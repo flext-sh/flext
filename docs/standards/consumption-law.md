@@ -175,7 +175,6 @@ duplication.threshold-percent = 0.0
 | ADR-006 | Thin Drivers (Meltano) | Accepted |
 | ADR-008 | Agent-runtime symmetry | Accepted |
 | ADR-010 | Codegen Standardization | Accepted |
-| ADR-012 | Config/Settings Pattern | Accepted |
 | ADR-014 | Codemod Governance | Accepted |
 | **ADR-015** | **Consumer Consumption Law (R1-R6)** | **Accepted** |
 

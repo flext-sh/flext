@@ -23,9 +23,8 @@
   the namespace/codemod gate alignment. Third-party forks stay outside FLEXT
   architecture (fleet boundary, `flext-law`).
 - **Tracking:** the active branch-matched Bead (`flext-joe2x` at authoring).
-- **Complements:** ADR-005 (config/settings SSOT), ADR-010 (unified
-  standardization via codegen), ADR-012 (config/settings canonical pattern),
-  `flext-law` (facade and import law).
+- **Complements:** ADR-005 (config/settings SSOT and canonical pattern), ADR-010 (unified
+  standardization via codegen), `flext-law` (facade and import law).
 - **Operator basis:** operator directives of 2026-09-09 (this session): flat
   part declarations, no pure namespace wrappers, hoist-not-alias, rules in
   dedicated folders as one YAML file per rule driving the dedicated Rope
@@ -159,8 +158,8 @@ platform exceptions stay encoded once (`NAMESPACE_PLATFORM_FACADE_SINGLETONS`,
 
 ## References
 
-- ADR-005 (config/settings SSOT), ADR-010 (unified standardization), ADR-012
-  (config/settings canonical pattern).
+- ADR-005 (config/settings SSOT and canonical pattern), ADR-010 (unified
+  standardization).
 - `flext-law` skill — facade composition, import direction, `make mod`
   structural-rewrite law.
 - `flext-infra`: `validate/namespace_validator.py`,
