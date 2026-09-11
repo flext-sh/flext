@@ -23,7 +23,7 @@
 1. `gc mail` à lane dona do WIP de templates (`Makefile.j2` script_dispatch, `.envrc.j2`,
    codegen.yaml) pedindo landing; se estagnar, absorver fix-forward (conflito hunk-a-hunk,
    funcionalidade mais nova vence).
-2. Root `make gen APPLY=Y` fixed point → commit das 5 projeções do super + gitlinks → push.
+2. Root `make gen` fixed point → commit das 5 projeções do super + gitlinks → push.
 - **Gate:** gen exit 0 + push FF.
 
 ## Fase C — sweep onda 2 (3 subagentes, batches ~10 membros)
@@ -55,7 +55,7 @@ duplication 36 · mypy 13 · loc-cap 9 · tier-whitelist 1 · runtime-census 1.
 | F5 | duplication + loc-cap + tier + census ~47 | owners compartilhados `u.*`; splits dos 5 arquivos >1000 LOC (1 subagente por arquivo, teste a cada extração) |
 
 - Cada wave: fix → fmt → check parcial da classe → commit escopado → push dev.
-- **Gate final:** `make check APPLY=Y` 100% verde + `make test` testmon verde.
+- **Gate final:** `make check` 100% verde + `make test` testmon verde.
 - Evidência: tabela antes/depois por classe no bead da campanha.
 
 ## Fase G — fechamento

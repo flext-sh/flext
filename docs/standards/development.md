@@ -61,16 +61,16 @@ Start at the workspace root:
 ```bash
 make setup
 make help
-make gen APPLY=Y
-make mod APPLY=Y
-make gen APPLY=Y
-make gen APPLY=Y
-make fix APPLY=Y
-make fmt APPLY=Y
-make check APPLY=Y
-make test APPLY=Y
-make conform APPLY=Y
-make waza APPLY=Y
+make gen
+make mod
+make gen
+make gen
+make fix
+make fmt
+make check
+make test
+make conform
+make waza
 ```
 
 The final generation pass proves the fixed point. Use only verbs declared by

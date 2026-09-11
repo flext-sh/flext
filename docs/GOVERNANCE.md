@@ -95,8 +95,8 @@ never allowed to hardcode the values that happen to exist today.
 Use the standard workspace commands; mutation is selected only with `APPLY=Y`:
 
 ```bash
-make check APPLY=Y
-make test APPLY=Y
+make check
+make test
 ```
 
 All FLEXT validation uses the root Make dispatcher and every Python test run

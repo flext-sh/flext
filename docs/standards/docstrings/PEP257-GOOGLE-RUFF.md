@@ -113,11 +113,11 @@ prohibited.
 Run validation from the workspace root:
 
 ```bash
-make fix APPLY=Y
-make fmt APPLY=Y
-make check APPLY=Y
-make test APPLY=Y
-make conform APPLY=Y
+make fix
+make fmt
+make check
+make test
+make conform
 ```
 
 The test verb retains Testmon. Never invoke Ruff, a test runner, or an ad-hoc
