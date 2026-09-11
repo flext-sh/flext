@@ -22,8 +22,7 @@ from collections.abc import Mapping, MutableSequence, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
-from examples import m, p, r, t, u
-from examples._constants import ExamplesPermission, ExamplesServerType
+from examples import ExamplesPermission, ExamplesServerType, m, p, r, t, u
 
 
 class AclProcessingExample:
@@ -35,7 +34,7 @@ class AclProcessingExample:
     class AclEntry(m.BaseModel):
         """Represents an ACL entry with context and permissions."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -48,7 +47,7 @@ class AclProcessingExample:
     class AclValidationResult(m.BaseModel):
         """Result of ACL validation with detailed context."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -132,12 +131,13 @@ class AclProcessingExample:
         for attr_name in acl_attrs:
             if attr_name in attributes:
                 acl_values = attributes.get(attr_name)
+                values_list: Sequence[str]
                 if isinstance(acl_values, str):
                     values_list = [acl_values]
                 elif isinstance(acl_values, Sequence) and not isinstance(
                     acl_values, (str, bytes, bytearray)
                 ):
-                    values_list = acl_values
+                    values_list = [str(value) for value in acl_values]
                 else:
                     continue
                 for i, acl_value in enumerate(values_list):
@@ -229,7 +229,7 @@ class AclProcessingExample:
         class EntryWithServer(m.BaseModel):
             """Typed envelope for extracted entry/server pairs."""
 
-            model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
+            model_config: ClassVar[t.ConfigDict] = m.ConfigDict(extra="forbid")
 
             entry: t.JsonMapping
             server_type: str
@@ -329,7 +329,9 @@ class AclProcessingExample:
                     if isinstance(entry_with_server_raw, Mapping)
                 )
             except m.ValidationError as exc:
-                return r[t.JsonMapping].fail(f"Invalid entries format: {exc}")
+                return r[t.JsonMapping].fail(
+                    f"Invalid entries format: {exc}", exception=exc
+                )
 
             if not entries_with_servers:
                 return r[t.JsonMapping].fail("No valid entries to extract")

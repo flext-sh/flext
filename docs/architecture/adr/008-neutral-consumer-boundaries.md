@@ -1,5 +1,16 @@
 # ADR-008 — Neutral consumer boundaries for docs, Office bytes, and artifact metadata
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [Ownership](#ownership)
+  - [Dependency direction](#dependency-direction)
+  - [Static consumer documentation](#static-consumer-documentation)
+  - [Neutral artifact metadata](#neutral-artifact-metadata)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
 - **Status:** Accepted
 - **Date:** 2026-07-18
 - **Scope:** FLEXT contracts consumed by independent Cosmos applications
@@ -85,7 +96,7 @@ deletes more code/dependencies than it adds.
 
 ## References
 
-- Cosmos ADR-020 (`bd-bhg1`)
+- Cosmos ADR-020 (`dcdoc-bhg1`)
 - DataOP ADR-001 (`data-organization-pipeline-4dt`)
 - DcBackup ADR-001 (`datacosmos-backup-o6w`)
 - [ADR-003 — Manifest-owned topology](003-workspace-tooling-hub-distribution.md)

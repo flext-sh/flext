@@ -12,9 +12,9 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from flext_cli import cli
+from flext_cli import cli, p
 
-WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 MIN_POSITIONAL_ARGS = 2
 
 
@@ -22,7 +22,7 @@ def _known_projects() -> frozenset[str]:
     """Return top-level directory names that look like FLEXT projects."""
     return frozenset(
         entry.name
-        for entry in WORKSPACE_ROOT.iterdir()
+        for entry in REPOSITORY_ROOT.iterdir()
         if entry.is_dir() and (entry / "pyproject.toml").is_file()
     )
 
@@ -52,22 +52,23 @@ def main(what: str, files: list[str]) -> int:
             "--projects",
             ",".join(sorted(projects)),
         ],
-        cwd=WORKSPACE_ROOT,
+        cwd=REPOSITORY_ROOT,
     )
     if outcome.failure:
         return 1
-    return outcome.value.exit_code
+    command: p.Cli.CommandOutput = outcome.value
+    return command.exit_code
 
 
 def _relative_to_workspace(raw: str) -> Path:
     path = Path(raw)
     if not path.is_absolute():
-        path = WORKSPACE_ROOT / path
-    return path.relative_to(WORKSPACE_ROOT)
+        path = REPOSITORY_ROOT / path
+    return path.relative_to(REPOSITORY_ROOT)
 
 
 if __name__ == "__main__":
     if len(sys.argv) < MIN_POSITIONAL_ARGS:
         msg = "usage: check_changed_projects.py <boundary|loc-cap> [file ...]"
         raise SystemExit(msg)
-    sys.exit(main(sys.argv[1], sys.argv[2:]))
+    cli.exit(main(sys.argv[1], sys.argv[2:]))

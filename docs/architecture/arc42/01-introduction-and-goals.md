@@ -1,5 +1,26 @@
 # 1. Introduction and Goals
 
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [1.1 Requirements Overview](#11-requirements-overview)
+  - [1.1.1 Functional Requirements](#111-functional-requirements)
+  - [1.1.2 Non-Functional Requirements](#112-non-functional-requirements)
+- [1.2 Quality Goals](#12-quality-goals)
+  - [1.2.1 Primary Quality Goals](#121-primary-quality-goals)
+  - [1.2.2 Secondary Quality Goals](#122-secondary-quality-goals)
+- [1.3 Stakeholders](#13-stakeholders)
+  - [1.3.1 Primary Stakeholders](#131-primary-stakeholders)
+  - [1.3.2 Secondary Stakeholders](#132-secondary-stakeholders)
+- [1.4 System Context](#14-system-context)
+  - [1.4.1 Business Context](#141-business-context)
+  - [1.4.2 Technical Context](#142-technical-context)
+  - [1.4.3 Integration Context](#143-integration-context)
+- [1.5 Success Criteria](#15-success-criteria)
+  - [1.5.1 Technical Success Criteria](#151-technical-success-criteria)
+  - [1.5.2 Business Success Criteria](#152-business-success-criteria)
+  - [1.5.3 Operational Success Criteria](#153-operational-success-criteria)
+<!-- TOC END -->
+
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 
 ## Table of Contents

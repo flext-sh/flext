@@ -18,8 +18,7 @@ from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
-from examples import m, p, r, t, u
-from examples._constants import ExamplesStage
+from examples import ExamplesStage, m, p, r, t, u
 
 type DataValue = t.JsonValue
 type ItemDict = t.JsonMapping
@@ -62,14 +61,14 @@ def _string_sequence(value: t.JsonValue) -> t.StrSequence:
 class PipelineStageData(m.BaseModel):
     """Data container for pipeline stage processing."""
 
-    model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+    model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
         arbitrary_types_allowed=True, extra="allow"
     )
 
     class PipelinePayload(m.BaseModel):
         """Pipeline payload container."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True, extra="allow"
         )
 
@@ -92,7 +91,7 @@ class AdvancedProcessingExample:
     class ProcessingResult(m.BaseModel):
         """Result of processing operation with metrics."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -111,7 +110,7 @@ class AdvancedProcessingExample:
     class ValidationResult(m.BaseModel):
         """Result of validation operation."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -228,16 +227,13 @@ class AdvancedProcessingExample:
                 return r[PipelineStageData].fail("Invalid items data")
             start_time = time.time()
 
-            def process_single_item(item: ItemDict) -> ItemDict | None:
+            def process_single_item(item: ItemDict) -> ItemDict:
                 """Process a single item."""
-                try:
-                    time.sleep(0.01)
-                    result: t.MutableJsonMapping = {**item}
-                    result["processed"] = True
-                    result["processing_timestamp"] = time.time()
-                    return result
-                except (KeyError, ValueError, TypeError):
-                    return None
+                time.sleep(0.01)
+                result: t.MutableJsonMapping = {**item}
+                result["processed"] = True
+                result["processing_timestamp"] = time.time()
+                return result
 
             processed_items: MutableSequence[ItemDict] = []
             with ThreadPoolExecutor(max_workers=4) as executor:
@@ -246,9 +242,7 @@ class AdvancedProcessingExample:
                     for item in items_to_process
                 }
                 for future in as_completed(future_to_item):
-                    result = future.result()
-                    if result is not None:
-                        processed_items.append(result)
+                    processed_items.append(future.result())
             processing_time = time.time() - start_time
             result_data: t.JsonMapping = t.json_mapping_adapter().validate_python({
                 **data,

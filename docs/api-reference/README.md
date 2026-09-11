@@ -1,5 +1,11 @@
 # API Reference
 
+<!-- TOC START -->
+- [SSOT Rule](#ssot-rule)
+- [Root Outputs](#root-outputs)
+- [Project Outputs](#project-outputs)
+<!-- TOC END -->
+
 FLEXT API documentation is code-driven.
 
 ## SSOT Rule

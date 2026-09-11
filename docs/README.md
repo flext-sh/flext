@@ -1,5 +1,9 @@
 # FLEXT Documentation
 
+<!-- TOC START -->
+- [Start Here](#start-here)
+<!-- TOC END -->
+
 This directory is the curated root documentation surface for the FLEXT workspace.
 
 Use it for:

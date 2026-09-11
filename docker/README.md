@@ -6,7 +6,7 @@
 - [Installation](#installation)
 - [Usage](#usage)
   - [For pytest Tests](#for-pytest-tests)
-  - [Direct tk Usage](#direct-flexttestsdocker-usage)
+  - Direct tk Usage
 - [Architecture](#architecture)
   - [DOCKER COMPOSE FILES (17 CENTRALIZED)](#docker-compose-files-17-centralized)
   - [Container Type Reference (THREE PRIMARY TYPES)](#container-type-reference-three-primary-types)
@@ -43,7 +43,7 @@ Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 ## Key Features
 
-```
+```text
 ~/flext/docker/
 ├── docker-compose.*.yml    # All compose files (17 centralized configs)
 ├── images/                  # All Dockerfiles (21 consolidated images)
@@ -110,7 +110,7 @@ from flext_tests import tk
 from pathlib import Path
 
 # Initialize with workspace root
-docker_mgr = tk(workspace_root=Path.home() / "flext")
+docker_mgr = tk(repository_root=Path.home() / "flext")
 
 # Start container
 result = docker_mgr.start_container("flext-postgres-test")
@@ -365,7 +365,7 @@ ls ~/flext/docker/images/Dockerfile.* | wc -l
 
 ## Contributing
 
-Please see our [Contributing Guide](../docs/CONTRIBUTING.md) for details.
+Please see our Contributing Guide for details.
 
 ## License
 

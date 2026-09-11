@@ -1,5 +1,16 @@
 # FLEXT LDAP
 
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT LDAP is the directory-services library of the FLEXT platform. It wraps `ldap3` behind typed Pydantic models and
 the `r[T]` contract, providing connection management, CRUD/search operations, entry synchronization, and server-type
 detection through a single `FlextLdap` facade (`ldap` alias). Package description: "Enterprise LDAP Operations Library

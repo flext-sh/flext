@@ -1,5 +1,16 @@
 # ADR-004 — Generated Make and codegen SSOT owned by `flext-infra`
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. `flext-infra codegen conform` is the sole owner](#1-flext-infra-codegen-conform-is-the-sole-owner)
+  - [2. The Makefile is a self-contained generated artifact](#2-the-makefile-is-a-self-contained-generated-artifact)
+  - [3. `custom.mk` is a narrow private extension surface](#3-custommk-is-a-narrow-private-extension-surface)
+  - [4. Conformance is deterministic and fail-closed](#4-conformance-is-deterministic-and-fail-closed)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
 - **Status:** Accepted (replaces the former Make registry decision)
 - **Date:** 2026-06-28
 - **Amended:** 2026-07-11
@@ -48,7 +59,7 @@ rendering path.
 ### 2. The Makefile is a self-contained generated artifact
 
 One template layer emits the complete versioned Makefile for the
-`workspace-root`, `workspace-member`, or `standalone` profile. Make never
+`workspace` or `standalone` profile. Make never
 regenerates itself and never includes a shared implementation from another
 checkout. `codegen` performs conformance explicitly; `check` is read-only and
 `apply` requires `APPLY=Y`.

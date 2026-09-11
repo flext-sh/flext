@@ -1,5 +1,16 @@
 # FLEXT Oracle WMS
 
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Oracle WMS is the domain package for Oracle Warehouse Management System
 (WMS) integration. Its executable source lives under
 `flext-oracle-wms/src/flext_oracle_wms/`.

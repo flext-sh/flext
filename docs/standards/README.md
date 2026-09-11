@@ -1,5 +1,10 @@
 # Standards Index
 
+<!-- TOC START -->
+- [Governing Sources](#governing-sources)
+- [Supporting Standards](#supporting-standards)
+<!-- TOC END -->
+
 The root standards surface is intentionally narrow.
 
 ## Governing Sources

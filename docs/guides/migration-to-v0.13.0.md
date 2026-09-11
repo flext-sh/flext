@@ -1,5 +1,22 @@
 # Migration to v0.13.0
 
+<!-- TOC START -->
+- [Purpose](#purpose)
+- [Migration Order](#migration-order)
+- [Track 1: flext-core](#track-1-flext-core)
+- [Track 2: Platform Packages](#track-2-platform-packages)
+- [Track 3: Domain Packages](#track-3-domain-packages)
+- [Track 4: Integration Packages](#track-4-integration-packages)
+- [Core Rename Table](#core-rename-table)
+- [Method Replacement Table](#method-replacement-table)
+- [Removed Concepts](#removed-concepts)
+- [Taxonomy Migration Checklists](#taxonomy-migration-checklists)
+  - [Tests](#tests)
+  - [Examples](#examples)
+  - [Scripts](#scripts)
+- [Done Criteria](#done-criteria)
+<!-- TOC END -->
+
 ## Purpose
 
 This guide describes how to migrate the FLEXT workspace to the `0.13.0` platform baseline.

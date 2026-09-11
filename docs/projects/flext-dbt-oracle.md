@@ -1,5 +1,16 @@
 # FLEXT dbt Oracle
 
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT dbt Oracle is the integration project that runs dbt transformations against Oracle Database inside the FLEXT
 ecosystem. It layers an Oracle-aware dbt service base on top of `flext-db-oracle` (connectivity) and `flext-meltano`
 (dbt orchestration), so dbt project execution, connection profiles, and settings all come from the FLEXT SSOT rather

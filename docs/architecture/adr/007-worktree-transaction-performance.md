@@ -1,5 +1,15 @@
 # ADR-007 — Performance optimization of worktree transactions and mutating CLI commands
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. Transaction wrapper stages run in parallel when independent](#1-transaction-wrapper-stages-run-in-parallel-when-independent)
+  - [2. Large machine-readable output bypasses Rich styling](#2-large-machine-readable-output-bypasses-rich-styling)
+  - [3. Future optimizations must be evidence-driven and non-breaking](#3-future-optimizations-must-be-evidence-driven-and-non-breaking)
+  - [4. No optimization may bypass gates or suppress diagnostics](#4-no-optimization-may-bypass-gates-or-suppress-diagnostics)
+  - [5. Generated-artifact linting is a single batched stage, not per template](#5-generated-artifact-linting-is-a-single-batched-stage-not-per-template)
+- [Consequences](#consequences)
+<!-- TOC END -->
 - **Status:** Accepted
 - **Date:** 2026-07-17
 - **Scope:** `flext-infra` worktree transaction executor, `flext-cli` output
@@ -11,7 +21,7 @@
 
 ## Context
 
-`make build WHAT=artifacts` and similar mutating commands execute inside a
+Mutating commands using the worktree transaction execute inside a
 complete isolated Git worktree before any source change is applied. Profiling
 showed that the wall-clock time was dominated by:
 
@@ -73,15 +83,19 @@ Every performance change in this area must:
   the profiling protocol or adds/removes a fast path;
 - be landed through scoped commits and fast-forward pushes with Bead evidence.
 
+Long commands emit causal progress within one minute. Keep locks, bounded
+resources, and the persistent testmon cache. Helm operations remain serialized.
+
 Cache-like optimizations (e.g., reusing a Rope index) are allowed only when they
 have a documented invalidation strategy keyed by versioned inputs (file mtime,
 Git HEAD, pyproject hash) and a test that proves invalidation works.
 
 ### 4. No optimization may bypass gates or suppress diagnostics
 
-A faster command that produces a red lint/type/test gate is not acceptable. The
-transaction wrapper exists to detect breakage; any change that hides breakage
-is a regression, not an optimization.
+Optimization must not introduce or conceal regressions. Required gates retain
+their exit statuses and diagnostics. Individually accepted checkpoint debt does
+not turn a red gate green or waive a gate. The transaction wrapper must continue
+to detect breakage.
 
 ### 5. Generated-artifact linting is a single batched stage, not per template
 

@@ -1,5 +1,14 @@
 # protocols-plugin
 
+<!-- TOC START -->
+- [Overview](#overview)
+- [Members](#members)
+- [Execution Flows](#execution-flows)
+- [Dependencies](#dependencies)
+  - [Outgoing](#outgoing)
+  - [Incoming](#incoming)
+<!-- TOC END -->
+
 ## Overview
 
 Community of 1715 nodes
@@ -19,7 +28,7 @@ Community of 1715 nodes
 | EnforcementBuildContext | Class | flext-tests/src/flext_tests/_protocols/enforcement.py | 21-41 |
 | infra_report | Function | flext-tests/src/flext_tests/_protocols/enforcement.py | 29-31 |
 | validator_targets | Function | flext-tests/src/flext_tests/_protocols/enforcement.py | 34-36 |
-| workspace_root | Function | flext-tests/src/flext_tests/_protocols/enforcement.py | 39-41 |
+| repository_root | Function | flext-tests/src/flext_tests/_protocols/enforcement.py | 39-41 |
 | NamespaceEnforcer | Class | flext-tests/src/flext_tests/_protocols/enforcement.py | 58-67 |
 | enforce | Function | flext-tests/src/flext_tests/_protocols/enforcement.py | 61-67 |
 | Infra | Class | flext-infra/src/flext_infra/protocols.py | 31-38 |
@@ -37,7 +46,7 @@ Community of 1715 nodes
 | get_start | Function | flext-infra/src/flext_infra/_protocols/rope.py | 42-42 |
 | get_end | Function | flext-infra/src/flext_infra/_protocols/rope.py | 44-44 |
 | RopeWorkspaceDsl | Class | flext-infra/src/flext_infra/_protocols/rope.py | 47-153 |
-| rope_workspace_root | Function | flext-infra/src/flext_infra/_protocols/rope.py | 53-53 |
+| rope_repository_root | Function | flext-infra/src/flext_infra/_protocols/rope.py | 53-53 |
 | rope_project | Function | flext-infra/src/flext_infra/_protocols/rope.py | 56-56 |
 | workspace_index | Function | flext-infra/src/flext_infra/_protocols/rope.py | 59-59 |
 | refresh | Function | flext-infra/src/flext_infra/_protocols/rope.py | 61-66 |
