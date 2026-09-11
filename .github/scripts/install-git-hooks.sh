@@ -43,6 +43,12 @@ fail() {
 
 command -v bd >/dev/null 2>&1 || fail "bd is not installed; install Beads before provisioning hooks"
 
+# Stage gates (operator law 2026-08-24): install only the stages the config
+# SSOT enables (make.pre_commit / make.pre_push). Both disabled means no
+# pre-commit framework install at all; Beads provisioning still runs.
+
+_log "Git-hook stages disabled by config gate; skipping pre-commit install"
+
 _log "Installing Beads git hooks (chained) at ${WORKSPACE_ROOT}"
 bd hooks install --chain >/dev/null || fail "bd hooks install --chain failed"
 
@@ -96,5 +102,7 @@ grep -q 'BD_ALLOW_AGENT_COMMIT_TRAILERS' "${hook_path}" \
 	|| fail "guard token missing after injection"
 grep -q 'bd hooks run prepare-commit-msg' "${hook_path}" \
 	|| fail "bd delegation missing; refusing to leave hook without beads integration"
+
+
 
 echo "install-git-hooks: prepare-commit-msg guarded (BD_ALLOW_AGENT_COMMIT_TRAILERS opt-in)"

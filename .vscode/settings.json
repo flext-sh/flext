@@ -48,7 +48,10 @@
     "**/.bin": true,
     "**/.tools": true,
     "**/.archive": true,
-    "**/.bkp": true
+    "**/.bkp": true,
+    "**/.testmondata": true,
+    "**/.testmondata-wal": true,
+    "**/.testmondata-shm": true
   },
   "files.watcherExclude": {
     "**/__pycache__/**": true,
@@ -96,7 +99,10 @@
     "**/.bin/**": true,
     "**/.tools/**": true,
     "**/.archive/**": true,
-    "**/.bkp/**": true
+    "**/.bkp/**": true,
+    "**/.testmondata/**": true,
+    "**/.testmondata-wal/**": true,
+    "**/.testmondata-shm/**": true
   },
   "git.autoRepositoryDetection": "subFolders",
   "git.detectSubmodules": true,
@@ -213,7 +219,10 @@
     "**/.bin": true,
     "**/.tools": true,
     "**/.archive": true,
-    "**/.bkp": true
+    "**/.bkp": true,
+    "**/.testmondata": true,
+    "**/.testmondata-wal": true,
+    "**/.testmondata-shm": true
   },
   "shellcheck.useWorkspaceRootAsCwd": true,
   "terminal.integrated.env.linux": {

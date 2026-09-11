@@ -1,0 +1,97 @@
+{
+  "managed": {
+    "api-design": {
+      "digest": "5dd54a4fd463b9aafa40899fc9e5d55c95f9881cf5ff06cbd40953f39aba8443",
+      "origin": "flext"
+    },
+    "article-writing": {
+      "digest": "37bf7f73e00a74e2380936e6bff7868a14871cb29f4d8c05740b4b8fb7c6542f",
+      "origin": "flext"
+    },
+    "backend-patterns": {
+      "digest": "debd8cda44bef91316843c894ee9b5276b4f9e581d5fbfecc19ed621c1c70516",
+      "origin": "flext"
+    },
+    "brand-voice": {
+      "digest": "9895af6c22aa1113e3b67ba6776507ada7cba1aa7480d151c269b94ecebb0622",
+      "origin": "flext"
+    },
+    "code-review-expert": {
+      "digest": "159bd34b4fbe77090d65eb599bcc8715d95d33a78c86f528f0b611778b4af303",
+      "origin": "flext"
+    },
+    "coding-standards": {
+      "digest": "c371d2059263efcd274b84a37533381079a3076a9a7d3007b0c0a84f42ab97a1",
+      "origin": "flext"
+    },
+    "content-engine": {
+      "digest": "144e602082b7c8f9cae182ebc191e489910b992c8fa46c46188d6c2121956de4",
+      "origin": "flext"
+    },
+    "crosspost": {
+      "digest": "8bc09c245773d60f7f9bd71f77e866cf75338bf13e7a8a6b6460c6acd72ae149",
+      "origin": "flext"
+    },
+    "diegosouzapw-modern-python-finimo-solutions": {
+      "digest": "c107c00c08d799621cac17e63173810898718971e05a7ebf47143e103869553f",
+      "origin": "flext"
+    },
+    "documentation-criteria": {
+      "digest": "08d8769861848d550cee9e593876d3864391044673035f26e7cb6f1a19b96d51",
+      "origin": "flext"
+    },
+    "documentation-lookup": {
+      "digest": "ce0d121e118706887a1013e62bf79055a2f5a035b0eee63a0a5d9ae8ff00b365",
+      "origin": "flext"
+    },
+    "flext-context-routing": {
+      "digest": "23737981c55c832ef47e4c07de10301f2698e033310b9410aa8d08f849bf3c1e",
+      "origin": "flext"
+    },
+    "flext-law": {
+      "digest": "5996583117d9a449a033753352da2a0c39b2ecc106648ac2244aef8bfa535f87",
+      "origin": "flext"
+    },
+    "human-writing-style": {
+      "digest": "8f0605a4c637cccae0013f5fc7cd305560f9d76d7f40405a54b607c47e04018d",
+      "origin": "flext"
+    },
+    "jamie-bitflight-python3-bug": {
+      "digest": "ba1f8e6910e212a478058c8f97cd0c37a76a577dadc3b5e773a25c8723d0740b",
+      "origin": "flext"
+    },
+    "majiayu000-config-schema-migrator": {
+      "digest": "f976bcdbb7ee1c240a5a699d6baa66e8c63286707fac4ddc9acd3c54998b1a6d",
+      "origin": "flext"
+    },
+    "python-production": {
+      "digest": "573bf7c7182d1f72c3abb7101c1a0efef6b910fa47f8d0409b9bdacc471cab39",
+      "origin": "flext"
+    },
+    "python-refactoring": {
+      "digest": "dbe207b60eac3e7b3e5aa29a5387ccfa60c0e95ec1ffac5ef4dfc1eaa1283e08",
+      "origin": "flext"
+    },
+    "security-review": {
+      "digest": "03cdcaae04b89d741d71814cd01b48c952655c43ec520a7ac3debafceae00874",
+      "origin": "flext"
+    },
+    "simplify": {
+      "digest": "e445e6e2d94812eade94b3120f7e7dc175dd107d5c5f2108976675106393495f",
+      "origin": "flext"
+    },
+    "summarization": {
+      "digest": "9294dc9d663c9d5e732708ff35c40c0226925775b5779a17827dc1cee5f35df1",
+      "origin": "flext"
+    },
+    "tdd-workflow": {
+      "digest": "a54c7698d0c7b1e17730104a4f22eaa177a367ba39f3f18d2708961532281653",
+      "origin": "flext"
+    },
+    "technical-writing-style": {
+      "digest": "29f46c3a11fa07a815260502b0a1cefdfd35dc8db6d71ed888de123c2d73de2d",
+      "origin": "flext"
+    }
+  },
+  "version": 2
+}

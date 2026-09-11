@@ -7,15 +7,10 @@ description: Apply the FLEXT-only architecture, workspace, generation, import, a
 
 ## Composition
 
-This repository is the sole owner of the skill named `flext-law`. AI Hub
-projects it but does not author it. Generic conduct, lane safety, evidence,
-Make-command selection, and completion gates remain owned by:
-
-- `~/.agents/skills/inviolable-rules/SKILL.md`
-- `~/.agents/skills/make-check/SKILL.md`
-- `~/.agents/skills/verification-loop/SKILL.md`
-
-Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
+The FLEXT repository is the sole authoring owner of `flext-law`. Projects that
+use FLEXT receive a validated independent copy. Read the active project's root
+instructions; this file adds only the FLEXT domain contract. It must never be a
+symbolic link or depend on files from another repository.
 
 ## Architecture and imports
 
