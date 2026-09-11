@@ -33,7 +33,7 @@ parallel command surface.
 
 ```bash
 make gen
-make mod APPLY=Y
+make mod
 make gen
 make gen
 make fix

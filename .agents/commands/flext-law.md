@@ -15,7 +15,7 @@ an identically named skill from another catalog or branch.
 
 For structural cleanup, also compose the canonical global `search-first`,
 `yagni`, `ssot`, `solid`, `simplify`, and `dry` skills in that order. Execute
-rewires through root `make mod APPLY=Y`; its FLEXT-owned ast-grep, Rope, and LSP
+rewires through root `make mod`; its FLEXT-owned ast-grep, Rope, and LSP
 pipeline discovers hierarchy and references. Public ai-hub commands, hooks, MCP
 routes, and `ai-hub-*` daemons may enrich that discovery when available, but
 FLEXT never imports ai-hub or CRG libraries and their absence is not an error.

@@ -14,7 +14,7 @@ or local command grammars.
 - `docs/standards/` owns cross-workspace authoring standards.
 
 Every generated document carries a header naming its source, adjustment point,
-and exact `make gen APPLY=Y` regeneration rule. Generated output is never edited
+and exact `make gen` regeneration rule. Generated output is never edited
 by hand.
 
 ## Command and test examples
@@ -56,13 +56,13 @@ See [Python docstring standards](docstrings/PEP257-GOOGLE-RUFF.md).
 Run the complete documentation propagation through the root dispatcher:
 
 ```bash
-make gen APPLY=Y
-make gen APPLY=Y
-make fix APPLY=Y
-make fmt APPLY=Y
-make check APPLY=Y
-make test APPLY=Y
-make conform APPLY=Y
+make gen
+make gen
+make fix
+make fmt
+make check
+make test
+make conform
 ```
 
 The second generation pass must be a fixed point. Test validation retains the

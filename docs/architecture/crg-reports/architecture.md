@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY. Source: code-review-graph → docs/architecture/crg-reports/architecture.md -->
-<!-- Run `make docs APPLY=Y` to regenerate. -->
+<!-- Run `make docs` to regenerate. -->
 
 # CRG Architecture Risk
 

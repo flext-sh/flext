@@ -46,7 +46,7 @@ such shapes member by member is unscalable and produces one-off rewrites that
 do not replicate to consumers.
 
 The fleet already owns the required machinery: the ADR-010 codemod cascade
-(detection rules shipped one per file, applied through `make mod APPLY=Y`
+(detection rules shipped one per file, applied through `make mod`
 until a guarded fixed point), the shared Rope change cycle
 (`FlextInfraUtilitiesRopeRuntime` change primitives plus `rope_project.do(changes)`
 in `_utilities/rope_class_move.py` and `_utilities/namespace_moves.py`, which
@@ -105,7 +105,7 @@ file globs are rule data — never hardcoded detector branches.
 
 ### 3. Shared change cycle (Rope replication)
 
-Family-shape rewrites run inside the `make mod APPLY=Y` circuit
+Family-shape rewrites run inside the `make mod` circuit
 (`FlextInfraCodemodBatchApply`), as a phase beside
 `FlextInfraCodemodSemanticApply`, and extend the common base rather than
 introducing a second path:
@@ -149,12 +149,12 @@ platform exceptions stay encoded once (`NAMESPACE_PLATFORM_FACADE_SINGLETONS`,
 
 ## Verification contract
 
-- `make mod APPLY=Y` reaches the guarded fixed point with zero pending
+- `make mod` reaches the guarded fixed point with zero pending
   findings on the target member.
-- `make check APPLY=Y` passes the namespace and codemod gates on the member
-  with the family law active; `make test APPLY=Y` stays green through the
+- `make check` passes the namespace and codemod gates on the member
+  with the family law active; `make test` stays green through the
   canonical testmon cache.
-- `make gen APPLY=Y` proves the generation fixed point after any export-affecting
+- `make gen` proves the generation fixed point after any export-affecting
   move; zero residue (no `.bak`, no orphan files) remains in the tree.
 
 ## References

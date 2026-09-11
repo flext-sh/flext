@@ -175,7 +175,7 @@ owner and is prohibited. Unknown or ambiguous ownership fails at the
 classifier; it never falls back to a guessed namespace or an inert/manual-review
 entry.
 
-`make mod APPLY=Y` owns this cutover. It inventories every governed repository,
+`make mod` owns this cutover. It inventories every governed repository,
 applies safe ast-grep rewrites, performs semantic consumer rewiring, removes the
 superseded owner, and then validates Ruff, Pyrefly, and local LSP diagnostics
 before accepting the fixed point. Detection-only findings keep the invocation red but do not
@@ -197,7 +197,7 @@ integration is selected, its first error propagates without normalization.
    layout, wrong facade/`**init**`, naming violations, toolchain/pyproject
    drift, non-standard tests/scripts/examples) across all projects, with zero
    writes. Output is evidence, not a rewrite.
-2. **Refactoring.** `make gen APPLY=Y` and `make mod APPLY=Y`, with the
+2. **Refactoring.** `make gen` and `make mod`, with the
    `flext-tests` base, migrate each project to the standard in bounded,
    ownership-scoped batches, deletion-first (ADR-005 §5), one cut per concern,
    no compatibility shim, each batch validated (`ruff`/`pyrefly`/`pytest`).
@@ -227,15 +227,15 @@ facades on foreign code.
 
 ## Verification contract
 
-1. Two consecutive root `make gen APPLY=Y` runs are green and byte-idempotent on
+1. Two consecutive root `make gen` runs are green and byte-idempotent on
    the standardized set; every managed file matches the rendered SSOT.
 2. The standardization audit reports zero drift for verbs, layout, facades,
    `**init**.py`, toolchain/pyproject, and naming on enforced projects.
-3. `make mod APPLY=Y` reports zero actionable and detection-only findings after
+3. `make mod` reports zero actionable and detection-only findings after
    AST/semantic rewire and zero Ruff, Pyrefly, or local LSP diagnostics. When an
    ai-hub CRG/LSP route is available and selected, its distinct runtime evidence
    is recorded without making host availability a FLEXT prerequisite.
-4. `make test APPLY=Y` retains the canonical testmon cache, and `flext-tests`
+4. `make test` retains the canonical testmon cache, and `flext-tests`
    supplies identical public behavior fixtures across projects.
 5. Independent FLEXT projects pass the same gates; non-FLEXT projects preserve
    upstream conventions with no reverse `flext-*` dependency (ADR-008).

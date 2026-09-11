@@ -52,7 +52,7 @@ Every test run starts at the workspace root and flows through the retained
 Testmon cache:
 
 ```bash
-make test APPLY=Y
+make test
 ```
 
 Never invoke the underlying test runner, clear Testmon state, or add project,
@@ -60,7 +60,7 @@ file, pattern, changed-only, fix, or phase selectors. Run the complete quality
 gate through its root owner:
 
 ```bash
-make check APPLY=Y
+make check
 ```
 
 If either verb is missing or broken, repair the dispatcher owner and rerun the
@@ -69,7 +69,7 @@ same canonical command.
 ## Generated copies
 
 Generated member guides are projections of root documentation. Change the root
-source and regenerate with `make gen APPLY=Y`; never edit a projection directly.
+source and regenerate with `make gen`; never edit a projection directly.
 
 ## Related
 

@@ -15,7 +15,7 @@
 > **AUTO-GENERATED — DO NOT EDIT MANUALLY.**
 > Sources: `docs/` tree (manual-curated), CRG graph (code knowledge graph),
 > and `mkdocstrings` directives (live from code).
-> Regenerate with: `make gen APPLY=Y`
+> Regenerate with: `make gen`
 
 ## Purpose
 
@@ -149,7 +149,7 @@ The knowledge index is refreshed by the codegen conform transaction. From the
 workspace root:
 
 ```bash
-make gen APPLY=Y
+make gen
 ```
 
 - **Manual & Curated** sections are authored by hand and synced via PR review.

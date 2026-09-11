@@ -43,9 +43,9 @@ Never invoke bare `ruff`, `pyrefly`, `pyright`, `mypy`, `pytest`, or `uv`. Use
 the dispatcher:
 
 ```bash
-make gen APPLY=Y
-make check APPLY=Y
-make test APPLY=Y
+make gen
+make check
+make test
 ```
 
 Every Python test run retains the canonical testmon cache. Agents do not clear,
@@ -103,8 +103,8 @@ lane: one coherent commit or an explicit pathspec-bound set of commits.
 
 The following fresh evidence is mandatory at every boundary:
 
-- `make check APPLY=Y` for the workspace;
-- `make test APPLY=Y`, retaining the canonical testmon cache, for every
+- `make check` for the workspace;
+- `make test`, retaining the canonical testmon cache, for every
   affected project and integration surface;
 - real public-surface QA for the changed behavior; and
 - generator/consumer idempotence when generated outputs are involved.

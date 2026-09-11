@@ -37,7 +37,7 @@ After correcting the source, use only the applicable canonical verbs:
 
 ```bash
 make gen
-make mod APPLY=Y
+make mod
 make gen
 make gen
 make fix

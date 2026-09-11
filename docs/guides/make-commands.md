@@ -29,7 +29,7 @@ Use the standard verbs directly from the workspace root:
 
 ```bash
 make gen
-make mod APPLY=Y
+make mod
 make gen
 make gen
 make fix
