@@ -134,6 +134,7 @@ Método: leitura dos donos canônicos (deep-research router procedure, flext-dev
 | (5) fence de consumers/projetos independentes | — | out-of-scope indie | — |
 
 ### 9.2 Drifts de DOCUMENTAÇÃO corrigidos nesta reconciliação
+
 | # | Drift | Correção aplicada |
 |---|-------|-------------------|
 | DR1 | Skill `flext-development` "Landing law delta" afirmava o guard gen-×2 como lei desta sessão | **corrigido in-place**: ADR-010 §Verification contract (item 1) é o DONO; skill restata para o caso pressão, não re-inventa |
@@ -143,6 +144,7 @@ Método: leitura dos donos canônicos (deep-research router procedure, flext-dev
 ### 9.3 Regras que precisam ser CODIFICADAS para o piloto de produção com propagação completa (cadeia de fechamento)
 
 Ordem ADR-010-conforme (cada gate fecha até o próximo abrir):
+
 1. **Fechar SLA-1** (`flext-3cabz`): idempotência pyproject.toml → item 1 do ADR-010 verificável.
 2. **Fechar SLA-3** (`flext-9wwed`): budget fixture + PATH-strip → item 4 verificável.
 3. **Fechar SLA-2** (`flext-cpkk`, absorvendo XML do ator `z82dg-nsloc` fix-forward): item 2 audit-zero-drift + item 3 mod-zero-findings.
@@ -150,6 +152,7 @@ Ordem ADR-010-conforme (cada gate fecha até o próximo abrir):
 5. **Piloto homologação** = estado onde os itens 1-4 do ADR-010 estão verdes no SHA integrado + `flext-gxgqp` (gate de regrowth) implementado — só aí a branch de integração está "produtiva para homologação".
 
 ### 9.4 Inputs atualizados nesta passada
+
 - Handoff v2 = este arquivo (seção 9 nova).
 - Skill `flext-development`: drift DR1 corrigido (ADR-010 como owner).
 - Plan: §10/§11 leem-se com a nota DR2 (rota CRG = ADR-010-sancionada).
@@ -192,6 +195,7 @@ Fonte fundida: `~/flext-work/flext-gov-super/docs/plans/2026-09-11-flext-gov-han
 5. Fechamento: beads das DUAS sessões fecham com 4 evidências cada; registro `bd remember` por transição de aprovação (protocolo END OF TURN do §13).
 
 ### 10.4 Decreto de continuidade (vigência dupla — aplica-se a ambas as sessões)
+
 - Nunca mover texto de plano past reality; corrigir bead/status, não a narrativa.
 - bd é SSOT de execução; SKAs/git são evidência; narrativa nunca é.
 - Cada aprovação A1..A3 confirmação EXPLÍCITA do operador (nunca inferida).

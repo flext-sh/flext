@@ -9,6 +9,7 @@ Accepted (2026-09-11)
 The FLEXT fleet (31+ `flext-*` packages) lacked a unified consumption standard. Consumers imported internal machinery (`flext_cli.models`, `flext_infra.workspace.detector`, `flext_core.lazy`), duplication went undetected across consumer+family scope, gates had hardcoded thresholds and bypass lists, and there was no budget enforcement or contribution path law.
 
 This led to:
+
 - Fragile consumer code that broke on internal refactors
 - Untracked duplication across the fleet
 - Gates that could be bypassed via allowlists
@@ -20,35 +21,41 @@ This led to:
 We ratify the **Consumer Consumption Law (R1-R6)** as the canonical standard for all FLEXT packages. This law is codified in `docs/standards/consumption-law.md` and enforced through the following mechanisms:
 
 ### R1 — Facade-Only Import Grammar
+
 - Legal: `from <pkg> import X` where `X ∈ pkg.__all__`
 - Illegal: any `pkg.<submodule>` path (facet modules, reach-throughs, internal machinery)
 - Enforcement: `FlextInfraConsumerImportViolationsDetector` → ENFORCE-099
 - Derivation: `FlextUtilitiesFamilySurface` from published lazy contract (`__all__` + `_LAZY_IMPORTS`)
 
 ### R2 — No Duplication (Structural Scan)
+
 - Extended duplication gate covers consumer+family scope
 - Thresholds via `[tool.flext.project]` config SSOT
 - Semantic classifier: only executable behavior counts
 - Enforcement: `FlextInfraDuplicationGate` extended → ENFORCE-100+
 
 ### R3 — Layer Law (Declaration vs Behavior)
+
 - Declaration layers (`c,t,p,m,u,r,e,x,h,d,s`) = pure data, zero methods
 - Behavior only in `u`, `base.py`, `services/*.py`, `api.py`, `cli.py`
 - Reverse imports `TYPE_CHECKING`-only; `c` never imports `m` at runtime
 - One class per module, ≤200 LOC, Pydantic-2-way only
 
 ### R4 — Gates as Products
+
 - Every gate has typed config via `[tool.flext.project]`
 - Budget gate (time/memory/token limits) is non-optional
 - Atomic `O_APPEND` primitive in `flext-core.u`
 - Fixed-point exposure via conform check
 
 ### R5 — Release Consumption
+
 - 0.12.x tags on green tips
 - `AI_HUB_CONSUMER.md` versioned per release
 - Depends on F1, F4, F7
 
 ### R6 — Contribution Path Law
+
 - Bead → formula lane → canonical Make verbs → WIP commits → PR → `--no-ff` merge → gates on merged SHA → roll-up gitlinks → bead closure with 4 evidences
 - Zero residue: dead code/compat shims are defects
 
@@ -62,6 +69,7 @@ We ratify the **Consumer Consumption Law (R1-R6)** as the canonical standard for
 ## Consequences
 
 ### Positive
+
 - Consumers couple only to published contracts (stable)
 - Duplication eliminated at owner (single source of truth)
 - Gates are products with budgets (predictable CI)
@@ -69,6 +77,7 @@ We ratify the **Consumer Consumption Law (R1-R6)** as the canonical standard for
 - All enforcement derives from typed config SSOT
 
 ### Negative
+
 - Migration required for existing consumers using internal imports
 - Duplication gate may surface existing debt (must fix at owner)
 - Budget gate may require optimization of slow gates

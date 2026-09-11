@@ -18,6 +18,7 @@
 ## 1. FEITO — evidências verificadas nesta revisão v2
 
 ### 1.1 Extremínio backup-on-apply (onda 1)
+
 | Item | Evidência |
 |---|---|
 | Escritor `.bak` morto na raiz | PR flext-infra **#673** `8279c4f2`; `grep -rn persist_apply_backup flext-infra/src/` = **0** |
@@ -26,6 +27,7 @@
 | Bead `flext-tldqe` | CLOSED (4 evidências) |
 
 ### 1.2 Gitlink + docs (onda 2)
+
 | Item | Evidência |
 |---|---|
 | Rollup ×2 | PRs flext **#215** `9a73d0f8` e **#216** `c4f9fb1b` (ambas MERGED) |
@@ -33,6 +35,7 @@
 | `make gen` umbrella | **VERDE** + ponto fixo (colisão "guia protegida" era transitória — iteração de worktree do ator) |
 
 ### 1.3 Onda do ator (absorvida)
+
 | Item | Evidência |
 |---|---|
 | Descarte wip `7a5e2e1e8`, cherry-pick `6261a1806` | registro predecessor (Deliverable 1) |
@@ -41,6 +44,7 @@
 | Bead `flext-uw305` | CLOSED nesta revisão (fix upstream PR #674 `573eb3746`) |
 
 ### 1.4 Codificação durável e higiene (esta revisão)
+
 - **Novas beads**: `flext-2h0un` (fixed-point drift, P1 bug), `flext-9wwed` (budget violation, P1, **dep** em `flext-38p39`), `flext-gxgqp` (regrowth gate + keep_backup, P2 feature).
 - **`flext-3cabz` atualizada**: 2 de 4 classes de red convergidas; classe restante → `flext-2h0un`.
 - **Retirada de lanes 100%**: worktrees `sweep-residue`, `sweep-conformance`, `3229sweep` removidos; branches locais/remotos/tracking limpos; toda remoção precedida de `merge-base --is-ancestor` contra base recém-fetchada.
@@ -86,6 +90,7 @@ Sweep não está "feito" quando minha Lane fica verde; está feito quando o ambi
 **Fonte de verdade**: status de cada bead lido de `bd show` nesta sessão (§5 repete os status). Este §4 substitui o TODO da v2 — itens máximos com dono/link/critério; a v2 fica como histórico do raciocínio D1–D6 (§3).
 
 ### Meu lane próximo (ordem executiva)
+
 | # | Item | Bead (status real) | Referências no plano | Aceite |
 |---|------|--------------------|----------------------|--------|
 | 1 | **Pouso do hotfix D1-D2** (reparar violações de pouso: PR `--no-ff` pós-verde, inventário de hunks, gates no SHA) | `flext-vo335` (OPEN P1) | §9.1 A0.3 | PR pós-verde; violações V1-V3 zeradas |
@@ -97,6 +102,7 @@ Sweep não está "feito" quando minha Lane fica verde; está feito quando o ambi
 | 7 | Onda-P autorizada → executar §11.1 nas ondas P1-P3 | proposta §11/§12(a) | §10-§11 | aceites §11.3 |
 
 ### Colaboração (dono: ator — não invadir)
+
 | Item | Bead | Nota |
 |------|------|------|
 | Reforma estrutural (namespace 83 / loc-cap 5 / duplication 57 / mypy 38 / tier-712) | `flext-1wjg1` (+filhas `flext-uuhc4`, `flext-y3qpq.*`) | absorver pós-pouso de `z82dg-nsloc` |
@@ -156,6 +162,7 @@ find . -name "*.bak" -not -path "*-worktrees/*" -not -path "*/.venv/*" -not -pat
 ## 9. Delta Sweep-2 (12:30–12:40 UTC, sessão principal — consolidado SEM duplicar a revisão v2 acima)
 
 ### 9.1 Consolidação de beads entre lanes (lei: um dono por assunto)
+
 | Ação | Resultado |
 |------|-----------|
 | `flext-3cabz` (classe idempotência) | ATUALIZADA 12:14Z: evidência da sessão (9/28 ci_matrix = fixed-point pyproject.toml pós-`3000b6bc0`; 1ª passada de `FlextInfraCodegenProjectNew` falha verify-fixed-point em tmpdir) + hipóteses H1/H2/H3 + método (difflib → `/tmp/fixed-point/*.log`) |
@@ -179,6 +186,7 @@ Conteúdo das lições desta sessão já redigido nos seguintes caminhos (pendê
 **Resolução pendente com a lei do operador (capsule-budget)**: unificar os dois caminhos — ou (i) ADR expandindo a cápsula para absorver os 6 artefatos, ou (ii) condensar as leis em atualizações de CORPO in-place sem arquivos novos (o que a lane fez com `bd remember` + `fleet-lane-discipline`). Recomendação: (ii) para respeitar o budget; os arquivos criados acima servem como RASCUNHO de conteúdo, a absorver in-place.
 
 ### 9.3 Estado do tip desta linha
+
 - Superproject `0.12.0-dev`: `355aaf83a1` (v2 da outra lane) — meu v3 foi sobrescrito antes do commit; região 9 = reconciliadora única fonte agora.
 - Autocrítica desta sessão (8 desvios + causa raiz) está contida em `flext-vo335` + seção 9.1 acima; complementa a A1-A9 da v2.
 

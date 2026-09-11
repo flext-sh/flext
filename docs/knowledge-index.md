@@ -90,6 +90,7 @@ project.
 ## Package Quick Reference
 
 <!-- AUTO-GENERATED TABLE: commence -->
+
 | Package | Class | Docs Portal | API Reference | Top Community |
 | --- | --- | --- | --- | --- |
 | flext-api | platform | [flext-api/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-api/docs) | [generated/flext-api.md](api-reference/generated/flext-api.md) | services-server |
@@ -123,6 +124,7 @@ project.
 | flext-target-oracle-wms | integration | [flext-target-oracle-wms/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-target-oracle-wms/docs) | [generated/flext-target-oracle-wms.md](api-reference/generated/flext-target-oracle-wms.md) | flext-tap-oracle-wms-tap |
 | flext-tests | test | [flext-tests/README](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-tests) | [generated/flext-tests.md](api-reference/generated/flext-tests.md) | flext-tests-compose |
 | flext-web | platform | [flext-web/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-web/docs) | [generated/flext-web.md](api-reference/generated/flext-web.md) | services-server |
+
 <!-- AUTO-GENERATED TABLE: end -->
 
 ## Cross-Reference Map
