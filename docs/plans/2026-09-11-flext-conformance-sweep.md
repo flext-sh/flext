@@ -150,3 +150,34 @@ find . -name "*.bak" -not -path "*-worktrees/*" -not -path "*/.venv/*" -not -pat
 ```
 
 *Plano vivente — atualizar a cada material-step. Próxima revisão: após `flext-2h0un` ou pouso do ator, o que vier primeiro.*
+
+---
+
+## 9. Delta Sweep-2 (12:30–12:40 UTC, sessão principal — consolidado SEM duplicar a revisão v2 acima)
+
+### 9.1 Consolidação de beads entre lanes (lei: um dono por assunto)
+| Ação | Resultado |
+|------|-----------|
+| `flext-3cabz` (classe idempotência) | ATUALIZADA 12:14Z: evidência da sessão (9/28 ci_matrix = fixed-point pyproject.toml pós-`3000b6bc0`; 1ª passada de `FlextInfraCodegenProjectNew` falha verify-fixed-point em tmpdir) + hipóteses H1/H2/H3 + método (difflib → `/tmp/fixed-point/*.log`) |
+| `flext-2h0un` (instância) | vinculada como instância da classe canônica `flext-3cabz` — root-cause único baixo 3cabz, sem fix duplicado |
+| `flext-p8sjy` (duplicata de `flext-9wwed`) | SUPERSEDED → 9wwed absorveu B2 (PATH-strip suspeito: stub uv hostil exit-99 vence provisionado = possível regressão de produto no dispatched-runner do Makefile.j2) |
+| `flext-vo335` (hotfix D1-D2) | ABERTA com violações V1-V3 registradas; reparo em A0.3 (PR `--no-ff` pós-verde) |
+| `flext-uw305` | confirmada CLOSED com 4 evidências — não tocar |
+
+### 9.2 Skills/rules/commands em `~/agents` — DRAFT pousado, LANE-EXTERNO
+Conteúdo das lições desta sessão já redigido nos seguintes caminhos (pendência: capsule-budget + coordenação da lane `~/agents`, cujo tree está dirty em voo — NÃO empurrar por cima; a revisão v2 da seção 7 decidiu NÃO Criar arquivos novos por ADR de budget 9.477/9.488):
+
+| Caminho | Conteúdo |
+|---------|----------|
+| `skills/framework/flext-development/SKILL.md` | seção "Landing law delta": pressão ≠ revoga lei de pouso; descarte de história pública exige inventário de hunks em bead; pre-push guard `make gen` ×2 byte-idênticos; pre-commit liveness pós-mutação de CI surface |
+| `skills/tool/beads/SKILL.md` | seção "Mutation coupling delta": bead ANTES da 1ª mutação; red → bead no mesmo turno com site/hipótese/gatilho; fechamento com 4 evidências |
+| `skills/project-wide/shell/make-check/SKILL.md` | seção "Idempotency pre-push guard": ×2 idêntico obrigatório; divergência 2ª passada = P0-produto; lock de journal = bead + kill owner, nunca `rm -f` |
+| `skills/agent-wide/verification/verification-loop/SKILL.md` | seção "Investigation protocol delta": hipótese→método antes de mutar; artefatos em ARQUIVO; orçamento força no teste, nunca no limite |
+| `rules/workflow/landing-and-sweep-law.md` | NOVO: descarte de história pública como efeito de produção; pressão não revoga pouso; idempotência como SLA; red capturada no turno |
+| `commands/implementation/conformance-sweep.md` | NOVO: comando do ciclo completo A0→A5 do sweep |
+
+**Resolução pendente com a lei do operador (capsule-budget)**: unificar os dois caminhos — ou (i) ADR expandindo a cápsula para absorver os 6 artefatos, ou (ii) condensar as leis em atualizações de CORPO in-place sem arquivos novos (o que a lane fez com `bd remember` + `fleet-lane-discipline`). Recomendação: (ii) para respeitar o budget; os arquivos criados acima servem como RASCUNHO de conteúdo, a absorver in-place.
+
+### 9.3 Estado do tip desta linha
+- Superproject `0.12.0-dev`: `355aaf83a1` (v2 da outra lane) — meu v3 foi sobrescrito antes do commit; região 9 = reconciliadora única fonte agora.
+- Autocrítica desta sessão (8 desvios + causa raiz) está contida em `flext-vo335` + seção 9.1 acima; complementa a A1-A9 da v2.
