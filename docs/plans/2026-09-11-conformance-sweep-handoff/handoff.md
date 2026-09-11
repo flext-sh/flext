@@ -15,7 +15,7 @@ mas **sempre** PR `--no-ff` → gates no SHA → prova de runtime.
 | Superfície | Estado |
 |---|---|
 | flext `origin/0.12.0-dev` | `396b359a1e` (zero-variable APPLY regenerado) |
-| flext-infra `origin/0.12.0-dev` | `bff592284` (Law 13 — CI steps com APPLY=Y) |
+| flext-infra `origin/0.12.0-dev` | `bff592284` (Law 13 — CI steps com) |
 | flext checkout local | `037a5cb561` (2° commits docs/plans `135de0efae`..: pendente de pousar via PR — **§12(d)**) |
 | Resíduo físico | `.bak` raiz = **0**; `persist_apply_backup` = **0** (grep no tip) |
 | Worktrees minhas | **NENHUMA** (todas retiradas com ancestry-proof) — abrir `hotfix/conformance-sweep-p` para Onda-P |
@@ -33,7 +33,7 @@ mas **sempre** PR `--no-ff` → gates no SHA → prova de runtime.
 
 ## 4. Contexto que precisa sobreviver (lições já codificadas — verifique, não re-derivo)
 1. **Tracker**: `env -u BEADS_DOLT_SERVER_DATABASE` para TODO comando `bd` neste tema (poluição de sessão causou horas de falso-bloqueio).
-2. **Provas por gerador**, nunca por find/grep literal (A7): gen ×2 byte-idêntico; grafo CRG fresco; `make mod APPLY=Y` é o único mutador; `make gen APPLY=Y` estampa.
+2. **Provas por gerador**, nunca por find/grep literal (A7): gen ×2 byte-idêntico; grafo CRG fresco; `make mod` é o único mutador; `make gen` estampa.
 3. **Fechamento de bead** cita o escopo exato verde NO momento; pipeline parcial nunca citado como verde — resto vira bead nova.
 4. **Regra nova** vaía ao SSOT do dono com snapshot-test (precedente `ban-ai-hub-crg-library-boundary.yml`).
 5. **Cápsula `~/agents` 9.477/9.488** — nenhum arquivo/índice novo sem ADR; absorção é in-place no corpo de skill existente (feita: `fleet-lane-discipline`).

@@ -134,7 +134,7 @@ Sweep não está "feito" quando minha Lane fica verde; está feito quando o ambi
 
 - **Skill `fleet-lane-discipline`** (fonte em `agents/skills/project-wide/coordination/`): nova seção "Conformance sweep over superprojects" (rollup gitlink com ancestry-proof, store do tracker por projeto, retirada de lane no mesmo ciclo, prova de regrowth só via gerador, não invadir reforma ativa, fleet-ping, fechamento de bead com escopo exato, rerun pós admin-merge, bulk edit com dono, budget ADR p/ índice novo). Commit agents `c387a9c5`.
 - **Fix-forward** no WIP de outro ator: `conformance-sweep-loop` frontmatter corrigido para a gramática canônica (`decision:ADR-0014`, tags ordenadas, `usage:on-demand`, descrição ≤96) — no mesmo commit.
-- **Débito registrado**: `make propagate` (render das projeções `.agents/`) está RED por cascade de **14 SKILL.md modifications de atores editando ao vivo** (09:22–09:28) — após o pouso dessas ondas, rerun `make propagate APPLY=Y` + `make check APPLY=Y` no repo agents.
+- **Débito registrado**: `make propagate` (render das projeções `.agents/`) está RED por cascade de **14 SKILL.md modifications de atores editando ao vivo** (09:22–09:28) — após o pouso dessas ondas, rerun `make propagate` + `make check` no repo agents.
 - **Memória flext `bd remember`**: lição condensada para `bd prime`. PENDING nesta sessão (registrar após rerun).
 - **Não criei nova skill/rule/command** em `~/agents/`: cápsula de governança está em **9.477/9.488 de orçamento** (folga ~11 chars) — toda entrada nova exige ADR de budget; atualização do CORPO de skill existente não cresce a cápsula. Expansão de índice = ADR própria com operador.
 
@@ -205,10 +205,10 @@ Conteúdo das lições desta sessão já redigido nos seguintes caminhos (pendê
 code-review-graph update                # grafo fresco (Built at == base de trabalho)
 code-review-graph impact --files <unit> # blast radius
 code-review-graph query tests_for <sym> # mapa de testes/rewiring
-make mod APPLY=Y                        # mutação estrutural via regra SSOT; ponto fixo = aceite
-make fmt APPLY=Y                        # formatação em massa
-make gen APPLY=Y; make gen APPLY=Y      # projeções; 2ª == 1ª é PRÉ-PUSH GUARD
-make check APPLY=Y; make test APPLY=Y   # gates; RED permanece RED (bead no turno)
+make mod                        # mutação estrutural via regra SSOT; ponto fixo = aceite
+make fmt                        # formatação em massa
+make gen; make gen      # projeções; 2ª == 1ª é PRÉ-PUSH GUARD
+make check; make test   # gates; RED permanece RED (bead no turno)
 ```
 
 Invariantes: (a) grafo atualizado a cada bloco, nunca navegar grafo velho (F6); (b) regra nova vai ao SSOT com snapshot-test (F3/F8), zero cópia local; (c) dead-code/impact recomendam corte só quando grafo e grep CONCORDAM — divergência = bug a registrar; (d) nenhum seletor `WHAT=` salvo necessidade declarada.
@@ -228,7 +228,7 @@ Branch: lane dedicada `hotfix/conformance-sweep-p` de `origin/0.12.0-dev` recém
 - [ ] `code-review-graph update` com `Built at` registrado em bead no início de cada bloco
 - [ ] 1 codemod novo no SSOT (driver H1/H2/H3 do fixed-point) COM snapshot-test
 - [ ] Loop aplicado nas ondas P1/P2/P3
-- [ ] `make gen APPLY=Y` ×2 idêntico em flext-infra antes de qualquer push
+- [ ] `make gen` ×2 idêntico em flext-infra antes de qualquer push
 - [ ] Gates verdes no SHA integrado (pós-merge), rerun registrado
 - [ ] Instância + ondas fechadas com 4 evidências; classe `flext-3cabz` colapsada a estado de referência
 

@@ -8,7 +8,7 @@
 |---|---|
 | `../2026-09-11-flext-conformance-sweep.md` | **Plano vivente**: §0 autoridade · §1 feito+evidências · §2 autocrítica A1-A9 · §3 produção D1-D6 · §4 TODO v3 (real) · §5 beads reais · §10 fatos de automação · §11 proposta Onda-P · §12 pedidos ao operador |
 | `handoff.md` | Prompt de retomada desta sessão (contexto, ambiente, método) |
-| `audit-2026-09-11.md` | **Auditoria documento×código** (governance-audit): drifts P1 (AGENTS.md regra 17 APPLY=Y), rascunhos untracked sem ADR, vínculo Onda-P→RC epic R4 — tabela com dono-corrige |
+| `audit-2026-09-11.md` | **Auditoria documento×código** (governance-audit): drifts P1 (AGENTS.md regra 17), rascunhos untracked sem ADR, vínculo Onda-P→RC epic R4 — tabela com dono-corrige |
 | Beads (tracker `flext-*`) | Estado vivo de execução — verifique com `bd show`, jamais de memória |
 | `/home/marlonsc/agents/skills/project-wide/coordination/fleet-lane-discipline/SKILL.md` | Lei da lane + stack de automação (commits `c387a9c5`, `3dd920fa`) |
 | `docs/guides/migration-to-v0.13.0.md` | Contrato breaking (APPLY zero-variable) do release v0.13.0 |

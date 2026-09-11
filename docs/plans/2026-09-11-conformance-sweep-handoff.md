@@ -14,7 +14,7 @@
 | **Worktrees de flext-infra** | `flext-infra/worktrees/promoted-framework-lift` (de outra lane — NÃO tocar) |
 | **~30 submódulos dirty** | `m` prefix (working-dirty) vs `[+SHA]` (gitlink divergente) — A0.2 triagem obrigatória ANTES de commit umbrella |
 | **Suíte de testes** | flext-infra: verde PARCIAL (27 pontuais em 6 arquivos); 9 reds ci_matrix (fixed-point pyproject.toml) + 3 timeouts make_environment + 1 ast-grep timeout (mod_circuit) + 1 git-identity (docs generator) |
-| **`make gen APPLY=Y`** | VERDE ×2 no escopo flext-infra repo; **PUSH ÉVitar** até fixed-point do pyproject (classe `flext-3cabz`) fechado |
+| **`make gen`** | VERDE ×2 no escopo flext-infra repo; **PUSH ÉVitar** até fixed-point do pyproject (classe `flext-3cabz`) fechado |
 | **crg graph** | `Built at commit 79dcca088` — STALE 2+ dias vs tip; rodar `code-review-graph update` antes de qualquer citação |
 | **Capsule-budget de ~/agents** | capsuula 9.477/9.488 (folga ~11 chars) — NÃO criar artifacts novos sem ADR; tudo novo vai in-place no corpo |
 
