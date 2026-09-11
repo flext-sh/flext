@@ -185,6 +185,54 @@ auditor — ver bead; prerequisite para F5.
 | Tags F5 | tag após gates no SHA mesclado; AI_HUB_CONSUMER gerado e versionado |
 | Docs | markdown gates verdes no super; zero texto duplicado entre docs (router-only). |
 
+## Onda de automação canonizada (pesquisa 2026-09-11 12:5x — APROVE-REQUEST]
+
+**Descoberta**: a plataforma já cobre o ciclo completo com verbos declarados;
+o plano v2 não explorava os escopos do `mod` nem o grafo de reviews.
+
+1. **`make mod APPLY=Y` NÃO "só ast-grep"**: executa ast-grep + fixed point +
+   Ruff + Pyrefly + **diagnósticos LSP reais** num único verbo. Escopos
+   declarados: `--module <dotted>`, `--namespace <c|m|p|t|u…>` — ondas por
+   módulo/slot, sem varrer a frota. Catálogo vivo: 101 regras yaml em
+   `flext-infra/src/flext_infra/codemod/rules/` (donos ADR-014).
+2. **`code-review-graph` (crg)** como ferramenta de agente (CLI ai-hub; nunca
+   dependência de código — regra `ban-ai-hub-crg-library-boundary.yml`):
+   `build`/`update --brief`, `detect-changes`, `impact <sym>` (raio de
+   explosão p/ pousos e PR reviews), `dead-code` (YAGNI objetivo p/ R2),
+   `refactor suggest`, `install`/`daemon` (hooks de watch), `doctor`.
+   Registry multi-repo JÁ contém `flext/flext-core`; grafo ausente
+   (doctor: critical) — primeira ação = `build`.
+3. **Ciclo canonizado** (documentado em skill+command novos em `~/.agents`):
+   `gen → mod (escopado) → fix → fmt → check → test → crg evidence →
+   commit escopado → FF push → PR → --no-ff integr. → gates no SHA →
+   crg update no tip`.
+
+### Piloto de homologação (proposta de objetivo produtivo)
+
+**Alvo**: colocar F1+R1 (gramática) em nível produtivo NA branch de
+integração `0.12.0-dev` e homologar via piloto real:
+
+- P0 — pouso infra+core (lanes → PRs → merge `--no-ff`, gates no SHA).
+- P1 — regime crg: `code-review-graph build` (core + infra tips mesclados) +
+  `daemon start` opcional durante a onda; `doctor` verde.
+- P2 — piloto consumidor: escolher 1 consumidor real (ai-hub plate) ->
+  baseline `codes-review-graph detect-changes` + consumer-grammar gate
+  **RED** (violações derivadas, ex. `flext_core.lazy`, `flext_cli.models`) →
+  fix forward dos consumidores no piloto → **GREEN** → evidência no bead
+  (4 fontes) + `AI_HUB_CONSUMER.md` base (F5 antecipado mínimo).
+- P3 — se RED→GREEN provado: elevar gate a strict nos membros (warn→hard)
+  e liberar F5 tags na linha 0.12.x.
+- P4 — espelhar pilot doctrine para R2 (duplitação consumer+família) nos
+  tips mesclados com crg `dead-code` como feed de resíduo.
+
+### Pedido de aprovação ao operador
+
+Aprovar (a) execução das ondas com o ciclo canonizado acima (gen→mod→gates→
+crg→pouso), (b) build/daemon do crg nos tips de integração, e (c) piloto
+P2 conforme descrito, com regime stop: **se P2 não prover RED→GREEN dentro
+do primeiro ciclo, mantenho warn e reporto** — nenhum rollout hard sem
+aprovação nova.
+
 ## Riscos vivos
 
 - Sessão concorrente no infra (rename `--repository-root`→`--ln`, namespace
