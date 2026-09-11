@@ -25,11 +25,11 @@ rules; this documentation never duplicates that registry.
 Run documentation and code validation only from the workspace root:
 
 ```bash
-make fix APPLY=Y
-make fmt APPLY=Y
-make check APPLY=Y
-make test APPLY=Y
-make conform APPLY=Y
+make fix
+make fmt
+make check
+make test
+make conform
 ```
 
 Do not invoke Ruff or another underlying tool directly. Do not add project,

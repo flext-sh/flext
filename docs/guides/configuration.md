@@ -36,11 +36,11 @@ source, never the member projection.
 Run configuration propagation and validation from the workspace root:
 
 ```bash
-make gen APPLY=Y
-make gen APPLY=Y
-make check APPLY=Y
-make test APPLY=Y
-make conform APPLY=Y
+make gen
+make gen
+make check
+make test
+make conform
 ```
 
 The second generation run must be a fixed point. Test validation retains the

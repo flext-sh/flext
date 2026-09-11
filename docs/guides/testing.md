@@ -29,7 +29,7 @@ workspace root `AGENTS.md` and the nearest package scope remain authoritative.
 Run tests only through the dispatcher at the workspace root:
 
 ```bash
-make test APPLY=Y
+make test
 ```
 
 The test verb owns test selection and the retained Testmon cache. Never clear or
@@ -38,7 +38,7 @@ bypass that cache, and never invoke the underlying test runner directly.
 Run the complete verification gate through the same dispatcher:
 
 ```bash
-make check APPLY=Y
+make check
 ```
 
 Selectors such as project names, file names, patterns, or changed-only flags are
@@ -51,7 +51,7 @@ Member copies of this guide are generated projections. Change this root source
 and regenerate from the workspace root:
 
 ```bash
-make gen APPLY=Y
+make gen
 ```
 
 Do not edit a member projection by hand.

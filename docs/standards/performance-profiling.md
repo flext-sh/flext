@@ -45,11 +45,11 @@ same change.
 ## Canonical validation
 
 ```bash
-make fix APPLY=Y
-make fmt APPLY=Y
-make check APPLY=Y
-make test APPLY=Y
-make conform APPLY=Y
+make fix
+make fmt
+make check
+make test
+make conform
 ```
 
 Do not invoke profilers, test runners, or other underlying tools directly. Do

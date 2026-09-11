@@ -34,8 +34,8 @@ After the final code/configuration edit, and before marking a Bead complete,
 you must prove all of the following from `~/flext`:
 
 ```bash
-make check APPLY=Y
-make test APPLY=Y
+make check
+make test
 ```
 
 Every Python test selection retains the canonical testmon cache; never bypass,

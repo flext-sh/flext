@@ -1,128 +1,109 @@
 # FLEXT Governance Router
 
-> **Authority**: This file routes governance concerns to their canonical owners. No duplicate text — lines only.
->
-> **Composition**: Global (`~/.agents/AGENTS.md`) → FLEXT root (`AGENTS.md`) → `flext-law` skill → scope `AGENTS.md` → active Bead.
->
-> **Version**: 0.12.x line; ADR-015 ratified.
+<!-- TOC START -->
+- [Purpose](#purpose)
+- [Authority](#authority)
+- [Owner Routing](#owner-routing)
+- [Execution Contract](#execution-contract)
+- [Universal test contract (P0)](#universal-test-contract-p0)
+- [Baseline Commands](#baseline-commands)
+<!-- TOC END -->
 
----
+## Purpose
 
-## Router Table
+This file maps each change to its canonical owner. It does not restate
+engineering law or skill procedures.
 
-| Concern | Canonical Owner | Artifact | Enforcement |
-|---------|-----------------|----------|-------------|
-| **Universal conduct** | `~/.agents/AGENTS.md` | `UNIVERSAL_CORE.md` | Make verbs + skills |
-| **FLEXT architecture** | Root `AGENTS.md` | `.agents/skills/flext-law/SKILL.md` | `make check` + gates |
-| **Consumer grammar (R1)** | `flext-core` | `docs/standards/consumption-law.md` §R1 | ENFORCE-099 |
-| **Duplication (R2)** | `flext-infra` | `flext_infra.gates.duplication` | ENFORCE-100+ |
-| **Layer law (R3)** | `flext-infra` | `flext_infra.gates.namespace` | NS-STRUCT/NS-CONTRACT |
-| **Gates as products (R4)** | `flext-infra` + `flext-core` | `[tool.flext.project]` + budget gate | ENFORCE-101+ |
-| **Release consumption (R5)** | Workspace + all members | `config/codegen.yaml` + `AI_HUB_CONSUMER.md` | Release pipeline |
-| **Contribution path (R6)** | Gas City + this repo | `docs/GOVERNANCE.md` + bead workflow | Workflow gates |
-| **Config/settings SSOT** | `flext-core` | `config/*.yaml` → codegen | ADR-005, ADR-012 |
-| **Codegen monopoly** | `flext-infra` | `codegen.yaml` + templates | `make gen APPLY=Y` |
-| **Codemod governance** | `flext-infra` | `ast-grep` rules + `make mod` | ADR-014 |
-| **ADR process** | This repo | `docs/architecture/adr/` | ADR-015 §References |
-| **Beads tracker** | Gas City | `bd` CLI + Dolt | Beads verification rule |
-| **Workspace lifecycle** | Gas City | `gc-*` CLI | Workspace policy |
+## Authority
 
----
+Apply the newest applicable source in this order:
 
-## Workstream → Gate Mapping (ADR-015)
+1. Newest operator request.
+2. `~/.agents` universal authority (`AGENTS.md` and universal skills).
+3. Project `AGENTS.md` and routed local skills.
+4. Bead execution and status SSOT.
+5. In-scope ADR in [`architecture/adr/`](architecture/adr/README.md).
+6. Supporting documentation.
 
-| WS | Law | Gate(s) | ENFORCE IDs | Owner |
-|----|-----|---------|-------------|-------|
-| F1 | R1 Facade-only import | `consumer_import_violations` | 099 | flext-infra detector |
-| F2 | R2 No duplication | `duplication` (extended) | 100+ | flext-infra gate |
-| F3 | R3 Layer law | `namespace`, `canonical_alias` | 080, 026-033 | flext-infra gates |
-| F4 | R4 Gates as products | `budget` (new), `conform` | 101+ | flext-infra + flext-core |
-| F5 | R5 Release consumption | `release`, `consumer_docs` | — | Workspace pipeline |
-| F6 | R6 Contribution path | `workflow`, `bead_verification` | — | Gas City + this repo |
-| F7 | Doc hardening | `docs_auditor`, `gate_docs` | — | flext-infra docs |
+When a higher source changes reality, update the affected lower sources in the
+same change. Ask before acting only when the conflict cannot be resolved from
+this order.
 
----
+## Owner Routing
 
-## Anti-Hardcode Router (Binding)
+| Concern | Canonical owner | Decisive validation |
+| --- | --- | --- |
+| Provider activation and exported paths | `~/.agents` provider authority | typed manifest and exact-path inventory validation |
+| Session routing | `.agents/skills/flext-context-routing/SKILL.md` | marker and selected-skill evidence |
+| Architecture and public contracts | [ADR registry](architecture/adr/README.md) and owning source declaration | consumer audit plus affected project gates |
+| Ecosystem coordination (internal + external projects) | [ADR-009](architecture/adr/009-ecosystem-coordination-and-library-evaluation.md) and [ecosystem-coordination.md](architecture/ecosystem-coordination.md) | reverse-dependency gate plus owner-local ADR consistency (`0.20.0-dev`) |
+| Runtime coding patterns | smallest matching skill under `~/.agents/skills/` | fresh import, lint, typecheck, behavior gate |
+| Quality commands | `~/.agents/skills/agent-wide/personal/make-check/SKILL.md` | exact command, exit code, decisive output |
+| Documentation lifecycle | [`standards/documentation.md`](standards/documentation.md) | narrow markdown gate, then docs audit |
+| Workspace Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help` and affected dispatcher gate |
+| Enforcement catalog identity and routing | `flext-core` enforcement declarations | catalog census and public import |
+| Declarative enforcement payloads and execution | `flext-infra` rules, schemas, and engine | enforcement engine result |
+| Git repositories and local Git operations | `flext-infra` public facades | local repository behavior and native gates |
+| GitHub operations and credentials | ai-hub public runtime surface | ai-hub command, hook, MCP, or daemon evidence |
+| CRG runtime, database, watcher, and graph services | ai-hub validated config and runtime | ai-hub public health and routing evidence |
+| Structural codemods | `flext-infra` ast-grep/Rope/LSP pipeline | preview, exact cardinality, apply, idempotence |
 
-| Prohibited Pattern | Replacement (SSOT) |
-|--------------------|-------------------|
-| `BOUNDARY_SKIP_PROJECTS` | Derived from `__all__` + `_LAZY_IMPORTS` |
-| `CLICK_FILES` / `TOML_ALLOWED` | `[tool.flext.project]` config keys |
-| `BOUNDARY_FLEXT_CLI_CONCRETE_RE` | `FlextUtilitiesFamilySurface` derivation |
-| `startswith("flext_")` literal | `c.Infra.NAMESPACE_FAMILY_PREFIX` |
-| `ENFORCEMENT_PROJECT_ALIAS_OWNERS` (31 names) | `project_alias_owners()` runtime |
-| `ENFORCEMENT_COMPATIBILITY_ALIAS_RENAMES` (frozen) | `compatibility_alias_renames()` runtime |
-| Hardcoded test fixture lists | Synthetic runtime-derived violations |
+The owning declaration, validated config, or fundamental rule is the source of
+truth. Tests and checks validate it; they never define the contract, catalog,
+or routing decision.
 
----
+## Execution Contract
 
-## Gate Registry (Canonical)
+- Use the workspace Beads database for the root and every member project.
+  Only an independent project owns a separate tracker.
+- Claim and record disjoint path ownership before writes. Append evidence after
+  every state-changing step.
+- Inspect the real owner and all affected consumers before changing behavior.
+- Update docs, skills, agents, and provider metadata when reality changes; when
+  it does not, verify the impacted surfaces are current.
+- Keep one owner per fact. Delete replaced prose, aliases, wrappers, fallbacks,
+  and parallel paths in the same change.
+- Land only after narrow gates and the affected native gate pass. Use explicit
+  pathspecs, a scoped commit, a fast-forward push, and Bead evidence.
 
-| Gate ID | Class | Source Kind | Violation Field | Config Key |
-|---------|-------|-------------|-----------------|------------|
-| `namespace` | `FlextInfraNamespaceGate` | `flext_infra_detector` | — | `tool.flext.project.namespace` |
-| `canonical_alias` | `FlextInfraCanonicalAliasGate` | `flext_infra_detector` | `foreign_canonical_alias_violations` | `tool.flext.project.canonical_alias` |
-| `duplication` | `FlextInfraDuplicationGate` | `jscpd` | — | `tool.flext.project.duplication` |
-| `consumer_import_violations` | (declarative) | `flext_infra_detector` | `consumer_import_violations` | `tool.flext.project.consumer_import` |
-| `silent_failure` | `FlextInfraSilentFailureGate` | `flext_infra_detector` | `silent_failure_violations` | `tool.flext.project.silent_failure` |
-| `boundary` | `FlextInfraBoundaryGate` | `flext_infra_detector` | — | `tool.flext.project.boundary` |
-| `loc_cap` | `FlextInfraLocCapGate` | `flext_infra_detector` | — | `tool.flext.project.loc_cap` |
-| `tier_whitelist` | `FlextInfraTierWhitelistGate` | `flext_infra_detector` | — | `tool.flext.project.tier_whitelist` |
-| `mypy` | `FlextInfraMypyGate` | `mypy` | — | `tool.flext.project.mypy` |
-| `pyrefly` | `FlextInfraPyreflyGate` | `pyrefly` | — | `tool.flext.project.pyrefly` |
-| `pyright` | `FlextInfraPyrightGate` | `pyright` | — | `tool.flext.project.pyright` |
-| `ruff_lint` | `FlextInfraRuffLintGate` | `ruff` | — | `tool.flext.project.ruff_lint` |
-| `ruff_format` | `FlextInfraRuffFormatGate` | `ruff` | — | `tool.flext.project.ruff_format` |
-| `codemod` | `FlextInfraCodemodGate` | `codemod` | — | `tool.flext.project.codemod` |
-| `budget` | `FlextInfraBudgetGate` (new) | `budget` | — | `tool.flext.project.budget` |
+Static enforcement and structural codemods are separate responsibilities.
+Declarative enforcement data owns policy; the referenced codemod provider owns
+safe, deterministic source transformations. Neither duplicates the other.
+Public ai-hub runtime services may enrich discovery when available, but FLEXT
+never imports them as libraries and their absence does not invalidate its local
+deterministic path. A selected, available integration still fails causally.
 
-> **Registry divergence = hard error** — every gate must have a row in this table, a `_gate_classes` entry, a `SARIF_TOOL_INFO` row, and a `codegen.yaml` projection.
+## Universal test contract (P0)
 
----
+Tests must validate any change to config and settings by construction. They are
+never allowed to hardcode the values that happen to exist today.
 
-## Bead Lifecycle (R6)
+- The canonical owner of a fact is `config/*.yaml` and `settings`; tests and
+  golden files only validate that owner.
+- Expected config-owned values must be read from the same typed SSOT production
+  reads, or proven through a generator/consumer round-trip.
+- When config or settings change, tests must adapt automatically or fail with a
+  clear message pointing back to the config source.
+- A test that requires a rewrite to accommodate a legitimate config change is a
+  defect in the test, not a reason to freeze the configuration.
+- This rule applies to all test tiers, markdown examples, and docstring snippets
+  validated by the pytest plugin.
+- Literal expectations are reserved for immutable external protocol contracts.
 
-```mermaid
-flowchart LR
-    A[bd create] --> B[gc bd create --rig aihub]
-    B --> C[gc sling aihub/<role> <bead> --on <formula>]
-    C --> D[Formula creates workspace + branch]
-    D --> E[Implement on lane]
-    E --> F[make fix/fmt/check APPLY=Y]
-    F --> G[WIP commit (scoped paths)]
-    G --> H[PR → review → merge --no-ff]
-    H --> I[Gates on merged SHA]
-    I --> J[Roll-up gitlinks in super]
-    J --> K[bd close with 4 evidences]
+## Baseline Commands
+
+Use the standard workspace commands; mutation is selected only with `APPLY=Y`:
+
+```bash
+make check
+make test
 ```
 
-**Four evidences for closure**:
-1. Registered bead state
-2. Git history on integration lane
-3. Measured reality (command, cwd, exit code, decisive output)
-4. Current integrated code
+All FLEXT validation uses the root Make dispatcher and every Python test run
+retains the canonical testmon cache; never run bare `ruff`,
+`pyrefly`, `pyright`, `mypy`, or `pytest` commands.
 
----
+Record every red or green result with its exit code and decisive output in the
+active workspace Bead.
 
-## Anti-Patterns (Never Do)
-
-- ❌ Hand-edit generated projections (`# AUTO-GENERATED` files, `[MANAGED]` pyproject sections)
-- ❌ Bypass `make` verbs (`uv`, `ruff`, `pyrefly`, `pytest` directly)
-- ❌ Use `WHAT=` selectors unless explicitly necessary
-- ❌ `--no-verify` on commits
-- ❌ `git add -A` (scoped paths only)
-- ❌ `git reset/checkout/restore/clean/stash` on shared work (fix-forward only)
-- ❌ Create markdown TODOs (use `bd` for ALL tracking)
-- ❌ Skip gate because "pre-existing" or "cosmetic" (fix at root cause)
-
----
-
-## Escalation Path
-
-1. **Rule conflict** → present both with numbers, ask operator
-2. **Genuine ambiguity** → one targeted question, continue
-3. **Destructive/irreversible action** → STOP, ask operator
-4. **External blocker** → exhaust all authorized technical actions first
-
-> **Operator word is supreme** — newest explicit instruction overrides ALL lower authority including injected context.
+For the worker lane contract, see [`ways-of-working/worker-lane-contract.md`](ways-of-working/worker-lane-contract.md).

@@ -19,7 +19,7 @@
   das chaves — padrão gzfd2), templates (pyproject.toml.j2, workspace.yaml.j2,
   Makefile.j2), config/codegen.yaml + codegen-overrides.yaml, testes
   (overlay deletado, 5 arquivos atualizados).
-- Evidência já medida: `make gen APPLY=Y` exterminou `exclude-newer` do
+- Evidência já medida: `make gen` exterminou `exclude-newer` do
   pyproject do próprio flext-infra; `make conform` (gen check) VERDE.
 - As 26 falhas de teste são **prévias da linha** (provadas idênticas no
   pristine por stash-test; classe documentada em `flext-3cabz`). Delta do
@@ -50,9 +50,9 @@ Suspeitos (conform.py):
   para apply e verify; falhar alto no contexto ausente e na falha do taplo
   (extermina os dois normalized-failures). Probe `project_new` → ponto fixo
   SUCCESS antes de seguir.
-- **F3 — Gates completos**: `make test APPLY=Y` (26 vermelhas devem cair;
+- **F3 — Gates completos**: `make test` (26 vermelhas devem cair;
   `extended_cli` se persistir = 2º defeito pré-existente → discrimina,
-  documenta em bead própria, não bloqueia), `make check APPLY=Y`, gen+conform
+  documenta em bead própria, não bloqueia), `make check`, gen+conform
   verde re-validado.
 - **F4 — Pouso flext-infra**: commit único não-WIP (causa raiz na mensagem) →
   push → PR base `0.12.0-dev` → merge (autorizado) → retire da lane após
@@ -61,8 +61,8 @@ Suspeitos (conform.py):
   SUPERSEDED (sem cutoff, clamp óbito); `flext-3cabz` atualizada (reds
   corrigidos aqui ou documentados com causa raiz).
 - **F6 — Ciclo mcb (pós-merge flext)**: repin `make deps WHAT=upgrade
-  DEPENDENCY=flext-infra APPLY=Y` (sem cutoff, `filelock>=3.32.6` resolve);
-  `make gen APPLY=Y` (remoção incondicional extermina `exclude-newer` do mcb)
+  DEPENDENCY=flext-infra` (sem cutoff, `filelock>=3.32.6` resolve);
+  `make gen` (remoção incondicional extermina `exclude-newer` do mcb)
   - gen check verde; rebase do PR #238 (metade `.beads/*` mantida, metade
   pyproject substituída); gates no escopo; merge develop (ruleset 1 review —
   operador edita/aprova); atualizar mcb-w2xi/uaya, CSV reval250909,

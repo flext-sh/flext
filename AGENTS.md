@@ -419,13 +419,13 @@ specifics and exclusions; it never copies or replaces either parent.
 (the root dispatcher forwards to each project). Use `make`, never bare `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
 
 ```bash
-# Standard workspace lifecycle. Mutation uses APPLY=Y only.
+# Standard workspace lifecycle. Mutation uses only.
 make setup
-make gen APPLY=Y
-make fix APPLY=Y
-make fmt APPLY=Y
-make check APPLY=Y
-make test APPLY=Y
+make gen
+make fix
+make fmt
+make check
+make test
 ```
 
 **Pinned toolchain**: versions declared in `config/codegen.yaml` scaffold.project.dev (ruff, mypy, pyright, pyrefly, pytest, etc.). Python strictly `>=3.13,<3.14`. The `.default-python-packages` file was removed; tool versions resolve through the cooldown-constrained SSOT.
@@ -463,12 +463,12 @@ the SSOT holds. Config/settings modules import only stdlib/pydantic/upstream bas
 ## Conventions & Patterns
 
 - **`**init**.py`, `constants.py`, `models.py`, etc. facet roots are AUTO-GENERATED**
-(`# AUTO-GENERATED FILE — regenerate through`make gen APPLY=Y`). Never hand-edit; change the codegen source in
+(`# AUTO-GENERATED FILE — regenerate through`make gen`). Never hand-edit; change the codegen source in
   `flext-infra`
-  - run `make gen APPLY=Y`.
+  - run `make gen`.
 - **Root `pyproject.toml` `[MANAGED]` sections** are rendered from
-  `flext-infra` templates + `config/codegen.yaml`; `make deps APPLY=Y` recalculates
-  floors in that YAML, then `make gen APPLY=Y` projects them. Never hand-edit.
+  `flext-infra` templates + `config/codegen.yaml`; `make deps` recalculates
+  floors in that YAML, then `make gen` projects them. Never hand-edit.
 - **Declaration layers are pure data:** models/protocols/constants/typings/settings/config carry ZERO methods
   (only Pydantic Field/validators/computed_field). Behavior lives only in `u`/services/`api`/`base`/`cli`.
 - **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No
