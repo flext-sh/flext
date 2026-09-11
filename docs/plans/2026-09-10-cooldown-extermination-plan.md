@@ -33,6 +33,7 @@ o verify-planeia desejado conformado (ordenado, sem headers). ~23 testes
 `test_codegen_ci_matrix` vermelhos por essa causa.
 
 Suspeitos (conform.py):
+
 1. Guard silencioso: `if workspace is not None and codegen is not None and
    repository is not None` (:1924) pula a conformação do pyproject.
 2. Fallback silencioso do taplo: `rendered = formatted.value if
@@ -62,7 +63,7 @@ Suspeitos (conform.py):
 - **F6 — Ciclo mcb (pós-merge flext)**: repin `make deps WHAT=upgrade
   DEPENDENCY=flext-infra APPLY=Y` (sem cutoff, `filelock>=3.32.6` resolve);
   `make gen APPLY=Y` (remoção incondicional extermina `exclude-newer` do mcb)
-  + gen check verde; rebase do PR #238 (metade `.beads/*` mantida, metade
+  - gen check verde; rebase do PR #238 (metade `.beads/*` mantida, metade
   pyproject substituída); gates no escopo; merge develop (ruleset 1 review —
   operador edita/aprova); atualizar mcb-w2xi/uaya, CSV reval250909,
   `bd remember` final.
