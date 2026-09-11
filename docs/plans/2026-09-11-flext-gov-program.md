@@ -19,7 +19,41 @@ Fechamento de bead = 4 evidências: (1) estado registrado, (2) git history na
 lane de integração, (3) realidade medida (comando/cwd/exit/output), (4) código
 integrado. **Nenhum bead fecha com WIP não pousado** — lição aplicada ao F1.
 
-## Snapshot (_commits_ e estados, 2026-09-11 12:30)
+## Snapshot (_commits_ e estados, 2026-09-11 13:10)
+
+STATUS LEGENDA: ◐ = `in_progress` no registro bd · ○ = `open` · ✓ = `closed`
+Fonte da verdade dos status: `bd list` (não o texto deste plano — qualquer
+divergência é erro DESTE plano e deve ser corrigido nele, ajustando o estado
+cadastrado, nunca o texto à mão para "concordar").
+
+### TODO vivo (1:1 com beads — verdade real `bd list`, nunca o texto)
+
+| Bead | Status real (bd) | Lane/branch · SKA no lane | Última evidência | Próxima ação (dono) |
+|---|---|---|---|---|
+| `flext-ssnc7` (epic) | ○ | — | filhos abaixo | fechar após filhos com 4 evidências |
+| `.1` F1 R1 | ◐ in_progress | core `feat/consumer-import-grammar` `6440f1529`+`14c63121d`; infra `feat/consumer-gates` `8c4ef3266`+`c8a429d59` | detector v2 (lineno real, raízes derivadas); budget v2 | detector v3 (asname + memo); pouso R6 (push→PR→`--no-ff`) — agente flext |
+| `.1.1` validação F1 | ○ | — | — | twin sintético RED→GREEN após pouso |
+| `.2` F2 R2 | ◐ in_progress | infra `feat/consumer-gates` `ba1e5ab70` | config reader consumer+family | contaminação cruzada; apagar `_scope_paths`; unificar `_read_project_config`; ENFORCE-100 — agente flext |
+| `.2.1` validação F2 | ○ | — | — | twin plantado RED após pouso |
+| `.3` F3 docs | ◐ in_progress | super `feat/flext-gov-consumption-law` `3ebf812055`+`b25d519d51` | ledger honesto (ENFORCE pendências declaradas) | gates markdown do super após P0 — agente flext |
+| `.4` F4 gates-as-products | ◐ in_progress | infra `ba1e5ab70`+`c8a429d59`; core `14c63121d` | budget deriva de `ALLOWED_GATES`; primitivas provadas em runtime | fsync/O_NOFOLLOW/EINTR; domínio único (`u.Cli` → core `u`); telemetria budget; verdadeiro projection em project_new — agente flext |
+| `.5` F5 tags/versão consumível | ○ (bloqueado por .1 + .4) | — | — | tags 0.12.x + `AI_HUB_CONSUMER.md` após pousos que satisfaçam gates |
+| `.6` F6 contribuição | ○ | — | R6 descrito em `GOVERNANCE.md` | formalizar gates de workflow (fluxo separado) |
+| `.7` F7 docs auditor | ○ | — | — | three-file gate docs + bijection (pré-requisito F5) |
+| `.8` F-AGE automação/piloto | ◐ in_progress | super `bcf2a130bb` (proposta) | ciclo canonizado; crg doctor diagnosticou graph crítico e registrou fix | AGUARDA APROVAÇÃO DO OPERADOR → P0 pouso → `crg build` → piloto RED→GREEN |
+
+Pipeline congelado: ver `~/.agents/commands/flext/gov-automation-cycle.md` (gen → mod escopado → gates → crg → pouso).
+
+### Como ler as SKAs (rastreabilidade)
+
+Cada linha do TODO aponta para commits reais em lanes locais (core:
+`feat/consumer-import-grammar`; infra: `feat/consumer-gates`; super:
+`feat/flext-gov-consumption-law`), todos com subjects `[WIP] <WS>` e
+commits escopados. Sem push: o pouso (push → PR → `--no-ff`) é um pedido
+de aprovação separado do operador, conforme R6 — nada de produtivo passa
+da lane sem autorização explícita.
+
+### Mapa SKA → conteúdo por repo (rastreabilidade dos [WIP])
 
 | Repo | Branch | SKA | Conteúdo |
 |---|---|---|---|
