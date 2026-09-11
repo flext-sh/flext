@@ -68,3 +68,14 @@ duplication 36 · mypy 13 · loc-cap 9 · tier-whitelist 1 · runtime-census 1.
 A ∥ C(depende de B) ∥ E imediato → D ∥ F(parte quando B fechar) → G.
 **Risco:** F5 (splits config.py 3390 / conform.py 2837) — reescrita real; subagente
 dedicado com validação por teste a cada extração.
+
+## Status 2026-09-11 (execução corrente)
+
+- **Fase A (flext-tests):** pendente — CI do tip não revalidado nesta sessão; teardown da materialização não executado.
+- **Fase B (templates + fixed point do root):** pendente.
+- **Fase C (sweep onda 2):** pendente.
+- **Fase D (3 beads de contrato): CONCLUÍDA.** `HookClientContract` projeta `fail_closed_events` (builder + degradação); `foreign_groups` skip de resíduo não-mapeado + descarte de grupos vazios; merge MCP substitui a root owned integral. Extras adotados no blast radius: rename `universal_core→governance_law` completado (modelo+builder), golden claude alinhado ao hook client in-tree, `fixed_socket_path` promovido a fixture compartilhada, credencial proxy pinada nos testes de config, fachada `AiHubGovernanceBundleService` + nesting `artifact_identity` corrigidos. Gate: verde em escopo (deploy 84, opencode 23, wip_hier 5, validate 58 testes) — PR ai-hub #728 (mergeable).
+- **Fase E:** feita na aprovação.
+- **Fase F (dívida estática):** waves não iniciadas. Baseline reconfirmado + 2 achados de dono: (1) gate `namespace` keyeado no dirname do checkout (flext-infra); (2) suíte ai-hub falha em pares rotativos de arquivos intocados (test-purity, bead aihub-70b34de6).
+- **Fase G:** parcial. Bead `aihub-l42it` com evidência completa; merge de #728 bloqueado por: (1) `ai-hub-model-pipeline.service` não ativa — CAS 409 "model or alias facts stale relative to CLIProxy" persiste após strip de voláteis; próximo passo de causa raiz: diffar `request.snapshot.inventory` (parseado) vs `liveInventory` do CCS no ponto do publish (`model-pipeline-publisher.ts:184`); (2) decisão de política: bead-exports rastreados embutem HOME na evidência vs validador de portabilidade.
+- **Frota (extra-session):** v3 do model-pipeline adotado no dono do CCS (`MODEL_PIPELINE_SCHEMA_VERSION 2→3`, build+restart, 400 de schema eliminado); recovery do pipeline anula candidato obsoleto em CAS 409; `flext-cli` click floor revertido+publicado e bumps `structlog` não-commitados revertidos — `uv lock --check` do umbrella exit 0; regras duráveis em `~/agents/rules/flext/process-owner-strictness.md`.
