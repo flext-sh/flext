@@ -19,7 +19,7 @@ dev = [
   "bandit>=1.8",
   "black>=25.1",
   "blacken-docs>=1.19",
-  "code-review-graph[all,embeddings]==2.3.6",
+  "code-review-graph[embeddings]==2.3.8+dc.2",
   "codespell>=2.3",
   "deptry>=0.23",
   "django-stubs>=6.0.6",
@@ -2346,6 +2346,10 @@ sort_first = ["build-system", "dependency-groups", "project", "tool"]
 
 [tool.uv]
 link-mode = "copy"
+
+[tool.uv.sources.code-review-graph]
+git = "https://github.com/marlon-costa-dc/code-review-graph"
+tag = "v2.3.8-dc.2"
 
 [tool.uv.sources.flext-api]
 workspace = true
