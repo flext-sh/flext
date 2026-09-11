@@ -22,7 +22,8 @@ from collections.abc import Mapping, MutableSequence, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
-from examples import ExamplesPermission, ExamplesServerType, m, p, r, t, u
+from examples import ExamplesPermission, ExamplesServerType, m, p, t, u
+from flext_core import r
 
 
 class AclProcessingExample:
