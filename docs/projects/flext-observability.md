@@ -1,5 +1,16 @@
 # FLEXT Observability
 
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Observability is the enterprise monitoring, metrics, and telemetry platform of FLEXT. It models every
 observability signal — metrics, traces, alerts, health checks, and log entries — as validated Pydantic entities, and
 records them through railway-oriented services, decorators, and instrumentation helpers shared by all downstream FLEXT

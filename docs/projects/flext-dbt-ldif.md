@@ -1,5 +1,16 @@
 # FLEXT dbt LDIF
 
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT dbt LDIF is the integration project that turns LDIF directory exports into analytics-ready dbt models. It composes
 `flext-ldif` (LDIF parsing), `flext-meltano` (dbt orchestration), and `flext-core` (result contracts, settings SSOT)
 behind one MRO facade that parses LDIF files, generates dbt model metadata, runs transformation workflows, and assesses

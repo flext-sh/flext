@@ -1,5 +1,16 @@
 # FLEXT Target LDAP
 
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Target LDAP is the Singer target that loads records into LDAP directories. It consumes Singer JSONL messages on
 stdin, resolves distinguished names, and writes entries through `flext-ldap`, composing the FLEXT facades with `flext-
 meltano` (Singer target base) behind `r[T]` contracts.

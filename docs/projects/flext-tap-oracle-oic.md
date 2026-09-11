@@ -1,5 +1,16 @@
 # FLEXT Tap Oracle OIC
 
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Tap Oracle OIC is the Singer tap that extracts integrations, connections, packages, and related entities from
 Oracle Integration Cloud (OIC). It composes the FLEXT facades with `flext-oracle-oic` (OIC connectivity) and `flext-
 meltano` (Singer tap base) behind `r[T]` contracts and the canonical `c/m/p/t/u` facade layout.

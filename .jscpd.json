@@ -20,6 +20,7 @@
     "**/__init__.py",
     "**/.github/**",
     "**/.claude/**",
+    "**/.opencode/**",
     "**/.agents/**",
     "**/.cursor/**",
     "**/.codex/**",

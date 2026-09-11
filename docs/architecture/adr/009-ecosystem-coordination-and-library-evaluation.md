@@ -9,8 +9,8 @@
   - [4. Coordination flow across all projects](#4-coordination-flow-across-all-projects)
   - [5. Neutral integration contract](#5-neutral-integration-contract)
   - [6. Platform selection (ecosystem-wide)](#6-platform-selection-ecosystem-wide)
-  - 7. Open libraries and possible new `flext-*` packages
-  - 8. Extraction gate for any new `flext-*` package
+  - [7. Open libraries and possible new `flext-*` packages](#7-open-libraries-and-possible-new-flext--packages)
+  - [8. Extraction gate for any new `flext-*` package](#8-extraction-gate-for-any-new-flext--package)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
@@ -41,7 +41,7 @@ The workspace root FLEXT project is the coordination point for a set of
 independent applications that all consume FLEXT foundations:
 
 - `cosmos-docgen`/`dcdoc` — document, proposal, and RCA artifact application.
-- DataOP (`/home/marlonsc.new/.leaks`) — dataset organization and evidence.
+- DataOP (`~/dataop`) — dataset organization and evidence.
 - DcBackup (`/home/datacosmos.bkp/datacosmos-backup`) — Google Workspace backup.
 
 Each has its own Beads tracker, its own ADRs, and its own release lifecycle.

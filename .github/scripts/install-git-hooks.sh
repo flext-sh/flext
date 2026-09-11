@@ -27,8 +27,8 @@
 set -euo pipefail
 
 VERBOSE="${1:-}"
-WORKSPACE_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-cd "${WORKSPACE_ROOT}"
+REPOSITORY_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+cd "${REPOSITORY_ROOT}"
 
 _log() {
 	if [[ "${VERBOSE}" == "--verbose" ]]; then
@@ -49,7 +49,7 @@ command -v bd >/dev/null 2>&1 || fail "bd is not installed; install Beads before
 
 _log "Git-hook stages disabled by config gate; skipping pre-commit install"
 
-_log "Installing Beads git hooks (chained) at ${WORKSPACE_ROOT}"
+_log "Installing Beads git hooks (chained) at ${REPOSITORY_ROOT}"
 bd hooks install --chain >/dev/null || fail "bd hooks install --chain failed"
 
 hook_path="$(git rev-parse --git-path hooks/prepare-commit-msg)"

@@ -1,5 +1,9 @@
 # Clean Architecture
 
+<!-- TOC START -->
+- No sections found
+<!-- TOC END -->
+
 Canonical detailed guidance:
 
 - `flext-core/docs/architecture/clean-architecture.md`

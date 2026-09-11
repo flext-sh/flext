@@ -1,5 +1,16 @@
 # FLEXT Tap Oracle
 
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Tap Oracle is the Singer extraction package for Oracle Database. Its
 executable source lives under `flext-tap-oracle/src/flext_tap_oracle/`.
 

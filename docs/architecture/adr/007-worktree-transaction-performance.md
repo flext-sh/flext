@@ -21,7 +21,7 @@
 
 ## Context
 
-`make build WHAT=artifacts` and similar mutating commands execute inside a
+Mutating commands using the worktree transaction execute inside a
 complete isolated Git worktree before any source change is applied. Profiling
 showed that the wall-clock time was dominated by:
 
@@ -83,15 +83,19 @@ Every performance change in this area must:
   the profiling protocol or adds/removes a fast path;
 - be landed through scoped commits and fast-forward pushes with Bead evidence.
 
+Long commands emit causal progress within one minute. Keep locks, bounded
+resources, and the persistent testmon cache. Helm operations remain serialized.
+
 Cache-like optimizations (e.g., reusing a Rope index) are allowed only when they
 have a documented invalidation strategy keyed by versioned inputs (file mtime,
 Git HEAD, pyproject hash) and a test that proves invalidation works.
 
 ### 4. No optimization may bypass gates or suppress diagnostics
 
-A faster command that produces a red lint/type/test gate is not acceptable. The
-transaction wrapper exists to detect breakage; any change that hides breakage
-is a regression, not an optimization.
+Optimization must not introduce or conceal regressions. Required gates retain
+their exit statuses and diagnostics. Individually accepted checkpoint debt does
+not turn a red gate green or waive a gate. The transaction wrapper must continue
+to detect breakage.
 
 ### 5. Generated-artifact linting is a single batched stage, not per template
 

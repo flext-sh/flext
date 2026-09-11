@@ -1,5 +1,16 @@
 # FLEXT gRPC
 
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT gRPC is the gRPC communication foundation of the FLEXT platform. It wraps grpcio/protobuf concerns behind typed
 Pydantic models and the `r[T]` contract, and exposes a single `FlextGrpc` facade (`grpc` alias) for building servers,
 clients, channels, and services with validated inputs. Package description: "FLEXT gRPC — High-Performance gRPC

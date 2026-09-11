@@ -8,16 +8,16 @@
   - [Arquivos a Verificar](#arquivos-a-verificar)
 - Métodos Deprecados e Migrações Obrigatórias
   - 1. tm (TestsFlextMatchers) - Métodos Deprecados
-  - 2. tt (TestsFlextFactories) - Métodos Deprecados
-  - 3. tf (TestsFlextFiles) - Métodos Deprecados
-  - 4. tv (TestsFlextValidator) - Verificar Uso Correto
-  - 5. tb (TestsFlextBuilders) - Verificar Uso Correto
+  - 1. tt (TestsFlextFactories) - Métodos Deprecados
+  - 1. tf (TestsFlextFiles) - Métodos Deprecados
+  - 1. tv (TestsFlextValidator) - Verificar Uso Correto
+  - 1. tb (TestsFlextBuilders) - Verificar Uso Correto
 - Padrões a Identificar e Corrigir
   - [1. Imports Incorretos](#1-imports-incorretos)
-  - 2. Uso de Métodos Privados ou Internos
+  - 1. Uso de Métodos Privados ou Internos
   - [3. Uso de Classes Aninhadas Deprecadas](#3-uso-de-classes-aninhadas-deprecadas)
-  - 4. Parâmetros Legacy/Deprecados
-  - 5. Uso de Métodos Não Documentados
+  - 1. Parâmetros Legacy/Deprecados
+  - 1. Uso de Métodos Não Documentados
 - Processo de Análise e Correção
   - Fase 1: Identificação Completa
   - Fase 2: Análise Contextual
@@ -27,8 +27,8 @@
   - [Para cada projeto](#para-cada-projeto)
 - Exceções e Casos Especiais
   - [1. Testes de Deprecation Warnings](#1-testes-de-deprecation-warnings)
-  - 2. Código de Compatibilidade
-  - 3. Métodos Internos Legítimos
+  - 1. Código de Compatibilidade
+  - 1. Métodos Internos Legítimos
 - Documentação de Progresso
 - [Resultado Esperado](#resultado-esperado)
 - Comandos Úteis
