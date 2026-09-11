@@ -6,7 +6,7 @@ import importlib.metadata
 from importlib.resources import files
 from pathlib import Path
 
-from flext_core import r, u
+from flext_core import u
 from flext_tests import tm
 
 
@@ -30,16 +30,17 @@ class TestReleasePackaging:
         repository_root = Path(__file__).resolve().parents[2]
         loaded = u.config_load(repository_root / "pyproject.toml")
         tm.that(loaded.failure, eq=False)
-        payload = loaded.value
-
-        tm.that(importlib.metadata.version("flext"), eq=payload["project"]["version"])
+        payload = loaded.unwrap()
+        project = payload["project"]
+        version = project["version"]
+        tm.that(importlib.metadata.version("flext"), eq=version)
 
     def test_root_distribution_is_bounded(self) -> None:
         """Release packaging excludes workspace-only repositories and state."""
         repository_root = Path(__file__).resolve().parents[2]
-        loaded: r[t.JsonMapping] = u.config_load(repository_root / "pyproject.toml")
+        loaded = u.config_load(repository_root / "pyproject.toml")
         tm.that(loaded.failure, eq=False)
-        payload = loaded.value
+        payload = loaded.unwrap()
         targets = payload["tool"]["hatch"]["build"]["targets"]
         expected_sdist_includes = ["README.md", "pyproject.toml", "src/flext"]
         expected_wheel_packages = ["src/flext"]
