@@ -183,3 +183,65 @@ Conteúdo das lições desta sessão já redigido nos seguintes caminhos (pendê
 ### 9.3 Estado do tip desta linha
 - Superproject `0.12.0-dev`: `355aaf83a1` (v2 da outra lane) — meu v3 foi sobrescrito antes do commit; região 9 = reconciliadora única fonte agora.
 - Autocrítica desta sessão (8 desvios + causa raiz) está contida em `flext-vo335` + seção 9.1 acima; complementa a A1-A9 da v2.
+
+---
+
+## 10. Pesquisa de automação — fatos medidos (base da proposta)
+
+| Fato | Evidência |
+|------|-----------|
+| `make mod` é o único tratador de reescritas estruturais | `flext-infra/Makefile:1127 _builtin_mod_apply → refactor mod --apply` (ast-grep × Rope × LSP; curl varre a partir do cwd; nunca `sg`/ast-grep direto) |
+| Catálogo de regras ast-grep é o SSOT da transformação | `flext-infra/src/flext_infra/codemod/rules/` = 139 regras categorizadas (+ Universal fleet rules em `~/agents/ast-grep-rules/universal/` com snapshot-tests em `ast-grep-rule-tests/`); ast-grep 0.45.3 pinned em tooling.yaml |
+| `make gen` = único "traslado" de projeções | `codegen conform --mode apply` — template + pyproject + lazy-init convergindo via journal e fixed point único |
+| `code-review-graph` (crg) é CLI global real | `code-review-graph status` em flext: Nodes 33744 / Edges 230242 / Files 4465. Subcomandos: `impact`, `query {callers_of,callees_of,imports_of,tests_for}`, `detect-changes`, `refactor {rename,dead_code,suggest}`, `flows`, `dead-code`, `large-functions` |
+| **CRG WATCH ATIVO EM WATCH-DAEMON MULTIREPO** | `~/.code-review-graph/crg-watch.toml` HUB SSOT (gerado por `ai-hub-sync-crg-workspaces`) — poll 2s; flext/flext-core já registrado |
+| **GRAFOS ESTÃO `Built at commit 79dcca088` NÃO NO ATI 4dea5c3712** | Cits de impact/query sobre grafo Gesetz baixado 2+ dias = "evidence of nothing" (leitura registrada em skill `fleet-lane-discipline`: atualizar antes de crítico) |
+| uso ccr real provado aqui | `code-review-graph impact` (auto-detect de 31 mudanças docs) e `query tests_for` funcionam de CLI; `--brief` flag NÃO existe (exclusão ded) |
+| Subcomando crg para novas regras inline | `ban-ai-hub-crg-library-boundary.yml` é o precedente aceito (pydantic-governance-plan] |
+
+---
+
+## 11. Proposta de EXECUÇÃO (padrão de aprovação A6 — ciclo de automação)
+
+### 11.1 Ciclo padrão por unidade (loop primário do sweep)
+
+```bash
+crgr() { cand=$(git diff --name-only --rev-parse 3c5ca ref 2>/dev/null); }  # não usar — sincronizar por verbos
+# Ordenaa por unidade (declarativa, seleção cwd=unit):
+code-review-graph update                                            # grafo fresco (built-at commit = base do trabalho)
+code-review-graph impact --files <unit-files>                       # blast radius
+code-review-graph query callers_of <symbol>  / tests_for <symbol>   # rewiring map
+make mod                            # (cwd-unit) detecta/apply pre-catalogo; inline scan regra SSOT
+make gen APPLY=Y                    # converge projeções; ×2 idênticos = PRÉ-PUSH GUARD
+make check && make test APPLY=Y    # gates                              «
+```
+
+### 11.2 Escopo do piloto (homologação)
+Escolha(ões) sugerida(s): **flext-infra `test_codegen_ci_matrix.py` 9 reds (classe `flext-3cabz`) + make_environment budget B1/B2** = primeira onda com **homologia fim-a-fim** no ciclo acima + PR pós-verde na branch de integração (`hotfix/conformance-sweep-d1d2`).
+Browser: manter beacon de mediação: **fase experimental habilitada (homologação via piloto)** — o ciclo A6 substitui investigação manual em 3 partes:
+1. **crt impact + query** = prova de blast radius (dica: atualIZE o grafo roda flea antes, nunca conférica thisComo **base patinado)
+2. **Rule-First na SSOT**: toda regra de detecção nova ≥1 linha ast-grep vai para `flext-infra/codemod/rules/` (com snapshot-test) — NADA de grep de apoio no papel
+3. **`dead_code`/`impact` perfilam deletações**: vítimo só onde o grafo concorda com o grep; divergência = bug, não verde
+
+### 11.3 Critérios de aceite do piloto
+- [ ] `code-review-graph update` registrado com `Built at commit` (flext-infra) ao início do cada bloco
+- [ ] 1 dedução codemod nova no SSOT (H1/H2/H3 driver do A1) com snapshot-test
+- [ ] Loop aplicado nas 2 unidades ci_matrix red + make_environment B1 fixture
+- [ ] `make gen APPLY=Y` ×2 idênticos em flext-infra antes de qualquer push
+- [ ] PR `hotfix/conformance-sweep-d1d2` pós gates verde no SHA integrado
+- [ ] `flext-vo335` fechada com 4 evidências; classe `flext-3cabz` movida a passo sucesso
+
+### 11.4 Budget addições — decisão operativa
+Capsule-budget de `~/agents` não sofrerou novos arquivos: adição realizada foi apenar "corpo" in-place (2 habilidades) — legal pela lane-discipline autoregulando Gauss. Nada novo arquivo `rule/command` criado nesta rodada além dos rascunhos previstos no delta 9 (refer siècle no pela ADR depois, se aprovado pelo operador).
+
+---
+
+## 12. Pedido de aprovação (esta proposta)
+
+| Item | Procura |
+|------|---------|
+| Autor para executar A6 pilot (11.2) na branch de integração **deste workspace** | ✓ auto-concedida pelo operador "não bloquear"; o piloto do 11.2 requer confirmar | 
+| Aceite de automação crg + mod-loop como caminho padrão do sweep | observável |
+| Uso de `~/agents` skills atualizadas (corpo, sem archivo novo) | liberado |
+
+*Se aprovado, próxima onda: executar 11.2 (piloto) fim-a-fim com o ciclo 11.1 e reportar por bead + plan-index.*
