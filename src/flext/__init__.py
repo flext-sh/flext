@@ -9,6 +9,8 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
+    from flext_core import d, e, h, r, s, x
+
     from .constants import FlextRootConstants, FlextRootConstants as c
     from .models import FlextRootModels, FlextRootModels as m
     from .protocols import FlextRootProtocols, FlextRootProtocols as p
@@ -21,10 +23,16 @@ __all__: tuple[str, ...] = (
     "FlextRootTypes",
     "FlextRootUtilities",
     "c",
+    "d",
+    "e",
+    "h",
     "m",
     "p",
+    "r",
+    "s",
     "t",
     "u",
+    "x",
 )
 
 _LAZY_IMPORTS = MappingProxyType(
@@ -35,6 +43,7 @@ _LAZY_IMPORTS = MappingProxyType(
             ".protocols": ("FlextRootProtocols", "p"),
             ".typings": ("FlextRootTypes", "t"),
             ".utilities": ("FlextRootUtilities", "u"),
+            "flext_core": ("d", "e", "h", "r", "s", "x"),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
