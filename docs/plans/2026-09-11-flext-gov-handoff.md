@@ -155,3 +155,47 @@ STOP, ask one precise question. Never "improve" mid-flight. Never feign
 success. Always `bd update <bead> --notes` with the exact command that
 fired the divergence (4 evidences for closure require git history on the
 integration lane, command/cwd/exit, decisive output, and code state).
+
+## 12. Reconciliação docs vs campo (auditoria 2026-09-11 final)
+
+Confrontado código real contra docs/ADRs/skills ANTES de autorizar pouso:
+
+- [OK] SKAs conferidos, `bd list | grep ssnc7` refletido 1:1 no TODO do
+  plano (fonte da verdade é ALWAYS `bd`, nunca o texto).
+- [OK] `infra-gov` lane: docs de gates gerados (Makefile/README/
+  pyproject/examples docs) foram reescritos pelo `make gen` — RESIDUO
+  NÃO COMMITADO na lane (files: `M Makefile M README.md
+  M docs/api-reference/... M pyproject.toml`). Próximo agente DEVE:
+  abrir a lane, rodar `make check` para validar dir, e commitar o
+  generated output por paths escopados ANTES do pouso — não migrar
+  para um lane novo.
+- [OK] `core-gov` lane: `.venv/`+`.ruff_cache/` sujos — que é ESPERADO,
+  não é trabalho em voo; commit escopado no primeiro ciclo da sessão
+  futura para não subir das contaminações.
+- [AWAITING] crg graphs ainda ausentes em ambas as lanes — `build` nos
+  tips integrados (A2 acima); `doctor` crítico até lá.
+- [AWAITING] ENFORCE-100 (R2) e 101 (R4 budget) ainda NÃO catalogados —
+  NÃO registrar como deliverado (F2/F4 fazem) — e NO R1 ainda são as
+  únicas linhas de enforcement do programa.
+- [LAW] F5 só abre depois de F1+F4 pousados com gates verdes; e
+  só após `warn→hard` pilot verde.
+
+## 13. Decreto de continuidade (OBRIGATÓRIO antes de qualquer efeito)
+
+- Reabrir o `docs/plans/2026-09-11-flext-gov-program.md` TODO e confirmar
+  que `bd list` e SKAs ainda casam depois de sincronizar (nunca pular).
+- Revalidar que as 3 lanes estão no mesmo estado de branch acima (se
+  algum agente mexeu no origin `0.12.0-dev`, rodar `git fetch` e aferir
+  ancestralidade com `git merge-base --is-ancestor`) antes do pouso
+  `--no-ff`.
+- As regras-guia do programa continuam nos FILES vivos: plan (TODO),
+  handoff (este), ADR-015, GOVERNANCE.md, consumption-law.md,
+  `~/.agents/{rules,skills,commands}/...`. Qualquer réplica re-gerada
+  por `agentsctl sync` recebe o conteúdo do arquivo canônico, nunca o
+  inverso (sync é delivery, não é dono).
+- END OF TURN protocol: ao cruzar cada aprovação (A1..A3) registrar
+  `bd remember` novo + update no bead dono + versos no plan/TODO antes
+  da re-execução. Nunca fiar conclusões em narrativa; tudo com
+  SKA/command evidence recolhida.
+
+STOP here. Re-read once more before mutating anything.
