@@ -2,7 +2,7 @@
 
 > **Authority**: This document is the canonical R1-R6 consumption standard for the FLEXT fleet. All enforcement derives from this law; no parallel rules or bypass lists exist.
 >
-> **Status**: ADR-015 ratified. Enforcement via ENFORCE-099 (consumer_import_violations) + ENFORCE-100+ (duplication, boundary, budget).
+> **Status**: ADR-015 ratified. Enforcement delivered: ENFORCE-099 (consumer_import_violations). Catalog rows for R2 duplication and R4 budget are **pending their next free IDs** (100, 101 — not yet registered in the enforcement catalog; landing them is part of WS-F2/F4 validation waves).
 >
 > **Version**: 0.12.x line; forward baseline 0.13.0.
 
@@ -51,7 +51,7 @@ duplication.threshold-percent = 0.0
 
 **Semantic classifier**: Only executable behavior counts (module licenses, docstrings, imports, TYPE_CHECKING blocks, class shells, function signatures, declaration-only assignments are excluded).
 
-**Enforcement**: `FlextInfraDuplicationGate` extended with consumer+family scope → ENFORCE-100+.
+**Enforcement**: `FlextInfraDuplicationGate` extended with consumer+family scope (config reader delivered); catalog row pending its next free ID (100) — registration belongs to WS-F2 validation.
 
 ---
 
@@ -96,7 +96,7 @@ duplication.threshold-percent = 0.0
 
 **Primitives**: `u.FlextUtilities.append_atomic(path, data)` — generic, reusable across fleet.
 
-**Enforcement**: budget gate (ENFORCE-101+) + conform check.
+**Enforcement**: budget gate delivered (`FlextInfraBudgetGate`, validates one declared budget row per `c.Infra.ALLOWED_GATES` gate); catalog row pending its next free ID (101) — WS-F4 validation. Runtime budget telemetry (measured time/memory in reports) remains open.
 
 ---
 

@@ -75,7 +75,7 @@
 | `ruff_lint` | `FlextInfraRuffLintGate` | `ruff` | — | `tool.flext.project.ruff_lint` |
 | `ruff_format` | `FlextInfraRuffFormatGate` | `ruff` | — | `tool.flext.project.ruff_format` |
 | `codemod` | `FlextInfraCodemodGate` | `codemod` | — | `tool.flext.project.codemod` |
-| `budget` | `FlextInfraBudgetGate` (new) | `budget` | — | `tool.fleft.project.budget` |
+| `budget` | `FlextInfraBudgetGate` (new) | `budget` | — | `tool.flext.project.budget` |
 
 > **Registry divergence = hard error** — every gate must have a row in this table, a `_gate_classes` entry, a `SARIF_TOOL_INFO` row, and a `codegen.yaml` projection.
 
