@@ -625,8 +625,6 @@ split-on-trailing-comma = false
   "assert",
   "compare-to-empty-string",
   "magic-value-comparison",
-  "PLC2801",
-  "SLF001",
   "undocumented-public-class",
   "undocumented-public-function",
   "undocumented-public-method",
@@ -863,7 +861,7 @@ exclude_docs = [
 site_title = "FLEXT Workspace"
 
 [tool.flext.namespace]
-scan_dirs = ["src"]
+scan_dirs = []
 
 [tool.flext.project.budget.lint]
 time-seconds = 30

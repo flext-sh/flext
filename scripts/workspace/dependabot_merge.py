@@ -195,9 +195,7 @@ def close_pr(slug: str, number: int, *, dry_run: bool, reason: str) -> bool:
     if result.failure:
         error_msg = f"Failed to close PR {number} for {slug}: {result.error}"
         raise e.OperationError(
-            error_msg,
-            operation="gh pr close",
-            reason=result.error or "unknown error",
+            error_msg, operation="gh pr close", reason=result.error or "unknown error"
         )
     return result.value.exit_code == 0
 
