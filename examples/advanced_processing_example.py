@@ -18,7 +18,8 @@ from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
-from examples import ExamplesStage, m, p, t, u
+from examples import m, p, t, u
+from examples._constants import ExamplesStage
 from flext_core import r
 
 type DataValue = t.JsonValue

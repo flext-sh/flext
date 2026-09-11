@@ -3,12 +3,26 @@
 from __future__ import annotations
 
 import importlib.metadata
+from collections.abc import Mapping
 from importlib.resources import files
 from pathlib import Path
-from typing import Any
 
-from flext_core import u
+from flext_core import t, u
 from flext_tests import tm
+
+
+def _section_of(payload: t.JsonMapping, *keys: str) -> t.JsonMapping:
+    """Narrow a nested config section through runtime type checks."""
+    node: t.JsonValue = dict(payload)
+    for key in keys:
+        if not isinstance(node, Mapping):
+            msg = f"expected mapping at key {key!r}"
+            raise TypeError(msg)
+        node = node[key]
+    if not isinstance(node, Mapping):
+        msg = "expected final section to be a mapping"
+        raise TypeError(msg)
+    return node
 
 
 class TestReleasePackaging:
@@ -31,9 +45,11 @@ class TestReleasePackaging:
         repository_root = Path(__file__).resolve().parents[2]
         loaded = u.config_load(repository_root / "pyproject.toml")
         tm.that(loaded.failure, eq=False)
-        payload: dict[str, Any] = loaded.unwrap()
-        project: dict[str, Any] = payload["project"]
-        version: str = project["version"]
+        project = _section_of(loaded.unwrap(), "project")
+        version = project["version"]
+        if not isinstance(version, str):
+            msg = "pyproject project.version must be a string"
+            raise TypeError(msg)
         tm.that(importlib.metadata.version("flext"), eq=version)
 
     def test_root_distribution_is_bounded(self) -> None:
@@ -41,10 +57,9 @@ class TestReleasePackaging:
         repository_root = Path(__file__).resolve().parents[2]
         loaded = u.config_load(repository_root / "pyproject.toml")
         tm.that(loaded.failure, eq=False)
-        payload: dict[str, Any] = loaded.unwrap()
-        targets: dict[str, Any] = payload["tool"]["hatch"]["build"]["targets"]
+        targets = _section_of(loaded.unwrap(), "tool", "hatch", "build", "targets")
         expected_sdist_includes = ["README.md", "pyproject.toml", "src/flext"]
         expected_wheel_packages = ["src/flext"]
 
-        tm.that(targets["sdist"]["only-include"], eq=expected_sdist_includes)
-        tm.that(targets["wheel"]["packages"], eq=expected_wheel_packages)
+        tm.that(_section_of(targets, "sdist")["only-include"], eq=expected_sdist_includes)
+        tm.that(_section_of(targets, "wheel")["packages"], eq=expected_wheel_packages)
