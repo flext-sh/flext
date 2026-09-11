@@ -1,107 +1,211 @@
-# PLANO — flext-gov: governance rules + gates (2026-09-11)
+# PLANO — flext-gov: governance rules + gates (2026-09-11) — v2
 
 > Aprovado pelo operador. Monopólio do tema no lado flext (WS-F1..F7).
 > Epico beads: `flext-ssnc7` (+ filhos `.1`–`.7`, validações `.1.1`/`.2.1`).
 > Programas irmãos NÃO são executados aqui: agents WS-A..D e ai-hub runtime
 > (WS-H1..H5) pertencem a outros agentes — coordenacao por workstream ID.
+>
+> **v2 (2026-09-11 12:35): autocrítica aplicada.** F1 reaberto (fechamento
+> prematuro: nenhum pouso em 0.12.0-dev). Detector/budget corrigidos na raiz
+> (`c8a429d59`). Ledger de docs alinhado à realidade (`b25d519d51`).
 
 ## Autoridade
 
 Operador > root `AGENTS.md` > `flext-law` skill > escopo > bead ativo.
-Uma autoridade por topico: lei de consumo nova = `docs/standards/consumption-law.md`
+Uma autoridade por tópico: lei de consumo = `docs/standards/consumption-law.md`
 + ADR-015; routing = `docs/GOVERNANCE.md` (linhas, nunca texto duplicado);
-identidade de enforcement = catalogo `flext-core`; motor/gates = `flext-infra`.
+identidade de enforcement = catálogo `flext-core`; motor/gates = `flext-infra`.
+Fechamento de bead = 4 evidências: (1) estado registrado, (2) git history na
+lane de integração, (3) realidade medida (comando/cwd/exit/output), (4) código
+integrado. **Nenhum bead fecha com WIP não pousado** — lição aplicada ao F1.
 
-## Decisoes confirmadas
+## Snapshot (_commits_ e estados, 2026-09-11 12:30)
 
-1. Gramatica R1 (derivada, nunca enumerada): legal no consumidor = `from <pkg>
-   import X` com `X ∈ pkg.__all__` (contrato lazy publicado). Qualquer
-   `pkg.<submodule>` é violação — inclusive facet modules (`flext_cli.models`),
-   reach-throughs (`flext_infra.workspace.detector`) e `flext_core.lazy`.
-   Facet modules continuam legais apenas intra-família. Fix hints derivados
-   invertendo `_LAZY_IMPORTS`. Primitiva publica de lazy-install no core raiz
-   elimina qualquer lista de isenção.
-2. ADR-015 (próximo livre; 011/012 existem só na linha 0.20.0-dev; 014 on-disk
-   não indexado — reparar índice no mesmo change).
-3. Pins: linha 0.12.x — tags nos tips verdes após gates; ai-hub pina tag.
-4. IDs: WS-F1..F7 (flext) + WS-H1..H5 (ai-hub, outro agente).
+| Repo | Branch | SKA | Conteúdo |
+|---|---|---|---|
+| flext-core (lane) | `feat/consumer-import-grammar` | `6440f1529` | F1 core: `FlextUtilitiesFamilySurface` (owners + renames 33 derivados), `part_03` constants |
+| flext-core (lane) | ˆ | `14c63121d` | F4 core: `FlextUtilitiesFiles` (`append_atomic`/`write_atomic`, payload `r[int]`), pin refresh infra→`bff59228` + cli |
+| flext-infra (lane) | `feat/consumer-gates` | `8c4ef3266` | F1 infra: detector + model + engine wiring |
+| flext-infra (lane) | ˆ | `ba1e5ab70` | F2/F4: duplicação consumer+family + budget gate |
+| flext-infra (lane) | ˆ | `c8a429d59` | Autocrítica: detector v2 grounded; budget deriva de `ALLOWED_GATES` (−64 LOC líquida) |
+| super (lane) | `feat/flext-gov-consumption-law` | `3ebf812055` / `b25d519d51` | F3 docs + ledger honesto |
+
+Pins vivos (core lane `uv.lock`): flext-infra `rev=0.12.0-dev#bff59228`,
+flext-cli re-resolvido. **Nunca rodar `uv sync` sem
+`UV_PROJECT_ENVIRONMENT=$PWD/.venv VIRTUAL_ENV=$PWD/.venv`** (ver também
+`~/.agents/rules/flext/flext-venv-hermeticity.md` + `bd remember
+fleet-venv-hazard`).
 
 ## Lei anti-hardcode (vale TAMBÉM para tests)
 
-Listas de bypass/afrouxamento proibidas — exterminar. Fatos localizáveis via
+Listas de bypass/afrouxamento proibidas — exterminar. Fatos deriváveis de
 SSOT/código nunca fixados: gates derivam em runtime (`__all__`,
-`_LAZY_IMPORTS`, `importlib.metadata` namespace-shape, constantes `c.Infra`).
-Tests: violações sintéticas geradas em runtime sobre a superfície descoberta;
-baseline medido (RED no ai-hub) = evidência de bead, nunca fixture committada.
-Sem caminhos absolutos / referências fora do repositório; config keys apenas.
+`_LAZY_IMPORTS`, `importlib.metadata`, `c.Infra.ALLOWED_GATES`,
+`core_u.project_alias_owners()`). Tests: violações sintéticas geradas em
+runtime; baseline medido = evidência de bead, nunca fixture committada. Sem
+caminhos absolutos; config keys apenas.
 
-## Workstreams (beads)
+## Estado por workstream — entregue / lacunas / próximos (produção)
 
-| WS | Bead | Entrega |
-|---|---|---|
-| F1 | `flext-ssnc7.1` | Gramática de import consumer + cut-over SSOT (exterminar `ENFORCEMENT_PROJECT_ALIAS_OWNERS`, `ENFORCEMENT_COMPATIBILITY_ALIAS_RENAMES`, `BOUNDARY_SKIP_PROJECTS/CLICK_FILES/TOML_ALLOWED`, `BOUNDARY_FLEXT_CLI_CONCRETE_RE`, `startswith("flext_")`) + primitiva lazy-install pública + rows ENFORCE-099+ |
-| F1.v | `flext-ssnc7.1.1` | Validação sintética derivada RED/GREEN |
-| F2 | `flext-ssnc7.2` | Scan estrutural de duplicação consumer+família (`.2.1` valida com twin plantado) |
-| F3 | `flext-ssnc7.3` | consumption-law.md + ADR-015 + índice ADR + router rows |
-| F4 | `flext-ssnc7.4` | `[tool.flext.project]` + budget gate + atomic O_APPEND append (core `u`) + fixed-point exposure |
-| F5 | `flext-ssnc7.5` | Tags 0.12.x + AI_HUB_CONSUMER versionado (deps: F1, F4, F7) |
-| F6 | `flext-ssnc7.6` | Lei do caminho de contribuição |
-| F7 | `flext-ssnc7.7` | ADR-bijection + guarantee-owner no docs auditor; docs de gate em três arquivos |
+### WS-F1 — R1 grammática de import consumer · bead `flext-ssnc7.1` · REABERTO
 
-## Lanes (worktrees dedicadas — pecado nº 1 corrigido)
+**Entregue** (fatos, locais exatos):
+- R1 core: `flext-core/src/flext_core/_utilities/family_surface.py`
+  — `project_alias_owners()` + `compatibility_alias_renames()` (33 derivados
+  vs 22 da tabela congelada); constantes `c.NAMESPACE_FAMILY_PREFIX` e
+  `FAMILY_SURFACE_MIN_PUBLISHED` em
+  `_constants/_enforcement_parts/flextconstantsenforcement_part_03.py`.
+- R1 infra: `flext-infra/src/flext_infra/detectors/consumer_import_violations_detector.py`
+  — AST com `node.lineno` real; raio de família de
+  `core_u.project_alias_owners()`; wildcard/submódulo/símbolo-não-publicado
+  tipados; hint canônico via mapa de renames derivado.
+  Model `ConsumerImportViolation` em `_models/refactor_namespace_enforcer.py`;
+  wiring declarativo `declarative_enforcement.py` (`_INFRA_VIOLATION_FIELDS`);
+  catálogo ENFORCE-099 em
+  `flext-core/.../_enforcement_catalog_rows_parts/_parts/flextconstantsenforcementcatalogrows_part_01_b.py`.
 
-- `~/flext-work/flext-gov-super` → `feat/flext-gov-consumption-law` (docs/lei/ADR/plano)
-- `~/flext-work/flext-core-gov` → `feat/consumer-import-grammar` (F1 core)
-- `~/flext-work/flext-infra-gov` → `feat/consumer-gates` (F1/F4 infra)
+**Lacunas de qualidade** (owner explícito, fecham antes de pousar):
+1. `_published_symbols` importa a raiz por statement — memoizar por
+   execução de `detect_file` (escopo por arquivo OK).
+2. Aliases (`from flext_core import FlextResult as R`): o símbolo original
+   está em `alias.name` (correto); consumo que renomeia alias local
+   (`as Z`) entra falso-positivo se `alias.asname` usado no texto do
+   current_import — capturar `alias.asname or alias.name` para o texto.
+   ⇒ corrigir no detector v3 (pequeno).
+3. Validação sintética `.1.1` (RED/GREEN) não executada — twin plantado,
+   baseline RED medido, depois GREEN.
 
-Base de cada lane = `origin/0.12.0-dev` recém-buscado. Infra tem sessão viva no
-umbrella checkout — colisão só no pouso: absorver `--no-ff`, hunk a hunk,
-funcionalidade mais nova vence (lei 2026-09-07).
+**Próximo (ordem, comandos canônicos):**
+1. Detector v3 aliases + memo (lane core-gov→infra-gov), `make fix/fmt`;
+   teste unitário na infra via `make test APPLY=Y` (escopado).
+2. Prova em runtime: plantar violação sintética em `examples/` de um
+   membro e rodar o detector declarativo via engine (evidência RED).
+3. Ciclo de pouso R6: FF push → draft PR → review → `--no-ff` em
+   `0.12.0-dev` (core, depois infra) → gates no SHA mesclado.
+4. Fechar .1.1 e .1 com as 4 evidências.
 
-## Lei de execução
+### WS-F2 — R2 duplicação consumer+família · bead `flext-ssnc7.2`
 
-Make canônico apenas, `APPLY=Y` única flag de mutação; testmon via `make test
-APPLY=Y`; fail loud (warnings/skips/vazio = RED); evidência por claim (comando,
-cwd, exit, output decisivo); refactor-in-place, resíduo zero (código
-superseded deletado no mesmo change); docs atualizados no mesmo change;
-generated surfaces via `make gen APPLY=Y` + ponto fixo; subagentes leves só
-descoberta; thread principal dona dos efeitos sequenciados; WIP commitado por
-paths explícitos com frequência.
+**Entregue**: leitor de config `[tool.flext.project.duplication]`
+(scope/min-lines/min-tokens/mode/threshold) em
+`flext-infra/src/flext_infra/gates/duplication.py` `_read_project_config`
++ `JSCPD_CONSUMER_FAMILY_SCOPE`/`JSCPD_STRUCTURAL_BAN_FORMS` em
+`_constants/check.py`; escopo canônico ampliado
+(src/testes/scripts/examples/templates/config).
 
-## Pouso
+**Lacunas de qualidade (produção)**:
+1. **Contaminação cruzada de config**: `_render_scope_dirs` lê a config DO
+   projeto checado e aplica a TODOS os projetos descobertos no escopo do
+   scan — corrigir para scoped por projeto antes de qualquer baseline largo.
+2. `_scope_paths` legado duplica a lógica de escopo → apagar (resíduo zero).
+3. `_read_project_config` duplicado entre gates → dono único (helper em
+   `base_gate` ou `u.Infra`) — DRY/JSCPD.
+4. Riscos de rollout: ampliar escopo 8→10 linhas + dirs extras explode
+   findings no primeiro regen — waveform: baselines por membro em lane,
+   classificados debt-vs-defeito, antes do pouso; gate em warn→erro.
+5. Catálogo ENFORCE-100 (duplicação consumer scans) + validação `.2.1`
+   (twin plantado RED).
 
-Lane → commits escopados → FF push → PR → review → `merge --no-ff` em
-`0.12.0-dev` do membro → gates no SHA mesclado → prova em runtime integrado →
-roll-up de gitlinks no super após commits no remote → beads fechados com as
-4 evidências. F1/F4/F5 TAGGED antes do consumo ai-hub (registro por WS ID nos
-dois trackers).
+### WS-F3 — R3 lei de camadas · bead `flext-ssnc7.3`
 
-## Status (vivo — atualizar a cada passo)
+**Entregue** (lane super `3ebf812055` + `b25d519d51`):
+`docs/standards/consumption-law.md` (R1–R6 + anti-hardcode + registry);
+`docs/architecture/adr/015-consumer-consumption-law.md` (Accepted); índice
+ADR reparado (014 indexado; nota colisão 011/012–020 line, 016 reservado);
+`docs/GOVERNANCE.md` router (owners/distância; typo `fleft` corrigido;
+ENFORCE pendências declaradas corretamente).
 
-- 2026-09-11: beads criados (`flext-ssnc7*`); 3 lanes criadas dos tips frescos
-  (super `bfaf0ed861`, core `d8ff74d16`, infra `cd40faa1a`); F1 claimed
-  (in_progress).
-- 2026-09-11 04:38: F1 core LANE COMPLETA (WIP commit `6440f1529`):
-  - `FlextUtilitiesFamilySurface` adicionado em `src/flext_core/_utilities/family_surface.py`
-  - `project_alias_owners()`: deriva aliases publicados por pacote (substitui roster congelado)
-  - `compatibility_alias_renames()`: deriva mapa `Flext* -> letra` agrupando por módulo dono (33 renames derivados vs 22 tabela antiga)
-  - `part_03`: `NAMESPACE_FAMILY_PREFIX` (seed descoberta) + `FAMILY_SURFACE_MIN_PUBLISHED=1` (fail-loud instalação quebrada)
-  - `utilities.py`: compõe `FamilySurface` no MRO de `FlextUtilities`
-  - Fix/fmt/check cycle: ZERO findings nos meus arquivos (2 pyrefly + 1 mypy corrigidos)
-  - Descobertas valiosas: env hazard `UV_PROJECT_ENVIRONMENT` vaza de direnv; golden stale `_golden_public_api.json:1739` (`read_project_metadata` renomeado); infra option rename em voo (`--repository-root`→`--n`/`--ln`); 762 namespace + 38 silent-failure + 7 boundary + 1 tier-whitelist + 9 codemod = dívida pré-existente da reforma live (não meu delta)
-- 2026-09-11 05:30: F1 infra LANE COMPLETA (WIP commit `8c4ef3266`):
-  - `FlextInfraConsumerImportViolationsDetector` em `src/flext_infra/detectors/consumer_import_violations_detector.py`
-  - Implementa gramática R1: legal = `from <pkg> import X` com `X in pkg.__all__`; qualquer `pkg.<submodule>` é violação (facet modules, reach-throughs, flext_core.lazy); intra-family isento (facade assembly)
-  - `ConsumerImportViolation` model com `target_package`, `imported_path`, `imported_symbol`, `legal_symbols` para fix hints
-  - Integração declarativa: `_INFRA_VIOLATION_FIELDS` + `_detect_consumer_import_violations()`
-  - ENFORCE-099 no core (`part_01_b.py`: 4-import-law, flext-import-rules, flext-consumption-law)
-  - Fix/fmt/check: ZERO findings nos novos arquivos
-- 2026-09-11 06:55: F3 + F2 + F4 (docs + gates):
-  - **F3**: `docs/standards/consumption-law.md` (R1–R6 canônico + anti-hardcode + registry de gates em 3 fontes); `docs/architecture/adr/015-consumer-consumption-law.md` (Accepted); índice ADR reparado (ADR-014 indexado + nota de colisão 011/012/016); `docs/GOVERNANCE.md` router (owners por SSOT, anti-hardcode router, mapeamento WS→gate→ENFORCE)
-  - **F2**: duplicação consumer+family — `_read_project_config` `[tool.flext.project.duplication]` (scope/min-lines/min-tokens/mode/threshold), constantes `JSCPD_CONSUMER_FAMILY_SCOPE` + `JSCPD_STRUCTURAL_BAN_FORMS`; ENFORCE-099 já ativo
-  - **F4**: `[tool.flext.project.budget]` gate (`FlextInfraBudgetGate`: toda registered gate exige budget com time-seconds/memory-mb/tokens; registry divergence = erro) + row `SARIF_TOOL_INFO` + entrada no gate registry; **primitivas atômicas no core `u`** (`append_atomic` O_APPEND + `write_atomic` temp+rename, payload tipado `r[int]` — `FlextResult[None]` é proibido pela lei) — provadas em runtime
-  - Pins re-resolvidos no core lane: flext-infra 3229dcc3→bff59228 + flext-cli refresh (resolveu crash de render `ci_private_submodules` + símbolo `Cli.AtomicDirectoryChainPlan`)
-  - WIP commits: core `14c63121d`, infra `ba1e5ab70`
-  - Descobertas: `FlextResult[None]`/payload None proibidos (base reject); bases de classe não são atributos da subclass (u.X sempre via MRO flat); mod pipeline cria checkpoint commit automático (contém venv! commits escopados obrigatórios)
-  - F1/F2/F3/F4 beads claimed/in flight; pendente: F5 (tags 0.12.x + AI_HUB_CONSUMER), F6 (contribuição), F7 (docs auditor/bijection)
-  - Próximo: validar gates synthesized RED (snowflake twin), F5 release-consumption quando F1+F4 estiverem landed
+**Próximo**: gates markdown do super (`make check` na lane — nunca
+executado; executar após merge dos PRs); consumo de cbh: registrar
+consultas de porta `consumption-law.md` no índice de docs do super
+(`docs/index.md` router, se houver); F6 contribuição (path) escreve seção
+própria referenciando R6 com link, sem duplicar texto.
+
+### WS-F4 — R4 gates-as-products · bead `flext-ssnc7.4`
+
+**Entregue**:
+- Budget gate `flext-infra/src/flext_infra/gates/budget.py` — gate set deriva
+  de `c.Infra.ALLOWED_GATES`, `BUDGET_REQUIRED_FIELDS`
+  (time-seconds/memory-mb/tokens) em `_constants/check.py`; pyproject
+  ilegível = falha alta (não confunde com ausente); row `SARIF_TOOL_INFO`
+  "budget" + entrada no registry (`workspace_check_gates.py`).
+- Primitivas atômicas `flext-core/src/flext_core/_utilities/files.py`,
+  compostas em `utilities.py` (MRO flat); provadas runtime: O_APPEND
+  (linha-atômica) + rename; payload tipado `r[int]` — **lei descoberta:
+  `FlextResult[None]` e payload None são proibidos** (reject na base do
+  Result).
+
+**Lacunas (produção)**:
+1. Durabilidade: append/write sem `fsync` — perder dados em queda; adicionar
+   `fsync` + loop EINTR/EWOULDBLOCK + `os.O_NOFOLLOW` (safety-path) —
+   parametrizar via constantes, nunca inline.
+2. Conflito de domínio: `u.Cli.atomic_write_text_file/_binário_fiel` já existem
+   na frota — **dono único**: migrar os chamados para `u.FlextUtilitiesFiles`
+   e apagar os duplicados (net-negative) OU converter these para delegar ao
+   core; NÃO manter dois donos (lei SSOT). Ping flext-cli lane.
+3. Budgets como constants vs config SSOT (ADR-005): thresholds tail
+   (`JSCPD_*`, `_DEFAULT_*` budget) migram para `config/codegen.yaml`
+   scaffold/budget seção (dados, não código) — make gen projeta.
+4. Telemetria: `_run_gate` mede tempo/memória e grava no GateExecution
+   (report/sarif) — budget vira enforcement real, não só validação de
+   presença; warn-1-ciclo-then-hard (lei de estabilização 2026-09-08).
+5. Exposição fixed-point: projeção `[tool.flext.project]` no scaffold de
+   project_new (consumidores novos surgem conformes).
+
+### WS-F5 — R5 release-consumption · bead `flext-ssnc7.5` (aberto)
+
+Depende F1+F4+F7. Plano de produção:
+1. Tags 0.12.x só em tips com gates verdes no SHA mesclado (proibido tag em
+   local-green).
+2. `AI_HUB_CONSUMER.md` versionado por release: gerado a partir de
+   consumption-law + changelog (não hand-edit); pipeline docs.
+3. ai-hub consome via pin de tag + verificação R1 no CI do consumidor
+   (baseline RED → refatorar → GREEN), registrado nos dois trackers por WS ID.
+
+### WS-F6 — R6 lei do caminho de contribuição · bead `flext-ssnc7.6`
+
+Corpo de R6 já escrito em `docs/GOVERNANCE.md` (lifecycle + 4 evidências);
+entregável restante: lei formalizada em `consumption-law.md §R6` já existe —
+faltam GATES de worlflow (WIP subjects, escopo de add, hook de merge) —
+tratar em flext-infra gates de workflow ou hooks (rastreio separado).
+
+### WS-F7 — docs bijection/owner · bead `flext-ssnc7.7`
+
+Docs de gate em três arquivos (law/governance/core docs), bijeckção no docs
+auditor — ver bead; prerequisite para F5.
+
+## Matriz produção (critérios de aceite)
+
+| Entregável | Aceite de produção |
+|---|---|
+| R1 gate | RED sintética → GREEN; zero hardcode de rostos; consumidores (ai-hub pilot) lintam com gate em CI; docs R1 validados |
+| R2 gate | baselines por membro classificados; threshold sob config SSOT; ENFORCE-100 registrado |
+| Budget | telemetria real em GateExecution; warn→hard após 1 ciclo verde; ENFORCE-101 |
+| Primitivas | domínio único (core-u), consumidores `u.Cli` migrados/deletados, fsync+O_NOFOLLOW, fixed point (+idempotence) |
+| Tags F5 | tag após gates no SHA mesclado; AI_HUB_CONSUMER gerado e versionado |
+| Docs | markdown gates verdes no super; zero texto duplicado entre docs (router-only). |
+
+## Riscos vivos
+
+- Sessão concorrente no infra (rename `--repository-root`→`--ln`, namespace
+  reform) — colisão só no pouso: absorver `--no-ff`, hunk-a-hunk, mais novo
+  vence (lei 2026-09-07).
+- CI do core tip d8ff já vermelho antes do delta (762 namespace etc.):
+  adotar no pouso; nunca varrer por cima.
+- Checkpoints do `make mod` incluem `.venv`/caches — commits sempre por
+  paths escopados.
+
+## Referências
+
+- Lei: `docs/standards/consumption-law.md` · ADR: 015 · router: `docs/GOVERNANCE.md`
+- Beads: épico `flext-ssnc7` (+ filhos; `.1` REABERTO); memórias: `fleet-venv-hazard`,
+  espaço técnico `technical-lesson-2026-09-05-xdist-silent-death` (padrão de lição em runtime)
+- Skills: `~/.agents/skills/framework/flext-gates-as-products/SKILL.md` (novo);
+  regra de registro: `~/.agents/rules/flext/gate-registry-ownership.md` (novo)
+- SHAs: core `6440f1529` `14c63121d`; infra `8c4ef3266` `ba1e5ab70` `c8a429d59`;
+  super `3ebf812055` `b25d519d51`
+- Arquivos-alvo: detector `flext_infra/detectors/consumer_import_violations_detector.py`;
+  budget `flext_infra/gates/budget.py`; duplicação `flext_infra/gates/duplication.py`;
+  primitivas `flext_core/_utilities/files.py`; family surface
+  `flext_core/_utilities/family_surface.py`; catálogo ENFORCE-099
+  `flext_core/_constants/_enforcement_catalog_rows_parts/_parts/flextconstantsenforcementcatalogrows_part_01_b.py`.
