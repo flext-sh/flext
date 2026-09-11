@@ -82,3 +82,11 @@ dedicado com validação por teste a cada extração.
 
 ### Adendo 2026-09-11 (cadeia de runtime do daemon, mapeada com evidência)
 Unidade roda `/home/marlonsc/ai-hub/.venv/bin/ai-hub model-pipeline-daemon`; runtime instalado `0.4.8+90bca03a6cec` perdeu `deployment.json` (falha fechada instantânea, sem saída). Rebuild bloqueado pela política de pins do release (`agents-governance @ git+ssh://…@v0.3.0` não publishable — dono: gate de release flext-infra). Desbloqueio na ordem: (1) resolver política do pin (https ou policy), (2) `make release-build` + `ai-hub runtime --action install`, (3) purge do estado stale já executado, (4) daemon bootstrap geração 1 (CCS vazio confirmado; v3 aceito; recovery void-on-409 e strip de voláteis já pousados). Depois: e2e `deployed_services_match_declaration` + merge #728.
+
+### Adendo 2 — mudanças por projeto (2026-09-11) + worktree dedicada
+- **ai-hub** (worktree dedicada `/home/marlonsc/ai-hub-wt/model-pipeline-v3`, 634M, branch `work/wip-hier-v3`, tip `995964e49`, PR #728 mergeable, reparada no registro após prune de terceiro): Fase D completa (fail_closed_events, foreign_groups skip, mcp root-replace), rename governance_law, golden in-tree, fixture socket compartilhada, fachada validate, recovery void-on-409, locks.
+- **flext-infra** (`0.12.0-dev` `a0effff42`): `private_direct_refs` (intermediário) → **substituído** pela regra geral "source pyproject é a SSOT" (passthrough verbatim + allow-direct-references deduzido); audit honra refs fonte; validate de namespace deriva forma/nomes do código, nunca de listas (absorção do achado dirname).
+- **flext (umbrella)**: plano atualizado 2x (`ba1dc8f2a9`, `6b005bb935`+); merges no-ff absorvendo origin.
+- **ccs** (`e2dc8e6c`): `MODEL_PIPELINE_SCHEMA_VERSION 3`, strip de voláteis no CAS, diff canônico no erro 409.
+- **~/agents**: `rules/flext/process-owner-strictness.md` novo.
+- **Dívidas registradas como itens do plano (lei estendida a tests):** (a) descobrir/executar o mecanismo canônico de install do runtime (elo não documentado) e ativar o daemon; (b) exterminar `class-nesting-mappings.yml` automatizando descoberta por SSOT; (c) fixture `FIXED_HOME` absoluta → tmp_path; (d) pares rotativos de purity (Fase F).
