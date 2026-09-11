@@ -31,6 +31,6 @@ portal.
 - [ADR-014: Family Part Shape, Rope, Codemod Rules](014-family-part-shape-rope-codemod-rules.md) — _Accepted, on-disk unindexed until this change_
 - [ADR-015: Consumer Consumption Law (R1-R6)](015-consumer-consumption-law.md) — _Accepted, `0.12.0-dev` line_
 
-> **Note**: ADR-011/012 exist only on `0.20.0-dev` line (forward baseline); collision risk recorded. ADR-016 reserved for future.
+> **Note**: ADR-011/012 exist only on `0.20.0-dev` line (forward baseline); collision risk recorded. ADR-016 reserved for future. On `0.12.0-dev`, the config/settings canonical pattern is owned by ADR-005 (§1–§2) plus the `_settings.py`/`_config.py` module docstrings — citations formerly pointing to "ADR-012 (config/settings canonical pattern)" were repointed there (`flext-z0zkq`, 2026-09-11); on the forward line ADR-012 is worktree transaction performance (= ADR-007 here).
 
 New ADRs should be added only when they represent a real architectural decision with an owning implementation path.
