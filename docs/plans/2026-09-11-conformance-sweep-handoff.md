@@ -1,0 +1,118 @@
+# Handoff — Sessão conformance sweep 2026-09-11 (12:43 UTC)
+
+> Commeo restrito: pega-o-voa. Este documento é o CURSOR completo para retomar o trabalho. Tudo o que era nesário para o próximo agente executar sem re-pesquisar está aqui, com endereços exatos.
+
+---
+
+## 1. Estado fino do projeto (verificado, não estimado)
+
+| Superfície | Estado |
+|------------|--------|
+| **Superproject** `/home/marlonsc/flext`, branch `0.12.0-dev` | tip local `516d9adc80` (pushed `4dea5c3712..516d9adc80`) |
+| **flext-infra** (submódulo) | HEAD `bff592284` — encadeado: meus `3000b6bc0` (cleanup APPLY 9 arq.) + `bff592284` (Law 13, **dono a verificar**, A0.1) |
+| **Base do meu pous** | `573eb3746` (wip `7a5e2e1e8` excisado via reset+cherry-pick→`dd65db77c`) |
+| **Worktrees de flext-infra** | `flext-infra/worktrees/promoted-framework-lift` (de outra lane — NÃO tocar) |
+| **~30 submódulos dirty** | `m` prefix (working-dirty) vs `[+SHA]` (gitlink divergente) — A0.2 triagem obrigatória ANTES de commit umbrella |
+| **Suíte de testes** | flext-infra: verde PARCIAL (27 pontuais em 6 arquivos); 9 reds ci_matrix (fixed-point pyproject.toml) + 3 timeouts make_environment + 1 ast-grep timeout (mod_circuit) + 1 git-identity (docs generator) |
+| **`make gen APPLY=Y`** | VERDE ×2 no escopo flext-infra repo; **PUSH ÉVitar** até fixed-point do pyproject (classe `flext-3cabz`) fechado |
+| **crg graph** | `Built at commit 79dcca088` — STALE 2+ dias vs tip; rodar `code-review-graph update` antes de qualquer citação |
+| **Capsule-budget de ~/agents** | capsuula 9.477/9.488 (folga ~11 chars) — NÃO criar artifacts novos sem ADR; tudo novo vai in-place no corpo |
+
+---
+
+## 2. Beads (the truth) — status real no bd
+
+| Bead | P | Status | O que falta |
+|------|---|--------|-------------|
+| `flext-vo335` (P1) | Hotfix D1-D2 + violações V1/V2/V3 | ABERTA | ordena A0.3: branch hotfix → PR → --no-ff → gates no SHA integrado |
+| `flext-3cabz` (P2) | Classe idempotência pyproject.toml | ABERTA (atualizada 12:14Z com H1/H2/H3 + método difflib→/tmp/fixed-point) | root cause + fix + teste de convergência |
+| `flext-2h0un` (P2) | Instância da 3cabz | ABERTA (linkada) | evidence-only |
+| `flext-9wwed` (P2) | Budget law + B2 PATH-strip | ABERTA (absorveu p8sjy) | B2 reproduzir PATH-strip com Makefile de fixture; B1 fixture ≤10s |
+| `flext-gxgqp` (P2) | Gate CI de backup-regrowth + keep_backup | ABERTA | impl |
+| `flext-p8sjy` | Duplicata de 9wwed | CLOSED superseded | — |
+| `flext-uw305` | requires_apply template | CLOSED (4 evidências) | — |
+| `flext-f73ii` (P3) | worktrees órfãs de conform | ABERTA | lock órfão de journal pertence aqui |
+| `flext-cpkk` (P0) | make check raiz CI block | ABERTA | desbloqueia pós-ator |
+| `flext-y3qpq.2/3/5` | R1 toolchain / R2 gates / R4 RC | ABERTOS | ordem R1→R5 rege |
+
+Regen: `env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json`
+
+---
+
+## 3. Onde está o conhecimento
+
+| Artefato | Caminho | Uso |
+|----------|---------|-----|
+| **Plano vivente** | `docs/plans/2026-09-11-flext-conformance-sweep.md` | §0 refs canônicas; §1 autocrítica 8 desvios; §3 SLAs de produção (SLA-1..5); §4 linhas de ação A0-A5; §5 riscos+gatilhos; §10 pesquisa crg/mód/rules; §11 ciclo de automação + piloto; §12 pedido de aprovação; §9 delta sweep-2 (colisão com lane oposta) |
+| Planos correlatos | `docs/plans/2026-09-09-fleet-consolidation-closure-plan.md`, `2026-09-10-cooldown-extermination-plan.md` | contexto |
+| ADRs workspace | `docs/architecture/adr/` (ADR-001..010) | decisões de arquitetura |
+| ADRs ~/agents | `~/agents/docs/adr/ADR-0012/0013` | crg-autopilot, fork versions |
+| Regra nova (RASCUNHO apt) | `~/agents/rules/workflow/landing-and-sweep-law.md` | leis: descarte histórico inventário prévio; push FF = viol; idempotência SLA; red no turn |
+| Comando (RASCUNHO apt) | `~/agents/commands/implementation/conformance-sweep.md` | ciclo completo A0→A5 |
+| Skills atualizadas in-place (CORPO, legal silo-budget) | `~/agents/skills/framework/flext-development` (landing delta), `tool/beads` (mutation coupling), `project-wide/shell/make-check` (pré-push guard ×2 + graph loop), `agent-wide/verification/verification-loop` (investigation protocol), `project-wide/coordination/fleet-lane-discipline` (graph freshness law) | seções novas no fim de cada SKILL.md — guardando conteúdo pendente ADR capsule |
+| Rules ast-grep SSOT | `flext-infra/src/flext_infra/codemod/rules/` (139) + `~/agents/ast-grep-rules/universal/` | toda regra nova com snapshot-test em `ast-grep-rule-tests/` |
+| crg capa CLI | `code-review-graph {status,update,impact,query,detect-changes,refactor,flows,dead-code,large-functions,update,doctor,daemon}` | automação de evidência |
+| bd remember (fila) | `fleet-stabilization-2026-09-08`, `lane-worktree-and-living-plan-law`, `operator-correction-learning` | lições absorvidas |
+
+---
+
+## 4. Como as conclusões foram obtidas (método, para reproduzir/validar)
+
+1. **Toda afirmação = comando + cwd + saída decisiva** (lei 117). Evidência por file-log (diff/difflib nunca stdout-códigos — codegen inunda).
+2. Bead ANTES de mutação; red → bead no MESMO cursor; fechamento = 4 evidências.
+3. Push FF na integração = **VIOL establecido**, reparo em A0.3 PR --no-ff pós-verde.
+4. Colisões entre lanes resolvidas por fix-forward + unificação de beads (3cabz classe / 2h0un instância / p8sjy→9wwed supersede).
+5. Todo-alviously-sempre reconstruído de: `bd list --status=open` + plan-index + skills body (nunca de memória narrativa).
+
+---
+
+## 5. Como remontar os TODOs (protocolo)
+
+```bash
+cd /home/marlonsc/flext
+env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json | jq -r '.[] | "\(.priority)\t\(.id)\t\(.title)"' | sort -n
+# 1. mapear cada bead → item do todo (flext-3cabz→A1, 9wwed→B1/B2, gxgqp→gate backup, cpkk→A3-locking-actor, f73ii→lock, vo335→A0.3)
+# 2. completar com o plan-index: docs/plans/2026-09-11-flext-conformance-sweep.md §4 (A0-A5) + §11 (piloto A6)
+# 3. marcar in_progress o piloto (crg update + trapézio 11.1 nas 9 reds ci_matrix + make_environment B1/B2)
+# 4. adição: capsule-budget resolução pendente ver §9.2 + seção 12 do plano
+```
+
+Estado alvo: **todo ↔ plano ↔ beads com MESMAS refs e status**; atualiza o todo a cada transição, turno a turno.
+
+---
+
+## 6. Ordem de retomada (primeiras 4 ações, em sequência)
+
+1. **crg update** e citação do built-at commit (todos os cliques subsequercitéticos de impact/query partem daí — §10 fatos)
+2. **Piloto A6 (§11.1 ciclo)** nas 2 unidades: ci_matrix red + make_environment B1/B2 fixture — ONE re-reg no snapshot-test; gate de aceite: ci_matrix 28/28 verde
+3. **A0.1+A0.2 paralelos** (proveniência bff592284 + triagem submódulos)
+4. **A0.3 fret**: hotfix branch → PR → --no-ff → gates no SHA merged → fechar flext-vo335
+
+---
+
+## 7. Proibições duráveis desta sessão (lidas no pós-mortem)
+
+- Não push FF na integração em nenhuma superfície sob pressão (leitura registrada)
+- Não criar bead "pré-existente" sem red uncaptured: red observada = bead no MESMO turn
+- Não citar grafo crg sem registrar seu Built at commit
+- Não `git add -A` em nenhum submodule/superprojeto
+- Não `rm -f` de lock de journal — bead `flext-f73ii` + kill do owner
+- Não invadir lantas ativas (`promoted-framework-lift`, `z82dg-nsloc`); absorver pós-merge
+- Não criar arquivos novos sob `~/agents/rules|commands|skills` sem ADR de capsule-budget; corpos in-place são livres
+
+---
+
+## 8. Numeros-chave (quick resume)
+
+| KPI | Valor |
+|-----|-------|
+| anos da sessão: commits superproject | 9 (4159c877b4 → 516d9adc80) |
+| commits flext-infra | 3 (dd65db77c, bff592284, 3000b6bc0) |
+| reds fixed-point testes ci_matrix | 9/28 — classe flext-3cabz |
+| Timeout testes make_environment | 3 ×60s — flext-9wwed |
+| verts strategy: VERDE hoje | flext-infra: gen ×2, workspace+docs-auditor+conform+make-env gate=27 testes pontuais |
+| crg | 33.744 nodes/230k edges, build 79dcca088 (stale) |
+
+---
+
+*Fim do handoff. Próximo agente: comece da seção 6, item 1.*
