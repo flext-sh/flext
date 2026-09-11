@@ -27,7 +27,7 @@ jobs:
         run: make setup
 
       - name: Check
-        run: make check APPLY=Y
+        run: make check 
 
       - name: Test
-        run: make test APPLY=Y
+        run: make test 

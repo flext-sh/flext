@@ -207,37 +207,6 @@ known_first_party = [
 ]
 pep621_dev_dependency_groups = ["dev"]
 
-[tool.flext.docs]
-exclude_docs = [
-  "/README.md",
-  "SUPPRESSIONS-RATIONALE.md",
-  "architecture/FLEXT_*.md",
-  "architecture/c4-model/**",
-  "architecture/clean-architecture.md",
-  "architecture/communities/README.md",
-  "architecture/data/**",
-  "architecture/deployment/**",
-  "architecture/flext-*-architecture.md",
-  "architecture/overview.md",
-  "architecture/plantuml/**",
-  "architecture/security/**",
-  "examples/**",
-  "planning/**",
-  "projects/flext-*.md",
-  "projects/flext-*/**",
-  "prompts/**",
-  "references/**",
-  "releases/**",
-  "reports/**",
-  "roadmap/**",
-  "scripts/**",
-  "standards/link-management.md",
-  "superpowers/**",
-  "type-system-architecture.md",
-  "utilities-guide.md",
-]
-site_title = "FLEXT Workspace"
-
 [tool.hatch.metadata]
 allow-direct-references = true
 
@@ -859,3 +828,36 @@ workspace = true
 
 [tool.uv.sources.flext-web]
 workspace = true
+
+[tool.flext.docs]
+exclude_docs = [
+  "/README.md",
+  "SUPPRESSIONS-RATIONALE.md",
+  "architecture/FLEXT_*.md",
+  "architecture/c4-model/**",
+  "architecture/clean-architecture.md",
+  "architecture/communities/README.md",
+  "architecture/data/**",
+  "architecture/deployment/**",
+  "architecture/flext-*-architecture.md",
+  "architecture/overview.md",
+  "architecture/plantuml/**",
+  "architecture/security/**",
+  "examples/**",
+  "planning/**",
+  "projects/flext-*.md",
+  "projects/flext-*/**",
+  "prompts/**",
+  "references/**",
+  "releases/**",
+  "reports/**",
+  "roadmap/**",
+  "scripts/**",
+  "standards/link-management.md",
+  "superpowers/**",
+  "type-system-architecture.md",
+  "utilities-guide.md",
+]
+site_title = "FLEXT Workspace"
+
+[tool.flext.namespace]

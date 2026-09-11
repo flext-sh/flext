@@ -28,15 +28,15 @@ that verb.
 Use the standard verbs directly from the workspace root:
 
 ```bash
-make gen APPLY=Y
+make gen
 make mod APPLY=Y
-make gen APPLY=Y
-make gen APPLY=Y
-make fix APPLY=Y
-make fmt APPLY=Y
-make check APPLY=Y
-make test APPLY=Y
-make conform APPLY=Y
+make gen
+make gen
+make fix
+make fmt
+make check
+make test
+make conform
 ```
 
 The final generation pass proves the fixed point. `APPLY=Y` is the sole mutation
@@ -45,7 +45,7 @@ be attached to a standard verb.
 
 ## Test contract
 
-Every test execution uses `make test APPLY=Y`. The verb owns impact selection and
+Every test execution uses `make test`. The verb owns impact selection and
 the retained Testmon cache, including complete-suite requests. Direct test-runner
 commands and cache-clearing bypasses are prohibited.
 
@@ -60,7 +60,7 @@ commands and cache-clearing bypasses are prohibited.
 
 The root dispatcher resolves workspace scope from its typed topology. Generated
 Make surfaces and documentation are changed at their template or configuration
-owner, then regenerated with `make gen APPLY=Y`.
+owner, then regenerated with `make gen`.
 
 ## Related guides
 
