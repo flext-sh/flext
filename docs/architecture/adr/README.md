@@ -28,5 +28,9 @@ portal.
   — _Accepted (planning, `0.20.0-dev`)_
 - [ADR-010: Unified project standardization (Make, scripts, tests, structure) via
   codegen](010-unified-project-standardization-via-codegen.md) - _Accepted and active, `0.12.0-dev`; forward baseline `0.13.0`_
+- [ADR-014: Family Part Shape, Rope, Codemod Rules](014-family-part-shape-rope-codemod-rules.md) — _Accepted, on-disk unindexed until this change_
+- [ADR-015: Consumer Consumption Law (R1-R6)](015-consumer-consumption-law.md) — _Accepted, `0.12.0-dev` line_
+
+> **Note**: ADR-011/012 exist only on `0.20.0-dev` line (forward baseline); collision risk recorded. ADR-016 reserved for future.
 
 New ADRs should be added only when they represent a real architectural decision with an owning implementation path.
