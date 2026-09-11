@@ -1,6 +1,7 @@
 # Plano 2026-09-11 — FLEXT Conformance Sweep — REVISÃO v2 (aprofundada, visão de produção)
 
-> **Status**: delta próprio 100% pousado e retirado; bloqueios residuais itemizados com bead, dono e critério de aceite.
+> **Status**: delta próprio 100% pousado e retirado; extermínio `.bak` preservado; **PROPOSTA P2 DE EXECUÇÃO — aguardando aprovação do operador (§10)**.
+> **Stack de automação global codificada**: skill `fleet-lane-discipline` (agents `3dd920fa`) — ver §9.
 > **Snapshot re-mediado**: flext tip `c7308e6791` (local, 2 docs commits à frente) · `origin/0.12.0-dev` `396b359a1e` · flext-infra `bff592284` · resíduo `.bak` raiz **0** · `persist_apply_backup` **0**.
 > **Método**: cada afirmação = comando + cwd + saída decisiva. Plano vivente (lei `lane-worktree-and-living-plan-law`).
 
@@ -186,62 +187,66 @@ Conteúdo das lições desta sessão já redigido nos seguintes caminhos (pendê
 
 ---
 
-## 10. Pesquisa de automação — fatos medidos (base da proposta)
+## 10. Pesquisa de automação — fatos medidos (fontes primárias)
 
-| Fato | Evidência |
-|------|-----------|
-| `make mod` é o único tratador de reescritas estruturais | `flext-infra/Makefile:1127 _builtin_mod_apply → refactor mod --apply` (ast-grep × Rope × LSP; curl varre a partir do cwd; nunca `sg`/ast-grep direto) |
-| Catálogo de regras ast-grep é o SSOT da transformação | `flext-infra/src/flext_infra/codemod/rules/` = 139 regras categorizadas (+ Universal fleet rules em `~/agents/ast-grep-rules/universal/` com snapshot-tests em `ast-grep-rule-tests/`); ast-grep 0.45.3 pinned em tooling.yaml |
-| `make gen` = único "traslado" de projeções | `codegen conform --mode apply` — template + pyproject + lazy-init convergindo via journal e fixed point único |
-| `code-review-graph` (crg) é CLI global real | `code-review-graph status` em flext: Nodes 33744 / Edges 230242 / Files 4465. Subcomandos: `impact`, `query {callers_of,callees_of,imports_of,tests_for}`, `detect-changes`, `refactor {rename,dead_code,suggest}`, `flows`, `dead-code`, `large-functions` |
-| **CRG WATCH ATIVO EM WATCH-DAEMON MULTIREPO** | `~/.code-review-graph/crg-watch.toml` HUB SSOT (gerado por `ai-hub-sync-crg-workspaces`) — poll 2s; flext/flext-core já registrado |
-| **GRAFOS ESTÃO `Built at commit 79dcca088` NÃO NO ATI 4dea5c3712** | Cits de impact/query sobre grafo Gesetz baixado 2+ dias = "evidence of nothing" (leitura registrada em skill `fleet-lane-discipline`: atualizar antes de crítico) |
-| uso ccr real provado aqui | `code-review-graph impact` (auto-detect de 31 mudanças docs) e `query tests_for` funcionam de CLI; `--brief` flag NÃO existe (exclusão ded) |
-| Subcomando crg para novas regras inline | `ban-ai-hub-crg-library-boundary.yml` é o precedente aceito (pydantic-governance-plan] |
+| # | Fato | Evidência (arquivo/comando) |
+|---|------|----------------------------|
+| F1 | `make mod` é o único mutador estrutural sancionado | `flext-infra/Makefile` `_builtin_mod_apply` -> `refactor mod` (compõe ast-grep × Rope × LSP); invocação direta de ast-grep é sonda de pesquisa, nunca mutação |
+| F2 | Regra plan composto em camadas herdáveis | `flext-infra/src/flext_infra/_utilities/codemod_rules.py` — universal -> runtime-transitivo -> local; regras herdadas via distribuições instaladas (= global de graça para consumidores) |
+| F3 | Catálogo SSOT de regras | `flext-infra/src/flext_infra/codemod/rules/**.yml` (regras de frota com snapshot-tests) + library de linguagem em `~/ai-hub/ast-grep-rules/` (anti-hardcode, agent-law contract, bans de boundary) |
+| F4 | `make gen` = único estampador de projeções | `codegen conform --mode apply`; aceite = segunda passada byte-idêntica (fixed point) |
+| F5 | CRG é CLI real e holística | binário `code-review-graph`; subcomandos: `status`, `update`, `impact --files`, `query {callers_of,callees_of,imports_of,tests_for}`, `detect-changes`, `refactor {rename,dead_code,suggest}`, `flows`, `dead-code`, `large-functions`; supervisor incremental via `ai-hub-watch-supervisor` + hub `~/.code-review-graph/crg-watch.toml` (`ai-hub-sync-crg-workspaces`) |
+| F6 | Grafo pode estar obsoleto | `Built at <commit>` != tip de trabalho -> `update` obrigatório ANTES de impact/query; grafo velho é evidência de nada (leitura já codificada na skill) |
+| F7 | Scope navigator para sites exatos | binário `scope` (cargo); índice fresco obrigatório; definições/referências exatas durante rewiring; grep só para literais |
+| F8 | Gramática de regra nova | precedente aceito: `codemod/rules/automation-infrastructure/ban-ai-hub-crg-library-boundary.yml` — regra nova entra no SSOT do dono com snapshot-test, nunca cópia local |
 
----
+## 11. Proposta de EXECUÇÃO — Onda-P: homologação via piloto (aguardando aprovação)
 
-## 11. Proposta de EXECUÇÃO (padrão de aprovação A6 — ciclo de automação)
-
-### 11.1 Ciclo padrão por unidade (loop primário do sweep)
+### 11.1 Ciclo primário por unidade
 
 ```bash
-crgr() { cand=$(git diff --name-only --rev-parse 3c5ca ref 2>/dev/null); }  # não usar — sincronizar por verbos
-# Ordenaa por unidade (declarativa, seleção cwd=unit):
-code-review-graph update                                            # grafo fresco (built-at commit = base do trabalho)
-code-review-graph impact --files <unit-files>                       # blast radius
-code-review-graph query callers_of <symbol>  / tests_for <symbol>   # rewiring map
-make mod                            # (cwd-unit) detecta/apply pre-catalogo; inline scan regra SSOT
-make gen APPLY=Y                    # converge projeções; ×2 idênticos = PRÉ-PUSH GUARD
-make check && make test APPLY=Y    # gates                              «
+code-review-graph update                # grafo fresco (Built at == base de trabalho)
+code-review-graph impact --files <unit> # blast radius
+code-review-graph query tests_for <sym> # mapa de testes/rewiring
+make mod APPLY=Y                        # mutação estrutural via regra SSOT; ponto fixo = aceite
+make fmt APPLY=Y                        # formatação em massa
+make gen APPLY=Y; make gen APPLY=Y      # projeções; 2ª == 1ª é PRÉ-PUSH GUARD
+make check APPLY=Y; make test APPLY=Y   # gates; RED permanece RED (bead no turno)
 ```
 
-### 11.2 Escopo do piloto (homologação)
-Escolha(ões) sugerida(s): **flext-infra `test_codegen_ci_matrix.py` 9 reds (classe `flext-3cabz`) + make_environment budget B1/B2** = primeira onda com **homologia fim-a-fim** no ciclo acima + PR pós-verde na branch de integração (`hotfix/conformance-sweep-d1d2`).
-Browser: manter beacon de mediação: **fase experimental habilitada (homologação via piloto)** — o ciclo A6 substitui investigação manual em 3 partes:
-1. **crt impact + query** = prova de blast radius (dica: atualIZE o grafo roda flea antes, nunca conférica thisComo **base patinado)
-2. **Rule-First na SSOT**: toda regra de detecção nova ≥1 linha ast-grep vai para `flext-infra/codemod/rules/` (com snapshot-test) — NADA de grep de apoio no papel
-3. **`dead_code`/`impact` perfilam deletações**: vítimo só onde o grafo concorda com o grep; divergência = bug, não verde
+Invariantes: (a) grafo atualizado a cada bloco, nunca navegar grafo velho (F6); (b) regra nova vai ao SSOT com snapshot-test (F3/F8), zero cópia local; (c) dead-code/impact recomendam corte só quando grafo e grep CONCORDAM — divergência = bug a registrar; (d) nenhum seletor `WHAT=` salvo necessidade declarada.
+
+### 11.2 Escopo do piloto (homologação fim-a-fim)
+
+| Onda | Unidade | Classe/bead | Gate do aceite |
+|------|---------|-------------|----------------|
+| **Wave-P1** | flext-infra `codegen_file_plan.py` + `conform.py` (composição pyproject apply/verify) | fixed-point drift (instância `flext-2h0un` sob classe `flext-3cabz`) | probe `project_new` ×2 byte-idêntico; 9 testes ci_matrix verdes; gen ×2 umbrella |
+| **Wave-P2** | 3 testes make_environment + ast-grep receipt timeout | budget law `flext-9wwed` | 0 timeout; suite <=120s/membro |
+| **Wave-P3** | gate de regrowth (fixture semeada) | `flext-gxgqp` | gate FAILS em fixture; umbrella verde |
+
+Branch: lane dedicada `hotfix/conformance-sweep-p` de `origin/0.12.0-dev` recém-fetchada (worktree dedicado — lei de lane); a branch de integração recebe apenas pouso via PR `--no-ff` pós-verde.
 
 ### 11.3 Critérios de aceite do piloto
-- [ ] `code-review-graph update` registrado com `Built at commit` (flext-infra) ao início do cada bloco
-- [ ] 1 dedução codemod nova no SSOT (H1/H2/H3 driver do A1) com snapshot-test
-- [ ] Loop aplicado nas 2 unidades ci_matrix red + make_environment B1 fixture
-- [ ] `make gen APPLY=Y` ×2 idênticos em flext-infra antes de qualquer push
-- [ ] PR `hotfix/conformance-sweep-d1d2` pós gates verde no SHA integrado
-- [ ] `flext-vo335` fechada com 4 evidências; classe `flext-3cabz` movida a passo sucesso
 
-### 11.4 Budget addições — decisão operativa
-Capsule-budget de `~/agents` não sofrerou novos arquivos: adição realizada foi apenar "corpo" in-place (2 habilidades) — legal pela lane-discipline autoregulando Gauss. Nada novo arquivo `rule/command` criado nesta rodada além dos rascunhos previstos no delta 9 (refer siècle no pela ADR depois, se aprovado pelo operador).
+- [ ] `code-review-graph update` com `Built at` registrado em bead no início de cada bloco
+- [ ] 1 codemod novo no SSOT (driver H1/H2/H3 do fixed-point) COM snapshot-test
+- [ ] Loop aplicado nas ondas P1/P2/P3
+- [ ] `make gen APPLY=Y` ×2 idêntico em flext-infra antes de qualquer push
+- [ ] Gates verdes no SHA integrado (pós-merge), rerun registrado
+- [ ] Instância + ondas fechadas com 4 evidências; classe `flext-3cabz` colapsada a estado de referência
 
----
+### 11.4 Orçamento de índice `~/agents` — decisão tomada
 
-## 12. Pedido de aprovação (esta proposta)
+Nenhum arquivo novo de skill/rule/command nesta rodada: cápsula 9.477/9.488 (folga ~11 chars). Codificação in-place no **corpo** de `fleet-lane-discipline` (commits agents `c387a9c5` + `3dd920fa`): "Conformance sweep over superprojects" + "Global automation stack for sweep execution". Os rascunhos da §9.2 ficam conteúdo-candidato a absorver in-place APÓS o pouso das lanes deles — sem push sobre tree dirty alheio. Expansão de índice = ADR separada com o operador.
 
-| Item | Procura |
-|------|---------|
-| Autor para executar A6 pilot (11.2) na branch de integração **deste workspace** | ✓ auto-concedida pelo operador "não bloquear"; o piloto do 11.2 requer confirmar | 
-| Aceite de automação crg + mod-loop como caminho padrão do sweep | observável |
-| Uso de `~/agents` skills atualizadas (corpo, sem archivo novo) | liberado |
+## 12. Pedido de aprovação (o que falta autoridade do operador)
 
-*Se aprovado, próxima onda: executar 11.2 (piloto) fim-a-fim com o ciclo 11.1 e reportar por bead + plan-index.*
+| Item | Status |
+|------|--------|
+| (a) Executar Onda-P (§11.2) em lane dedicada `hotfix/conformance-sweep-p` | **requer confirmação** — expande o escopo atual para homologação da stack |
+| (b) CRG + mod/gen-loop como caminho padrão do sweep | observável — já codificado na skill; confirmação consolida |
+| (c) Skills `~/agents` atualizadas (corpo, sem arquivo novo) | **liberado e executado** (`3dd920fa`) |
+| (d) Commits de planos vivos direto na integração — formalizar exceção OU migrar a PR | **decisão pendente** (autocrítica A5) |
+| (e) Débito repo agents: `make propagate` + `make check` após o pouso das ~14 SKILL.md em voo de outro ator | agendar pós-pouso deles |
+
+*Se (a) aprovado: abrir lane, aplicar o ciclo §11.1 nas ondas P1->P3, reportar por beads + este plano vivente.*
