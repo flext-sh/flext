@@ -29,6 +29,7 @@ appear in the full CRG wiki at `.code-review-graph/wiki/`.
 ## Significant Communities
 
 <!-- AUTO-GENERATED TABLE: commence -->
+
 | Community | Size | Cohesion | Language | Page |
 | --- | --- | --- | --- | --- |
 | codegen-infra | 688 | 0.1638 | python | [codegen-infra.md](codegen-infra.md) |
@@ -81,6 +82,7 @@ appear in the full CRG wiki at `.code-review-graph/wiki/`.
 | check-project | 57 | 0.3089 | python | [check-project.md](check-project.md) |
 | providers-validate | 56 | 0.3963 | python | [providers-validate.md](providers-validate.md) |
 | models-config | 55 | 0.0785 | python | [models-config.md](models-config.md) |
+
 <!-- AUTO-GENERATED TABLE: end -->
 
 ## Regeneration

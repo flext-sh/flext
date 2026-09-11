@@ -21,6 +21,7 @@
 5. Pins: operator word > orchestration > beads > ADRs > skills > docs.
 
 Hard refs for the fleet law themselves:
+
 - Global rules place: `~/.agents/rules/flext/` (incl. new
   `gate-registry-ownership.md`, and pre-existing `flext-venv-hermeticity.md`).
 - Global skill + command (automation cycle):
@@ -85,12 +86,12 @@ correct the pieces (or the actual bd state) to converge BEFORE faking.
 
  epic `flext-ssnc7` ○
  ├ `.1` F1 in_progress (reopened for premature close; detector v2 in place)
- │  └ `.1.1` open (validation twin synthetic RED→GREEN; starts after .1 lands)
+ │ └ `.1.1` open (validation twin synthetic RED→GREEN; starts after .1 lands)
  ├ `.2` F2 in_progress (config reader consumer+family; cross-contamination fix pending)
- │  └ `.2.1` open (planted-twin validation)
+ │ └ `.2.1` open (planted-twin validation)
  ├ `.3` F3 in_progress (docs delivered to super lane; gates markdown pending)
  ├ `.4` F4 in_progress (budget gate derives ALLOWED_GATES; atomic primitives
- │      delivered; fsync/O_NOFOLLOW/EINTR + writer unification + telemetry pending)
+ │ delivered; fsync/O_NOFOLLOW/EINTR + writer unification + telemetry pending)
  ├ `.5` F5 open (tags/AI_HUB_CONSUMER after F1+F4 land)
  ├ `.6` F6 open
  ├ `.7` F7 open

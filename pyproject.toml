@@ -861,3 +861,26 @@ exclude_docs = [
 site_title = "FLEXT Workspace"
 
 [tool.flext.namespace]
+
+[tool.flext.project.budget]
+  lint = { time-seconds = 30, memory-mb = 1024, tokens = 100000 }
+  format = { time-seconds = 60, memory-mb = 1024, tokens = 100000 }
+  pyrefly = { time-seconds = 180, memory-mb = 1024, tokens = 500000 }
+  mypy = { time-seconds = 300, memory-mb = 1024, tokens = 500000 }
+  pyright = { time-seconds = 120, memory-mb = 1024, tokens = 500000 }
+  silent-failure = { time-seconds = 120, memory-mb = 1024, tokens = 500000 }
+  deferred-self-reference = { time-seconds = 60, memory-mb = 1024, tokens = 100000 }
+  security = { time-seconds = 30, memory-mb = 1024, tokens = 100000 }
+  markdown = { time-seconds = 120, memory-mb = 1024, tokens = 500000 }
+  loc-cap = { time-seconds = 30, memory-mb = 1024, tokens = 100000 }
+  boundary = { time-seconds = 60, memory-mb = 1024, tokens = 100000 }
+  runtime-census = { time-seconds = 60, memory-mb = 1024, tokens = 100000 }
+  namespace = { time-seconds = 120, memory-mb = 1024, tokens = 500000 }
+  tier-whitelist = { time-seconds = 600, memory-mb = 1024, tokens = 500000 }
+  smells = { time-seconds = 60, memory-mb = 1024, tokens = 100000 }
+  codemod = { time-seconds = 180, memory-mb = 1024, tokens = 500000 }
+  layout = { time-seconds = 60, memory-mb = 1024, tokens = 100000 }
+  canonical-alias = { time-seconds = 300, memory-mb = 1024, tokens = 500000 }
+  direnv = { time-seconds = 10, memory-mb = 1024, tokens = 100000 }
+  duplication = { time-seconds = 300, memory-mb = 1024, tokens = 500000 }
+  budget = { time-seconds = 5, memory-mb = 1024, tokens = 100000 }

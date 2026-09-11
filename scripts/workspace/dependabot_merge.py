@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Annotated
 
 from flext_cli import m, p, t, u
+from flext_core import e
 
 DEPENDABOT_AUTHOR = "dependabot[bot]"
 DEPENDABOT_TITLE_RE = re.compile(
@@ -165,7 +166,12 @@ def update_pr_branch(slug: str, number: int) -> bool:
     """Update a PR branch from its base (rebase/merge) to resolve conflicts."""
     result = _run_cmd(["gh", "pr", "update-branch", str(number), "-R", slug])
     if result.failure:
-        return False
+        error_msg = f"Failed to update PR branch {number} for {slug}: {result.error}"
+        raise e.OperationError(
+            error_msg,
+            operation="gh pr update-branch",
+            reason=result.error or "unknown error",
+        )
     if result.value.exit_code == 0:
         return True
     # update-branch may report "Already up to date"; treat as success.
@@ -187,7 +193,12 @@ def close_pr(slug: str, number: int, *, dry_run: bool, reason: str) -> bool:
         reason,
     ])
     if result.failure:
-        return False
+        error_msg = f"Failed to close PR {number} for {slug}: {result.error}"
+        raise e.OperationError(
+            error_msg,
+            operation="gh pr close",
+            reason=result.error or "unknown error",
+        )
     return result.value.exit_code == 0
 
 

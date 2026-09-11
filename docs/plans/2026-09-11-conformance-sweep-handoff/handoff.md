@@ -12,6 +12,7 @@ geração por membro, gate de regrowth em CI, budget de teste, reds estruturais
 mas **sempre** PR `--no-ff` → gates no SHA → prova de runtime.
 
 ## 2. Estado medido ao fechar a sessão (2026-09-11 ~15:00Z)
+
 | Superfície | Estado |
 |---|---|
 | flext `origin/0.12.0-dev` | `396b359a1e` (zero-variable APPLY regenerado) |
@@ -23,6 +24,7 @@ mas **sempre** PR `--no-ff` → gates no SHA → prova de runtime.
 | CRG | watch-daemon multirepo ativo; **grafos podem estar `Built at 79dcca088` (2+ dias)** → `code-review-graph update` OBRIGATÓRIO antes de impact/query |
 
 ## 3. Beads — verdade ao fechar (re-verificar §4/§5 do plano)
+
 - `flext-vo335` **OPEN P1** → próximo passo 1: pouso do hotfix D1-D2 (reparar violações V1-V3 de pouso; PR pós-verde).
 - `flext-5k9r7` **IN_PROGRESS** (dono executando — não duplicar).
 - `flext-2h0un` OPEN P1 (instância) sob classe `flext-3cabz` OPEN P2 (root-cause único) — fixed-point drift `conform.py` apply/verify.
@@ -32,6 +34,7 @@ mas **sempre** PR `--no-ff` → gates no SHA → prova de runtime.
 - Epics do ator `flext-1wjg1`/`flext-y3qpq.3` (+`flext-cpkk` **P0 dono do gate raiz**) — absolver pós-pouso, não re-solver.
 
 ## 4. Contexto que precisa sobreviver (lições já codificadas — verifique, não re-derivo)
+
 1. **Tracker**: `env -u BEADS_DOLT_SERVER_DATABASE` para TODO comando `bd` neste tema (poluição de sessão causou horas de falso-bloqueio).
 2. **Provas por gerador**, nunca por find/grep literal (A7): gen ×2 byte-idêntico; grafo CRG fresco; `make mod` é o único mutador; `make gen` estampa.
 3. **Fechamento de bead** cita o escopo exato verde NO momento; pipeline parcial nunca citado como verde — resto vira bead nova.

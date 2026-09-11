@@ -58,25 +58,24 @@ def _string_sequence(value: t.JsonValue) -> t.StrSequence:
     return tuple(strings)
 
 
-class PipelineStageData(m.BaseModel):
+class PipelinePayload(m.BaseModel):
+    """Pipeline payload container."""
+
+    model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        arbitrary_types_allowed=True, extra="allow"
+    )
+
+    values: t.JsonMapping = u.Field(default_factory=_new_data_value_map)
+
+
+class PipelineStageData(PipelinePayload):
     """Data container for pipeline stage processing."""
 
     model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
         arbitrary_types_allowed=True, extra="allow"
     )
 
-    class PipelinePayload(m.BaseModel):
-        """Pipeline payload container."""
-
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True, extra="allow"
-        )
-
-        values: t.JsonMapping = u.Field(default_factory=_new_data_value_map)
-
-    data: PipelinePayload = u.Field(
-        default_factory=lambda: PipelineStageData.PipelinePayload(values={})
-    )
+    data: PipelinePayload = u.Field(default_factory=PipelinePayload)
 
 
 def _new_scalar_dict() -> t.MutableJsonMapping:
@@ -159,7 +158,7 @@ class AdvancedProcessingExample:
                 if result.failure:
                     return result
                 current_data = result.value.data.values
-            payload = PipelineStageData.PipelinePayload.model_validate({
+            payload = PipelinePayload.model_validate({
                 "values": current_data
             })
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
@@ -215,7 +214,7 @@ class AdvancedProcessingExample:
                 **data,
                 "analysis": analysis,
             })
-            payload = PipelineStageData.PipelinePayload.model_validate({
+            payload = PipelinePayload.model_validate({
                 "values": result_data
             })
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
@@ -252,7 +251,7 @@ class AdvancedProcessingExample:
                 if items_to_process
                 else 0,
             })
-            payload = PipelineStageData.PipelinePayload.model_validate({
+            payload = PipelinePayload.model_validate({
                 "values": result_data
             })
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
@@ -288,7 +287,7 @@ class AdvancedProcessingExample:
                 "valid_count": sum(1 for r in validation_results if r.valid),
                 "invalid_count": sum(1 for r in validation_results if not r.valid),
             })
-            payload = PipelineStageData.PipelinePayload.model_validate({
+            payload = PipelinePayload.model_validate({
                 "values": result_data
             })
             return r[PipelineStageData].ok(PipelineStageData(data=payload))

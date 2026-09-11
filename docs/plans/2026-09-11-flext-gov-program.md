@@ -13,7 +13,8 @@
 
 Operador > root `AGENTS.md` > `flext-law` skill > escopo > bead ativo.
 Uma autoridade por tópico: lei de consumo = `docs/standards/consumption-law.md`
-+ ADR-015; routing = `docs/GOVERNANCE.md` (linhas, nunca texto duplicado);
+
+- ADR-015; routing = `docs/GOVERNANCE.md` (linhas, nunca texto duplicado);
 identidade de enforcement = catálogo `flext-core`; motor/gates = `flext-infra`.
 Fechamento de bead = 4 evidências: (1) estado registrado, (2) git history na
 lane de integração, (3) realidade medida (comando/cwd/exit/output), (4) código
@@ -84,6 +85,7 @@ caminhos absolutos; config keys apenas.
 ### WS-F1 — R1 grammática de import consumer · bead `flext-ssnc7.1` · REABERTO
 
 **Entregue** (fatos, locais exatos):
+
 - R1 core: `flext-core/src/flext_core/_utilities/family_surface.py`
   — `project_alias_owners()` + `compatibility_alias_renames()` (33 derivados
   vs 22 da tabela congelada); constantes `c.NAMESPACE_FAMILY_PREFIX` e
@@ -99,6 +101,7 @@ caminhos absolutos; config keys apenas.
   `flext-core/.../_enforcement_catalog_rows_parts/_parts/flextconstantsenforcementcatalogrows_part_01_b.py`.
 
 **Lacunas de qualidade** (owner explícito, fecham antes de pousar):
+
 1. `_published_symbols` importa a raiz por statement — memoizar por
    execução de `detect_file` (escopo por arquivo OK).
 2. Aliases (`from flext_core import FlextResult as R`): o símbolo original
@@ -110,6 +113,7 @@ caminhos absolutos; config keys apenas.
    baseline RED medido, depois GREEN.
 
 **Próximo (ordem, comandos canônicos):**
+
 1. Detector v3 aliases + memo (lane core-gov→infra-gov), `make fix/fmt`;
    teste unitário na infra via `make test APPLY=Y` (escopado).
 2. Prova em runtime: plantar violação sintética em `examples/` de um
@@ -123,11 +127,13 @@ caminhos absolutos; config keys apenas.
 **Entregue**: leitor de config `[tool.flext.project.duplication]`
 (scope/min-lines/min-tokens/mode/threshold) em
 `flext-infra/src/flext_infra/gates/duplication.py` `_read_project_config`
-+ `JSCPD_CONSUMER_FAMILY_SCOPE`/`JSCPD_STRUCTURAL_BAN_FORMS` em
+
+- `JSCPD_CONSUMER_FAMILY_SCOPE`/`JSCPD_STRUCTURAL_BAN_FORMS` em
 `_constants/check.py`; escopo canônico ampliado
 (src/testes/scripts/examples/templates/config).
 
 **Lacunas de qualidade (produção)**:
+
 1. **Contaminação cruzada de config**: `_render_scope_dirs` lê a config DO
    projeto checado e aplica a TODOS os projetos descobertos no escopo do
    scan — corrigir para scoped por projeto antes de qualquer baseline largo.
@@ -158,6 +164,7 @@ própria referenciando R6 com link, sem duplicar texto.
 ### WS-F4 — R4 gates-as-products · bead `flext-ssnc7.4`
 
 **Entregue**:
+
 - Budget gate `flext-infra/src/flext_infra/gates/budget.py` — gate set deriva
   de `c.Infra.ALLOWED_GATES`, `BUDGET_REQUIRED_FIELDS`
   (time-seconds/memory-mb/tokens) em `_constants/check.py`; pyproject
@@ -170,6 +177,7 @@ própria referenciando R6 com link, sem duplicar texto.
   Result).
 
 **Lacunas (produção)**:
+
 1. Durabilidade: append/write sem `fsync` — perder dados em queda; adicionar
    `fsync` + loop EINTR/EWOULDBLOCK + `os.O_NOFOLLOW` (safety-path) —
    parametrizar via constantes, nunca inline.
@@ -189,6 +197,7 @@ própria referenciando R6 com link, sem duplicar texto.
 ### WS-F5 — R5 release-consumption · bead `flext-ssnc7.5` (aberto)
 
 Depende F1+F4+F7. Plano de produção:
+
 1. Tags 0.12.x só em tips com gates verdes no SHA mesclado (proibido tag em
    local-green).
 2. `AI_HUB_CONSUMER.md` versionado por release: gerado a partir de

@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import importlib.metadata
-import tomllib
 from importlib.resources import files
 from pathlib import Path
 
+from flext_core import r, u
 from flext_tests import tm
 
 
@@ -28,18 +28,18 @@ class TestReleasePackaging:
     def test_installed_version_matches_version_owner(self) -> None:
         """Runtime metadata and the version SSOT must never diverge."""
         repository_root = Path(__file__).resolve().parents[2]
-        payload = tomllib.loads(
-            (repository_root / "pyproject.toml").read_text(encoding="utf-8")
-        )
+        loaded = u.config_load(repository_root / "pyproject.toml")
+        tm.that(loaded.failure, eq=False)
+        payload = loaded.value
 
         tm.that(importlib.metadata.version("flext"), eq=payload["project"]["version"])
 
     def test_root_distribution_is_bounded(self) -> None:
         """Release packaging excludes workspace-only repositories and state."""
         repository_root = Path(__file__).resolve().parents[2]
-        payload = tomllib.loads(
-            (repository_root / "pyproject.toml").read_text(encoding="utf-8")
-        )
+        loaded: r[t.JsonMapping] = u.config_load(repository_root / "pyproject.toml")
+        tm.that(loaded.failure, eq=False)
+        payload = loaded.value
         targets = payload["tool"]["hatch"]["build"]["targets"]
         expected_sdist_includes = ["README.md", "pyproject.toml", "src/flext"]
         expected_wheel_packages = ["src/flext"]
