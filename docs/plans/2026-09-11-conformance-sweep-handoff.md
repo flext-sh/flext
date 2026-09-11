@@ -116,3 +116,43 @@ Estado alvo: **todo ↔ plano ↔ beads com MESMAS refs e status**; atualiza o t
 ---
 
 *Fim do handoff. Próximo agente: comece da seção 6, item 1.*
+
+---
+
+## 9. Reconciliação skills/ADRs/docs ↔ código (12:52 UTC — confronto pós-handoff v1)
+
+Método: leitura dos donos canônicos (deep-research router procedure, flext-development SKILL, ADR-010, rule `production-readiness`) confrontada contra o código real e o estado medido da sessão. O router-procedure de web-research (firecrawl/exa) não apply ab — tarefa de reconciliação local; propagationpreserved: nada foi normalizado.
+
+### 9.1 Tabela de mapeamento: contrato ADR-010 ↔ SLA do plano ↔ estado medido
+
+| ADR-010 §Verification contract | SLA no plano §3 | Estado medido no tip `bff592284` | Conclusão |
+|---|---|---|---|
+| (1) `make gen` ×2 byte-idempotente | SLA-1 Idempotência | **RED** — 9 ci_matrix + classe `flext-3cabz` (prova 1ª passada de `FlextInfraCodegenProjectNew` falha em tmpdir) | **BLOQUEIA o piloto de produção** |
+| (2) Standardization audit zero-drift | SLA-2 Gate CI | RED (`flext-cpkk` P0; base vermelha = entrega vermelha pela rule `production-readiness`) | bloqueia |
+| (3) `make mod` zero actionable/detection-only + **rota CRG sancionada** | automação §10-11 (ciclo crg+mod+gen) | mod viável (139 regras SSOT); CRG com grafo STALE @79dcca088 | piloto usa a rota já sancionada pelo ADR — não é invenção desta sessão |
+| (4) testmon canônico / budget (10s) | SLA-3 Budget | VULNERADO (3×60s+, `flext-9wwed`) | bloqueia |
+| (5) fence de consumers/projetos independentes | — | out-of-scope indie | — |
+
+### 9.2 Drifts de DOCUMENTAÇÃO corrigidos nesta reconciliação
+| # | Drift | Correção aplicada |
+|---|-------|-------------------|
+| DR1 | Skill `flext-development` "Landing law delta" afirmava o guard gen-×2 como lei desta sessão | **corrigido in-place**: ADR-010 §Verification contract (item 1) é o DONO; skill restata para o caso pressão, não re-inventa |
+| DR2 | Plano §10 apresentava o loop crg como invenção | esclarecido: **ADR-010 item 3 já sanciona a rota ai-hub CRG/LSP** como evidência sem pré-requisito de host — o ciclo §11 é ADR-conformant |
+| DR3 | Framing "pré-existente fora de escopo" (meu delta verde) usado para Reds estruturais | rule `production-readiness` proíbe: defeito no blast radius é adotado ("combined state is the deliverable") — Reds do ator só são ACEITÁVEIS como beads abertas com promoção bloqueada, nunca como "fora do meu mirante" |
+
+### 9.3 Regras que precisam ser CODIFICADAS para o piloto de produção com propagação completa (cadeia de fechamento)
+
+Ordem ADR-010-conforme (cada gate fecha até o próximo abrir):
+1. **Fechar SLA-1** (`flext-3cabz`): idempotência pyproject.toml → item 1 do ADR-010 verificável.
+2. **Fechar SLA-3** (`flext-9wwed`): budget fixture + PATH-strip → item 4 verificável.
+3. **Fechar SLA-2** (`flext-cpkk`, absorvendo XML do ator `z82dg-nsloc` fix-forward): item 2 audit-zero-drift + item 3 mod-zero-findings.
+4. **Landing canônico**: hotfix/conformance-sweep-d1d2 → PR → `--no-ff` → gates no SHA integrado (fecha `flext-vo335` V1-V3).
+5. **Piloto homologação** = estado onde os itens 1-4 do ADR-010 estão verdes no SHA integrado + `flext-gxgqp` (gate de regrowth) implementado — só aí a branch de integração está "produtiva para homologação".
+
+### 9.4 Inputs atualizados nesta passada
+- Handoff v2 = este arquivo (seção 9 nova).
+- Skill `flext-development`: drift DR1 corrigido (ADR-010 como owner).
+- Plan: §10/§11 leem-se com a nota DR2 (rota CRG = ADR-010-sancionada).
+- Beads: `flext-3cabz` recebeu o mapeamento ADR-010↔SLA↔piloto como aceite.
+
+*Fim da reconciliação. Próximo agente: seção 6 do handoff v1 continua válida como ordem de retomada; a cadeia 9.3 substitui qualquer leitura de Reds como "fora de alcance".*
