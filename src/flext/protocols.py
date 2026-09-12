@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
-from flext_core import p
+from flext_core import c, p
 
 
 class FlextRootProtocols(p):
     """Flext protocols namespace."""
+
+    class Root(p, c):
+        """Root namespace for workspace-level protocols."""
 
 
 p = FlextRootProtocols

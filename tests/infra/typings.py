@@ -6,10 +6,14 @@ from collections.abc import MutableSequence
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
+from flext_core import m, t
 from flext_tests import FlextTestsTypes
 
 
-class TestsFlextRootTypes(FlextTestsTypes):
+class TestsFlextRootTypes(t):
+    class TestsFlextRoot(t, m):
+        """Root namespace for infra test typings."""
+
     class Workspace:
         """Workspace-level test type aliases."""
 
@@ -23,6 +27,4 @@ class TestsFlextRootTypes(FlextTestsTypes):
             type RepoCall = tuple[str, Path]
 
 
-t = TestsFlextRootTypes
-
-__all__: list[str] = ["TestsFlextRootTypes", "t"]
+__all__: list[str] = ["TestsFlextRootTypes"]

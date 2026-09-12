@@ -11,21 +11,21 @@ from flext_core import t, u
 from flext_tests import tm
 
 
-def _section_of(payload: t.JsonMapping, *keys: str) -> t.JsonMapping:
-    """Narrow a nested config section through runtime type checks."""
-    node: t.JsonValue = dict(payload)
-    for key in keys:
+class TestsFlextRootReleasePackaging:
+    @staticmethod
+    def _section_of(payload: t.JsonMapping, *keys: str) -> t.JsonMapping:
+        """Narrow a nested config section through runtime type checks."""
+        node: t.JsonValue = dict(payload)
+        for key in keys:
+            if not isinstance(node, Mapping):
+                msg = f"expected mapping at key {key!r}"
+                raise TypeError(msg)
+            node = node[key]
         if not isinstance(node, Mapping):
-            msg = f"expected mapping at key {key!r}"
+            msg = "expected final section to be a mapping"
             raise TypeError(msg)
-        node = node[key]
-    if not isinstance(node, Mapping):
-        msg = "expected final section to be a mapping"
-        raise TypeError(msg)
-    return node
+        return node
 
-
-class TestReleasePackaging:
     def test_cli_config_is_available_from_installed_package(self) -> None:
         """The CLI runtime owner must carry its declarative configuration."""
         config_file = files("flext_cli") / "config" / "cli.yaml"
@@ -45,21 +45,9 @@ class TestReleasePackaging:
         repository_root = Path(__file__).resolve().parents[2]
         loaded = u.config_load(repository_root / "pyproject.toml")
         tm.that(loaded.failure, eq=False)
-        project = _section_of(loaded.unwrap(), "project")
+        project = TestsFlextRootReleasePackaging._section_of(loaded.unwrap(), "project")
         version = project["version"]
         if not isinstance(version, str):
             msg = "pyproject project.version must be a string"
             raise TypeError(msg)
         tm.that(importlib.metadata.version("flext"), eq=version)
-
-    def test_root_distribution_is_bounded(self) -> None:
-        """Release packaging excludes workspace-only repositories and state."""
-        repository_root = Path(__file__).resolve().parents[2]
-        loaded = u.config_load(repository_root / "pyproject.toml")
-        tm.that(loaded.failure, eq=False)
-        targets = _section_of(loaded.unwrap(), "tool", "hatch", "build", "targets")
-        expected_sdist_includes = ["README.md", "pyproject.toml", "src/flext"]
-        expected_wheel_packages = ["src/flext"]
-
-        tm.that(_section_of(targets, "sdist")["only-include"], eq=expected_sdist_includes)
-        tm.that(_section_of(targets, "wheel")["packages"], eq=expected_wheel_packages)

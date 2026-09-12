@@ -4,13 +4,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
+from flext_core import m, t
 from flext_tests import FlextTestsModels, u
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
-class TestsFlextRootModels(FlextTestsModels):
+class TestsFlextRootModels(m):
+    class TestsFlextRoot(m, t):
+        """Root namespace for infra test models."""
+
     class Workspace:
         """Workspace-level test models."""
 
@@ -38,9 +42,9 @@ class TestsFlextRootModels(FlextTestsModels):
                 action: Annotated[
                     str, u.Field(description="Sync action performed (e.g. pull, push).")
                 ]
-                repo: Annotated[Path, u.Field(description="Target repository root.")]
+                repo: Annotated[
+                    Path, u.Field(description="Target repository root.")
+                ]
 
 
-m = TestsFlextRootModels
-
-__all__: list[str] = ["TestsFlextRootModels", "m"]
+__all__: list[str] = ["TestsFlextRootModels"]

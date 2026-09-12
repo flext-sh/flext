@@ -115,7 +115,7 @@ caminhos absolutos; config keys apenas.
 **Próximo (ordem, comandos canônicos):**
 
 1. Detector v3 aliases + memo (lane core-gov→infra-gov), `make fix/fmt`;
-   teste unitário na infra via `make test APPLY=Y` (escopado).
+   teste unitário na infra via `make test` (escopado).
 2. Prova em runtime: plantar violação sintética em `examples/` de um
    membro e rodar o detector declarativo via engine (evidência RED).
 3. Ciclo de pouso R6: FF push → draft PR → review → `--no-ff` em
@@ -233,7 +233,7 @@ auditor — ver bead; prerequisite para F5.
 **Descoberta**: a plataforma já cobre o ciclo completo com verbos declarados;
 o plano v2 não explorava os escopos do `mod` nem o grafo de reviews.
 
-1. **`make mod APPLY=Y` NÃO "só ast-grep"**: executa ast-grep + fixed point +
+1. **`make mod` NÃO "só ast-grep"**: executa ast-grep + fixed point +
    Ruff + Pyrefly + **diagnósticos LSP reais** num único verbo. Escopos
    declarados: `--module <dotted>`, `--namespace <c|m|p|t|u…>` — ondas por
    módulo/slot, sem varrer a frota. Catálogo vivo: 101 regras yaml em

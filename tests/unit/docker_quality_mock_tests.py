@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 
-class TestDockerQualityDockerfiles:
+class TestsFlextRootDockerQualityMockFiles:
     QUALITY_DOCKERFILES = (
         "docker/images/Dockerfile.flext-quality",
         "docker/images/Dockerfile.flext-quality-simple",
