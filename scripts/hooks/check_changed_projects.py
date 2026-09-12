@@ -14,61 +14,65 @@ from pathlib import Path
 
 from flext_cli import cli, p
 
-REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
-MIN_POSITIONAL_ARGS = 2
 
+class FlextRootCheckChangedProjects:
+    """FlextRoot check changed projects namespace."""
 
-def _known_projects() -> frozenset[str]:
-    """Return top-level directory names that look like FLEXT projects."""
-    return frozenset(
-        entry.name
-        for entry in REPOSITORY_ROOT.iterdir()
-        if entry.is_dir() and (entry / "pyproject.toml").is_file()
-    )
+    REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+    MIN_POSITIONAL_ARGS = 2
 
+    @staticmethod
+    def _known_projects() -> frozenset[str]:
+        """Return top-level directory names that look like FLEXT projects."""
+        return frozenset(
+            entry.name
+            for entry in FlextRootCheckChangedProjects.REPOSITORY_ROOT.iterdir()
+            if entry.is_dir() and (entry / "pyproject.toml").is_file()
+        )
 
-def main(what: str, files: list[str]) -> int:
-    """Run the requested gate only for projects touched by the staged files."""
-    known = _known_projects()
-    projects = {
-        rel.parts[0]
-        for raw in files
-        if (rel := _relative_to_workspace(raw)).parts and rel.parts[0] in known
-    }
-    if not projects:
-        return 0
+    @staticmethod
+    def main(what: str, files: list[str]) -> int:
+        """Run the requested gate only for projects touched by the staged files."""
+        known = FlextRootCheckChangedProjects._known_projects()
+        projects = {
+            rel.parts[0]
+            for raw in files
+            if (rel := FlextRootCheckChangedProjects._relative_to_workspace(raw)).parts and rel.parts[0] in known
+        }
+        if not projects:
+            return 0
 
-    outcome = cli.run(
-        [
-            "uv",
-            "run",
-            "--all-packages",
-            "python",
-            "-m",
-            "flext_infra",
-            "check",
-            "--what",
-            what,
-            "--projects",
-            ",".join(sorted(projects)),
-        ],
-        cwd=REPOSITORY_ROOT,
-    )
-    if outcome.failure:
-        return 1
-    command: p.Cli.CommandOutput = outcome.value
-    return command.exit_code
+        outcome = cli.run(
+            [
+                "uv",
+                "run",
+                "--all-packages",
+                "python",
+                "-m",
+                "flext_infra",
+                "check",
+                "--what",
+                what,
+                "--projects",
+                ",".join(sorted(projects)),
+            ],
+            cwd=FlextRootCheckChangedProjects.REPOSITORY_ROOT,
+        )
+        if outcome.failure:
+            return 1
+        command: p.Cli.CommandOutput = outcome.value
+        return command.exit_code
 
-
-def _relative_to_workspace(raw: str) -> Path:
-    path = Path(raw)
-    if not path.is_absolute():
-        path = REPOSITORY_ROOT / path
-    return path.relative_to(REPOSITORY_ROOT)
+    @staticmethod
+    def _relative_to_workspace(raw: str) -> Path:
+        path = Path(raw)
+        if not path.is_absolute():
+            path = FlextRootCheckChangedProjects.REPOSITORY_ROOT / path
+        return path.relative_to(FlextRootCheckChangedProjects.REPOSITORY_ROOT)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < MIN_POSITIONAL_ARGS:
+    if len(sys.argv) < FlextRootCheckChangedProjects.MIN_POSITIONAL_ARGS:
         msg = "usage: check_changed_projects.py <boundary|loc-cap> [file ...]"
         raise SystemExit(msg)
-    cli.exit(main(sys.argv[1], sys.argv[2:]))
+    cli.exit(FlextRootCheckChangedProjects.main(sys.argv[1], sys.argv[2:]))

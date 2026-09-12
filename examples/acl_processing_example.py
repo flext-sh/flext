@@ -23,8 +23,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
 from examples import ExamplesPermission, m, p, t, u
-from examples._constants import ExamplesServerType
 from flext_core import r
+
+from ._constants import ExamplesServerType
+
+
+class FlextRootAclProcessing:
+    """FlextRoot ACL processing namespace."""
 
 
 class AclProcessingExample:
@@ -158,7 +163,8 @@ class AclProcessingExample:
                         server_type=server_type,
                     )
                     extracted_acls.append(acl_entry)
-        return r[Sequence[AclProcessingExample.AclEntry]].ok(extracted_acls)
+        acls: Sequence[AclProcessingExample.AclEntry] = list(extracted_acls)
+        return r[Sequence[AclProcessingExample.AclEntry]].ok(acls)
 
     @staticmethod
     def validate_acl_entry(

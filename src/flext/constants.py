@@ -8,6 +8,9 @@ from flext_core import c, t
 class FlextRootConstants(c):
     """Flext constants namespace."""
 
+    class Root(c, t):
+        """Root namespace for workspace-level constants."""
+
 
 c = FlextRootConstants
 

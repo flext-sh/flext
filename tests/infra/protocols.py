@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from flext_tests import FlextTestsProtocols
+from flext_core import c, p
 
 if TYPE_CHECKING:
     from importlib.machinery import ModuleSpec
@@ -12,7 +12,10 @@ if TYPE_CHECKING:
     from types import ModuleType
 
 
-class TestsFlextRootProtocols(FlextTestsProtocols):
+class TestsFlextRootProtocols(p):
+    class TestsFlextRoot(p, c):
+        """Root namespace for infra test protocols."""
+
     class Workspace:
         """Workspace-level test protocols."""
 
@@ -47,6 +50,4 @@ class TestsFlextRootProtocols(FlextTestsProtocols):
                 def __call__(self, name: str, location: Path) -> ModuleSpec | None: ...
 
 
-p = TestsFlextRootProtocols
-
-__all__: list[str] = ["TestsFlextRootProtocols", "p"]
+__all__: list[str] = ["TestsFlextRootProtocols"]

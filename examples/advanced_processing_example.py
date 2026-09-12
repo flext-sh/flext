@@ -19,45 +19,60 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
 from examples import m, p, t, u
-from examples._constants import ExamplesStage
 from flext_core import r
+
+from ._constants import ExamplesStage
+
+
+class FlextRootAdvancedProcessing:
+    """FlextRoot advanced processing namespace."""
+
+    MAX_VALUE_LENGTH = 100
+
+    @staticmethod
+    def new_data_value_map() -> t.JsonMapping:
+        """Return an empty pipeline payload mapping."""
+        return {}
+
+    @staticmethod
+    def json_mapping_or_none(value: t.JsonValue) -> t.JsonMapping | None:
+        """Convert a JSON value to a mapping, returning None if not a mapping."""
+        if not isinstance(value, Mapping):
+            return None
+        return dict(value.items())
+
+    @staticmethod
+    def json_mapping_sequence(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
+        """Convert a JSON value to a sequence of mappings."""
+        if not isinstance(value, Sequence) or isinstance(value, (str, bytes, bytearray)):
+            return ()
+        mappings: MutableSequence[t.JsonMapping] = []
+        for item in value:
+            mapping_item = FlextRootAdvancedProcessing.json_mapping_or_none(item)
+            if mapping_item is not None:
+                mappings.append(mapping_item)
+        return tuple(mappings)
+
+    @staticmethod
+    def string_sequence(value: t.JsonValue) -> t.StrSequence:
+        """Convert a JSON value to a sequence of strings."""
+        if not isinstance(value, Sequence) or isinstance(value, (str, bytes, bytearray)):
+            return ()
+        strings: MutableSequence[str] = []
+        for item in value:
+            if isinstance(item, str):
+                strings.append(item)
+        return tuple(strings)
+
+    @staticmethod
+    def new_scalar_dict() -> t.MutableJsonMapping:
+        """Return an empty operation metadata mapping."""
+        return {}
+
 
 type DataValue = t.JsonValue
 type ItemDict = t.JsonMapping
 type StageOperation = Callable[[t.JsonMapping], r[PipelineStageData]]
-
-MAX_VALUE_LENGTH = 100
-
-
-def _new_data_value_map() -> t.JsonMapping:
-    return {}
-
-
-def _json_mapping_or_none(value: t.JsonValue) -> t.JsonMapping | None:
-    if not isinstance(value, Mapping):
-        return None
-    return dict(value.items())
-
-
-def _json_mapping_sequence(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
-    if not isinstance(value, Sequence) or isinstance(value, (str, bytes, bytearray)):
-        return ()
-    mappings: MutableSequence[t.JsonMapping] = []
-    for item in value:
-        mapping_item = _json_mapping_or_none(item)
-        if mapping_item is not None:
-            mappings.append(mapping_item)
-    return tuple(mappings)
-
-
-def _string_sequence(value: t.JsonValue) -> t.StrSequence:
-    if not isinstance(value, Sequence) or isinstance(value, (str, bytes, bytearray)):
-        return ()
-    strings: MutableSequence[str] = []
-    for item in value:
-        if isinstance(item, str):
-            strings.append(item)
-    return tuple(strings)
 
 
 class PipelinePayload(m.BaseModel):
@@ -67,7 +82,7 @@ class PipelinePayload(m.BaseModel):
         arbitrary_types_allowed=True, extra="allow"
     )
 
-    values: t.JsonMapping = u.Field(default_factory=_new_data_value_map)
+    values: t.JsonMapping = u.Field(default_factory=FlextRootAdvancedProcessing.new_data_value_map)
 
 
 class PipelineStageData(PipelinePayload):
@@ -78,10 +93,6 @@ class PipelineStageData(PipelinePayload):
     )
 
     data: PipelinePayload = u.Field(default_factory=PipelinePayload)
-
-
-def _new_scalar_dict() -> t.MutableJsonMapping:
-    return {}
 
 
 class AdvancedProcessingExample:
@@ -105,7 +116,7 @@ class AdvancedProcessingExample:
             default_factory=tuple, description="List of errors encountered"
         )
         metadata: t.JsonMapping = u.Field(
-            default_factory=_new_scalar_dict, description="Operation metadata"
+            default_factory=FlextRootAdvancedProcessing.new_scalar_dict, description="Operation metadata"
         )
 
     class ValidationResult(m.BaseModel):
@@ -165,8 +176,8 @@ class AdvancedProcessingExample:
 
         def _analyze_results(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
             """Analyze processing results."""
-            processed_items = _json_mapping_sequence(data.get("processed_items", []))
-            validation_results = _json_mapping_sequence(
+            processed_items = FlextRootAdvancedProcessing.json_mapping_sequence(data.get("processed_items", []))
+            validation_results = FlextRootAdvancedProcessing.json_mapping_sequence(
                 data.get("validation_results", [])
             )
             field_counts: MutableMapping[int, int] = {}
@@ -190,11 +201,11 @@ class AdvancedProcessingExample:
                     if result_item.get("valid") is True
                 ),
                 "total_violations": sum(
-                    len(_string_sequence(result_item.get("violations")))
+                    len(FlextRootAdvancedProcessing.string_sequence(result_item.get("violations")))
                     for result_item in validation_results
                 ),
                 "total_warnings": sum(
-                    len(_string_sequence(result_item.get("warnings")))
+                    len(FlextRootAdvancedProcessing.string_sequence(result_item.get("warnings")))
                     for result_item in validation_results
                 ),
             }
@@ -219,7 +230,7 @@ class AdvancedProcessingExample:
 
         def _process_parallel(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
             """Process items in parallel."""
-            items_to_process = _json_mapping_sequence(data.get("items", []))
+            items_to_process = FlextRootAdvancedProcessing.json_mapping_sequence(data.get("items", []))
             if not items_to_process:
                 return r[PipelineStageData].fail("Invalid items data")
             start_time = time.time()
@@ -254,7 +265,7 @@ class AdvancedProcessingExample:
 
         def _validate_batch(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
             """Validate batch of items."""
-            items_to_validate = _json_mapping_sequence(data.get("items", []))
+            items_to_validate = FlextRootAdvancedProcessing.json_mapping_sequence(data.get("items", []))
             if not items_to_validate:
                 return r[PipelineStageData].fail("Invalid items data")
             validation_results: MutableSequence[
@@ -300,7 +311,7 @@ class AdvancedProcessingExample:
             if not name or not isinstance(name, str):
                 violations.append("Missing or invalid name field")
             value = item.get("value", "")
-            if isinstance(value, str) and len(value) > MAX_VALUE_LENGTH:
+            if isinstance(value, str) and len(value) > FlextRootAdvancedProcessing.MAX_VALUE_LENGTH:
                 warnings.append("Value field is very long")
             return r[AdvancedProcessingExample.ValidationResult].ok(
                 AdvancedProcessingExample.ValidationResult(

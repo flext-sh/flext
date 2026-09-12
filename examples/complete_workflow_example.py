@@ -22,24 +22,30 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, ClassVar
 
 from examples import m, p, t, u
-from examples._constants import ExamplesWorkflowStage
 from flext_core import r
+
+from ._constants import ExamplesWorkflowStage
 
 if TYPE_CHECKING:
     from collections.abc import Callable, MutableSequence
 
+
+class FlextRootCompleteWorkflow:
+    """FlextRoot complete workflow namespace."""
+
+    @staticmethod
+    def json_mapping() -> t.JsonMapping:
+        """Return a typed immutable empty JSON mapping."""
+        return MappingProxyType({})
+
+    @staticmethod
+    def scalar_mapping() -> t.ScalarMapping:
+        """Return a typed immutable empty scalar mapping."""
+        return MappingProxyType({})
+
+
 type CompleteWorkflowProcessingDict = t.JsonMapping
 type CompleteWorkflowContent = t.JsonMapping
-
-
-def _json_mapping() -> t.JsonMapping:
-    """Return a typed immutable empty JSON mapping."""
-    return MappingProxyType({})
-
-
-def _scalar_mapping() -> t.ScalarMapping:
-    """Return a typed immutable empty scalar mapping."""
-    return MappingProxyType({})
 
 
 class CompleteWorkflowExample:
@@ -78,7 +84,7 @@ class CompleteWorkflowExample:
             description="List of workflow stages to execute",
         )
         metadata: t.JsonMapping = u.Field(
-            default_factory=_json_mapping,
+            default_factory=FlextRootCompleteWorkflow.json_mapping,
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: t.MutableJsonMapping = u.Field(
@@ -108,7 +114,7 @@ class CompleteWorkflowExample:
             default_factory=list, description="List of warnings encountered"
         )
         stage_metadata: t.JsonMapping = u.Field(
-            default_factory=_json_mapping, description="Stage-specific metadata"
+            default_factory=FlextRootCompleteWorkflow.json_mapping, description="Stage-specific metadata"
         )
 
     class CompleteWorkflowResult(m.BaseModel):
@@ -132,7 +138,7 @@ class CompleteWorkflowExample:
             )
         )
         aggregated_metrics: t.JsonMapping = u.Field(
-            default_factory=_json_mapping,
+            default_factory=FlextRootCompleteWorkflow.json_mapping,
             description="Aggregated metrics across all stages",
         )
         workflow_status: Annotated[
@@ -156,7 +162,7 @@ class CompleteWorkflowExample:
         data: t.SequenceOf[CompleteWorkflowProcessingDict] = u.Field(
             default_factory=tuple
         )
-        workflow_settings: t.ScalarMapping = u.Field(default_factory=_scalar_mapping)
+        workflow_settings: t.ScalarMapping = u.Field(default_factory=FlextRootCompleteWorkflow.scalar_mapping)
 
         def execute(self) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Execute complete workflow with automatic resource management."""

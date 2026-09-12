@@ -45,10 +45,10 @@ email = "team@flext.sh"
 name = "FLEXT Team"
 
 [project.scripts]
-flext = "flext.workspace:main"
-flext-dev = "flext.dev:main"
-flext-docs = "flext.docs:main"
-flext-workspace = "flext.workspace:main"
+flext = "flext.workspace:FlextRootWorkspace.main"
+flext-dev = "flext.dev:FlextRootDev.main"
+flext-docs = "flext.docs:FlextRootDocs.main"
+flext-workspace = "flext.workspace:FlextRootWorkspace.main"
 
 [project.urls]
 Documentation = "https://docs.flext.sh"

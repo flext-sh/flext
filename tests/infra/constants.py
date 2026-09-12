@@ -4,10 +4,13 @@ from __future__ import annotations
 
 from typing import Final
 
-from flext_tests import FlextTestsConstants
+from flext_core import c, t
 
 
-class TestsFlextRootConstants(FlextTestsConstants):
+class TestsFlextRootConstants(c):
+    class TestsFlextRoot(c, t):
+        """Root namespace for infra test constants."""
+
     class Workspace:
         """Workspace-level test constants."""
 
@@ -17,6 +20,4 @@ class TestsFlextRootConstants(FlextTestsConstants):
             MODULE_VERSIONING: Final[str] = "libs/versioning.py"
 
 
-c = TestsFlextRootConstants
-
-__all__: list[str] = ["TestsFlextRootConstants", "c"]
+__all__: list[str] = ["TestsFlextRootConstants"]

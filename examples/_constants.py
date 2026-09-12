@@ -9,6 +9,10 @@ from __future__ import annotations
 from enum import StrEnum, unique
 
 
+class FlextRootConstants:
+    """FlextRoot constants namespace."""
+
+
 @unique
 class ExamplesPermission(StrEnum):
     """Permission enumeration used across ACL examples."""

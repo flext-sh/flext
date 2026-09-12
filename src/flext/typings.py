@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
-from flext_core import t
+from flext_core import m, t
 
 
 class FlextRootTypes(t):
     """Flext types namespace."""
+
+    class Root(t, m):
+        """Root namespace for workspace-level types."""
 
 
 t = FlextRootTypes
