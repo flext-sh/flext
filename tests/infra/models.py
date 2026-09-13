@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
-from flext_infra import m as infra_m, u as infra_u
+from flext_infra import m, u
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -17,41 +17,37 @@ if TYPE_CHECKING:
 class _ModuleModels:
     """Module reference models."""
 
-    class ModuleRef(infra_m.Value):
+    class ModuleRef(m.Value):
         """Module reference with path and name information."""
 
         anchor_file: Annotated[
-            Path,
-            infra_u.Field(description="Absolute path to the module's anchor file."),
+            Path, u.Field(description="Absolute path to the module's anchor file.")
         ]
-        module_name: Annotated[
-            str, infra_u.Field(description="Fully qualified module name.")
-        ]
+        module_name: Annotated[str, u.Field(description="Fully qualified module name.")]
         relative_path: Annotated[
-            str,
-            infra_u.Field(description="Module path relative to the workspace root."),
+            str, u.Field(description="Module path relative to the workspace root.")
         ]
 
 
 class _SyncModels:
     """Sync call models."""
 
-    class SyncCall(infra_m.Value):
+    class SyncCall(m.Value):
         """Workspace synchronization call record."""
 
         action: Annotated[
-            str, infra_u.Field(description="Sync action performed (e.g. pull, push).")
+            str, u.Field(description="Sync action performed (e.g. pull, push).")
         ]
-        repo: Annotated[Path, infra_u.Field(description="Target repository root.")]
+        repo: Annotated[Path, u.Field(description="Target repository root.")]
 
-    class RepoState(infra_m.Value):
+    class RepoState(m.Value):
         """Repository state snapshot."""
 
-        branch: Annotated[str, infra_u.Field(description="Current branch name.")]
-        commit_sha: Annotated[str, infra_u.Field(description="Current commit SHA.")]
+        branch: Annotated[str, u.Field(description="Current branch name.")]
+        commit_sha: Annotated[str, u.Field(description="Current commit SHA.")]
 
 
-class TestsFlextRootModels(infra_m):
+class TestsFlextRootModels(m):
     """Infrastructure test models facade — extends flext_infra models."""
 
     class Tests(_ModuleModels, _SyncModels):

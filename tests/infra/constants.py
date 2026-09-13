@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Final
 
-from flext_infra import c as infra_c
+from flext_infra import c
 
 
 class _WorkspaceConstants:
@@ -23,7 +23,7 @@ class _RepoConstants:
     DEFAULT_BRANCH: Final[str] = "main"
 
 
-class TestsFlextRootConstants(infra_c):
+class TestsFlextRootConstants(c):
     """Infrastructure test constants facade — extends flext_infra constants."""
 
     class Tests(_WorkspaceConstants, _RepoConstants):

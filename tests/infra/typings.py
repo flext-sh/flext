@@ -10,13 +10,13 @@ from collections.abc import MutableSequence
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
-from flext_infra import t as infra_t
+from flext_infra import t
 
 
 class _CommandTypes:
     """Command-related types."""
 
-    type Command = infra_t.StrSequence
+    type Command = t.StrSequence
     type CommandBuffer = MutableSequence[Command]
 
 
@@ -34,7 +34,7 @@ class _RepoTypes:
     type RepoMetadata = tuple[str, str, str]  # owner, repo, branch
 
 
-class TestsFlextRootTypes(infra_t):
+class TestsFlextRootTypes(t):
     """Infrastructure test typings facade — extends flext_infra typings."""
 
     class Tests(_CommandTypes, _ModuleTypes, _RepoTypes):

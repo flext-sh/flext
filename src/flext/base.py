@@ -6,10 +6,10 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import s as s_core
+from flext_core import s
 
 
-class FlextRootServiceBase(s_core[bool]):
+class FlextRootServiceBase(s[bool]):
     """Workspace root service base — composes through cooperative FLEXT MRO."""
 
 

@@ -125,10 +125,10 @@ class FlextRootAdvancedProcessingExample:
         self,
         *,
         items: t.SequenceOf[t.JsonMapping],
-        processing_func: t.StrSequence,  # ruff: ignore[unused-method-argument]
-        validation_func: t.StrSequence,  # ruff: ignore[unused-method-argument]
-        analysis_func: t.StrSequence,  # ruff: ignore[unused-method-argument]
-        use_parallel: bool = True,  # ruff: ignore[unused-method-argument]
+        processing_func: t.StrSequence,
+        validation_func: t.StrSequence,
+        analysis_func: t.StrSequence,
+        use_parallel: bool = True,
     ) -> p.Result[t.JsonMapping]:
         """Execute the integrated pipeline."""
         return r[t.JsonMapping].ok({"items_processed": len(items)})

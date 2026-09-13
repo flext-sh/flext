@@ -18,9 +18,13 @@ class FlextRootCli:
         _ = cli.execute()
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Module-level CLI entry point."""
     FlextRootCli.main()
 
 
-__all__: tuple[str, ...] = ("FlextRootCli", "main")
+if __name__ == "__main__":
+    main()
 
+
+__all__: tuple[str, ...] = ("FlextRootCli", "main")

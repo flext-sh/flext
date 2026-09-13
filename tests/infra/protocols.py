@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from flext_infra import p as infra_p
+from flext_infra import p
 
 if TYPE_CHECKING:
     from importlib.machinery import ModuleSpec
@@ -58,7 +58,7 @@ class _RepoProtocols:
         def get_remote_url(self) -> str: ...
 
 
-class TestsFlextRootProtocols(infra_p):
+class TestsFlextRootProtocols(p):
     """Infrastructure test protocols facade — extends flext_infra protocols."""
 
     class Tests(_ModuleProtocols, _RepoProtocols):
