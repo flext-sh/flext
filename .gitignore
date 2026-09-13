@@ -456,3 +456,4 @@ CLAUDE.local.md
 !.vscode/settings.json
 !config/
 !config/gitleaks-release.toml
+worktrees/
