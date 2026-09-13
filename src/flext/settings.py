@@ -1,4 +1,4 @@
-"""Settings facade for flext-workspace — re-exports flext_core settings.
+"""Settings facade for flext-workspace — workspace-level settings.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -6,16 +6,19 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core._settings import FlextSettings
+from flext_core import settings
 
 
-class FlextRootSettings(FlextSettings):
-    """Workspace root settings facade — extends flext_core FlextSettings."""
+class FlextRootSettings(settings.FlextSettings):
+    """Workspace root settings — extends flext-core settings with FLEXT_ROOT_ prefix."""
 
-    pass
+    class Config:
+        """Pydantic config for root settings."""
+
+        env_prefix = "FLEXT_ROOT_"
 
 
-(settings) = FlextRootSettings
+settings: FlextRootSettings = FlextRootSettings.fetch_global()
+"""Process-wide root settings singleton."""
 
 __all__: tuple[str, ...] = ("FlextRootSettings", "settings")
-
