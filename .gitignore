@@ -453,3 +453,4 @@ CLAUDE.local.md
 !config/
 !config/build-constraints.txt
 !config/gitleaks-release.toml
+worktrees/
