@@ -19,7 +19,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
 from examples import m, p, t, u
-from examples._constants import ExamplesStage
+from ._constants import ExamplesStage
 from flext_core import r
 
 type DataValue = t.JsonValue

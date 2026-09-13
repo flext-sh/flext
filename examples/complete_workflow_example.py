@@ -22,7 +22,7 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, ClassVar
 
 from examples import m, p, t, u
-from examples._constants import ExamplesWorkflowStage
+from ._constants import ExamplesWorkflowStage
 from flext_core import r
 
 if TYPE_CHECKING:
