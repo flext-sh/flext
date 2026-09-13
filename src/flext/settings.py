@@ -1,23 +1,21 @@
-"""Settings facet for flext-workspace — settings singleton."""
+"""Settings facade for flext-workspace — re-exports flext_core settings.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
-from typing import ClassVar
-
-from pydantic_settings import SettingsConfigDict
-
-from flext_core import FlextSettings
+from flext_core._settings import FlextSettings
 
 
 class FlextRootSettings(FlextSettings):
-    """Workspace root settings facade — access via settings.*."""
+    """Workspace root settings facade — extends flext_core FlextSettings."""
 
-    model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(
-        env_prefix="FLEXT_ROOT_", extra="ignore"
-    )
+    pass
 
 
-settings: FlextRootSettings = FlextRootSettings.fetch_global()
-"""Process-wide flext settings singleton resolved from the global container."""
+(settings) = FlextRootSettings
 
 __all__: tuple[str, ...] = ("FlextRootSettings", "settings")
+

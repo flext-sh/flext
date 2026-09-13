@@ -190,8 +190,7 @@ class _AclValidator:
             "violations": list(violations),
             "warnings": list(warnings),
             "processing_time": time.time() - start_time,
-            }
-        )
+        })
 
 
 class FlextRootAclProcessingExample:
@@ -212,9 +211,7 @@ class FlextRootAclProcessingExample:
         parallel: bool = True,
     ) -> p.Result[t.JsonMapping]:
         """Process ACL entries through the pipeline."""
-        return self.AclProcessor(
-            entries=raw_entries, parallel=parallel
-        ).execute()
+        return self.AclProcessor(entries=raw_entries, parallel=parallel).execute()
 
     class AclEntry(m.BaseModel):
         """Represents an ACL entry with context and permissions."""
@@ -448,15 +445,17 @@ class FlextRootAclProcessingExample:
                     })
                     for r in validated_results
                 ],
-                "valid_acls": sum(1 for r in validated_results if cast("bool", r["valid"])),
-                "invalid_acls": sum(1 for r in validated_results if not cast("bool", r["valid"])),
+                "valid_acls": sum(
+                    1 for r in validated_results if cast("bool", r["valid"])
+                ),
+                "invalid_acls": sum(
+                    1 for r in validated_results if not cast("bool", r["valid"])
+                ),
                 "total_violations": sum(
-                    len(cast("list", r["violations"]))
-                    for r in validated_results
+                    len(cast("list", r["violations"])) for r in validated_results
                 ),
                 "total_warnings": sum(
-                    len(cast("list", r["warnings"]))
-                    for r in validated_results
+                    len(cast("list", r["warnings"])) for r in validated_results
                 ),
             }
             return r[t.JsonMapping].ok(

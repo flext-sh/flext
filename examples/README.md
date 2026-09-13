@@ -165,9 +165,7 @@ from examples import FlextRootAclProcessingExample, u
 pipeline = FlextRootAclProcessingExample(max_workers=8)
 
 # Sample LDAP entries with ACL attributes
-ldap_entries = [
-    {"dn": "cn=test,dc=example,dc=com", "attributes": {"aci": "(test)"}},
-]
+ldap_entries = [{"dn": "cn=test,dc=example,dc=com", "attributes": {"aci": "(test)"}}]
 
 # Process ACL entries
 result = pipeline.process_acls_with_pipeline(

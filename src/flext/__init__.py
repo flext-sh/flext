@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from . import services
     from .api import FlextRoot, api, flext
     from .base import FlextRootServiceBase, FlextRootServiceBase as s
-    from .cli import FlextRootCli, main
+    from .cli import FlextRootCli
     from .config import FlextRootConfig, config
     from .constants import FlextRootConstants, FlextRootConstants as c
     from .models import FlextRootModels, FlextRootModels as m
@@ -41,7 +41,6 @@ __all__: tuple[str, ...] = (
     "flext",
     "h",
     "m",
-    "main",
     "p",
     "r",
     "s",

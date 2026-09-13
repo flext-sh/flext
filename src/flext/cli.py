@@ -1,4 +1,4 @@
-"""CLI facade for flext-workspace — declarative command entry point.
+"""CLI facade for flext-workspace — thin orchestrator over flext-cli.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -8,39 +8,21 @@ from __future__ import annotations
 
 import sys
 
-from flext_cli import cli
-from flext_core import p, t
+from flext_cli import cli as flext_cli
 
 
 class FlextRootCli:
-    """Thin declarative CLI router for flext-workspace."""
+    """Workspace root CLI facade — composes flext-cli."""
 
-    def __init__(self) -> None:
-        """Bind the singleton facade and register the declarative routes."""
-        self._app = cli.create_app_with_common_params(
-            name="flext", help_text="FLEXT workspace orchestration CLI"
-        )
-        self._register_commands()
-
-    def run(self, args: t.StrSequence | None = None) -> p.Result[bool]:
-        """Execute the CLI app through the public flext-cli facade."""
-        result: p.Result[bool] = cli.execute_app(
-            self._app, prog_name="flext", args=args
-        )
-        return result
-
-    def _register_commands(self) -> None:
-        """Register the configured routes."""
+    @staticmethod
+    def main(args: list[str] | None = None) -> int:
+        """Main entry point for flext CLI."""
+        return flext_cli.main(args)
 
 
-def main() -> int:
-    """Run the CLI and return a process-compatible exit code."""
-    result = FlextRootCli().run(sys.argv[1:])
-    return cli.finalize_result(result)
-
-
-if __name__ == "__main__":
-    cli.exit(main())
+def main() -> None:
+    """Module-level CLI entry point."""
+    sys.exit(FlextRootCli.main())
 
 
 __all__: tuple[str, ...] = ("FlextRootCli", "main")

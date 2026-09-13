@@ -1,4 +1,4 @@
-"""Config facade for flext-workspace — config singleton.
+"""Config facade for flext-workspace — re-exports flext_core config.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -6,13 +6,16 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import FlextConfig
+from flext_core._config import FlextConfig
 
 
 class FlextRootConfig(FlextConfig):
-    """Workspace root config facade — access via config.*."""
+    """Workspace root config facade — extends flext_core FlextConfig."""
+
+    CONFIG_DIR: str = "config"
 
 
-config = FlextRootConfig.fetch_global()
+(config) = FlextRootConfig
 
 __all__: tuple[str, ...] = ("FlextRootConfig", "config")
+
