@@ -22,8 +22,7 @@ from collections.abc import Mapping, MutableSequence, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
-from examples import ExamplesPermission, m, p, t, u
-from ._constants import ExamplesServerType
+from examples import ExamplesPermission, ExamplesServerType, m, p, t, u
 from flext_core import r
 
 
@@ -124,7 +123,7 @@ class AclProcessingExample:
             return r[Sequence[AclProcessingExample.AclEntry]].fail(
                 f"No ACL attributes defined for server type: {server_type}"
             )
-        extracted_acls: MutableSequence[AclProcessingExample.AclEntry] = []
+        extracted_acls: Sequence[AclProcessingExample.AclEntry] = []
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, Mapping):
             return r[Sequence[AclProcessingExample.AclEntry]].fail(
