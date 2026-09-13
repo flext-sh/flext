@@ -4,19 +4,17 @@ from __future__ import annotations
 
 from typing import Final
 
-from flext_tests import FlextTestsConstants
+from flext_tests import c
 
 
-class TestsFlextRootConstants(FlextTestsConstants):
-    class Workspace:
-        """Workspace-level test constants."""
+class TestsFlextRootConstants(c):
+    class Tests:
+        """Infrastructure test path constants."""
 
-        class Tests:
-            """Infrastructure test path constants."""
+        class Workspace:
+            """Workspace-level test constants."""
 
             MODULE_VERSIONING: Final[str] = "libs/versioning.py"
 
 
-c = TestsFlextRootConstants
-
-__all__: list[str] = ["TestsFlextRootConstants", "c"]
+__all__: list[str] = ["TestsFlextRootConstants"]

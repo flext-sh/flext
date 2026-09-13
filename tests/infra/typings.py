@@ -6,23 +6,18 @@ from collections.abc import MutableSequence
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
-from flext_tests import FlextTestsTypes
+from flext_tests import t
 
 
-class TestsFlextRootTypes(FlextTestsTypes):
-    class Workspace:
-        """Workspace-level test type aliases."""
+class TestsFlextRootTypes(t):
+    class Tests:
+        """Test infrastructure type definitions."""
 
-        class Tests:
-            """Test infrastructure type definitions."""
-
-            type Command = FlextTestsTypes.StrSequence
-            type CommandBuffer = MutableSequence[Command]
-            type LoadedModule = ModuleType
-            type ProjectRef = SimpleNamespace
-            type RepoCall = tuple[str, Path]
+        type Command = t.StrSequence
+        type CommandBuffer = MutableSequence[Command]
+        type LoadedModule = ModuleType
+        type ProjectRef = SimpleNamespace
+        type RepoCall = tuple[str, Path]
 
 
-t = TestsFlextRootTypes
-
-__all__: list[str] = ["TestsFlextRootTypes", "t"]
+__all__: list[str] = ["TestsFlextRootTypes"]
