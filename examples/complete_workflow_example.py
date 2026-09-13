@@ -1,11 +1,11 @@
-"""08_complete_workflow.py - Complete Workflow Example.
+"""Complete Workflow Example.
 
 Demonstrates complete workflow integration with:
-- Integração completa de todas as capacidades
-- Railway pattern abrangente
-- Processamento paralelo em todas as etapas
-- Auto-detecção e builders inteligentes
-- Validação integrada end-to-end
+- Complete integration of all capabilities
+- Comprehensive railway pattern
+- Parallel processing in all stages
+- Auto-detection and intelligent builders
+- End-to-end integrated validation
 
 This example showcases the complete FLEXT enterprise data integration
 workflow with comprehensive capabilities.
@@ -21,8 +21,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, ClassVar
 
-from examples import m, p, t, u
-from examples._constants import ExamplesWorkflowStage
+from examples import ExamplesWorkflowStage, m, p, t, u
 from flext_core import r
 
 if TYPE_CHECKING:
@@ -32,17 +31,21 @@ type CompleteWorkflowProcessingDict = t.JsonMapping
 type CompleteWorkflowContent = t.JsonMapping
 
 
-def _json_mapping() -> t.JsonMapping:
-    """Return a typed immutable empty JSON mapping."""
-    return MappingProxyType({})
+class _ImmutableMappings:
+    """Immutable mapping factories."""
+
+    @staticmethod
+    def json_mapping() -> t.JsonMapping:
+        """Return a typed immutable empty JSON mapping."""
+        return MappingProxyType({})
+
+    @staticmethod
+    def scalar_mapping() -> t.ScalarMapping:
+        """Return a typed immutable empty scalar mapping."""
+        return MappingProxyType({})
 
 
-def _scalar_mapping() -> t.ScalarMapping:
-    """Return a typed immutable empty scalar mapping."""
-    return MappingProxyType({})
-
-
-class CompleteWorkflowExample:
+class FlextRootCompleteWorkflowExample:
     """Complete workflow example demonstrating FLEXT enterprise data integration capabilities."""
 
     ProcessingDict = CompleteWorkflowProcessingDict
@@ -51,7 +54,7 @@ class CompleteWorkflowExample:
     class WorkflowData(m.BaseModel):
         """Data container for workflow processing."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True, extra="allow"
         )
         content: t.JsonMapping = u.Field(default_factory=dict)
@@ -61,7 +64,7 @@ class CompleteWorkflowExample:
     class WorkflowContext(m.BaseModel):
         """Complete workflow context with correlation and metadata."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -78,7 +81,7 @@ class CompleteWorkflowExample:
             description="List of workflow stages to execute",
         )
         metadata: t.JsonMapping = u.Field(
-            default_factory=_json_mapping,
+            default_factory=_ImmutableMappings.json_mapping,
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: t.MutableJsonMapping = u.Field(
@@ -89,7 +92,7 @@ class CompleteWorkflowExample:
     class WorkflowStageResult(m.BaseModel):
         """Result of a workflow stage with comprehensive tracking."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -108,13 +111,14 @@ class CompleteWorkflowExample:
             default_factory=list, description="List of warnings encountered"
         )
         stage_metadata: t.JsonMapping = u.Field(
-            default_factory=_json_mapping, description="Stage-specific metadata"
+            default_factory=_ImmutableMappings.json_mapping,
+            description="Stage-specific metadata",
         )
 
     class CompleteWorkflowResult(m.BaseModel):
         """Complete workflow result with all stages aggregated."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -126,13 +130,13 @@ class CompleteWorkflowExample:
         total_processing_time: float = u.Field(
             description="Total workflow processing time"
         )
-        stage_results: t.SequenceOf[CompleteWorkflowExample.WorkflowStageResult] = (
-            u.Field(
-                default_factory=list, description="Results from each workflow stage"
-            )
+        stage_results: t.SequenceOf[
+            FlextRootCompleteWorkflowExample.WorkflowStageResult
+        ] = u.Field(
+            default_factory=list, description="Results from each workflow stage"
         )
         aggregated_metrics: t.JsonMapping = u.Field(
-            default_factory=_json_mapping,
+            default_factory=_ImmutableMappings.json_mapping,
             description="Aggregated metrics across all stages",
         )
         workflow_status: Annotated[
@@ -156,9 +160,11 @@ class CompleteWorkflowExample:
         data: t.SequenceOf[CompleteWorkflowProcessingDict] = u.Field(
             default_factory=tuple
         )
-        workflow_settings: t.ScalarMapping = u.Field(default_factory=_scalar_mapping)
+        workflow_settings: t.ScalarMapping = u.Field(
+            default_factory=_ImmutableMappings.scalar_mapping
+        )
 
-        def execute(self) -> p.Result[CompleteWorkflowExample.WorkflowData]:
+        def execute(self) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
             """Execute complete workflow with automatic resource management."""
             context = self._setup_context()
             try:
@@ -169,8 +175,8 @@ class CompleteWorkflowExample:
         def _aggregate_results(
             self,
             item: CompleteWorkflowProcessingDict,
-            context: CompleteWorkflowExample.WorkflowContext,
-        ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
+            context: FlextRootCompleteWorkflowExample.WorkflowContext,
+        ) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
             """Aggregate results."""
             complexity_score_raw = item.get("complexity_score", 0)
             complexity_score = (
@@ -184,19 +190,23 @@ class CompleteWorkflowExample:
             content_payload: CompleteWorkflowContent = {
                 **self._process_stage(
                     item,
-                    CompleteWorkflowExample.Stage.AGGREGATION,
+                    FlextRootCompleteWorkflowExample.Stage.AGGREGATION,
                     context,
                     lambda _i: {"final_score": final_score},
                 )
             }
-            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate({
-                "content": content_payload
-            })
+            workflow_data = (
+                FlextRootCompleteWorkflowExample.WorkflowData.model_validate({
+                    "content": content_payload
+                })
+            )
             return r.ok(workflow_data)
 
         def _aggregate_workflow_metrics(
             self,
-            stage_results: t.SequenceOf[CompleteWorkflowExample.WorkflowStageResult],
+            stage_results: t.SequenceOf[
+                FlextRootCompleteWorkflowExample.WorkflowStageResult
+            ],
             total_time: float,
         ) -> t.MappingKV[str, t.Numeric]:
             """Aggregate metrics across all workflow stages."""
@@ -226,24 +236,26 @@ class CompleteWorkflowExample:
         def _analyze_items(
             self,
             item: CompleteWorkflowProcessingDict,
-            context: CompleteWorkflowExample.WorkflowContext,
-        ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
+            context: FlextRootCompleteWorkflowExample.WorkflowContext,
+        ) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
             """Analyze single item."""
             content_payload: CompleteWorkflowContent = {
                 **self._process_stage(
                     item,
-                    CompleteWorkflowExample.Stage.ANALYSIS,
+                    FlextRootCompleteWorkflowExample.Stage.ANALYSIS,
                     context,
                     lambda _i: {"complexity_score": len(str(item)) * 0.1},
                 )
             }
-            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate({
-                "content": content_payload
-            })
+            workflow_data = (
+                FlextRootCompleteWorkflowExample.WorkflowData.model_validate({
+                    "content": content_payload
+                })
+            )
             return r.ok(workflow_data)
 
         def _cleanup_context(
-            self, context: CompleteWorkflowExample.WorkflowContext
+            self, context: FlextRootCompleteWorkflowExample.WorkflowContext
         ) -> None:
             """Cleanup workflow context and log completion."""
             total_time = time.time() - context.start_time
@@ -256,12 +268,12 @@ class CompleteWorkflowExample:
             stage_func: Callable[
                 [
                     CompleteWorkflowProcessingDict,
-                    CompleteWorkflowExample.WorkflowContext,
+                    FlextRootCompleteWorkflowExample.WorkflowContext,
                 ],
-                p.Result[CompleteWorkflowExample.WorkflowData],
+                p.Result[FlextRootCompleteWorkflowExample.WorkflowData],
             ],
-            context: CompleteWorkflowExample.WorkflowContext,
-        ) -> p.Result[CompleteWorkflowExample.WorkflowStageResult]:
+            context: FlextRootCompleteWorkflowExample.WorkflowContext,
+        ) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowStageResult]:
             """Execute a workflow stage in parallel."""
             stage_start = time.time()
             max_workers_raw = context.metadata.get("max_workers", 4)
@@ -285,7 +297,7 @@ class CompleteWorkflowExample:
                 for future in as_completed(future_to_item):
                     processed_results.append(future.result())
             processing_time = time.time() - stage_start
-            stage_result = CompleteWorkflowExample.WorkflowStageResult(
+            stage_result = FlextRootCompleteWorkflowExample.WorkflowStageResult(
                 stage_name=stage_name,
                 workflow_id=context.workflow_id,
                 correlation_id=context.correlation_id,
@@ -303,17 +315,19 @@ class CompleteWorkflowExample:
                     "success_rate": len(processed_results) / len(items) if items else 0,
                 },
             )
-            return r[CompleteWorkflowExample.WorkflowStageResult].ok(stage_result)
+            return r[FlextRootCompleteWorkflowExample.WorkflowStageResult].ok(
+                stage_result
+            )
 
         def _execute_workflow(
             self,
             data: t.SequenceOf[CompleteWorkflowProcessingDict],
-            context: CompleteWorkflowExample.WorkflowContext,
-        ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
+            context: FlextRootCompleteWorkflowExample.WorkflowContext,
+        ) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
             """Execute workflow stages with parallel processing."""
             items = data
             stage_results: MutableSequence[
-                CompleteWorkflowExample.WorkflowStageResult
+                FlextRootCompleteWorkflowExample.WorkflowStageResult
             ] = []
             current_data = items
             stage_functions = {
@@ -325,14 +339,14 @@ class CompleteWorkflowExample:
             for stage_name in context.stages:
                 stage_func = stage_functions.get(stage_name)
                 if not stage_func:
-                    return r[CompleteWorkflowExample.WorkflowData].fail(
+                    return r[FlextRootCompleteWorkflowExample.WorkflowData].fail(
                         f"Unknown stage: {stage_name}"
                     )
                 result = self._execute_stage_parallel(
                     stage_name, current_data, stage_func, context
                 )
                 if result.failure:
-                    return r[CompleteWorkflowExample.WorkflowData].fail(
+                    return r[FlextRootCompleteWorkflowExample.WorkflowData].fail(
                         f"Stage {stage_name} failed: {result.error}"
                     )
                 stage_result = result.value
@@ -358,7 +372,7 @@ class CompleteWorkflowExample:
                 aggregated_metrics_payload[key] = value
 
             workflow_result = (
-                CompleteWorkflowExample.CompleteWorkflowResult.model_validate({
+                FlextRootCompleteWorkflowExample.CompleteWorkflowResult.model_validate({
                     "workflow_id": context.workflow_id,
                     "correlation_id": context.correlation_id,
                     "total_stages": len(context.stages),
@@ -381,35 +395,39 @@ class CompleteWorkflowExample:
                 })
             )
             summary_content: CompleteWorkflowContent = {**summary}
-            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate({
-                "content": summary_content
-            })
+            workflow_data = (
+                FlextRootCompleteWorkflowExample.WorkflowData.model_validate({
+                    "content": summary_content
+                })
+            )
             return r.ok(workflow_data)
 
         def _process_items(
             self,
             item: CompleteWorkflowProcessingDict,
-            context: CompleteWorkflowExample.WorkflowContext,
-        ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
+            context: FlextRootCompleteWorkflowExample.WorkflowContext,
+        ) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
             """Process single item."""
             content_payload: CompleteWorkflowContent = {
                 **self._process_stage(
                     item,
-                    CompleteWorkflowExample.Stage.PROCESSING,
+                    FlextRootCompleteWorkflowExample.Stage.PROCESSING,
                     context,
                     lambda _i: {"processed_at": time.time()},
                 )
             }
-            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate({
-                "content": content_payload
-            })
+            workflow_data = (
+                FlextRootCompleteWorkflowExample.WorkflowData.model_validate({
+                    "content": content_payload
+                })
+            )
             return r.ok(workflow_data)
 
         def _process_stage(
             self,
             item: CompleteWorkflowProcessingDict,
-            stage: CompleteWorkflowExample.Stage,
-            context: CompleteWorkflowExample.WorkflowContext,
+            stage: FlextRootCompleteWorkflowExample.Stage,
+            context: FlextRootCompleteWorkflowExample.WorkflowContext,
             extra_logic: Callable[[CompleteWorkflowProcessingDict], t.JsonMapping]
             | None = None,
         ) -> CompleteWorkflowProcessingDict:
@@ -426,7 +444,7 @@ class CompleteWorkflowExample:
                 result.update(extra_logic(item))
             return result
 
-        def _setup_context(self) -> CompleteWorkflowExample.WorkflowContext:
+        def _setup_context(self) -> FlextRootCompleteWorkflowExample.WorkflowContext:
             """Setup workflow context with correlation tracking."""
             workflow_id = str(
                 self.workflow_settings.get(
@@ -434,7 +452,7 @@ class CompleteWorkflowExample:
                 )
             )
             correlation_id = f"{workflow_id}_{int(time.time() * 1000)}"
-            return CompleteWorkflowExample.WorkflowContext(
+            return FlextRootCompleteWorkflowExample.WorkflowContext(
                 workflow_id=workflow_id,
                 correlation_id=correlation_id,
                 start_time=time.time(),
@@ -454,20 +472,22 @@ class CompleteWorkflowExample:
         def _validate_items(
             self,
             item: CompleteWorkflowProcessingDict,
-            context: CompleteWorkflowExample.WorkflowContext,
-        ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
+            context: FlextRootCompleteWorkflowExample.WorkflowContext,
+        ) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
             """Validate single item."""
             content_payload: CompleteWorkflowContent = {
                 **self._process_stage(
                     item,
-                    CompleteWorkflowExample.Stage.VALIDATION,
+                    FlextRootCompleteWorkflowExample.Stage.VALIDATION,
                     context,
                     lambda _i: {"valid": bool(item.get("id") and item.get("name"))},
                 )
             }
-            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate({
-                "content": content_payload
-            })
+            workflow_data = (
+                FlextRootCompleteWorkflowExample.WorkflowData.model_validate({
+                    "content": content_payload
+                })
+            )
             return r.ok(workflow_data)
 
     @staticmethod
@@ -498,7 +518,7 @@ class CompleteWorkflowExample:
     def run_example() -> None:
         """Run the complete workflow example."""
         sample_data: t.SequenceOf[CompleteWorkflowProcessingDict] = (
-            CompleteWorkflowExample.create_sample_workflow_data(50)
+            FlextRootCompleteWorkflowExample.create_sample_workflow_data(50)
         )
         workflow_settings: t.ScalarMapping = {
             "workflow_id": "comprehensive_workflow",
@@ -506,7 +526,7 @@ class CompleteWorkflowExample:
             "max_workers": 4,
             "strict_mode": False,
         }
-        orchestrator = CompleteWorkflowExample.WorkflowOrchestrator()
+        orchestrator = FlextRootCompleteWorkflowExample.WorkflowOrchestrator()
         orchestrator.data = sample_data
         orchestrator.workflow_settings = workflow_settings
         orchestrator.execute()

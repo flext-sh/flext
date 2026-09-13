@@ -1,22 +1,33 @@
-"""FLEXT infra test helpers for constants."""
+"""FLEXT infra test helpers for constants.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
 from typing import Final
 
-from flext_tests import FlextTestsConstants
+from flext_tests import c
 
 
-class TestsFlextRootConstants(FlextTestsConstants):
-    class Workspace:
-        """Workspace-level test constants."""
+class _WorkspaceConstants:
+    """Workspace-level test constants."""
 
-        class Tests:
-            """Infrastructure test path constants."""
-
-            MODULE_VERSIONING: Final[str] = "libs/versioning.py"
+    MODULE_VERSIONING: Final[str] = "libs/versioning.py"
 
 
-c = TestsFlextRootConstants
+class _RepoConstants:
+    """Repository-level test constants."""
 
-__all__: list[str] = ["TestsFlextRootConstants", "c"]
+    DEFAULT_BRANCH: Final[str] = "main"
+
+
+class TestsFlextRootConstants(c):
+    """Infrastructure test constants facade — extends flext_tests constants."""
+
+    class TestsFlextRoot(_WorkspaceConstants, _RepoConstants):
+        """Infrastructure test path constants."""
+
+
+__all__: list[str] = ["TestsFlextRootConstants"]

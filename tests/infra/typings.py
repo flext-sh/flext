@@ -1,4 +1,8 @@
-"""FLEXT infra test helpers for typings."""
+"""FLEXT infra test helpers for typings.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -6,23 +10,35 @@ from collections.abc import MutableSequence
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
-from flext_tests import FlextTestsTypes
+from flext_tests import t
 
 
-class TestsFlextRootTypes(FlextTestsTypes):
-    class Workspace:
-        """Workspace-level test type aliases."""
+class _CommandTypes:
+    """Command-related types."""
 
-        class Tests:
-            """Test infrastructure type definitions."""
-
-            type Command = FlextTestsTypes.StrSequence
-            type CommandBuffer = MutableSequence[Command]
-            type LoadedModule = ModuleType
-            type ProjectRef = SimpleNamespace
-            type RepoCall = tuple[str, Path]
+    type Command = t.StrSequence
+    type CommandBuffer = MutableSequence[Command]
 
 
-t = TestsFlextRootTypes
+class _ModuleTypes:
+    """Module-related types."""
 
-__all__: list[str] = ["TestsFlextRootTypes", "t"]
+    type LoadedModule = ModuleType
+    type ProjectRef = SimpleNamespace
+
+
+class _RepoTypes:
+    """Repository-related types."""
+
+    type RepoCall = tuple[str, Path]
+    type RepoMetadata = tuple[str, str, str]  # owner, repo, branch
+
+
+class TestsFlextRootTypes(t):
+    """Infrastructure test typings facade — extends flext_tests typings."""
+
+    class TestsFlextRoot(_CommandTypes, _ModuleTypes, _RepoTypes):
+        """Test infrastructure type definitions."""
+
+
+__all__: list[str] = ["TestsFlextRootTypes"]

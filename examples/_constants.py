@@ -51,4 +51,14 @@ class ExamplesWorkflowStage(StrEnum):
     AGGREGATION = "aggregation"
 
 
-__all__: list[str] = ["ExamplesPermission"]
+class FlextRootExamplesConstants:
+    """Examples constants facade — access via FlextRootExamplesConstants.*."""
+
+
+__all__: list[str] = [
+    "ExamplesPermission",
+    "ExamplesServerType",
+    "ExamplesStage",
+    "ExamplesWorkflowStage",
+    "FlextRootExamplesConstants",
+]

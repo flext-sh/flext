@@ -20,8 +20,5 @@ class FlextRootDev:
         _ = cli.execute()
 
 
-main = FlextRootDev.main
-
-
 if __name__ == "__main__":
-    main()
+    FlextRootDev.main()

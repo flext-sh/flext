@@ -1,10 +1,14 @@
-"""FLEXT infra test helpers for protocols."""
+"""FLEXT infra test helpers for protocols.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from flext_tests import FlextTestsProtocols
+from flext_tests import p
 
 if TYPE_CHECKING:
     from importlib.machinery import ModuleSpec
@@ -12,41 +16,53 @@ if TYPE_CHECKING:
     from types import ModuleType
 
 
-class TestsFlextRootProtocols(FlextTestsProtocols):
-    class Workspace:
-        """Workspace-level test protocols."""
+class _ModuleProtocols:
+    """Module resolution protocols."""
 
-        class Tests:
-            """Test infrastructure protocol definitions."""
+    @runtime_checkable
+    class SpecLoader(Protocol):
+        """Protocol for module spec loaders."""
 
-            @runtime_checkable
-            class SpecLoader(Protocol):
-                """Protocol for module spec loaders."""
+        def exec_module(self, module: ModuleType) -> None: ...
 
-                def exec_module(self, module: ModuleType) -> None: ...
+    @runtime_checkable
+    class ModuleSpecProtocol(Protocol):
+        """Protocol for module specifications."""
 
-            @runtime_checkable
-            class ModuleSpecProtocol(Protocol):
-                """Protocol for module specifications."""
+        name: str | None
+        loader: _ModuleProtocols.SpecLoader | None
 
-                name: str | None
-                loader: TestsFlextRootProtocols.Workspace.Tests.SpecLoader | None
+    @runtime_checkable
+    class ModuleResolver(Protocol):
+        """Protocol for module resolution callables."""
 
-            @runtime_checkable
-            class ModuleResolver(Protocol):
-                """Protocol for module resolution callables."""
+        def __call__(
+            self, module_name: str, relative_path: str, *, anchor_file: Path
+        ) -> ModuleType: ...
 
-                def __call__(
-                    self, module_name: str, relative_path: str, *, anchor_file: Path
-                ) -> ModuleType: ...
+    @runtime_checkable
+    class ModuleSpecFactory(Protocol):
+        """Protocol for module spec factory callables."""
 
-            @runtime_checkable
-            class ModuleSpecFactory(Protocol):
-                """Protocol for module spec factory callables."""
-
-                def __call__(self, name: str, location: Path) -> ModuleSpec | None: ...
+        def __call__(self, name: str, location: Path) -> ModuleSpec | None: ...
 
 
-p = TestsFlextRootProtocols
+class _RepoProtocols:
+    """Repository metadata protocols."""
 
-__all__: list[str] = ["TestsFlextRootProtocols", "p"]
+    @runtime_checkable
+    class RepoProvider(Protocol):
+        """Protocol for repository metadata providers."""
+
+        def get_branch(self) -> str: ...
+        def get_remote_url(self) -> str: ...
+
+
+class TestsFlextRootProtocols(p):
+    """Infrastructure test protocols facade — extends flext_tests protocols."""
+
+    class TestsFlextRoot(_ModuleProtocols, _RepoProtocols):
+        """Test infrastructure protocol definitions."""
+
+
+__all__: list[str] = ["TestsFlextRootProtocols"]

@@ -159,36 +159,41 @@ pip install flext-core flext-ldif flext-api
 ### Basic ACL Processing
 
 ```python
-from examples import AclProcessingPipeline
+from examples import FlextRootAclProcessingExample, u
 
 # Create pipeline with 8 worker threads
-pipeline = AclProcessingPipeline(max_workers=8)
+pipeline = FlextRootAclProcessingExample(max_workers=8)
+
+# Sample LDAP entries with ACL attributes
+ldap_entries = [{"dn": "cn=test,dc=example,dc=com", "attributes": {"aci": "(test)"}}]
 
 # Process ACL entries
 result = pipeline.process_acls_with_pipeline(
     raw_entries=ldap_entries, server_context={"strict_mode": True}, parallel=True
 )
 
-if result.is_success:
+if result.success:
     summary = result.unwrap()
-    # Access comprehensive processing results
-    u.Cli.print(f"Processed {summary['acls_extracted']} ACLs")
+    print(f"Processed {len(ldap_entries)} ACLs")
 ```
 
 ### Advanced Processing Pipeline
 
 ```python
-from examples import IntegratedProcessingPipeline
+from examples import FlextRootAdvancedProcessingExample
 
 # Create integrated pipeline
-pipeline = IntegratedProcessingPipeline(max_workers=8, batch_size=200)
+pipeline = FlextRootAdvancedProcessingExample(max_workers=8, batch_size=200)
+
+# Sample data items
+data_items = [{"id": f"item_{i}"} for i in range(10)]
 
 # Execute complete pipeline
 result = pipeline.execute_integrated_pipeline(
     items=data_items,
-    processing_func=process_function,
-    validation_func=validate_function,
-    analysis_func=analyze_function,
+    processing_func="default_processing",
+    validation_func="default_validation",
+    analysis_func="default_analysis",
     use_parallel=True,
 )
 ```
@@ -196,15 +201,16 @@ result = pipeline.execute_integrated_pipeline(
 ### Complete Workflow
 
 ```python
-from examples import ComprehensiveRailwayPattern, CompleteWorkflowBuilder
+from examples import FlextRootCompleteWorkflow
 
 # Build workflow configuration
-settings = CompleteWorkflowBuilder.build_comprehensive_workflow(
+settings = FlextRootCompleteWorkflow.build_comprehensive_workflow(
     workflow_type="ldap_processing", requirements={"max_workers": 8, "parallel": True}
 )
 
 # Execute complete workflow
-railway = ComprehensiveRailwayPattern(max_workers=8)
+railway = FlextRootCompleteWorkflow(max_workers=8)
+input_data = {"entries": [{"dn": "cn=test,dc=example,dc=com"}]}
 result = railway.execute_workflow_railway(
     workflow_id="enterprise_workflow",
     input_data=input_data,
