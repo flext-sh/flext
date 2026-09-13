@@ -1,10 +1,14 @@
-"""FLEXT infra test helpers for protocols."""
+"""FLEXT infra test helpers for protocols.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Protocol, runtime_checkable
-
 from flext_tests import p
+
+from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 if TYPE_CHECKING:
     from importlib.machinery import ModuleSpec
@@ -13,7 +17,9 @@ if TYPE_CHECKING:
 
 
 class TestsFlextRootProtocols(p):
-    class Tests:
+    """Infrastructure test protocols facade — extends flext_tests protocols."""
+
+    class TestsFlextRoot:
         """Test infrastructure protocol definitions."""
 
         @runtime_checkable
@@ -27,7 +33,7 @@ class TestsFlextRootProtocols(p):
             """Protocol for module specifications."""
 
             name: str | None
-            loader: TestsFlextRootProtocols.Tests.SpecLoader | None
+            loader: TestsFlextRootProtocols.TestsFlextRoot.SpecLoader | None
 
         @runtime_checkable
         class ModuleResolver(Protocol):
@@ -45,3 +51,4 @@ class TestsFlextRootProtocols(p):
 
 
 __all__: list[str] = ["TestsFlextRootProtocols"]
+

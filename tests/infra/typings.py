@@ -1,4 +1,8 @@
-"""FLEXT infra test helpers for typings."""
+"""FLEXT infra test helpers for typings.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -10,7 +14,9 @@ from flext_tests import t
 
 
 class TestsFlextRootTypes(t):
-    class Tests:
+    """Infrastructure test typings facade — extends flext_tests typings."""
+
+    class TestsFlextRoot:
         """Test infrastructure type definitions."""
 
         type Command = t.StrSequence
@@ -21,3 +27,4 @@ class TestsFlextRootTypes(t):
 
 
 __all__: list[str] = ["TestsFlextRootTypes"]
+

@@ -21,8 +21,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, ClassVar
 
-from examples import m, p, t, u
-from ._constants import ExamplesWorkflowStage
+from examples import ExamplesWorkflowStage, m, p, t, u
 from flext_core import r
 
 if TYPE_CHECKING:

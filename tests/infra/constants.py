@@ -1,14 +1,20 @@
-"""FLEXT infra test helpers for constants."""
+"""FLEXT infra test helpers for constants.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
+from flext_tests import c as c_tests
+
 from typing import Final
 
-from flext_tests import c
 
+class TestsFlextRootConstants(c_tests):
+    """Infrastructure test constants facade — extends flext_tests constants."""
 
-class TestsFlextRootConstants(c):
-    class Tests:
+    class TestsFlextRoot:
         """Infrastructure test path constants."""
 
         class Workspace:
@@ -18,3 +24,4 @@ class TestsFlextRootConstants(c):
 
 
 __all__: list[str] = ["TestsFlextRootConstants"]
+

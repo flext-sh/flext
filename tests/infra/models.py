@@ -1,17 +1,23 @@
-"""FLEXT infra test helpers for models."""
+"""FLEXT infra test helpers for models.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Annotated
-
 from flext_tests import m, u
+
+from typing import TYPE_CHECKING, Annotated
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
 class TestsFlextRootModels(m):
-    class Tests:
+    """Infrastructure test models facade — extends flext_tests models."""
+
+    class TestsFlextRoot:
         """Test infrastructure model definitions."""
 
         class ModuleRef(m.Value):
@@ -39,3 +45,4 @@ class TestsFlextRootModels(m):
 
 
 __all__: list[str] = ["TestsFlextRootModels"]
+

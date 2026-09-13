@@ -20,8 +20,6 @@ class FlextRootWorkspace:
         _ = cli.execute()
 
 
-main = FlextRootWorkspace.main
-
-
 if __name__ == "__main__":
-    main()
+    FlextRootWorkspace.main()
+
