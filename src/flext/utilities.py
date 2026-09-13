@@ -6,16 +6,18 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import u as u_core
+from flext_core import u
 
 from ._utilities.base import FlextRootUtilitiesBase
+from ._utilities.config import FlextRootUtilitiesConfig
 
 
-class FlextRootUtilities(u_core):
+class FlextRootUtilities(u):
     """Workspace root utilities facade — access via u.Root.*."""
 
     class Root(
         FlextRootUtilitiesBase,
+        FlextRootUtilitiesConfig,
     ):
         """Workspace root utilities MRO composition."""
 

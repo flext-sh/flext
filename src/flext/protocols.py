@@ -6,16 +6,18 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import p as p_core
+from flext_core import p
 
 from ._protocols.base import FlextRootProtocolsBase
+from ._protocols.config import FlextRootProtocolsConfig
 
 
-class FlextRootProtocols(p_core):
+class FlextRootProtocols(p):
     """Workspace root protocols facade — access via p.Root.*."""
 
     class Root(
         FlextRootProtocolsBase,
+        FlextRootProtocolsConfig,
     ):
         """Workspace root protocols MRO composition."""
 
