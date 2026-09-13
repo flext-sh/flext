@@ -22,4 +22,3 @@ class FlextRootDev:
 
 if __name__ == "__main__":
     FlextRootDev.main()
-

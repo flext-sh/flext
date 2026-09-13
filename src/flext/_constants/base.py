@@ -9,5 +9,3 @@ from __future__ import annotations
 
 class FlextRootConstantsBase:
     """Base constants for flext-workspace."""
-
-

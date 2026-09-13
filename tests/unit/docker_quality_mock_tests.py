@@ -41,5 +41,3 @@ class TestsFlextRootDockerQualityDockerfiles:
             content = (repository_root / dockerfile).read_text(encoding="utf-8")
             for forbidden_copy in self.FORBIDDEN_MOCK_COPIES:
                 assert forbidden_copy not in content
-
-

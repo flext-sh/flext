@@ -22,4 +22,3 @@ class FlextRootWorkspace:
 
 if __name__ == "__main__":
     FlextRootWorkspace.main()
-

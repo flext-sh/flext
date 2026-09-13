@@ -9,5 +9,3 @@ from __future__ import annotations
 
 class FlextRootModelsConfig:
     """Config models for flext-workspace."""
-
-

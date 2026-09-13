@@ -15,14 +15,10 @@ from ._models.config import FlextRootModelsConfig
 class FlextRootModels(m):
     """Workspace root models facade — access via m.Root.*."""
 
-    class Root(
-        FlextRootModelsBase,
-        FlextRootModelsConfig,
-    ):
+    class Root(FlextRootModelsBase, FlextRootModelsConfig):
         """Workspace root models MRO composition."""
 
 
 m = FlextRootModels
 
 __all__: tuple[str, ...] = ("FlextRootModels", "m")
-

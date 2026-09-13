@@ -15,14 +15,10 @@ from ._protocols.config import FlextRootProtocolsConfig
 class FlextRootProtocols(p):
     """Workspace root protocols facade — access via p.Root.*."""
 
-    class Root(
-        FlextRootProtocolsBase,
-        FlextRootProtocolsConfig,
-    ):
+    class Root(FlextRootProtocolsBase, FlextRootProtocolsConfig):
         """Workspace root protocols MRO composition."""
 
 
 p = FlextRootProtocols
 
 __all__: tuple[str, ...] = ("FlextRootProtocols", "p")
-

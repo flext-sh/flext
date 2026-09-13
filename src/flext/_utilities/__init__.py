@@ -1,5 +1,5 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Scripts.hooks package."""
+"""Flext. Utilities package."""
 
 from __future__ import annotations
 
@@ -9,13 +9,15 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext import c, d, e, h, m, p, r, s, t, u, x
-__all__: tuple[str, ...] = ("c", "d", "e", "h", "m", "p", "r", "s", "t", "u", "x")
+    from .base import FlextRootUtilitiesBase
+    from .config import FlextRootUtilitiesConfig
+__all__: tuple[str, ...] = ("FlextRootUtilitiesBase", "FlextRootUtilitiesConfig")
 
 _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
-            "flext": ("c", "d", "e", "h", "m", "p", "r", "s", "t", "u", "x")
+            ".base": ("FlextRootUtilitiesBase",),
+            ".config": ("FlextRootUtilitiesConfig",),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,

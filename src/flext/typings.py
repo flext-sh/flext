@@ -15,14 +15,10 @@ from ._typings.config import FlextRootTypingsConfig
 class FlextRootTypes(t):
     """Workspace root typings facade — access via t.Root.*."""
 
-    class Root(
-        FlextRootTypingsBase,
-        FlextRootTypingsConfig,
-    ):
+    class Root(FlextRootTypingsBase, FlextRootTypingsConfig):
         """Workspace root typings MRO composition."""
 
 
 t = FlextRootTypes
 
 __all__: tuple[str, ...] = ("FlextRootTypes", "t")
-

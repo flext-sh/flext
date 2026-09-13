@@ -80,9 +80,10 @@ class FlextRootCheckChangedProjects:
         if len(args) < cls.MIN_POSITIONAL_ARGS:
             msg = "usage: check_changed_projects.py <boundary|loc-cap> [file ...]"
             raise SystemExit(msg)
-        return cli.exit(cls.main(args[0], args[1:]))
+        result = cls.main(args[0], args[1:])
+        cli.exit(result)
+        return result  # unreachable, but satisfies type checker
 
 
 if __name__ == "__main__":
     raise SystemExit(FlextRootCheckChangedProjects.cli_entry())
-

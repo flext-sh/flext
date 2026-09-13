@@ -9,5 +9,3 @@ from __future__ import annotations
 
 class FlextRootProtocolsConfig:
     """Config protocols for flext-workspace."""
-
-

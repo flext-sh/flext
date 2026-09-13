@@ -6,9 +6,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_tests import c
-
 from typing import Final
+
+from flext_tests import c
 
 
 class _WorkspaceConstants:
@@ -31,4 +31,3 @@ class TestsFlextRootConstants(c):
 
 
 __all__: list[str] = ["TestsFlextRootConstants"]
-

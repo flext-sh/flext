@@ -13,6 +13,7 @@ Usage:
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
@@ -54,10 +55,10 @@ class FlextRootDependabotMerge:
 
         base: Annotated[str, m.Field(description="Target branch for PRs")] = "main"
         dry_run: Annotated[bool, m.Field(description="Preview only")] = False
-        workers: Annotated[int, m.Field(description="Parallel repo workers")] = MAX_WORKERS
-        close_on_conflict: Annotated[bool, m.Field(description="Close conflicting PRs")] = (
-            True
-        )
+        workers: Annotated[int, m.Field(description="Parallel repo workers")] = 4
+        close_on_conflict: Annotated[
+            bool, m.Field(description="Close conflicting PRs")
+        ] = True
 
     @staticmethod
     def _run_cmd(
@@ -160,9 +161,7 @@ class FlextRootDependabotMerge:
             group_name = group.group("group").strip()
             count = group.group("count").strip()
             eco = cls.ecosystem_from_head_ref(head_ref)
-            return (
-                f"chore(deps): bump {group_name} dependency group ({count} updates) [{eco}]"
-            )
+            return f"chore(deps): bump {group_name} dependency group ({count} updates) [{eco}]"
 
         return None
 
@@ -171,7 +170,9 @@ class FlextRootDependabotMerge:
         """Update a PR branch from its base (rebase/merge) to resolve conflicts."""
         result = cls._run_cmd(["gh", "pr", "update-branch", str(number), "-R", slug])
         if result.failure:
-            error_msg = f"Failed to update PR branch {number} for {slug}: {result.error}"
+            error_msg = (
+                f"Failed to update PR branch {number} for {slug}: {result.error}"
+            )
             raise e.OperationError(
                 error_msg,
                 operation="gh pr update-branch",
@@ -200,7 +201,9 @@ class FlextRootDependabotMerge:
         if result.failure:
             error_msg = f"Failed to close PR {number} for {slug}: {result.error}"
             raise e.OperationError(
-                error_msg, operation="gh pr close", reason=result.error or "unknown error"
+                error_msg,
+                operation="gh pr close",
+                reason=result.error or "unknown error",
             )
         return result.value.exit_code == 0
 
@@ -217,7 +220,7 @@ class FlextRootDependabotMerge:
 
         Returns (merged_or_enqueued, skipped, closed).
         """
-        number = int(pr["number"])
+        number = int(str(pr["number"]))
         title = str(pr["title"])
         head_ref = str(pr["headRefName"])
         message = cls.standard_message(title, head_ref)
@@ -277,7 +280,8 @@ class FlextRootDependabotMerge:
                     return True, False, False
                 retry_stderr = retry.value.stderr.strip() if not retry.failure else ""
                 if not any(
-                    indicator in retry_stderr.lower() for indicator in conflict_indicators
+                    indicator in retry_stderr.lower()
+                    for indicator in conflict_indicators
                 ):
                     break
 
@@ -293,12 +297,7 @@ class FlextRootDependabotMerge:
 
     @classmethod
     def process_repo(
-        cls,
-        slug: str,
-        base: str,
-        *,
-        dry_run: bool,
-        close_on_conflict: bool = True,
+        cls, slug: str, base: str, *, dry_run: bool, close_on_conflict: bool = True
     ) -> tuple[int, int, int, int]:
         """Process all open Dependabot PRs for a single repository.
 
@@ -310,7 +309,7 @@ class FlextRootDependabotMerge:
 
         # Sort ascending so older PRs merge first, reducing lock-file conflicts.
         def pr_number(pr: t.JsonMapping) -> int:
-            return int(pr["number"])
+            return int(str(pr["number"]))
 
         prs_sorted = sorted(prs, key=pr_number)
 
@@ -333,7 +332,7 @@ class FlextRootDependabotMerge:
     def _parse_options(cls, argv: t.StrSequence | None = None) -> MergeOptions:
         """Parse command-line options into a validated model."""
         raw_args = list(sys.argv[1:] if argv is None else argv)
-        raw: t.JsonMapping = {
+        raw: t.MutableJsonMapping = {
             "base": "main",
             "dry_run": False,
             "workers": cls.MAX_WORKERS,
@@ -409,4 +408,3 @@ class FlextRootDependabotMerge:
 
 if __name__ == "__main__":
     raise SystemExit(FlextRootDependabotMerge.main())
-

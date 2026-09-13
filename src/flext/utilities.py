@@ -15,14 +15,10 @@ from ._utilities.config import FlextRootUtilitiesConfig
 class FlextRootUtilities(u):
     """Workspace root utilities facade — access via u.Root.*."""
 
-    class Root(
-        FlextRootUtilitiesBase,
-        FlextRootUtilitiesConfig,
-    ):
+    class Root(FlextRootUtilitiesBase, FlextRootUtilitiesConfig):
         """Workspace root utilities MRO composition."""
 
 
 u = FlextRootUtilities
 
 __all__: tuple[str, ...] = ("FlextRootUtilities", "u")
-

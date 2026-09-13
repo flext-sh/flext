@@ -6,9 +6,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_tests import p
-
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
+
+from flext_tests import p
 
 if TYPE_CHECKING:
     from importlib.machinery import ModuleSpec
@@ -66,4 +66,3 @@ class TestsFlextRootProtocols(p):
 
 
 __all__: list[str] = ["TestsFlextRootProtocols"]
-
