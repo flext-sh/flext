@@ -42,9 +42,7 @@ class TestsFlextRootModels(m):
                 action: Annotated[
                     str, u.Field(description="Sync action performed (e.g. pull, push).")
                 ]
-                repo: Annotated[
-                    Path, u.Field(description="Target repository root.")
-                ]
+                repo: Annotated[Path, u.Field(description="Target repository root.")]
 
 
 __all__: list[str] = ["TestsFlextRootModels"]

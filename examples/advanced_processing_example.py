@@ -44,7 +44,9 @@ class FlextRootAdvancedProcessing:
     @staticmethod
     def json_mapping_sequence(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
         """Convert a JSON value to a sequence of mappings."""
-        if not isinstance(value, Sequence) or isinstance(value, (str, bytes, bytearray)):
+        if not isinstance(value, Sequence) or isinstance(
+            value, (str, bytes, bytearray)
+        ):
             return ()
         mappings: MutableSequence[t.JsonMapping] = []
         for item in value:
@@ -56,7 +58,9 @@ class FlextRootAdvancedProcessing:
     @staticmethod
     def string_sequence(value: t.JsonValue) -> t.StrSequence:
         """Convert a JSON value to a sequence of strings."""
-        if not isinstance(value, Sequence) or isinstance(value, (str, bytes, bytearray)):
+        if not isinstance(value, Sequence) or isinstance(
+            value, (str, bytes, bytearray)
+        ):
             return ()
         strings: MutableSequence[str] = []
         for item in value:
@@ -78,17 +82,19 @@ type StageOperation = Callable[[t.JsonMapping], r[PipelineStageData]]
 class PipelinePayload(m.BaseModel):
     """Pipeline payload container."""
 
-    model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+    model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
         arbitrary_types_allowed=True, extra="allow"
     )
 
-    values: t.JsonMapping = u.Field(default_factory=FlextRootAdvancedProcessing.new_data_value_map)
+    values: t.JsonMapping = u.Field(
+        default_factory=FlextRootAdvancedProcessing.new_data_value_map
+    )
 
 
 class PipelineStageData(PipelinePayload):
     """Data container for pipeline stage processing."""
 
-    model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+    model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
         arbitrary_types_allowed=True, extra="allow"
     )
 
@@ -103,7 +109,7 @@ class AdvancedProcessingExample:
     class ProcessingResult(m.BaseModel):
         """Result of processing operation with metrics."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -116,13 +122,14 @@ class AdvancedProcessingExample:
             default_factory=tuple, description="List of errors encountered"
         )
         metadata: t.JsonMapping = u.Field(
-            default_factory=FlextRootAdvancedProcessing.new_scalar_dict, description="Operation metadata"
+            default_factory=FlextRootAdvancedProcessing.new_scalar_dict,
+            description="Operation metadata",
         )
 
     class ValidationResult(m.BaseModel):
         """Result of validation operation."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -176,7 +183,9 @@ class AdvancedProcessingExample:
 
         def _analyze_results(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
             """Analyze processing results."""
-            processed_items = FlextRootAdvancedProcessing.json_mapping_sequence(data.get("processed_items", []))
+            processed_items = FlextRootAdvancedProcessing.json_mapping_sequence(
+                data.get("processed_items", [])
+            )
             validation_results = FlextRootAdvancedProcessing.json_mapping_sequence(
                 data.get("validation_results", [])
             )
@@ -201,11 +210,19 @@ class AdvancedProcessingExample:
                     if result_item.get("valid") is True
                 ),
                 "total_violations": sum(
-                    len(FlextRootAdvancedProcessing.string_sequence(result_item.get("violations")))
+                    len(
+                        FlextRootAdvancedProcessing.string_sequence(
+                            result_item.get("violations")
+                        )
+                    )
                     for result_item in validation_results
                 ),
                 "total_warnings": sum(
-                    len(FlextRootAdvancedProcessing.string_sequence(result_item.get("warnings")))
+                    len(
+                        FlextRootAdvancedProcessing.string_sequence(
+                            result_item.get("warnings")
+                        )
+                    )
                     for result_item in validation_results
                 ),
             }
@@ -230,7 +247,9 @@ class AdvancedProcessingExample:
 
         def _process_parallel(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
             """Process items in parallel."""
-            items_to_process = FlextRootAdvancedProcessing.json_mapping_sequence(data.get("items", []))
+            items_to_process = FlextRootAdvancedProcessing.json_mapping_sequence(
+                data.get("items", [])
+            )
             if not items_to_process:
                 return r[PipelineStageData].fail("Invalid items data")
             start_time = time.time()
@@ -265,7 +284,9 @@ class AdvancedProcessingExample:
 
         def _validate_batch(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
             """Validate batch of items."""
-            items_to_validate = FlextRootAdvancedProcessing.json_mapping_sequence(data.get("items", []))
+            items_to_validate = FlextRootAdvancedProcessing.json_mapping_sequence(
+                data.get("items", [])
+            )
             if not items_to_validate:
                 return r[PipelineStageData].fail("Invalid items data")
             validation_results: MutableSequence[
@@ -311,7 +332,10 @@ class AdvancedProcessingExample:
             if not name or not isinstance(name, str):
                 violations.append("Missing or invalid name field")
             value = item.get("value", "")
-            if isinstance(value, str) and len(value) > FlextRootAdvancedProcessing.MAX_VALUE_LENGTH:
+            if (
+                isinstance(value, str)
+                and len(value) > FlextRootAdvancedProcessing.MAX_VALUE_LENGTH
+            ):
                 warnings.append("Value field is very long")
             return r[AdvancedProcessingExample.ValidationResult].ok(
                 AdvancedProcessingExample.ValidationResult(

@@ -57,7 +57,7 @@ class CompleteWorkflowExample:
     class WorkflowData(m.BaseModel):
         """Data container for workflow processing."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True, extra="allow"
         )
         content: t.JsonMapping = u.Field(default_factory=dict)
@@ -67,7 +67,7 @@ class CompleteWorkflowExample:
     class WorkflowContext(m.BaseModel):
         """Complete workflow context with correlation and metadata."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -95,7 +95,7 @@ class CompleteWorkflowExample:
     class WorkflowStageResult(m.BaseModel):
         """Result of a workflow stage with comprehensive tracking."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -114,13 +114,14 @@ class CompleteWorkflowExample:
             default_factory=list, description="List of warnings encountered"
         )
         stage_metadata: t.JsonMapping = u.Field(
-            default_factory=FlextRootCompleteWorkflow.json_mapping, description="Stage-specific metadata"
+            default_factory=FlextRootCompleteWorkflow.json_mapping,
+            description="Stage-specific metadata",
         )
 
     class CompleteWorkflowResult(m.BaseModel):
         """Complete workflow result with all stages aggregated."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -162,7 +163,9 @@ class CompleteWorkflowExample:
         data: t.SequenceOf[CompleteWorkflowProcessingDict] = u.Field(
             default_factory=tuple
         )
-        workflow_settings: t.ScalarMapping = u.Field(default_factory=FlextRootCompleteWorkflow.scalar_mapping)
+        workflow_settings: t.ScalarMapping = u.Field(
+            default_factory=FlextRootCompleteWorkflow.scalar_mapping
+        )
 
         def execute(self) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Execute complete workflow with automatic resource management."""

@@ -37,7 +37,8 @@ class FlextRootCheckChangedProjects:
         projects = {
             rel.parts[0]
             for raw in files
-            if (rel := FlextRootCheckChangedProjects._relative_to_workspace(raw)).parts and rel.parts[0] in known
+            if (rel := FlextRootCheckChangedProjects._relative_to_workspace(raw)).parts
+            and rel.parts[0] in known
         }
         if not projects:
             return 0

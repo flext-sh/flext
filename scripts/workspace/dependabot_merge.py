@@ -54,12 +54,14 @@ class FlextRootDependabotMerge:
         base: Annotated[str, m.Field(description="Target branch for PRs")] = "main"
         dry_run: Annotated[bool, m.Field(description="Preview only")] = False
         workers: Annotated[int, m.Field(description="Parallel repo workers")] = 4
-        close_on_conflict: Annotated[bool, m.Field(description="Close conflicting PRs")] = (
-            True
-        )
+        close_on_conflict: Annotated[
+            bool, m.Field(description="Close conflicting PRs")
+        ] = True
 
     @staticmethod
-    def _run_cmd(cmd: list[str], *, cwd: Path | None = None) -> p.Result[p.Cli.CommandOutput]:
+    def _run_cmd(
+        cmd: list[str], *, cwd: Path | None = None
+    ) -> p.Result[p.Cli.CommandOutput]:
         """Run a subprocess command with closed stdin to avoid interactive prompts."""
         return u.Cli.run_raw(cmd, cwd=cwd, input_data="")
 
@@ -82,7 +84,14 @@ class FlextRootDependabotMerge:
     @staticmethod
     def repo_slug_from_origin(path: Path) -> str | None:
         """Resolve owner/repo from a submodule's origin remote URL."""
-        result = FlextRootDependabotMerge._run_cmd(["git", "-C", str(path), "remote", "get-url", "origin"])
+        result = FlextRootDependabotMerge._run_cmd([
+            "git",
+            "-C",
+            str(path),
+            "remote",
+            "get-url",
+            "origin",
+        ])
         if result.failure or result.value.exit_code != 0:
             return None
         url = result.value.stdout.strip()
@@ -157,18 +166,25 @@ class FlextRootDependabotMerge:
             group_name = group.group("group").strip()
             count = group.group("count").strip()
             eco = FlextRootDependabotMerge.ecosystem_from_head_ref(head_ref)
-            return (
-                f"chore(deps): bump {group_name} dependency group ({count} updates) [{eco}]"
-            )
+            return f"chore(deps): bump {group_name} dependency group ({count} updates) [{eco}]"
 
         return None
 
     @staticmethod
     def update_pr_branch(slug: str, number: int) -> bool:
         """Update a PR branch from its base (rebase/merge) to resolve conflicts."""
-        result = FlextRootDependabotMerge._run_cmd(["gh", "pr", "update-branch", str(number), "-R", slug])
+        result = FlextRootDependabotMerge._run_cmd([
+            "gh",
+            "pr",
+            "update-branch",
+            str(number),
+            "-R",
+            slug,
+        ])
         if result.failure:
-            error_msg = f"Failed to update PR branch {number} for {slug}: {result.error}"
+            error_msg = (
+                f"Failed to update PR branch {number} for {slug}: {result.error}"
+            )
             raise e.OperationError(
                 error_msg,
                 operation="gh pr update-branch",
@@ -196,17 +212,15 @@ class FlextRootDependabotMerge:
         if result.failure:
             error_msg = f"Failed to close PR {number} for {slug}: {result.error}"
             raise e.OperationError(
-                error_msg, operation="gh pr close", reason=result.error or "unknown error"
+                error_msg,
+                operation="gh pr close",
+                reason=result.error or "unknown error",
             )
         return result.value.exit_code == 0
 
     @staticmethod
     def merge_pr(
-        slug: str,
-        pr: t.JsonMapping,
-        *,
-        dry_run: bool,
-        close_on_conflict: bool = True,
+        slug: str, pr: t.JsonMapping, *, dry_run: bool, close_on_conflict: bool = True
     ) -> tuple[bool, bool, bool]:
         """Merge a single Dependabot PR using the standard commit schema.
 
@@ -271,7 +285,8 @@ class FlextRootDependabotMerge:
                     return True, False, False
                 retry_stderr = retry.value.stderr.strip() if not retry.failure else ""
                 if not any(
-                    indicator in retry_stderr.lower() for indicator in conflict_indicators
+                    indicator in retry_stderr.lower()
+                    for indicator in conflict_indicators
                 ):
                     break
 
@@ -280,7 +295,9 @@ class FlextRootDependabotMerge:
                     "Closing stale Dependabot PR due to persistent merge conflicts; "
                     "Dependabot will recreate a fresh update if still needed."
                 )
-                if FlextRootDependabotMerge.close_pr(slug, number, dry_run=dry_run, reason=reason):
+                if FlextRootDependabotMerge.close_pr(
+                    slug, number, dry_run=dry_run, reason=reason
+                ):
                     return False, False, True
 
         return False, False, False
