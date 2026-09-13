@@ -150,6 +150,11 @@ mise.lock
 /.aihub/
 /.cursor/mcp.json
 
+# RESIDUE: never track backups or repo-local policy copies
+*.bak
+config/build-constraints.txt
+*aihub-prior*
+
 # Aider AI data
 .aider/
 .aider.conf.yml
@@ -451,6 +456,4 @@ CLAUDE.local.md
 !.qlty/qlty.toml
 !.vscode/settings.json
 !config/
-!config/build-constraints.txt
 !config/gitleaks-release.toml
-worktrees/
