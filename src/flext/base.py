@@ -6,14 +6,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import s
+from flext_core import s as s_core
 
 
-class FlextRootServiceBase(s[bool]):
+class FlextRootServiceBase(s_core[bool]):
     """Workspace root service base — composes through cooperative FLEXT MRO."""
 
 
-s: FlextRootServiceBase = FlextRootServiceBase.fetch_global()
-"""Process-wide root service base singleton."""
+s = FlextRootServiceBase
 
 __all__: tuple[str, ...] = ("FlextRootServiceBase", "s")

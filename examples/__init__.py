@@ -19,11 +19,17 @@ if TYPE_CHECKING:
         FlextRootExamplesConstants,
     )
     from ._models import FlextRootExamplesModels, ValidationRules
+    from .acl_processing_example import FlextRootAclProcessingExample
+    from .advanced_processing_example import FlextRootAdvancedProcessingExample
+    from .complete_workflow_example import FlextRootCompleteWorkflow
 __all__: tuple[str, ...] = (
     "ExamplesPermission",
     "ExamplesServerType",
     "ExamplesStage",
     "ExamplesWorkflowStage",
+    "FlextRootAclProcessingExample",
+    "FlextRootAdvancedProcessingExample",
+    "FlextRootCompleteWorkflow",
     "FlextRootExamplesConstants",
     "FlextRootExamplesModels",
     "ValidationRules",
@@ -51,6 +57,9 @@ _LAZY_IMPORTS = MappingProxyType(
                 "FlextRootExamplesConstants",
             ),
             "._models": ("FlextRootExamplesModels", "ValidationRules"),
+            ".acl_processing_example": ("FlextRootAclProcessingExample",),
+            ".advanced_processing_example": ("FlextRootAdvancedProcessingExample",),
+            ".complete_workflow_example": ("FlextRootCompleteWorkflow",),
             "flext": ("c", "d", "e", "h", "m", "p", "r", "s", "t", "u", "x"),
         }),
         alias_groups=MappingProxyType({}),
