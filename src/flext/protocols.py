@@ -8,6 +8,9 @@ from flext_core import p
 class FlextRootProtocols(p):
     """Flext protocols namespace."""
 
+    class Root:
+        """Workspace root protocols MRO."""
+
 
 p = FlextRootProtocols
 

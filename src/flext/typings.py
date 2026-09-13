@@ -8,6 +8,9 @@ from flext_core import t
 class FlextRootTypes(t):
     """Flext types namespace."""
 
+    class Root:
+        """Workspace root types MRO."""
+
 
 t = FlextRootTypes
 

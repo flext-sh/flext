@@ -8,6 +8,9 @@ from flext_core import u
 class FlextRootUtilities(u):
     """Flext utilities namespace."""
 
+    class Root:
+        """Workspace root utilities MRO."""
+
 
 u = FlextRootUtilities
 
