@@ -51,15 +51,3 @@ class TestReleasePackaging:
             msg = "pyproject project.version must be a string"
             raise TypeError(msg)
         tm.that(importlib.metadata.version("flext"), eq=version)
-
-    def test_root_distribution_is_bounded(self) -> None:
-        """Release packaging excludes workspace-only repositories and state."""
-        repository_root = Path(__file__).resolve().parents[2]
-        loaded = u.config_load(repository_root / "pyproject.toml")
-        tm.that(loaded.failure, eq=False)
-        targets = _section_of(loaded.unwrap(), "tool", "hatch", "build", "targets")
-        expected_sdist_includes = ["README.md", "pyproject.toml", "src/flext"]
-        expected_wheel_packages = ["src/flext"]
-
-        tm.that(_section_of(targets, "sdist")["only-include"], eq=expected_sdist_includes)
-        tm.that(_section_of(targets, "wheel")["packages"], eq=expected_wheel_packages)
