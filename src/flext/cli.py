@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_cli import cli as flext_cli
+from flext_cli import cli
 
 
 class FlextRootCli:
@@ -15,7 +15,7 @@ class FlextRootCli:
     @staticmethod
     def main() -> None:
         """Entry point for flext CLI."""
-        _ = flext_cli.execute()
+        _ = cli.execute()
 
 
 if __name__ == "__main__":
@@ -23,3 +23,4 @@ if __name__ == "__main__":
 
 
 __all__: tuple[str, ...] = ("FlextRootCli", "main")
+
