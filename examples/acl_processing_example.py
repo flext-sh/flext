@@ -207,7 +207,7 @@ class FlextRootAclProcessingExample:
         self,
         *,
         raw_entries: t.SequenceOf[t.JsonMapping],
-        server_context: t.JsonMapping,
+        _server_context: t.JsonMapping,
         parallel: bool = True,
     ) -> p.Result[t.JsonMapping]:
         """Process ACL entries through the pipeline."""
