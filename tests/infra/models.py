@@ -4,20 +4,20 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
-from flext_tests import FlextTestsModels, u
+from flext_tests import FlextTestsModels as m, u
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
-class TestsFlextRootModels(FlextTestsModels):
+class TestsFlextRootModels(m):
     class Workspace:
         """Workspace-level test models."""
 
         class Tests:
             """Test infrastructure model definitions."""
 
-            class ModuleRef(FlextTestsModels.Value):
+            class ModuleRef(m.Value):
                 """Module reference with path and name information."""
 
                 anchor_file: Annotated[
@@ -32,7 +32,7 @@ class TestsFlextRootModels(FlextTestsModels):
                     u.Field(description="Module path relative to the workspace root."),
                 ]
 
-            class SyncCall(FlextTestsModels.Value):
+            class SyncCall(m.Value):
                 """Workspace synchronization call record."""
 
                 action: Annotated[
