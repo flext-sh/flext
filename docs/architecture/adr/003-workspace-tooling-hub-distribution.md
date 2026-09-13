@@ -1,5 +1,16 @@
 # ADR-003 — Manifest-owned topology, root workspace, and autonomous Git libraries
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. A typed manifest owns repository topology](#1-a-typed-manifest-owns-repository-topology)
+  - [2. Root workspace and library metadata have distinct responsibilities](#2-root-workspace-and-library-metadata-have-distinct-responsibilities)
+  - [3. Make orchestrates the root workspace environment](#3-make-orchestrates-the-root-workspace-environment)
+  - [4. Generated profiles define attachment behavior](#4-generated-profiles-define-attachment-behavior)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
 - **Status:** Accepted (amended 2026-07-16)
 - **Date:** 2026-06-24
 - **Scope:** FLEXT, Cosmos, and standalone repository topology, dependency
@@ -47,21 +58,19 @@ The root `flext` project is the only native uv workspace. It owns the complete
 `workspace = true` for every manifest member. Those entries select local,
 editable members only when work is orchestrated from the root.
 
-Every non-root FLEXT library is independently installable. Its internal FLEXT
-requirements in `project.dependencies`, `project.optional-dependencies`, and
-`dependency-groups` are PEP 508 direct Git references pinned to the repository
-URL and branch from `config/workspace.yaml`. Member and standalone projects do
-not declare managed internal `tool.uv.sources` entries or a native
-`tool.uv.workspace` table.
+Every FLEXT distribution must be independently installable from the registry.
+Published internal runtime and optional requirements use registry-resolvable
+package names and version ranges derived by the typed dependency/version owner.
+They must not require editable paths, Git checkouts, or a consumer-side manifest
+rewrite. Member and standalone projects do not declare a native workspace table.
 
-uv applies the root source table to attached workspace members, replacing their
-direct Git requirements with the corresponding local members during root
-development. Outside the root, standard package metadata resolves the same
-distributions directly from Git without a sibling checkout or consumer-side
-manifest rewrite. Repository lock policy does not own dependency identity.
+The root source table selects local members during development. Release staging
+derives registry metadata from the accepted source and sibling versions without
+turning development overlays into published requirements. Repository provenance
+remains manifest-owned; lock policy does not own dependency identity.
 
-Mise pins Python `3.13` and uv `0.9.21` for the root checkout. Generated
-profiles require Python `3.13.11` and uv `0.9.21` from the toolchain SSOT.
+Mise and generated profiles consume the toolchain SSOT rather than versions
+copied into this ADR.
 
 ### 3. Make orchestrates the root workspace environment
 
@@ -76,21 +85,21 @@ The generated root `setup` handler:
 
 This local selection is an environment operation, never a metadata rewrite. An
 attached member delegates `setup` to the root. The same member in an independent
-clone uses its own environment and Git-sourced FLEXT dependencies.
+clone uses its own environment and registry-resolvable FLEXT dependencies.
 
 All other commands execute with `uv run --project <environment-owner>
 --no-sync`. Checks and tests therefore cannot synchronize, relock, rewrite
 metadata, or replace the editable overlay implicitly. Dependency upgrades are
-an explicit, apply-gated `deps` operation followed by `setup`.
+an explicit, apply-gated `deps` operation that updates the SSOT. `gen` writes
+managed projections, and `setup` synchronizes the environment.
 
 ### 4. Generated profiles define attachment behavior
 
-The sole template layer supports exactly three profiles:
+The sole template layer supports exactly two profiles, derived from the
+checkout itself:
 
-- `workspace-root` — owns the shared environment and declared member fleet;
-- `workspace-member` — delegates environment provisioning when attached and
-  remains independently provisionable when detached;
-- `standalone` — owns only itself and never inspects neighboring directories.
+- `workspace` — the tree has `.gitmodules`;
+- `standalone` — the tree does not.
 
 No profile depends on files outside its repository checkout.
 
@@ -100,15 +109,16 @@ No profile depends on files outside its repository checkout.
 - Local source editing is selected by the root workspace without weakening the
   autonomous package metadata of any member.
 - A missing, extra, or misclassified member is a manifest validation error.
-- Any command other than the explicit environment/dependency operations is
-  read-only with respect to locks, environments, generated files, and sources.
+- Apply-gated generation, build, and repair commands may mutate their declared
+  outputs. Checks and tests never silently synchronize or rewrite dependencies.
 
 ## Verification contract
 
 - Root lock/setup proves every declared internal dependency resolves to its
   workspace member.
-- Representative members install from their Git URLs into fresh virtual
-  environments with no parent workspace and no metadata rewrite.
+- Every candidate distribution installs in a clean environment without a parent
+  workspace. Verify dependency closure, package resources, and public runtime
+  against the exact artifact; sampling members is not fleet release evidence.
 - Standalone repositories pass from temporary clones with no neighboring
   repositories.
 - Generated manifests are byte-idempotent; only the root contains managed

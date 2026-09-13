@@ -24,23 +24,48 @@
   "quality_attributes": {
     "performance": {
       "enabled": true,
-      "metrics": ["throughput", "latency", "scalability", "efficiency"]
+      "metrics": [
+        "throughput",
+        "latency",
+        "scalability",
+        "efficiency"
+      ]
     },
     "security": {
       "enabled": true,
-      "metrics": ["authentication", "authorization", "data_protection", "compliance"]
+      "metrics": [
+        "authentication",
+        "authorization",
+        "data_protection",
+        "compliance"
+      ]
     },
     "reliability": {
       "enabled": true,
-      "metrics": ["availability", "fault_tolerance", "data_consistency", "monitoring"]
+      "metrics": [
+        "availability",
+        "fault_tolerance",
+        "data_consistency",
+        "monitoring"
+      ]
     },
     "maintainability": {
       "enabled": true,
-      "metrics": ["modularity", "testability", "documentation", "extensibility"]
+      "metrics": [
+        "modularity",
+        "testability",
+        "documentation",
+        "extensibility"
+      ]
     },
     "usability": {
       "enabled": true,
-      "metrics": ["api_design", "cli_experience", "error_messages", "documentation"]
+      "metrics": [
+        "api_design",
+        "cli_experience",
+        "error_messages",
+        "documentation"
+      ]
     }
   },
   "generation": {
@@ -76,10 +101,7 @@
   },
   "docs_validation": {
     "required_skills": [
-      "rules-docs",
-      "scripts-maintenance",
-      "readme-standardization",
-      "flext-docs-pointer-policy"
+      "flext-law"
     ],
     "gate_contract": {
       "max_violations": 0

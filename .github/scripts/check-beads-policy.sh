@@ -31,7 +31,7 @@ bad = sorted(
     if not hooks[name].get("Installed") or hooks[name].get("Outdated")
 )
 if missing or bad:
-    u.Cli.print(f"missing={missing} bad={bad}", file=sys.stderr)
+    print(f"missing={missing} bad={bad}", file=sys.stderr)
     raise SystemExit(1)
 ' || fail "bd git hooks must be installed and current"
 

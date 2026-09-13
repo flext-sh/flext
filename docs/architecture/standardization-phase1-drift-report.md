@@ -1,5 +1,18 @@
 # Standardization Phase 1 — Drift Audit Report (zero-writes)
 
+<!-- TOC START -->
+- [Method](#method)
+- [Finding 1 — `.python-version` missing on ~10 FLEXT members](#finding-1-python-version-missing-on-10-flext-members)
+- [Finding 2 — settings/config exposure convention split](#finding-2-settingsconfig-exposure-convention-split)
+- [Finding 3 — dc_backup structural drift (highest)](#finding-3-dc-backup-structural-drift-highest)
+- [Finding 4 — external/standalone managed-file gaps](#finding-4-externalstandalone-managed-file-gaps)
+- [Finding 5 — class-prefix naming](#finding-5-class-prefix-naming)
+- [Phase 2 input (ordered, deletion-first, no writes here)](#phase-2-input-ordered-deletion-first-no-writes-here)
+- [Verification of this report](#verification-of-this-report)
+- [Addendum — settings `*_dir` audit (Bead mro-377y.6, read-only)](#addendum-settings-dir-audit-bead-mro-377y6-read-only)
+  - [Phase 2/3 input for mro-377y.6](#phase-23-input-for-mro-377y6)
+<!-- TOC END -->
+
 Owner: ADR-010 · Bead `mro-377y.1` · Target line `0.20.0-dev`.
 This is a read-only drift report. No source was modified to produce it.
 
@@ -102,11 +115,11 @@ dataop, dc_backup (309/…/145 py files). Findings:
   `~/.cache`, `expanduser`) in `src/` — zero hits. Good baseline.
 - However, each project defines its OWN directory fields instead of consuming the
   root-singleton `settings.*_dir` contract (ADR-010 §3a):
-  - **dataop** `WorkspaceSettings`: own `data_dir`, `workspace_root`,
+  - **dataop** `WorkspaceSettings`: own `data_dir`, `repository_root`,
     `state_root`, `temp_dir`, plus `ClickHouseSettings.user_files_path` — own
     derivation, not the root-singleton `*_dir`.
-  - **dc_backup** `DcBackupSettings`: `workspace_root = Path.cwd()` and
-    `backup_root = workspace_root/"backup"` — derives from CWD, not from the
+  - **dc_backup** `DcBackupSettings`: `repository_root = Path.cwd()` and
+    `backup_root = repository_root/"backup"` — derives from CWD, not from the
     XDG root-singleton namespace.
   - **dcdoc**: own runtime settings; does not consume `settings.*_dir`.
 

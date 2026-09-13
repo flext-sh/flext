@@ -1,5 +1,10 @@
 # Architecture Index
 
+<!-- TOC START -->
+- [Canonical Documents](#canonical-documents)
+- [Interpretation Rule](#interpretation-rule)
+<!-- TOC END -->
+
 This directory contains the canonical architecture baseline for the FLEXT workspace plus the ADR set that records formal
 platform decisions.
 

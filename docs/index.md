@@ -1,5 +1,13 @@
 # FLEXT Documentation Index
 
+<!-- TOC START -->
+- [Quick Start](#quick-start)
+- [Current Versioning Context](#current-versioning-context)
+- [Canonical Sections](#canonical-sections)
+- [Workspace tooling](#workspace-tooling)
+- [Scope Boundary](#scope-boundary)
+<!-- TOC END -->
+
 <!-- mro-wkii.17.7 (agent: codex) — route Make and workspace guidance to the conform SSOT. -->
 
 The root portal is intentionally small. It documents the FLEXT workspace itself, not every historical note or every
@@ -15,6 +23,7 @@ non-FLEXT directory in the repository.
 - [Ecosystem coordination (internal + external projects, `0.20.0-dev`)](architecture/ecosystem-coordination.md)
 - [Migration guide](guides/migration-to-v0.13.0.md)
 - [Workspace project catalog](projects/generated/catalog.md)
+- [Documentation Knowledge Index](knowledge-index.md) — navigate by topic or responsibility
 - [Workspace API overview](api-reference/generated/overview.md)
 
 ## Current Versioning Context
@@ -25,7 +34,9 @@ non-FLEXT directory in the repository.
 
 ## Canonical Sections
 
+- [Knowledge Index](knowledge-index.md) — bridge between manual docs, CRG code wiki, and auto-generated API reference
 - [Architecture](architecture/README.md)
+- [Code Communities](architecture/communities/index.md) — CRG knowledge graph communities
 - [Guides](guides/README.md)
 - [Projects](projects/README.md)
 - [API Reference](api-reference/README.md)
@@ -35,8 +46,8 @@ non-FLEXT directory in the repository.
 
 `flext-infra codegen conform` is the sole owner of repository conformance and
 generated Makefiles. It consumes the universal `flext-cli` config, schema, and
-template engine and emits self-contained `workspace-root`, `workspace-member`,
-or `standalone` profiles. Workspace topology comes only from the validated
+template engine and emits self-contained `workspace` or `standalone`
+profiles (`.gitmodules` present vs absent). Workspace topology comes only from the validated
 manifest under `config/`; package metadata remains Git-and-branch sourced while
 root `setup` installs declared local members as editable distributions.
 

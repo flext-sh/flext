@@ -1,5 +1,16 @@
 # FLEXT DB Oracle
 
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT DB Oracle is the enterprise Oracle Database operations library of the FLEXT ecosystem. It wraps `python-oracledb`
 behind the canonical FLEXT facades (`c/m/t/p/u`, `r[T]` result contracts) so every Oracle-facing project — taps,
 targets, dbt adapters — reuses one typed connection, query, and schema-introspection stack instead of reimplementing it.

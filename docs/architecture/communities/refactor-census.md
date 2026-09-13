@@ -1,5 +1,14 @@
 # refactor-census
 
+<!-- TOC START -->
+- [Overview](#overview)
+- [Members](#members)
+- [Execution Flows](#execution-flows)
+- [Dependencies](#dependencies)
+  - [Outgoing](#outgoing)
+  - [Incoming](#incoming)
+<!-- TOC END -->
+
 ## Overview
 
 Community of 569 nodes
@@ -16,9 +25,9 @@ Community of 569 nodes
 | test_split_csv_parses_and_normalizes_tokens | Test | flext-tests/tests/unit/test_enforcement_plugin.py | 51-57 |
 | test_split_csv_is_idempotent_under_rejoin | Test | flext-tests/tests/unit/test_enforcement_plugin.py | 59-63 |
 | _stamp_workspace_markers | Function | flext-tests/tests/unit/test_enforcement_plugin.py | 68-72 |
-| test_discover_workspace_root_returns_marked_root | Test | flext-tests/tests/unit/test_enforcement_plugin.py | 74-80 |
-| test_discover_workspace_root_walks_upward_from_nested_start | Test | flext-tests/tests/unit/test_enforcement_plugin.py | 82-90 |
-| test_discover_workspace_root_returns_none_without_markers | Test | flext-tests/tests/unit/test_enforcement_plugin.py | 92-99 |
+| test_discover_repository_root_returns_marked_root | Test | flext-tests/tests/unit/test_enforcement_plugin.py | 74-80 |
+| test_discover_repository_root_walks_upward_from_nested_start | Test | flext-tests/tests/unit/test_enforcement_plugin.py | 82-90 |
+| test_discover_repository_root_returns_none_without_markers | Test | flext-tests/tests/unit/test_enforcement_plugin.py | 92-99 |
 | _config | Function | flext-tests/tests/unit/test_enforcement_plugin.py | 104-115 |
 | test_active_rules_returns_only_enabled_rules | Test | flext-tests/tests/unit/test_enforcement_plugin.py | 117-121 |
 | test_active_rules_include_restricts_to_allow_list | Test | flext-tests/tests/unit/test_enforcement_plugin.py | 123-128 |
@@ -55,7 +64,7 @@ Community of 569 nodes
 | test_violation_error_is_an_exception | Test | flext-tests/tests/unit/test_enforcement_dispatcher.py | 263-264 |
 | test_addoption_registers_flext_enforce_cli_options | Test | flext-tests/tests/unit/test_enforcement_dispatcher.py | 271-290 |
 | EnforcementDispatcherConfig | Class | flext-tests/src/flext_tests/_models/validator.py | 93-121 |
-| discover_workspace_root | Function | flext-tests/src/flext_tests/_fixtures/_enforcement_parts/config.py | 21-29 |
+| discover_repository_root | Function | flext-tests/src/flext_tests/_fixtures/_enforcement_parts/config.py | 21-29 |
 | split_csv | Function | flext-tests/src/flext_tests/_fixtures/_enforcement_parts/config.py | 32-35 |
 | resolve_config | Function | flext-tests/src/flext_tests/_fixtures/_enforcement_parts/config.py | 85-115 |
 | active_rules | Function | flext-tests/src/flext_tests/_fixtures/_enforcement_parts/config.py | 118-131 |

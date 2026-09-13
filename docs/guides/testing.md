@@ -1,48 +1,63 @@
 # Testing
 
-The workspace test taxonomy is standardized. Root guidance stays short; project-specific test details stay local to each
-project.
+<!-- TOC START -->
+- [Test design](#test-design)
+- [Canonical execution](#canonical-execution)
+- [Generated documentation](#generated-documentation)
+- [Related guides](#related-guides)
+<!-- TOC END -->
 
-## Canonical Test Layout
+FLEXT tests prove observable runtime behavior through public package facades. The
+workspace root `AGENTS.md` and the nearest package scope remain authoritative.
 
-Use these directories when the project owns tests:
+## Test design
 
-- `tests/unit`
-- `tests/integration`
-- `tests/architecture`
-- `tests/performance`
-- `tests/fixtures`
+- Exercise only public `api.py` surfaces and canonical `c`, `t`, `p`, `m`, and
+  `u` facades.
+- Put shared setup in the unified `conftest.py` and typed fixtures under
+  `tests/fixtures/`.
+- Use `tm` matchers and shared `flext-tests` builders for assertions and test
+  data.
+- Read project-owned values from typed config or settings. Never freeze current
+  defaults in tests, examples, or golden files.
+- Use real, bounded dependencies. Mocks, fakes, stubs, patching, monkeypatch
+  mutation, and assertions about private construction are prohibited.
+- Treat warnings, skips, empty collection, and suppressed failures as red.
 
-## Common Commands
+## Canonical execution
+
+Run tests only through the dispatcher at the workspace root:
 
 ```bash
-make test PROJECT=flext-infra
-make test PROJECT=flext-infra MATCH=docs
-make check PROJECT=flext-infra
-make val
+make test
 ```
 
-## Docs Pipeline Validation
+The test verb owns test selection and the retained Testmon cache. Never clear or
+bypass that cache, and never invoke the underlying test runner directly.
 
-Use the docs phases directly when you are changing documentation tooling or generated docs:
+Run the complete verification gate through the same dispatcher:
 
 ```bash
-make docs DOCS_PHASE=generate PROJECT=flext-infra
-make docs DOCS_PHASE=fix PROJECT=flext-infra FIX=1
-make docs DOCS_PHASE=audit PROJECT=flext-infra
-make docs DOCS_PHASE=build PROJECT=flext-infra
-make docs DOCS_PHASE=validate PROJECT=flext-infra
+make check
 ```
 
-## Expectations
+Selectors such as project names, file names, patterns, or changed-only flags are
+not part of this command surface. If a required workflow is missing, repair the
+root Make owner and rerun its declared verb.
 
-- generated API docs must come from public exports and docstrings
-- root docs must stay FLEXT-only
-- lint and type gates stay clean after each docs-tooling change
+## Generated documentation
 
-## Related Guides
+Member copies of this guide are generated projections. Change this root source
+and regenerate from the workspace root:
 
-- [Make Commands](make-commands.md)
+```bash
+make gen
+```
+
+Do not edit a member projection by hand.
+
+## Related guides
+
 - [Development](development.md)
-- [Configuration](configuration.md)
 - [Troubleshooting](troubleshooting.md)
+- [Testing standards](../standards/testing.md)

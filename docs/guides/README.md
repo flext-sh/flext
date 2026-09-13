@@ -1,5 +1,10 @@
 # Guides Index
 
+<!-- TOC START -->
+- [Canonical Guides](#canonical-guides)
+- [Scope](#scope)
+<!-- TOC END -->
+
 Guides are curated documents for workflow, migration, and day-to-day maintenance. They complement generated API
 reference; they do not duplicate it.
 

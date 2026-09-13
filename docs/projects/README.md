@@ -1,5 +1,11 @@
 # Projects Index
 
+<!-- TOC START -->
+- [Generated Catalog](#generated-catalog)
+- [Package Groups](#package-groups)
+- [Source of Truth](#source-of-truth)
+<!-- TOC END -->
+
 The root project portal is a workspace catalog, not a duplicate of every package README.
 
 ## Generated Catalog

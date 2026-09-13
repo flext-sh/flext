@@ -1,5 +1,18 @@
 # ADR-005 — Config, settings, constants, templates, and schemas SSOT
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. Each concern has exactly one owner](#1-each-concern-has-exactly-one-owner)
+  - [2. Facade and layer direction is strict](#2-facade-and-layer-direction-is-strict)
+  - [3. Repository conformance is data-driven](#3-repository-conformance-is-data-driven)
+  - [4. Rendering and application are deterministic transactions](#4-rendering-and-application-are-deterministic-transactions)
+  - [5. Migration is deletion-first](#5-migration-is-deletion-first)
+- [Consequences](#consequences)
+- [6. Enforcement is declarative data over a rope-only engine](#6-enforcement-is-declarative-data-over-a-rope-only-engine)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
 - **Status:** Accepted
 - **Date:** 2026-07-11
 - **Scope:** runtime configuration, declarative generation inputs, schemas,
@@ -27,8 +40,8 @@ generated artifacts, while preserving the runtime dependency direction
 
 | Concern | Canonical owner |
 | --- | --- |
-| invariants and scalar defaults | private constant modules exposed through `c` |
-| execution parametrization and repository manifests | validated files under `config/` |
+| immutable invariants | private constant modules exposed through `c` |
+| configurable policy/defaults, generation inputs, and repository manifests | validated files under `config/` |
 | environment-overridable runtime values | typed `settings.<Namespace>.*` models |
 | generated bodies | `templates/*.j2` rendered only through `flext-cli` |
 | validation contracts | matching `schemas/*.schema.json` files |
@@ -54,6 +67,10 @@ Within a package, runtime dependencies follow `c -> t -> p -> m -> u`; reverse
 references are type-checking-only. Fallible operations return `r[T]`. Shared
 behavior is composed through the public facade and MRO, with no loose helper or
 compatibility alias.
+
+Preserve generated lazy exports through `__init__.py`. Model annotations resolve
+at their declaring owner through runtime-safe imports. Eager-export rewrites,
+compatibility aliases, and `model_rebuild` are not import-cycle repairs.
 
 Across packages:
 
@@ -96,6 +113,10 @@ Conformance performs these stages in order:
 
 Check mode never writes. Apply mode never writes a partial selection. Repeated
 application of unchanged input is byte-idempotent and produces no diff.
+
+File mutation uses the existing FilePlan/publication/journal owner and CLI
+atomic-I/O primitives. Compare both content and mode for CAS; never add a
+parallel writer or weaken recovery checks to make generation pass.
 
 ### 5. Migration is deletion-first
 

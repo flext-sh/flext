@@ -229,7 +229,7 @@ flext-cli `qlty_smells.txt.bak`. O gate substitui `parse_smells.py`.
    CHECK_GATES=smells` na raiz → exit 0 + contagens por tipo no report + warnings no stderr.
 10. **B10 beads:** criar os 11 beads via `bd create`.
 
-## Verificação (por batch, DIRETO via /home/marlonsc/flext/.venv — NUNCA make check)
+## Verificação (por batch, DIRETO via ~/flext/.venv — NUNCA make check)
 
 - Baseline ANTES (salvo em scratchpad): `ruff check src tests` (contagem), `pyrefly check` (0),
   `pytest -q` (contagens) para flext-core e flext-infra.
