@@ -6,10 +6,10 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import config
+import flext_core
 
 
-class FlextRootConfig(config.FlextConfig):
+class FlextRootConfig(flext_core.config.FlextConfig):
     """Workspace root configuration — extends flext-core config."""
 
     CONFIG_DIR: str = "config"
@@ -19,3 +19,4 @@ config: FlextRootConfig = FlextRootConfig.fetch_global()
 """Process-wide root configuration singleton."""
 
 __all__: tuple[str, ...] = ("FlextRootConfig", "config")
+

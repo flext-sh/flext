@@ -128,7 +128,7 @@ class FlextRootAdvancedProcessingExample:
         processing_func: t.StrSequence,
         validation_func: t.StrSequence,
         analysis_func: t.StrSequence,
-        use_parallel: bool = True,
+        _use_parallel: bool = True,
     ) -> p.Result[t.JsonMapping]:
         """Execute the integrated pipeline."""
         return r[t.JsonMapping].ok({"items_processed": len(items)})

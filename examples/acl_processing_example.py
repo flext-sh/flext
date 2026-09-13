@@ -390,7 +390,7 @@ class FlextRootAclProcessingExample:
                     t.json_mapping_adapter().validate_python({
                         "dn": cast("str", acl["dn"]),
                         "acl_attribute": cast("str", acl["acl_attribute"]),
-                        "permissions": list(cast("list", acl["permissions"])),
+                        "permissions": list[str](cast("list[str]", acl["permissions"])),
                         "context": {
                             key: value
                             for key, value in cast(
@@ -439,8 +439,8 @@ class FlextRootAclProcessingExample:
                     t.json_mapping_adapter().validate_python({
                         "entry_dn": cast("str", r["entry_dn"]),
                         "valid": cast("bool", r["valid"]),
-                        "violations": list(cast("list", r["violations"])),
-                        "warnings": list(cast("list", r["warnings"])),
+                        "violations": list[str](cast("list[str]", r["violations"])),
+                        "warnings": list[str](cast("list[str]", r["warnings"])),
                         "processing_time": cast("float", r["processing_time"]),
                     })
                     for r in validated_results
@@ -452,10 +452,10 @@ class FlextRootAclProcessingExample:
                     1 for r in validated_results if not cast("bool", r["valid"])
                 ),
                 "total_violations": sum(
-                    len(cast("list", r["violations"])) for r in validated_results
+                    len(cast("list[str]", r["violations"])) for r in validated_results
                 ),
                 "total_warnings": sum(
-                    len(cast("list", r["warnings"])) for r in validated_results
+                    len(cast("list[str]", r["warnings"])) for r in validated_results
                 ),
             }
             return r[t.JsonMapping].ok(

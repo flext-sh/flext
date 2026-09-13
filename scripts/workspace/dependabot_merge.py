@@ -33,11 +33,11 @@ class FlextRootDependabotMerge:
     """Dependabot merge orchestrator for the FLEXT workspace."""
 
     DEPENDABOT_AUTHOR: str = "dependabot[bot]"
-    DEPENDABOT_TITLE_RE: p.RegexPattern = re.compile(
+    DEPENDABOT_TITLE_RE: t.RegexPattern = re.compile(
         r"bump\s+(?P<package>.+?)\s+from\s+(?P<old>\S+)\s+to\s+(?P<new>\S+)\s*$",
         re.IGNORECASE,
     )
-    DEPENDABOT_GROUP_RE: p.RegexPattern = re.compile(
+    DEPENDABOT_GROUP_RE: t.RegexPattern = re.compile(
         r"bump\s+(?:the\s+)?(?P<group>[\w\-]+)\s+group\s+.*\s+with\s+(?P<count>\d+)\s+updates?",
         re.IGNORECASE,
     )
@@ -108,7 +108,7 @@ class FlextRootDependabotMerge:
         }
 
     @classmethod
-    def list_dependabot_prs(cls, slug: str, base: str) -> t.Sequence[t.JsonMapping]:
+    def list_dependabot_prs(cls, slug: str, base: str) -> t.SequenceOf[t.JsonMapping]:
         """List open Dependabot PRs targeting the given base branch."""
         result = cls._run_cmd([
             "gh",
