@@ -9,7 +9,7 @@ from __future__ import annotations
 import flext_core
 
 
-class FlextRootConfig(flext_core.config.FlextConfig):
+class FlextRootConfig(flext_core.FlextConfig):
     """Workspace root configuration — extends flext-core config."""
 
     CONFIG_DIR: str = "config"
