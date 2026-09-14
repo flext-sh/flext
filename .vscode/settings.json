@@ -2,7 +2,8 @@
   "[python]": {
     "diffEditor.ignoreTrimWhitespace": true,
     "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave.source.organizeImports": "explicit"
   },
   "files.autoSave": "afterDelay",
   "files.exclude": {
