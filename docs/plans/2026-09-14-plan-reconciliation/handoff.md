@@ -307,11 +307,21 @@ Publication amendment (2026-09-14):
 
 | Repository | Preserved checkpoint | PR / integration target |
 | --- | --- | --- |
-| FLEXT root | Handoff and member snapshot recorded by the commit containing this amendment | [242](https://github.com/flext-sh/flext/pull/242), `0.12.0-dev` |
+| FLEXT root | Handoff `a6f9be8985`; subsequent WIP records the exact member snapshot | [242](https://github.com/flext-sh/flext/pull/242), `0.12.0-dev` |
 | flext-infra | `df262eb228a9fefb76b0332515d9559523ddd241` | [733](https://github.com/flext-sh/flext-infra/pull/733), `0.12.0-dev` |
+| flext-cli | `9336a7cd20be2672fda7bc31fab88dacb9b9af89` | [169](https://github.com/flext-sh/flext-cli/pull/169), `0.12.0-dev` |
+| flext-core | `9c08b68b1b36d2f952bbbc14c4b401e7b94635c0` | [475](https://github.com/flext-sh/flext-core/pull/475), `0.12.0-dev` |
+| flext-tests | `a0a0ddb532f3fcca085fc6c1aa274f00bd9bf683` | [111](https://github.com/flext-sh/flext-tests/pull/111), `0.12.0-dev` |
 | agents | `db4cdaa55c5a91d03f399ddd8da8fdc40db9a767`, then `14210a111013568502dbe307ff1eb413fed7d3e7` | [148](https://github.com/datacosmos-br/agents/pull/148), `dev` |
 | AI Hub | `4d34b263e783e957c73d96bdc5936de486992a1f`, includes resource cut `8068298d1` | [774](https://github.com/datacosmos-br/ai-hub/pull/774), `dev` |
 | Cosmos GitOps | `5494ef755ad86f76c0091fc4c0f262507905a5f2`, includes annotations `64ff6a545` | [175](https://github.com/datacosmos-br/cosmos-gitops/pull/175), `develop` |
+
+The root gitlink checkpoint is an explicit as-is preservation of the separate
+worktree, not a claim that its member tips contain the newest integration tips.
+Before eventual merge, reabsorb each fresh integration base with no-ff, validate
+and roll up the resulting published gitlinks. Never promote this snapshot by
+blindly replacing newer integration pointers. The original checkout and broad
+unrelated Cosmos superproject WIP were not staged or modified by this handoff.
 
 All listed PRs were observed Draft/WIP; none was merged by this handoff. Agents
 checkpoint `14210a111` separately preserves previously shared `wip-beads.sh`
