@@ -69,11 +69,12 @@ make fix
 make fmt
 make check
 make test
+make gen
 make waza
 ```
 
 The final generation pass proves the fixed point. Use only verbs declared by
-`make help`; every verb always applies. Do
+`make help`; each verb executes its declared operation directly. Do
 not attach project, file, pattern, action, phase, fix, or changed-only selectors,
 and do not invoke underlying tools directly.
 

@@ -29,6 +29,7 @@ make fix
 make fmt
 make check
 make test
+make gen
 ```
 
 Do not invoke Ruff or another underlying tool directly. Do not add project,

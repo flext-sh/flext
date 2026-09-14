@@ -49,6 +49,7 @@ make fix
 make fmt
 make check
 make test
+make gen
 ```
 
 Do not invoke profilers, test runners, or other underlying tools directly. Do
