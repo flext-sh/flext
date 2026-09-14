@@ -21,6 +21,10 @@ branch-matched FLEXT law without duplicating universal execution governance.
 Fail closed if a required file is absent. Never resolve `flext-law` by an
 unqualified catalog name, from `main`, or from another checkout.
 
+At resumption, recover intent, scope and exclusions, the last validated
+candidate, and the next action from the active Bead. Read the handoff it links
+as dated evidence; do not copy its state into a second tracker.
+
 ## Detection and scope
 
 - Read the typed AI Hub project association before dependency detection. A

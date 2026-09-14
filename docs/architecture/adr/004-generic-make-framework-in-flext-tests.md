@@ -13,7 +13,8 @@
 <!-- TOC END -->
 - **Status:** Accepted (replaces the former Make registry decision)
 - **Date:** 2026-06-28
-- **Amended:** 2026-07-11
+- **Amended:** 2026-09-14 (selector-free command catalog; supersedes the fixed
+  verb count and WHAT routing described by the earlier decision)
 - **Scope:** generated Makefiles, repository conformance, command routing, and
   custom project handlers.
 - **Tracking:** `mro-wkii.17`
@@ -61,47 +62,23 @@ rendering path.
 One template layer emits the complete versioned Makefile for the
 `workspace` or `standalone` profile. Make never
 regenerates itself and never includes a shared implementation from another
-checkout. `codegen` performs conformance explicitly; every verb always applies
-(operator law 2026-09-14 retired the former apply gate).
+checkout. `make gen` performs conformance explicitly. Each public verb performs
+its declared operation directly, without an effect selector.
 
-The public surface is `help` plus exactly twelve operational verbs:
-
-```text
-setup deps build check test format run status docs clean release codegen
-```
-
-`help` only describes the surface. Every operation maps to exactly one public
-verb, one `WHAT` selector, and one canonical handler. Public aliases, duplicate
-verbs, daemon targets, and alternative dispatch routes are invalid.
-
-The meanings are fixed:
-
-| Verb | Responsibility |
-| --- | --- |
-| `setup` | provision the pinned toolchain and environment |
-| `deps` | validate, create, or explicitly update locks |
-| `build` | produce project artifacts |
-| `check` | run static and policy gates |
-| `test` | execute real behavior tests |
-| `format` | always applies |
-| `run` | execute declared project capabilities |
-| `status` | report read-only diagnostics |
-| `docs` | validate or build documentation |
-| `clean` | remove declared generated/runtime artifacts only when apply-gated |
-| `release` | perform the selected tag, PR, publish, or deploy operation |
-| `codegen` | always applies conformance |
+The public verb catalog and handler mappings are owned by
+`flext-infra/config/codegen.yaml`; the complete Makefile is rendered by
+`flext-infra/src/flext_infra/templates/project/base/Makefile.j2`. Discover the
+current surface through root `make help`, rather than a second list in this ADR.
+Each operation has one canonical handler. Public aliases, duplicate dispatchers,
+and caller-provided action selectors are invalid.
 
 ### 3. `custom.mk` is a narrow private extension surface
 
-A versioned `custom.mk` may contain only private handlers named
-`_custom_<verb>_<what>`. Its schema rejects public targets, aliases, help or
-toolchain ownership, setup logic, generated-target redefinition, and a handler
-whose verb is outside the canonical surface.
-
-Project-specific capabilities are classified under the canonical verb whose
-meaning they implement. They do not create a new public command. For Cosmos
-Charts, the existing release helper remains behind `check WHAT=commit` and
-`check WHAT=push`; the push check requires the commit check and a clean commit.
+A versioned `custom.mk` may contain only the private extensions accepted by the
+canonical Make owner. It cannot own help, toolchain provisioning, public command
+routing, or generated-target definitions. Project-specific behavior follows the
+owner's declared extension contract; it does not introduce public selectors or
+a competing dispatcher.
 
 ### 4. Conformance is deterministic and fail-closed
 
@@ -129,8 +106,8 @@ an existing project with the same manifest.
 - Parse and `help` validation cover every generated profile.
 - Schema tests reject public custom targets and handler collisions.
 - Conformance check performs no writes; apply is atomic and idempotent.
-- Public-surface discovery reports only `help` and the twelve operational
-  verbs, with one handler per `(verb, WHAT)` pair.
+- Public-surface discovery agrees with the owner catalog and resolves one
+  canonical handler per declared verb.
 
 ## References
 

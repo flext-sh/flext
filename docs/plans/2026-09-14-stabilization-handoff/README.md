@@ -4,6 +4,121 @@ Data: 2026-09-14. Solicitado pelo operador às 21:43–21:46 UTC.
 Este documento é memória de transferência autorizada, não um tracker substituto.
 Beads continua sendo a autoridade de execução. **Estabilização NÃO concluída.**
 
+> **Retomada autorizada após este checkpoint:** o operador retomou a
+> estabilização operacional e a integração dos 32 projetos. A restrição abaixo
+> à publicação WIP descreve a entrega anterior e não limita a execução retomada.
+> O cursor de execução, o candidato e as evidências atuais pertencem à bead
+> `flext-itpd1.1`; as tabelas e anexos deste documento são históricos.
+>
+> **Aceite específico da retomada:** custom checks do flext-infra podem
+> permanecer vermelhos e sua implementação pertence ao outro responsável.
+> Registrar esses resultados como vermelhos, sem desligar checks ou alterar
+> expectativas para contorná-los. Esse aceite não dispensa a estabilização
+> operacional, as ferramentas padrão, os testes, a revisão do PR, o merge
+> commit, a propagação e suas evidências próprias.
+
+## Atualização de execução — 2026-09-14, 23:00 UTC
+
+**Pedido vigente:** concluir a estabilização operacional dos 32 projetos, integrar
+por PR com merge commit em `0.12.0-dev`, validar o código integrado em runtime e
+entregar o handoff. Publicar WIP preserva o trabalho, mas não encerra esse pedido.
+Somente os checks customizados do infra podem permanecer vermelhos. As seções
+numeradas abaixo preservam a auditoria anterior; esta atualização prevalece
+sobre seus estados e limites temporais.
+
+### Candidato e evidências novas
+
+Workspace: `/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0`.
+Raiz/infra: `bugfix/stabilize-0.12.0`; demais membros:
+`bugfix/absorb-checkout-20260914`. Bead ativa: `flext-itpd1.1`, épico `flext-itpd1`.
+
+- Raiz absorveu `origin/0.12.0-dev` recém-buscado (`206c02ee1d`) via merge
+  `04c4d724e84203588dccd2ede473d384c49780bc`. Conflitos dos gitlinks core/infra
+  foram resolvidos preservando os históricos. `git merge-base --is-ancestor
+  origin/0.12.0-dev HEAD` terminou em 0 naquele candidato.
+- Infra incorporou por merge o reparo de imports relativos privados
+  `1a7c784a6ae6be9d6d9125942220d83b8e85e485`; a prova de ancestralidade desse
+  commit para HEAD passou, exit 0. Isso não é merge do PR #731 em dev.
+- `make setup`, sessão 61068, exit 0: 285 pacotes resolvidos e ldap3 atualizado
+  para 2.10.2rc4. A falha anterior de coleta do DBT-LDAP não se repetiu.
+- `make gen`, sessão 22544, exit 0: 32/32, verificações internas concluídas,
+  três efeitos lazy-init nos pacotes privados `_oid`, `_oud`, `_rfc` do LDIF.
+  Ainda falta a segunda execução sobre o mesmo candidato. Houve períodos
+  longos sem progresso visível; não há prova de eliminação do gargalo.
+- `make test`, sessão 25454, ainda estava executando infra, projeto 12/32,
+  nesta atualização. Não iniciar outro Make em paralelo. Os relatórios nativos
+  ficam em `.reports/workspace/test/`; são mutáveis, não prova de outro SHA.
+- Resultados já encerrados nessa rodada: raiz 5 passed; API 2 failed/72 passed;
+  auth 162 passed; CLI 1263 passed; core 6 failed/2655 passed; DB Oracle
+  541 passed/6 skipped; DBT LDAP 44 passed; DBT LDIF 84 passed; DBT Oracle
+  69 skipped/nenhum executado; DBT Oracle WMS 26 passed; gRPC 350 passed.
+  API/core retornaram falha. Oracle com skips não satisfaz aceite operacional.
+- Após suas execuções, dois testes API trocaram o argumento inexistente
+  `is_str` pelo contrato real `is_=str`; o executor de exemplos do core passou
+  a usar `u.Cli.run_raw`, que possui limpeza de subprocessos. Essas mudanças
+  ainda aguardam revalidação; os resultados anteriores não as validam.
+
+### Publicação deste checkpoint
+
+Os quatro membros alterados foram publicados por push fast-forward, todos exit 0:
+API `f34cfb5c` ([PR #99](https://github.com/flext-sh/flext-api/pull/99)),
+core `ae3e0b07f` ([PR #474](https://github.com/flext-sh/flext-core/pull/474)),
+infra `e6c58b412` ([PR #731](https://github.com/flext-sh/flext-infra/pull/731)),
+LDIF `c42accd5` ([PR #110](https://github.com/flext-sh/flext-ldif/pull/110)).
+São checkpoints `[WIP]`, não candidatos aprovados para merge. A raiz publica
+este documento e seus gitlinks no [PR #240](https://github.com/flext-sh/flext/pull/240).
+A rodada 25454 avançou para LDIF após a captura inicial acima; continua pendente.
+
+### Falhas que impedem o encerramento
+
+O core apresentou timeouts de exemplos e processos não recolhidos, além de
+GitPython interrompido durante validação de arquitetura. A correção do executor
+de exemplos não comprova solução do timeout nem do processo Git. Não alterar
+limites para esconder o problema. Os resultados antigos de tipos precisam de
+nova rodada: os candidatos mudaram desde aquela medição.
+
+Oracle perdeu cobertura real: startup Compose retornou 125 e fixtures
+converteram falhas em skips. Inspeção encontrou Compose instalado pelo mise,
+mas nenhum diretório padrão de plugins do Docker; isso é hipótese causal forte,
+**ainda sem confirmação pelo probe canônico com stderr**. Corrigir o owner do
+provisionamento e a propagação causal, sem criar plugin manual fora da geração,
+suprimir warnings ou considerar suites inteiramente puladas como verdes.
+
+PRs adicionais ainda não incorporados: raiz #242 (`feature/plan-reconciliation`)
+e infra #732 (`fix/docs-renderer-contract`). O #242 contém automação de coleta
+com pré-requisitos incompletos; #732 mistura melhorias de docs/relatórios com
+alterações que conflitam com execução incondicional e o verificador atômico já
+adotado. Ler o diff atual, integrar por fix-forward e preservar os owners; não
+adotar gitlinks ou contratos regressivos cegamente. Não confundir suas partes
+úteis com autorização para assumir os custom checks de outro responsável.
+
+### Crítica e retomada objetiva
+
+A execução preservou os históricos, mas atrasou a entrega integrada: repetiu
+inventários e checkpoints, acumulou um candidato grande e demorou a oferecer o
+link do handoff. Rodadas longas ficaram sem candidato estável e sem fechamento
+do ciclo PR → integração → runtime. Relatos de PASS com skips e provas de
+ancestralidade na direção errada poderiam produzir conclusões falsas; este
+handoff rejeita explicitamente essas conclusões. Não há evidência para chamar a
+estabilização de concluída, nem para fechar a bead.
+
+A retomada começa por recolher o resultado completo da sessão 25454, mantendo
+as falhas custom separadas das falhas operacionais. Em seguida, corrigir os
+owners das falhas padrão demonstradas, estabilizar um candidato, executar os
+verbos nativos sem seletores e regenerar duas vezes sem mudanças intermediárias.
+Publicar o candidato validado, obter revisão independente, resolver checks e
+conversas, integrar membros por merge commit, atualizar gitlinks e integrar a
+raiz. Só depois propagar por fast-forward ao checkout principal, executar os
+verbos nativos nesse código integrado e registrar os SHAs e resultados na bead.
+A retirada de branches/worktrees exige base recém-buscada e prova de
+ancestralidade; não executar como parte de um checkpoint incompleto.
+
+Foram atualizados o skill local de roteamento, o contrato de lane, a orientação
+de governança, o ADR-004 e o plano externo para apontar para a bead e distinguir
+checkpoint, absorção de base, pouso e validação runtime. Não tratar esses textos
+como um segundo tracker. O plano S0–S8 continua referenciado abaixo e não foi
+concluído por esta atualização.
+
 ## 1. Leia primeiro: intenção vigente e fronteira desta entrega
 
 O objetivo original é integrar o trabalho útil dos **32 projetos** (superprojeto e
@@ -11,7 +126,7 @@ O objetivo original é integrar o trabalho útil dos **32 projetos** (superproje
 commit em `0.12.0-dev`, propagar para `/home/marlonsc/flext` e fechar as beads com
 evidência. Checkpoints não satisfazem esse objetivo.
 
-A instrução mais recente pede interromper a ampliação da implementação para
+A instrução vigente no momento deste checkpoint pediu interromper a ampliação da implementação para
 investigar objetivos, decisões e execução, produzir crítica profunda e handoff,
 e **gravar/publicar todo o trabalho desta lane como WIP com PR**. Esta entrega é
 esse checkpoint; não é uma promoção, uma autorização administrativa de merge ou
