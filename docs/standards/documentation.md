@@ -62,7 +62,7 @@ make fix
 make fmt
 make check
 make test
-make conform
+make gen
 ```
 
 The second generation pass must be a fixed point. Test validation retains the
