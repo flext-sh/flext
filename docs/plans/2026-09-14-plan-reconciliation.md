@@ -1,6 +1,6 @@
 ---
 title: Plan reconciliation and fixed Make contracts
-source_updated_at: 2026-09-14T17:20:28Z
+source_updated_at: 2026-09-14T20:05:00Z
 source: Operator-approved conversation
 status: Approved
 work_item: flext-ro6mj
@@ -12,7 +12,8 @@ work_item: flext-ro6mj
 
 Publish one reusable workflow, invoked by “Reconcilie os planos do FLEXT até
 terminar”, through canonical agents governance and AI Hub distribution. Collect
-FLEXT plans and their research into `docs/plans/`, then reconcile documentation,
+FLEXT plans and their research into versioned `docs/plans/`, project them into
+the configured `~/docs/plans/` destination, then reconcile documentation,
 architecture decisions, and every open and closed FLEXT Bead against evidence.
 
 Beads owns execution state and closure. This plan records the approved contract;
@@ -22,11 +23,18 @@ cycle. Implementing the collector and workflow is explicitly in scope.
 
 ## Sequential delivery
 
-1. Remove the Make effect-selection mechanism at its owners and consumers.
-2. Publish the governance workflow, distribute it through AI Hub, and integrate
-   the incremental collector with the workspace `make docs` lifecycle.
+1. Deliver the usable automation increment: fixed Make effects, the governance
+   workflow distributed through AI Hub, and the incremental collector integrated
+   with the workspace `make docs` lifecycle.
+2. Prove collection, projection, reconciliation, and interrupted-cycle resumption
+   with one real plan and its annexes through reviewed integration.
 3. Reconcile the complete source inventory, newest plan first, finishing the
    integration of each plan before starting the next.
+
+Operator amendment, 2026-09-14T20:05:00Z: automation has priority over the
+previously expanded serialization repairs. Preserve their work without turning
+this documentary cycle into a general code migration. The operator selected
+versioned FLEXT plans plus a home-directory projection, not a new repository.
 
 The active first increment is `flext-ro6mj.1`. Related prior work includes
 `flext-uqji`, `flext-im2my`, `flext-5mgye`, and `flext-xeg9x`; historical claims
@@ -60,6 +68,12 @@ generation has no further changes.
 FLEXT owns its source association and destination configuration. A thin script
 connected through `pre-docs` in `custom.mk` invokes reusable implementation
 owned by `flext-infra`. Existing session extractors remain with their owners.
+Correct the existing document generator's publication path through its
+transaction owner; do not replace the builtin docs lifecycle or introduce a
+second publisher. Declare the external projection root explicitly without
+weakening destination-boundary checks. Import existing home plans before
+publishing, and treat later home edits as incoming revisions rather than
+silently overwriting them.
 
 ## Collection contract
 
@@ -70,7 +84,8 @@ addenda, and handoffs in full; never publish entire private transcripts.
 
 Use a stable plan filename and a companion directory with the same basename.
 Preserve provider and source identity, provenance, references, and revisions.
-Order the index by the source's substantive update, newest first. Keep source,
+Order the index by the source's substantive update, oldest first, and process
+it bottom-up, newest first. Keep source,
 collection, and reconciliation timestamps separate. Use ISO 8601 UTC when a
 complete timestamp exists; preserve incomplete precision without invented time.
 
@@ -78,7 +93,10 @@ Identity and content digests include attachments. Collection is atomic,
 preserves reconciled content, and exposes changed source revisions for review.
 An unchanged second collection produces no changes. Automated collection does
 not decide implementation status, semantic supersession, deletion, or Bead
-state. Missing source access prevents claiming complete coverage.
+state: the invoked agent workflow performs those evidence-backed decisions.
+Missing source access prevents claiming complete coverage. Provider extraction
+is automatic through its declared owner, never a manual-export prerequisite.
+Collection provenance is not a second execution tracker.
 
 ## Reconciliation and ADR consolidation
 
@@ -116,6 +134,13 @@ Use bounded workers for research, disjoint simple edits, and independent review.
 The main agent owns coordination, validation, review disposition, and merges.
 Each increment requires native gates, independent approval, merge-commit
 integration, and post-merge evidence. Publish member commits before gitlinks.
+
+Necessary structural code movements use the existing Rope owner, semantic
+identity and reference propagation across all affected consumers. Compose
+facades in the generator, never by hand. Regenerate through callbacks in the
+existing loop, refresh its indices, and require convergence without ambiguous
+owner guesses or no-progress retries. This requirement does not turn document
+copying into a code refactor or authorize an unrelated migration campaign.
 
 Acceptance covers fixed Make behavior, managed identity creation/rename/removal,
 bundle and projection convergence, collection revisions and attachments,
