@@ -387,7 +387,7 @@ $${mise_config_argument:+"$$mise_config_argument"} \
 		else mise_status=$$?; cat "$$mise_log"; printf 'setup probe: failed stage=%s exit=%s\n' "$${mise_log##*/}" "$$mise_status" >&2; return "$$mise_status"; fi; \
 		cat "$$mise_log"; \
 		if grep -Fq 'mise WARN' "$$mise_log"; then \
-			printf 'WARNING: Mise emitted a warning; setup continues (see %s)\n' "$$mise_log" >&2; \
+			printf 'ERROR: Mise emitted a warning; setup stopped (see %s)\n' "$$mise_log" >&2; return 2; \
 		fi; \
 		printf 'setup probe: end stage=%s exit=0\n' "$${mise_log##*/}" >&2; \
 	}; \
@@ -397,7 +397,7 @@ $${mise_config_argument:+"$$mise_config_argument"} \
 		else mise_status=$$?; cat "$$mise_stderr_log" >&2; cat "$$mise_stdout_log"; return "$$mise_status"; fi; \
 		cat "$$mise_stderr_log" >&2; cat "$$mise_stdout_log"; \
 		if grep -Fq 'mise WARN' "$$mise_stderr_log" || grep -Fq 'mise WARN' "$$mise_stdout_log"; then \
-			printf 'WARNING: Mise emitted a warning; setup continues (see %s)\n' "$$mise_stderr_log" >&2; \
+			printf 'ERROR: Mise emitted a warning; setup stopped (see %s)\n' "$$mise_stderr_log" >&2; return 2; \
 		fi; \
 	}; \
 	latest_mise="$$mise"; \
@@ -938,10 +938,9 @@ _builtin-self-docs: _builtin_docs_all
 _builtin_build_artifacts:
 	@$(WORKSPACE_ORCHESTRATE) --verb build $(WORKSPACE_PROJECT_ARGS)
 
-# Read-only by contract in every profile: mutation belongs to `make fix`
-# and `make fmt`, which run BEFORE check. CI=Y
-# keeps make.ci.check_gates before orchestrating members (same contract as
-# standalone/member Makefiles and flext_infra check run).
+# Check applies supported fixes and fails while findings remain. The workspace
+# delegates the same operation to each member; CI=Y keeps
+# make.ci.check_gates in each generated member handler.
 _builtin_check_all: _builtin_require_environment
 	@$(WORKSPACE_ORCHESTRATE) --verb check $(WORKSPACE_PROJECT_ARGS)
 
