@@ -120,7 +120,7 @@ duplication.threshold-percent = 0.0
 
 1. Work filed as bead (tracker-owned)
 2. Lane created by formula (Gas City owns workspace/branch lifecycle)
-3. Implementation on lane, gates via canonical Make verbs (`APPLY=Y`)
+3. Implementation on lane, gates via canonical Make verbs
 4. WIP commits (scoped paths, `[WIP]` subject, local only)
 5. PR → review → `--no-ff` merge into integration branch (`0.12.0-dev`)
 6. Gates rerun on merged SHA → runtime proved on integrated state

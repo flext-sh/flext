@@ -117,7 +117,6 @@ make fix
 make fmt
 make check
 make test
-make conform
 ```
 
 The test verb retains Testmon. Never invoke Ruff, a test runner, or an ad-hoc

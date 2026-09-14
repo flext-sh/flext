@@ -61,8 +61,8 @@ rendering path.
 One template layer emits the complete versioned Makefile for the
 `workspace` or `standalone` profile. Make never
 regenerates itself and never includes a shared implementation from another
-checkout. `codegen` performs conformance explicitly; `check` is read-only and
-`apply` requires `APPLY=Y`.
+checkout. `codegen` performs conformance explicitly; every verb always applies
+(operator law 2026-09-14 retired the former apply gate).
 
 The public surface is `help` plus exactly twelve operational verbs:
 
@@ -83,13 +83,13 @@ The meanings are fixed:
 | `build` | produce project artifacts |
 | `check` | run static and policy gates |
 | `test` | execute real behavior tests |
-| `format` | check by default; modify only with `APPLY=Y` |
+| `format` | always applies |
 | `run` | execute declared project capabilities |
 | `status` | report read-only diagnostics |
 | `docs` | validate or build documentation |
 | `clean` | remove declared generated/runtime artifacts only when apply-gated |
 | `release` | perform the selected tag, PR, publish, or deploy operation |
-| `codegen` | check conformance by default; modify only with `APPLY=Y` |
+| `codegen` | always applies conformance |
 
 ### 3. `custom.mk` is a narrow private extension surface
 

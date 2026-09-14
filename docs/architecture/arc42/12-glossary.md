@@ -65,7 +65,7 @@ Terms are defined once here; other documents link instead of redefining.
 | --- | --- |
 | **Bead** | A unit of tracked work in the `bd` ledger (epic, task, bug); the mandatory work record for multi-agent sessions. |
 | **Gate** | A quality check that must be green before work lands (lint, typecheck, tests, docs audit). |
-| **Docs phase** | One stage of the docs pipeline: `generate` (mutating, requires `APPLY=Y`), `build` (strict), `validate`, `audit`. |
+| **Docs phase** | One stage of the docs pipeline: `generate` (mutating), `build` (strict), `validate`, `audit`. |
 | **Generated surface** | Files under `docs/**/generated/` reproduced by the engine; read-only for humans. |
 | **Continuous green** | The tree stays importable/collectable at every instant; a red gate is an active incident. |
 | **Fix-forward** | Defects are corrected at the source going forward; rollback of existing work is forbidden. |

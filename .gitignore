@@ -47,11 +47,14 @@ scripts/maintenance/
 
 # Python configuration
 !pyproject.toml
-!uv.lock
 !.taplo.toml
 !pyrefly.toml
 !poetry.lock
 !ruff-shared.toml
+
+# uv lockfile is never tracked
+uv.lock
+**/uv.lock
 
 # mise toolchain pinning
 !.mise.toml
