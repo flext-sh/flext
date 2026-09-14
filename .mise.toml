@@ -43,6 +43,7 @@ node = "latest"
 "npm:jscpd" = "latest"
 "github:microsoft/waza" = "latest"
 go = "latest"
+codex = "latest"
 [tools."github:qltysh/qlty"]
 version = "latest"
 github_attestations = false
