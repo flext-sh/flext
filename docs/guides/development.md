@@ -42,7 +42,7 @@ make fix
 make fmt
 make check
 make test
-make conform
+make gen
 ```
 
 The final generation run proves the fixed point. The test verb always retains
