@@ -114,6 +114,7 @@ mise.lock
 .claude/statsig/
 .claude/projects/
 .claude/shell-snapshots/
+.claude/worktrees/
 .claude/settings.local.json.bak
 
 # WHITELIST: Agent skills owned by the workspace root
