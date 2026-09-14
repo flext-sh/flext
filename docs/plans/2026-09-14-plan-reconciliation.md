@@ -1,12 +1,23 @@
 ---
 title: Plan reconciliation and fixed Make contracts
-source_updated_at: 2026-09-14T20:05:00Z
+source_updated_at: 2026-09-14T21:55:00Z
 source: Operator-approved conversation
 status: Approved
 work_item: flext-ro6mj
 ---
 
 # Plan reconciliation and fixed Make contracts
+
+## Audit and handoff amendment
+
+Operator amendment, 2026-09-14T21:55:00Z: pause implementation to investigate
+the requested outcome, critique actual execution, preserve all current work in
+published WIP branches and Draft PRs, and produce a durable handoff. Read the
+[handoff index](2026-09-14-plan-reconciliation/00-index.md) and
+[critical audit](2026-09-14-plan-reconciliation/handoff.md) before resuming.
+This changes the immediate activity, not the approved product acceptance below.
+The automation increment and full reconciliation remain incomplete; Beads owns
+their live state. No historical pass or merged earlier PR validates later WIP.
 
 ## Approved outcome
 
