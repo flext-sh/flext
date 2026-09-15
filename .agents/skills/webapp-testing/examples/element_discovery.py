@@ -37,6 +37,8 @@ with sync_playwright() as p:
         input_type = input_elem.get_attribute("type") or "text"
 
     # Take screenshot for visual reference
-    page.screenshot(path=Path(tempfile.gettempdir()) / "page_discovery.png", full_page=True)
+    page.screenshot(
+        path=Path(tempfile.gettempdir()) / "page_discovery.png", full_page=True
+    )
 
     browser.close()

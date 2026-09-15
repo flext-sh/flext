@@ -154,8 +154,9 @@ async def evaluate_single_task(
     """Evaluate a single QA pair with the given tools."""
     start_time = time.time()
 
-    response, tool_metrics = await agent_loop(client, model, qa_pair["question"],
-                                              tools, connection)
+    response, tool_metrics = await agent_loop(
+        client, model, qa_pair["question"], tools, connection
+    )
 
     response_value = extract_xml_content(response, "response")
     summary = extract_xml_content(response, "summary")
@@ -212,7 +213,9 @@ TASK_TEMPLATE = """
 
 
 async def run_evaluation(
-    eval_path: Path, connection: MCPConnection, model: str = "claude-3-7-sonnet-20250219"
+    eval_path: Path,
+    connection: MCPConnection,
+    model: str = "claude-3-7-sonnet-20250219",
 ) -> str:
     """Run evaluation with MCP server tools."""
     client = Anthropic()
@@ -221,8 +224,10 @@ async def run_evaluation(
 
     qa_pairs = parse_evaluation_file(eval_path)
 
-    results = [await evaluate_single_task(client, model, qa_pair, tools, connection)
-               for qa_pair in qa_pairs]
+    results = [
+        await evaluate_single_task(client, model, qa_pair, tools, connection)
+        for qa_pair in qa_pairs
+    ]
 
     correct = sum(r["score"] for r in results)
     accuracy = (correct / len(results)) * 100 if results else 0

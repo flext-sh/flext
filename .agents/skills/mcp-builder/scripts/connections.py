@@ -48,9 +48,7 @@ class MCPConnection(ABC):
         """Enter the transport context and initialize one session."""
         result = await self._stack.enter_async_context(context)
         read, write = _result_pair(result)
-        self.session = await self._stack.enter_async_context(
-            ClientSession(read, write)
-        )
+        self.session = await self._stack.enter_async_context(ClientSession(read, write))
         await self.session.initialize()
 
     async def __aenter__(self) -> Self:
