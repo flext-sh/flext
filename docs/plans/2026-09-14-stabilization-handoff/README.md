@@ -10,7 +10,13 @@ O operador reiterou às **23:07 UTC** o uso de `gh pr merge --merge --admin`. Re
 
 **Exclusão específica:** os custom checks do flext-infra pertencem ao outro responsável e podem permanecer vermelhos. Não alterar, desligar ou enfraquecer esses checks para produzir aprovação artificial. Essa exclusão não abrange Ruff, Pyrefly, Pyright, Mypy, testes, geração, provisionamento, processos ou runtime. Um teste do infra não é automaticamente um custom check excluído: suas falhas precisam de diagnóstico causal.
 
-A primeira regeneração **`make gen` 17490 encerrou com exit 0**; a segunda, sessão **69562**, está ativa no momento desta atualização. O coordenador serializa os Make desta lane. O próximo passo é recolher o resultado da segunda execução, iniciada sem alteração das fontes entre as duas; em caso de falha, corrigir o owner e repetir a geração. Comprovar o ponto fixo antes de atribuir sucesso ao candidato. Rodar os gates canônicos, corrigir falhas operacionais e publicar o candidato validado. A rodada de testes anterior não valida os patches posteriores.
+As duas execuções consecutivas de **`make gen` 17490 e 69562 encerraram com exit 0**.
+A segunda informou zero efeitos lazy-init em 220,21 s e completou as verificações de receipts e conformidade dos 32.
+O **`make check` 16946 está em andamento**: raiz concluída com falha por markdown (duas linhas longas já corrigidas,
+ainda sem nova prova) e 200 findings codemod custom; lint, segurança, Pyright, Pyrefly e Mypy passaram na raiz.
+Isso não valida os outros 31. Não iniciar outro Make em paralelo na lane; aguardar a rodada, corrigir os owners
+ordinários e revalidar o candidato. A rodada de testes anterior não valida os patches posteriores.
+A correção documental posterior em Target Oracle deve ser considerada na próxima prova de geração.
 
 Não recomeçar pela absorção de `206c02ee1d`: essa base já foi incorporada na lane. Antes de publicar ou pousar, buscar as bases atuais dos 32 e absorver somente divergências realmente novas por `merge --no-ff`, preservando ambos os históricos.
 
@@ -35,7 +41,7 @@ Não recomeçar pela absorção de `206c02ee1d`: essa base já foi incorporada n
 | `make test` 25454 | Concluído às 23:25:33 UTC, **exit 2**, `total=32 completed=32 passed=25 failed=7`. |
 | `make fmt` 3139 | Exit 0, 32/32; formatação do candidato, sem comprovação funcional. |
 | `make gen` 17490 | Exit 0; 32 repositórios renderizados, lazy-init com zero efeitos em 333,32 s e verificações de ponto fixo/receipts concluídas. |
-| `make gen` 69562 | Segunda execução em andamento; lazy-init informou zero efeitos em 220,21 s; ainda sem exit final. |
+| `make gen` 69562 | Exit 0; lazy-init com zero efeitos em 220,21 s, receipts e conformidade dos 32 concluídos. |
 
 Os sete membros com falha na rodada 25454 foram **API, core, infra, quality, tap-oracle-wms, target-oracle e target-oracle-wms**. O despachante completou os 32 projetos; isso não significa que todas as suites internas terminaram. Infra retornou **erro 241** antes de completar sua suite. Seus dois testes de release marcados FAILED não deixaram traceback final nem JUnit da execução interrompida; causa ainda desconhecida.
 
@@ -57,7 +63,7 @@ Os relatórios nativos em `.reports/workspace/test/` e `.reports/workspace/check
 - DB Oracle `0bd29b64`: três testes locais deixaram de exigir conexão artificial; os três casos SQL/DDL/timing foram preservados.
 - Oracle WMS `7e73e1fe`: entrada de modelo passou por `model_validate`, preservando o caso inválido.
 - Target LDAP `f0cb6ac`: falha de startup agora falha no teste; configuração vem do manager, não de um campo inexistente no ContainerInfo.
-- Aplicados e ainda sem publicação: pré-validação de credencial SMTP e ajustes de tipos em Quality, refinamento de fixture de modelo em Web, factories da união Singer e herança das exceções em Target Oracle. Não atribuir resultados anteriores a essas mudanças.
+- Publicados como WIP, ainda sem validação: pré-validação de credencial SMTP e ajustes de tipos em Quality, refinamento de fixture de modelo em Web, factories da união Singer e herança das exceções em Target Oracle. Não atribuir resultados anteriores a essas mudanças.
 - Configuração canônica do infra registra o marcador Oracle consumido pelos testes; a geração projetou essa alteração nos 32 pyprojects. Não foi desligado strict-markers.
 
 RootModel e BaseModel são classes irmãs, mas esse fato isolado não justificava ampliar `NormalizationInput`. A leitura dos consumidores mostrou que todos desembrulham RootModel antes de normalizar. A proposta de alias genérico e testes de TypeAdapter foi retirada por fix-forward; o reparo final elimina o ramo morto e preserva a entrada existente.
@@ -66,9 +72,28 @@ RootModel e BaseModel são classes irmãs, mas esse fato isolado não justificav
 
 O checkpoint da raiz **`a0d0bd81e8`** publicou o handoff e os gitlinks dos quatro membros daquele lote. Entre os checkpoints publicados estão API `f34cfb5c`, core `ae3e0b07f`, infra `e6c58b412` e LDIF `c42accd5`. Infra publicou depois `de3c7811a` por push FF, de `e6c58b412`, com `git diff --check`, commit escopado e push retornando 0.
 
-Esses hashes são **checkpoints WIP publicados**, não uma lista de SHAs integrados em dev. Os patches de fundação descritos acima ainda aguardam validação e publicação do candidato correspondente. Não fechar a bead nem alegar pouso por causa desses pushes.
+Esses hashes são **checkpoints WIP publicados**, não uma lista de SHAs integrados em dev. Os patches de fundação foram publicados no checkpoint abaixo e ainda aguardam validação do candidato correspondente. Não fechar a bead nem alegar pouso por causa desses pushes.
 
 PRs de referência: [raiz #240](https://github.com/flext-sh/flext/pull/240), [infra #731](https://github.com/flext-sh/flext-infra/pull/731), [core #474](https://github.com/flext-sh/flext-core/pull/474), [tests #110](https://github.com/flext-sh/flext-tests/pull/110), [API #99](https://github.com/flext-sh/flext-api/pull/99). Conferir estado/checks/head atuais antes do pouso; o documento não transforma estado histórico de Draft/OPEN/CLEAN em consulta atual.
+
+### Checkpoint dos membros em 2026-09-15 UTC
+
+Os 31 membros publicaram os deltas revisados por commits WIP e push FF. O snapshot
+[candidate-publication-20260915.json](candidate-publication-20260915.json) registra HEAD,
+branch, upstream e referência de publicação. As 31 referências `origin/<branch da lane>`
+coincidem com os HEADs capturados; os upstreams configurados apontam à integração e não
+comprovam publicação da lane. O snapshot inclui core dirty pelo teste de regressão iniciado
+após o checkpoint; não afirmar limpeza do candidato atual.
+
+Core `e09753be2`, tests `53c3f8f`, infra `895db98f7`, Quality `ce8b5c571`, Web `e7223adf0`
+e Target Oracle `a26ae5e12` preservam os reparos descritos acima. A documentação de herança
+Target Oracle foi alinhada ao owner. Os demais membros publicaram o marker Oracle gerado e
+formatação pertinente. Esses são SHAs de branches de trabalho, não SHAs de merge.
+
+O check atual da API terminou com exit 2 e 14 erros Mypy de conformidade entre
+`FlextResult[T]` e `p.Result[T]`, concentrados em JsonValue; causa sob investigação no core.
+Auth terminou com falhas custom (silent-failure, runtime-census, namespace), Mypy passou.
+O restante da frota continua em execução; nenhuma contagem final ou integração foi obtida.
 
 ### Endereços dos 32 PRs de estabilização
 
@@ -137,7 +162,7 @@ Ruff, Pyrefly, Pyright, Mypy e testes precisam de rodada no candidato estabiliza
 
 ## 3. Ordem de execução até o fechamento
 
-1. Terminar a segunda geração 69562 e recolher saída/exit code. Se falhar, corrigir seu owner. Obter duas gerações bem-sucedidas consecutivas no mesmo candidato e provar ponto fixo.
+1. Recolher a rodada `make check` 16946 até os 32, classificar as falhas ordinárias e corrigir seus owners. As gerações 17490/69562 já terminaram com exit 0; não repetir por memória. Alterações posteriores precisam da validação correspondente.
 2. Executar os verbos canônicos necessários na raiz da lane: setup quando o ambiente/dependências mudarem, gen, fix, fmt, check e test. Coordenar mutações para que a prova final corresponda ao candidato publicado. Sem `PROJECT=`, `WHAT=`, novos seletores ou gates avulsos.
 3. Corrigir falhas padrão e ambiente pelos owners, preservando a exclusão dos custom checks. Registrar o que executou, o que falhou e o que não teve runtime. Cada correção invalida somente as provas que dependem do trecho alterado; a rodada final deve cobrir os 32 declarados.
 4. Adjudicar contribuições úteis ainda pendentes, especialmente [raiz #242](https://github.com/flext-sh/flext/pull/242) e [infra #732](https://github.com/flext-sh/flext-infra/pull/732), contra o HEAD atual. Incorporar por fix-forward/no-ff somente semântica útil, sem restaurar políticas retiradas ou assumir implementação de custom checks excluídos. Mudanças incorporadas retornam ao ciclo de geração/validação.
@@ -159,12 +184,19 @@ Fontes canônicas de planejamento a reler integralmente ao retomar:
 Tracker sem mudar configuração:
 
 ```bash
-export BEADS_DOLT_SERVER_HOST=127.0.0.1 BEADS_DOLT_SERVER_PORT=14499 BEADS_DOLT_SERVER_DATABASE=flext
+export BEADS_DOLT_SERVER_HOST=127.0.0.1 BEADS_DOLT_SERVER_PORT=14499 BEADS_DOLT_SERVER_DATABASE=flext BEADS_DOLT_SERVER_MODE=1
 bd show flext-itpd1 flext-itpd1.1 --json
 bd list --parent flext-itpd1 --limit 100 --json
 ```
 
-Filhas de referência para consultar, sem fechar por lembrança: `flext-ocxtt` (gates), `flext-2j4lr` (desempenho/replanejamento), `flext-za816`/`flext-2h0un` (ponto fixo), `flext-bdmdg` (render spec), `flext-rlb47` (raízes Python), `flext-xldlq` (journal), `flext-7ua33`/`flext-gajwa` (scratch), `flext-x1x1q` (deptry), `flext-c4k44` (testes), `flext-rwls4` (fronteira pública). As beads `flext-c1vvr`, `flext-k7vvp`, `flext-6x6jr`, `flext-xobfw` incluem enforcers/codemods/gates: reconciliar responsabilidade excluída antes de agir. A contagem histórica de 19 filhas não é censo atual.
+No runtime bd 1.2.2-fd4 observado, host/port/database sozinhos selecionavam embedded e `bd show` falhava com “no beads database found”. O owner documenta `BEADS_DOLT_SERVER_MODE=1` como servidor externo, sem autoprovisionamento. Com essa variável adicional, `bd --readonly show flext-itpd1.1 --json` encerrou com exit 0 na lane, bead in_progress. Nenhuma configuração foi alterada.
+
+Filhas de referência para consultar, sem fechar por lembrança: `flext-ocxtt` (gates), `flext-2j4lr`
+(desempenho/replanejamento), `flext-za816`/`flext-2h0un` (ponto fixo), `flext-bdmdg` (render spec), `flext-rlb47`
+(raízes Python), `flext-xldlq` (journal), `flext-7ua33`/`flext-gajwa` (scratch), `flext-x1x1q` (deptry), `flext-c4k44`
+(testes), `flext-rwls4` (fronteira pública). As beads `flext-c1vvr`, `flext-k7vvp`, `flext-6x6jr`, `flext-xobfw` incluem
+enforcers/codemods/gates: reconciliar responsabilidade excluída antes de agir. A contagem histórica de 19 filhas não é
+censo atual.
 
 `land_members.sh` e `roll_members.sh`, no diretório externo dos planos, são apoio histórico; ler suas pré-condições antes de usar. Não assumir branches, limpeza ou base exata a partir desses scripts.
 

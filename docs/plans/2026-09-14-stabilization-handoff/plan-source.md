@@ -29,6 +29,7 @@ flext-infra `bugfix/stabilize-0.12.0` (PR draft #727). Execução **contínua at
 com verbos canônicos + commit `[WIP]` + push FF + nota na bead; só se para por bloqueio real.
 
 ## Decisões do operador em vigor (mais nova vence)
+
 1. **flext não conhece nem usa ai-hub nem Gas City** (nenhum nome, chave, tool, diretório, doc, teste).
 2. **Beads = identidade apenas.** Gerado: `issue_prefix` (`.beads/config.yaml`), `backend/database/
    dolt_database/project_id` (`.beads/metadata.json`), `config/beads.yaml` (workspace/database/prefix derivados
@@ -51,6 +52,7 @@ com verbos canônicos + commit `[WIP]` + push FF + nota na bead; só se para por
    passa a ser o ai-hub. Detalhe e fronteira (URL de remote git ≠ gh) na fatia S2b.
 
 ### S2b — Extermínio GitHub/gh (flext-infra + superprojeto)
+
 - Regra: flext-infra deixa de gerar/ler/validar qualquer superfície GitHub; consumidores religados ao que é
   git puro; o que o ai-hub precisa assumir entra no pacote ai-hub (S7).
 - Ordem (inventário 14/09):
@@ -82,6 +84,7 @@ com verbos canônicos + commit `[WIP]` + push FF + nota na bead; só se para por
   `make setup/gen/check/test` e `release plan` executam sem `gh`.
 
 ## Estado medido (14/09 ~16:20Z)
+
 - flext-infra commits na lane: `265346e77` (budget), `b7385f600` (fix/fmt apply-and-report, fix/apply),
   `bf1e1e532` (orquestrador roda tudo, `FAIL_FAST` fora, gates sem `FORCE_COLOR`). Super: `8090291786`.
 - Verbos: setup 0; gen ×2 0 (ponto fixo); fix 0 (WARN restantes); fmt 0 (32/32);
@@ -106,6 +109,7 @@ com verbos canônicos + commit `[WIP]` + push FF + nota na bead; só se para por
 - `~/wip-hier.sh`: `bash -n` OK; shellcheck NOT EXECUTED (sem binário; instalação é do ambiente do operador).
 
 ## Progresso 14/09 ~17:05Z (lane)
+
 - S0+S1 editados e validados com `APPLY=N` exportado (condição do shell do operador): `make gen` exit 0 (310
   arquivos), 2ª `APPLY=N make gen` exit 0 com `mode=apply` e 0 publicados (ponto fixo); `APPLY=N make setup`
   exit 0; `APPLY=N make fix` 32/32 passed (WARN só em flext-infra, flext-target-ldap, flext-tests);
@@ -124,6 +128,7 @@ com verbos canônicos + commit `[WIP]` + push FF + nota na bead; só se para por
 
 ## Progresso 14/09 ~17:45Z — PAUSA (handoff)
 Retomada: `~/.claude/plans/happy-puzzling-flask-handoff.md` (tabela de estado + próximos passos em ordem).
+
 - Pousado em `0.12.0-dev`: flext-infra #727 merge `b13793fb1`; 30 membros (PRs de projeções regeneradas,
   SHAs na nota de `flext-itpd1.1`); membros da lane em `0.12.0-dev` local nesses SHAs.
 - Super: merge `-s ours` de `c2dba374e0` (uv.lock/`--refresh` já no dono flext-infra; excludes aihub-hooks
@@ -144,12 +149,14 @@ e bead. `make test` entra na fatia S8.
 ## Fatias
 
 ### S0 — Checkpoint do trabalho já feito
+
 1. `make gen` ×2 (regenera lazy `__init__` do `_utilities`, projeta templates P-1c).
 2. Ciclo completo; 3 commits separados: (a) templates P-1c, (b) A5 `.gen`+políticas, (c) A4 ancestralidade.
 
 ### S1 — Superfície Make sem modo e sem validação de parâmetros
 Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/codegen.yaml`,
 `_models/config.py`, `promoted/`, testes.
+
 - `Makefile.j2`: remover `PUBLIC_INPUTS`/`COMMAND_LINE_INPUTS`/`UNKNOWN_INPUTS` e o `$(error)` (66-70);
   validação de `INDEX` (74-77); `APPLY`/`CHECK_ONLY` (78-84, comentário 57-61); `CHECK_CAPABLE_VERBS` e guarda
   (159-172); `MAKE_PROFILE` inválido (204-205); linha de help do APPLY (~462); alvos workspace
@@ -183,6 +190,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/
   em templates/config/src/tests/docs vivos; 32 Makefiles regenerados.
 
 ### S2 — Extermínio ai-hub/Gas City + beads identidade-apenas (flext-infra)
+
 - Mapa atual (14/09 ~17:10Z, pós S1): fonte `_models/config.py` (238 GithubWorkflowRenderSpec.gascity_enabled,
   413 EnvrcRenderSpec.gascity, 1481-1492 custom_issue_types+validador, 1532 target.gascity_enabled, 1672-1715
   BeadsConfigRenderSpec endpoint/gascity/types/dolt, 2314 WorkspaceBeadsServerSpec, 2361 beads_enabled, 2370/2515
@@ -237,6 +245,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/
   `bd list` funciona com o ambiente do operador após `make gen` (sem export manual além do ambiente dele).
 
 ### S3 — AGENTS.md gerido com 4 regiões
+
 - Novo managed file `AGENTS.md` (owner `agents`, policy `merge`) em `codegen.yaml` `managed_files` +
   `templates.entries` (`base/AGENTS.md.j2`), dono de merge no ponto de despacho `codegen/conform.py:1039-1060`
   (mesmo padrão do owner `vscode`); nenhum parser externo.
@@ -252,12 +261,14 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/
   ponto fixo na 2ª geração.
 
 ### S4 — Erros de execução do `make check`
+
 - flext-tests `_typings/base.py:61`: remover as aspas de `TestobjectAtom` (lane flext-tests).
 - `check/workspace_check_gates.py:298-339`: exceção de um gate vira falha daquele gate com traceback completo
   no relatório (exit ≠0), os demais gates do projeto concluem.
 - Reexecutar `make check` 32/32: zero tracebacks.
 
 ### S5 — Restante do P-1c (bootstrap seguro)
+
 - A1 validadores cruzados no import (`_models/config.py` 141-148 já removido; demais 232-256, 548-563, 596-603,
   771-789, 858-861, 1022-1087): sem função → exterminar; com função → WARNING; nenhum import aborta.
   Inclui `gates_skip`/`project_check_gates` mortos + validadores.
@@ -271,6 +282,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/
 - Prova: checkout tmp com config quebrada → setup/gen concluem com WARNINGs e estado coeso; 2ª execução sem diff.
 
 ### S6 — Frota e flext-core
+
 - flext-core: remover `budget` de `_models/project_metadata.py:88`; `_settings.py:165` mapeamento `AI_HUB_`;
   docstrings ai-hub (`_settings.py:369`, `_config.py:209`, `_utilities/settings.py:17-21`).
 - Membros: `make gen` na raiz projeta Makefile/CI/pyproject/.mise/.beads/.envrc/AGENTS.md; `git rm uv.lock`
@@ -280,6 +292,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/
 - Uma lane `bugfix/stabilize-0.12.0` por membro com mudança; PR draft; merge commit após CI verde.
 
 ### S7 — Superprojeto e docs
+
 - `pyproject.toml [project.scripts]` corrigido; `scripts/workspace/dependabot_merge.py` safe-delete (CodeQL #6);
   `exclude_docs` restaurado do histórico; gitlinks → merge SHAs.
 - Docs vivas sem ai-hub/Gas City: apagar `docs/AI_HUB_CONSUMER.md`; reescrever `docs/GOVERNANCE.md:47-48,72`,
@@ -293,6 +306,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/
   3b (flext-cli) mantido.
 
 ### S8 — Testes e pouso
+
 - `make test` na lane (flext-infra primeiro, depois frota); correção no dono de cada falha.
 - PR #727 → Ready → CI verde → merge commit em `0.12.0-dev`; PRs dos membros idem; super re-rola gitlinks,
   CI verde, merge commit; `make gen` na checkout do operador sem erro.
@@ -303,6 +317,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/
 - `~/wip-hier.sh`: shellcheck quando o binário existir no ambiente; senão NOT EXECUTED registrado.
 
 ## Verificação final
+
 - Root e membros: `make gen` ×2 sem diff; `make setup`, `make fix`, `make fmt`, `make check`, `make test` executam
   até o fim; `make check`/`make test` exit 0 no estado pousado.
 - Greps = 0 nos vivos: `APPLY|CHECK_ONLY|check_mode`, `ai-hub|aihub|agentsctl|gascity|\.gc/|AGENTS_GAS_CITY_ROOT`,

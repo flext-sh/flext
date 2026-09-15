@@ -14,6 +14,7 @@ Pausado pelo operador em 2026-09-14 ~17:45Z. Plano aprovado (SSOT de escopo e de
 (notas completas com todos os SHAs). Pacote ai-hub: `~/.claude/plans/ai-hub-envrc-agent-hooks.md`.
 
 ## Como retomar
+
 1. Tracker (não mudar config do beads):
    `export BEADS_DOLT_SERVER_HOST=127.0.0.1 BEADS_DOLT_SERVER_PORT=14499 BEADS_DOLT_SERVER_DATABASE=flext; bd show flext-itpd1.1`
 2. Lane: worktree `/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0`
@@ -21,6 +22,7 @@ Pausado pelo operador em 2026-09-14 ~17:45Z. Plano aprovado (SSOT de escopo e de
 3. Ler o plano inteiro, depois esta seção "Estado" e seguir "Próximos passos" na ordem.
 
 ## Ordens vigentes do operador (mais nova vence)
+
 - Executar o plano até o fim; validar cada ação antes de declarar pronto.
 - Sempre: fix-forward/adopt, PRs propagados à integração `0.12.0-dev` (merge commit autorizado),
   propagar a `~/flext`, beads fechadas com evidência.
@@ -30,6 +32,7 @@ Pausado pelo operador em 2026-09-14 ~17:45Z. Plano aprovado (SSOT de escopo e de
   `.envrc` termina só com `source_env_if_exists .envrc.local`.
 
 ## Estado (medido)
+
 | Item | Estado |
 |---|---|
 | flext-infra S0+S1+A4+A5 | `1ccd926e7`, PR #727 merge `b13793fb1` em `0.12.0-dev` |
@@ -42,6 +45,7 @@ Pausado pelo operador em 2026-09-14 ~17:45Z. Plano aprovado (SSOT de escopo e de
 | `~/flext` (checkout do operador) | **não propagado**; sessão externa (pid 3657409) roda `make -C <membro> gen` em loop e apaga o lock do journal — coordenar antes |
 
 ## Próximos passos (ordem)
+
 1. **PR #240**: conferir checks (`gh pr checks 240 -R flext-sh/flext`), merge commit
    (`gh pr merge 240 -R flext-sh/flext --merge`), `git merge-base --is-ancestor` contra base recém-buscada.
 2. **Propagar a `~/flext`**: sair do isolamento (ExitWorktree keep); em `~/flext` fetch e merge ff de
@@ -69,12 +73,14 @@ Pausado pelo operador em 2026-09-14 ~17:45Z. Plano aprovado (SSOT de escopo e de
 5. Achados de `make check` (lista acima) entram por dono nas fatias S5/S6/S8; `make check` precisa rodar 32/32.
 
 ## Scripts de apoio (cópias duráveis em `~/.claude/plans/land_members.sh` e `~/.claude/plans/roll_members.sh`)
+
 - `land_members.sh <assunto> <membro>…`: por membro limpo exige HEAD == `origin/0.12.0-dev`, cria
   `bugfix/stabilize-0.12.0`, `add -u`, commit, push, `gh pr create --base 0.12.0-dev`, `gh pr merge --merge`.
 - `roll_members.sh <membro>…`: exige limpo, HEAD ancestral do merge e árvore idêntica; atualiza
   `0.12.0-dev` local ff e faz switch.
 
 ## Limites do harness observados
+
 - Um só `&&`/`&` e um só `|` por comando; `;` só após `export`.
 - `git -C ~/flext` recusado enquanto em worktree (usar ExitWorktree).
 - Nota de bd com `$CLAUDE_JOB_DIR` literal foi recusada.

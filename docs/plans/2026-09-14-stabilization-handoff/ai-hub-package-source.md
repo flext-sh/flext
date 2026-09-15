@@ -17,6 +17,7 @@ manual, sem fallback, sem jeitinho. Este documento é o pacote de execução; a 
 executa numa lane própria do ai-hub com os gates nativos do ai-hub.
 
 ## 1. Sintoma medido
+
 - **Onde:** sessão Claude Code (job em background) rodando em
   `/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0`.
 - **Ambiente herdado do shell que lançou o agente, com o direnv do ai-hub:**
@@ -30,6 +31,7 @@ executa numa lane própria do ai-hub com os gates nativos do ai-hub.
   (`eval "$(direnv hook bash)"`) só cobre shells interativos.
 
 ## 2. Causas (arquivo:linha)
+
 1. **Hooks declarados mas não implantados:** `config/agents.yaml:49-117` declara a surface `hooks`
    do Claude (session-start, subagent-start, stop, stop-failure, session-end, pretool, posttool,
    user-prompt). Porém `~/.claude/settings.json` não tem chave `hooks`, então nenhum hook do
@@ -56,6 +58,7 @@ executa numa lane própria do ai-hub com os gates nativos do ai-hub.
    (`shell_environment_policy` é estático).
 
 ## 3. Mudança (um dono, sem daemon)
+
 1. **`config/agents.yaml`, engine do Claude:**
    - Declarar a variável do arquivo de ambiente, por exemplo
      `engine.hook_env_file_var: CLAUDE_ENV_FILE`, tipada no modelo do engine de agente (mesmo
@@ -82,6 +85,7 @@ executa numa lane própria do ai-hub com os gates nativos do ai-hub.
    - A parte do flext-infra (`.envrc.j2` e bootstrap) está sendo feita na sessão flext (P-1b/P-1c).
 
 ## 3b. Defeito adicional encontrado: projeções de governança commitadas com marcadores de conflito
+
 - **Onde:** `flext-cli`, no commit que o superprojeto aponta (`5b2b182d`).
 - **Arquivos rastreados com `<<<<<<< HEAD` / `>>>>>>> origin/integration/sweep-20260830`:** 69, entre
   `.claude/rules/*.md`, `.claude/skills/*/SKILL.md`, `.agents/skills/*/SKILL.md`,
@@ -102,6 +106,7 @@ executa numa lane própria do ai-hub com os gates nativos do ai-hub.
     commit da regeneração.
 
 ## 3c. Fronteira flext ↔ ai-hub decidida pelo operador (14/09, atualização)
+
 - **flext não conhece ai-hub nem Gas City.** Nenhum arquivo, chave, template ou doc do flext cita ai-hub/gc.
 - **`.envrc` do flext** termina só com `source_env_if_exists .envrc.local` (rastreado, criado uma vez, nunca
   sobrescrito). O ai-hub injeta o ambiente dele (Gas City → Beads → standalone, `BEADS_DOLT_SERVER_*`) por
@@ -123,6 +128,7 @@ executa numa lane própria do ai-hub com os gates nativos do ai-hub.
     `gascity`/endpoint). SHA de merge da S2 ainda pendente — enviar após o pouso da S2 completa.
 
 ## 4. Aceite (prova em runtime real)
+
 - **Worktree nova:** sessão Claude Code nova numa worktree nova do flext. O primeiro comando Bash
   mostra `BEADS_DOLT_SERVER_DATABASE=flext` e `VIRTUAL_ENV=<worktree>/.venv` sem nenhum export
   manual; `bd list` funciona.
