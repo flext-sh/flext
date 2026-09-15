@@ -77,10 +77,12 @@ base.
 ### 2. Common verb surface for every project
 
 Every managed project exposes the root-dispatched standard verbs declared by
-`make help`, including `setup`, `gen`, `fix`, `fmt`, `check`, `test`, `conform`,
-`mod`, `waza`, and publication. Mutation uses only `APPLY=Y`; callers do not
+`make help`, including `setup`, `gen`, `fix`, `fmt`, `check`, `test`,
+`mod`, `waza`, and publication. Every verb always applies; callers do not
 invent selectors. Standalone FLEXT projects own only themselves and never
 inspect neighbors (ADR-003).
+
+> **Superseded:** verbs are selector-free since 2026-09; mutation is the verb default (see root AGENTS.md rule 17).
 
 `setup` provisions the declared toolchain, `.venv` via uv, and environment
 integration. `gen` owns rendering managed `pyproject.toml`, `.mise.toml`, and
@@ -182,6 +184,16 @@ before accepting the fixed point. Detection-only findings keep the invocation re
 prevent independent actionable rewrites from being applied first. Every phase
 emits causal progress in less than 60 seconds; quiet, truncated, capped, or
 warning-suppressing evidence is invalid.
+
+**Alignment (2026-09-15, ADR-014 §3b "rope-in-gen").** The engine behind this
+cutover is the single Rope engine shared with `make gen` (ADR-014 §3b): mod
+performs ad-hoc structural moves; gen is the **only writer of generated
+projections** (package `__init__`/lazy-init exports — strict/total union of
+sibling `__all__`, warnings `GEN-W*`) and re-proves its render as
+`f(SSOT, templates, PINS)` per invocation. Hand-written splits are adoption
+input; when gen renders a divergent output, gen wins. Rewrites involving
+generated facets must re-run gen to reach the fixed point — never hand-edit a
+projection.
 
 Git repositories and local Git operations are owned by `flext-infra`; GitHub
 and the CRG runtime are owned by ai-hub. FLEXT may consume public ai-hub

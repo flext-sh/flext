@@ -22,7 +22,7 @@ from collections.abc import Mapping, MutableSequence, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar, cast
 
-from examples import ExamplesPermission, ExamplesServerType, m, p, t, u
+from examples import FlextRootExamplesConstants, m, p, t, u
 from flext_core import r
 
 
@@ -51,7 +51,7 @@ class _AclPermissionParser:
 
     @staticmethod
     def parse(
-        acl_value: str, permission_enum: type[ExamplesPermission]
+        acl_value: str, permission_enum: type[FlextRootExamplesConstants.Permission]
     ) -> MutableSequence[str]:
         """Parse ACL permissions from raw ACL value."""
         acl_lower = acl_value.lower()
@@ -86,7 +86,7 @@ class _AclExtractor:
     def extract(
         entry: t.JsonMapping,
         server_type: str,
-        permission_enum: type[ExamplesPermission],
+        permission_enum: type[FlextRootExamplesConstants.Permission],
     ) -> p.Result[t.SequenceOf[t.JsonMapping]]:
         """Extract ACLs using server-specific attribute detection."""
         start_time = time.time()
@@ -137,7 +137,7 @@ class _AclValidator:
     def validate(
         acl_entry: t.JsonMapping,
         context: t.JsonMapping,
-        permission_enum: type[ExamplesPermission],
+        permission_enum: type[FlextRootExamplesConstants.Permission],
     ) -> p.Result[t.JsonMapping]:
         """Validate ACL entry with complex context evaluation."""
         start_time = time.time()
@@ -196,8 +196,8 @@ class _AclValidator:
 class FlextRootAclProcessingExample:
     """Advanced ACL processing example demonstrating enterprise-grade ACL capabilities."""
 
-    ServerType = ExamplesServerType
-    Permission = ExamplesPermission
+    ServerType = FlextRootExamplesConstants.ServerType
+    Permission = FlextRootExamplesConstants.Permission
 
     def __init__(self, *, max_workers: int = 8) -> None:
         """Initialize the ACL processing pipeline."""
@@ -364,7 +364,10 @@ class FlextRootAclProcessingExample:
                 with ThreadPoolExecutor(max_workers=4) as executor:
                     futures = [
                         executor.submit(
-                            extract, item.entry, item.server_type, ExamplesPermission
+                            extract,
+                            item.entry,
+                            item.server_type,
+                            FlextRootExamplesConstants.Permission,
                         )
                         for item in entries_with_servers
                     ]
@@ -373,7 +376,11 @@ class FlextRootAclProcessingExample:
                     ]
             else:
                 extraction_results = [
-                    extract(item.entry, item.server_type, ExamplesPermission)
+                    extract(
+                        item.entry,
+                        item.server_type,
+                        FlextRootExamplesConstants.Permission,
+                    )
                     for item in entries_with_servers
                 ]
 
@@ -421,7 +428,7 @@ class FlextRootAclProcessingExample:
                 result = _AclValidator.validate(
                     acl,
                     t.json_mapping_adapter().validate_python({"strict_mode": True}),
-                    ExamplesPermission,
+                    FlextRootExamplesConstants.Permission,
                 )
                 if result.success:
                     validation_results.append(result.value)

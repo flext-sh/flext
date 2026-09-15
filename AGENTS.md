@@ -108,7 +108,7 @@ never allowed to hardcode, freeze, or implicitly assume the values that exist to
     value is parametrized through config/settings/templates.
 17. **Canonical command surface only.** Every build, check, test, generation,
     release, deploy, and validation action runs through the project's canonical
-    standard Make verbs directly, with `APPLY=Y` for mutation, or the
+    standard Make verbs directly, or the
     project's documented canonical CLI — never through ad-hoc direct tool
     invocations that bypass the command's guards, locks, dry-run semantics, and
     evidence. A broken, out-of-pattern, or misbehaving canonical command is a

@@ -1,0 +1,478 @@
+[
+  {
+    "project": "flext-api",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-api",
+    "head": "d13aef23168486cd4d87b14fec29eef8983decc4",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      ".gitignore",
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:52:54.390233+00:00"
+  },
+  {
+    "project": "flext-auth",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-auth",
+    "head": "ad3c3d855f755b21b74b36d898083019660b2f80",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      ".gitignore",
+      "Makefile",
+      "tests/__init__.py"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:52:56.447656+00:00"
+  },
+  {
+    "project": "flext-cli",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-cli",
+    "head": "f6f2d65773e4686d94118ff40db068b54a27632d",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:52:58.509832+00:00"
+  },
+  {
+    "project": "flext-core",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-core",
+    "head": "64d58f17004c192a02fc5fd4028a6de4aae53714",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:01.501747+00:00"
+  },
+  {
+    "project": "flext-db-oracle",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-db-oracle",
+    "head": "58960871f43feb52620fd8165a10d780783a6860",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:03.974717+00:00"
+  },
+  {
+    "project": "flext-dbt-ldap",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-ldap",
+    "head": "1b78d503adaa4a8ea1b47e0cbce822a759cfae48",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:06.208895+00:00"
+  },
+  {
+    "project": "flext-dbt-ldif",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-ldif",
+    "head": "b9942f2ac08a831aab0304ba9e15026177914009",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:08.557362+00:00"
+  },
+  {
+    "project": "flext-dbt-oracle",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-oracle",
+    "head": "c31cccccb2e6ba3b78601920271e88cd9920b2a2",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:10.790461+00:00"
+  },
+  {
+    "project": "flext-dbt-oracle-wms",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-oracle-wms",
+    "head": "0655d370cf8746ddc93e0dc176af595b9e315902",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:13.060248+00:00"
+  },
+  {
+    "project": "flext-grpc",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-grpc",
+    "head": "c0b863cc42c06b5073a529b3b5990b1016651f46",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile",
+      "tests/__init__.py"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:15.322430+00:00"
+  },
+  {
+    "project": "flext-infra",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-infra",
+    "head": "8b03723cbcb78e10966f5d81f49fe9f37ba64130",
+    "branch": "bugfix/stabilize-0.12.0",
+    "paths": [
+      ".gitignore",
+      "Makefile",
+      "config/codegen.yaml",
+      "src/flext_infra/templates/project/base/tool_bootstrap_recipe.j2",
+      "tests/unit/__init__.py",
+      "tests/unit/workspace/__init__.py"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:17.332336+00:00"
+  },
+  {
+    "project": "flext-ldap",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-ldap",
+    "head": "c196ab85e279bc147ba371b20ea499e217a39045",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile",
+      "pyproject.toml"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:19.298309+00:00"
+  },
+  {
+    "project": "flext-ldif",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-ldif",
+    "head": "e258c8cf183741d9efe996c0659c5122cb11947d",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:21.489734+00:00"
+  },
+  {
+    "project": "flext-meltano",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-meltano",
+    "head": "5360beb93568c653e28cbf397a760ffcbef106bb",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:23.845014+00:00"
+  },
+  {
+    "project": "flext-observability",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-observability",
+    "head": "0d417be70d0e8448b074ec4b5b1db699c6aba93f",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:25.938435+00:00"
+  },
+  {
+    "project": "flext-oracle-oic",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-oracle-oic",
+    "head": "430fff0647f7c57f91f9a5a248003013d10ebba5",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:28.115398+00:00"
+  },
+  {
+    "project": "flext-oracle-wms",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-oracle-wms",
+    "head": "fab5579b940a2af779bfde7f1e8e507c2253480e",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:30.164192+00:00"
+  },
+  {
+    "project": "flext-plugin",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-plugin",
+    "head": "6926717f1a46c13664bcab38922e25b872678902",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:32.466385+00:00"
+  },
+  {
+    "project": "flext-quality",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-quality",
+    "head": "405411f60b98bf51e6a98eb4eeef3f9ae8a54a9e",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:35.048288+00:00"
+  },
+  {
+    "project": "flext-tap-ldap",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-ldap",
+    "head": "7098697e23ebce22c345cc0dc027beea9b3a87d4",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:37.247085+00:00"
+  },
+  {
+    "project": "flext-tap-ldif",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-ldif",
+    "head": "c98066c01678d9933f7dbe85eff45ef719073629",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:39.336145+00:00"
+  },
+  {
+    "project": "flext-tap-oracle",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-oracle",
+    "head": "776aed526f5504593d5f5a8581a74aad9b5937e8",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:41.697584+00:00"
+  },
+  {
+    "project": "flext-tap-oracle-oic",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-oracle-oic",
+    "head": "26803cdb03f3044cfb343fda3532ef43b16ef0cd",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:43.777323+00:00"
+  },
+  {
+    "project": "flext-tap-oracle-wms",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-oracle-wms",
+    "head": "addf8d6bb009db109f672f9eb0458cc4f7decf71",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:46.084515+00:00"
+  },
+  {
+    "project": "flext-target-ldap",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-ldap",
+    "head": "5f0c0e4742c653625cd51845626b3c86a056210e",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:48.131723+00:00"
+  },
+  {
+    "project": "flext-target-ldif",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-ldif",
+    "head": "ee379d3b1983815a98372dbbb81f8ad87f495350",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:50.253225+00:00"
+  },
+  {
+    "project": "flext-target-oracle",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-oracle",
+    "head": "d14c5634c56338c6e73b3bc5790085f9fc545c15",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:52.184366+00:00"
+  },
+  {
+    "project": "flext-target-oracle-oic",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-oracle-oic",
+    "head": "33de3ef6007eae631879c2b8b6624da88e475ed8",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:54.239206+00:00"
+  },
+  {
+    "project": "flext-target-oracle-wms",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-oracle-wms",
+    "head": "7c51f1479c5c80dd8cd009ede453b66763be92df",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:56.520659+00:00"
+  },
+  {
+    "project": "flext-tests",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tests",
+    "head": "d5f21964b890b651b3b0cc9e092262dbcf061b42",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:53:58.380708+00:00"
+  },
+  {
+    "project": "flext-web",
+    "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-web",
+    "head": "78c03b69ecf8d817f096d1a2e2490eca26b25334",
+    "branch": "bugfix/absorb-checkout-20260914",
+    "paths": [
+      ".gitignore",
+      "Makefile"
+    ],
+    "diff_check_exit": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "status": "",
+    "remote_relation": "0\t0",
+    "observed_utc": "2026-09-14T21:54:00.481871+00:00"
+  }
+]

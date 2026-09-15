@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 
-def validate_skill(skill_path):
+def validate_skill(skill_path: str) -> tuple[bool, str]:
     """Basic validation of a skill."""
     skill_path = Path(skill_path)
 
@@ -60,8 +60,10 @@ def validate_skill(skill_path):
     return True, "Skill is valid!"
 
 
+EXPECTED_ARG_COUNT = 2
+
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) != EXPECTED_ARG_COUNT:
         sys.exit(1)
 
     valid, message = validate_skill(sys.argv[1])

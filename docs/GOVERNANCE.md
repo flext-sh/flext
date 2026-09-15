@@ -92,7 +92,7 @@ never allowed to hardcode the values that happen to exist today.
 
 ## Baseline Commands
 
-Use the standard workspace commands; mutation is selected only with `APPLY=Y`:
+Use the standard workspace commands; mutation is the verb's declared default operation (selector-free):
 
 ```bash
 make check
