@@ -6,6 +6,7 @@
   - [1. Family directory and part-class law](#1-family-directory-and-part-class-law)
   - [2. Declarative Rope rules (one YAML file per rule)](#2-declarative-rope-rules-one-yaml-file-per-rule)
   - [3. Shared change cycle (Rope replication)](#3-shared-change-cycle-rope-replication)
+  - [3b. rope-in-gen (one engine, two modes)](#3b-rope-in-gen-one-engine-two-modes)
   - [4. Centralized backup cycle](#4-centralized-backup-cycle)
   - [5. Gate alignment (one law, two engines)](#5-gate-alignment-one-law-two-engines)
 - [Consequences](#consequences)
@@ -118,6 +119,44 @@ introducing a second path:
 - The fixed-point, no-progress guard, and final validation of the mod circuit
   (canonical formatting, zero Ruff/Pyrefly/LSP diagnostics) govern the phase
   identically.
+
+### 3b. rope-in-gen (one engine, two modes)
+
+The Rope engine is a single engine with two invocation modes, and `make gen`
+is the only writer of generated projections (operator ruling 2026-09-15,
+plan-of-record `rope-gen engine strict/total init`, Bead `flext-crd1y`):
+
+1. **One engine.** The Rope change primitives
+   (`FlextInfraUtilitiesRopeRuntime` / refactor / `_utilities/rope_*`) are the
+   shared motor. There is no second engine and no reimplemented lazy-init.
+2. **Two modes.** `codegen init` (strict/total package init) and `conform`
+   (structural family repair) both drive the same engine; `make mod` remains
+   the ad-hoc structural circuit that consumes the same primitives.
+3. **gen is the projection owner.** lazy-init re-generation lives INSIDE
+   `make gen`. Every generated facet export surface is authored exclusively by
+   gen; hand-written split output is adoption input, never authority — when gen
+   renders a divergent result, gen wins and the render is re-proven.
+4. **Strict/total init.** Generated `__init__` exports are the ordered union of
+   the sibling parts' `__all__`: a sibling without `__all__` emits warning
+   `GEN-W001`; a stale `__all__` (export listed but absent from the sibling) is
+   an error (`GEN-E001`) that fails loud; a symbol collision between siblings
+   is an error. Exceptions are declared as one data line in `config/codegen.yaml`
+   (rules-as-data — never a detector branch).
+5. **Three levels.** gen emits `GEN-W*` warnings; `make fix` corrects the
+   auto-fixable subset (relativized self-imports `GEN-W002`); `make check`
+   reports anything remaining. No detector is ever disabled and no finding
+   turns into a silent success.
+6. **Render purity.** `render = f(SSOT, templates, PINS)` and nothing else: any
+   environment input (filesystem probing, wall clock, dependency resolution,
+   worktree WIP state) reaching the render is a P0 engine defect.
+7. **Transactional loop.** Per repository: authenticated input snapshot
+   (CAS) → plan everything with one Rope project per repo → publish in one
+   transactional batch → single receipt (findings + timings). A mid-publication
+   failure reverse-applies only the effects of its own invocation (empty diff
+   post-rollback is the criterion), for gen and fix alike.
+8. **Gate before the fleet.** The engine touches no fleet member before the
+   external standalone cobaias prove it green ×2 (cosmos-docgen first, then
+   `agents_governance`).
 
 ### 4. Centralized backup cycle
 

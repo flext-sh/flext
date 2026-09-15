@@ -185,6 +185,16 @@ prevent independent actionable rewrites from being applied first. Every phase
 emits causal progress in less than 60 seconds; quiet, truncated, capped, or
 warning-suppressing evidence is invalid.
 
+**Alignment (2026-09-15, ADR-014 §3b "rope-in-gen").** The engine behind this
+cutover is the single Rope engine shared with `make gen` (ADR-014 §3b): mod
+performs ad-hoc structural moves; gen is the **only writer of generated
+projections** (package `__init__`/lazy-init exports — strict/total union of
+sibling `__all__`, warnings `GEN-W*`) and re-proves its render as
+`f(SSOT, templates, PINS)` per invocation. Hand-written splits are adoption
+input; when gen renders a divergent output, gen wins. Rewrites involving
+generated facets must re-run gen to reach the fixed point — never hand-edit a
+projection.
+
 Git repositories and local Git operations are owned by `flext-infra`; GitHub
 and the CRG runtime are owned by ai-hub. FLEXT may consume public ai-hub
 commands, hooks, MCP routes, or `ai-hub-*` daemons as optional discovery
