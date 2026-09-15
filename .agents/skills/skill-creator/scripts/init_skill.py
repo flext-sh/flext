@@ -276,10 +276,7 @@ PATH_VALUE_INDEX = 3
 
 def main() -> None:
     """Create one skill directory from the routing arguments."""
-    if (
-        len(sys.argv) < REQUIRED_ARG_COUNT
-        or sys.argv[PATH_ARG_INDEX] != "--path"
-    ):
+    if len(sys.argv) < REQUIRED_ARG_COUNT or sys.argv[PATH_ARG_INDEX] != "--path":
         sys.exit(1)
 
     skill_name = sys.argv[1]

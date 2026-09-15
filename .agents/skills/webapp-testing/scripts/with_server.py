@@ -30,7 +30,9 @@ def is_server_ready(port: int, timeout: int = DEFAULT_SERVER_TIMEOUT) -> bool:
     start_time = time.time()
     while time.time() - start_time < timeout:
         try:
-            with socket.create_connection(("localhost", port), timeout=READY_POLL_INTERVAL):
+            with socket.create_connection(
+                ("localhost", port), timeout=READY_POLL_INTERVAL
+            ):
                 return True
         except (OSError, ConnectionRefusedError):
             time.sleep(SERVER_WAIT_SECONDS)
@@ -56,7 +58,8 @@ def parse_args(argv: list[str]) -> dict[str, object]:
         trailing = []
 
     if not trailing:
-        raise UsageError("a command must follow --")
+        msg = "a command must follow --"
+        raise UsageError(msg)
 
     servers: list[str] = []
     ports: list[int] = []
@@ -64,7 +67,7 @@ def parse_args(argv: list[str]) -> dict[str, object]:
     handled = 0
     while handled < len(argv):
         spell = argv[handled]
-        if spell in {"--server"}:
+        if spell == "--server":
             handled += 1
             if handled >= len(argv):
                 msg = "Missing value for --server"
@@ -72,7 +75,7 @@ def parse_args(argv: list[str]) -> dict[str, object]:
             servers.append(argv[handled])
             handled += 1
             continue
-        if spell in {"--port"}:
+        if spell == "--port":
             handled += 1
             if handled >= len(argv):
                 msg = "Missing value for --port"
@@ -80,7 +83,7 @@ def parse_args(argv: list[str]) -> dict[str, object]:
             ports.append(int(argv[handled]))
             handled += 1
             continue
-        if spell in {"--timeout"}:
+        if spell == "--timeout":
             handled += 1
             if handled >= len(argv):
                 msg = "Missing value for --timeout"
@@ -95,7 +98,8 @@ def parse_args(argv: list[str]) -> dict[str, object]:
         raise UsageError(msg)
 
     if not servers or len(servers) != len(ports):
-        raise UsageError("--port count must match --server count")
+        msg_0 = "--port count must match --server count"
+        raise UsageError(msg_0)
 
     return {"servers": servers, "ports": ports, "timeout": timeout, "command": trailing}
 
@@ -125,10 +129,7 @@ def main() -> None:
         for server in servers:
             server_argv = shlex.split(server["cmd"])
             process = subprocess.Popen(
-                server_argv,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                check=False,
+                server_argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False
             )
             server_processes.append(process)
 
