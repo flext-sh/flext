@@ -27,7 +27,7 @@ Read the canonical authorities first; this file only adds lane discipline.
 - Config/settings SSOT: [ADR-005][adr-005]
 
 [agents-md]: https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md
-[governance-md]: https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md
+[governance-md]: ../GOVERNANCE.md
 [flext-law]: https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md
 [adr-005]: ../architecture/adr/005-config-settings-constants-templates-schemas-ssot.md
 
@@ -101,6 +101,16 @@ Any edit or automated adjustment — sync, codegen round-trip, auto-fix, or
 upstream merge — is a code change. Keep automated corrections atomic within the
 lane: one coherent commit or an explicit pathspec-bound set of commits.
 
+A WIP checkpoint preserves a scoped commit on its remote branch; it does not
+establish review readiness. Resolve the integration branch from the repository's
+current declaration before fetching it. With that branch substituted for
+`<integration>`, `git merge-base --is-ancestor origin/<integration> HEAD`
+proves base absorption; the reverse order proves that the lane commit is
+contained in integration. Neither proof replaces reviewed PR merge-commit
+evidence or runtime validation. Propagation requires fresh native validation in
+the original target checkout against the integrated candidate. Record these
+boundaries separately in the active Bead.
+
 The following fresh evidence is mandatory at every boundary:
 
 - `make check` for the workspace;
@@ -117,8 +127,8 @@ boundary above and records exact commands, cwd, exit codes, and decisive output.
 ### 8.2 Updated worker lane before merge
 
 Before reporting `READY_FOR_REVIEW`, the worker must non-destructively merge the
-latest `origin/0.12.0-dev` into the lane, resolve any resulting issues without
-discarding WIP, and rerun the complete boundary above. An upstream merge is
+latest fetched integration branch into the lane, resolve resulting issues
+without discarding WIP, and rerun the complete boundary above. An upstream merge is
 absorbed only after this lane-context validation passes.
 
 ### 8.3 Original target after integration

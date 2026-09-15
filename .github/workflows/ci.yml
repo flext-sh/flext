@@ -137,9 +137,7 @@ jobs:
           git status --short
           test -z "$(git status --porcelain --untracked-files=all)"
 
-      # Setup syncs against the committed lock and refreshes it in place (`uv
-      # sync`); the fleet runs unlocked, so the deps audit proves the resolved
-      # graph instead of preserving a frozen snapshot.
+      # Setup resolves manifests into the runtime; dependency audit checks that graph.
       - name: deps check (blocking)
         run: CI=Y make audit
 
