@@ -7,12 +7,20 @@ Documento de transferência autorizado, preparado em 2026-09-14 após o encerram
 **Beads central, verificado em 2026-09-15:** executar sempre por
 `direnv exec . gc bd <comando> --rig flext`. A consulta
 `show flext-itpd1.1 --json` retornou exit 0 no checkout principal e na lane,
-com resposta do store do rig `flext`. A lane carrega a configuração operacional
-existente do principal por `source_env` em `.envrc.local`, resolvendo o principal
-pelo diretório Git compartilhado. Não repetir endpoints em configurações da lane.
+com resposta do store do rig `flext`. Essa prova é histórica: o override local
+do principal foi posteriormente retirado, e a referência correspondente da lane
+também foi removida. Não repetir endpoints em configurações da lane.
 Não executar `bd init`: ausência de configuração local não autoriza criar banco.
 O diretório `.beads` de identidade não equivale a um banco local; preservar essa
 identidade e o banco central. Nenhuma remoção de banco foi necessária nesta correção.
+
+**Última revalidação:** consultas via direnv/Gas City nos dois checkouts retornaram
+exit 1 com `Dolt server unreachable at 127.0.0.1:14499`, `connection refused` e
+`gc.endpoint_origin=inherited_city`. A resolução é central, mas o serviço estava
+indisponível nessa prova. `gc status` retornou exit 0 com estado parcial: controlador
+ativo, cidade não suspensa, rig flext suspenso e erro de acesso ao Dolt. Não confundir
+exit 0 do status parcial com saúde do banco. A última tentativa de atualizar o épico
+não ocorreu; repetir quando o owner estiver disponível, sem banco substituto.
 
 O `make check` 16946 alcançou 23/32 e continua ativo. Falhas ordinárias de tipagem
 do contrato Result permanecem; a rodada não comprova o candidato corrigido.
@@ -230,12 +238,12 @@ direnv exec . gc bd show flext-itpd1 flext-itpd1.1 --rig flext --json
 direnv exec . gc bd list --parent flext-itpd1 --limit 100 --rig flext --json
 ```
 
-A configuração operacional do principal seleciona o servidor externo e desativa
-autoinicialização. A lane consome essa mesma configuração pelo carregamento direnv;
-não repetir exports manuais nem inicializar armazenamento embedded. A consulta pelo
-Gas City retornou exit 0 nos dois checkouts e a atualização de `flext-itpd1.1`
-retornou exit 0. O acesso direto anterior com exports é evidência histórica,
-superada pela exigência explícita de carregamento automático via direnv e Gas City.
+A resolução atual pelo Gas City identifica o servidor herdado da cidade. Não repetir
+exports manuais nem inicializar armazenamento embedded. A consulta pelo Gas City e
+a atualização de `flext-itpd1.1` tiveram exit 0 anteriormente; as consultas mais
+recentes falharam por conexão recusada no servidor central, conforme seção 1.
+O acesso direto anterior com exports é evidência histórica, superada pela exigência
+explícita de carregamento automático via direnv e Gas City.
 
 Filhas de referência para consultar, sem fechar por lembrança: `flext-ocxtt` (gates), `flext-2j4lr`
 (desempenho/replanejamento), `flext-za816`/`flext-2h0un` (ponto fixo), `flext-bdmdg` (render spec), `flext-rlb47`
