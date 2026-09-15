@@ -1,168 +1,162 @@
-# FLEXT 0.12.0 — handoff crítico e checkpoint WIP
+# FLEXT 0.12.0 — handoff de estabilização em andamento
 
-Data: 2026-09-14. Solicitado pelo operador às 21:43–21:46 UTC.
-Este documento é memória de transferência autorizada, não um tracker substituto.
-Beads continua sendo a autoridade de execução. **Estabilização NÃO concluída.**
+Documento de transferência autorizado, preparado em 2026-09-14 após o encerramento da rodada de testes às 23:25:33 UTC. Não é tracker substituto: a execução permanece em `flext-itpd1.1`, no épico `flext-itpd1`. Estabilização não concluída.
 
-> **Retomada autorizada após este checkpoint:** o operador retomou a
-> estabilização operacional e a integração dos 32 projetos. A restrição abaixo
-> à publicação WIP descreve a entrega anterior e não limita a execução retomada.
-> O cursor de execução, o candidato e as evidências atuais pertencem à bead
-> `flext-itpd1.1`; as tabelas e anexos deste documento são históricos.
->
-> **Aceite específico da retomada:** custom checks do flext-infra podem
-> permanecer vermelhos e sua implementação pertence ao outro responsável.
-> Registrar esses resultados como vermelhos, sem desligar checks ou alterar
-> expectativas para contorná-los. Esse aceite não dispensa a estabilização
-> operacional, as ferramentas padrão, os testes, a revisão do PR, o merge
-> commit, a propagação e suas evidências próprias.
+## 1. Estado vigente e próxima ação
 
-## Atualização de execução — 2026-09-14, 23:00 UTC
+O pedido vigente é estabilizar operacionalmente e integrar os **32 projetos** (raiz e 31 membros) por PR com **merge commit** em `0.12.0-dev`, propagar o código integrado ao checkout principal, provar runtime e fechar as beads com evidência. Publicação de WIP preserva trabalho; não comprova pouso, aprovação de gates ou runtime.
 
-**Pedido vigente:** concluir a estabilização operacional dos 32 projetos, integrar
-por PR com merge commit em `0.12.0-dev`, validar o código integrado em runtime e
-entregar o handoff. Publicar WIP preserva o trabalho, mas não encerra esse pedido.
-Somente os checks customizados do infra podem permanecer vermelhos. As seções
-numeradas abaixo preservam a auditoria anterior; esta atualização prevalece
-sobre seus estados e limites temporais.
+O operador reiterou às **23:07 UTC** o uso de `gh pr merge --merge --admin`. Registrar essa autorização administrativa como tal, sem apresentá-la como aprovação independente satisfeita. Ela não converte checks vermelhos em verdes nem dispensa as demais provas exigidas para integração e fechamento.
 
-### Candidato e evidências novas
+**Exclusão específica:** os custom checks do flext-infra pertencem ao outro responsável e podem permanecer vermelhos. Não alterar, desligar ou enfraquecer esses checks para produzir aprovação artificial. Essa exclusão não abrange Ruff, Pyrefly, Pyright, Mypy, testes, geração, provisionamento, processos ou runtime. Um teste do infra não é automaticamente um custom check excluído: suas falhas precisam de diagnóstico causal.
 
-Workspace: `/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0`.
-Raiz/infra: `bugfix/stabilize-0.12.0`; demais membros:
-`bugfix/absorb-checkout-20260914`. Bead ativa: `flext-itpd1.1`, épico `flext-itpd1`.
+A primeira regeneração **`make gen` 17490 encerrou com exit 0**; a segunda, sessão **69562**, está ativa no momento desta atualização. O coordenador serializa os Make desta lane. O próximo passo é recolher o resultado da segunda execução, iniciada sem alteração das fontes entre as duas; em caso de falha, corrigir o owner e repetir a geração. Comprovar o ponto fixo antes de atribuir sucesso ao candidato. Rodar os gates canônicos, corrigir falhas operacionais e publicar o candidato validado. A rodada de testes anterior não valida os patches posteriores.
 
-- Raiz absorveu `origin/0.12.0-dev` recém-buscado (`206c02ee1d`) via merge
-  `04c4d724e84203588dccd2ede473d384c49780bc`. Conflitos dos gitlinks core/infra
-  foram resolvidos preservando os históricos. `git merge-base --is-ancestor
-  origin/0.12.0-dev HEAD` terminou em 0 naquele candidato.
-- Infra incorporou por merge o reparo de imports relativos privados
-  `1a7c784a6ae6be9d6d9125942220d83b8e85e485`; a prova de ancestralidade desse
-  commit para HEAD passou, exit 0. Isso não é merge do PR #731 em dev.
-- `make setup`, sessão 61068, exit 0: 285 pacotes resolvidos e ldap3 atualizado
-  para 2.10.2rc4. A falha anterior de coleta do DBT-LDAP não se repetiu.
-- `make gen`, sessão 22544, exit 0: 32/32, verificações internas concluídas,
-  três efeitos lazy-init nos pacotes privados `_oid`, `_oud`, `_rfc` do LDIF.
-  Ainda falta a segunda execução sobre o mesmo candidato. Houve períodos
-  longos sem progresso visível; não há prova de eliminação do gargalo.
-- `make test`, sessão 25454, ainda estava executando infra, projeto 12/32,
-  nesta atualização. Não iniciar outro Make em paralelo. Os relatórios nativos
-  ficam em `.reports/workspace/test/`; são mutáveis, não prova de outro SHA.
-- Resultados já encerrados nessa rodada: raiz 5 passed; API 2 failed/72 passed;
-  auth 162 passed; CLI 1263 passed; core 6 failed/2655 passed; DB Oracle
-  541 passed/6 skipped; DBT LDAP 44 passed; DBT LDIF 84 passed; DBT Oracle
-  69 skipped/nenhum executado; DBT Oracle WMS 26 passed; gRPC 350 passed.
-  API/core retornaram falha. Oracle com skips não satisfaz aceite operacional.
-- Após suas execuções, dois testes API trocaram o argumento inexistente
-  `is_str` pelo contrato real `is_=str`; o executor de exemplos do core passou
-  a usar `u.Cli.run_raw`, que possui limpeza de subprocessos. Essas mudanças
-  ainda aguardam revalidação; os resultados anteriores não as validam.
+Não recomeçar pela absorção de `206c02ee1d`: essa base já foi incorporada na lane. Antes de publicar ou pousar, buscar as bases atuais dos 32 e absorver somente divergências realmente novas por `merge --no-ff`, preservando ambos os históricos.
 
-### Publicação deste checkpoint
+### Workspace e coordenação
 
-Os quatro membros alterados foram publicados por push fast-forward, todos exit 0:
-API `f34cfb5c` ([PR #99](https://github.com/flext-sh/flext-api/pull/99)),
-core `ae3e0b07f` ([PR #474](https://github.com/flext-sh/flext-core/pull/474)),
-infra `e6c58b412` ([PR #731](https://github.com/flext-sh/flext-infra/pull/731)),
-LDIF `c42accd5` ([PR #110](https://github.com/flext-sh/flext-ldif/pull/110)).
-São checkpoints `[WIP]`, não candidatos aprovados para merge. A raiz publica
-este documento e seus gitlinks no [PR #240](https://github.com/flext-sh/flext/pull/240).
-A rodada 25454 avançou para LDIF após a captura inicial acima; continua pendente.
+- Lane existente: `/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0`.
+- Raiz e infra: `bugfix/stabilize-0.12.0`.
+- Demais membros: `bugfix/absorb-checkout-20260914`.
+- Checkout principal: `/home/marlonsc/flext`; cooperar com seu estado atual antes da propagação.
+- Cursor: `flext-itpd1.1`; integração relacionada: `flext-yirgp`.
+- Não criar clones/worktrees, não apagar journal lock e não iniciar outro Make durante a geração.
+- Preservar todo WIP e resolver fix-forward. Sem reset, restore, checkout destrutivo, stash, clean, rebase, force-push ou no-verify.
 
-### Falhas que impedem o encerramento
+### Evidências encerradas
 
-O core apresentou timeouts de exemplos e processos não recolhidos, além de
-GitPython interrompido durante validação de arquitetura. A correção do executor
-de exemplos não comprova solução do timeout nem do processo Git. Não alterar
-limites para esconder o problema. Os resultados antigos de tipos precisam de
-nova rodada: os candidatos mudaram desde aquela medição.
+| Operação | Evidência e limite |
+| --- | --- |
+| Absorção da base na raiz | `origin/0.12.0-dev` recém-buscado em `206c02ee1d`, incorporado por `04c4d724e84203588dccd2ede473d384c49780bc`; prova base → HEAD retornou 0 naquele candidato. Isso comprova absorção, não pouso. |
+| Absorção no infra | `1a7c784a6ae6be9d6d9125942220d83b8e85e485` incorporado na lane, ancestralidade para HEAD exit 0; não comprova merge de #731 em dev. |
+| `make setup` 61068 | Exit 0; 285 pacotes resolvidos, ldap3 instalado em 2.10.2rc4. |
+| `make gen` 22544 | Exit 0, 32/32; três efeitos lazy-init nos pacotes LDIF `_oid`, `_oud`, `_rfc`. Não houve segunda execução comprovada sobre aquele mesmo candidato. |
+| `make test` 25454 | Concluído às 23:25:33 UTC, **exit 2**, `total=32 completed=32 passed=25 failed=7`. |
+| `make fmt` 3139 | Exit 0, 32/32; formatação do candidato, sem comprovação funcional. |
+| `make gen` 17490 | Exit 0; 32 repositórios renderizados, lazy-init com zero efeitos em 333,32 s e verificações de ponto fixo/receipts concluídas. |
+| `make gen` 69562 | Segunda execução em andamento; lazy-init informou zero efeitos em 220,21 s; ainda sem exit final. |
 
-Oracle perdeu cobertura real: startup Compose retornou 125 e fixtures
-converteram falhas em skips. Inspeção encontrou Compose instalado pelo mise,
-mas nenhum diretório padrão de plugins do Docker; isso é hipótese causal forte,
-**ainda sem confirmação pelo probe canônico com stderr**. Corrigir o owner do
-provisionamento e a propagação causal, sem criar plugin manual fora da geração,
-suprimir warnings ou considerar suites inteiramente puladas como verdes.
+Os sete membros com falha na rodada 25454 foram **API, core, infra, quality, tap-oracle-wms, target-oracle e target-oracle-wms**. O despachante completou os 32 projetos; isso não significa que todas as suites internas terminaram. Infra retornou **erro 241** antes de completar sua suite. Seus dois testes de release marcados FAILED não deixaram traceback final nem JUnit da execução interrompida; causa ainda desconhecida.
 
-PRs adicionais ainda não incorporados: raiz #242 (`feature/plan-reconciliation`)
-e infra #732 (`fix/docs-renderer-contract`). O #242 contém automação de coleta
-com pré-requisitos incompletos; #732 mistura melhorias de docs/relatórios com
-alterações que conflitam com execução incondicional e o verificador atômico já
-adotado. Ler o diff atual, integrar por fix-forward e preservar os owners; não
-adotar gitlinks ou contratos regressivos cegamente. Não confundir suas partes
-úteis com autorização para assumir os custom checks de outro responsável.
+Resultados de referência dessa rodada: raiz 5 passed; API 2 failed/72 passed; auth 162 passed; CLI 1263 passed; core 6 failed/2655 passed; DB Oracle 541 passed/6 skipped; DBT LDAP 44 passed; DBT LDIF 84 passed; DBT Oracle 69 skipped, nenhum teste executado; DBT Oracle WMS 26 passed; gRPC 350 passed. **PASS com skips não comprova runtime omitido**, especialmente quando falha de provisionamento foi convertida em skip.
 
-### Crítica e retomada objetiva
+Os relatórios nativos em `.reports/workspace/test/` e `.reports/workspace/check/` são mutáveis e devem ser associados à invocação e ao candidato correspondente. Não atribuir seus resultados automaticamente ao HEAD atual.
 
-A execução preservou os históricos, mas atrasou a entrega integrada: repetiu
-inventários e checkpoints, acumulou um candidato grande e demorou a oferecer o
-link do handoff. Rodadas longas ficaram sem candidato estável e sem fechamento
-do ciclo PR → integração → runtime. Relatos de PASS com skips e provas de
-ancestralidade na direção errada poderiam produzir conclusões falsas; este
-handoff rejeita explicitamente essas conclusões. Não há evidência para chamar a
-estabilização de concluída, nem para fechar a bead.
+### Patches aplicados depois dos respectivos testes, ainda não validados
 
-A retomada começa por recolher o resultado completo da sessão 25454, mantendo
-as falhas custom separadas das falhas operacionais. Em seguida, corrigir os
-owners das falhas padrão demonstradas, estabilizar um candidato, executar os
-verbos nativos sem seletores e regenerar duas vezes sem mudanças intermediárias.
-Publicar o candidato validado, obter revisão independente, resolver checks e
-conversas, integrar membros por merge commit, atualizar gitlinks e integrar a
-raiz. Só depois propagar por fast-forward ao checkout principal, executar os
-verbos nativos nesse código integrado e registrar os SHAs e resultados na bead.
-A retirada de branches/worktrees exige base recém-buscada e prova de
-ancestralidade; não executar como parte de um checkpoint incompleto.
+- API: dois testes substituíram `is_str` inexistente pelo contrato `is_=str`.
+- Core: executor dos exemplos passou a `u.Cli.run_raw`, preservando assertions e timeout. O owner coleta processos e drena pipes; a troca ainda não comprova eliminação dos timeouts ou do processo Git deixado por outra rota.
+- Core: protocolo `Result[T]` deixou de declarar covariância falsa; `ResultView` permanece covariante. Teste público de `flow_through` verifica atribuições a `p.Result[int]` e comportamento, sem exigir tipo concreto exato.
+- Flext-tests: removido somente o ramo RootModel inalcançável em `to_normalized_value`; docstring esclarece que `to_payload` já desembrulha RootModel. Alias original preservado; não foi criada nova API para justificar código morto.
+- Quality `9d2c0b27`: corrigida a entrada do validador.
+- DBT Oracle `7c259091`: retirada fixture autouse Docker sem consumidor nos testes de modelos; nenhum teste removido. Isso não substitui cobertura Oracle que efetivamente executa SQL.
+- Infra `de3c7811a`: teste de checkout lê comandos reais de `jobs.ci.steps[].run` no YAML, usa configuração CI e verifica chmod antes de setup/gen/check; não congela rótulos descritivos.
+- Tap Oracle WMS `30f9154a`: marcador alinhado à categoria canônica integration.
+- Target Oracle WMS `97586e3d`: produtores de mensagens Singer usam os modelos públicos; a chamada inválida de helper foi corrigida e os contratos de scripts foram separados dos módulos de suporte, sem remover testes.
+- DB Oracle `0bd29b64`: três testes locais deixaram de exigir conexão artificial; os três casos SQL/DDL/timing foram preservados.
+- Oracle WMS `7e73e1fe`: entrada de modelo passou por `model_validate`, preservando o caso inválido.
+- Target LDAP `f0cb6ac`: falha de startup agora falha no teste; configuração vem do manager, não de um campo inexistente no ContainerInfo.
+- Aplicados e ainda sem publicação: pré-validação de credencial SMTP e ajustes de tipos em Quality, refinamento de fixture de modelo em Web, factories da união Singer e herança das exceções em Target Oracle. Não atribuir resultados anteriores a essas mudanças.
+- Configuração canônica do infra registra o marcador Oracle consumido pelos testes; a geração projetou essa alteração nos 32 pyprojects. Não foi desligado strict-markers.
 
-Foram atualizados o skill local de roteamento, o contrato de lane, a orientação
-de governança, o ADR-004 e o plano externo para apontar para a bead e distinguir
-checkpoint, absorção de base, pouso e validação runtime. Não tratar esses textos
-como um segundo tracker. O plano S0–S8 continua referenciado abaixo e não foi
-concluído por esta atualização.
+RootModel e BaseModel são classes irmãs, mas esse fato isolado não justificava ampliar `NormalizationInput`. A leitura dos consumidores mostrou que todos desembrulham RootModel antes de normalizar. A proposta de alias genérico e testes de TypeAdapter foi retirada por fix-forward; o reparo final elimina o ramo morto e preserva a entrada existente.
 
-## 1. Leia primeiro: intenção vigente e fronteira desta entrega
+### Publicação não é integração
 
-O objetivo original é integrar o trabalho útil dos **32 projetos** (superprojeto e
-31 membros), resolver conflitos por fix-forward, validar, pousar por PR com merge
-commit em `0.12.0-dev`, propagar para `/home/marlonsc/flext` e fechar as beads com
-evidência. Checkpoints não satisfazem esse objetivo.
+O checkpoint da raiz **`a0d0bd81e8`** publicou o handoff e os gitlinks dos quatro membros daquele lote. Entre os checkpoints publicados estão API `f34cfb5c`, core `ae3e0b07f`, infra `e6c58b412` e LDIF `c42accd5`. Infra publicou depois `de3c7811a` por push FF, de `e6c58b412`, com `git diff --check`, commit escopado e push retornando 0.
 
-A instrução vigente no momento deste checkpoint pediu interromper a ampliação da implementação para
-investigar objetivos, decisões e execução, produzir crítica profunda e handoff,
-e **gravar/publicar todo o trabalho desta lane como WIP com PR**. Esta entrega é
-esse checkpoint; não é uma promoção, uma autorização administrativa de merge ou
-um fechamento da estabilização.
+Esses hashes são **checkpoints WIP publicados**, não uma lista de SHAs integrados em dev. Os patches de fundação descritos acima ainda aguardam validação e publicação do candidato correspondente. Não fechar a bead nem alegar pouso por causa desses pushes.
 
-Exclusão expressa de 21:40 UTC: **checks customizados do flext-infra pertencem a
-outro agente**. O próximo executor deste escopo cuida da integração, geração,
-dependências, testes e ferramentas padrão. Não desliga os checks customizados,
-não altera sua implementação/expectativas para contorná-los e não chama seus
-resultados de verdes. A identidade/bead do outro responsável ainda não foi
-confirmada; não atribuir automaticamente todo o PR infra #732 a essa exclusão.
+PRs de referência: [raiz #240](https://github.com/flext-sh/flext/pull/240), [infra #731](https://github.com/flext-sh/flext-infra/pull/731), [core #474](https://github.com/flext-sh/flext-core/pull/474), [tests #110](https://github.com/flext-sh/flext-tests/pull/110), [API #99](https://github.com/flext-sh/flext-api/pull/99). Conferir estado/checks/head atuais antes do pouso; o documento não transforma estado histórico de Draft/OPEN/CLEAN em consulta atual.
 
-## 2. Documentos e Beads
+### Endereços dos 32 PRs de estabilização
 
-- Plano completo: `/home/marlonsc/.claude/plans/happy-puzzling-flask.md`.
-- Handoff anterior: `/home/marlonsc/.claude/plans/happy-puzzling-flask-handoff.md`.
-  Seu estado das 17:45 UTC é histórico, não o cursor atual.
-- Pacote de coordenação externa:
-  `/home/marlonsc/.claude/plans/ai-hub-envrc-agent-hooks.md`.
-- Épico: `flext-itpd1`; execução atual: `flext-itpd1.1`, ambos em andamento.
-- Bead de integração relacionada: `flext-yirgp` (discovered-from).
-- Filhas relevantes para revalidar, não fechar por lembrança:
-  `flext-ocxtt` (gates), `flext-2j4lr` (desempenho/replanejamento),
-  `flext-za816` e `flext-2h0un` (ponto fixo), `flext-bdmdg` (render spec),
-  `flext-rlb47` (raízes Python), `flext-xldlq` (journal),
-  `flext-7ua33` e `flext-gajwa` (scratch), `flext-x1x1q` (deptry),
-  `flext-c4k44` (contratos de testes), `flext-rwls4` (fronteira pública).
-  `flext-c1vvr`, `flext-k7vvp`, `flext-6x6jr`, `flext-xobfw` contêm trabalho
-  de enforcers/codemods/gates que exige separar a responsabilidade excluída.
-  O inventário consultado retornou 19 filhas abertas/em andamento; não é censo
-  de todas as beads do projeto nem inclui itens fechados por padrão.
-- Apoio histórico: `land_members.sh` e `roll_members.sh` no diretório dos planos.
-  Ler antes de usar: suas pré-condições antigas de branch/limpeza/base exata não
-  correspondem automaticamente ao checkpoint atual.
+Esta tabela é navegação, não atestado de merge ou consulta atual de checks.
 
-Tracker, sem mudar configuração:
+| Repositório | PR |
+| --- | --- |
+| flext | [#240](https://github.com/flext-sh/flext/pull/240) |
+| flext-api | [#99](https://github.com/flext-sh/flext-api/pull/99) |
+| flext-auth | [#100](https://github.com/flext-sh/flext-auth/pull/100) |
+| flext-cli | [#168](https://github.com/flext-sh/flext-cli/pull/168) |
+| flext-core | [#474](https://github.com/flext-sh/flext-core/pull/474) |
+| flext-db-oracle | [#101](https://github.com/flext-sh/flext-db-oracle/pull/101) |
+| flext-dbt-ldap | [#101](https://github.com/flext-sh/flext-dbt-ldap/pull/101) |
+| flext-dbt-ldif | [#110](https://github.com/flext-sh/flext-dbt-ldif/pull/110) |
+| flext-dbt-oracle | [#101](https://github.com/flext-sh/flext-dbt-oracle/pull/101) |
+| flext-dbt-oracle-wms | [#101](https://github.com/flext-sh/flext-dbt-oracle-wms/pull/101) |
+| flext-grpc | [#96](https://github.com/flext-sh/flext-grpc/pull/96) |
+| flext-infra | [#731](https://github.com/flext-sh/flext-infra/pull/731) |
+| flext-ldap | [#114](https://github.com/flext-sh/flext-ldap/pull/114) |
+| flext-ldif | [#110](https://github.com/flext-sh/flext-ldif/pull/110) |
+| flext-meltano | [#113](https://github.com/flext-sh/flext-meltano/pull/113) |
+| flext-observability | [#109](https://github.com/flext-sh/flext-observability/pull/109) |
+| flext-oracle-oic | [#100](https://github.com/flext-sh/flext-oracle-oic/pull/100) |
+| flext-oracle-wms | [#97](https://github.com/flext-sh/flext-oracle-wms/pull/97) |
+| flext-plugin | [#99](https://github.com/flext-sh/flext-plugin/pull/99) |
+| flext-quality | [#170](https://github.com/flext-sh/flext-quality/pull/170) |
+| flext-tap-ldap | [#99](https://github.com/flext-sh/flext-tap-ldap/pull/99) |
+| flext-tap-ldif | [#102](https://github.com/flext-sh/flext-tap-ldif/pull/102) |
+| flext-tap-oracle | [#94](https://github.com/flext-sh/flext-tap-oracle/pull/94) |
+| flext-tap-oracle-oic | [#97](https://github.com/flext-sh/flext-tap-oracle-oic/pull/97) |
+| flext-tap-oracle-wms | [#100](https://github.com/flext-sh/flext-tap-oracle-wms/pull/100) |
+| flext-target-ldap | [#100](https://github.com/flext-sh/flext-target-ldap/pull/100) |
+| flext-target-ldif | [#103](https://github.com/flext-sh/flext-target-ldif/pull/103) |
+| flext-target-oracle | [#105](https://github.com/flext-sh/flext-target-oracle/pull/105) |
+| flext-target-oracle-oic | [#100](https://github.com/flext-sh/flext-target-oracle-oic/pull/100) |
+| flext-target-oracle-wms | [#101](https://github.com/flext-sh/flext-target-oracle-wms/pull/101) |
+| flext-tests | [#110](https://github.com/flext-sh/flext-tests/pull/110) |
+| flext-web | [#92](https://github.com/flext-sh/flext-web/pull/92) |
+
+As revisões independentes dos deltas de core/tests/Target Oracle, Quality/Web/Target LDAP e infra/Target WMS terminaram sem achados de código bloqueantes, condicionadas aos gates atuais. A revisão identificou documentação de herança em Target Oracle a alinhar. Nenhuma revisão afirmou sucesso funcional ou aprovação de CI.
+
+## 2. Falhas operacionais e reparos causais
+
+### Core
+
+As três falhas de exemplos foram timeouts de 10 segundos em `process.communicate()`, não divergências comprovadas de goldens. O caso de decorator ValueError falhou com avisos de recursos não coletados, coerentes com subprocessos deixados pelos exemplos interrompidos; os outros parâmetros passaram. Não alterar o decorator sem prova de defeito nele.
+
+O teste agregado de arquitetura excedeu o limite durante `git status` via GitPython; o teste seguinte recebeu aviso de subprocesso ainda vivo. Isso não demonstra findings custom ou campos inválidos de violações. A correção do executor dos exemplos não valida automaticamente a rota Git. Não elevar limites, excluir testes ou mudar goldens para esconder o problema. Otimização exige perfil causal.
+
+### Oracle e provisionamento
+
+Startup Compose retornou 125 e fixtures converteram falhas em skips. Inspeção histórica encontrou Compose instalado pelo mise sem diretório padrão de plugins Docker; isso permanece hipótese até prova do comando canônico com stderr. Corrigir o owner do provisionamento e propagar a primeira falha, sem instalar plugin manual fora da geração nem converter falhas em sucesso.
+
+Os três testes DB Oracle que realmente executam SQL/DDL/timing continuam exigindo provisionamento real. A retirada de fixture sem consumidor em DBT Oracle não autoriza remover infraestrutura de testes que a utilizam. Suites inteiramente puladas não cumprem o aceite operacional.
+
+### Infra
+
+Distinguir defeitos do produto de findings custom excluídos. O teste de checkout tinha expectativa obsoleta `gen check (blocking)`; o gerador já emitia ponto fixo por make gen e verificação de limpeza. O reparo passou a observar comandos, preservando o contrato atual.
+
+As duas falhas de `release/protocol_tests.py` permanecem sem causa determinada pela execução interrompida. Não inferir timeout, problema de Git ou defeito do protocolo sem traceback. Recuperar evidência na próxima rodada canônica.
+
+### Ferramentas padrão
+
+Ruff, Pyrefly, Pyright, Mypy e testes precisam de rodada no candidato estabilizado. O Mypy histórico foi interrompido com teto de 6144 MiB; isso não identifica sozinho a causa nem autoriza execução ilimitada. Não reutilizar contagens históricas como confirmação de erros ainda presentes ou corrigidos.
+
+## 3. Ordem de execução até o fechamento
+
+1. Terminar a segunda geração 69562 e recolher saída/exit code. Se falhar, corrigir seu owner. Obter duas gerações bem-sucedidas consecutivas no mesmo candidato e provar ponto fixo.
+2. Executar os verbos canônicos necessários na raiz da lane: setup quando o ambiente/dependências mudarem, gen, fix, fmt, check e test. Coordenar mutações para que a prova final corresponda ao candidato publicado. Sem `PROJECT=`, `WHAT=`, novos seletores ou gates avulsos.
+3. Corrigir falhas padrão e ambiente pelos owners, preservando a exclusão dos custom checks. Registrar o que executou, o que falhou e o que não teve runtime. Cada correção invalida somente as provas que dependem do trecho alterado; a rodada final deve cobrir os 32 declarados.
+4. Adjudicar contribuições úteis ainda pendentes, especialmente [raiz #242](https://github.com/flext-sh/flext/pull/242) e [infra #732](https://github.com/flext-sh/flext-infra/pull/732), contra o HEAD atual. Incorporar por fix-forward/no-ff somente semântica útil, sem restaurar políticas retiradas ou assumir implementação de custom checks excluídos. Mudanças incorporadas retornam ao ciclo de geração/validação.
+5. Publicar por push FF os candidatos dos membros, resolver checks/conversas e registrar a autorização administrativa de 23:07. Integrar os PRs por merge commit em `0.12.0-dev`; não promover um head WIP como se validado. Usar a autorização administrativa sem declarar uma aprovação independente inexistente; manter a revisão independente e as demais condições vigentes.
+6. Registrar SHA de merge por membro, buscar a base novamente e provar candidato → base. Atualizar gitlinks da raiz para os SHAs pousados; validar e integrar a raiz por PR com merge commit. Completar esse procedimento nos 32 projetos, não somente raiz e infra.
+7. Propagar ao principal por fast-forward onde aplicável. Reconciliar cooperativamente qualquer WIP/divergência por fix-forward; nunca mover submódulos cegamente sobre trabalho local. Rodar setup/gen e validação do código realmente instalado. Provar runtime dos contratos exercidos, sem confundir importação, unidade ou skips com serviços reais.
+8. Atualizar e fechar beads somente com estado registrado, histórico integrado, comando/cwd/exit/saída decisiva e código atual concordantes. Registrar SHAs de merge e runtime. Retirar PRs/branches/worktrees somente com autorização aplicável e ancestralidade contra base recém-buscada. Não promover para main.
+9. Manter S0–S8 reconciliado na bead. Cada fatia restante precisa de ciclo completo; nenhuma fatia é concluída por este handoff.
+
+## 4. Plano, Beads e fontes
+
+Fontes canônicas de planejamento a reler integralmente ao retomar:
+
+- `/home/marlonsc/.claude/plans/happy-puzzling-flask.md` — plano completo, reconciliado com o operador mais recente.
+- `/home/marlonsc/.claude/plans/happy-puzzling-flask-handoff.md` — handoff anterior, evidência histórica.
+- `/home/marlonsc/.claude/plans/ai-hub-envrc-agent-hooks.md` — coordenação externa e fronteiras ai-hub.
+- `docs/plans/2026-09-14-stabilization-handoff/README.md` — handoff vigente, publicado como checkpoint; não comprova integração.
+
+Tracker sem mudar configuração:
 
 ```bash
 export BEADS_DOLT_SERVER_HOST=127.0.0.1 BEADS_DOLT_SERVER_PORT=14499 BEADS_DOLT_SERVER_DATABASE=flext
@@ -170,346 +164,65 @@ bd show flext-itpd1 flext-itpd1.1 --json
 bd list --parent flext-itpd1 --limit 100 --json
 ```
 
-Fontes desta auditoria: leitura integral dos três documentos acima; mensagens do
-operador nesta conversa; notas/histórico das beads; histórico Git e inventário
-fresco dos 32 repositórios; inventário GitHub dos 32; resultados dos comandos
-nativos capturados na sessão; crítica independente do agente `fleet_platform`.
-Os JSONs anexos são evidência datada, não uma fila de trabalho editável.
+Filhas de referência para consultar, sem fechar por lembrança: `flext-ocxtt` (gates), `flext-2j4lr` (desempenho/replanejamento), `flext-za816`/`flext-2h0un` (ponto fixo), `flext-bdmdg` (render spec), `flext-rlb47` (raízes Python), `flext-xldlq` (journal), `flext-7ua33`/`flext-gajwa` (scratch), `flext-x1x1q` (deptry), `flext-c4k44` (testes), `flext-rwls4` (fronteira pública). As beads `flext-c1vvr`, `flext-k7vvp`, `flext-6x6jr`, `flext-xobfw` incluem enforcers/codemods/gates: reconciliar responsabilidade excluída antes de agir. A contagem histórica de 19 filhas não é censo atual.
 
-## 3. Evolução das ordens do operador
+`land_members.sh` e `roll_members.sh`, no diretório externo dos planos, são apoio histórico; ler suas pré-condições antes de usar. Não assumir branches, limpeza ou base exata a partir desses scripts.
 
-1. Retomar o handoff e executar S0–S8; primeiro resolver #240 e propagação.
-2. Adotar todo WIP e commits do checkout principal nos 32 projetos; resolver
-   conflitos tanto na subida do principal como na lane; absorver `dev` via
-   `merge --no-ff`. Nunca reset/stash/rebase/force-push.
-3. Investigar o aparente travamento de `make gen` após indexação Rope.
-4. Incorporar todo PR/branch que tenha contribuição útil, em toda a frota.
-5. Adotar o merge no-ff que o operador fazia como nova base, nos 32 projetos.
-6. Lançar lotes de quatro subagentes com instruções claras. O ambiente admite
-   três filhos simultâneos além do coordenador; o quarto foi lançado ao liberar
-   vaga. Escopos: plataforma 8, conectores 10, domínios 6, fundação/dbt 6.
-7. Continuar até green/green; em seguida excluir expressamente custom checks do
-   infra, de responsabilidade de outro agente.
-8. Solicitar esta auditoria/handoff e publicação WIP na posição atual.
+### Auditoria histórica imutável
 
-As ordens de absorção ampliaram legitimamente o trabalho de integração, mas não
-revogaram o pouso, a propagação e a validação. A ordem final autoriza preservar
-o estado incompleto como WIP, sem fingir conclusão dessas obrigações.
+A auditoria anterior permanece no [commit `81873eeff9`](https://github.com/flext-sh/flext/blob/81873eeff9/docs/plans/2026-09-14-stabilization-handoff/README.md). Seus estados, ordens de pausa, ausência de autorização administrativa, resultados parciais e comandos futuros descrevem aquele instante; **não são instruções vigentes**.
 
-## 4. O que foi realmente executado
+Anexos históricos mantidos no pacote, sem reescrevê-los como tracker:
 
-### Integração e preservação
+- `plan-source.md` — snapshot do plano anotado.
+- `previous-handoff-source.md` — snapshot do handoff anterior.
+- `ai-hub-package-source.md` — snapshot de coordenação externa.
+- `state-before-checkpoint.json` — estado datado dos 32 e principal.
+- `prs-at-audit.json` — PRs e heads observados na auditoria.
+- `beads-at-audit.json` — beads consultadas naquela captura.
+- `member-publication.json` — comandos e resultados dos pushes daquele lote.
 
-- Foram adotados estados do principal e concluídos merges pendentes, inclusive
-  o commit de merge do core `79085f8c8`; depois absorvidas bases nos 31 membros e
-  na raiz. A contribuição do operador e a nossa não foram descartadas.
-- Merges da raiz: `59874c3646`, `d9ce054487`, depois `79238b9720` sobre
-  `8049f7b681`. Houve prova de que os gitlinks de ambos os lados eram ancestrais
-  dos HEADs de membros escolhidos. Essa prova era válida naquele instante.
-- Foram publicados checkpoints e Draft PRs para todos os membros, além de #240.
-  Nos 30 membros fora do infra, a branch atual é
-  `bugfix/absorb-checkout-20260914`; na raiz/infra é
-  `bugfix/stabilize-0.12.0`.
-- Infra PR #729 foi mergeado externamente pelo operador como `a312043b5`,
-  head `155c52a34`, às 19:18 UTC. Os checks consultados estavam falhando;
-  isso não é evidência de fechamento verde e não foi merge executado por mim.
-- Infra PRs #723, #724 e #730 foram incorporados **na lane**, por merges
-  `866ba84fd`, `61a9c0602`, `f9e0f6163`. Não foram pousados por esta sessão em dev.
-  O candidato composto está no Draft [infra #731](https://github.com/flext-sh/flext-infra/pull/731).
-- API #90/configdict, auth #91/#95/#96, grpc #91 e web #86 tiveram histórico
-  absorvido pelos agentes. Parte da semântica já estava no HEAD; não contabilizar
-  merges vazios/ancestralidade recuperada como novas correções funcionais.
+Todos ficam em `docs/plans/2026-09-14-stabilization-handoff/`. A revisão deste documento confirmou a existência dos sete anexos; não refez consultas remotas ou provas de runtime.
 
-### Correções concretas preservadas
+## 5. Crítica da execução e correções de método
 
-- Infra `155c52a34`: progresso de snapshots/varredura antes silenciosa; remoção
-  de aceitação de drift; reutilização do verificador atômico; retirada de etapas
-  duplicadas/desligadas do pipeline. Não há prova de que todo gargalo acabou.
-- Infra `0ae002820`: manifesto presente inválido falha; correção de contrato de
-  resultado da execução; dois testes de manifesto passaram na rodada histórica.
-- Infra `f224f711b`: teste de lock substituído por round-trip do owner da política,
-  sem exigir o valor de configuração anterior.
-- PR #723: fachada Git init/staging e fixture compartilhada; PR #724: fonte de
-  docs alterada deixa de virar warning, namespaces de testes conciliados com os
-  fixtures atuais. A verificação de docs foi religada ao primitive atômico do CLI.
-- PR #730: configuração pytest `max-failures: 0` e teste de resultados completos.
-  Ainda não foi executada uma rodada completa de testes sobre esse candidato.
-- DB Oracle `5ce0fbd`: retorno `r[Self]`; DBT LDIF `deb6d50`: retirada da fixture
-  autouse de LDAP sem consumidor local; seus 84 testes passaram naquela rodada.
-- Target Oracle WMS `e84bbab`: produtor do teste Singer passou a emitir schema
-  tipado com `properties` no lugar correto; sem afrouxar produção.
-- API `1305fd5f`: MessagePack `0xff` é -1, caso inválido usa `0xc1` reservado.
-  API `5333ec49`: nil externo rejeitado conforme contrato de `r`, null interno
-  em coleção coberto, docstring pública esclarecida. Testes novos não rerodados.
-- Quality `fac3c6fe`: teste registra validador real e exige violações reais.
-  OIC `f19465a3`: expectativa obsoleta de ConfigDict removida da fachada t.
-  WMS `45976a91`: teste clone compara estado observado, sem congelar default.
-- Bootstrap: template `tool_bootstrap_recipe.j2` perdeu o argumento vazio
-  `"=$()"`, resíduo da remoção de APPLY. Foi regenerado pelo owner.
-- LDAP: `config/codegen.yaml` passou de `ldap3>=2.9.1` para
-  `ldap3>=2.10.2rc4`; é uma prerelease explicitamente selecionada, não política
-  global de prereleases. A instalação/runtime ainda NÃO foram validados.
-  [PR upstream #983](https://github.com/cannatag/ldap3/pull/983) e
-  [PyPI rc4](https://pypi.org/project/ldap3/2.10.2rc4/) sustentam a proposta.
-- Locks antes versionados foram retirados do índice, preservando arquivos
-  locais, conforme política atual. A auditoria final de todos os índices ainda
-  deve ser refeita antes de fechamento.
+1. **Preservação excedeu entrega.** A absorção ampla foi autorizada, mas WIP e Draft PRs acumularam sem pouso. Publicação não substitui incremento entregue; limitar cada rodada a um candidato que possa ser validado e integrado.
+2. **O cursor perdeu prioridade.** #240 e propagação eram a primeira obrigação. As ampliações legítimas não revogaram esse objetivo; a bead deve manter uma próxima ação concreta, sem reiniciar inventários já encerrados.
+3. **A direção de ancestralidade importa.** Base ancestral da lane demonstra absorção; candidato ancestral da base recém-buscada demonstra pouso. Não usar a primeira prova para afirmar a segunda.
+4. **As provas envelheceram.** Commits, merges e geração posteriores alteraram candidatos. Cada relatório precisa de escopo temporal; fix/fmt ou PASS parcial não comprovam check/test atual.
+5. **A janela de geração precisa ser exclusiva.** Mutações durante gen impedem prova confiável de ponto fixo. Cooperar com todos os atores e preservar seu trabalho; concorrência não transfere culpa nem justifica abandono.
+6. **Desempenho foi investigado parcialmente.** CPU ativa e progresso não eliminam gargalo. Não declarar travamento resolvido sem perfil, observabilidade e prova no caminho que demorava.
+7. **Comparações históricas induziram erros.** ConfigDict pertence a m; RootModel ser irmão de BaseModel não criava consumidor para nova API. Ler produtor, consumidor e HEAD atual antes de modificar contrato ou classificar contribuição.
+8. **Delegação não encerra o ciclo.** Lotes terminaram preservação/revisão, mas gates, pouso e runtime ficaram pendentes. O coordenador deve manter esses passos ativos até o aceite dos 32.
+9. **A comunicação terminou cedo demais.** Relatar agentes lançados ou patches prontos não cumpre a execução completa. Handoffs autorizados transferem contexto; não encerram estabilização.
+10. **Tracker e documentação precisam acompanhar realidade.** Evitar múltiplos blocos vigentes conflitantes. Bead guarda cursor; handoff explica evidência e retoma a próxima ação real.
+11. **Autorização administrativa deve ser descrita precisamente.** A ausência histórica de autorização foi superada às 23:07. Registrar o uso autorizado sem chamar check vermelho de verde ou aprovação independente de satisfeita.
+12. **Exclusão de custom checks é delimitada.** Não assumir todo infra como excluído; também não exigir reparo dos custom checks antes de pouso contra o aceite atual. Classificar falhas pelo owner e contrato.
 
-## 5. Validação: fatos e limites
+## 6. Reconciliação de S0–S8
 
-Todos os Make abaixo foram executados da raiz da lane existente.
-
-| Evidência capturada | Resultado | O que NÃO prova |
-| --- | --- | --- |
-| `make setup` inicial | exit 0, 284 pacotes compatíveis | ambiente com novo ldap3 |
-| `make check`, sessão 66311 | exit 2, 32 concluídos, 1 PASS/31 FAIL | que todas as falhas são de ferramentas padrão |
-| `make fix`, sessão 86286 | exit 0, 32/32 | ausência de achados, pois fix reporta |
-| `make fmt`, sessão 89243 | exit 0, 32/32 | aprovação de tipos/testes |
-| `make test`, sessão 12912 | exit 2, 32 concluídos, 20 PASS/12 FAIL | validação dos commits posteriores; suites com skips não equivalem a cobertura integral |
-| `make gen`, sessões 15601 e 56785 | exit 0, 32/32 e verificações internas concluídas | dois runs sem efeitos no MESMO candidato: houve correção de bootstrap entre eles |
-| `git diff --check`, commits, pushes | exits 0 registrados | qualidade funcional ou pouso em dev |
-
-Há resultados de geração anteriores com duas execuções sem efeito no mesmo
-candidato (`155c52a34`, lazy-init 0 efeitos em 115,56 s), mas são históricos.
-O candidato mais recente inclui merges e correções posteriores.
-Os relatórios locais `.reports/workspace/{check,test}/*.log` são mutáveis e podem
-estar em armazenamento externo/symlinks. Identificar timestamp e SHA antes de
-usá-los; não assumir que uma saída vazia de busca é relatório inexistente.
-
-Os doze projetos que falharam naquela rodada de testes: api, dbt-ldap, infra,
-ldap, oracle-oic, oracle-wms, quality, tap-ldap, tap-oracle-wms, target-ldap,
-target-oracle e target-oracle-wms. A causa de coleta LDAP era ldap3 2.9.1 com
-pyasn1 0.6.4 (`tagMap` depreciado). Não remover warnings para fazê-la passar.
-
-O comando `make gen` iniciado antes do pedido de handoff é a sessão 66731;
-o resultado final e o checkpoint correspondente constam no apêndice de fecho.
-Nenhuma nova implementação deve ser iniciada para completar esta entrega WIP.
-
-## 6. Estado medido e riscos de concorrência
-
-Inventário fresco da auditoria: `git fetch origin 0.12.0-dev` exit 0 nos 32.
-`merge-base --is-ancestor origin/0.12.0-dev HEAD`: **31 membros exit 0; raiz exit 1**.
-Na direção de pouso, `merge-base --is-ancestor HEAD origin/0.12.0-dev`:
-**32/32 exit 1**. Logo, nenhum HEAD completo desta lane está pousado.
-
-Raiz da lane ainda em `79238b9720`; base/principal em `206c02ee1d` no momento
-da medição. [Raiz #240](https://github.com/flext-sh/flext/pull/240) continua Draft,
-OPEN, DIRTY; infra #731 Draft, OPEN, CLEAN. CLEAN significa mergeável pelo Git,
-não aprovado nem CI verde. Não houve aprovação independente registrada.
-
-No principal, 30 membros estavam limpos em `0.12.0-dev`; **flext-infra estava
-em `fix/docs-renderer-contract`, HEAD `2e8fe9cf90`, com 179 entradas dirty**.
-O superprojeto principal tinha seu gitlink infra modificado. Isso é trabalho
-ativo fora desta lane: não incluir no nosso checkpoint nem descartar/adotar
-cegamente. A propagação final deve cooperar com esse estado.
-
-PRs novos encontrados na auditoria e ainda NÃO adjudicados:
-[raiz #242](https://github.com/flext-sh/flext/pull/242),
-[infra #732](https://github.com/flext-sh/flext-infra/pull/732),
-dbt-ldif #111/#112/#113 (dependências/actions). A presença deles invalida a
-frase irrestrita “todos os PRs já revisados”. O JSON de PRs contém o conjunto
-observado e seus heads; é preciso buscar novamente antes de decidir.
-
-## 7. Crítica profunda da execução
-
-1. **Preservei mais do que entreguei.** Adotar WIP e publicar branches foi
-   necessário e autorizado, mas os lotes terminaram em Draft, não em incremento
-   pousado. A complexidade acumulada superou o objetivo de fatias curtas.
-2. **A prioridade perdeu o cursor.** #240 e propagação eram a primeira obrigação.
-   A falha de geração abriu uma integração ampla; eu deveria ter explicitado
-   cedo qual candidato estabilizaria essa obrigação e fechado esse recorte antes
-   de ampliar. Ordens posteriores justificam absorção, não o abandono do pouso.
-3. **As provas de ancestralidade foram insuficientes para a linguagem de
-   entrega.** Base ancestral da lane comprova absorção; lane ancestral da base
-   comprova pouso. A segunda ficou ausente, e a primeira deixou de valer na raiz.
-4. **Validação envelheceu.** Houve commits/merges após check/test e rodadas de
-   gen sobre estados diferentes. Os números históricos são diagnósticos, não
-   green/green do candidato atual. Fix/fmt zero não substituem check/test.
-5. **Concorri com geração durante parte da absorção.** Uma rodada falhou em
-   ponto fixo enquanto fontes/base eram atualizadas. Isso não é culpa de outra
-   sessão: faltou combinar uma janela estável. Os últimos lotes passaram a
-   interromper escritas antes de gen, mas a correção do processo foi tardia.
-6. **A investigação de desempenho foi parcial.** CPU ativa e progresso
-   provaram trabalho, não ausência de gargalo. A fase antes silenciosa ganhou
-   logs, mas docs/verificações ainda demoraram. Não foi concluído perfil causal
-   nem SLA completo; não chamar isso de travamento totalmente resolvido.
-7. **A triagem de branches errou em comparações.** Alguns agentes inicialmente
-   classificaram `m.ConfigDict` como incorreto ou mudança ainda ausente. O owner
-   atual confirmou m e o HEAD já continha a mudança. Isso foi corrigido, mas
-   demonstra que diff de branch antiga não substitui leitura do contrato atual.
-8. **Delegação cobriu arquivos, não o ciclo de entrega.** Os quatro lotes
-   executaram preservação/revisão/correções pequenas; validação e pouso ficaram
-   no coordenador e não foram concluídos. “Quatro agentes terminaram” não é
-   “32 projetos entregues”. Uma tentativa de segundo merge após conflito foi
-   recusada pelo Git; sequências dependentes devem parar na primeira falha.
-9. **A comunicação encerrou turnos cedo.** Relatei lotes lançados/preparados com
-   o objetivo global ainda aberto. Isso não cumpriu a persistência pedida.
-   O handoff atual é diferente: foi explicitamente solicitado pelo operador.
-10. **Tracker e documentos ficaram atrasados.** Notas extensas foram anexadas,
-    mas o épico ainda descrevia a lane/PR #225 de 12/09 e o handoff apontava
-    #727/estado das 17:45. Faltou manter um cursor único e curto, ligado às provas.
-11. **Merge WIP não é liberação de gates.** O merge externo de #729 não permite
-    contar CI falhando como aprovação. Também não há autorização demonstrada
-    para bypass de aprovação independente ou merge administrativo.
-12. **O novo limite de escopo precisa prevalecer.** Não continuar reparos de
-    namespace/codemod/silent-failure apenas para reduzir o contador global se
-    forem precisamente os custom checks delegados ao outro agente. É necessário
-    produzir relatório separado de ferramentas padrão e coordenar a promoção.
-
-## 8. Contradições do plano que não devem ser reproduzidas
-
-| Texto antigo | Reconciliação para retomada |
+| Fatia | Estado e limite de conclusão |
 | --- | --- |
-| S2b preserva CI/actions mas exige zero `.github/`, `GithubWorkflow`, `GITHUB_*` | Inventário por responsabilidade; preservar CI/actions próprios expressamente autorizados. Zero somente no runtime externo retirado, não grep global impossível. |
-| S5 converte erros em WARNING e pula repositórios | Não implementar normalização/execução parcial contra o contrato estrito atual; retirar esse aceite antigo e manter erro causal. |
-| Fatias “pousadas” terminam em WIP, testes só S8 | WIP é checkpoint; testar cada fatia que muda comportamento antes de promoção. S8 consolida, não estreia os testes. |
-| “Achados não bloqueiam a fatia” | Permite preservação incompleta, não fechamento verde. Custom checks têm dono separado agora. |
-| Grep zero APPLY também em testes que provam APPLY ignorado | Separar uso operacional retirado de fixture de regressão autorizada; não apagar prova correta só para zerar texto. |
-| Remover gitlink validation do produto, mas exigir ancestry no pouso | São camadas distintas: não restaurar gate de runtime; continuar prova Git explícita de integração/retirada. |
-| Todo conhecimento ai-hub desaparece, mas região external é preservada byte a byte | Restrição ao código/config/templates/documentação owned; não reescrever conteúdo externo preservado. Confirmar inventário dessa fronteira antes do cutover. |
-| #727 e membros em branch stabilization limpa | Histórico apenas; usar branches/PRs do apêndice atual. Scripts antigos exigem revisão. |
+| S0/S1/A4/A5 | Entregas históricas #727 e membros registradas. Revalidar preservação após absorções; não repetir merges já incorporados como trabalho novo. |
+| S2 | Cutover completo ainda não comprovado. O inventário histórico encontrou gascity_enabled, WorkspaceBeadsServerSpec, beads_enabled, ledger_id e BeadsWorkspaceEnvironmentSpec. Conferir owner atual antes de remover; template parcial `95baa0c0d` não é entrega completa. |
+| S2b | Inventariar runtime externo retirado e preservar CI/actions próprios autorizados. Não exigir zero global de `.github`, GithubWorkflow ou GITHUB_* quando a CI continua parte do produto. |
+| S3 | Quatro regiões AGENTS ainda sem implementação/validação completa comprovada nesta sessão. Preservar conteúdo externo conforme fronteira autorizada. |
+| S4 | Custom gates têm outro responsável e estão excluídos desta implementação. Registrar resultados reais e coordenação, sem duplicar trabalho nem chamá-los de verdes. |
+| S5 | Bootstrap perdeu argumento vazio da retirada de APPLY. Restante precisa respeitar execução estrita: não adotar plano antigo que converte erro em warning ou pula repositório. |
+| S6 | Geração/locks/checkpoints avançaram; candidato final ainda precisa gates, integração e runtime nos 32. |
+| S7 | Gitlinks de merge, documentação, scripts/pacote e coordenação externa devem corresponder ao código integrado. Não publicar repin como se etapa operacional ausente estivesse concluída. |
+| S8 | Fechamento depende de gates atuais, merge dos 32, propagação, runtime, adjudicação de PRs e quatro fontes nas beads. Retirada exige prova recente e preservação. |
 
-## 9. Cursor executável de retomada (Bead flext-itpd1.1)
+Cada fatia implementada muda seu próprio candidato e deve ser validada e pousada por PR com merge commit. S8 consolida essas provas; não estreia os testes. Enviar o SHA da S2 completa à sessão ai-hub somente após pouso e dentro da autorização de comunicação existente.
 
-1. Ler este handoff, plano completo anotado e bead. Reconfirmar exclusão de
-   custom checks e identificar a entrega do outro responsável sem presumir que
-   sua mera existência aprova os gates. Não consumir inbox global de alertas
-   alheios como trabalho adicional deste plano.
-2. Conferir processos/locks e estado dos 32 em ambas as árvores. Não apagar
-   journal lock. Ler fontes e WIP atuais antes de qualquer merge. Não criar
-   clones/worktrees; usar a lane existente. Ferramentas Enter/ExitWorktree não
-   estavam disponíveis aqui: foi usado cwd explícito, sem simular chamadas.
-3. Consultar PRs novos #242/#732 e atualizar adjudicação. Preservar o trabalho
-   externo em progresso; não supor que snapshots de 21:45 ainda sejam atuais.
-4. Consolidar o checkpoint publicado em um candidato: fetch das bases nos 32,
-   `merge --no-ff` quando necessário, começando pela divergência da raiz #240.
-   Em gitlinks, provar ambos os históricos antes de selecionar HEAD. Conflito
-   gerado exige reconciliar owner e regenerar; nada de blanket ours/theirs.
-5. LDAP: depois da projeção do piso novo, `make setup` deve realmente instalar
-   a versão. Rodar `make gen` novamente e validar coleta/testes. A prerelease
-   ainda é risco não validado; não mudar pyasn1 ou suprimir warnings.
-6. Executar os verbos canônicos da raiz, com candidato estável: `make setup`,
-   `make gen`, `make fix`, `make fmt`, `make check`, `make test`. Não usar
-   `PROJECT=`, `WHAT=`, novas flags de skip ou linters avulsos. Se check agregar
-   custom gates, registrar resultados separados; reparar só o escopo atual e
-   incorporar a entrega do dono dos custom checks antes da promoção exigida.
-   Falha não significa autorização para redefinir CI como verde.
-7. Corrigir resultados atuais de Ruff/Pyrefly/Pyright/Mypy/Pytest e ambiente,
-   não listas antigas por quantidade. Não ocultar exemplos/scripts/tests.
-   A rodada anterior teve Mypy interrompido com limite de 6144 MiB; examinar
-   owner/causa, não rodar mypy ilimitado. Suites com servidores/skips exigem
-   declaração de cobertura realmente executada, não contagem otimista.
-8. Pousar a fatia candidata por PR com merge commit após os critérios exigidos;
-   publicar membros primeiro, apontar gitlinks para SHAs de merge e pousar raiz.
-   Checkpoints WIP não podem ser heads de promoção. Resolver reviews/CI e
-   aprovação independente; autorização de merge não é autorização de bypass.
-9. Propagar para o principal somente com cooperação sobre seu infra dirty:
-   preservar o trabalho atual, integrar fix-forward, setup/gen/validação do
-   estado efetivamente instalado. Nunca executar submodule update que descarte
-   ou desloque silenciosamente o trabalho da outra branch.
-10. Retomar S2, S2b, S3, S5, S6, S7 em fatias menores com testes no próprio
-    ciclo. S4 de custom gates pertence ao outro dono; registrar dependência,
-    não duplicar implementação. Enviar SHA da S2 completa ao ai-hub após pouso,
-    sem tratar template parcial `95baa0c0d` como migração acabada.
-11. S8: provas atuais de integração nos 32, validação pós-merge, propagação,
-    correspondência gitlinks/.gitmodules, índices sem locks indevidos, PRs
-    supersedidos adjudicados, fechamento Beads com quatro fontes. Retirada só
-    depois de fetch recente e prova de ancestralidade; nenhum reset/rebase/
-    force-push/stash/clean/restore/no-verify. Nunca promover para main.
+Outras reconciliações: retirar uso operacional de APPLY sem apagar fixtures que comprovam sua rejeição; não restaurar validação de gitlink no runtime apenas porque o pouso exige prova Git; preservar regiões externas byte a byte quando essa é a fronteira autorizada; não assumir que revisão histórica de branch autoriza sua aposentadoria.
 
-## 10. Estado por fatia
+## 7. Contribuições históricas e adjudicação pendente
 
-| Fatia | Situação honesta |
-| --- | --- |
-| S0/S1/A4/A5 | Entregas históricas #727 e membros registradas; candidato atual precisa revalidar preservação após absorções. |
-| S2 | Templates parciais; modelos ainda têm gascity_enabled, WorkspaceBeadsServerSpec, beads_enabled, ledger_id e BeadsWorkspaceEnvironmentSpec. Não houve cutover completo. |
-| S2b | Não concluída; preservar CI própria e retirar runtime externo por inventário, não grep destrutivo. |
-| S3 | Quatro regiões AGENTS ainda sem implementação/validação completa nesta sessão. |
-| S4 | Alias de testes teve correção histórica; isolamento/implementação de custom gates excluídos deste executor pelo operador. |
-| S5 | Remoções/parciais do bootstrap; argumento vazio corrigido. Restante exige reconciliar contrato estrito. |
-| S6 | Projeções/locks/checkpoints avançaram; frota não verde nem pousada no estado final. |
-| S7 | Scripts da raiz corrigidos anteriormente; gitlinks finais, documentação e pacote/repin externo pendentes. |
-| S8 | Check/test completos rodaram e falharam; PRs, propagação e retirada final pendentes. |
+Infra #723/#724/#730 foram incorporados na lane; não confundir isso com pouso de #731 em dev. #729 foi mergeado externamente pelo operador como `a312043b5`, head `155c52a34`, às 19:18 UTC, com checks então falhando; não é fechamento verde desta sessão.
 
-## 11. Adjudicação histórica resumida
+A adjudicação histórica identificou conteúdo já presente ou obsoleto em release/checkpoint dos quatro DBTs, budgets retirados e resets de endpoints. ConfigDict WMS já estava no owner correto. DBT Oracle #97 propunha caminhos inexistentes; não copiar código quebrado por mera afinidade de família. LDIF #102 e Target Oracle #102 exigem respeitar owners atuais; decisões históricas não dispensam comparação com os heads atuais.
 
-- Infra #681: melhoria útil de comando de attestation já presente; mudanças
-  mecânicas de APPLY geram textos inválidos. Não incorporar conteúdo obsoleto.
-  Ainda está OPEN; recomendação de superseded não equivale a fechamento feito.
-- Branches de budget ou reset de endpoints: não restaurar políticas retiradas.
-- Dependabot structlog/actions: resolver no SSOT, respeitando restrição atual
-  de structlog de consumidores; não editar somente pyproject/CI gerado.
-- LDIF #102: imports relativos propostos apontam módulos errados; não absorvido.
-- DBT Oracle #97: proposta importa services.client ausente e caminho _settings
-  incorreto. A necessidade de família coerente não autoriza copiar código quebrado.
-- Target Oracle #102: diferença de aliases operacionais no init gerado ainda
-  requer decisão do gerador; não foi adjudicada como funcionalmente correta.
-- Release/checkpoint dos quatro dbts: contribuições úteis observadas já presentes;
-  Make/locks/scratch históricos restantes supersedidos. Revisão não autoriza
-  apagar branches sem prova de preservação/ancestralidade prevista para retirada.
+Raiz #242 e infra #732 ainda precisam adjudicação das contribuições úteis. O primeiro trouxe automação com pré-condições incompletas; o segundo mistura melhorias de documentação/relatórios com mudanças que podem conflitar com execução incondicional e verificação atômica já adotadas. Conferir hunks atuais e cooperar antes de absorver. PRs de dependências/actions devem mudar o SSOT e regenerar, nunca somente projeções.
 
-## 12. Apêndice de publicação
-
-A geração sessão 66731 terminou com **exit 0**, 32/32, `project conformance complete`.
-Inclui a projeção do novo piso LDAP. `make setup`/check/test sobre esse piso NÃO
-foram executados. O checkpoint não comprova a dependência instalada.
-
-Publicação dos 31 membros: `git diff --check`, commits escopados `[WIP]` e
-`git push origin <branch>` retornaram 0; `git status --porcelain=v1` vazio e
-`git rev-list --left-right --count HEAD...origin/<branch>` = `0 0` em cada um.
-Comandos rodaram em `<lane>/<membro>`. A raiz publica o próprio handoff e os
-31 gitlinks depois desses pushes, no Draft #240. Seu hash é registrado na bead
-e no PR, evitando autorreferência impossível. Nenhuma branch foi aposentada,
-nenhum PR foi promovido/mergeado para fechar este checkpoint.
-
-
-| Membro | HEAD WIP publicado | PR |
-| --- | --- | --- |
-| flext-api | `d13aef23168486cd4d87b14fec29eef8983decc4` | [#99](https://github.com/flext-sh/flext-api/pull/99) |
-| flext-auth | `ad3c3d855f755b21b74b36d898083019660b2f80` | [#100](https://github.com/flext-sh/flext-auth/pull/100) |
-| flext-cli | `f6f2d65773e4686d94118ff40db068b54a27632d` | [#168](https://github.com/flext-sh/flext-cli/pull/168) |
-| flext-core | `64d58f17004c192a02fc5fd4028a6de4aae53714` | [#474](https://github.com/flext-sh/flext-core/pull/474) |
-| flext-db-oracle | `58960871f43feb52620fd8165a10d780783a6860` | [#101](https://github.com/flext-sh/flext-db-oracle/pull/101) |
-| flext-dbt-ldap | `1b78d503adaa4a8ea1b47e0cbce822a759cfae48` | [#101](https://github.com/flext-sh/flext-dbt-ldap/pull/101) |
-| flext-dbt-ldif | `b9942f2ac08a831aab0304ba9e15026177914009` | [#110](https://github.com/flext-sh/flext-dbt-ldif/pull/110) |
-| flext-dbt-oracle | `c31cccccb2e6ba3b78601920271e88cd9920b2a2` | [#101](https://github.com/flext-sh/flext-dbt-oracle/pull/101) |
-| flext-dbt-oracle-wms | `0655d370cf8746ddc93e0dc176af595b9e315902` | [#101](https://github.com/flext-sh/flext-dbt-oracle-wms/pull/101) |
-| flext-grpc | `c0b863cc42c06b5073a529b3b5990b1016651f46` | [#96](https://github.com/flext-sh/flext-grpc/pull/96) |
-| flext-infra | `8b03723cbcb78e10966f5d81f49fe9f37ba64130` | [#731](https://github.com/flext-sh/flext-infra/pull/731) |
-| flext-ldap | `c196ab85e279bc147ba371b20ea499e217a39045` | [#114](https://github.com/flext-sh/flext-ldap/pull/114) |
-| flext-ldif | `e258c8cf183741d9efe996c0659c5122cb11947d` | [#110](https://github.com/flext-sh/flext-ldif/pull/110) |
-| flext-meltano | `5360beb93568c653e28cbf397a760ffcbef106bb` | [#113](https://github.com/flext-sh/flext-meltano/pull/113) |
-| flext-observability | `0d417be70d0e8448b074ec4b5b1db699c6aba93f` | [#109](https://github.com/flext-sh/flext-observability/pull/109) |
-| flext-oracle-oic | `430fff0647f7c57f91f9a5a248003013d10ebba5` | [#100](https://github.com/flext-sh/flext-oracle-oic/pull/100) |
-| flext-oracle-wms | `fab5579b940a2af779bfde7f1e8e507c2253480e` | [#97](https://github.com/flext-sh/flext-oracle-wms/pull/97) |
-| flext-plugin | `6926717f1a46c13664bcab38922e25b872678902` | [#99](https://github.com/flext-sh/flext-plugin/pull/99) |
-| flext-quality | `405411f60b98bf51e6a98eb4eeef3f9ae8a54a9e` | [#170](https://github.com/flext-sh/flext-quality/pull/170) |
-| flext-tap-ldap | `7098697e23ebce22c345cc0dc027beea9b3a87d4` | [#99](https://github.com/flext-sh/flext-tap-ldap/pull/99) |
-| flext-tap-ldif | `c98066c01678d9933f7dbe85eff45ef719073629` | [#102](https://github.com/flext-sh/flext-tap-ldif/pull/102) |
-| flext-tap-oracle | `776aed526f5504593d5f5a8581a74aad9b5937e8` | [#94](https://github.com/flext-sh/flext-tap-oracle/pull/94) |
-| flext-tap-oracle-oic | `26803cdb03f3044cfb343fda3532ef43b16ef0cd` | [#97](https://github.com/flext-sh/flext-tap-oracle-oic/pull/97) |
-| flext-tap-oracle-wms | `addf8d6bb009db109f672f9eb0458cc4f7decf71` | [#100](https://github.com/flext-sh/flext-tap-oracle-wms/pull/100) |
-| flext-target-ldap | `5f0c0e4742c653625cd51845626b3c86a056210e` | [#100](https://github.com/flext-sh/flext-target-ldap/pull/100) |
-| flext-target-ldif | `ee379d3b1983815a98372dbbb81f8ad87f495350` | [#103](https://github.com/flext-sh/flext-target-ldif/pull/103) |
-| flext-target-oracle | `d14c5634c56338c6e73b3bc5790085f9fc545c15` | [#105](https://github.com/flext-sh/flext-target-oracle/pull/105) |
-| flext-target-oracle-oic | `33de3ef6007eae631879c2b8b6624da88e475ed8` | [#100](https://github.com/flext-sh/flext-target-oracle-oic/pull/100) |
-| flext-target-oracle-wms | `7c51f1479c5c80dd8cd009ede453b66763be92df` | [#101](https://github.com/flext-sh/flext-target-oracle-wms/pull/101) |
-| flext-tests | `d5f21964b890b651b3b0cc9e092262dbcf061b42` | [#110](https://github.com/flext-sh/flext-tests/pull/110) |
-| flext-web | `78c03b69ecf8d817f096d1a2e2490eca26b25334` | [#92](https://github.com/flext-sh/flext-web/pull/92) |
-
-
-### Cópias publicadas com este documento
-
-- [Plano anotado, snapshot](plan-source.md).
-- [Handoff anterior anotado, snapshot](previous-handoff-source.md).
-- [Pacote externo anotado, snapshot](ai-hub-package-source.md).
-- [Estado pré-checkpoint dos 32 e principal](state-before-checkpoint.json).
-- [Inventário datado de PRs](prs-at-audit.json).
-- [Beads filhas consultadas, snapshot](beads-at-audit.json).
-- [Comandos e resultados dos 31 pushes](member-publication.json).
-
-Esses anexos preservam evidências históricas autorizadas. O estado atual é
-sempre lido do Git/GitHub/Beads. Não atualizar snapshots como se fossem trackers.
-A raiz ainda deve absorver `206c02ee1d` e resolver #240 ao retomar implementação;
-o pedido final desta sessão foi preservar a posição atual, não iniciar outro
-merge e outra rodada de conflitos durante o handoff.
+Ao encerrar, registrar o que foi incorporado, já estava presente ou foi superado, com prova. Nenhuma dessas classificações autoriza apagar branches sem fetch recente e ancestralidade. O estado atual continua ativo e incompleto até que integração e runtime dos 32 sejam comprovados.
