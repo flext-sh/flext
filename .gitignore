@@ -38,6 +38,11 @@ scripts/*.sh
 scripts/*.md
 scripts/maintenance/
 
+# TRACK: Local structural rules and their regression fixtures
+!/sgconfig.yml
+!/ast-grep-rules/
+!/ast-grep-rule-tests/
+
 # TRACK: Beads team config; keep Dolt data, runtime state, and JSONL exports local.
 !.beads/
 .beads/*

@@ -114,7 +114,7 @@ export TESTMON_DATAFILE
 # run inside MAKEFILE_ROOT: run from a foreign CWD they would report THAT
 # checkout's topology and redirect the verb to the wrong tree.
 ifeq ($(filter command line override,$(origin REPOSITORY_ROOT)),)
-ifneq ($(GEN_INIT_ONLY),)
+ifneq ($(filter standalone,$(MAKE_PROFILE))$(GEN_INIT_ONLY),)
 REPOSITORY_ROOT := $(MAKEFILE_ROOT)
 else
 REPOSITORY_ROOT := $(shell cd "$(MAKEFILE_ROOT)" && root=$$(git rev-parse --show-superproject-working-tree 2>/dev/null); if [ -n "$$root" ]; then printf '%s\n' "$$root"; else git rev-parse --show-toplevel 2>/dev/null || printf '%s\n' "$(MAKEFILE_ROOT)"; fi)
@@ -145,9 +145,8 @@ MYPY_PATHS := $(strip $(foreach d,src tests examples,$(if $(wildcard $(PROJECT_R
 # End SECTION: lint/type paths
 
 # === SECTION: project tool owner (managed) ===
-# Source: caller-selected uv command; make setup owns environment provisioning.
-UV ?= uv
-UV_REQUESTED := $(UV)
+# Source: the repository's declared Mise toolchain, provisioned by make setup.
+override UV := "$(SETUP_MISE)" -C "$(PROJECT_ROOT)" exec -- uv
 CALLER_PATH := $(PATH)
 CALLER_VIRTUAL_ENV := $(patsubst %/,%,$(VIRTUAL_ENV))
 # End SECTION: project tool owner
@@ -190,23 +189,13 @@ ifeq ($(SANITIZED_CALLER_PATH),$(CALLER_VIRTUAL_ENV_BIN))
 SANITIZED_CALLER_PATH :=
 endif
 endif
-ifneq ($(filter Y,$(GEN_INIT_ONLY) $(SETUP_BOOTSTRAP_ONLY)),)
-RESOLVED_UV :=
-else
-RESOLVED_UV := $(shell PATH="$(SANITIZED_CALLER_PATH)" command -v "$(UV_REQUESTED)")
-# Operator 2026-09-14: parsing never aborts every verb over a missing tool; only
-# the recipe that runs uv fails, so gen and setup can still recover the checkout.
-ifneq ($(.SHELLSTATUS),0)
-$(warning uv executable not found on PATH: $(UV_REQUESTED); recipes that run uv fail until make setup provisions it)
-endif
-endif
-override UV := $(if $(strip $(RESOLVED_UV)),$(RESOLVED_UV),$(UV_REQUESTED))
 override FLEXT_INFRA_PYTHON := $(FLEXT_INFRA_RUNTIME_PYTHON)
 override UV_PROJECT := $(RUNTIME_ROOT)
 override UV_PROJECT_ENVIRONMENT := $(RUNTIME_VENV)
 override VIRTUAL_ENV := $(RUNTIME_VENV)
 override PATH := $(RUNTIME_BIN):$(SANITIZED_CALLER_PATH)
-export FLEXT_INFRA_PYTHON UV UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH
+unexport UV
+export FLEXT_INFRA_PYTHON UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH
 
 .PHONY: _bootstrap_setup_tools
 
@@ -276,7 +265,7 @@ if [ -z "$$mise_storage_root" ]; then \
 	case "$$project_root/" in \
 		"$$mise_storage_root/"*) printf 'ERROR: persistent Mise storage must not contain the checkout: %s\n' "$$mise_storage_root" >&2; exit 2 ;; \
 	esac; \
-	for persistent_path in "$$mise_storage_root" "$$mise_storage_root/cache" "$$mise_storage_root/state" "$$mise_storage_root/installs" "$$mise_storage_root/shims" "$$mise_storage_root/bootstrap"; do \
+	for persistent_path in "$$mise_storage_root" "$$mise_storage_root/cache" "$$mise_storage_root/state" "$$mise_storage_root/installs" "$$mise_storage_root/shims" "$$mise_storage_root/uv-cache" "$$mise_storage_root/bootstrap"; do \
 		if [ -L "$$persistent_path" ]; then \
 			printf 'ERROR: persistent Mise path must not be a symlink: %s\n' "$$persistent_path" >&2; exit 2; \
 		fi; \
@@ -363,6 +352,7 @@ mise_exec() { \
 "MISE_STATE_DIR=$$mise_storage_root/state" \
 "MISE_INSTALLS_DIR=$$mise_storage_root/installs" \
 "MISE_SHIMS_DIR=$$mise_storage_root/shims" \
+"UV_CACHE_DIR=$$mise_storage_root/uv-cache" \
 "GIT_CEILING_DIRECTORIES=$$project_parent" \
 			"MISE_CEILING_PATHS=$$project_parent" \
 			"MISE_TRUSTED_CONFIG_PATHS=$$project_root" \
@@ -468,7 +458,7 @@ SETUP_ENVIRONMENT_RECIPE = set -eu; \
 		if [ ! -x "$(RUNTIME_PYTHON)" ]; then \
 			$(UV) venv "$(RUNTIME_VENV)"; \
 		fi; \
-		$(UV) sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS) --link-mode "$(UV_LINK_MODE)"; \
+		"$(RUNTIME_PYTHON)" -c 'import os, pathlib, sys, tomllib; command = sys.argv[1:]; manifests = [pathlib.Path(command[index + 1]) for index, argument in enumerate(command) if argument == "-r"]; groups = [argument for manifest in manifests for group in tomllib.loads(manifest.read_text(encoding="utf-8")).get("dependency-groups", {}).keys() for argument in ("--group", f"{manifest}:{group}")]; os.execvp(command[0], [*command, *groups])' $(UV) pip install --python "$(RUNTIME_PYTHON)" --exact --upgrade --refresh --all-extras $(UV_INSTALL_INPUTS) --link-mode "$(UV_LINK_MODE)"; \
 	fi; \
 	XDG_DATA_HOME="$${SETUP_DIRENV_XDG_DATA_HOME:?missing persistent direnv data home}" \
 		"$${SETUP_DIRENV:?missing Mise-resolved direnv executable}" allow "$(PROJECT_ROOT)"; \
@@ -501,26 +491,14 @@ DOCS_PROJECT_ARGS := $(foreach project,$(SELECTED_PROJECTS),--projects $(project
 # PYTHONPATH would make `make test` in a linked worktree execute that primary
 # tree instead of this checkout. Prefer PROJECT_ROOT/src so the Makefile owner
 # always wins over the shared editable (terminus T4 / path-purity).
-# Preserve the Make-owned UV_PROJECT_ENVIRONMENT used by setup. --project alone
-# can select a parent uv workspace's default venv, even for a standalone member.
-UV_RUN := env -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u PROJECT_ROOT PYTHONPATH="$(PROJECT_ROOT)/src" $(UV) run --project "$(RUNTIME_ROOT)" --no-sync
+# Execute the interpreter provisioned by setup without discovering a project
+# workspace or creating a dependency-resolution file during a runtime command.
+UV_RUN := env -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u PROJECT_ROOT PYTHONPATH="$(PROJECT_ROOT)/src" $(UV) run --no-project --python "$(RUNTIME_PYTHON)"
 PROJECT_INFRA_PYTHONPATH ?= $(MAKEFILE_ROOT)/src
-PROJECT_FLEXT_INFRA := if [ ! -x "$(FLEXT_INFRA_PYTHON)" ]; then printf 'ERROR: FLEXT_INFRA_PYTHON must name an executable managed Python\n' >&2; exit 2; fi; env -u PYTHONPATH -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u UV_PROJECT_ENVIRONMENT PATH="$(dir $(FLEXT_INFRA_PYTHON)):$(SANITIZED_CALLER_PATH)" PYTHONPATH="$(PROJECT_INFRA_PYTHONPATH)" $(FLEXT_INFRA_PYTHON) -m flext_infra
-# Scaffold dev tools live in the validated optional dev
-# profile; a fresh project must create its lock before later check-mode locks.
-# Keyed on the environment's OWNER, not on the caller's profile. A member has
-# no local venv -- RUNTIME_VENV is RUNTIME_ROOT/.venv -- so every checkout that
-# provisions a shared environment must describe the same contents. A member
-# syncing without --all-packages treats the siblings already installed there as
-# surplus and uninstalls them, undoing the root's provisioning and leaving
-# `uv sync --check` permanently divergent. A standalone project owns its venv
-# alone and has no workspace packages to include.
-SHARED_RUNTIME := $(if $(filter-out $(PROJECT_ROOT),$(RUNTIME_ROOT)),1,$(if $(strip $(WORKSPACE_SUBPROJECTS)),1,))
-# No lock is committed, so there is nothing for `--locked` to honour: the fleet
-# resolves dependency floors from pyproject on every setup, in CI exactly as
-# locally. `--refresh` re-reads branch-tracked git metadata so a cached
-# requires-dist can never skew the resolution (operator 2026-09-14).
-UV_SYNC_FLAGS := $(if $(SHARED_RUNTIME),--all-packages ,)--all-extras --all-groups --refresh
+PROJECT_FLEXT_INFRA := if [ ! -x "$(FLEXT_INFRA_PYTHON)" ]; then printf 'ERROR: FLEXT_INFRA_PYTHON must name an executable managed Python\n' >&2; exit 2; fi; "$(SETUP_MISE)" -C "$(PROJECT_ROOT)" exec -- env -u PYTHONPATH -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u UV_PROJECT_ENVIRONMENT PYTHONPATH="$(PROJECT_INFRA_PYTHONPATH)" $(FLEXT_INFRA_PYTHON) -m flext_infra
+# Resolve groups from real manifests at setup, after submodule initialization.
+# Python preserves each argv path (including spaces); exec preserves uv failures.
+UV_INSTALL_INPUTS := -r "$(RUNTIME_ROOT)/./pyproject.toml" -e "$(RUNTIME_ROOT)/flext-api" -r "$(RUNTIME_ROOT)/flext-api/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-auth" -r "$(RUNTIME_ROOT)/flext-auth/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-cli" -r "$(RUNTIME_ROOT)/flext-cli/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-core" -r "$(RUNTIME_ROOT)/flext-core/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-db-oracle" -r "$(RUNTIME_ROOT)/flext-db-oracle/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-dbt-ldap" -r "$(RUNTIME_ROOT)/flext-dbt-ldap/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-dbt-ldif" -r "$(RUNTIME_ROOT)/flext-dbt-ldif/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-dbt-oracle" -r "$(RUNTIME_ROOT)/flext-dbt-oracle/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-dbt-oracle-wms" -r "$(RUNTIME_ROOT)/flext-dbt-oracle-wms/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-grpc" -r "$(RUNTIME_ROOT)/flext-grpc/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-infra" -r "$(RUNTIME_ROOT)/flext-infra/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-ldap" -r "$(RUNTIME_ROOT)/flext-ldap/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-ldif" -r "$(RUNTIME_ROOT)/flext-ldif/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-meltano" -r "$(RUNTIME_ROOT)/flext-meltano/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-observability" -r "$(RUNTIME_ROOT)/flext-observability/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-oracle-oic" -r "$(RUNTIME_ROOT)/flext-oracle-oic/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-oracle-wms" -r "$(RUNTIME_ROOT)/flext-oracle-wms/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-plugin" -r "$(RUNTIME_ROOT)/flext-plugin/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-quality" -r "$(RUNTIME_ROOT)/flext-quality/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-tap-ldap" -r "$(RUNTIME_ROOT)/flext-tap-ldap/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-tap-ldif" -r "$(RUNTIME_ROOT)/flext-tap-ldif/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-tap-oracle" -r "$(RUNTIME_ROOT)/flext-tap-oracle/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-tap-oracle-oic" -r "$(RUNTIME_ROOT)/flext-tap-oracle-oic/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-tap-oracle-wms" -r "$(RUNTIME_ROOT)/flext-tap-oracle-wms/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-target-ldap" -r "$(RUNTIME_ROOT)/flext-target-ldap/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-target-ldif" -r "$(RUNTIME_ROOT)/flext-target-ldif/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-target-oracle" -r "$(RUNTIME_ROOT)/flext-target-oracle/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-target-oracle-oic" -r "$(RUNTIME_ROOT)/flext-target-oracle-oic/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-target-oracle-wms" -r "$(RUNTIME_ROOT)/flext-target-oracle-wms/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-tests" -r "$(RUNTIME_ROOT)/flext-tests/pyproject.toml" -e "$(RUNTIME_ROOT)/flext-web" -r "$(RUNTIME_ROOT)/flext-web/pyproject.toml"
 
 ifeq ($(GEN_INIT_ONLY),)
 -include custom.mk
@@ -915,7 +893,7 @@ _builtin-self-check: _builtin_require_environment
 
 _builtin-self-fmt: _builtin_require_environment
 	@$(UV_RUN) ruff format --preview $(RUFF_PATHS)
-	@$(UV_RUN) ruff check --preview --fix --unsafe-fixes --exit-zero $(RUFF_PATHS)
+	@$(UV_RUN) ruff check --preview --fix --unsafe-fixes $(RUFF_PATHS)
 
 _builtin-self-fix: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gates "lint,markdown,canonical-alias,smells" --projects . --apply --report-findings
@@ -956,16 +934,16 @@ _builtin_status_diagnostics: _builtin_require_environment
 	@printf 'profile=%s\nproject=%s\nruntime=%s\n' \
 		'$(MAKE_PROFILE)' '$(PROJECT_ROOT)' '$(RUNTIME_ROOT)'
 	@$(UV) --version
-	@$(UV) lock --project "$(PROJECT_ROOT)" --check
 	@if [ -x "$(RUNTIME_PYTHON)" ]; then \
 		$(UV) pip check --python "$(RUNTIME_VENV)"; \
 	fi
 	@git -C "$(PROJECT_ROOT)" status --short
 
-_builtin_docs_all:
+_builtin_docs_all: _builtin_gen_all
 	@set -eu; \
 	for action in $(DOCS_ACTIONS); do \
-		case "$$action" in fix) mode=--apply ;; *) mode= ;; esac; \
+		mode=; \
+		case "$$action" in fix) mode=--apply ;; esac; \
 		$(PROJECT_FLEXT_INFRA) docs "$$action" --repository-root "$(PROJECT_ROOT)" --output-dir ".reports/docs" $$mode $(DOCS_PROJECT_ARGS); \
 	done
 
@@ -1039,7 +1017,7 @@ _builtin_mod_apply: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) refactor mod --apply
 
 # Selector-free public verbs map one-to-one to their canonical implementation;
-# every verb always applies (operator law 2026-09-14).
+# each implementation owns one fixed operation.
 _builtin-deps: _builtin_deps_upgrade
 _builtin-build: _builtin_build_artifacts
 _builtin-check: _builtin_check_all
@@ -1048,11 +1026,6 @@ _builtin-fmt: _builtin_fmt_all
 _builtin-fix: _builtin_fix_all
 _builtin-fix-enforcement: _builtin_fix_enforcement
 _builtin-audit:
-	@if [ "$(MAKE_PROFILE)" = "workspace" ]; then \
-		$(UV) lock --project "$(PROJECT_ROOT)" --check; \
-	else \
-		printf '%s\n' "audit: dependency truth is owned by the fleet workspace lock (design B, flext-62fbu); run the audit at the fleet root."; \
-	fi
 	@$(UV) pip check --python "$(RUNTIME_VENV)"
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode check
 _builtin-status: _builtin_status_diagnostics
