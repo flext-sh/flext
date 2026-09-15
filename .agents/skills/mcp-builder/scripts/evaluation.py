@@ -3,19 +3,17 @@
 This script evaluates MCP servers by running test questions against them using Claude.
 """
 
-import argparse
 import asyncio
 import json
 import re
 import sys
 import time
 import traceback
-import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Any
 
 from anthropic import Anthropic
-from connections import create_connection
+from connections import MCPConnection, create_connection
+from defusedxml import ElementTree as DelTree
 
 EVALUATION_PROMPT = """You are an AI assistant with access to tools.
 
@@ -52,26 +50,18 @@ Response Requirements:
 - Your response should go last"""
 
 
-def parse_evaluation_file(file_path: Path) -> list[dict[str, Any]]:
+def parse_evaluation_file(file_path: Path) -> list[dict[str, str]]:
     """Parse XML evaluation file with qa_pair elements."""
-    try:
-        tree = ET.parse(file_path)
-        root = tree.getroot()
-        evaluations = []
-
-        for qa_pair in root.findall(".//qa_pair"):
-            question_elem = qa_pair.find("question")
-            answer_elem = qa_pair.find("answer")
-
-            if question_elem is not None and answer_elem is not None:
-                evaluations.append({
-                    "question": (question_elem.text or "").strip(),
-                    "answer": (answer_elem.text or "").strip(),
-                })
-
-        return evaluations
-    except Exception:
-        return []
+    tree = DelTree.parse(file_path)
+    root = tree.getroot()
+    return [
+        {
+            "question": (qa_pair.find("question").text or "").strip(),
+            "answer": (qa_pair.find("answer").text or "").strip(),
+        }
+        for qa_pair in root.findall(".//qa_pair")
+        if qa_pair.find("question") is not None and qa_pair.find("answer") is not None
+    ]
 
 
 def extract_xml_content(text: str, tag: str) -> str | None:
@@ -85,11 +75,11 @@ async def agent_loop(
     client: Anthropic,
     model: str,
     question: str,
-    tools: list[dict[str, Any]],
-    connection: Any,
-) -> tuple[str, dict[str, Any]]:
+    tools: list[dict[str, object]],
+    connection: MCPConnection,
+) -> tuple[str | None, dict[str, object]]:
     """Run the agent loop with MCP tools."""
-    messages = [{"role": "user", "content": question}]
+    messages: list[dict[str, object]] = [{"role": "user", "content": question}]
 
     response = await asyncio.to_thread(
         client.messages.create,
@@ -102,7 +92,7 @@ async def agent_loop(
 
     messages.append({"role": "assistant", "content": response.content})
 
-    tool_metrics = {}
+    tool_metrics: dict[str, dict[str, object]] = {}
 
     while response.stop_reason == "tool_use":
         tool_use = next(block for block in response.content if block.type == "tool_use")
@@ -117,7 +107,7 @@ async def agent_loop(
                 if isinstance(tool_result, (dict, list))
                 else str(tool_result)
             )
-        except Exception as e:
+        except (RuntimeError, OSError, ValueError) as e:
             tool_response = f"Error executing tool {tool_name}: {e!s}\n"
             tool_response += traceback.format_exc()
         tool_duration = time.time() - tool_start_ts
@@ -157,17 +147,15 @@ async def agent_loop(
 async def evaluate_single_task(
     client: Anthropic,
     model: str,
-    qa_pair: dict[str, Any],
-    tools: list[dict[str, Any]],
-    connection: Any,
-    task_index: int,
-) -> dict[str, Any]:
+    qa_pair: dict[str, str],
+    tools: list[dict[str, object]],
+    connection: MCPConnection,
+) -> dict[str, object]:
     """Evaluate a single QA pair with the given tools."""
     start_time = time.time()
 
-    response, tool_metrics = await agent_loop(
-        client, model, qa_pair["question"], tools, connection
-    )
+    response, tool_metrics = await agent_loop(client, model, qa_pair["question"],
+                                              tools, connection)
 
     response_value = extract_xml_content(response, "response")
     summary = extract_xml_content(response, "summary")
@@ -224,7 +212,7 @@ TASK_TEMPLATE = """
 
 
 async def run_evaluation(
-    eval_path: Path, connection: Any, model: str = "claude-3-7-sonnet-20250219"
+    eval_path: Path, connection: MCPConnection, model: str = "claude-3-7-sonnet-20250219"
 ) -> str:
     """Run evaluation with MCP server tools."""
     client = Anthropic()
@@ -233,12 +221,8 @@ async def run_evaluation(
 
     qa_pairs = parse_evaluation_file(eval_path)
 
-    results = []
-    for i, qa_pair in enumerate(qa_pairs):
-        result = await evaluate_single_task(
-            client, model, qa_pair, tools, connection, i
-        )
-        results.append(result)
+    results = [await evaluate_single_task(client, model, qa_pair, tools, connection)
+               for qa_pair in qa_pairs]
 
     correct = sum(r["score"] for r in results)
     accuracy = (correct / len(results)) * 100 if results else 0
@@ -303,94 +287,114 @@ def parse_env_vars(env_list: list[str]) -> dict[str, str]:
     return env
 
 
-async def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Evaluate MCP servers using test questions",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
+USAGE = """usage: evaluation.py [-h] eval_file
+                      [-t {stdio,sse,http}] [-m MODEL] [-c COMMAND] [-a [ARGS ...]]
+                      [-e [ENV ...]] [-u URL] [-H [HEADERS ...]] [-o OUTPUT]
+
 Examples:
-  # Evaluate a local stdio MCP server
   python evaluation.py -t stdio -c python -a my_server.py eval.xml
-
-  # Evaluate an SSE MCP server
   python evaluation.py -t sse -u https://example.com/mcp -H "Authorization: Bearer token" eval.xml
+  python evaluation.py -t http -u https://example.com/mcp -m claude-3-5-sonnet-20241022 eval.xml"""
 
-  # Evaluate an HTTP MCP server with custom model
-  python evaluation.py -t http -u https://example.com/mcp -m claude-3-5-sonnet-20241022 eval.xml
-        """,
-    )
 
-    parser.add_argument("eval_file", type=Path, help="Path to evaluation XML file")
-    parser.add_argument(
-        "-t",
-        "--transport",
-        choices=["stdio", "sse", "http"],
-        default="stdio",
-        help="Transport type (default: stdio)",
-    )
-    parser.add_argument(
-        "-m",
-        "--model",
-        default="claude-3-7-sonnet-20250219",
-        help="Claude model to use (default: claude-3-7-sonnet-20250219)",
-    )
+class UsageError(ValueError):
+    """Command-line usage error reported to the caller."""
 
-    stdio_group = parser.add_argument_group("stdio options")
-    stdio_group.add_argument(
-        "-c", "--command", help="Command to run MCP server (stdio only)"
-    )
-    stdio_group.add_argument(
-        "-a", "--args", nargs="+", help="Arguments for the command (stdio only)"
-    )
-    stdio_group.add_argument(
-        "-e",
-        "--env",
-        nargs="+",
-        help="Environment variables in KEY=VALUE format (stdio only)",
-    )
 
-    remote_group = parser.add_argument_group("sse/http options")
-    remote_group.add_argument("-u", "--url", help="MCP server URL (sse/http only)")
-    remote_group.add_argument(
-        "-H",
-        "--header",
-        nargs="+",
-        dest="headers",
-        help="HTTP headers in 'Key: Value' format (sse/http only)",
-    )
+def parse_args(argv: list[str]) -> dict[str, object]:
+    """Parse the evaluation-harness command line without a CLI framework."""
+    args: dict[str, object] = {"transport": "stdio"}
+    positional: list[str] = []
+    flags_getting_value = {
+        "-t": "transport",
+        "--transport": "transport",
+        "-m": "model",
+        "--model": "model",
+        "-c": "command",
+        "--command": "command",
+        "-e": "env",
+        "--env": "env",
+        "-u": "url",
+        "--url": "url",
+        "-o": "output",
+        "--output": "output",
+    }
 
-    parser.add_argument(
-        "-o",
-        "--output",
-        type=Path,
-        help="Output file for evaluation report (default: stdout)",
-    )
+    index = 0
+    while index < len(argv):
+        spell = argv[index]
+        if spell in {"-a", "--args"}:
+            collected: list[str] = []
+            index += 1
+            while index < len(argv) and not argv[index].startswith("-"):
+                collected.append(argv[index])
+                index += 1
+            args["args"] = collected
+            continue
+        if spell in {"-H", "--header"}:
+            received: list[str] = []
+            index += 1
+            while index < len(argv) and not argv[index].startswith("-"):
+                received.append(argv[index])
+                index += 1
+            args["headers"] = received
+            continue
+        if spell in {"-h", "--help"}:
+            sys.stdout.write(USAGE + "\n")
+            sys.exit(0)
+        if spell in flags_getting_value:
+            index += 1
+            if index >= len(argv):
+                msg = f"Missing value for {spell}"
+                raise UsageError(msg)
+            args[flags_getting_value[spell]] = argv[index]
+            index += 1
+            continue
+        if spell.startswith("-"):
+            msg = f"Unknown option: {spell}"
+            raise UsageError(msg)
+        positional.append(spell)
+        index += 1
 
-    args = parser.parse_args()
+    args["eval_file"] = Path(positional[0])
+    return args
 
-    if not args.eval_file.exists():
+
+async def main() -> None:
+    """Evaluate MCP servers using test questions from the command line."""
+    try:
+        args = parse_args(sys.argv[1:])
+    except UsageError:
         sys.exit(1)
 
-    headers = parse_headers(args.headers) if args.headers else None
-    env_vars = parse_env_vars(args.env) if args.env else None
+    eval_file = args["eval_file"]
+    if not isinstance(eval_file, Path) or not eval_file.exists():
+        sys.exit(1)
+
+    transport: str = args["transport"]
+    model: str = args.get("model", "claude-3-7-sonnet-20250219")
+
+    headers = parse_headers(args["headers"]) if args.get("headers") else None
+    env_vars = parse_env_vars(args["env"]) if args.get("env") else None
 
     try:
         connection = create_connection(
-            transport=args.transport,
-            command=args.command,
-            args=args.args,
+            transport=transport,
+            command=args.get("command"),
+            args=args.get("args"),
             env=env_vars,
-            url=args.url,
+            url=args.get("url"),
             headers=headers,
         )
     except ValueError:
         sys.exit(1)
 
     async with connection:
-        report = await run_evaluation(args.eval_file, connection, args.model)
+        report = await run_evaluation(eval_file, connection, model)
 
-        if args.output:
-            args.output.write_text(report)
+        output = args.get("output")
+        if output:
+            output.write_text(report)
 
 
 if __name__ == "__main__":
