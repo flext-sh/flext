@@ -185,12 +185,12 @@ Note: This is a text placeholder. Actual assets can be any file type.
 """
 
 
-def title_case_skill_name(skill_name):
+def title_case_skill_name(skill_name: str) -> str:
     """Convert hyphenated skill name to Title Case for display."""
     return " ".join(word.capitalize() for word in skill_name.split("-"))
 
 
-def init_skill(skill_name, path):
+def init_skill(skill_name: str, path: str) -> Path | None:
     """Initialize a new skill directory with template SKILL.md.
 
     Args:
@@ -211,7 +211,7 @@ def init_skill(skill_name, path):
     # Create skill directory
     try:
         skill_dir.mkdir(parents=True, exist_ok=False)
-    except Exception:
+    except OSError:
         return None
 
     # Create SKILL.md from template
@@ -219,47 +219,71 @@ def init_skill(skill_name, path):
     skill_content = SKILL_TEMPLATE.format(
         skill_name=skill_name, skill_title=skill_title
     )
-
-    skill_md_path = skill_dir / "SKILL.md"
     try:
-        skill_md_path.write_text(skill_content)
-    except Exception:
+        (skill_dir / "SKILL.md").write_text(skill_content)
+    except OSError:
         return None
 
-    # Create resource directories with example files
-    try:
-        # Create scripts/ directory with example script
-        scripts_dir = skill_dir / "scripts"
-        scripts_dir.mkdir(exist_ok=True)
-        example_script = scripts_dir / "example.py"
-        example_script.write_text(EXAMPLE_SCRIPT.format(skill_name=skill_name))
-        example_script.chmod(0o755)
-
-        # Create references/ directory with example reference doc
-        references_dir = skill_dir / "references"
-        references_dir.mkdir(exist_ok=True)
-        example_reference = references_dir / "api_reference.md"
-        example_reference.write_text(EXAMPLE_REFERENCE.format(skill_title=skill_title))
-
-        # Create assets/ directory with example asset placeholder
-        assets_dir = skill_dir / "assets"
-        assets_dir.mkdir(exist_ok=True)
-        example_asset = assets_dir / "example_asset.txt"
-        example_asset.write_text(EXAMPLE_ASSET)
-    except Exception:
+    if not _create_resource_directories(skill_dir, skill_name, skill_title):
         return None
-
-    # Print next steps
 
     return skill_dir
 
 
+def _create_resource_directories(
+    skill_dir: Path, skill_name: str, skill_title: str
+) -> bool:
+    """Create the scripts, references, and assets starter resources."""
+    try:
+        _create_scripts_resource(skill_dir, skill_name)
+        _create_references_resource(skill_dir, skill_title)
+        _create_assets_resource(skill_dir)
+    except OSError:
+        return False
+
+    return True
+
+
+def _create_scripts_resource(skill_dir: Path, skill_name: str) -> None:
+    """Create the scripts directory with one example script."""
+    scripts_dir = skill_dir / "scripts"
+    scripts_dir.mkdir(exist_ok=True)
+    example_script = scripts_dir / "example.py"
+    example_script.write_text(EXAMPLE_SCRIPT.format(skill_name=skill_name))
+    example_script.chmod(0o755)
+
+
+def _create_references_resource(skill_dir: Path, skill_title: str) -> None:
+    """Create the references directory with one example reference doc."""
+    references_dir = skill_dir / "references"
+    references_dir.mkdir(exist_ok=True)
+    example_reference = references_dir / "api_reference.md"
+    example_reference.write_text(EXAMPLE_REFERENCE.format(skill_title=skill_title))
+
+
+def _create_assets_resource(skill_dir: Path) -> None:
+    """Create the assets directory with one example asset placeholder."""
+    assets_dir = skill_dir / "assets"
+    assets_dir.mkdir(exist_ok=True)
+    example_asset = assets_dir / "example_asset.txt"
+    example_asset.write_text(EXAMPLE_ASSET)
+
+
+REQUIRED_ARG_COUNT = 4
+PATH_ARG_INDEX = 2
+PATH_VALUE_INDEX = 3
+
+
 def main() -> None:
-    if len(sys.argv) < 4 or sys.argv[2] != "--path":
+    """Create one skill directory from the routing arguments."""
+    if (
+        len(sys.argv) < REQUIRED_ARG_COUNT
+        or sys.argv[PATH_ARG_INDEX] != "--path"
+    ):
         sys.exit(1)
 
     skill_name = sys.argv[1]
-    path = sys.argv[3]
+    path = sys.argv[PATH_VALUE_INDEX]
 
     result = init_skill(skill_name, path)
 
