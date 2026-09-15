@@ -4,6 +4,30 @@ Documento de transferência autorizado, preparado em 2026-09-14 após o encerram
 
 ## 1. Estado vigente e próxima ação
 
+**Beads central, verificado em 2026-09-15:** executar sempre por
+`direnv exec . gc bd <comando> --rig flext`. A consulta
+`show flext-itpd1.1 --json` retornou exit 0 no checkout principal e na lane,
+com resposta do store do rig `flext`. A lane carrega a configuração operacional
+existente do principal por `source_env` em `.envrc.local`, resolvendo o principal
+pelo diretório Git compartilhado. Não repetir endpoints em configurações da lane.
+Não executar `bd init`: ausência de configuração local não autoriza criar banco.
+O diretório `.beads` de identidade não equivale a um banco local; preservar essa
+identidade e o banco central. Nenhuma remoção de banco foi necessária nesta correção.
+
+O `make check` 16946 alcançou 23/32 e continua ativo. Falhas ordinárias de tipagem
+do contrato Result permanecem; a rodada não comprova o candidato corrigido.
+Os patches externos S2 e instalação sem lock aguardam composição e revisão final.
+No segundo, o scaffold parcial revelou dependência indevida de manifestos ainda
+ausentes: o provisionamento deve consumir os manifestos reais após inicializar
+submódulos. Não congelar grupos em testes nem inventar manifestos para passar gates.
+
+**Atualização do operador, 2026-09-15 00:35–00:36 UTC:** absorver os tips atuais do GitHub nos 32 projetos
+ e publicar o resultado nas branches de integração; retirar `uv.lock`, `mise.lock` e o modo `APPLY`
+ de produtores, consumidores, templates, testes e orientações vigentes. Não basta retirar rastreamento Git:
+ setup ainda cria lock e consumidores ainda o exigem. Locks de journal/coordenação permanecem fora dessa retirada.
+ A recomendação anterior de manter fixtures do modo aposentado está superada. A execução segue na bead,
+ sem promover WIP como validação ou integração.
+
 O pedido vigente é estabilizar operacionalmente e integrar os **32 projetos** (raiz e 31 membros) por PR com **merge commit** em `0.12.0-dev`, propagar o código integrado ao checkout principal, provar runtime e fechar as beads com evidência. Publicação de WIP preserva trabalho; não comprova pouso, aprovação de gates ou runtime.
 
 O operador reiterou às **23:07 UTC** o uso de `gh pr merge --merge --admin`. Registrar essa autorização administrativa como tal, sem apresentá-la como aprovação independente satisfeita. Ela não converte checks vermelhos em verdes nem dispensa as demais provas exigidas para integração e fechamento.
@@ -19,6 +43,24 @@ ordinários e revalidar o candidato. A rodada de testes anterior não valida os 
 A correção documental posterior em Target Oracle deve ser considerada na próxima prova de geração.
 
 Não recomeçar pela absorção de `206c02ee1d`: essa base já foi incorporada na lane. Antes de publicar ou pousar, buscar as bases atuais dos 32 e absorver somente divergências realmente novas por `merge --no-ff`, preservando ambos os históricos.
+
+### Atualização das tips de integração
+
+A busca das 32 bases em 2026-09-15 identificou o novo tip CLI `b6db6cec9`
+(correção de notificação de término de processo), absorvido e publicado por merge
+`3058c420`. Nova busca identificou o tip infra `b82eefa3e` (merge externo do PR #732),
+absorvido por `ec9813edd` com ancestralidade base → HEAD exit 0.
+Os conflitos ficaram em dois testes: contrato CI combina comandos renderizados com
+etapas derivadas do catálogo; conform adota os helpers e módulos de teste reorganizados
+na integração, que já preservam a remoção dos campos aposentados.
+Isso atualiza a base da lane; não comprova pouso dos PRs #240/#731.
+
+A exigência reiterada às 01:00 UTC é trabalhar sobre a tip de integração atual em todos
+os projetos: buscar novamente antes de aplicar os patches preparados e incorporar
+avanços por merge no-ff. Às 01:09 UTC, o operador reiterou runtime como autoridade:
+provar o comportamento pelo consumidor canônico antes de alinhar testes e declarar
+sucesso. Os patches externos de S2 e instalação sem lock ainda não foram aplicados;
+precisam adaptação ao merge infra mais recente e revisão antes da geração/setup.
 
 ### Workspace e coordenação
 
@@ -165,7 +207,7 @@ Ruff, Pyrefly, Pyright, Mypy e testes precisam de rodada no candidato estabiliza
 1. Recolher a rodada `make check` 16946 até os 32, classificar as falhas ordinárias e corrigir seus owners. As gerações 17490/69562 já terminaram com exit 0; não repetir por memória. Alterações posteriores precisam da validação correspondente.
 2. Executar os verbos canônicos necessários na raiz da lane: setup quando o ambiente/dependências mudarem, gen, fix, fmt, check e test. Coordenar mutações para que a prova final corresponda ao candidato publicado. Sem `PROJECT=`, `WHAT=`, novos seletores ou gates avulsos.
 3. Corrigir falhas padrão e ambiente pelos owners, preservando a exclusão dos custom checks. Registrar o que executou, o que falhou e o que não teve runtime. Cada correção invalida somente as provas que dependem do trecho alterado; a rodada final deve cobrir os 32 declarados.
-4. Adjudicar contribuições úteis ainda pendentes, especialmente [raiz #242](https://github.com/flext-sh/flext/pull/242) e [infra #732](https://github.com/flext-sh/flext-infra/pull/732), contra o HEAD atual. Incorporar por fix-forward/no-ff somente semântica útil, sem restaurar políticas retiradas ou assumir implementação de custom checks excluídos. Mudanças incorporadas retornam ao ciclo de geração/validação.
+4. Adjudicar contribuições úteis ainda pendentes, especialmente [raiz #242](https://github.com/flext-sh/flext/pull/242); infra #732 já chegou pela nova base e suas incompatibilidades com o pedido atual devem ser corrigidas fix-forward, contra o HEAD atual. Incorporar por fix-forward/no-ff somente semântica útil, sem restaurar políticas retiradas ou assumir implementação de custom checks excluídos. Mudanças incorporadas retornam ao ciclo de geração/validação.
 5. Publicar por push FF os candidatos dos membros, resolver checks/conversas e registrar a autorização administrativa de 23:07. Integrar os PRs por merge commit em `0.12.0-dev`; não promover um head WIP como se validado. Usar a autorização administrativa sem declarar uma aprovação independente inexistente; manter a revisão independente e as demais condições vigentes.
 6. Registrar SHA de merge por membro, buscar a base novamente e provar candidato → base. Atualizar gitlinks da raiz para os SHAs pousados; validar e integrar a raiz por PR com merge commit. Completar esse procedimento nos 32 projetos, não somente raiz e infra.
 7. Propagar ao principal por fast-forward onde aplicável. Reconciliar cooperativamente qualquer WIP/divergência por fix-forward; nunca mover submódulos cegamente sobre trabalho local. Rodar setup/gen e validação do código realmente instalado. Provar runtime dos contratos exercidos, sem confundir importação, unidade ou skips com serviços reais.
@@ -181,15 +223,19 @@ Fontes canônicas de planejamento a reler integralmente ao retomar:
 - `/home/marlonsc/.claude/plans/ai-hub-envrc-agent-hooks.md` — coordenação externa e fronteiras ai-hub.
 - `docs/plans/2026-09-14-stabilization-handoff/README.md` — handoff vigente, publicado como checkpoint; não comprova integração.
 
-Tracker sem mudar configuração:
+Tracker central, sempre carregado por direnv:
 
 ```bash
-export BEADS_DOLT_SERVER_HOST=127.0.0.1 BEADS_DOLT_SERVER_PORT=14499 BEADS_DOLT_SERVER_DATABASE=flext BEADS_DOLT_SERVER_MODE=1
-bd show flext-itpd1 flext-itpd1.1 --json
-bd list --parent flext-itpd1 --limit 100 --json
+direnv exec . gc bd show flext-itpd1 flext-itpd1.1 --rig flext --json
+direnv exec . gc bd list --parent flext-itpd1 --limit 100 --rig flext --json
 ```
 
-No runtime bd 1.2.2-fd4 observado, host/port/database sozinhos selecionavam embedded e `bd show` falhava com “no beads database found”. O owner documenta `BEADS_DOLT_SERVER_MODE=1` como servidor externo, sem autoprovisionamento. Com essa variável adicional, `bd --readonly show flext-itpd1.1 --json` encerrou com exit 0 na lane, bead in_progress. Nenhuma configuração foi alterada.
+A configuração operacional do principal seleciona o servidor externo e desativa
+autoinicialização. A lane consome essa mesma configuração pelo carregamento direnv;
+não repetir exports manuais nem inicializar armazenamento embedded. A consulta pelo
+Gas City retornou exit 0 nos dois checkouts e a atualização de `flext-itpd1.1`
+retornou exit 0. O acesso direto anterior com exports é evidência histórica,
+superada pela exigência explícita de carregamento automático via direnv e Gas City.
 
 Filhas de referência para consultar, sem fechar por lembrança: `flext-ocxtt` (gates), `flext-2j4lr`
 (desempenho/replanejamento), `flext-za816`/`flext-2h0un` (ponto fixo), `flext-bdmdg` (render spec), `flext-rlb47`
@@ -247,7 +293,7 @@ Todos ficam em `docs/plans/2026-09-14-stabilization-handoff/`. A revisão deste 
 
 Cada fatia implementada muda seu próprio candidato e deve ser validada e pousada por PR com merge commit. S8 consolida essas provas; não estreia os testes. Enviar o SHA da S2 completa à sessão ai-hub somente após pouso e dentro da autorização de comunicação existente.
 
-Outras reconciliações: retirar uso operacional de APPLY sem apagar fixtures que comprovam sua rejeição; não restaurar validação de gitlink no runtime apenas porque o pouso exige prova Git; preservar regiões externas byte a byte quando essa é a fronteira autorizada; não assumir que revisão histórica de branch autoriza sua aposentadoria.
+Outras reconciliações: retirar integralmente o modo APPLY e migrar suas fixtures conforme a atualização de 00:35–00:36 UTC; não restaurar validação de gitlink no runtime apenas porque o pouso exige prova Git; preservar regiões externas byte a byte quando essa é a fronteira autorizada; não assumir que revisão histórica de branch autoriza sua aposentadoria.
 
 ## 7. Contribuições históricas e adjudicação pendente
 
@@ -255,6 +301,6 @@ Infra #723/#724/#730 foram incorporados na lane; não confundir isso com pouso d
 
 A adjudicação histórica identificou conteúdo já presente ou obsoleto em release/checkpoint dos quatro DBTs, budgets retirados e resets de endpoints. ConfigDict WMS já estava no owner correto. DBT Oracle #97 propunha caminhos inexistentes; não copiar código quebrado por mera afinidade de família. LDIF #102 e Target Oracle #102 exigem respeitar owners atuais; decisões históricas não dispensam comparação com os heads atuais.
 
-Raiz #242 e infra #732 ainda precisam adjudicação das contribuições úteis. O primeiro trouxe automação com pré-condições incompletas; o segundo mistura melhorias de documentação/relatórios com mudanças que podem conflitar com execução incondicional e verificação atômica já adotadas. Conferir hunks atuais e cooperar antes de absorver. PRs de dependências/actions devem mudar o SSOT e regenerar, nunca somente projeções.
+Raiz #242 ainda precisa adjudicação das contribuições úteis. Infra #732 foi integrado externamente por `b82eefa3e` e absorvido na lane por `ec9813edd`; sua descrição abaixo é o diagnóstico anterior, não uma instrução de deixá-lo pendente. O primeiro trouxe automação com pré-condições incompletas; o segundo mistura melhorias de documentação/relatórios com mudanças que podem conflitar com execução incondicional e verificação atômica já adotadas. Conferir hunks atuais e cooperar antes de absorver. PRs de dependências/actions devem mudar o SSOT e regenerar, nunca somente projeções.
 
 Ao encerrar, registrar o que foi incorporado, já estava presente ou foi superado, com prova. Nenhuma dessas classificações autoriza apagar branches sem fetch recente e ancestralidade. O estado atual continua ativo e incompleto até que integração e runtime dos 32 sejam comprovados.
