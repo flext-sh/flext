@@ -21,7 +21,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, ClassVar
 
-from examples import ExamplesWorkflowStage, m, p, t, u
+from examples import FlextRootExamplesConstants, m, p, t, u
 from flext_core import r
 
 if TYPE_CHECKING:
@@ -59,7 +59,7 @@ class FlextRootCompleteWorkflowExample:
         )
         content: t.JsonMapping = u.Field(default_factory=dict)
 
-    Stage = ExamplesWorkflowStage
+    Stage = FlextRootExamplesConstants.WorkflowStage
 
     class WorkflowContext(m.BaseModel):
         """Complete workflow context with correlation and metadata."""
@@ -147,12 +147,12 @@ class FlextRootCompleteWorkflowExample:
         """Workflow orchestrator coordinating the full stage pipeline."""
 
         STAGE_PARAMS: ClassVar[
-            t.MappingKV[ExamplesWorkflowStage, tuple[float, str]]
+            t.MappingKV[FlextRootExamplesConstants.WorkflowStage, tuple[float, str]]
         ] = {
-            ExamplesWorkflowStage.VALIDATION: (0.005, "validated"),
-            ExamplesWorkflowStage.PROCESSING: (0.01, "processed"),
-            ExamplesWorkflowStage.ANALYSIS: (0.005, "analyzed"),
-            ExamplesWorkflowStage.AGGREGATION: (0.0, "aggregated"),
+            FlextRootExamplesConstants.WorkflowStage.VALIDATION: (0.005, "validated"),
+            FlextRootExamplesConstants.WorkflowStage.PROCESSING: (0.01, "processed"),
+            FlextRootExamplesConstants.WorkflowStage.ANALYSIS: (0.005, "analyzed"),
+            FlextRootExamplesConstants.WorkflowStage.AGGREGATION: (0.0, "aggregated"),
         }
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 

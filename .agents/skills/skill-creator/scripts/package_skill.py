@@ -17,7 +17,7 @@ from pathlib import Path
 from quick_validate import validate_skill
 
 
-def package_skill(skill_path, output_dir=None):
+def package_skill(skill_path: str, output_dir: str | None = None) -> Path | None:
     """Package a skill folder into a zip file.
 
     Args:
@@ -66,19 +66,23 @@ def package_skill(skill_path, output_dir=None):
                     # Calculate the relative path within the zip
                     arcname = file_path.relative_to(skill_path.parent)
                     zipf.write(file_path, arcname)
-
+    except (OSError, zipfile.BadZipFile):
+        return None
+    else:
         return zip_filename
 
-    except Exception:
-        return None
+
+PACKAGE_MIN_ARGS = 2
+PACKAGE_OUTPUT_ARGS = 3
 
 
 def main() -> None:
-    if len(sys.argv) < 2:
+    """Package one skill directory into a zip file."""
+    if len(sys.argv) < PACKAGE_MIN_ARGS:
         sys.exit(1)
 
     skill_path = sys.argv[1]
-    output_dir = sys.argv[2] if len(sys.argv) > 2 else None
+    output_dir = sys.argv[2] if len(sys.argv) > PACKAGE_OUTPUT_ARGS - 1 else None
 
     result = package_skill(skill_path, output_dir)
 

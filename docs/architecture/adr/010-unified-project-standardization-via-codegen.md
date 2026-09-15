@@ -82,6 +82,8 @@ Every managed project exposes the root-dispatched standard verbs declared by
 invent selectors. Standalone FLEXT projects own only themselves and never
 inspect neighbors (ADR-003).
 
+> **Superseded:** verbs are selector-free since 2026-09; mutation is the verb default (see root AGENTS.md rule 17).
+
 `setup` provisions the declared toolchain, `.venv` via uv, and environment
 integration. `gen` owns rendering managed `pyproject.toml`, `.mise.toml`, and
 `.python-version` from the toolchain SSOT; setup is not a competing renderer.

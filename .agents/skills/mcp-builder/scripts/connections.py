@@ -1,59 +1,84 @@
 """Lightweight connection handling for MCP servers."""
 
 from abc import ABC, abstractmethod
-from contextlib import AsyncExitStack
-from typing import Any
+from contextlib import AbstractAsyncContextManager, AsyncExitStack
+from types import TracebackType
+from typing import Self
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.sse import sse_client
 from mcp.client.stdio import stdio_client
 from mcp.client.streamable_http import streamablehttp_client
 
+_RESULT_ARITY_REQUEST = 2
+_RESULT_ARITY_FULL = 3
+
+
+def _result_pair(result: tuple[object, ...]) -> tuple[object, object]:
+    """Split a context-manager result into its read/write pair.
+
+    Versioned clients expose an extra trailing element; keep only the pair.
+    """
+    if len(result) == _RESULT_ARITY_REQUEST:
+        first, second = result
+        return first, second
+    if len(result) == _RESULT_ARITY_FULL:
+        first, second, _ = result
+        return first, second
+    sentinel = f"Unexpected context result: {result}"
+    raise ValueError(sentinel)
+
 
 class MCPConnection(ABC):
     """Base class for MCP server connections."""
 
+    session: ClientSession | None
+    _stack: AsyncExitStack | None
+
     def __init__(self) -> None:
+        """Initialize the base connection state."""
         self.session = None
         self._stack = None
 
     @abstractmethod
-    def _create_context(self):
+    def _create_context(self) -> AbstractAsyncContextManager[object]:
         """Create the connection context based on connection type."""
 
-    async def __aenter__(self):
+    async def _attach(self, context: AbstractAsyncContextManager[object]) -> None:
+        """Enter the transport context and initialize one session."""
+        result = await self._stack.enter_async_context(context)
+        read, write = _result_pair(result)
+        self.session = await self._stack.enter_async_context(
+            ClientSession(read, write)
+        )
+        await self.session.initialize()
+
+    async def __aenter__(self) -> Self:
         """Initialize MCP server connection."""
         self._stack = AsyncExitStack()
         await self._stack.__aenter__()
-
         try:
-            ctx = self._create_context()
-            result = await self._stack.enter_async_context(ctx)
-
-            if len(result) == 2:
-                read, write = result
-            elif len(result) == 3:
-                read, write, _ = result
-            else:
-                msg = f"Unexpected context result: {result}"
-                raise ValueError(msg)
-
-            session_ctx = ClientSession(read, write)
-            self.session = await self._stack.enter_async_context(session_ctx)
-            await self.session.initialize()
-            return self
+            context = self._create_context()
+            await self._attach(context)
         except BaseException:
             await self._stack.__aexit__(None, None, None)
             raise
+        else:
+            return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         """Clean up MCP server connection resources."""
         if self._stack:
             await self._stack.__aexit__(exc_type, exc_val, exc_tb)
         self.session = None
         self._stack = None
 
-    async def list_tools(self) -> list[dict[str, Any]]:
+    async def list_tools(self) -> list[dict[str, object]]:
         """Retrieve available tools from the MCP server."""
         response = await self.session.list_tools()
         return [
@@ -65,7 +90,7 @@ class MCPConnection(ABC):
             for tool in response.tools
         ]
 
-    async def call_tool(self, tool_name: str, arguments: dict[str, Any]) -> Any:
+    async def call_tool(self, tool_name: str, arguments: dict[str, object]) -> object:
         """Call a tool on the MCP server with provided arguments."""
         result = await self.session.call_tool(tool_name, arguments=arguments)
         return result.content
@@ -80,12 +105,14 @@ class MCPConnectionStdio(MCPConnection):
         args: list[str] | None = None,
         env: dict[str, str] | None = None,
     ) -> None:
+        """Initialize one stdio connection."""
         super().__init__()
         self.command = command
         self.args = args or []
         self.env = env
 
-    def _create_context(self):
+    def _create_context(self) -> AbstractAsyncContextManager[object]:
+        """Create the stdio transport context."""
         return stdio_client(
             StdioServerParameters(command=self.command, args=self.args, env=self.env)
         )
@@ -95,11 +122,13 @@ class MCPConnectionSSE(MCPConnection):
     """MCP connection using Server-Sent Events."""
 
     def __init__(self, url: str, headers: dict[str, str] | None = None) -> None:
+        """Initialize one Server-Sent Events connection."""
         super().__init__()
         self.url = url
         self.headers = headers or {}
 
-    def _create_context(self):
+    def _create_context(self) -> AbstractAsyncContextManager[object]:
+        """Create the Server-Sent Events transport context."""
         return sse_client(url=self.url, headers=self.headers)
 
 
@@ -107,11 +136,13 @@ class MCPConnectionHTTP(MCPConnection):
     """MCP connection using Streamable HTTP."""
 
     def __init__(self, url: str, headers: dict[str, str] | None = None) -> None:
+        """Initialize one Streamable HTTP connection."""
         super().__init__()
         self.url = url
         self.headers = headers or {}
 
-    def _create_context(self):
+    def _create_context(self) -> AbstractAsyncContextManager[object]:
+        """Create the Streamable HTTP transport context."""
         return streamablehttp_client(url=self.url, headers=self.headers)
 
 

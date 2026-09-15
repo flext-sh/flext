@@ -1,3 +1,8 @@
+"""Discover page elements and capture a reference screenshot."""
+
+import tempfile
+from pathlib import Path
+
 from playwright.sync_api import sync_playwright
 
 # Example: Discovering buttons and other elements on a page
@@ -32,6 +37,6 @@ with sync_playwright() as p:
         input_type = input_elem.get_attribute("type") or "text"
 
     # Take screenshot for visual reference
-    page.screenshot(path="/tmp/page_discovery.png", full_page=True)
+    page.screenshot(path=Path(tempfile.gettempdir()) / "page_discovery.png", full_page=True)
 
     browser.close()
