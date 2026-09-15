@@ -77,8 +77,8 @@ base.
 ### 2. Common verb surface for every project
 
 Every managed project exposes the root-dispatched standard verbs declared by
-`make help`, including `setup`, `gen`, `fix`, `fmt`, `check`, `test`, `conform`,
-`mod`, `waza`, and publication. Mutation uses only `APPLY=Y`; callers do not
+`make help`, including `setup`, `gen`, `fix`, `fmt`, `check`, `test`,
+`mod`, `waza`, and publication. Every verb always applies; callers do not
 invent selectors. Standalone FLEXT projects own only themselves and never
 inspect neighbors (ADR-003).
 
