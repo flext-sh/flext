@@ -174,6 +174,21 @@ files, so detection-only and check-time findings never diverge. Canonical
 platform exceptions stay encoded once (`NAMESPACE_PLATFORM_FACADE_SINGLETONS`,
 `cli.py` `main` entrypoint, `api.py` composition-root singleton).
 
+### 6. Three instruments and the mod/ast/gen verb taxonomy (2026-09-15)
+
+Only three instruments impose structural law: **rope** (semantic), **make mod**
+(ast-grep YAML + parameterized sed-by-list), and **config rows** (detection and
+policy). Python rewrite engines (`re`/`ast`/`libcst`/`tokenize`) are
+exterminated, never encapsulated; consumers rewire to the three instruments.
+Verb taxonomy: `mod` is the single modernize surface; `ast` is the ast-grep
+engine (phase 1 of `mod`, standalone scan); `gen` is the template generator
+sharing the same rope planners. Rules and parameters live as data under
+`config/rules/{mod,ast,rope}/` (ADR-017). Execution runs in a dedicated
+complete-superproject worktree aligned to the integration tip; every sync is a
+`--no-ff` merge in each touched project (never rebase/reset/stash); landing is
+a scoped commit -> fast-forward push -> PR -> `--no-ff` integration merge. The
+extermination ledger is tracked by the program beads (W-waves).
+
 ## Consequences
 
 - Members converge on one machine-checkable shape; the first execution target
