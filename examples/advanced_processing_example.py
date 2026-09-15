@@ -18,7 +18,7 @@ from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
-from examples import ExamplesStage, m, p, t, u
+from examples import FlextRootExamplesConstants, m, p, t, u
 from flext_core import r
 
 type DataValue = t.JsonValue
@@ -114,7 +114,7 @@ class PipelineStageData(PipelinePayload):
 class FlextRootAdvancedProcessingExample:
     """Advanced processing example demonstrating FLEXT parallel capabilities."""
 
-    Stage = ExamplesStage
+    Stage = FlextRootExamplesConstants.Stage
 
     def __init__(self, *, max_workers: int = 8, batch_size: int = 200) -> None:
         """Initialize the advanced processing pipeline."""

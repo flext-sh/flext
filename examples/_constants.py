@@ -9,56 +9,46 @@ from __future__ import annotations
 from enum import StrEnum, unique
 
 
-@unique
-class ExamplesPermission(StrEnum):
-    """Permission enumeration used across ACL examples."""
-
-    READ = "read"
-    WRITE = "write"
-    DELETE = "delete"
-    SEARCH = "search"
-    UNKNOWN = "unknown"
-
-
-@unique
-class ExamplesServerType(StrEnum):
-    """Server type enumeration used across directory-service examples."""
-
-    OPENLDAP = "openldap"
-    ORACLE_OID = "oracle_oid"
-    ORACLE_UNIFIED_DIRECTORY = "oracle_unified_directory"
-    ACTIVE_DIRECTORY = "active_directory"
-    APACHE_DS = "apache_ds"
-    UNKNOWN = "unknown"
-
-
-@unique
-class ExamplesStage(StrEnum):
-    """Processing stage enumeration used across pipeline examples."""
-
-    VALIDATE = "validate"
-    PROCESS = "process"
-    ANALYZE = "analyze"
-
-
-@unique
-class ExamplesWorkflowStage(StrEnum):
-    """Processing stage enumeration used across complete-workflow examples."""
-
-    VALIDATION = "validation"
-    PROCESSING = "processing"
-    ANALYSIS = "analysis"
-    AGGREGATION = "aggregation"
-
-
 class FlextRootExamplesConstants:
     """Examples constants facade — access via FlextRootExamplesConstants.*."""
 
+    @unique
+    class Permission(StrEnum):
+        """Permission enumeration used across ACL examples."""
 
-__all__: list[str] = [
-    "ExamplesPermission",
-    "ExamplesServerType",
-    "ExamplesStage",
-    "ExamplesWorkflowStage",
-    "FlextRootExamplesConstants",
-]
+        READ = "read"
+        WRITE = "write"
+        DELETE = "delete"
+        SEARCH = "search"
+        UNKNOWN = "unknown"
+
+    @unique
+    class ServerType(StrEnum):
+        """Server type enumeration used across directory-service examples."""
+
+        OPENLDAP = "openldap"
+        ORACLE_OID = "oracle_oid"
+        ORACLE_UNIFIED_DIRECTORY = "oracle_unified_directory"
+        ACTIVE_DIRECTORY = "active_directory"
+        APACHE_DS = "apache_ds"
+        UNKNOWN = "unknown"
+
+    @unique
+    class Stage(StrEnum):
+        """Processing stage enumeration used across pipeline examples."""
+
+        VALIDATE = "validate"
+        PROCESS = "process"
+        ANALYZE = "analyze"
+
+    @unique
+    class WorkflowStage(StrEnum):
+        """Processing stage enumeration used across complete-workflow examples."""
+
+        VALIDATION = "validation"
+        PROCESSING = "processing"
+        ANALYSIS = "analysis"
+        AGGREGATION = "aggregation"
+
+
+__all__: list[str] = ["FlextRootExamplesConstants"]
