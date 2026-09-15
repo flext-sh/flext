@@ -64,6 +64,8 @@ regenerates itself and never includes a shared implementation from another
 checkout. `codegen` performs conformance explicitly; `check` is read-only and
 `apply` requires `APPLY=Y`.
 
+> **Superseded:** verbs are selector-free since 2026-09; mutation is the verb default (see root AGENTS.md rule 17).
+
 The public surface is `help` plus exactly twelve operational verbs:
 
 ```text
@@ -91,6 +93,8 @@ The meanings are fixed:
 | `release` | perform the selected tag, PR, publish, or deploy operation |
 | `codegen` | check conformance by default; modify only with `APPLY=Y` |
 
+> **Superseded:** `format` and `codegen` mutate by default (selector-free) since 2026-09; `APPLY=Y` is retired (see root AGENTS.md rule 17).
+
 ### 3. `custom.mk` is a narrow private extension surface
 
 A versioned `custom.mk` may contain only private handlers named
@@ -102,6 +106,8 @@ Project-specific capabilities are classified under the canonical verb whose
 meaning they implement. They do not create a new public command. For Cosmos
 Charts, the existing release helper remains behind `check WHAT=commit` and
 `check WHAT=push`; the push check requires the commit check and a clean commit.
+
+> **Superseded:** `check` is selector-free since 2026-09; `WHAT=` selectors are retired (see root AGENTS.md rule 17).
 
 ### 4. Conformance is deterministic and fail-closed
 

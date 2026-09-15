@@ -134,11 +134,39 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   hardcoded project-owned values. Every test run retains the canonical testmon
   cache, including an explicitly requested full run.
 
+## Tracker: central Beads via direnv
+
+- Every `bd` invocation runs inside the rig checkout environment:
+  `direnv exec <repo> bd ...`. Never call `bd` with a manually exported
+  port, host, or database.
+- The activation contract is generated, not hand-written: `.envrc` /
+  `.envrc.local` carry `AGENTS_GAS_CITY_ROOT` (city identity), the port
+  from the city's runtime publication (`.gc/runtime/packs/dolt/dolt-state.json`),
+  and the rig's database from `.beads/metadata.json` (`dolt.mode: server`).
+  If a generation erases the server choice, fix the model or template owner
+  and regenerate; never initialize an embedded database or persist host/port
+  manually.
+- A rig keeps its own database identity on the city's single managed Dolt
+  server. Identity mismatch is repaired only with the native
+  `gc rig set-endpoint <rig> --inherit` run in the city; a metadata read is
+  not connectivity proof — confirm with a real `bd show <id> --json`.
+
+## Resume entry points
+
+- Stabilization handoff (state table, first failure, next action):
+  `flext-infra/docs/roadmap/namespace-automation-handoff-2026-09-14.md`.
+- Session plans live under `.kilo/plans/` (newest first); the master
+  stabilization plan is
+  `.kilo/plans/1789441200000-stabilization-recovery-docs-automation.md`.
+- Execution state belongs to central Beads; handoffs and plans carry
+  evidence and resume instructions only, never a second queue.
+- Stabilization runbook (canonical cycle, tracker contract, landing):
+  `docs/ways-of-working/stabilization-checkpoint-0.12.md`.
+
 ## Fleet boundary
 
 - First-party FLEXT members and standalone repositories consume the same
-  branch-matched law, Make control plane, and generated conventions.
-- Third-party forks and content-only repositories are not FLEXT members: do
+  branch-matched law, Make control plane, and generated conventions.- Third-party forks and content-only repositories are not FLEXT members: do
   not impose FLEXT architecture, dependency injection, typing modernization,
   language features, lint, generation, or package layout on them. Follow the
   upstream architecture, style, runtime floor, toolchain, build, release, and

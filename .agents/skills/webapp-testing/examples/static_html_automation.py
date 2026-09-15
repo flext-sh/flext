@@ -1,3 +1,5 @@
+"""Run Playwright automation against a static HTML page."""
+
 import pathlib
 
 from playwright.sync_api import sync_playwright

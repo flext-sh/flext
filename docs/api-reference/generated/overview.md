@@ -1,4 +1,4 @@
-# FLEXT Workspace API Overview
+# flext API Overview
 
 <!-- TOC START -->
 - [Next Pages](#next-pages)

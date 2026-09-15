@@ -1,0 +1,1628 @@
+[
+  {
+    "project": "flext",
+    "observed_utc": "2026-09-14T21:46:09.520708+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "feature/plan-reconciliation",
+        "headRefOid": "9d34ecb58ab711258e93d675c1f1531e2da6e8de",
+        "isDraft": true,
+        "number": 242,
+        "title": "[WIP] Automate sequential plan reconciliation and documentation collection",
+        "url": "https://github.com/flext-sh/flext/pull/242"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/stabilize-0.12.0",
+        "headRefOid": "79238b9720ea988c7f1dd94dfc20f99a56c88b00",
+        "isDraft": true,
+        "number": 240,
+        "title": "fix(repo): stabilize 0.12.0 \u2014 no-mode Make projections, docs sources, landed member gitlinks",
+        "url": "https://github.com/flext-sh/flext/pull/240"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "aeolian-sodalite",
+        "headRefOid": "6ea78795a44b8437ca42944d11cfc1326d7dfa14",
+        "isDraft": false,
+        "number": 235,
+        "title": "chore(aeolian-sodalite): preserve aeolian-sodalite changes across 3 paths",
+        "url": "https://github.com/flext-sh/flext/pull/235"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/ccs/flext/mayor/rig",
+        "headRefOid": "b404bd3901b236e011ea4333929f4e2d2bb3b4ed",
+        "isDraft": false,
+        "number": 231,
+        "title": "Wip/duplicate/ccs/flext/mayor/rig",
+        "url": "https://github.com/flext-sh/flext/pull/231"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "constants-remediation-0.12",
+        "headRefOid": "17009e720d999990b49f9df8b26cc26db14d6c92",
+        "isDraft": false,
+        "number": 226,
+        "title": "chore(flext-wt-constants): preserve constants-remediation-0.12 changes across 32 paths",
+        "url": "https://github.com/flext-sh/flext/pull/226"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "973e6cbf32228e06f2c7b3004a5556530d821f1a",
+        "isDraft": false,
+        "number": 225,
+        "title": "chore(fleet): absorb in-flight state \u2014 fix-forward (21:13Z)",
+        "url": "https://github.com/flext-sh/flext/pull/225"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-api",
+    "observed_utc": "2026-09-14T21:46:09.503302+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-api",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "5333ec495870a8713d965582cce3aa599028f258",
+        "isDraft": true,
+        "number": 99,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-api/pull/99"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "c793d36fde977db18ea78c2b4f12008df247babf",
+        "isDraft": false,
+        "number": 90,
+        "title": "chore(flext-api): preserve chore/absorb-inflight-20260911b changes across 2 paths",
+        "url": "https://github.com/flext-sh/flext-api/pull/90"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "fix/serialization-typing-import",
+        "headRefOid": "f1c203fe8a95394bd8cf01bb858c6d726e7c910a",
+        "isDraft": false,
+        "number": 86,
+        "title": "fix(typing): import serialization types from the defining module",
+        "url": "https://github.com/flext-sh/flext-api/pull/86"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/github_actions/actions/cache-6",
+        "headRefOid": "804f36e8334cd1b5eb4ebeda3f86a3ffe4eae25f",
+        "isDraft": false,
+        "number": 84,
+        "title": "chore(deps): bump actions/cache from 4 to 6",
+        "url": "https://github.com/flext-sh/flext-api/pull/84"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/github_actions/actions/upload-artifact-7",
+        "headRefOid": "b647cd3106be3e0df50e6a51b44241dc99cfb399",
+        "isDraft": false,
+        "number": 83,
+        "title": "chore(deps): bump actions/upload-artifact from 4 to 7",
+        "url": "https://github.com/flext-sh/flext-api/pull/83"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-auth",
+    "observed_utc": "2026-09-14T21:46:09.501287+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-auth",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "ab9e63085c10262443ab1d7b8559b9c54deac39c",
+        "isDraft": true,
+        "number": 100,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-auth/pull/100"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/kilo/worktrees/aeolian-sodalite/flext-auth",
+        "headRefOid": "f67988b917620b0db42ab3294c3f6166929ce67b",
+        "isDraft": false,
+        "number": 96,
+        "title": "chore(flext-auth): preserve wip/duplicate/flext/kilo/worktrees/aeolian-sodalite/flext-auth changes across 6 paths",
+        "url": "https://github.com/flext-sh/flext-auth/pull/96"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/flext-auth",
+        "headRefOid": "90d1d7f344da99acd7f20093dc0a0211b04c6ba6",
+        "isDraft": false,
+        "number": 95,
+        "title": "chore(flext-auth): preserve wip/duplicate/flext/flext-auth changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-auth/pull/95"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "b4f7b3abd2721ef78943c33cd6728b28f2d77d13",
+        "isDraft": false,
+        "number": 91,
+        "title": "chore(flext-auth): preserve chore/absorb-inflight-20260911b changes across 2 paths",
+        "url": "https://github.com/flext-sh/flext-auth/pull/91"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-cli",
+    "observed_utc": "2026-09-14T21:46:09.511838+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-cli",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "a167b79d1cbfc36439339918e03ff3c8a7274a0e",
+        "isDraft": true,
+        "number": 168,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-cli/pull/168"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-core",
+    "observed_utc": "2026-09-14T21:46:10.266287+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-core",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "adbed6f49b4c4ef5e5d47cde98ad4145f675c99c",
+        "isDraft": true,
+        "number": 474,
+        "title": "[WIP] preserve generated residue policy and canonical verb documentation",
+        "url": "https://github.com/flext-sh/flext-core/pull/474"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-db-oracle",
+    "observed_utc": "2026-09-14T21:46:10.291712+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-db-oracle",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "f77af7bb3932c285ac00633a904932527043d2fc",
+        "isDraft": true,
+        "number": 101,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-db-oracle/pull/101"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-dbt-ldap",
+    "observed_utc": "2026-09-14T21:46:10.268870+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-dbt-ldap",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "06f500e7272f2b7372f588d810a9db98fd07fccf",
+        "isDraft": true,
+        "number": 101,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-dbt-ldap/pull/101"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-dbt-ldap",
+        "headRefOid": "af2bb50b97073ea96b76c1d2e40301dd51875d12",
+        "isDraft": false,
+        "number": 97,
+        "title": "chore(flext-dbt-ldap): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-dbt-ldap changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-dbt-ldap/pull/97"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "14e5898d6d4848ca389262ee8708272f5748e86d",
+        "isDraft": false,
+        "number": 93,
+        "title": "chore(flext-dbt-ldap): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-dbt-ldap/pull/93"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-dbt-ldif",
+    "observed_utc": "2026-09-14T21:46:10.291913+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-dbt-ldif",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/pip/structlog-gte-25.5.0-and-lt-27",
+        "headRefOid": "62baf74cc770347a4de73992fb9763e55709711c",
+        "isDraft": false,
+        "number": 113,
+        "title": "chore(deps): update structlog requirement from <26,>=25.5.0 to >=25.5.0,<27",
+        "url": "https://github.com/flext-sh/flext-dbt-ldif/pull/113"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/github_actions/actions/upload-artifact-7",
+        "headRefOid": "ec737106dc5aacfe477a53dc9b631b82dfed9a27",
+        "isDraft": false,
+        "number": 112,
+        "title": "chore(deps): bump actions/upload-artifact from 4 to 7",
+        "url": "https://github.com/flext-sh/flext-dbt-ldif/pull/112"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/github_actions/actions/cache-6",
+        "headRefOid": "dab855e7596462a5084ddf05b519c0d9f3f3e65d",
+        "isDraft": false,
+        "number": 111,
+        "title": "chore(deps): bump actions/cache from 4 to 6",
+        "url": "https://github.com/flext-sh/flext-dbt-ldif/pull/111"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "48719a3c2d1309fee11fee2da11e4cb75bbbd4c4",
+        "isDraft": true,
+        "number": 110,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-dbt-ldif/pull/110"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-dbt-ldif",
+        "headRefOid": "51f763791f1e99762f804ad3cadcbb380442eec4",
+        "isDraft": false,
+        "number": 106,
+        "title": "chore(flext-dbt-ldif): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-dbt-ldif changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-dbt-ldif/pull/106"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "0db2a672e4bb628b7e5e696a894fa1ae70e9ee4b",
+        "isDraft": false,
+        "number": 102,
+        "title": "chore(flext-dbt-ldif): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-dbt-ldif/pull/102"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-dbt-oracle",
+    "observed_utc": "2026-09-14T21:46:11.200886+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-dbt-oracle",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "ee230b6b2f4c337dd553ef6a48c8639ed0a919d7",
+        "isDraft": true,
+        "number": 101,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-dbt-oracle/pull/101"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-dbt-oracle",
+        "headRefOid": "e5fb869cb7a30fde95511b2ad7e59e20a3f64e8c",
+        "isDraft": false,
+        "number": 98,
+        "title": "chore(flext-dbt-oracle): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-dbt-oracle changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-dbt-oracle/pull/98"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/flext-dbt-oracle",
+        "headRefOid": "e7e97b61e259c80d928e4739bfeea34d3285ee74",
+        "isDraft": false,
+        "number": 97,
+        "title": "chore(flext-dbt-oracle): preserve wip/duplicate/flext/flext-dbt-oracle changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-dbt-oracle/pull/97"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "64fcbb54c56e6dadc19d0f0d18c8fdbe1314535c",
+        "isDraft": false,
+        "number": 95,
+        "title": "chore(flext-dbt-oracle): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-dbt-oracle/pull/95"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-dbt-oracle-wms",
+    "observed_utc": "2026-09-14T21:46:10.959962+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-dbt-oracle-wms",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "01d3a3ae925fc7f8a25b4e54e3309f687b405cc2",
+        "isDraft": true,
+        "number": 101,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-dbt-oracle-wms/pull/101"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-dbt-oracle-wms",
+        "headRefOid": "7a784c4defd0461b005272e7cb1ef8848644f2ac",
+        "isDraft": false,
+        "number": 98,
+        "title": "chore(flext-dbt-oracle-wms): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-dbt-oracle-wms changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-dbt-oracle-wms/pull/98"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "498cd8808483bb9f9962f762426c1b8ba7bc8120",
+        "isDraft": false,
+        "number": 95,
+        "title": "chore(flext-dbt-oracle-wms): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-dbt-oracle-wms/pull/95"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-grpc",
+    "observed_utc": "2026-09-14T21:46:11.090272+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-grpc",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "1d6930102315278a8700036b3eafa9a5cdd5a7d7",
+        "isDraft": true,
+        "number": 96,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-grpc/pull/96"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "release/next",
+        "headRefOid": "369e1a219e9dfd322698d7d24214b02624f56b09",
+        "isDraft": false,
+        "number": 93,
+        "title": "chore(release): v0.12.0",
+        "url": "https://github.com/flext-sh/flext-grpc/pull/93"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/flext-grpc",
+        "headRefOid": "27dc1912255ef8ca644810d76fe63a7a4a292a24",
+        "isDraft": false,
+        "number": 91,
+        "title": "chore(flext-grpc): preserve wip/duplicate/flext/flext-grpc changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-grpc/pull/91"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-infra",
+    "observed_utc": "2026-09-14T21:46:11.229493+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-infra",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "fix/docs-renderer-contract",
+        "headRefOid": "2e8fe9cf90c68411ced8fb57e4b1e81c63d7f3a1",
+        "isDraft": true,
+        "number": 732,
+        "title": "[WIP] Repair documentation rendering and semantic Make verification",
+        "url": "https://github.com/flext-sh/flext-infra/pull/732"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/stabilize-0.12.0",
+        "headRefOid": "f9e0f61637a48477f6082312aee2e977dbde98cf",
+        "isDraft": true,
+        "number": 731,
+        "title": "[WIP] stabilize generation and integrate remaining contributions",
+        "url": "https://github.com/flext-sh/flext-infra/pull/731"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "hotfix/pytest-complete-failure-reporting",
+        "headRefOid": "bf1e844b36856eea0c718de267326aaa3608e8c9",
+        "isDraft": true,
+        "number": 730,
+        "title": "[WIP] fix(pytest): retain all selected outcomes after failures",
+        "url": "https://github.com/flext-sh/flext-infra/pull/730"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "lane-r41",
+        "headRefOid": "6c485a5c1dc7cfe224df1c4998b8f03af0a7f9fa",
+        "isDraft": false,
+        "number": 724,
+        "title": "fix(docs): a changed source fails planning again",
+        "url": "https://github.com/flext-sh/flext-infra/pull/724"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "worktree-fix-hermetic-gate-child-env",
+        "headRefOid": "31aadbcee5f416fcd013043f697291c10dc523a7",
+        "isDraft": false,
+        "number": 723,
+        "title": "fix(git): the facade owns git init and porcelain add; the gate test uses it",
+        "url": "https://github.com/flext-sh/flext-infra/pull/723"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "promoted-framework-lift",
+        "headRefOid": "0f4bffe25bdf9fcaeb239512dbc756e6130486d3",
+        "isDraft": false,
+        "number": 681,
+        "title": "wip: promoted-framework-lift \u2014 preserved at host retirement (F1)",
+        "url": "https://github.com/flext-sh/flext-infra/pull/681"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-ldap",
+    "observed_utc": "2026-09-14T21:46:11.706899+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-ldap",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "b81063793984b39669c7a796809ebe85db96b6f4",
+        "isDraft": true,
+        "number": 114,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-ldap/pull/114"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-ldif",
+    "observed_utc": "2026-09-14T21:46:11.781226+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-ldif",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "2f88eab7d9c969b05c54699ee30d5a9f3debd37b",
+        "isDraft": true,
+        "number": 110,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-ldif/pull/110"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/pip/structlog-gte-25.5.0-and-lt-27",
+        "headRefOid": "3f3d5caf2319ad6883dda9853e2f0ab0be57c4ae",
+        "isDraft": false,
+        "number": 106,
+        "title": "chore(deps): update structlog requirement from <26,>=25.5.0 to >=25.5.0,<27",
+        "url": "https://github.com/flext-sh/flext-ldif/pull/106"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/github_actions/actions/upload-artifact-7",
+        "headRefOid": "cf9b8bc48754f7f09406ce91ca7d9e61844e8ac9",
+        "isDraft": false,
+        "number": 105,
+        "title": "chore(deps): bump actions/upload-artifact from 4 to 7",
+        "url": "https://github.com/flext-sh/flext-ldif/pull/105"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/github_actions/actions/cache-6",
+        "headRefOid": "fc88a2c61fbc2d2d1719b7467a8599f1dc1cb3ec",
+        "isDraft": false,
+        "number": 104,
+        "title": "chore(deps): bump actions/cache from 4 to 6",
+        "url": "https://github.com/flext-sh/flext-ldif/pull/104"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/flext-ldif",
+        "headRefOid": "20ccb22289fb9230c93f8a3655ad6208758662f7",
+        "isDraft": false,
+        "number": 102,
+        "title": "chore(flext-ldif): preserve wip/duplicate/flext/flext-ldif changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-ldif/pull/102"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-meltano",
+    "observed_utc": "2026-09-14T21:46:11.852385+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-meltano",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "e72643c7c797621398f9850280fb819e269b91f5",
+        "isDraft": true,
+        "number": 113,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-meltano/pull/113"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-observability",
+    "observed_utc": "2026-09-14T21:46:11.913617+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-observability",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "04a39f05868f0819ee77840a5b45db83e5b3d589",
+        "isDraft": true,
+        "number": 109,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-observability/pull/109"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "constants-remediation-0.12",
+        "headRefOid": "0cb98c6ad75653acab10c790ddf417d577314f7c",
+        "isDraft": false,
+        "number": 102,
+        "title": "chore(flext-observability): preserve constants-remediation-0.12 changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-observability/pull/102"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-oracle-oic",
+    "observed_utc": "2026-09-14T21:46:12.358411+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-oracle-oic",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "f19465a300837be3b7669f9715738711c3515699",
+        "isDraft": true,
+        "number": 100,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-oracle-oic/pull/100"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "release/next",
+        "headRefOid": "e146bb1db242fe9695de0dddc91919d1cf0a00b2",
+        "isDraft": false,
+        "number": 97,
+        "title": "chore(release): v0.12.0",
+        "url": "https://github.com/flext-sh/flext-oracle-oic/pull/97"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-oracle-oic",
+        "headRefOid": "85c5c53d621ebd1b373fb57fb8ac76c50ca3dd7d",
+        "isDraft": false,
+        "number": 95,
+        "title": "chore(flext-oracle-oic): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-oracle-oic changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-oracle-oic/pull/95"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "31d8b8af91850d109fa0c148a8202c9dac927655",
+        "isDraft": false,
+        "number": 92,
+        "title": "chore(flext-oracle-oic): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-oracle-oic/pull/92"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-oracle-wms",
+    "observed_utc": "2026-09-14T21:46:12.563078+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-oracle-wms",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "45976a91f72ca2e153e472f0de92c7fe5ab5962e",
+        "isDraft": true,
+        "number": 97,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-oracle-wms/pull/97"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-oracle-wms",
+        "headRefOid": "34587de309782ef35f75e837ca3f0ab7ecab6997",
+        "isDraft": false,
+        "number": 93,
+        "title": "chore(flext-oracle-wms): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-oracle-wms changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-oracle-wms/pull/93"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "7005de3f1017be08c2c49dfa1a580970ea3392c5",
+        "isDraft": false,
+        "number": 91,
+        "title": "chore(flext-oracle-wms): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-oracle-wms/pull/91"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-plugin",
+    "observed_utc": "2026-09-14T21:46:12.496483+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-plugin",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "56161b849d6645293c1e1a11126ee493b6aabf02",
+        "isDraft": true,
+        "number": 99,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-plugin/pull/99"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "constants-remediation-0.12",
+        "headRefOid": "adce71b470da5e86ecb951d8ef516fd876d5d10c",
+        "isDraft": false,
+        "number": 92,
+        "title": "chore(flext-plugin): preserve constants-remediation-0.12 changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-plugin/pull/92"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-quality",
+    "observed_utc": "2026-09-14T21:46:12.609405+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-quality",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "fac3c6fe82e8fa0b12fc0fa3d65ad2020cd40d33",
+        "isDraft": true,
+        "number": 170,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-quality/pull/170"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-tap-ldap",
+    "observed_utc": "2026-09-14T21:46:13.169604+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-tap-ldap",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "1f4a4812165fc03653072728f135196ab6868526",
+        "isDraft": true,
+        "number": 99,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-tap-ldap/pull/99"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-tap-ldap",
+        "headRefOid": "60c18c73ac7fb2ff4f19fd2fc018b2a9a1bf5a5e",
+        "isDraft": false,
+        "number": 96,
+        "title": "chore(flext-tap-ldap): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-tap-ldap changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-tap-ldap/pull/96"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "5e140915ede0a8e15379c5d163140c6057a207bb",
+        "isDraft": false,
+        "number": 93,
+        "title": "chore(flext-tap-ldap): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-tap-ldap/pull/93"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-tap-ldif",
+    "observed_utc": "2026-09-14T21:46:13.144242+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-tap-ldif",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "44403d4c42ad63c58dd66155b4bb77c8aee5b45d",
+        "isDraft": true,
+        "number": 102,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-tap-ldif/pull/102"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/pip/structlog-gte-25.5.0-and-lt-27",
+        "headRefOid": "15e41da62e88e050c3caf0ee99a7f1070ba49f03",
+        "isDraft": false,
+        "number": 99,
+        "title": "chore(deps): update structlog requirement from <26,>=25.5.0 to >=25.5.0,<27",
+        "url": "https://github.com/flext-sh/flext-tap-ldif/pull/99"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/github_actions/actions/upload-artifact-7",
+        "headRefOid": "781ff6ab94e1d0f6b93f1f90e6d1c114fc26e606",
+        "isDraft": false,
+        "number": 98,
+        "title": "chore(deps): bump actions/upload-artifact from 4 to 7",
+        "url": "https://github.com/flext-sh/flext-tap-ldif/pull/98"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/github_actions/actions/cache-6",
+        "headRefOid": "4ec5171baf36039b3af4b5b38d2b23e09bf0c8d9",
+        "isDraft": false,
+        "number": 97,
+        "title": "chore(deps): bump actions/cache from 4 to 6",
+        "url": "https://github.com/flext-sh/flext-tap-ldif/pull/97"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-tap-ldif",
+        "headRefOid": "57325c61b32904ee487b06e25f1ddc14b1485e65",
+        "isDraft": false,
+        "number": 96,
+        "title": "chore(flext-tap-ldif): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-tap-ldif changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-tap-ldif/pull/96"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "0bda5df7a07d4af812df721e6c56770e3c560491",
+        "isDraft": false,
+        "number": 93,
+        "title": "chore(flext-tap-ldif): preserve chore/absorb-inflight-20260911b changes across 4 paths",
+        "url": "https://github.com/flext-sh/flext-tap-ldif/pull/93"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-tap-oracle",
+    "observed_utc": "2026-09-14T21:46:13.199277+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-tap-oracle",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "00c93e428bbb5253b65c4b4df6b0fd67eabf64ec",
+        "isDraft": true,
+        "number": 94,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-tap-oracle/pull/94"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-tap-oracle",
+        "headRefOid": "40b64b603a2705b682ad989aa215150cbd06847b",
+        "isDraft": false,
+        "number": 91,
+        "title": "chore(flext-tap-oracle): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-tap-oracle changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-tap-oracle/pull/91"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "ff7f74a6620f524d5cb455fd7a9e94ad42401166",
+        "isDraft": false,
+        "number": 88,
+        "title": "chore(flext-tap-oracle): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-tap-oracle/pull/88"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-tap-oracle-oic",
+    "observed_utc": "2026-09-14T21:46:13.244217+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-tap-oracle-oic",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "9e7d68c7657edb334a9c35be577536244b8f9b03",
+        "isDraft": true,
+        "number": 97,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-tap-oracle-oic/pull/97"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-tap-oracle-oic",
+        "headRefOid": "707564edce10d8b30307ce908acf8b853249a00d",
+        "isDraft": false,
+        "number": 94,
+        "title": "chore(flext-tap-oracle-oic): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-tap-oracle-oic changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-tap-oracle-oic/pull/94"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "69022f3d677954d75ef2f097d166c1e2e1766c70",
+        "isDraft": false,
+        "number": 91,
+        "title": "chore(flext-tap-oracle-oic): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-tap-oracle-oic/pull/91"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-tap-oracle-wms",
+    "observed_utc": "2026-09-14T21:46:13.755503+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-tap-oracle-wms",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "83acc0a38f822408f269705a782ce38cc0fcb2f0",
+        "isDraft": true,
+        "number": 100,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-tap-oracle-wms/pull/100"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-tap-oracle-wms",
+        "headRefOid": "563d6b4fb73c4f1877d437caac3da1b71ea69ac2",
+        "isDraft": false,
+        "number": 97,
+        "title": "chore(flext-tap-oracle-wms): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-tap-oracle-wms changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-tap-oracle-wms/pull/97"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/flext-tap-oracle-wms",
+        "headRefOid": "f172768e09e0d53753be4adba23467d66501198a",
+        "isDraft": false,
+        "number": 95,
+        "title": "chore(flext-tap-oracle-wms): preserve wip/duplicate/flext/flext-tap-oracle-wms changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-tap-oracle-wms/pull/95"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "b8035cc22626f4ac0a1a80aba526088a05e03ce7",
+        "isDraft": false,
+        "number": 94,
+        "title": "chore(flext-tap-oracle-wms): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-tap-oracle-wms/pull/94"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-target-ldap",
+    "observed_utc": "2026-09-14T21:46:13.842019+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-target-ldap",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "579dd2b6a89b9ba6517470ad310df740f67b0df2",
+        "isDraft": true,
+        "number": 100,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-target-ldap/pull/100"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-target-ldap",
+        "headRefOid": "397adeb54def63f2d2e4bcd1929f29493c84443d",
+        "isDraft": false,
+        "number": 97,
+        "title": "chore(flext-target-ldap): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-target-ldap changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-target-ldap/pull/97"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "c236ed368c2c4326f811418c35d8620e82cfe17e",
+        "isDraft": false,
+        "number": 94,
+        "title": "chore(flext-target-ldap): preserve chore/absorb-inflight-20260911b changes across 2 paths",
+        "url": "https://github.com/flext-sh/flext-target-ldap/pull/94"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-target-ldif",
+    "observed_utc": "2026-09-14T21:46:13.899553+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-target-ldif",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "ad62b743c1206767fc557f70e16182b7a6176316",
+        "isDraft": true,
+        "number": 103,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-target-ldif/pull/103"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/pip/structlog-gte-25.5.0-and-lt-27",
+        "headRefOid": "9f6595be486d45045e6326b7085c24e5a5d0e091",
+        "isDraft": false,
+        "number": 100,
+        "title": "chore(deps): update structlog requirement from <26,>=25.5.0 to >=25.5.0,<27",
+        "url": "https://github.com/flext-sh/flext-target-ldif/pull/100"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/github_actions/actions/upload-artifact-7",
+        "headRefOid": "a9d788e1c5bab6e5817047d4bf8e7a1802d4d349",
+        "isDraft": false,
+        "number": 99,
+        "title": "chore(deps): bump actions/upload-artifact from 4 to 7",
+        "url": "https://github.com/flext-sh/flext-target-ldif/pull/99"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "dependabot/github_actions/actions/cache-6",
+        "headRefOid": "b5c2d59600fc45b23d817195c2eb296ba2b6456e",
+        "isDraft": false,
+        "number": 98,
+        "title": "chore(deps): bump actions/cache from 4 to 6",
+        "url": "https://github.com/flext-sh/flext-target-ldif/pull/98"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-target-ldif",
+        "headRefOid": "b18634f3c5bb6f87e94297d1ec841ce607e1ad2e",
+        "isDraft": false,
+        "number": 97,
+        "title": "chore(flext-target-ldif): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-target-ldif changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-target-ldif/pull/97"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "325250dc35983e0a6c88a0bf622eeead6c3c1898",
+        "isDraft": false,
+        "number": 94,
+        "title": "chore(flext-target-ldif): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-target-ldif/pull/94"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-target-oracle",
+    "observed_utc": "2026-09-14T21:46:13.826127+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-target-oracle",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "ce0a40ba5309ad59d2d4e65a4e0c22ac8675c1be",
+        "isDraft": true,
+        "number": 105,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-target-oracle/pull/105"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/kilo/worktrees/aeolian-sodalite/flext-target-oracle",
+        "headRefOid": "0e7503815c6ed099c0652c55653808a84b0814f4",
+        "isDraft": false,
+        "number": 102,
+        "title": "chore(flext-target-oracle): preserve wip/duplicate/flext/kilo/worktrees/aeolian-sodalite/flext-target-oracle changes across 5 paths",
+        "url": "https://github.com/flext-sh/flext-target-oracle/pull/102"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-target-oracle",
+        "headRefOid": "0367dd6627dc0e5dbc17cf47432e708cb0cc3ecc",
+        "isDraft": false,
+        "number": 101,
+        "title": "chore(flext-target-oracle): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-target-oracle changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-target-oracle/pull/101"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "be0b37363793f22adb12d4ff8330469acdcde115",
+        "isDraft": false,
+        "number": 98,
+        "title": "chore(flext-target-oracle): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-target-oracle/pull/98"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-target-oracle-oic",
+    "observed_utc": "2026-09-14T21:46:14.396484+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-target-oracle-oic",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "c2007df089b599cee04f2454d13e033571aaa9aa",
+        "isDraft": true,
+        "number": 100,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-target-oracle-oic/pull/100"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/kilo/worktrees/aeolian-sodalite/flext-target-oracle-oic",
+        "headRefOid": "4a6695afaf2b3fbe133fd09737af8b33577dada2",
+        "isDraft": false,
+        "number": 97,
+        "title": "chore(flext-target-oracle-oic): preserve wip/duplicate/flext/kilo/worktrees/aeolian-sodalite/flext-target-oracle-oic changes across 5 paths",
+        "url": "https://github.com/flext-sh/flext-target-oracle-oic/pull/97"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-target-oracle-oic",
+        "headRefOid": "33ff819f8ee89ca9bf3afc15b4194a0c1a7494b0",
+        "isDraft": false,
+        "number": 96,
+        "title": "chore(flext-target-oracle-oic): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-target-oracle-oic changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-target-oracle-oic/pull/96"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/flext-target-oracle-oic",
+        "headRefOid": "8231c168ada32aeda2b3004086dd4a3f0611f94f",
+        "isDraft": false,
+        "number": 94,
+        "title": "chore(flext-target-oracle-oic): preserve wip/duplicate/flext/flext-target-oracle-oic changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-target-oracle-oic/pull/94"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "76cbfcfc589733e561d25af79e28b7bc92ded88b",
+        "isDraft": false,
+        "number": 93,
+        "title": "chore(flext-target-oracle-oic): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-target-oracle-oic/pull/93"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-target-oracle-wms",
+    "observed_utc": "2026-09-14T21:46:14.472278+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-target-oracle-wms",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "e84bbab1bd49b9e5428386aebc9e16f18ce63ed6",
+        "isDraft": true,
+        "number": 101,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-target-oracle-wms/pull/101"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/claude/worktrees/lane-r41/flext-target-oracle-wms",
+        "headRefOid": "8f8880a97f705424ba0b7ff2a1ad2d812b8e6ea6",
+        "isDraft": false,
+        "number": 98,
+        "title": "chore(flext-target-oracle-wms): preserve wip/duplicate/flext/claude/worktrees/lane-r41/flext-target-oracle-wms changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-target-oracle-wms/pull/98"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "wip/duplicate/flext/flext-target-oracle-wms",
+        "headRefOid": "94cfccd7efc58814444f22ea764a4dc9b6e9c71c",
+        "isDraft": false,
+        "number": 96,
+        "title": "chore(flext-target-oracle-wms): preserve wip/duplicate/flext/flext-target-oracle-wms changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-target-oracle-wms/pull/96"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "e66a1ea57723f78c5bf75b99a086813faab98b40",
+        "isDraft": false,
+        "number": 95,
+        "title": "chore(flext-target-oracle-wms): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-target-oracle-wms/pull/95"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-tests",
+    "observed_utc": "2026-09-14T21:46:14.717009+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-tests",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "5f563be9a6b259451fd67c0867a1f582fcad6d13",
+        "isDraft": true,
+        "number": 110,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-tests/pull/110"
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "project": "flext-web",
+    "observed_utc": "2026-09-14T21:46:14.551440+00:00",
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "flext-sh/flext-web",
+      "--state",
+      "open",
+      "--limit",
+      "100",
+      "--json",
+      "number,title,headRefName,headRefOid,isDraft,baseRefName,url"
+    ],
+    "exit": 0,
+    "prs": [
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "bugfix/absorb-checkout-20260914",
+        "headRefOid": "40a70dd1e52e06a49db102932f113b2956608d85",
+        "isDraft": true,
+        "number": 92,
+        "title": "[WIP] stabilize generated configuration and absorb checkout changes",
+        "url": "https://github.com/flext-sh/flext-web/pull/92"
+      },
+      {
+        "baseRefName": "0.12.0-dev",
+        "headRefName": "chore/absorb-inflight-20260911b",
+        "headRefOid": "0f69a9470d694da68a18fab9fe50a173d4cbb9be",
+        "isDraft": false,
+        "number": 86,
+        "title": "chore(flext-web): preserve chore/absorb-inflight-20260911b changes across 1 paths",
+        "url": "https://github.com/flext-sh/flext-web/pull/86"
+      }
+    ],
+    "stderr": ""
+  }
+]

@@ -1,0 +1,559 @@
+[
+  {
+    "id": "flext-itpd1.1",
+    "title": "0.12.0 est\u00e1vel: unificar lanes + exterm\u00ednio budget SSOT + frota verde",
+    "description": "Plano aprovado 14/09: ~/.claude/plans/happy-puzzling-flask.md. P0: unir worktrees/branches/PRs \u00fateis (adjudica\u00e7\u00e3o por arquivo), atualizar beads/docs/skills, corrigir ~/wip-hier.sh, orientar code-review-graph/sg/jscpd/skills por CLI. P1: flext-infra extermina budget SSOT (gate, rows, model, template, 21 tabelas) + remo\u00e7\u00f5es de desempenho (conform duplicado no audit, split check/complement) + template docs/blank-line; flext-core remove campo budget; frota regenera e remove uv.lock rastreado; super remove gitlink \u00f3rf\u00e3o, safe-delete dependabot_merge.py (CodeQL #6), restaura exclude_docs, re-rola gitlinks; retirada com prova.",
+    "acceptance_criteria": "32 repos --is-ancestor=0 contra origin/0.12.0-dev fresco; CI 0.12.0-dev verde nos 32 heads; root make gen x2 sem diff, make check/test exit 0; gitlinks == .gitmodules; grep project.budget/BudgetGate/gate_budgets/check complement = 0; nenhum uv.lock rastreado em membros; CodeQL abertos=0; bd lint 0 nas tocadas",
+    "notes": "HANDOFF 2026-09-14 ~17:45Z (session paused by operator). LANDED on 0.12.0-dev: flext-infra #727 merge b13793fb1 (S0+S1+A4+A5); 30 member PRs merged (regenerated no-mode projections): api#97 5f99ba66, auth#98 8fc346e3, cli#166 cb6f5d09, core#471 8f3071c6, db-oracle#99 a8153e02, dbt-ldap#99 9bae4e5c, dbt-ldif#108 4d8267f6, dbt-oracle#99 d27de4ae, dbt-oracle-wms#99 651fef0f, grpc#94 dc773b7c, ldap#112 4e1b614b, ldif#108 d21cee79, meltano#111 ffc40003, observability#107 dabbf8a5, oracle-oic#98 f1dbfc19, oracle-wms#95 1875a88b, plugin#97 b29d638d, quality#168 d0fbbff3, tap-ldap#97 43805122, tap-ldif#100 277ddb99, tap-oracle#92 d5c80962, tap-oracle-oic#95 841b1440, tap-oracle-wms#98 2003abce, target-ldap#98 de96e90d, target-ldif#101 bfcde593, target-oracle#103 88037c22, target-oracle-oic#98 ff338fd5, target-oracle-wms#99 a27a938d, tests#108 d4d5d6eb, web#90 7e60daed. Lane members switched to local 0.12.0-dev at those SHAs (tree-identical check). SUPER: merge -s ours of c2dba374e0 (uv.lock/--refresh already owned by flext-infra template+codegen.yaml; aihub-hooks excludes rejected), commit 5806a67377 (31 gitlinks + [project.scripts] -> FlextRoot*.main, entry points load), pushed; PR flext-sh/flext#240 OPEN, NOT merged. flext-infra lane: [WIP] 95baa0c0d S2 template-only (envrc local overrides, beads identity-only) pushed, no PR. make check fleet run STOPPED at 9/32 (0 tracebacks; PASS flext-api; FAIL on findings root, auth, cli, core 619, db-oracle pyrefly api_runtime.py:123, dbt-ldap, dbt-ldif, dbt-oracle). Closed obsolete flext-xeg9x, flext-5mgye. NOT DONE: merge #240, propagate to ~/flext, S2 models/python/tests, S2b, S3, S4 gate isolation, S5, S6, S7, S8. Handoff doc: ~/.claude/plans/happy-puzzling-flask-handoff.md\nImplementation resumed from approved continuation plan. Cwd /home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0. make setup exit 0: 284 packages compatible. gh pr checks 240 -R flext-sh/flext exit 1: ci failed at gen fixed point, 21 dirty members; merge remains blocked. Root origin/0.12.0-dev freshly fetched; S2 template WIP 95baa0c0d preserved. codegen conform --root . --scope all --mode check completed 32/32, exit 1 with template drift from S2; does not prove CI drift root cause. No phase closed.\nOperator checkout absorption in progress. Primary cwd /home/marlonsc/flext: completed existing resolved member merges with git diff --cached --check and git commit --no-edit, exit 0; core editor-blocked invocation terminated preserving index, merge commit 79085f8c8 created. Lane cwd /home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0: preserved pending S2 projection edits with scoped WIP commits in 31 members and root; fetched and merged published 0.12.0-dev with --no-ff across all 31 members. Root merge 59874c3646 exit 0 resolves 13 doc conflicts and all 31 gitlinks; four exact incoming gitlink histories fetched from primary checkout before merge, preserving both sides. Primary publishes continue; dirty generated CI/Makefile/root gitlinks still observed. make gen running in lane; no full check/test proof and PR240 remains OPEN with CI FAILURE. No closure claimed.\nAfter operator cycle, primary /home/marlonsc/flext status clean at 7aa6f285d9; all 31 members report ahead/behind 0/0. Lane no-ff root merge d9ce054487 completed exit 0; all 31 incoming and previous gitlink SHAs proven ancestors of selected member HEADs, root origin/0.12.0-dev ancestor exit 0. Fast-forward checkpoint push loop completed for 31 members and root exit 0. Draft WIP PRs opened for all 31 members (infra #729); root #240 converted to Draft/WIP. make gen in lane completed all 32 projects and fixed-point verification exit 0. Native make check remains running; api PASS exit 0, core FAIL 619 findings including bounded Mypy exit -9 at 6144 MiB. Untracked uv.lock from root and 12 members per canonical codegen policy, local files preserved and checkpoint commits published. No release/phase completion claimed.\nGeneration investigation 2026-09-14: primary conform process was CPU-active across repeated ps samples (82-84 percent), then exited; its terminal exit status was not captured. Lane cwd /home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0: make gen completed twice with exit 0 and 32/32 conformance. Final run on infra 155c52a34 logs 4337 input snapshots, 4166 scanned modules, 538 package plans, zero lazy-init effects in 115.56 seconds, fixed-point verification and project conformance complete. Added progress for formerly silent stages; replaced snapshot drift acceptance with existing atomic verifier; removed unwired duplicate pipeline stages referencing absent enum members. Infra checkpoint 155c52a34 and root gitlink checkpoint 85992419cc pushed exit 0. DB Oracle checkpoint 5ce0fbd and DBT LDIF checkpoint deb6d50 published; native validation still pending for these gate repairs. Fleet make check continues beyond 24/32 with failures; no full green, merge, primary deployment or phase closure claimed.\nFull fleet gate evidence from lane root: make check completed all 32 and exited 2; canonical summary total=32 completed=32 passed=1 failed=31 (flext-api passed). make fix subsequently exited 0 with 32/32; make fmt exited 0 with 32/32. During root make test, DBT LDIF passed 84 tests and both new invalid-manifest regression tests passed; infra then failed on an obsolete tracked-lockfile expectation (34 passed, 1 failed). Replaced that test with config-to-rendered-policy round-trip checked by Git, and require Git check-ignore exit 0 or 1 rather than treating every error as trackable. Checkpoints infra 0ae002820 and f224f711b, root f665dd6e5c, all pushed exit 0. Current root status clean; make test still running at 31/32 with additional failures, final make gen after fix/fmt in progress. No complete test/check approval or phase closure.\nOperator 19:32-19:35Z reaffirmed merging every useful contributing PR and adopting his no-ff dev merges as the new base. Root merge 79238b9720 incorporates origin/0.12.0-dev tip 8049f7b681; seven gitlink conflicts and one local flext-law paragraph resolved with incoming current verb contract. Both prior and incoming gitlink commits proven ancestors of all 31 selected member heads. After pushes for all 31 members and root exited 0, fresh fetch plus merge-base --is-ancestor origin/0.12.0-dev HEAD exited 0 for each of all 32 roots. Infra PR729 was merged externally by operator at 19:18:36Z as a312043b5, head 155c52a34; CI and release-plan were failing, so no green closure inferred. Full pre-base-update make test finished 32/32, passed20 failed12, exit2. Last generation overlapping base absorption exited2 with gitignore fixed-point drift; user then ran generation on adopted base. Inventory of all open fleet PRs obtained; infra723 Git facade/test repairs, infra724 docs source integrity/test namespace repairs, infra730 complete pytest outcomes identified as relevant next contributions. New base adopted, stabilization still in progress.\nOperator explicitly authorized background subagents in batches of four. Environment permits three child agents concurrently plus root: initial batches platform8/connectors10/domains6 completed inventories; fourth foundation+dbt6 now active. Connectors10 and domains6 report scoped WIP checkpoints, FF pushes, fresh origin/0.12.0-dev ancestor proofs and clean trees (all exit0), Draft PR descriptions updated. Their native validation remains pending. Root infra integrated PR723 into lane with merge commit866ba84fd; git commit exit0 and git push origin bugfix/stabilize-0.12.0 exit0, new Draft WIP PR731 created. PR724 merge in progress, preserving current policy and both fixture/namespace improvements; codegen and native fleet gates still pending on this combined candidate. Previous full fleet test completed32 with20passed12failed; no phase or PR declared green or closed. Connectors helper now resolves only infra test merge conflicts while root owns source and landing.\nAll four requested background batches launched and completed checkpoint publication for30 members: platform8, connectors10, domains6, foundation/dbt6. Their fetch/ancestry/FFpush/status proofs exit0; core new Draft PR474. Root infra resolved all PR724 test/source conflicts; git diff --cached --check exit0, merge checkpoint61a9c0602. PR730 merged no-ff exit0 as f9e0f6163, full selected pytest outcomes configured via max-failures0; push origin bugfix/stabilize-0.12.0 exit0. Draft infraPR731 remains unvalidated. make gen launched from active lane (session15601), reports repositories32 and progressing. No native green closure. PR681 reviewed read-only: useful attestation command already present, remaining mechanical APPLY removal produces obsolete/broken docs; no useful absent behavior identified. Foundation agent completes remaining historical release-hunk review read-only.\nOperator 2026-09-14 21:40Z explicitly excludes flext-infra custom checks from this agents remediation scope; another agent owns them. Continue useful contribution absorption, native standard lint/type/test/build and generation repair. Do not disable or mark custom checks green; record their independently owned status separately. Both last make gen invocations15601 and56785 completed exit0 across32, including bootstrap empty environment argument owner fix in second run. Generated outputs and template repair still need checkpoint publication. API nil test/doc consumer correction delegated; LDAP upstream dependency fix researched. Custom-gate-only dbt-ldap catch/namespace remediation not undertaken here under newest exclusion.",
+    "status": "in_progress",
+    "priority": 0,
+    "issue_type": "task",
+    "assignee": "Marlon Costa",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-14T14:57:00Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-14T21:41:40Z",
+    "started_at": "2026-09-14T15:06:25Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-itpd1.1",
+        "depends_on_id": "flext-yirgp",
+        "type": "discovered-from",
+        "created_at": "2026-09-14T11:57:00Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      },
+      {
+        "issue_id": "flext-itpd1.1",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-14T11:57:00Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-ocxtt",
+    "title": "Fase 0.2b \u2014 gates da lane flext-infra verdes na worktree (make test + make check exit 0; fix/fmt x2 sem diff)",
+    "description": "Loop de gates do flext-infra na worktree chore/absorb-inflight-20260911b, antecipado de E para dentro da Fase 0 por Q3 (CI verde antes do merge commit). 16 rodadas de make test ate 12/09 (r15 = 289 passed); make check ainda nao rodou (auditoria X-55). Cada vermelho: classificar (R25) -> fake: apagar; real: causa raiz no dono (R23) + rewire por make mod/ast-grep quando multi-site + regra de codemod por classe recorrente (P0-FL.2). Catalogo 11.",
+    "acceptance_criteria": "Acceptance Criteria: make test exit 0 e make check exit 0 na worktree do flext-infra (junit + tail -40 registrados); make gen x2 sem efeitos; make fix x2 e make fmt x2 com git status limpo; testes exterminados listados na bead flext-c4k44; commit nao-WIP publicado na lane.",
+    "notes": "flext-grpc: merged origin/0.12.0-dev, fixed silent-failure/deferred-self-reference/ENFORCE-046/066/067/070/079 (partial); 354/354 tests pass, gen/fmt/fix idempotent x2; namespace=88 baseline-exempt; runtime-census ENFORCE-079 escalated as flext-infra detector defect (shifts to a new constant each fix). Commit 2f16dc1, PR https://github.com/flext-sh/flext-grpc/pull/89 (updated, head chore/absorb-inflight-20260911b).",
+    "status": "open",
+    "priority": 0,
+    "issue_type": "task",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T19:22:44Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-13T18:28:47Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-ocxtt",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T16:22:44Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-bdmdg",
+    "title": "flext-infra: conform.py referencia m.Infra.ReleasePolicyRenderSpec inexistente (gitleaks render) \u2014 AttributeError em runtime",
+    "description": "Integra\u00e7\u00e3o 0.12.0-dev (a2cef33b4) e lane 1e765660c: conform.py:2373/2384 retorna m.Infra.ReleasePolicyRenderSpec(build_constraints=...) para RELEASE_GITLEAKS_CONFIG_PATH; o modelo n\u00e3o existe (s\u00f3 ReleasePolicySpec). 0c1e6c4b2 (#691) declarou remover branch e modelo, mas o branch sobreviveu.",
+    "design": "Corrigir no dono (codegen/conform.py): template sem vari\u00e1veis usa StaticTextRenderSpec() (contexto vazio tipado, j\u00e1 existente); sem modelo novo. R13 na mensagem de gen check.",
+    "acceptance_criteria": "Steps to Reproduce: cwd flext-infra; .venv/bin/python -c 'from flext_infra import m; m.Infra.ReleasePolicyRenderSpec' \u2192 AttributeError; make test FILE=tests/unit/release/test_release_dag.py \u2192 FAILED tests/unit/deps/test_modernizer_packaging.py::test_conform_packages_every_declared_python_root. Acceptance Criteria: import sem AttributeError; teste verde; make gen \u00d72 sem diff; commit escopado + PR.",
+    "notes": "AttributeError fixed in lane commit 05424c544 (conform.py gitleaks branch \u2192 StaticTextRenderSpec). Runtime: .venv/bin/python -c 'from flext_infra import m; m.Infra.StaticTextRenderSpec()' OK. test_conform_packages_every_declared_python_root now fails on a different assertion ([build-system]) \u2192 separate defect, bead follows.",
+    "status": "open",
+    "priority": 0,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T16:12:57Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T16:35:04Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-bdmdg",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T13:12:56Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-2j4lr",
+    "title": "perf: r[T] generic subscriptions rebuilt por chamada (pydantic __class_getitem__ = 73% do release version phase) + conform replaneja 3x por apply",
+    "description": "X-39 (cat\u00e1logo 11). cProfile de flext-infra release run --phase version --apply em fixture real (subagente sonnet, R27): 16.45 s CPU; pydantic/main.py:904 BaseModel.__class_getitem__ 4273 chamadas, 11.96 s cumulativo (73%); _GENERIC_TYPES_CACHE de valores fracos descarta parametriza\u00e7\u00f5es r[T]/p.Result[T] criadas e descartadas por chamada \u2192 model_rebuild a cada subscri\u00e7\u00e3o; _thread.lock.acquire 1.8 s tottime. plan()/compose_project_artifact roda 3x por apply (apply, verify-fixed-point, verify-docs-receipt; 66 = 22 templates x 3); tomlkit 0.49 s (3%); subprocess 1.6 s (10%). Efeito: test_rerun_continues_the_lane_without_a_second_commit > 10 s (duas execu\u00e7\u00f5es de ~8-9 s). Donos: flext-core (r[T] como generic pydantic: manter refer\u00eancia forte por parametriza\u00e7\u00e3o concreta ou tirar o generic de BaseModel.__class_getitem__); flext-infra conform (reutilizar o plano entre verify-fixed-point e verify-docs-receipt; tomllib para valida\u00e7\u00e3o sem reescrita).",
+    "acceptance_criteria": "Steps to Reproduce: fixture em /home/marlonsc/.claude/jobs/28df3549/tmp/x39/workspace; python -m cProfile -o prof.out -m flext_infra release run --repository-root . --phase version --apply; pstats top cumulative. Acceptance Criteria: __class_getitem__ fora do top-10 cumulativo; release version phase < 3 s na fixture; teste rerun < 10 s sem marcador slow; make test flext-core/flext-infra verdes; prova por novo perfil.",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T18:25:43Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T18:25:43Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-2j4lr",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T15:25:42Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-7ua33",
+    "title": "sandbox de testes dentro da \u00e1rvore versionada: scratch em <workspace>/.flext-runtime/<proj>/scratch faz os helpers de VCS tratarem tmp_path como escopo do reposit\u00f3rio (X-20/X-29/X-34)",
+    "description": "X-34 (cat\u00e1logo 11). Makefile.j2:112-113 e .envrc.j2 derivam PROJECT_STATE_ROOT = <parent>/.flext-runtime/<proj> e PROJECT_SCRATCH = .../scratch; o basetemp do pytest fica dentro da \u00e1rvore versionada do superprojeto/worktree. _open_repo (repo.py:63) tem contrato documentado de descoberta por ancestral (68 consumidores), logo tracked_top_level_dir_names(tmp) enxerga o reposit\u00f3rio envolvente e devolve conjunto vazio \u2192 layout plan pula flext-undeclared (layout_tests KeyError); mesma classe em X-20 (remotes do superprojeto) e X-29. Lei de storage do ~/agents: scratch = home da plataforma + tmp, nunca dentro do reposit\u00f3rio. Decis\u00e3o do operador pendente: (A) mover scratch para ~/tmp/<state>/<proj>/scratch via SSOT codegen.yaml toolchain (envrc/Makefile/tool_bootstrap/pytest) ou (B) manter no reposit\u00f3rio e restringir os helpers ao repo_root para ra\u00edzes de sandbox.",
+    "acceptance_criteria": "Steps to Reproduce: rodada de testes \u2192 layout_tests::test_declared_repositories_are_canonical_root_entries KeyError flext-undeclared; stdout de r8 indexed 0 modules para fixtures. Acceptance Criteria: decis\u00e3o registrada; scratch fora de qualquer \u00e1rvore versionada (ou helpers restritos) via SSOT; testes X-20/X-29/X-34 verdes sem altera\u00e7\u00e3o de asser\u00e7\u00e3o; gen \u00d72 sem diff; docs regeneradas.",
+    "notes": "12/09 decisao do operador: opcao A-linha \u2014 so o namespace scratch vai para HOME/tmp/<state_directory_name><abs project root>/<scratch_namespace> via SSOT codegen.yaml toolchain (envrc, Makefile, tool_bootstrap, pytest regenerados por gen na frota); journal/testmon ficam. Implementacao na worktree; prova: X-20/X-34/X-38 verdes sem tocar assercoes; gen x2 sem diff.",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T17:47:39Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T18:02:51Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-7ua33",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T14:47:39Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-za816",
+    "title": "codegen new nunca atinge ponto fixo: overlay_preserved devolvia o template cru quando n\u00e3o h\u00e1 pyproject live (dois renderers para um arquivo)",
+    "description": "X-35 (cat\u00e1logo 11). u.Infra.overlay_preserved (pyproject_conform.py:946, e202f4e62 08/09 wip) retornava o render do template com cabe\u00e7alho e marcadores quando live is None; a verifica\u00e7\u00e3o de ponto fixo replaneja pelo caminho parse-merge-dump (sem coment\u00e1rios, chaves ordenadas) \u2192 residual em pyproject.toml em todo projeto novo (test_rendered_workflow_python_commands_compile; repro CLI codegen new). Fix: live ausente = documento vazio no mesmo caminho de canonicaliza\u00e7\u00e3o; mensagem do verificador de ponto fixo passa a incluir o drift report (R13).",
+    "acceptance_criteria": "Steps to Reproduce: flext-infra codegen new --name flext-demo --kind internal_flext --output-root <tmp> ... --apply \u2192 'did not reach a fixed point: pyproject.toml'. Acceptance Criteria: repro exit 0 com projeto publicado; conform --mode check no projeto novo = 0 efeitos; make test verde no teste; make gen \u00d72 no flext-infra sem diff.",
+    "notes": "12/09: overlay_preserved trata live ausente como documento vazio no mesmo caminho parse-merge-dump; verificador de ponto fixo inclui drift report; repro CLI codegen new = project created; checkpoint ec3b159c7; prova final no CI",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T17:46:55Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T18:50:23Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-za816",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T14:46:54Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-rwls4",
+    "title": "R20: expor contrato p\u00fablico de muta\u00e7\u00e3o do flext-infra (stage/verify/publish/rollback + lock + removals) para o ai-hub consumir",
+    "description": "X-31 (cat\u00e1logo 11). Pedido do agente ai-hub (ddf993, 12/09) ap\u00f3s aceitar R20: ai-hub tem 6 writers paralelos (deploy_agents.atomic_write_text, atomic_replace_accepted, publish, installed_runtime._publish_release_candidate, workspace.rollback_symlink, generate_workspace_config._artifact) e precisa de u.Infra.*: (1) stage(artifacts(target, content: bytes, mode), *, lock_root) -> Staged com valida\u00e7\u00e3o de owner (uid, n\u00e3o-symlink, mesmo FS); (2) verify(staged) -> diff tipado por alvo (check, sem efeito); (3) publish(staged) -> Receipt at\u00f4mico com journal e backup do estado anterior; (4) rollback(receipt) s\u00f3 dos efeitos da invoca\u00e7\u00e3o; (5) lock por reposit\u00f3rio/destino compartilhado; (6) removals na mesma transa\u00e7\u00e3o. Dono existente: codegen_transaction.py / _codegen_staging.py / journal \u2014 expor via fachada p\u00fablica root-most, sem nova implementa\u00e7\u00e3o. Tamb\u00e9m confirmar que FlextInfra.project_context cobre worktrees ligados e subm\u00f3dulos (A13 do AH).",
+    "acceptance_criteria": "Acceptance Criteria: fachada u.Infra com os 6 pontos acima mapeados sobre a transa\u00e7\u00e3o existente (zero implementa\u00e7\u00e3o paralela); teste funcional publish \u00d72 idempotente + rollback s\u00f3 da invoca\u00e7\u00e3o; docs regeneradas; W-msg ao ddf993 com o sha; ai-hub cutover provado por ele (deploy \u00d72 sem diff).",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "feature",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T17:23:39Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T17:23:39Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-rwls4",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T14:23:39Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-xobfw",
+    "title": "tier-whitelist: c\u00f3digo morto com subprocess (7 erros ruff na integra\u00e7\u00e3o) e escopo por .git-ancestor falso em worktree ligada; exclus\u00e3o de membros movida para a base rope-boundary",
+    "description": "X-30 (cat\u00e1logo 11). validate/tier_whitelist.py em origin/0.12.0-dev (ae34b064b): _submodule_dirs/_submodule_cache sem consumidor (subprocess.run sem check, try/except pass, RUF012, F811 Path) e _is_in_scope decidindo por '.git \u00e9 arquivo' \u2014 numa worktree ligada o super tem .git-arquivo, logo TODOS os arquivos ficavam fora de escopo (falso verde). Tamb\u00e9m tests/unit/codegen/test_codegen_budget_projection_tests.py F401 (resolve_gate_budgets de m\u00f3dulo duplicava o staticmethod em conform.py). Fix: c\u00f3digo morto e override removidos; FlextInfraRopeImportBoundaryBase.build_report exclui membros por u.Infra.git_declared_submodule_paths (topologia declarada, nunca ancestria .git); duplicata de conform.py apagada e teste rewired. Ligada a flext-vlpv4.",
+    "acceptance_criteria": "Steps to Reproduce: check run --gates lint no flext-infra \u2192 8 erros (7 tier_whitelist.py + 1 F401). Acceptance Criteria: lint 0; tier-whitelist numa worktree ligada reporta viola\u00e7\u00f5es reais (n\u00e3o vazio); metadata-discipline mant\u00e9m comportamento; make test verde; make gen \u00d72 sem diff.",
+    "notes": "12/09: FlextInfraRopeImportBoundaryBase.build_report exclui membros declarados via u.Infra.git_declared_submodule_paths; tier_whitelist.py sem codigo morto (-52 LOC); duplicata resolve_gate_budgets removida; lint do check run verde desde r8; checkpoint ec3b159c7",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T17:23:25Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T18:50:11Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-xobfw",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T14:23:24Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-9oljq",
+    "title": "check run: RunCommand redeclarava a raiz como workspace (default cwd) \u2014 --repository-root ignorado; fuga de sandbox no teste de descoberta",
+    "description": "X-29 (cat\u00e1logo 11). m.Infra.RunCommand redeclarava workspace: Path = Path() sobre o repository_root herdado de ScopeMixin; execute_payload consumia params.workspace \u2192 --repository-root ca\u00eda no cwd (fallback silencioso). Em make check coincidia (cwd = PROJECT_ROOT); em test_cli_auto_discovers_projects verificou o flext-infra real em vez do tmp. Fix: campo removido, execute_payload/_resolve_project_targets usam params.repository_root (rewire).",
+    "acceptance_criteria": "Steps to Reproduce: worktree flext-infra; make test \u2192 test_cli_auto_discovers_projects: '[1/1] flext-infra check' com --repository-root <tmp>. Acceptance Criteria: RunCommand sem campo workspace; check run --repository-root <tmp> verifica s\u00f3 a topologia do tmp; make test verde nesse teste; make gen \u00d72 sem diff.",
+    "notes": "12/09: campo workspace removido de RunCommand; execute_payload e _resolve_project_targets usam params.repository_root; verde desde r8 (nao reaparece nas rodadas 9-16); checkpoint ec3b159c7",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T17:23:10Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T18:50:01Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-9oljq",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T14:23:10Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-c4k44",
+    "title": "R25: exterminar testes fake/mock/forma-interna em flext-infra; s\u00f3 testes funcionais reais por interface p\u00fablica",
+    "description": "Ruling operador 12/09 (R25): teste fake, mockado, que n\u00e3o testa funcionalidade, que n\u00e3o usa exclusivamente interface p\u00fablica ou que testa como o m\u00f3dulo foi constru\u00eddo \u00e9 exterminado (teste + s\u00edmbolo de src s\u00f3 consumido por ele). Baixar o piso de cobertura no SSOT \u00e9 aceito. Invent\u00e1rio 12/09: 6 arquivos em flext-infra/tests com monkeypatch(20)/unittest.mock(1)/patch((1); regra codemod ban-test-mocks.yml existe. Loop por teste vermelho em E: classificar \u2192 fake: apagar; real: causa raiz no dono (R23) + rewire + contrato via conftest/c,t,p,m,u/fixtures (R21/R22). Cat\u00e1logo 11 X-27.",
+    "acceptance_criteria": "Acceptance Criteria: grep -rlE 'unittest.mock|MagicMock|mocker|monkeypatch|patch(' flext-infra/tests \u2192 0; make mod (ban-test-mocks) sem achados; testes restantes s\u00f3 via fachadas p\u00fablicas + u.Tests.*; s\u00edmbolos src s\u00f3-teste removidos (ast-grep prova 0 consumidores); piso de cobertura no SSOT ajustado por bead irm\u00e3 se necess\u00e1rio; make test exit 0; commit escopado.",
+    "notes": "12/09 r10: exterminados 4 testes fake em flext-infra: docs/auditor_tests.py test_returns_flext_result e test_audit_option_variants (tautologia success or failure), test_report_structure (sem assercao); refactor enforcer test_loose_object_detector_skips_canonical_alias_module_exception (premissa retirada por a0effff42: isencao por nome de arquivo). Catalogo 11 X-36/X-37.",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "task",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T17:05:42Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T17:54:31Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-c4k44",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T14:05:42Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-c1vvr",
+    "title": "flext-infra: namespace enforcer n\u00e3o acusa private import cross-package em scripts/ (test_namespace_enforcer_flags_cross_package_private_import_from_scripts_tree \u2192 0)",
+    "description": "junit 20260912T162749; cat\u00e1logo 11 X-18. Regra de gate scope (src,tests) hardcoded \u2014 rela\u00e7\u00e3o com flext-2pkx2.",
+    "design": "Corrigir no dono (validate/namespace enforcer): scripts/ entra no escopo conforme SSOT de gate scope; nunca ajustar o teste.",
+    "acceptance_criteria": "Steps to Reproduce: cwd flext-infra; make test \u2192 FAILED tests/unit/refactor/test_infra_refactor_namespace_enforcer.py::\u2026scripts_tree (0 did not satisfy). Acceptance Criteria: viola\u00e7\u00e3o detectada em scripts/; teste verde; commit escopado.",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T16:44:31Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T16:44:31Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-c1vvr",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T13:44:30Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-x1x1q",
+    "title": "flext-infra: test_run_with_deptry_missing \u2014 'Expected failure but got success' (deptry presente no PATH latest)",
+    "description": "junit 20260912T162749; cat\u00e1logo 11 X-17. Teste assume deptry ausente do ambiente real (viola observable-runtime: fixture deve provisionar o contrato).",
+    "design": "Fixture u.Tests provisiona PATH sem deptry dentro do sandbox (R21); nunca depender do host.",
+    "acceptance_criteria": "Steps to Reproduce: cwd flext-infra; make test \u2192 FAILED tests/unit/deps/test_detector_detect.py::\u2026test_run_with_deptry_missing. Acceptance Criteria: teste verde e herm\u00e9tico; commit escopado.",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T16:44:30Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T16:44:30Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-x1x1q",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T13:44:30Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-xldlq",
+    "title": "flext-infra: transaction journal \u2014 test_appended_phase_rejects_replaced_created_parent devolve mensagem de recovery em vez de 'generation destination parent differs from journal'",
+    "description": "junit 20260912T162711: 'docs destination changed after planning: \u2026 Atomic directory delete failed: [Errno 116] atomic directory physical state changed'. Cat\u00e1logo 11 X-16; rela\u00e7\u00e3o com WS-B (journal por repo).",
+    "design": "Corrigir no dono (codegen_transaction/journal): a detec\u00e7\u00e3o de pai substitu\u00eddo deve preceder o recovery; mensagem R13 com violador/fix/ref.",
+    "acceptance_criteria": "Steps to Reproduce: cwd flext-infra; make test \u2192 FAILED tests/unit/codegen/transaction_directory_journal_tests.py::\u2026test_appended_phase_rejects_replaced_created_parent. Acceptance Criteria: teste verde; mensagem R13; commit escopado.",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T16:44:30Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T16:44:30Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-xldlq",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T13:44:29Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-rlb47",
+    "title": "flext-infra: test_conform_packages_every_declared_python_root falha em [build-system] (ap\u00f3s fix do RenderSpec)",
+    "description": "Pr\u00e9-existente encoberto pelo AttributeError X-11; junit 20260912T162711: AssertionError: [build-system]. Cat\u00e1logo 11 X-15.",
+    "design": "Investigar o contrato de packaging (deps/modernizer) vs fixture; corrigir no dono ou na fixture u.Tests (R21), nunca na asser\u00e7\u00e3o.",
+    "acceptance_criteria": "Steps to Reproduce: cwd flext-infra; make test \u2192 FAILED tests/unit/deps/test_modernizer_packaging.py::test_conform_packages_every_declared_python_root AssertionError: [build-system]. Acceptance Criteria: teste verde sem supress\u00e3o; commit escopado.",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T16:44:29Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T16:44:29Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-rlb47",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T13:44:28Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-gajwa",
+    "title": "flext-infra: PROJECT_STATE_ROOT/scratch fica dentro da \u00e1rvore git do superprojeto para membros (../.flext-runtime/<projeto>) \u2014 fuga de sandbox nos testes",
+    "description": "Makefile.j2: PROJECT_STATE_ROOT := $(PROJECT_ROOT)/../.flext-runtime/$(notdir PROJECT_ROOT). Para um subm\u00f3dulo, o pai \u00e9 o superprojeto \u2192 scratch do pytest (tmp_path) nasce dentro de flext/.flext-runtime/flext-infra/scratch, dentro da \u00e1rvore git de flext; c\u00f3digo sob teste que descobre a raiz git a partir de tmp_path empresta o superprojeto (ex. detector l\u00ea .gitmodules de flext e falha em test_root_config_sets_expected_execution_environments com 'subproject origin differs from its .gitmodules URL: flext-core'). Viola storage.md (scratch = home + tmp) e observable-runtime (teste escreve s\u00f3 em tmp_path sandbox). Relacionado: flext-bxo4y.",
+    "design": "SSOT no flext-infra codegen (state_directory_name/scratch_namespace): ancorar o state root fora de qualquer \u00e1rvore git (ex. $HOME/.flext-runtime/<workspace>/<projeto>, alinhado \u00e0 decis\u00e3o Q-A do ai-hub: stage em ~/tmp), regenerar Makefiles da frota; detector nunca sobe al\u00e9m da raiz do projeto sem .git pr\u00f3prio.",
+    "acceptance_criteria": "Steps to Reproduce: cwd flext-infra; make test \u2192 FAILED tests/unit/deps/test_modernizer_pyright.py::\u2026test_root_config_sets_expected_execution_environments ValueError subproject origin differs from its .gitmodules URL: flext-core. Acceptance Criteria: tmp_path do pytest fora de qualquer reposit\u00f3rio git; teste verde; make gen \u00d72 sem diff na frota; storage.md satisfeito.",
+    "notes": "Root cause precisa (X-20): ensure_pyright._expected_excludes \u2192 detector.analysis_exclusion_paths(tmp) \u2192 _git_origin_url \u2192 u.Infra.git_remote_url \u2192 gitpython Repo(resolved, search_parent_directories=True) (_git/repo.py:63; contrato documentado flext-infra-c3h para caminhos dentro de um checkout). tmp com .beads+.gitmodules mas sem .git 'empresta' o superprojeto. Fix no dono: analysis_exclusion_paths exige .git pr\u00f3prio (sen\u00e3o ungoverned \u2192 ok(())). Restante da bead: SSOT do scratch fora da \u00e1rvore git (Makefile.j2 state_directory_name).",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T16:37:26Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T16:44:17Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-gajwa",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T13:37:25Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-k7vvp",
+    "title": "flext-infra: make mod n\u00e3o tem caminho can\u00f4nico para refresh de snapshots de rule-tests (sg test --update-all)",
+    "description": "batch_gates.py roda sg test numa c\u00f3pia tempor\u00e1ria (stage_rule_fixture_root) e nunca atualiza __snapshots__; casos de teste editados (remove-cli-captured-process-timeout-parameter, test-utilities-production-receiver-rewire) ficaram com snapshot M \u2192 test_mod_circuit vermelho na integra\u00e7\u00e3o. Hoje o refresh s\u00f3 \u00e9 poss\u00edvel por invoca\u00e7\u00e3o direta de sg test --update-all (flag listada em MANUAL_CMD_REWRITE_FLAGS).",
+    "design": "Wire no dono (codemod/batch_gates.py + circuito make mod): modo de refresh de snapshots declarado (ex. make mod com input p\u00fablico existente), executado nos fixture_directories declarados; R13 na mensagem quando snapshot diverge (violador = test yml/rule id, fix = verbo can\u00f4nico, ref = skill dry-refactoring).",
+    "acceptance_criteria": "Acceptance Criteria: existe verbo/WHAT can\u00f4nico que regenera snapshots e o circuito falha com mensagem R13 quando divergem; test_mod_circuit verde; docs do make mod atualizadas; commit escopado.",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "task",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T16:24:46Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T16:24:46Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-k7vvp",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T13:24:46Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-6x6jr",
+    "title": "flext-infra: test_rewrites_builtin_containers_to_canonical_t_aliases vermelho na integra\u00e7\u00e3o (typing unifier n\u00e3o reescreve dict[...] \u2192 t.MappingKV)",
+    "description": "Teste e src id\u00eanticos entre lane e origin/0.12.0-dev (git diff --stat vazio) \u2192 vermelho pr\u00e9-existente na integra\u00e7\u00e3o; blast radius da Fase 0 (production-readiness: adotar).",
+    "design": "Corrigir no dono src/flext_infra/refactor/ (regra 'Canonicalized built-in annotation'): dict[K,V] \u2192 t.MappingKV[K,V] em par\u00e2metros, conforme contrato NS-CONTRACT; nunca xfail/skip.",
+    "acceptance_criteria": "Steps to Reproduce: cwd flext-infra; make test FILE=tests/unit/refactor/test_infra_refactor_typing_unifier.py \u2192 AssertionError: expected 'data: t.MappingKV[str, t.SequenceOf[t.JsonValue]]', got 'data: dict[str, t.SequenceOf[t.JsonValue]]'. Acceptance Criteria: teste verde sem supress\u00e3o; make check codemod/namespace verdes; commit escopado.",
+    "notes": "Fix landed in lane commit 05424c544 (dict[ \u2192 t.MappingKV in transformers/_typing_rewrite.py). make test round 20260912T1614: 136 passed, target not in failures; full-suite proof pending on PR CI (testmon incremental locally).",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-12T16:12:58Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-12T16:35:03Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-6x6jr",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T13:12:57Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-2h0un",
+    "title": "[bug] pyproject.toml fixed-point drift: 9 ci_matrix tests red at tip bff592284 \u2014 generator non-idempotent",
+    "description": "Nine test_codegen_ci_matrix tests fail at pristine tip: generator apply publishes raw render, verify plans conformed output (oct/taplo formatting divergence). Owner: flext-infra src/flext_infra/codegen/conform.py _compose_project_artifact call sites (~1605 apply vs ~1864 verify). Fix: single composition path, fail loud on missing context and on taplo formatting failure (two normalized failures). Acceptance: project_new probe twice == identical bytes; 9 tests green; make gen x2 fixed point at umbrella.\n\n## Steps to Reproduce\n1. Reproduzir no runtime real conforme a descri\u00e7\u00e3o acima (nunca sandbox).\n2. Evid\u00eancia obrigat\u00f3ria: comando exato + cwd + exit code + sa\u00edda decisiva; warning/sa\u00edda vazia = RED.\n\n## Acceptance Criteria\n- [ ] [bug] pyproject.toml fixed-point drift: 9 ci_matrix tests red at tip bff592284 \u2014 generator non-idempotent resolvido e verificado no runtime real.\n- [ ] Evid\u00eancia registrada na bead: comando, exit code, sa\u00edda decisiva, SHA pousado na integra\u00e7\u00e3o.",
+    "notes": "SAME CLASS as canonical flext-3cabz (idempotency family). 3cabz updated this lane 2026-09-11T12:14Z with session evidence: 9/28 ci_matrix failures all 'fixed point: pyproject.toml' post-3000b6bc0; first-pass FlextInfraCodegenProjectNew itself fails verify-fixed-point in tmpdir; hypotheses H1 taplo=latest non-determinism (tie to flext-y3qpq.2 R1), H2 post-publish conform writer block, H3 stale registry \u2014 instrument via difflib to /tmp/fixed-point/*.log, never stdout. Root-cause work should proceed under 3cabz (class) with 2h0un as instance evidence; avoid duplicate fixes.\ncorrela\u00e7\u00e3o-retomada [\u00e9pico flext-cpzjo]: absorvida-em:F4 \u2014 Wave-P1 SLA-1: fixed-point pyproject",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-11T12:21:18Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-11T14:28:11Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-2h0un",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T13:18:52Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      },
+      {
+        "issue_id": "flext-2h0un",
+        "depends_on_id": "flext-cpzjo.5",
+        "type": "relates-to",
+        "created_at": "2026-09-11T11:28:11Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  },
+  {
+    "id": "flext-maygx",
+    "title": "Protected-edit linting spawns subprocess storm per path x tool (test_rewrite_manual_typing_alias 27s > 10s timeout)",
+    "description": "tests/unit/codegen main+refactor suites time out: protected-edit linting spawns one subprocess per path x tool (mypy/ruff/pyrefly), 27s under load vs the 10s pytest-timeout budget.\n\n## Steps to Reproduce\n1. Run make test APPLY=Y in flext-infra on a loaded machine.\n2. tests/unit/refactor/test_infra_refactor_namespace_moves.py::test_rewrite_manual_typing_alias_violations_uses_public_runtime_api exceeds pytest-timeout (10s), captured stack shows protected_edit_linting.lint_snapshots fan-out.\n\n## Root Cause\nlint_snapshots builds futures_by_path; each path runs every selected tool as its own process. N paths x M tools = N*M spawns; mypy cold start dominates.\n\n## Fix Direction\nBatch invocations: one process per TOOL receiving all snapshot paths (attribution via ruff/mypy path-prefixed output), preserving the LintSnapshot contract and cache keys.\n\n## Acceptance Criteria\n- [ ] lint_snapshots spawns at most one process per selected tool per call.\n- [ ] test_rewrite_manual_typing_alias_violations_uses_public_runtime_api passes within the 10s budget.\n- [ ] make test APPLY=Y green in flext-infra.",
+    "notes": "correla\u00e7\u00e3o-retomada [\u00e9pico flext-cpzjo]: absorvida-em:None \u2014 backlog do \u00e9pico da retomada \u2014 execu\u00e7\u00e3o pelo \u00e9pico/programa dono ap\u00f3s pousos F2/F4; re-censo a cada fim de fase",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "bug",
+    "owner": "marlon.costa@datacosmos.com.br",
+    "created_at": "2026-09-10T20:56:15Z",
+    "created_by": "Marlon Costa",
+    "updated_at": "2026-09-11T14:28:29Z",
+    "dependencies": [
+      {
+        "issue_id": "flext-maygx",
+        "depends_on_id": "flext-cpzjo",
+        "type": "relates-to",
+        "created_at": "2026-09-11T11:28:29Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      },
+      {
+        "issue_id": "flext-maygx",
+        "depends_on_id": "flext-itpd1",
+        "type": "parent-child",
+        "created_at": "2026-09-12T13:20:12Z",
+        "created_by": "Marlon Costa",
+        "metadata": "{}"
+      }
+    ],
+    "dependency_count": 0,
+    "dependent_count": 0,
+    "comment_count": 0,
+    "parent": "flext-itpd1"
+  }
+]

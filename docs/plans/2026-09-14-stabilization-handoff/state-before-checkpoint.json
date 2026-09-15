@@ -1,0 +1,2245 @@
+{
+  "purpose": "Read-only handoff evidence, not a tracker",
+  "rows": [
+    {
+      "project": "flext",
+      "observed_utc": "2026-09-14T21:45:31.150925+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From github.com:flext-sh/flext\n * branch                  0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0",
+        "head": {
+          "exit": 0,
+          "stdout": "79238b9720ea988c7f1dd94dfc20f99a56c88b00",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/stabilize-0.12.0",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M .gitignore\n M Makefile\n M flext-api\n M flext-auth\n M flext-cli\n M flext-core\n M flext-db-oracle\n M flext-dbt-ldap\n M flext-dbt-ldif\n M flext-dbt-oracle\n M flext-dbt-oracle-wms\n M flext-grpc\n M flext-infra\n M flext-ldap\n M flext-ldif\n M flext-meltano\n M flext-observability\n M flext-oracle-oic\n M flext-oracle-wms\n M flext-plugin\n M flext-quality\n M flext-tap-ldap\n M flext-tap-ldif\n M flext-tap-oracle\n M flext-tap-oracle-oic\n M flext-tap-oracle-wms\n M flext-target-ldap\n M flext-target-ldif\n M flext-target-oracle\n M flext-target-oracle-oic\n M flext-target-oracle-wms\n M flext-tests\n M flext-web",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext",
+        "head": {
+          "exit": 0,
+          "stdout": "206c02ee1dd3f714a8164ade4b5605a6f71b8856",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M flext-infra",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "206c02ee1dd3f714a8164ade4b5605a6f71b8856",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-api",
+      "observed_utc": "2026-09-14T21:45:33.226557+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-api\n * branch              0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-api",
+        "head": {
+          "exit": 0,
+          "stdout": "5333ec495870a8713d965582cce3aa599028f258",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M .gitignore\n M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-api",
+        "head": {
+          "exit": 0,
+          "stdout": "6f9a0bcf1234ba1c92887f546d9bb35df032c657",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "6f9a0bcf1234ba1c92887f546d9bb35df032c657",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-auth",
+      "observed_utc": "2026-09-14T21:45:33.951263+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-auth\n * branch              0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-auth",
+        "head": {
+          "exit": 0,
+          "stdout": "ab9e63085c10262443ab1d7b8559b9c54deac39c",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M .gitignore\n M Makefile\n M tests/__init__.py",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-auth",
+        "head": {
+          "exit": 0,
+          "stdout": "74f71f9ef856965679937bdea5e2ea34f69395be",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "74f71f9ef856965679937bdea5e2ea34f69395be",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-cli",
+      "observed_utc": "2026-09-14T21:45:34.712562+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-cli\n * branch              0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-cli",
+        "head": {
+          "exit": 0,
+          "stdout": "a167b79d1cbfc36439339918e03ff3c8a7274a0e",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-cli",
+        "head": {
+          "exit": 0,
+          "stdout": "641700e5f1d82c841aaaea496e22733d56ca3133",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "641700e5f1d82c841aaaea496e22733d56ca3133",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-core",
+      "observed_utc": "2026-09-14T21:45:35.459192+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-core\n * branch                0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-core",
+        "head": {
+          "exit": 0,
+          "stdout": "adbed6f49b4c4ef5e5d47cde98ad4145f675c99c",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-core",
+        "head": {
+          "exit": 0,
+          "stdout": "5a1317238e7e00a5d4250732bd4247c6dbce8d8c",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "5a1317238e7e00a5d4250732bd4247c6dbce8d8c",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-db-oracle",
+      "observed_utc": "2026-09-14T21:45:36.261820+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-db-oracle\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-db-oracle",
+        "head": {
+          "exit": 0,
+          "stdout": "f77af7bb3932c285ac00633a904932527043d2fc",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-db-oracle",
+        "head": {
+          "exit": 0,
+          "stdout": "951237df67f48acf8ad49126ff4eb15234ba4b41",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "951237df67f48acf8ad49126ff4eb15234ba4b41",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-dbt-ldap",
+      "observed_utc": "2026-09-14T21:45:37.081845+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-dbt-ldap\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-ldap",
+        "head": {
+          "exit": 0,
+          "stdout": "06f500e7272f2b7372f588d810a9db98fd07fccf",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-dbt-ldap",
+        "head": {
+          "exit": 0,
+          "stdout": "27a5d5d2bc2c4e993127b17467499f71381f319a",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "27a5d5d2bc2c4e993127b17467499f71381f319a",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-dbt-ldif",
+      "observed_utc": "2026-09-14T21:45:37.908966+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-dbt-ldif\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-ldif",
+        "head": {
+          "exit": 0,
+          "stdout": "48719a3c2d1309fee11fee2da11e4cb75bbbd4c4",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-dbt-ldif",
+        "head": {
+          "exit": 0,
+          "stdout": "e40ccecfa6e72aab614e483736ffa1e892d5e8fd",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "e40ccecfa6e72aab614e483736ffa1e892d5e8fd",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-dbt-oracle",
+      "observed_utc": "2026-09-14T21:45:38.701771+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-dbt-oracle\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-oracle",
+        "head": {
+          "exit": 0,
+          "stdout": "ee230b6b2f4c337dd553ef6a48c8639ed0a919d7",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-dbt-oracle",
+        "head": {
+          "exit": 0,
+          "stdout": "9b5d1b3cdd1938c7c381639cdd96cca9cf25625d",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "9b5d1b3cdd1938c7c381639cdd96cca9cf25625d",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-dbt-oracle-wms",
+      "observed_utc": "2026-09-14T21:45:39.482807+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-dbt-oracle-wms\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-oracle-wms",
+        "head": {
+          "exit": 0,
+          "stdout": "01d3a3ae925fc7f8a25b4e54e3309f687b405cc2",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-dbt-oracle-wms",
+        "head": {
+          "exit": 0,
+          "stdout": "2a7933f58782a8f8433b005e1bd985c862a61cee",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "2a7933f58782a8f8433b005e1bd985c862a61cee",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-grpc",
+      "observed_utc": "2026-09-14T21:45:40.310880+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-grpc\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-grpc",
+        "head": {
+          "exit": 0,
+          "stdout": "1d6930102315278a8700036b3eafa9a5cdd5a7d7",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile\n M tests/__init__.py",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-grpc",
+        "head": {
+          "exit": 0,
+          "stdout": "58605cf8e71d42828c09935da846bd8e93d762b6",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "58605cf8e71d42828c09935da846bd8e93d762b6",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-infra",
+      "observed_utc": "2026-09-14T21:45:41.090148+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-infra\n * branch                0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-infra",
+        "head": {
+          "exit": 0,
+          "stdout": "f9e0f61637a48477f6082312aee2e977dbde98cf",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/stabilize-0.12.0",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M .gitignore\n M Makefile\n M config/codegen.yaml\n M src/flext_infra/templates/project/base/tool_bootstrap_recipe.j2\n M tests/unit/__init__.py\n M tests/unit/workspace/__init__.py",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-infra",
+        "head": {
+          "exit": 0,
+          "stdout": "2e8fe9cf90c68411ced8fb57e4b1e81c63d7f3a1",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "fix/docs-renderer-contract",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile\n M config/codegen.yaml\n M pyproject.toml\n M src/flext_infra/_constants/codegen.py\n M src/flext_infra/_constants/codegen_project.py\nM  src/flext_infra/_constants/validate.py\n M src/flext_infra/_models/__init__.py\n M src/flext_infra/_models/codegen.py\n M src/flext_infra/_models/codemod.py\n M src/flext_infra/_models/config.py\n M src/flext_infra/_models/mise_toolchain.py\n M src/flext_infra/_models/promoted.py\n M src/flext_infra/_utilities/_docs_generate_sources.py\n M src/flext_infra/_utilities/_mypy_supervisor.py\n M src/flext_infra/_utilities/class_nesting_cst.py\n M src/flext_infra/_utilities/docs_contract.py\n M src/flext_infra/_utilities/private_import_cst.py\n M src/flext_infra/_utilities/private_import_facades.py\n M src/flext_infra/_utilities/project_discovery.py\n M src/flext_infra/_utilities/project_managed_artifacts.py\n M src/flext_infra/_utilities/pyproject_conform.py\n M src/flext_infra/_utilities/qualified_names.py\n M src/flext_infra/_utilities/rope_analysis.py\nM  src/flext_infra/codegen/_codegen_generation_paths.py\n M src/flext_infra/codegen/_codegen_generation_standard.py\n M src/flext_infra/codegen/_mise_artifacts_candidates.py\n M src/flext_infra/codegen/_mise_artifacts_files.py\n M src/flext_infra/codegen/_mise_artifacts_journal.py\n M src/flext_infra/codegen/_mise_artifacts_recovery.py\n M src/flext_infra/codegen/_mise_artifacts_staging.py\n M src/flext_infra/codegen/_mise_artifacts_state.py\n M src/flext_infra/codegen/_mise_artifacts_verification.py\nM  src/flext_infra/codegen/_pipeline_stages.py\n M src/flext_infra/codegen/codegen_transaction.py\n M src/flext_infra/codegen/conform.py\n M src/flext_infra/codegen/constants_quality_gate.py\n M src/flext_infra/codegen/mise_artifacts_workspace.py\n M src/flext_infra/codegen/project_new.py\n M src/flext_infra/codemod/batch_apply.py\n M src/flext_infra/detectors/consumer_import_violations_detector.py\n M src/flext_infra/gates/codemod.py\n M src/flext_infra/gates/runtime_census.py\n M src/flext_infra/promoted/__init__.py\n M src/flext_infra/promoted/headers.py\n M src/flext_infra/refactor/classvar_constant_autofix.py\n M src/flext_infra/refactor/declarative_enforcement.py\n M src/flext_infra/release/_orchestrator_dispatch.py\n M src/flext_infra/release/_release_artifact_build.py\n M src/flext_infra/release/_release_artifact_persistence.py\n M src/flext_infra/services/_codegen/vscode.py\n M src/flext_infra/templates/project/base/Makefile.j2\n M src/flext_infra/transformers/typing_unifier.py\n M src/flext_infra/validate/_pytest_runner/command.py\n M src/flext_infra/validate/runtime_census.py\nMM src/flext_infra/validate/tier_whitelist.py\n M src/flext_infra/workspace/_orchestrator_execution.py\n M src/flext_infra/workspace/detector.py\n M tests/constants.py\n M tests/constants_scan.py\n M tests/unit/_utilities/test_rope_structure.py\n M tests/unit/check/extended_gate_bandit_markdown_tests.py\n M tests/unit/check/extended_models_tests.py\n M tests/unit/check/extended_run_projects_tests.py\n M tests/unit/codegen/_support.py\n M tests/unit/codegen/consolidator_tests.py\n M tests/unit/codegen/docs_workflow_profile_tests.py\n M tests/unit/codegen/init_tests.py\n M tests/unit/codegen/layout_make_root_tests.py\n M tests/unit/codegen/lazy_init_helpers_tests.py\n M tests/unit/codegen/lazy_init_registry_wrapper_tests.py\n M tests/unit/codegen/lazy_init_runtime_tests.py\n M tests/unit/codegen/lazy_init_service_tests.py\n M tests/unit/codegen/main_tests.py\n M tests/unit/codegen/submodule_recipe_shell_tests.py\n M tests/unit/codegen/test_ci_checkout_mode_normalization.py\n M tests/unit/codegen/test_ci_integration_branch_triggers.py\n M tests/unit/codegen/test_ci_system_packages.py\n M tests/unit/codegen/test_codegen_catalog_extensions.py\n M tests/unit/codegen/test_codegen_conform.py\n M tests/unit/codegen/test_codegen_conform_no_transaction_worktrees.py\n M tests/unit/codegen/test_codegen_make_environment.py\n M tests/unit/codegen/test_codegen_mise_artifacts.py\n M tests/unit/codegen/test_codegen_pyproject_conform.py\n M tests/unit/codegen/test_codegen_render_purity_golden.py\n M tests/unit/codegen/test_codegen_repository_root_fanout.py\n M tests/unit/codegen/test_codegen_setup_submodules.py\n M tests/unit/codegen/test_codegen_version_file.py\n M tests/unit/codegen/test_gen_respects_invocation_scope.py\n M tests/unit/codegen/test_managed_maintenance_headers.py\n M tests/unit/codegen/test_mise_runtime_storage.py\n M tests/unit/codegen/test_setup_never_destroys.py\n M tests/unit/codegen/test_template_formatter_fixed_point.py\n M tests/unit/codegen/test_workspace_root_setup_submodules.py\n M tests/unit/codegen/toolchain_beads_distribution_tests.py\n M tests/unit/codegen/toolchain_go_backend_tests.py\n M tests/unit/codegen/toolchain_requirement_tests.py\n M tests/unit/codegen/transaction_directory_journal_tests.py\n M tests/unit/codegen/workflow_orphan_guard_tests.py\n M tests/unit/codemod/test_mod_circuit.py\n M tests/unit/codemod/test_private_import_cutover.py\n M tests/unit/deps/extra_paths_support.py\n M tests/unit/deps/test_detection_deptry.py\n M tests/unit/deps/test_detection_discover.py\n M tests/unit/deps/test_detection_pip_check.py\n M tests/unit/deps/test_detection_typings.py\n M tests/unit/deps/test_extra_paths_path_purity.py\n M tests/unit/deps/test_modernizer_packaging.py\n M tests/unit/deps/test_project_gitignore_patterns.py\n M tests/unit/deps/test_ruff_blanket_mask_is_unrepresentable.py\n M tests/unit/detectors/test_cyclic_import_detector.py\n M tests/unit/detectors/test_deferred_self_reference_ast.py\n M tests/unit/detectors/test_loose_object_detector.py\n M tests/unit/detectors/test_loose_object_detector_characterization.py\n M tests/unit/detectors/test_loose_test_function_detector.py\n M tests/unit/docs/builder_tests.py\n M tests/unit/docs/main_entry_tests.py\n M tests/unit/docs/workspace_manifest_tests.py\nM  tests/unit/gates/index_declarations_gate_tests.py\n M tests/unit/gates/tier_whitelist_gate_tests.py\n M tests/unit/promoted/test_apply_contract.py\n M tests/unit/promoted/test_process_boundary.py\n M tests/unit/refactor/test_declarative_enforcement.py\n M tests/unit/refactor/test_infra_refactor_census_preview_cache.py\n M tests/unit/refactor/test_infra_refactor_namespace_aliases.py\n M tests/unit/refactor/test_infra_refactor_namespace_enforcer.py\n M tests/unit/refactor/test_infra_refactor_namespace_moves.py\n M tests/unit/refactor/test_infra_refactor_typing_unifier.py\n M tests/unit/refactor/test_main_cli.py\n M tests/unit/release/artifact_boundary_tests.py\n M tests/unit/release/dependency_order_tests.py\n M tests/unit/release/orchestrator_publish_tests.py\n M tests/unit/release/protocol_tests.py\n M tests/unit/test_custom_handler_policy_is_profile_aware.py\n M tests/unit/test_custom_make_surface_is_derived.py\n M tests/unit/test_custom_surface_never_shadows_public_verbs.py\n M tests/unit/test_infra_maintenance_main.py\n M tests/unit/test_infra_rope_service.py\n M tests/unit/test_infra_versioning.py\n M tests/unit/test_make_parse_is_side_effect_free.py\n M tests/unit/test_repository_baseline_branch.py\n M tests/unit/test_root_makefile_single_owner.py\n M tests/unit/transformers/test_infra_transformer_cast_remover.py\n M tests/unit/transformers/test_infra_transformer_enforcement_fixers.py\n M tests/unit/transformers/test_infra_transformer_mro_remover.py\n M tests/unit/transformers/test_infra_transformer_pydantic_modernizer.py\n M tests/unit/transformers/test_infra_transformer_typing_dict.py\n M tests/unit/validate/import_cycles_tests.py\n M tests/unit/validate/pytest_runner_public_tests.py\n M tests/unit/validate/silent_failure_tests.py\n M tests/unit/validate/test_import_dag_tests.py\n M tests/unit/validate/tier_whitelist_tests.py\n M tests/unit/workspace/test_environment_provenance.py\n M tests/unit/workspace/test_flext_worktree_binding.py\n M tests/unit/workspace/test_git_remote_identity.py\n M tests/unit/workspace/test_lane_owns_an_isolated_environment.py\n M tests/unit/workspace/test_main.py\n M tests/unit/workspace/test_mise_distribution_policy.py\n M tests/unit/workspace/test_repository_local_topology.py\n M tests/unit/workspace/test_workspace_member_ledger_identity.py\n M tests/unit/workspace/test_worktree_add_contract.py\n M tests/unit/workspace/test_worktree_add_is_unprovisioned.py\n M tests/unit/workspace/test_worktree_attached_repository.py\n M tests/unit/workspace/test_worktree_paths.py\n M tests/unit/workspace/test_worktree_provisioning_gitlinks.py\n M tests/unit/workspace/test_worktree_removal.py\n M tests/unit/workspace/test_worktree_security_boundaries.py\n M tests/unit/workspace/test_worktree_topology.py\n M tests/unit/workspace/worktree_fixture.py\n M tests/utilities_codegen.py\n M tests/utilities_fixture_docs.py\n M tests/utilities_fixture_workspace.py\n M tests/utilities_gates.py\n M tests/utilities_toml.py\n M tests/utilities_workspace_env.py\n?? src/flext_infra/_models/codegen_toolchain.py\n?? tests/unit/codegen/conform_support.py\n?? tests/unit/codegen/test_codegen_make_contracts.py\n?? tests/unit/codegen/test_codegen_script_dispatch.py\n?? tests/unit/gates/runtime_census_gate_tests.py",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "a254c1f3f3e3491a5eea34c6a088c7285e454ca6",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-ldap",
+      "observed_utc": "2026-09-14T21:45:41.918296+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-ldap\n * branch              0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-ldap",
+        "head": {
+          "exit": 0,
+          "stdout": "b81063793984b39669c7a796809ebe85db96b6f4",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile\n M pyproject.toml",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-ldap",
+        "head": {
+          "exit": 0,
+          "stdout": "79d451e8980158ba0881d32b4ce9eed7879e84d6",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "79d451e8980158ba0881d32b4ce9eed7879e84d6",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-ldif",
+      "observed_utc": "2026-09-14T21:45:42.729136+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-ldif\n * branch              0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-ldif",
+        "head": {
+          "exit": 0,
+          "stdout": "2f88eab7d9c969b05c54699ee30d5a9f3debd37b",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-ldif",
+        "head": {
+          "exit": 0,
+          "stdout": "048dc613c902b5ed4efa008607b51e61611525f4",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "048dc613c902b5ed4efa008607b51e61611525f4",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-meltano",
+      "observed_utc": "2026-09-14T21:45:43.588922+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-meltano\n * branch              0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-meltano",
+        "head": {
+          "exit": 0,
+          "stdout": "e72643c7c797621398f9850280fb819e269b91f5",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-meltano",
+        "head": {
+          "exit": 0,
+          "stdout": "cd99926a3637f91931719a2bf26a544dc45d2834",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "cd99926a3637f91931719a2bf26a544dc45d2834",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-observability",
+      "observed_utc": "2026-09-14T21:45:44.461551+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-observability\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-observability",
+        "head": {
+          "exit": 0,
+          "stdout": "04a39f05868f0819ee77840a5b45db83e5b3d589",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-observability",
+        "head": {
+          "exit": 0,
+          "stdout": "08cd0df50987fde10ffbd9b270383b2ac3d2f8b0",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "08cd0df50987fde10ffbd9b270383b2ac3d2f8b0",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-oracle-oic",
+      "observed_utc": "2026-09-14T21:45:45.247419+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-oracle-oic\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-oracle-oic",
+        "head": {
+          "exit": 0,
+          "stdout": "f19465a300837be3b7669f9715738711c3515699",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-oracle-oic",
+        "head": {
+          "exit": 0,
+          "stdout": "a2c8af20cc73715c9b45fb66f4c4297263536864",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "a2c8af20cc73715c9b45fb66f4c4297263536864",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-oracle-wms",
+      "observed_utc": "2026-09-14T21:45:45.996537+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-oracle-wms\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-oracle-wms",
+        "head": {
+          "exit": 0,
+          "stdout": "45976a91f72ca2e153e472f0de92c7fe5ab5962e",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-oracle-wms",
+        "head": {
+          "exit": 0,
+          "stdout": "64e0c9117ee1f96d5b550ebb623b429329a7a40e",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "64e0c9117ee1f96d5b550ebb623b429329a7a40e",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-plugin",
+      "observed_utc": "2026-09-14T21:45:46.693269+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-plugin\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-plugin",
+        "head": {
+          "exit": 0,
+          "stdout": "56161b849d6645293c1e1a11126ee493b6aabf02",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-plugin",
+        "head": {
+          "exit": 0,
+          "stdout": "8b5685f57a12bac2c31261719fed531d3901c185",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "8b5685f57a12bac2c31261719fed531d3901c185",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-quality",
+      "observed_utc": "2026-09-14T21:45:47.373494+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-quality\n * branch              0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-quality",
+        "head": {
+          "exit": 0,
+          "stdout": "fac3c6fe82e8fa0b12fc0fa3d65ad2020cd40d33",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-quality",
+        "head": {
+          "exit": 0,
+          "stdout": "0edef2c0dee4b3b1111ba71678708c10849c972c",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "0edef2c0dee4b3b1111ba71678708c10849c972c",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-tap-ldap",
+      "observed_utc": "2026-09-14T21:45:48.094478+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-tap-ldap\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-ldap",
+        "head": {
+          "exit": 0,
+          "stdout": "1f4a4812165fc03653072728f135196ab6868526",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-tap-ldap",
+        "head": {
+          "exit": 0,
+          "stdout": "0a3ff6d223570f7696055ab0db58ee27e6b31f32",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "0a3ff6d223570f7696055ab0db58ee27e6b31f32",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-tap-ldif",
+      "observed_utc": "2026-09-14T21:45:48.772099+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-tap-ldif\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-ldif",
+        "head": {
+          "exit": 0,
+          "stdout": "44403d4c42ad63c58dd66155b4bb77c8aee5b45d",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-tap-ldif",
+        "head": {
+          "exit": 0,
+          "stdout": "887e5f1916ee5dc6b9acefa4dd42c234ff49f947",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "887e5f1916ee5dc6b9acefa4dd42c234ff49f947",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-tap-oracle",
+      "observed_utc": "2026-09-14T21:45:49.569908+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-tap-oracle\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-oracle",
+        "head": {
+          "exit": 0,
+          "stdout": "00c93e428bbb5253b65c4b4df6b0fd67eabf64ec",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-tap-oracle",
+        "head": {
+          "exit": 0,
+          "stdout": "8cb6a9ce00b710fb01e8d23cd72d68de6b31d461",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "8cb6a9ce00b710fb01e8d23cd72d68de6b31d461",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-tap-oracle-oic",
+      "observed_utc": "2026-09-14T21:45:50.271935+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-tap-oracle-oic\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-oracle-oic",
+        "head": {
+          "exit": 0,
+          "stdout": "9e7d68c7657edb334a9c35be577536244b8f9b03",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-tap-oracle-oic",
+        "head": {
+          "exit": 0,
+          "stdout": "0912536ace213246d107e81fe74336e6c84d0d60",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "0912536ace213246d107e81fe74336e6c84d0d60",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-tap-oracle-wms",
+      "observed_utc": "2026-09-14T21:45:50.990104+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-tap-oracle-wms\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-oracle-wms",
+        "head": {
+          "exit": 0,
+          "stdout": "83acc0a38f822408f269705a782ce38cc0fcb2f0",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-tap-oracle-wms",
+        "head": {
+          "exit": 0,
+          "stdout": "f5aff85f7f78d7340280bd2066a55f1dfcc03db6",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "f5aff85f7f78d7340280bd2066a55f1dfcc03db6",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-target-ldap",
+      "observed_utc": "2026-09-14T21:45:51.686388+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-target-ldap\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-ldap",
+        "head": {
+          "exit": 0,
+          "stdout": "579dd2b6a89b9ba6517470ad310df740f67b0df2",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-target-ldap",
+        "head": {
+          "exit": 0,
+          "stdout": "8ae57d9380f58c63fd0652ede77574ee59cf268d",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "8ae57d9380f58c63fd0652ede77574ee59cf268d",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-target-ldif",
+      "observed_utc": "2026-09-14T21:45:52.406144+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-target-ldif\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-ldif",
+        "head": {
+          "exit": 0,
+          "stdout": "ad62b743c1206767fc557f70e16182b7a6176316",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-target-ldif",
+        "head": {
+          "exit": 0,
+          "stdout": "da46bb49837da02ae573b5d751e9c94b05716ad6",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "da46bb49837da02ae573b5d751e9c94b05716ad6",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-target-oracle",
+      "observed_utc": "2026-09-14T21:45:53.126860+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-target-oracle\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-oracle",
+        "head": {
+          "exit": 0,
+          "stdout": "ce0a40ba5309ad59d2d4e65a4e0c22ac8675c1be",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-target-oracle",
+        "head": {
+          "exit": 0,
+          "stdout": "0aebdd01934bfabb540e2ef78fa91cba7d135f69",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "0aebdd01934bfabb540e2ef78fa91cba7d135f69",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-target-oracle-oic",
+      "observed_utc": "2026-09-14T21:45:53.840753+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-target-oracle-oic\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-oracle-oic",
+        "head": {
+          "exit": 0,
+          "stdout": "c2007df089b599cee04f2454d13e033571aaa9aa",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-target-oracle-oic",
+        "head": {
+          "exit": 0,
+          "stdout": "6e2bfc9155435e4ae46d0f7b64d8f4bc51a7c999",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "6e2bfc9155435e4ae46d0f7b64d8f4bc51a7c999",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-target-oracle-wms",
+      "observed_utc": "2026-09-14T21:45:54.566114+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-target-oracle-wms\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-oracle-wms",
+        "head": {
+          "exit": 0,
+          "stdout": "e84bbab1bd49b9e5428386aebc9e16f18ce63ed6",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-target-oracle-wms",
+        "head": {
+          "exit": 0,
+          "stdout": "95a3cfe432a466fb058abca43a5f7853a738626e",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "95a3cfe432a466fb058abca43a5f7853a738626e",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-tests",
+      "observed_utc": "2026-09-14T21:45:55.285119+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-tests\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tests",
+        "head": {
+          "exit": 0,
+          "stdout": "5f563be9a6b259451fd67c0867a1f582fcad6d13",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-tests",
+        "head": {
+          "exit": 0,
+          "stdout": "1e0bb2b334943c8299ffb6ad1258522ce2fd6ce9",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "1e0bb2b334943c8299ffb6ad1258522ce2fd6ce9",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "project": "flext-web",
+      "observed_utc": "2026-09-14T21:45:56.014559+00:00",
+      "fetch": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/flext-sh/flext-web\n * branch            0.12.0-dev -> FETCH_HEAD"
+      },
+      "lane": {
+        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-web",
+        "head": {
+          "exit": 0,
+          "stdout": "40a70dd1e52e06a49db102932f113b2956608d85",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "bugfix/absorb-checkout-20260914",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "M .gitignore\n M Makefile",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "primary": {
+        "cwd": "/home/marlonsc/flext/flext-web",
+        "head": {
+          "exit": 0,
+          "stdout": "0e816775baa38929feb6a6bb78ab1c300d13a014",
+          "stderr": ""
+        },
+        "branch": {
+          "exit": 0,
+          "stdout": "0.12.0-dev",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "merge_head": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "lane_base": {
+        "exit": 0,
+        "stdout": "0e816775baa38929feb6a6bb78ab1c300d13a014",
+        "stderr": ""
+      },
+      "base_in_lane": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "lane_in_base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    }
+  ]
+}

@@ -25,7 +25,7 @@ dependencies = [
   "pydantic>=2.13.5",
   "pydantic-settings>=2.15.0",
   "pyyaml>=6.0.3",
-  "structlog>=25.5.0,<26",
+  "structlog>=25.5.0,<27",
   "typing-extensions>=4.16.0",
 ]
 description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
@@ -45,10 +45,10 @@ email = "team@flext.sh"
 name = "FLEXT Team"
 
 [project.scripts]
-flext = "flext.workspace:main"
-flext-dev = "flext.dev:main"
-flext-docs = "flext.docs:main"
-flext-workspace = "flext.workspace:main"
+flext = "flext.workspace:FlextRootWorkspace.main"
+flext-dev = "flext.dev:FlextRootDev.main"
+flext-docs = "flext.docs:FlextRootDocs.main"
+flext-workspace = "flext.workspace:FlextRootWorkspace.main"
 
 [project.urls]
 Documentation = "https://docs.flext.sh"
@@ -84,6 +84,7 @@ dev = [
   "pytest-cov",
   "pytest-markdown-docs",
   "pytest-randomly>=4.1.0",
+  "pytest-reportlog",
   "pytest-testmon>=2.2.0",
   "pytest-timeout",
   "pytest-xdist",
@@ -469,14 +470,18 @@ markers = [
   "smoke: public-interface smoke tests",
   "unit: unit tests",
   "integration: integration tests",
+  "functional: functional behavior tests",
   "performance: performance and benchmark tests",
   "slow: slow-running tests",
   "docker: tests requiring Docker",
+  "oracle: tests requiring the shared Oracle database",
   "remote: tests requiring remote/external network services",
   "e2e: end-to-end integration tests",
   "edge_cases: edge case tests",
   "stress: stress tests",
   "resilience: resilience tests",
+  "discovery: catalog and stream discovery tests",
+  "singer: Singer protocol contract tests",
 ]
 minversion = "8.0"
 python_classes = ["Test*"]

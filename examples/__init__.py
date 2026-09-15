@@ -11,19 +11,9 @@ from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 if TYPE_CHECKING:
     from flext import c, d, e, h, m, p, r, s, t, u, x
 
-    from ._constants import (
-        ExamplesPermission,
-        ExamplesServerType,
-        ExamplesStage,
-        ExamplesWorkflowStage,
-        FlextRootExamplesConstants,
-    )
+    from ._constants import FlextRootExamplesConstants
     from ._models import FlextRootExamplesModels, ValidationRules
 __all__: tuple[str, ...] = (
-    "ExamplesPermission",
-    "ExamplesServerType",
-    "ExamplesStage",
-    "ExamplesWorkflowStage",
     "FlextRootExamplesConstants",
     "FlextRootExamplesModels",
     "ValidationRules",
@@ -43,13 +33,7 @@ __all__: tuple[str, ...] = (
 _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
-            "._constants": (
-                "ExamplesPermission",
-                "ExamplesServerType",
-                "ExamplesStage",
-                "ExamplesWorkflowStage",
-                "FlextRootExamplesConstants",
-            ),
+            "._constants": ("FlextRootExamplesConstants",),
             "._models": ("FlextRootExamplesModels", "ValidationRules"),
             "flext": ("c", "d", "e", "h", "m", "p", "r", "s", "t", "u", "x"),
         }),
