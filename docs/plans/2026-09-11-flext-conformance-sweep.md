@@ -31,7 +31,7 @@
 | Item | Evidência |
 |---|---|
 | Rollup ×2 | PRs flext **#215** `9a73d0f8` e **#216** `c4f9fb1b` (ambas MERGED) |
-| 8 guias sem `APPLY=Y` legado | doc gates do gen verdes pós-saneamento |
+| 8 guias sem legado | doc gates do gen verdes pós-saneamento |
 | `make gen` umbrella | **VERDE** + ponto fixo (colisão "guia protegida" era transitória — iteração de worktree do ator) |
 
 ### 1.3 Onda do ator (absorvida)
@@ -40,7 +40,7 @@
 |---|---|
 | Descarte wip `7a5e2e1e8`, cherry-pick `6261a1806` | registro predecessor (Deliverable 1) |
 | Zero-variable APPLY: 12 templates/testes + macro `_require_apply` (checa `(APPLY),N`) | commits infra `3000b6bc0`, flext `4159c877b4`/`396b359a1e` |
-| Law 13 — CI steps com `APPLY=Y` | infra `bff592284` |
+| Law 13 — CI steps com | infra `bff592284` |
 | Bead `flext-uw305` | CLOSED nesta revisão (fix upstream PR #674 `573eb3746`) |
 
 ### 1.4 Codificação durável e higiene (esta revisão)
@@ -56,12 +56,12 @@
 | # | Falha | Gravidade | Contramedida aplicada | Pendência |
 |---|---|---|---|---|
 | A1 | **Pousei PRs #673/#215/#216 com CI `UNSTABLE`** (checks pending) sob autorização admin — sem rerun pós-merge completo dos gates no SHA mesclado | Alta | rerun parcial: gen verde no umbrella + grep raiz | **executar `make check`/`make test` no SHA merged** antes de nova onda (`D2`) |
-| A2 | **`sed s/APPLY=Y//g` em 8 docs** — bulk sem leitura individual; risco de frase quebrada (ex.: parágrafos explicativos sobre o flag antigo podem ter virado texto órfão) | Média | gates de docs do gen passaram; porém é edição manual em superfície é fonte (docs/guides são fonte legítima, não geradas) | revisão humana dos 8 diffs no próximo PR (2.1.6); padrão futuro: ast-grep/`make mod` com leitura prévia |
+| A2 | **`sed s///g` em 8 docs** — bulk sem leitura individual; risco de frase quebrada (ex.: parágrafos explicativos sobre o flag antigo podem ter virado texto órfão) | Média | gates de docs do gen passaram; porém é edição manual em superfície é fonte (docs/guides são fonte legítima, não geradas) | revisão humana dos 8 diffs no próximo PR (2.1.6); padrão futuro: ast-grep/`make mod` com leitura prévia |
 | A3 | **Fechei `flext-tldqe` quando `make gen` ainda vermelho** (skew `requires_apply`) — a evidência "0 regrowth em ciclos de gen" era verdadeira para o escritor, mas o enunciado podia sugerir gen verde | Média | fechamento agora cita escopo exato: escritor ausente ≠ pipeline verde | regra codificada na skill (§7): fechamento cita gates do escopo exato no momento do fechamento |
 | A4 | **Zero alinhamento proativo com o ator** (gc mail) — descobri 3 movimentações de tip tardiamente, gerei 2 rollups de gitlink que poderiam ser 1 | Média | lição registrada; nas próximas lanes: mensagem de frota antes, absorb origin a cada material-step | incluir "fleet ping" no checklist da skill |
 | A5 | **Commits de `docs/plans` direto na integração `0.12.0-dev`** (`135de0efae`, `c7308e6791`) — seguindo padrão do predecessor sem questionar | Baixo-médio | documento vivente tem natureza de bookkeeping, mas lei exige branch de mudança | **decisão pendente do operador**: (a) autorizar exceção formal p/ planos vivos, ou (b) fluxo PR-only; enquanto isso, acumular e emitir via PR |
 | A6 | Plano anterior rotulou vermelhos de check como "amarelo aceitável" — **RED é RED**; não criar bead para cada classe foi informalidade | Alto (corrigido) | esta revisão itemiza cada classe com bead/dono (§5) | — |
-| A7 | **Grep heurístico para "spalhamento do fix"** em membro (literal `APPLY=N` não casa com `$(APPLY),N`) — quase declarei conclusão errada | Médio | desmentido no mesmo passo; prova correta é gen ×2 ponto fixo por membro (§2) | registrar na skill: "grep literal não prova macro Make" |
+| A7 | **Grep heurístico para "spalhamento do fix"** em membro (literal não casa com `$(APPLY),N`) — quase declarei conclusão errada | Médio | desmentido no mesmo passo; prova correta é gen ×2 ponto fixo por membro (§2) | registrar na skill: "grep literal não prova macro Make" |
 | A8 | Verifiquei "0 regrowth" em CICLOS de gen que **falharam** — válido para o escritor, inválido como prova do pipeline | Médio | revisão v2 separa as duas afirmações explicitamente | — |
 | A9 | Monopólio sobre "conformidade" mostrou limite real: reds estruturais são reformas do ator em voo — lane `z82dg-nsloc`** — respeitei, mas o plano anterior não explicava o custo (check/test vermelhos indefinidamente) | Informativo | §2.2 explicita dependência e gatilho de absorção | — |
 
