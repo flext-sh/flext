@@ -742,6 +742,15 @@ _activated-mod: _builtin_require_environment
 	$(call RUN_PUBLIC,mod)
 
 
+ast:
+	+@direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-ast
+
+.PHONY: _activated-ast
+_activated-ast: _builtin_require_environment
+
+	$(call RUN_PUBLIC,ast)
+
+
 waza:
 	+@direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-waza
 
@@ -1175,6 +1184,11 @@ _builtin_gen_all:
 _builtin_mod_apply: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) refactor mod --apply
 
+# The ast engine verb reports both mechanical cascades (ast-grep rules and
+# sed-by-list) from the rules tree; applying them stays scoped to the engine.
+_builtin_ast_apply: _builtin_require_environment
+	@$(PROJECT_FLEXT_INFRA) refactor ast
+
 # Selector-free public verbs map one-to-one to their canonical implementation;
 # each implementation owns one fixed operation.
 _builtin-deps: _builtin_deps_upgrade
@@ -1198,6 +1212,7 @@ _builtin-publication: _builtin_release_publish
 _builtin-gen: _builtin_gen_all
 _builtin-initialize: _builtin_gen_init
 _builtin-mod: _builtin_mod_apply
+_builtin-ast: _builtin_ast_apply
 _builtin-waza:
 	@cd "$(PROJECT_ROOT)" && "$(SETUP_MISE)" exec -- waza check --no-update-check
 _builtin-duplication:
