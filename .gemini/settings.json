@@ -7,7 +7,7 @@
         "code-review-graph",
         "serve"
       ],
-      "cwd": "/home/marlonsc/flext-worktrees/rope-modernize"
+      "cwd": "/home/marlonsc/flext"
     }
   },
   "hooks": {
