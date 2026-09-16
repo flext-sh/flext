@@ -1,11 +1,104 @@
 ---
 title: Critical audit and resumption contract
-updated_at: 2026-09-14T21:55:00Z
+updated_at: 2026-09-15T02:06:56Z
 source: Operator requests, repository owners, Beads, native command evidence
 work_item: flext-ro6mj.1
 ---
 
 # Verdict
+
+## Active resumption — 2026-09-15T02:06:56Z
+
+The operator requires fix-forward adoption of current work and freshly fetched
+integration tips across every repository. Correct runtime behavior defines
+acceptance; tests verify that behavior. `make setup` must authorize direnv and
+operational Make verbs must activate it automatically.
+
+The current first red remains FLEXT environment activation. In this worktree,
+bare `make setup` exited 2 because UV rejected Infra's nested workspace table.
+The subsequent `direnv exec . make gen` exited 2 with `atomic source changed`
+after source edits overlapped generation; that run is not accepted. Finish all
+edits before the next exclusive generation, then repeat the real setup.
+
+Infra now contains integration tip `ee9e5e018` through merge `d6b773f8b`;
+CLI contains its refreshed integration tip through `ce1a291b`. The latest fetch
+of the root and all 31 members succeeded. Automatic direnv Make dispatch and
+composed Beads activation are source changes awaiting regenerated runtime proof.
+Beads service publication exists; the failure is activation selecting embedded
+mode, not evidence that the canonical service is unavailable.
+
+Agents producer `cfd84f8` passed native check, full tests and installed artifact
+runtime, and was integrated externally. AI Hub's current installed producer and
+lock both identify descendant `f3001e5`; consumer functional validation remains
+pending. The execution Bead remains `flext-ro6mj.1`, in progress. No collector
+round trip or corpus completion is claimed.
+
+## Current handoff — 2026-09-14T22:57:00Z
+
+The operator requested this handoff now, with integrated and operational PRs.
+That acceptance condition is **not satisfied**. This document delivers the
+current evidence and recovery context, not an integration-completion claim.
+The orchestration failure was continuing to expand stabilization without
+delivering the requested handoff directly and keeping its opening current.
+
+The execution owner is `flext-ro6mj.1` (in progress), under `flext-ro6mj`
+(open). The [plan](../2026-09-14-plan-reconciliation.md) and
+[context index](00-index.md) remain the navigation entrypoints. No substitute
+tracker is created here.
+
+### Published versus integrated
+
+- FLEXT root WIP snapshot `5fe704eaae217ae8a93279fe06e80edf666640c4`
+  is published in [PR 242](https://github.com/flext-sh/flext/pull/242).
+  Later root documentation and generated changes are not covered by that SHA.
+- All 31 member integration bases were fetched and absorbed with no-ff merges;
+  their resulting branch heads were pushed successfully. This proves branch
+  publication, **not** that their PRs have landed in integration.
+- Infra [PR 733](https://github.com/flext-sh/flext-infra/pull/733),
+  CLI [PR 169](https://github.com/flext-sh/flext-cli/pull/169),
+  Core [PR 475](https://github.com/flext-sh/flext-core/pull/475), and
+  Tests [PR 111](https://github.com/flext-sh/flext-tests/pull/111)
+  are WIP publication references, not runtime acceptance receipts.
+- Agents [PR 148](https://github.com/datacosmos-br/agents/pull/148)
+  was observed merged by another execution. Its integration does not validate
+  subsequent dirty changes. AI Hub has a newer published WIP cut `77823582f`
+  in [PR 776](https://github.com/datacosmos-br/ai-hub/pull/776).
+
+### Latest bounded evidence and first failures
+
+| Owner / working directory | Command and result | Meaning / next action |
+| --- | --- | --- |
+| FLEXT separate worktree `/home/marlonsc/flext-worktrees/plan-reconciliation` | `direnv exec . make status`, exit 0 | Environment/status only; not functional acceptance |
+| Same FLEXT worktree | Two `make test` runs interrupted with exit 130 after repeated import failures | First `types.TypeAliasType` imports corrected in authored Tests modules; next failure importing `m` remains to revalidate after generator composition |
+| Same FLEXT worktree | `direnv exec . make gen`, session 88479, still running at this cut | Conform/publication progressed; Rope indexed 4,179 modules. Wait for final exit before any claim or concurrent write |
+| `/home/marlonsc/agents` | `make check`, session 3023, worker reports exit 0 | Ruff/Pyright/Mypy, 132 semantic suites, fixed point and 242 packaged resources passed for that snapshot; later test changes invalidate freshness |
+| `/home/marlonsc/agents` | `make test-full` then native test rerun, worker reports exit 2; 14 passed before MCP timeout | Real stdio consumer times out after 10 seconds. Cold-cache hypothesis disproved; locate lifecycle failure without suppressing it |
+| `/home/marlonsc/ai-hub` | External native test report: 188 passed, 2 failed; session exit not owned here | Installed older producer lacks `SkillRecord.resources`; refreshed lock alone is not an installed-runtime proof |
+| `/home/marlonsc/ai-hub` | `direnv exec . make setup`, session 87449, running | Installs the already refreshed producer lock; then repeat native consumer tests |
+
+The operator clarified that Ruff, Pyrefly, Pyright and Mypy remain mandatory;
+the exception concerns other Infra custom Make checks. No functional collection,
+generation, transaction or publication failure is hidden under that exception.
+
+### Resume at the actual causal boundary
+
+Finish the active producer test failure, checkpoint its exact green source and
+publish/review it. Then validate the installed AI Hub consumer against that
+producer. Finish the active FLEXT generation and cold runtime test before
+continuing collector ingress/configuration. Do not hand-edit generated facades.
+The collector still lacks a demonstrated configured, real-plan round trip and
+complete provider/annex coverage; no corpus plan is semantically complete.
+
+Before final closure, refresh each PR's actual head/base/review/check state,
+land only eligible commits with merge commits, validate the merge SHAs through
+native runtime commands, roll up published member gitlinks, and record those
+receipts on the Bead. An open PR or a green producer test is not that proof.
+
+The handoff/context skills were amended at their canonical `agents` owner;
+AI Hub remains their publisher. These changes improve evidence freshness and
+navigation, but their existence does not demonstrate propagation to FLEXT.
+
+## Earlier audit, retained with corrections
 
 The requested outcome has not been delivered. Useful source changes and WIP
 checkpoints exist, but no demonstrated end-to-end cycle takes a real plan and
@@ -48,8 +141,9 @@ The operator progressively made these constraints explicit:
    use advanced Rope through the existing loop/callbacks and all consumers.
 8. After a serialization detour was authorized, the operator explicitly restored
    automation as priority. Preserve that WIP; do not treat it as the core outcome.
-9. Latest request pauses implementation for this critical handoff and requires
-   preserving and publishing current work as WIP with PRs, not merging it green.
+9. The earlier audit request required WIP publication. The subsequent request
+   additionally requires stabilization, reviewed integration and post-merge
+   runtime proof; the latest reminder requires delivering this handoff now.
 
 The approved storage choice is versioned FLEXT `docs/plans` plus automatic home
 projection, not a new home Git repository. Historical provider material is
@@ -115,12 +209,17 @@ cannot duplicate or revive an already adjudicated plan.
 
 ### Blocker: cross-repository contracts were changed out of landing order
 
-AI Hub now consumes `SkillRecord.resources`, while its dependency is still
+At the preservation snapshot, AI Hub consumed `SkillRecord.resources`, while its dependency was still
 `agents-governance` from `agents@dev`; the corresponding producer is on a WIP
 branch. Source agreement across two checkouts is not installed compatibility.
-Likewise, docs generation removed a request effect flag while the Make template
-still passes `mode=--apply` to mutable docs actions. Direct source inspection
-found that residue; no successful canonical invocation disproved the mismatch.
+The initial audit also suspected a docs-generation flag mismatch from the
+template alone. Correction, 2026-09-14T22:11:00Z: reading the actual owner
+`flext-infra/config/codegen.yaml: make.docs.mutable_actions` establishes `[fix]`.
+The template passes `--apply` to fix, not generate; that observation does not
+prove a generate mismatch. Preserve valid internal CLI contracts and validate
+the configured producer/consumer pair before alleging or changing incompatibility.
+This correction itself demonstrates why source-only pattern matching is not
+sufficient contract evidence.
 
 Correction: validate and integrate the producer, refresh consumers using native
 dependency/setup/generation paths, and validate installed artifacts before

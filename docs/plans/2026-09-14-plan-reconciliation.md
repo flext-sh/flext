@@ -1,6 +1,6 @@
 ---
 title: Plan reconciliation and fixed Make contracts
-source_updated_at: 2026-09-14T21:55:00Z
+source_updated_at: 2026-09-15T01:08:46Z
 source: Operator-approved conversation
 status: Approved
 work_item: flext-ro6mj
@@ -9,6 +9,24 @@ work_item: flext-ro6mj
 # Plan reconciliation and fixed Make contracts
 
 ## Audit and handoff amendment
+
+Operator amendment, recorded 2026-09-15T01:08:46Z: continue by adopting the
+current published tip and repairing forward. Existing integration is input to
+the continuation, not a reason to reconstruct history or request its reversal.
+Keep the active branch current. `make setup` must authorize the generated
+direnv environment and the public Make verbs must activate it automatically.
+Correct the setup/dispatch generator and prove the real activation, inherited
+hooks, and causal environment failures before resuming the collector work.
+
+Operator amendment, 2026-09-14T22:04:00Z: resume from the preserved WIP and
+stabilize the delivered runtime before the final handoff. Absorb each current
+development base with no-ff, correct unfinished owner/consumer contracts,
+integrate reviewed PRs and prove the runtime from the integration SHA. Update
+skills, guidance, docs and existing ADRs with reusable context and freshness
+boundaries so the next executor does not repeat established discovery. Ruff,
+Pyrefly, Pyright and Mypy remain required; the operator's exception for other
+Infra custom Make findings never establishes functional correctness or hides
+an unexecuted/failed check. Preserve the audit below as historical evidence.
 
 Operator amendment, 2026-09-14T21:55:00Z: pause implementation to investigate
 the requested outcome, critique actual execution, preserve all current work in
