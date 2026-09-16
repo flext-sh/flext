@@ -115,12 +115,12 @@ Each approval must be reconfirmed (do not extrapolate "already approved").
 
 ```bash
 export UV_PROJECT_ENVIRONMENT=$PWD/.venv VIRTUAL_ENV=$PWD/.venv
-make gen APPLY=Y    # config SSOT → projections
-make mod APPLY=Y    # ast-grep scoped (--module/--namespace) + Ruff + Pyrefly + LSP
-make fix APPLY=Y    # gate fixes
-make fmt APPLY=Y    # format gate
-make check APPLY=Y  # full gates
-make test APPLY=Y   # scoped tests with testmon
+make gen    # config SSOT → projections
+make mod    # ast-grep scoped (--module/--namespace) + Ruff + Pyrefly + LSP
+make fix    # gate fixes
+make fmt    # format gate
+make check  # full gates
+make test   # scoped tests with testmon
 code-review-graph build | update --brief | doctor | detect-changes | dead-code | impact
 ```
 (automated references in

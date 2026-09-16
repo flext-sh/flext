@@ -110,10 +110,10 @@ com verbos canônicos + commit `[WIP]` + push FF + nota na bead; só se para por
 
 ## Progresso 14/09 ~17:05Z (lane)
 
-- S0+S1 editados e validados com `APPLY=N` exportado (condição do shell do operador): `make gen` exit 0 (310
-  arquivos), 2ª `APPLY=N make gen` exit 0 com `mode=apply` e 0 publicados (ponto fixo); `APPLY=N make setup`
-  exit 0; `APPLY=N make fix` 32/32 passed (WARN só em flext-infra, flext-target-ldap, flext-tests);
-  `APPLY=N make fmt` 32/32 passed; `APPLY=N make check` em execução. Makefile raiz sem
+- S0+S1 editados e validados com exportado (condição do shell do operador): `make gen` exit 0 (310
+  arquivos), 2ª `make gen` exit 0 com `mode=apply` e 0 publicados (ponto fixo); `make setup`
+  exit 0; `make fix` 32/32 passed (WARN só em flext-infra, flext-target-ldap, flext-tests);
+  `make fmt` 32/32 passed; `make check` em execução. Makefile raiz sem
   `APPLY|CHECK_ONLY|PUBLIC_INPUTS|CHECK_CAPABLE|_builtin_gen_check`.
 - Docs-fonte: `make gen` falhou uma vez por `make conform` em `docs/guides/configuration.md` (contrato de verbos
   do gerador de docs funcionando); guias, standards, ADRs, AGENTS.md e skill corrigidos.
@@ -134,7 +134,7 @@ Retomada: `~/.claude/plans/happy-puzzling-flask-handoff.md` (tabela de estado + 
 - Super: merge `-s ours` de `c2dba374e0` (uv.lock/`--refresh` já no dono flext-infra; excludes aihub-hooks
   rejeitados) + `5806a67377` (31 gitlinks, `[project.scripts]` → `FlextRoot*.main`); PR #240 **aberto, sem merge**.
 - flext-infra: `[WIP] 95baa0c0d` S2 só templates (push feito, sem PR, sem regenerar/validar).
-- `APPLY=N make check` parado por ordem em 9/32: 0 tracebacks; PASS flext-api; FAIL por achados raiz, auth,
+- `make check` parado por ordem em 9/32: 0 tracebacks; PASS flext-api; FAIL por achados raiz, auth,
   cli, core (619), db-oracle, dbt-ldap, dbt-ldif, dbt-oracle. Execução completa 32/32 ainda devida.
 - Beads fechadas: `flext-xeg9x`, `flext-5mgye` (obsoletas por S1).
 - Pendente: merge #240 → propagar `~/flext` → S2 2ª metade (modelos/python/testes) → S2b → S3 → S4 → S5 → S6
@@ -180,13 +180,13 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/
 - Anti-regressão: `_constants/docs.py:133` `DOCS_APPLY_RE` → `\bAPPLY=` (rejeita qualquer valor);
   `tests/unit/docs/auditor_command_contract_tests.py` estendido.
 - Testes Make: `tests/unit/codegen/test_codegen_make_environment.py` (638-690, 845-872 e comentários) reescritos
-  para o contrato novo (APPLY=N ignorado, verbo aplica); `tests/constants.py:56` `APPLY`/`CHECK_ONLY` saem.
+  para o contrato novo (ignorado, verbo aplica); `tests/constants.py:56` `APPLY`/`CHECK_ONLY` saem.
 - Docs com `APPLY=`: `AGENTS.md:111`, `.agents/skills/flext-law/SKILL.md:98`, `docs/GOVERNANCE.md:95`,
   `docs/guides/make-commands.md:42`, `docs/guides/using-flext-tests.md:120`,
   `docs/architecture/arc42/12-glossary.md:68`, `docs/standards/consumption-law.md:123`,
   `docs/standards/development.md:77`, ADR-004 (65,86,92), ADR-010 (81), `flext-infra/docs/guides/{make-commands,
   using-flext-tests}.md`, `flext-infra/docs/index.md:49`. `flext-law-loop.sh.j2` `APPLY` local → `DO_APPLY`.
-- Prova: `make gen APPLY=N` aplica; `make check WHAT=xyz` falha no uso; grep `APPLY|CHECK_ONLY|check_mode` = 0
+- Prova: `make gen` aplica; `make check WHAT=xyz` falha no uso; grep `APPLY|CHECK_ONLY|check_mode` = 0
   em templates/config/src/tests/docs vivos; 32 Makefiles regenerados.
 
 ### S2 — Extermínio ai-hub/Gas City + beads identidade-apenas (flext-infra)
