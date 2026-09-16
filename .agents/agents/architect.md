@@ -12,7 +12,7 @@ permission:
     .plans/*.md: allow
     .opencode/plans/*.md: allow
   bash: deny
-  mcp: deny
+  mcp: allow
   question: allow
   plan_exit: allow
 ---

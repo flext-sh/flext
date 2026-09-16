@@ -1,13 +1,23 @@
 {
-	"servers": {
-		"serena": {
-			"type": "stdio",
-			"command": "serena",
-			"args": [
-				"start-mcp-server",
-				"--context=vscode",
-				"--project-from-cwd"
-			]
-		}
-	}
+  "servers": {
+    "serena": {
+      "type": "stdio",
+      "command": "serena",
+      "args": [
+        "start-mcp-server",
+        "--context=vscode",
+        "--project-from-cwd"
+      ]
+    },
+    "code-review-graph": {
+      "command": "uv",
+      "args": [
+        "run",
+        "code-review-graph",
+        "serve"
+      ],
+      "cwd": "/home/marlonsc/flext-worktrees/rope-modernize",
+      "type": "stdio"
+    }
+  }
 }

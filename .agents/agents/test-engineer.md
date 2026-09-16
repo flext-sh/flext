@@ -8,6 +8,8 @@ permission:
   read: allow
   edit:
     "*": deny
+    "*./testgs/*.": allow
+    "*.test.js": allow
     "*.test.js": allow
     "*.test.ts": allow
     "*.test.jsx": allow
@@ -17,7 +19,7 @@ permission:
     "*.spec.jsx": allow
     "*.spec.tsx": allow
   bash: allow
-  mcp: deny
+  mcp: allow
   question: allow
 ---
 

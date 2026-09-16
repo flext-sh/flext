@@ -8,7 +8,7 @@ permission:
   read: allow
   bash: allow
   edit: deny
-  mcp: deny
+  mcp: allow
   question: allow
 ---
 
