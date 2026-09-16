@@ -14,6 +14,10 @@ from __future__ import annotations
 from examples import m, t, u
 
 
+class FlextRootModels:
+    """FlextRoot models namespace."""
+
+
 class ValidationRules(m.BaseModel):
     """Validation rules for ACL processing examples.
 
