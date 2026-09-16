@@ -9,12 +9,20 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
+<<<<<<< HEAD
     from flext_tests import c, d, e, h, m, p, r, s, t, td, tf, tk, tm, tv, u, x
+=======
+    from flext_tests import c, d, e, h, m, p, s, t, td, tf, tk, tm, tv, u, x
+>>>>>>> origin/0.12.0-dev
 
     from .constants import TestsFlextRootConstants
     from .models import TestsFlextRootModels
     from .protocols import TestsFlextRootProtocols
+<<<<<<< HEAD
     from .result import TestsFlextRootResult
+=======
+    from .result import TestsFlextRootResult, r
+>>>>>>> origin/0.12.0-dev
     from .typings import TestsFlextRootTypes
 __all__: tuple[str, ...] = (
     "TestsFlextRootConstants",
@@ -46,7 +54,11 @@ _LAZY_IMPORTS = MappingProxyType(
             ".constants": ("TestsFlextRootConstants",),
             ".models": ("TestsFlextRootModels",),
             ".protocols": ("TestsFlextRootProtocols",),
+<<<<<<< HEAD
             ".result": ("TestsFlextRootResult",),
+=======
+            ".result": ("TestsFlextRootResult", "r"),
+>>>>>>> origin/0.12.0-dev
             ".typings": ("TestsFlextRootTypes",),
             "flext_tests": (
                 "c",
@@ -55,7 +67,10 @@ _LAZY_IMPORTS = MappingProxyType(
                 "h",
                 "m",
                 "p",
+<<<<<<< HEAD
                 "r",
+=======
+>>>>>>> origin/0.12.0-dev
                 "s",
                 "t",
                 "td",

@@ -266,7 +266,12 @@ project-excludes = [
   "typings/**",
   "vendor/**",
 ]
-project-includes = ["src/**/*.py*", "tests/**/*.py*"]
+project-includes = [
+  "examples/**/*.py*",
+  "scripts/**/*.py*",
+  "src/**/*.py*",
+  "tests/**/*.py*",
+]
 python-version = "3.13"
 search-path = ["src", "."]
 use-ignore-files = false
@@ -482,7 +487,6 @@ testpaths = ["tests"]
 exclude = [
   "**/.archive/**",
   "**/__pyrefly_virtual__/**",
-  "**/aihub-hooks/**",
   ".archive",
   ".archive/**",
   ".git",

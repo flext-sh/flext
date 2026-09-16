@@ -444,3 +444,11 @@ members:
 exclusions:
 
     []
+
+refactor:
+  project_scan_dirs:
+    - "src"
+    - "tests"
+    - "scripts"
+    - "examples"
+  file_extensions: []

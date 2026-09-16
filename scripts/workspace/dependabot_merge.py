@@ -11,6 +11,9 @@ Usage:
     python scripts/workspace/dependabot_merge.py --base main
     DRY_RUN=1 python scripts/workspace/dependabot_merge.py --base main
 
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
@@ -28,6 +31,7 @@ from flext_core import e
 
 
 class FlextRootDependabotMerge:
+<<<<<<< HEAD
     """FlextRoot dependabot merge namespace."""
 
     DEPENDABOT_AUTHOR = "dependabot[bot]"
@@ -45,6 +49,25 @@ class FlextRootDependabotMerge:
 
     _BASE_VALUE_REQUIRED = "--base requires a value"
     _WORKERS_VALUE_REQUIRED = "--workers requires a value"
+=======
+    """Dependabot merge orchestrator for the FLEXT workspace."""
+
+    DEPENDABOT_AUTHOR: str = "dependabot[bot]"
+    DEPENDABOT_TITLE_RE: t.RegexPattern = re.compile(
+        r"bump\s+(?P<package>.+?)\s+from\s+(?P<old>\S+)\s+to\s+(?P<new>\S+)\s*$",
+        re.IGNORECASE,
+    )
+    DEPENDABOT_GROUP_RE: t.RegexPattern = re.compile(
+        r"bump\s+(?:the\s+)?(?P<group>[\w\-]+)\s+group\s+.*\s+with\s+(?P<count>\d+)\s+updates?",
+        re.IGNORECASE,
+    )
+    MAX_WORKERS: int = 4
+    RETRIES_ON_CONFLICT: int = 2
+    PR_LIST_LIMIT: int = 100
+
+    _BASE_VALUE_REQUIRED: str = "--base requires a value"
+    _WORKERS_VALUE_REQUIRED: str = "--workers requires a value"
+>>>>>>> origin/0.12.0-dev
 
     class MergeOptions(m.Value):
         """Validated command-line options for the dependabot merge orchestrator."""
@@ -60,17 +83,30 @@ class FlextRootDependabotMerge:
 
     @staticmethod
     def _run_cmd(
+<<<<<<< HEAD
         cmd: list[str], *, cwd: Path | None = None
+=======
+        cmd: t.StrSequence, *, cwd: Path | None = None
+>>>>>>> origin/0.12.0-dev
     ) -> p.Result[p.Cli.CommandOutput]:
         """Run a subprocess command with closed stdin to avoid interactive prompts."""
         return u.Cli.run_raw(cmd, cwd=cwd, input_data="")
 
+<<<<<<< HEAD
     @staticmethod
     def discover_repos(root: Path) -> list[str]:
         """Read declared submodule paths from .gitmodules."""
         gitmodules = root / ".gitmodules"
         if not gitmodules.is_file():
             return []
+=======
+    @classmethod
+    def discover_repos(cls, root: Path) -> t.StrSequence:
+        """Read declared submodule paths from .gitmodules."""
+        gitmodules = root / ".gitmodules"
+        if not gitmodules.is_file():
+            return ()
+>>>>>>> origin/0.12.0-dev
         config = configparser.ConfigParser()
         config.read(gitmodules)
         paths: list[str] = []
@@ -79,6 +115,7 @@ class FlextRootDependabotMerge:
                 path = config.get(section, "path", fallback=None)
                 if path:
                     paths.append(path)
+<<<<<<< HEAD
         return paths
 
     @staticmethod
@@ -92,6 +129,14 @@ class FlextRootDependabotMerge:
             "get-url",
             "origin",
         ])
+=======
+        return tuple(paths)
+
+    @classmethod
+    def repo_slug_from_origin(cls, path: Path) -> str | None:
+        """Resolve owner/repo from a submodule's origin remote URL."""
+        result = cls._run_cmd(["git", "-C", str(path), "remote", "get-url", "origin"])
+>>>>>>> origin/0.12.0-dev
         if result.failure or result.value.exit_code != 0:
             return None
         url = result.value.stdout.strip()
@@ -112,10 +157,17 @@ class FlextRootDependabotMerge:
             "url": u.Cli.json_pick_str(row, "url"),
         }
 
+<<<<<<< HEAD
     @staticmethod
     def list_dependabot_prs(slug: str, base: str) -> list[t.JsonMapping]:
         """List open Dependabot PRs targeting the given base branch."""
         result = FlextRootDependabotMerge._run_cmd([
+=======
+    @classmethod
+    def list_dependabot_prs(cls, slug: str, base: str) -> t.SequenceOf[t.JsonMapping]:
+        """List open Dependabot PRs targeting the given base branch."""
+        result = cls._run_cmd([
+>>>>>>> origin/0.12.0-dev
             "gh",
             "pr",
             "list",
@@ -124,12 +176,17 @@ class FlextRootDependabotMerge:
             "--state",
             "open",
             "--author",
+<<<<<<< HEAD
             FlextRootDependabotMerge.DEPENDABOT_AUTHOR,
+=======
+            cls.DEPENDABOT_AUTHOR,
+>>>>>>> origin/0.12.0-dev
             "--base",
             base,
             "--json",
             "number,title,headRefName,url",
             "--limit",
+<<<<<<< HEAD
             str(FlextRootDependabotMerge.PR_LIST_LIMIT),
         ])
         if result.failure or result.value.exit_code != 0:
@@ -137,6 +194,15 @@ class FlextRootDependabotMerge:
         parsed = u.Cli.json_parse(result.value.stdout or "[]")
         rows = u.Cli.json_as_sequence(parsed.unwrap())
         return [FlextRootDependabotMerge._pr_row(row) for row in rows]
+=======
+            str(cls.PR_LIST_LIMIT),
+        ])
+        if result.failure or result.value.exit_code != 0:
+            return ()
+        parsed = u.Cli.json_parse(result.value.stdout or "[]")
+        rows = u.Cli.json_as_sequence(parsed.unwrap())
+        return tuple(cls._pr_row(row) for row in rows)
+>>>>>>> origin/0.12.0-dev
 
     @staticmethod
     def ecosystem_from_head_ref(head_ref: str) -> str:
@@ -147,17 +213,27 @@ class FlextRootDependabotMerge:
             return "pip"
         return "deps"
 
+<<<<<<< HEAD
     @staticmethod
     def standard_message(title: str, head_ref: str) -> str | None:
+=======
+    @classmethod
+    def standard_message(cls, title: str, head_ref: str) -> str | None:
+>>>>>>> origin/0.12.0-dev
         """Return a single, non-repeating conventional commit message.
 
         Supports single-package bumps and Dependabot grouped updates.
         """
+<<<<<<< HEAD
         single = FlextRootDependabotMerge.DEPENDABOT_TITLE_RE.search(title)
+=======
+        single = cls.DEPENDABOT_TITLE_RE.search(title)
+>>>>>>> origin/0.12.0-dev
         if single:
             package = single.group("package").strip()
             old = single.group("old").strip()
             new = single.group("new").strip()
+<<<<<<< HEAD
             eco = FlextRootDependabotMerge.ecosystem_from_head_ref(head_ref)
             return f"chore(deps): bump {package} {old} → {new} [{eco}]"
 
@@ -166,10 +242,21 @@ class FlextRootDependabotMerge:
             group_name = group.group("group").strip()
             count = group.group("count").strip()
             eco = FlextRootDependabotMerge.ecosystem_from_head_ref(head_ref)
+=======
+            eco = cls.ecosystem_from_head_ref(head_ref)
+            return f"chore(deps): bump {package} {old} → {new} [{eco}]"
+
+        group = cls.DEPENDABOT_GROUP_RE.search(title)
+        if group:
+            group_name = group.group("group").strip()
+            count = group.group("count").strip()
+            eco = cls.ecosystem_from_head_ref(head_ref)
+>>>>>>> origin/0.12.0-dev
             return f"chore(deps): bump {group_name} dependency group ({count} updates) [{eco}]"
 
         return None
 
+<<<<<<< HEAD
     @staticmethod
     def update_pr_branch(slug: str, number: int) -> bool:
         """Update a PR branch from its base (rebase/merge) to resolve conflicts."""
@@ -181,6 +268,12 @@ class FlextRootDependabotMerge:
             "-R",
             slug,
         ])
+=======
+    @classmethod
+    def update_pr_branch(cls, slug: str, number: int) -> bool:
+        """Update a PR branch from its base (rebase/merge) to resolve conflicts."""
+        result = cls._run_cmd(["gh", "pr", "update-branch", str(number), "-R", slug])
+>>>>>>> origin/0.12.0-dev
         if result.failure:
             error_msg = (
                 f"Failed to update PR branch {number} for {slug}: {result.error}"
@@ -192,6 +285,7 @@ class FlextRootDependabotMerge:
             )
         if result.value.exit_code == 0:
             return True
+<<<<<<< HEAD
         return "already up to date" in result.value.stderr.lower()
 
     @staticmethod
@@ -200,6 +294,17 @@ class FlextRootDependabotMerge:
         if dry_run:
             return True
         result = FlextRootDependabotMerge._run_cmd([
+=======
+        # update-branch may report "Already up to date"; treat as success.
+        return "already up to date" in result.value.stderr.lower()
+
+    @classmethod
+    def close_pr(cls, slug: str, number: int, *, dry_run: bool, reason: str) -> bool:
+        """Close a stale/conflicting Dependabot PR so it can be regenerated."""
+        if dry_run:
+            return True
+        result = cls._run_cmd([
+>>>>>>> origin/0.12.0-dev
             "gh",
             "pr",
             "close",
@@ -218,9 +323,20 @@ class FlextRootDependabotMerge:
             )
         return result.value.exit_code == 0
 
+<<<<<<< HEAD
     @staticmethod
     def merge_pr(
         slug: str, pr: t.JsonMapping, *, dry_run: bool, close_on_conflict: bool = True
+=======
+    @classmethod
+    def merge_pr(
+        cls,
+        slug: str,
+        pr: t.JsonMapping,
+        *,
+        dry_run: bool,
+        close_on_conflict: bool = True,
+>>>>>>> origin/0.12.0-dev
     ) -> tuple[bool, bool, bool]:
         """Merge a single Dependabot PR using the standard commit schema.
 
@@ -229,7 +345,11 @@ class FlextRootDependabotMerge:
         number = int(str(pr["number"]))
         title = str(pr["title"])
         head_ref = str(pr["headRefName"])
+<<<<<<< HEAD
         message = FlextRootDependabotMerge.standard_message(title, head_ref)
+=======
+        message = cls.standard_message(title, head_ref)
+>>>>>>> origin/0.12.0-dev
         if message is None:
             return False, True, False
 
@@ -248,7 +368,11 @@ class FlextRootDependabotMerge:
         if dry_run:
             return True, False, False
 
+<<<<<<< HEAD
         result = FlextRootDependabotMerge._run_cmd(base_cmd)
+=======
+        result = cls._run_cmd(base_cmd)
+>>>>>>> origin/0.12.0-dev
         if result.failure:
             return False, False, False
         if result.value.exit_code == 0:
@@ -262,7 +386,11 @@ class FlextRootDependabotMerge:
             or "add the `--auto` flag" in stderr
             or "--auto" in stderr
         ):
+<<<<<<< HEAD
             auto_result = FlextRootDependabotMerge._run_cmd([*base_cmd, "--auto"])
+=======
+            auto_result = cls._run_cmd([*base_cmd, "--auto"])
+>>>>>>> origin/0.12.0-dev
             if not auto_result.failure and auto_result.value.exit_code == 0:
                 return True, False, False
             stderr = auto_result.value.stderr.strip() if not auto_result.failure else ""
@@ -270,6 +398,10 @@ class FlextRootDependabotMerge:
         if "already merged" in stderr.lower() or "not found" in stderr.lower():
             return True, False, False
 
+<<<<<<< HEAD
+=======
+        # Conflict: try to update the branch and retry a few times.
+>>>>>>> origin/0.12.0-dev
         conflict_indicators = (
             "conflict",
             "merge conflicts",
@@ -277,10 +409,17 @@ class FlextRootDependabotMerge:
             "cannot be cleanly created",
         )
         if any(indicator in merge_stderr.lower() for indicator in conflict_indicators):
+<<<<<<< HEAD
             for _attempt in range(1, FlextRootDependabotMerge.RETRIES_ON_CONFLICT + 1):
                 if not FlextRootDependabotMerge.update_pr_branch(slug, number):
                     break
                 retry = FlextRootDependabotMerge._run_cmd(base_cmd)
+=======
+            for _attempt in range(1, cls.RETRIES_ON_CONFLICT + 1):
+                if not cls.update_pr_branch(slug, number):
+                    break
+                retry = cls._run_cmd(base_cmd)
+>>>>>>> origin/0.12.0-dev
                 if not retry.failure and retry.value.exit_code == 0:
                     return True, False, False
                 retry_stderr = retry.value.stderr.strip() if not retry.failure else ""
@@ -295,21 +434,32 @@ class FlextRootDependabotMerge:
                     "Closing stale Dependabot PR due to persistent merge conflicts; "
                     "Dependabot will recreate a fresh update if still needed."
                 )
+<<<<<<< HEAD
                 if FlextRootDependabotMerge.close_pr(
                     slug, number, dry_run=dry_run, reason=reason
                 ):
+=======
+                if cls.close_pr(slug, number, dry_run=dry_run, reason=reason):
+>>>>>>> origin/0.12.0-dev
                     return False, False, True
 
         return False, False, False
 
+<<<<<<< HEAD
     @staticmethod
     def process_repo(
         slug: str, base: str, *, dry_run: bool, close_on_conflict: bool = True
+=======
+    @classmethod
+    def process_repo(
+        cls, slug: str, base: str, *, dry_run: bool, close_on_conflict: bool = True
+>>>>>>> origin/0.12.0-dev
     ) -> tuple[int, int, int, int]:
         """Process all open Dependabot PRs for a single repository.
 
         Returns (merged, skipped, failed, closed).
         """
+<<<<<<< HEAD
         prs = FlextRootDependabotMerge.list_dependabot_prs(slug, base)
         if not prs:
             return 0, 0, 0, 0
@@ -322,6 +472,21 @@ class FlextRootDependabotMerge:
         merged = skipped = failed = closed = 0
         for pr in prs:
             ok, is_skip, was_closed = FlextRootDependabotMerge.merge_pr(
+=======
+        prs = cls.list_dependabot_prs(slug, base)
+        if not prs:
+            return 0, 0, 0, 0
+
+        # Sort ascending so older PRs merge first, reducing lock-file conflicts.
+        def pr_number(pr: t.JsonMapping) -> int:
+            return int(str(pr["number"]))
+
+        prs_sorted = sorted(prs, key=pr_number)
+
+        merged = skipped = failed = closed = 0
+        for pr in prs_sorted:
+            ok, is_skip, was_closed = cls.merge_pr(
+>>>>>>> origin/0.12.0-dev
                 slug, pr, dry_run=dry_run, close_on_conflict=close_on_conflict
             )
             if is_skip:
@@ -334,6 +499,7 @@ class FlextRootDependabotMerge:
                 failed += 1
         return merged, skipped, failed, closed
 
+<<<<<<< HEAD
     @staticmethod
     def _parse_options(argv: list[str] | None = None) -> MergeOptions:
         """Parse command-line options into a validated model."""
@@ -342,6 +508,16 @@ class FlextRootDependabotMerge:
             "base": "main",
             "dry_run": False,
             "workers": FlextRootDependabotMerge.MAX_WORKERS,
+=======
+    @classmethod
+    def _parse_options(cls, argv: t.StrSequence | None = None) -> MergeOptions:
+        """Parse command-line options into a validated model."""
+        raw_args = list(sys.argv[1:] if argv is None else argv)
+        raw: t.MutableJsonMapping = {
+            "base": "main",
+            "dry_run": False,
+            "workers": cls.MAX_WORKERS,
+>>>>>>> origin/0.12.0-dev
             "close_on_conflict": True,
         }
         i = 0
@@ -350,25 +526,38 @@ class FlextRootDependabotMerge:
             if arg == "--base":
                 i += 1
                 if i >= len(raw_args):
+<<<<<<< HEAD
                     raise SystemExit(FlextRootDependabotMerge._BASE_VALUE_REQUIRED)
+=======
+                    raise SystemExit(cls._BASE_VALUE_REQUIRED)
+>>>>>>> origin/0.12.0-dev
                 raw["base"] = raw_args[i]
             elif arg == "--dry-run":
                 raw["dry_run"] = True
             elif arg == "--workers":
                 i += 1
                 if i >= len(raw_args):
+<<<<<<< HEAD
                     raise SystemExit(FlextRootDependabotMerge._WORKERS_VALUE_REQUIRED)
+=======
+                    raise SystemExit(cls._WORKERS_VALUE_REQUIRED)
+>>>>>>> origin/0.12.0-dev
                 raw["workers"] = int(raw_args[i])
             elif arg == "--close-on-conflict":
                 raw["close_on_conflict"] = True
             elif arg == "--no-close-on-conflict":
                 raw["close_on_conflict"] = False
             elif arg in {"-h", "--help"}:
+<<<<<<< HEAD
                 raise SystemExit(__doc__ or "Usage: ...")
+=======
+                raise SystemExit(cls.__doc__ or "Usage: ...")
+>>>>>>> origin/0.12.0-dev
             else:
                 unknown_arg = f"Unknown argument: {arg}"
                 raise SystemExit(unknown_arg)
             i += 1
+<<<<<<< HEAD
         return FlextRootDependabotMerge.MergeOptions.model_validate(raw)
 
     @staticmethod
@@ -377,6 +566,16 @@ class FlextRootDependabotMerge:
         options = FlextRootDependabotMerge._parse_options(argv)
         root = Path.cwd()
         repos = FlextRootDependabotMerge.discover_repos(root)
+=======
+        return cls.MergeOptions.model_validate(raw)
+
+    @classmethod
+    def main(cls, argv: t.StrSequence | None = None) -> int:
+        """Entry point for the dependabot merge orchestrator."""
+        options = cls._parse_options(argv)
+        root = Path.cwd()
+        repos = cls.discover_repos(root)
+>>>>>>> origin/0.12.0-dev
         if not repos:
             return 0
 
@@ -385,7 +584,11 @@ class FlextRootDependabotMerge:
             submodule = root / path
             if not ((submodule / ".git").is_dir() or (submodule / ".git").is_file()):
                 continue
+<<<<<<< HEAD
             slug = FlextRootDependabotMerge.repo_slug_from_origin(submodule)
+=======
+            slug = cls.repo_slug_from_origin(submodule)
+>>>>>>> origin/0.12.0-dev
             if not slug:
                 continue
             slugs.append(slug)
@@ -394,7 +597,11 @@ class FlextRootDependabotMerge:
         with ThreadPoolExecutor(max_workers=options.workers) as executor:
             futures = {
                 executor.submit(
+<<<<<<< HEAD
                     FlextRootDependabotMerge.process_repo,
+=======
+                    cls.process_repo,
+>>>>>>> origin/0.12.0-dev
                     slug,
                     options.base,
                     dry_run=options.dry_run,

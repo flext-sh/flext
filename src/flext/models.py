@@ -1,12 +1,22 @@
-"""Auto-generated facade to enforce MRO namespace contracts."""
+"""Models facade for flext-workspace — m.Root project namespace.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
 from flext_core import m, t
 
+from ._models.base import FlextRootModelsBase
+from ._models.config import FlextRootModelsConfig
+
 
 class FlextRootModels(m):
-    """Flext models namespace."""
+    """Workspace root models facade — access via m.Root.*."""
+
+    class Root(FlextRootModelsBase, FlextRootModelsConfig):
+        """Workspace root models MRO composition."""
 
     class Root(m, t):
         """Root namespace for workspace-level models."""
@@ -14,4 +24,4 @@ class FlextRootModels(m):
 
 m = FlextRootModels
 
-__all__: list[str] = ["FlextRootModels", "m"]
+__all__: tuple[str, ...] = ("FlextRootModels", "m")

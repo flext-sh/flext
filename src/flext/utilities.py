@@ -1,12 +1,22 @@
-"""Auto-generated facade to enforce MRO namespace contracts."""
+"""Utilities facade for flext-workspace — u.Root project namespace.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
 from flext_core import t, u
 
+from ._utilities.base import FlextRootUtilitiesBase
+from ._utilities.config import FlextRootUtilitiesConfig
+
 
 class FlextRootUtilities(u):
-    """Flext utilities namespace."""
+    """Workspace root utilities facade — access via u.Root.*."""
+
+    class Root(FlextRootUtilitiesBase, FlextRootUtilitiesConfig):
+        """Workspace root utilities MRO composition."""
 
     class Root(u, t):
         """Root namespace for workspace-level utilities."""
@@ -14,4 +24,4 @@ class FlextRootUtilities(u):
 
 u = FlextRootUtilities
 
-__all__: list[str] = ["FlextRootUtilities", "u"]
+__all__: tuple[str, ...] = ("FlextRootUtilities", "u")

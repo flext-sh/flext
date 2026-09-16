@@ -33,4 +33,8 @@ class ValidationRules(m.BaseModel):
     )
 
 
-__all__: list[str] = ["ValidationRules"]
+class FlextRootExamplesModels:
+    """Examples models facade — access via FlextRootExamplesModels.*."""
+
+
+__all__: list[str] = ["FlextRootExamplesModels", "ValidationRules"]

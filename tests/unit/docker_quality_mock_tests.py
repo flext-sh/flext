@@ -1,11 +1,21 @@
-"""FLEXT infra test helpers for docker_quality_mock_tests."""
+"""FLEXT infra test helpers for docker_quality_mock_tests.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
 from pathlib import Path
 
 
+<<<<<<< HEAD
 class TestsFlextRootDockerQualityMockFiles:
+=======
+class TestsFlextRootDockerQualityDockerfiles:
+    """Tests for quality Dockerfile mock integrity."""
+
+>>>>>>> origin/0.12.0-dev
     QUALITY_DOCKERFILES = (
         "docker/images/Dockerfile.flext-quality",
         "docker/images/Dockerfile.flext-quality-simple",

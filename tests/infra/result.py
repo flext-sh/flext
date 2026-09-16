@@ -11,4 +11,8 @@ class TestsFlextRootResult:
     Result = r
 
 
+<<<<<<< HEAD
 __all__: list[str] = ["TestsFlextRootResult"]
+=======
+__all__: list[str] = ["TestsFlextRootResult", "r"]
+>>>>>>> origin/0.12.0-dev
