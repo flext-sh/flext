@@ -1,26 +1,24 @@
 # Runbook de estabilização — checkpoint 0.12.0
 
-<<<<<<< HEAD
 <!-- TOC START -->
 - [(a) Ciclo canônico](#a-ciclo-canonico)
 - [(b) Contrato beads central](#b-contrato-beads-central)
 - [(c) Integração](#c-integracao)
 - [(d) Extermínios vigentes](#d-exterminios-vigentes)
 <!-- TOC END -->
-=======
 > **Status (2026-09-17):** this checkpoint is **not globally green**. The canonical
 > cycle below is the target contract; the current runtime is red and must be
 > proven by an actual run on the integration tip before any lane reports
 > completion. Gas City Bead `flext-itpd1.2` owns the live cursor; this document
 > owns the versioned recovery contract. Workspace-local plans are session
 > evidence only, and earlier checkpoint plans are superseded history.
->>>>>>> origin/0.12.0-dev
 
 ## (a) Ciclo canônico
 
 ```bash
 make setup
 make gen
+make mod
 make gen          # 2× ponto fixo (idempotência)
 make fix
 make fmt
