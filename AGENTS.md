@@ -392,7 +392,7 @@ specifics and exclusions; it never copies or replaces either parent.
 | ------ | ---------- | ------- |
 | Foundation facades / result / DI | `flext-core/src/flext_core/` | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base |
 | Build/codegen/enforcement | `flext-infra/src/flext_infra/` | drives standard Make generation, conform, and lint rules |
-| Test fixtures & builders | `flext-tests/src/flext_tests/` | `tm,tv,tt`; unified `conftest.py` pattern |
+| Test fixtures & builders | `flext-tests/src/flext_tests/` | `tm`, `tv`; unified `conftest.py` pattern |
 | Architectural decisions | `docs/architecture/adr/` | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization) |
 | Workspace topology | `config/workspace.yaml` | member list, codegen input (hand-written SSOT) |
 | A Singer connector | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006) |
@@ -410,9 +410,14 @@ make fix
 make fmt
 make check
 make test
+make build
 ```
 
-**Pinned toolchain**: versions declared in `config/codegen.yaml` scaffold.project.dev (ruff, mypy, pyright, pyrefly, pytest, etc.). Python strictly `>=3.13,<3.14`. The `.default-python-packages` file was removed; tool versions resolve through the cooldown-constrained SSOT.
+**Toolchain owner**: versions are declared by the typed toolchain configuration
+in `flext-infra/config/codegen.yaml` (ruff, mypy, pyright, pyrefly, pytest, and
+related tools). Python is strictly `>=3.13,<3.14`. The
+`.default-python-packages` file was removed; tool versions resolve through that
+SSOT.
 
 **Gotchas:** mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never run mypy uncapped, it can blow up RAM.
 Docs CI needs

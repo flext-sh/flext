@@ -533,5 +533,3 @@ CLAUDE.local.md
 !/flext-tests/**
 !/flext-web/
 !/flext-web/**
-# Added by code-review-graph
-.code-review-graph/
