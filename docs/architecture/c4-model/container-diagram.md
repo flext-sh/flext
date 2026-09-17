@@ -439,7 +439,3 @@ graph TB
 - **gRPC**: High-performance service communication
 
 ---
-
-**Last Updated**: 2025-01-XX
-**Version**: 1.0.0
-**Maintainer**: FLEXT Architecture Team

@@ -1,3 +1,15 @@
+# Documentation
+
+<!-- TOC START -->
+- [Handoff substituído para retomada — 2026-09-14](#handoff-substituido-para-retomada-2026-09-14)
+- [Como retomar](#como-retomar)
+- [Ordens vigentes do operador (mais nova vence)](#ordens-vigentes-do-operador-mais-nova-vence)
+- [Estado (medido)](#estado-medido)
+- [Próximos passos (ordem)](#proximos-passos-ordem)
+- [Scripts de apoio (cópias duráveis em ~/.claude/plans/land_members.sh e ~/.claude/plans/roll_members.sh)](#scripts-de-apoio-copias-duraveis-em-claudeplansland_memberssh-e-claudeplansroll_memberssh)
+- [Limites do harness observados](#limites-do-harness-observados)
+<!-- TOC END -->
+
 ## Handoff substituído para retomada — 2026-09-14
 
 Leia `~/.claude/plans/happy-puzzling-flask-handoff-20260914-audit.md` primeiro.

@@ -1,5 +1,15 @@
 # Testing Standards
 
+<!-- TOC START -->
+- [Public boundary](#public-boundary)
+- [Fixtures and assertions](#fixtures-and-assertions)
+- [Configuration independence](#configuration-independence)
+- [Failure semantics](#failure-semantics)
+- [Canonical execution](#canonical-execution)
+- [Generated copies](#generated-copies)
+- [Related](#related)
+<!-- TOC END -->
+
 Tests confirm current observable behavior; they do not own the product contract
 or its configuration. Establish runtime reality first, then encode it through a
 public facade.

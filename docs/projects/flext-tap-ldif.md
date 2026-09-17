@@ -24,8 +24,8 @@ state, sync) is built on `flext-meltano`, and every fallible operation returns `
 
 ### Quality signals
 
-- Gates run through the workspace Make contract: `make check PROJECT=flext-tap-ldif`, `make test PROJECT=flext-tap-
-  ldif`, `make val`.
+- Gates run through the selector-free workspace Make contract: `make check`,
+  `make test`, and `make build` from the workspace root.
 - Strict typing per workspace `AGENTS.md`: no `Any`/`object`, Pydantic 2-way models, `r[T]` on every fallible path.
 - No coverage or test-count metrics are asserted here; the gates above produce the authoritative numbers.
 
@@ -41,12 +41,11 @@ tap-ldif --config settings.json --catalog catalog.json --state state.json
 Programmatically:
 
 ```python
-from flext_tap_ldif import FlextTapLdif, FlextTapLdifService, FlextTapLdifSettings
+from flext_tap_ldif import FlextTapLdifService, FlextTapLdifSettings
 
 settings = FlextTapLdifSettings()  # namespaced under settings.TapLdif.*
 exit_code = FlextTapLdifService().cli_main()
 ```
-
 The `settings.TapLdif.*` group carries `file_path` / `directory_path`, `file_pattern`, `encoding`, `strict_parsing`, and
 `max_file_size_mb` (validated Pydantic fields).
 
@@ -74,13 +73,13 @@ Source lives under `flext-tap-ldif/src/flext_tap_ldif/`:
 
 ## Testing & quality
 
-- Scoped suites run via `make check PROJECT=flext-tap-ldif` and `make test PROJECT=flext-tap-ldif`; full workspace
-  validation is `make val`.
+- Workspace quality evidence comes from `make check`, `make test`, and
+  `make build` at the workspace root.
 - Tests assert the public surface only (tap discovery, CLI exit codes, exported models) per the workspace testing law.
 
 ## Resources
 
-- [Project README](../../flext-tap-ldif/README.md)
+- [Project README](https://github.com/flext-sh/flext-tap-ldif/blob/0.12.0-dev/README.md)
 - Source: `flext-tap-ldif/src/flext_tap_ldif/`
 - Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
 - Related packages: `flext-ldif`, `flext-dbt-ldif`, `flext-target-ldif`, `flext-meltano`, `flext-core`, `flext-

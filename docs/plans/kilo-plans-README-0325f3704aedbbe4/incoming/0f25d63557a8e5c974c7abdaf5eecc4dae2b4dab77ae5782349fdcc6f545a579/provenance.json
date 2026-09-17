@@ -1,0 +1,15 @@
+{
+  "identity": "0325f3704aedbbe48828ad85e0f729c079df658d8e2153e1bd06dc602dad2cb8",
+  "provider": "kilo",
+  "source_id": "kilo-plans",
+  "source_path": "addenda/README.md",
+  "driver": "kilo",
+  "driver_version": "1",
+  "digest": "0f25d63557a8e5c974c7abdaf5eecc4dae2b4dab77ae5782349fdcc6f545a579",
+  "canonical_path": "kilo-plans-README-0325f3704aedbbe4.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T01:09:51.575583Z",
+  "attachments": []
+}

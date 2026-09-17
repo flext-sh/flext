@@ -1,5 +1,18 @@
 # PEP 257, Google Style, and Ruff
 
+<!-- TOC START -->
+- [Purpose](#purpose)
+- [General form](#general-form)
+- [Modules](#modules)
+- [Classes and protocols](#classes-and-protocols)
+- [Functions and methods](#functions-and-methods)
+- [Properties](#properties)
+- [Public examples](#public-examples)
+- [Avoid](#avoid)
+- [Review checklist](#review-checklist)
+- [Canonical validation](#canonical-validation)
+<!-- TOC END -->
+
 FLEXT public docstrings follow PEP 257 structure and Google-style sections. The
 typed Ruff configuration is the executable authority for the precise rule set;
 this page owns authoring guidance, not a copied lint registry.
@@ -35,10 +48,9 @@ def normalize_name(value: str) -> str:
 
     Raises:
         ValueError: The supplied name is empty.
-    """
-    ...
-```
 
+    """
+```
 ## Modules
 
 State the module's responsibility and ownership. Keep copyright and SPDX text

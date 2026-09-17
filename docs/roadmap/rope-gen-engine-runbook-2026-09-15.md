@@ -1,6 +1,19 @@
 # Runbook — Rope-Gen Engine (owner, taxonomy, findings flow, resume)
 
+<<<<<<< HEAD
+<!-- TOC START -->
+- [1. Owner → responsibility](#1-owner-responsibility)
+- [2. Findings taxonomy (ONE vocabulary, engine + gates + receipts)](#2-findings-taxonomy-one-vocabulary-engine-gates-receipts)
+- [3. Findings flow (one detector, one consumer)](#3-findings-flow-one-detector-one-consumer)
+- [4. Transaction loop per repository](#4-transaction-loop-per-repository)
+- [5. Resume procedure (new session)](#5-resume-procedure-new-session)
+- [6. Resume context (2026-09-15, proven)](#6-resume-context-2026-09-15-proven)
+<!-- TOC END -->
+
+- **Status:** Active runbook (plan-of-record §F2.W0)
+=======
 - **Status:** Active, versioned runbook; resume authority updated 2026-09-17.
+>>>>>>> origin/0.12.0-dev
 - **Date:** 2026-09-15
 - **Tracking:** Gas City Bead `flext-itpd1.2` owns live execution state. Earlier
   workspace-local plans are preserved as dated session evidence and are not the

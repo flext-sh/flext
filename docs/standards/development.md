@@ -1,5 +1,15 @@
 # Development Standards
 
+<!-- TOC START -->
+- [Ownership and architecture](#ownership-and-architecture)
+- [Configuration and types](#configuration-and-types)
+- [Imports and modules](#imports-and-modules)
+- [Failure semantics](#failure-semantics)
+- [Tests](#tests)
+- [Canonical workflow](#canonical-workflow)
+- [Related](#related)
+<!-- TOC END -->
+
 This standard summarizes the root `AGENTS.md` and branch-matched `flext-law`.
 Those authorities, the nearest package scope, and the active Bead own execution.
 

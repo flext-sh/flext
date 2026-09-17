@@ -11,7 +11,7 @@
 - [Verification contract](#verification-contract)
 - [References](#references)
 <!-- TOC END -->
-- **Status:** Accepted
+- **Status:** CURRENT IMPLEMENTATION
 - **Date:** 2026-07-18
 - **Scope:** FLEXT contracts consumed by independent Cosmos applications
 - **Tracking:** `mro-ib6t`

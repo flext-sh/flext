@@ -95,10 +95,14 @@ never allowed to hardcode the values that happen to exist today.
 Use the standard workspace commands; mutation is the verb's declared default operation (selector-free):
 
 ```bash
+make help
+make setup
 make check
 make test
 ```
 
+`make help` owns the current inventory; the complete lifecycle is documented in
+[Make Commands](guides/make-commands.md) without freezing a target count here.
 All FLEXT validation uses the root Make dispatcher and every Python test run
 retains the canonical testmon cache; never run bare `ruff`,
 `pyrefly`, `pyright`, `mypy`, or `pytest` commands.

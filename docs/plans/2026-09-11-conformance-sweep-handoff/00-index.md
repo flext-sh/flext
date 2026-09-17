@@ -1,5 +1,11 @@
 # 00-index — Handoff «FLEXT Conformance Sweep» (2026-09-11)
 
+<!-- TOC START -->
+- [1. Documentos autoritativos (nesta ordem)](#1-documentos-autoritativos-nesta-ordem)
+- [2. Como remontar os TODOs (método, não cópia)](#2-como-remontar-os-todos-metodo-nao-copia)
+- [3. Como as conclusões foram alcançadas (trilha)](#3-como-as-conclusoes-foram-alcancadas-trilha)
+<!-- TOC END -->
+
 > Fonte única de continuidade. Nova sessão: leia ESTE índice, depois `handoff.md`,
 > depois o plano vivente e as beads — nunca restaure transcript/cursor como autoridade.
 

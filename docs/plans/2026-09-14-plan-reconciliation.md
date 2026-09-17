@@ -8,6 +8,17 @@ work_item: flext-ro6mj
 
 # Plan reconciliation and fixed Make contracts
 
+<!-- TOC START -->
+- [Audit and handoff amendment](#audit-and-handoff-amendment)
+- [Approved outcome](#approved-outcome)
+- [Sequential delivery](#sequential-delivery)
+- [Fixed Make contract](#fixed-make-contract)
+- [Governance ownership and distribution](#governance-ownership-and-distribution)
+- [Collection contract](#collection-contract)
+- [Reconciliation and ADR consolidation](#reconciliation-and-adr-consolidation)
+- [Execution boundary and acceptance](#execution-boundary-and-acceptance)
+<!-- TOC END -->
+
 ## Audit and handoff amendment
 
 Operator amendment, recorded 2026-09-15T01:08:46Z: continue by adopting the

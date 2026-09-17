@@ -1,5 +1,12 @@
 # Plano 2026-09-10 — Extermínio do supply-chain cooldown + fix do scaffold fixed-point
 
+<!-- TOC START -->
+- [Contexto](#contexto)
+- [Diagnóstico do defeito do scaffold (bloqueia o pouso limpo)](#diagnostico-do-defeito-do-scaffold-bloqueia-o-pouso-limpo)
+- [Fases](#fases)
+- [Retomada](#retomada)
+<!-- TOC END -->
+
 > Status: EXECUÇÃO. Decisões do operador (2026-09-10): **consertar o scaffold
 > antes de pousar**; commitar em `~/agents` apenas o arquivo novo
 > `skills/tool/beads-reval/SKILL.md`; PR #238 do mcb **mantida aberta** para

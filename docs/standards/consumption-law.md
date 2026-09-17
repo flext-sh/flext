@@ -1,5 +1,18 @@
 # FLEXT Consumer Consumption Law
 
+<!-- TOC START -->
+- [R1 — Facade-Only Import Grammar (Consumer Legality)](#r1-facade-only-import-grammar-consumer-legality)
+- [R2 — No Duplication (Structural Scan)](#r2-no-duplication-structural-scan)
+- [R3 — Layer Law (Declaration vs Behavior)](#r3-layer-law-declaration-vs-behavior)
+- [R4 — Gates as Products (Budget + Primitives)](#r4-gates-as-products-budget-primitives)
+- [R5 — Release Consumption (Versioning + AI_HUB_CONSUMER)](#r5-release-consumption-versioning-ai_hub_consumer)
+- [R6 — Contribution Path Law](#r6-contribution-path-law)
+- [Canonical Sources](#canonical-sources)
+- [Anti-Hardcode Law (Enforcement)](#anti-hardcode-law-enforcement)
+- [ADR Cross-Reference](#adr-cross-reference)
+- [Change Log](#change-log)
+<!-- TOC END -->
+
 > **Authority**: This document is the canonical R1-R6 consumption standard for the FLEXT fleet. All enforcement derives from this law; no parallel rules or bypass lists exist.
 >
 > **Status**: ADR-015 ratified. Enforcement delivered: ENFORCE-099 (consumer_import_violations). Catalog rows for R2 duplication and R4 budget are **pending their next free IDs** (100, 101 — not yet registered in the enforcement catalog; landing them is part of WS-F2/F4 validation waves).
@@ -94,7 +107,7 @@ duplication.threshold-percent = 0.0
 
 **Budget gate**: New gate class + `_gate_classes` registry + `SARIF_TOOL_INFO` row + `codegen.yaml` entry. Registry divergence = hard error.
 
-**Primitives**: `u.FlextUtilities.append_atomic(path, data)` — generic, reusable across fleet.
+**Primitives**: `u.append_atomic(path, data)` — generic, reusable across fleet.
 
 **Enforcement**: budget gate delivered (`FlextInfraBudgetGate`, validates one declared budget row per `c.Infra.ALLOWED_GATES` gate); catalog row pending its next free ID (101) — WS-F4 validation. Runtime budget telemetry (measured time/memory in reports) remains open.
 

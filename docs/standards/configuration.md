@@ -2,6 +2,35 @@
 
 <!-- TOC START -->
 - [Ownership](#ownership)
+<<<<<<< HEAD
+- [Config-owned facts](#config-owned-facts)
+- [Validation](#validation)
+<!-- TOC END -->
+
+Configuration conventions for workspace documentation.
+
+## Ownership
+
+Typed `config/*.yaml` and settings own operational values, project-controlled behavior, and environment-tunable knobs. `pyproject.toml` owns package and tool metadata only. Generators derive managed surfaces from these owners.
+
+## Config-owned facts
+
+Facts consumed by documentation (project descriptions, versions, package names, URLs) come from canonical package metadata or typed config/settings. Docs-only policy exists only when it cannot be derived from a typed owner. Derived values are generated projections, never frozen literals.
+
+## Validation
+
+Run configuration propagation and validation from the workspace root:
+
+```bash
+make gen
+make gen
+make check
+make test
+```
+
+The consecutive second generation pass must be a fixed point. Warnings, stale
+projections, and missing tools are failures corrected at their owner.
+=======
 - [Runtime access](#runtime-access)
 - [Generated surfaces](#generated-surfaces)
 - [Validation](#validation)
@@ -65,3 +94,4 @@ make build
 Run `make gen` again after a generation change and require zero further file
 effects. A missing command, warning, stale projection, or second-run mutation is
 a defect at the owning configuration or generator.
+>>>>>>> origin/0.12.0-dev

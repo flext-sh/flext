@@ -1,5 +1,14 @@
 # Handoff — FLEXT Conformance Sweep (sessão 2026-09-11) — PROMPT DE RETOMADA
 
+<!-- TOC START -->
+- [1. Papel e objetivo](#1-papel-e-objetivo)
+- [2. Estado medido ao fechar a sessão (2026-09-11 ~15:00Z)](#2-estado-medido-ao-fechar-a-sessao-2026-09-11-1500z)
+- [3. Beads — verdade ao fechar (re-verificar §4/§5 do plano)](#3-beads-verdade-ao-fechar-re-verificar-45-do-plano)
+- [4. Contexto que precisa sobreviver (lições já codificadas — verifique, não re-derivo)](#4-contexto-que-precisa-sobreviver-licoes-ja-codificadas-verifique-nao-re-derivo)
+- [5. Preflight da nova sessão (executar, registrar saída)](#5-preflight-da-nova-sessao-executar-registrar-saida)
+- [6. Primeira ação (se §12(a) confirmado; caso contrário: #1 do §4)](#6-primeira-acao-se-12a-confirmado-caso-contrario-1-do-4)
+<!-- TOC END -->
+
 > Cole este arquivo como 1ª mensagem de uma sessão nova (com `00-index.md` do diretório).
 > Execute o preflight §5 ANTES de qualquer mutação.
 

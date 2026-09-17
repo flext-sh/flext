@@ -23,8 +23,8 @@ executable source lives under `flext-tap-oracle/src/flext_tap_oracle/`.
 
 ### Quality signals
 
-- Run `make check PROJECT=flext-tap-oracle` and
-  `make test PROJECT=flext-tap-oracle` through the workspace root.
+- Run selector-free `make check`, `make test`, and `make build` through the
+  workspace root.
 
 ## Quick start
 
@@ -48,7 +48,7 @@ The root Make gates provide current quality evidence.
 
 ## Resources
 
-- [Project README](../../flext-tap-oracle/README.md)
+- [Project README](https://github.com/flext-sh/flext-tap-oracle/blob/0.12.0-dev/README.md)
 - Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
 - Related packages: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, `flext-target-oracle`,
   `flext-dbt-oracle`

@@ -18,7 +18,7 @@ permission:
     CHANGELOG: allow
     "*/CHANGELOG": allow
   bash: allow
-  mcp: deny
+  mcp: allow
   question: allow
 ---
 

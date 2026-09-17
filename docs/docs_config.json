@@ -9,10 +9,7 @@
     ],
     "stale_symbols": [
       "FlextRegistry",
-      "FlextHandlers",
-      "FlextMixins",
-      "get_global()",
-      "register_handler("
+      "get_global()"
     ],
     "stale_symbol_exempt_paths": [
       "architecture/baseline-v0.13.0.md",

@@ -15,7 +15,7 @@
 - [Verification contract](#verification-contract)
 - [References](#references)
 <!-- TOC END -->
-- **Status:** Accepted (planning) — targets the `0.20.0-dev` line
+- **Status:** ACCEPTED TARGET — planning, targets the `0.20.0-dev` line
 - **Date:** 2026-07-18
 - **Target line:** FLEXT `0.20.0-dev`, an early development and planning branch.
   This coordination contract is the forward target for `0.20.0-dev`; it does not
@@ -41,8 +41,9 @@ The workspace root FLEXT project is the coordination point for a set of
 independent applications that all consume FLEXT foundations:
 
 - `cosmos-docgen`/`dcdoc` — document, proposal, and RCA artifact application.
-- DataOP (`~/dataop`) — dataset organization and evidence.
-- DcBackup (`/home/datacosmos.bkp/datacosmos-backup`) — Google Workspace backup.
+- DataOP — dataset organization and evidence in its independently versioned
+  repository.
+- DcBackup (`datacosmos-backup`) — Google Workspace backup application.
 
 Each has its own Beads tracker, its own ADRs, and its own release lifecycle.
 They must work together — documentation platform, data ingestion, backup — and

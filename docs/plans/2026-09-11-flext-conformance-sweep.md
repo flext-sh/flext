@@ -1,5 +1,35 @@
 # Plano 2026-09-11 — FLEXT Conformance Sweep — REVISÃO v2 (aprofundada, visão de produção)
 
+<!-- TOC START -->
+- [0. Escopo e autoridade](#0-escopo-e-autoridade)
+- [1. FEITO — evidências verificadas nesta revisão v2](#1-feito-evidencias-verificadas-nesta-revisao-v2)
+  - [1.1 Extremínio backup-on-apply (onda 1)](#11-extreminio-backup-on-apply-onda-1)
+  - [1.2 Gitlink + docs (onda 2)](#12-gitlink-docs-onda-2)
+  - [1.3 Onda do ator (absorvida)](#13-onda-do-ator-absorvida)
+  - [1.4 Codificação durável e higiene (esta revisão)](#14-codificacao-duravel-e-higiene-esta-revisao)
+- [2. AUTOCRÍTICA — o que fiz mal e a contramedida (profunda)](#2-autocritica-o-que-fiz-mal-e-a-contramedida-profunda)
+- [3. VISÃO DE PRODUÇÃO — o que "conformidade" precisa significar](#3-visao-de-producao-o-que-conformidade-precisa-significar)
+- [4. TODO — estado real (v3, alinhado aos status de beads verificados nesta sessão)](#4-todo-estado-real-v3-alinhado-aos-status-de-beads-verificados-nesta-sessao)
+  - [Meu lane próximo (ordem executiva)](#meu-lane-proximo-ordem-executiva)
+  - [Colaboração (dono: ator — não invadir)](#colaboracao-dono-ator-nao-invadir)
+  - [Operador (pedidos §12)](#operador-pedidos-12)
+- [5. Beads — status REAL (lido de bd show nesta sessão; v3)](#5-beads-status-real-lido-de-bd-show-nesta-sessao-v3)
+- [6. Referências rápidas (arquivos de verdade)](#6-referencias-rapidas-arquivos-de-verdade)
+- [7. Codificação durável (~/agents — para o padrão se repetir certo)](#7-codificacao-duravel-agents-para-o-padrao-se-repetir-certo)
+- [8. Retomada rápida (nova sessão)](#8-retomada-rapida-nova-sessao)
+- [9. Delta Sweep-2 (12:30–12:40 UTC, sessão principal — consolidado SEM duplicar a revisão v2 acima)](#9-delta-sweep-2-12301240-utc-sessao-principal-consolidado-sem-duplicar-a-revisao-v2-acima)
+  - [9.1 Consolidação de beads entre lanes (lei: um dono por assunto)](#91-consolidacao-de-beads-entre-lanes-lei-um-dono-por-assunto)
+  - [9.2 Skills/rules/commands em ~/agents — DRAFT pousado, LANE-EXTERNO](#92-skillsrulescommands-em-agents-draft-pousado-lane-externo)
+  - [9.3 Estado do tip desta linha](#93-estado-do-tip-desta-linha)
+- [10. Pesquisa de automação — fatos medidos (fontes primárias)](#10-pesquisa-de-automacao-fatos-medidos-fontes-primarias)
+- [11. Proposta de EXECUÇÃO — Onda-P: homologação via piloto (aguardando aprovação)](#11-proposta-de-execucao-onda-p-homologacao-via-piloto-aguardando-aprovacao)
+  - [11.1 Ciclo primário por unidade](#111-ciclo-primario-por-unidade)
+  - [11.2 Escopo do piloto (homologação fim-a-fim)](#112-escopo-do-piloto-homologacao-fim-a-fim)
+  - [11.3 Critérios de aceite do piloto](#113-criterios-de-aceite-do-piloto)
+  - [11.4 Orçamento de índice ~/agents — decisão tomada](#114-orcamento-de-indice-agents-decisao-tomada)
+- [12. Pedido de aprovação (o que falta autoridade do operador)](#12-pedido-de-aprovacao-o-que-falta-autoridade-do-operador)
+<!-- TOC END -->
+
 > **Status**: delta próprio 100% pousado e retirado; extermínio `.bak` preservado; **PROPOSTA P2 DE EXECUÇÃO — aguardando aprovação do operador (§10)**.
 > **Stack de automação global codificada**: skill `fleet-lane-discipline` (agents `3dd920fa`) — ver §9.
 > **Snapshot re-mediado**: flext tip `c7308e6791` (local, 2 docs commits à frente) · `origin/0.12.0-dev` `396b359a1e` · flext-infra `bff592284` · resíduo `.bak` raiz **0** · `persist_apply_backup` **0**.

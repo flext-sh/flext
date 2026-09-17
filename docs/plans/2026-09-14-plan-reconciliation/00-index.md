@@ -7,6 +7,10 @@ work_item: flext-ro6mj.1
 
 # Plan reconciliation handoff
 
+<!-- TOC START -->
+- [Context lookup by boundary](#context-lookup-by-boundary)
+<!-- TOC END -->
+
 Read [the approved plan](../2026-09-14-plan-reconciliation.md), then the
 [critical audit and resumption contract](handoff.md) in full. The latter records
 an evidence snapshot, not an execution tracker. Beads `flext-ro6mj` and
@@ -44,10 +48,10 @@ ledger. Current execution evidence and unresolved work stay in `flext-ro6mj.1`.
 | --- | --- | --- |
 | What did the operator approve? | [Plan and dated amendments](../2026-09-14-plan-reconciliation.md) | A newer operator request changes scope or acceptance |
 | Which members and project identities apply? | [Workspace topology](../../../config/workspace.yaml) | Topology or repository association changes |
-| How does documentation collect plans? | [Hook](../../../custom.mk), [thin entrypoint](../../../scripts/docs/collect_plans.py), [collector](../../../flext-infra/src/flext_infra/docs/collector.py) | CLI/config/generator changes; source-only wiring is not runtime proof |
-| What are source/revision contracts? | [Typed collection models](../../../flext-infra/src/flext_infra/_models/docs_collection.py), [source boundary](../../../flext-infra/src/flext_infra/_utilities/docs_collection_sources.py) | Provider schema, adapter version, input digest or attachment topology changes |
-| Who may publish external files? | [Existing transaction](../../../flext-infra/src/flext_infra/codegen/codegen_transaction.py) | Destination identity, bytes, mode, ancestry, lease or journal changes |
-| Who composes missing facade capabilities? | [Generator owner](../../../flext-infra/src/flext_infra/_utilities/codegen_facades.py) | Authored definitions, references, imports or inheritance change |
+| How does documentation collect plans? | [Hook](../../../custom.mk), [thin entrypoint](../../../scripts/docs/collect_plans.py), [collector](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/docs/collector.py) | CLI/config/generator changes; source-only wiring is not runtime proof |
+| What are source/revision contracts? | [Typed collection models](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_models/docs_collection.py), [source boundary](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_utilities/docs_collection_sources.py) | Provider schema, adapter version, input digest or attachment topology changes |
+| Who may publish external files? | [Existing transaction](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/codegen/codegen_transaction.py) | Destination identity, bytes, mode, ancestry, lease or journal changes |
+| Who composes missing facade capabilities? | [Generator owner](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_utilities/codegen_facades.py) | Authored definitions, references, imports or inheritance change |
 | What must never be rediscovered from history? | [Audit corrections and accepted decisions](handoff.md) | Fresh owner evidence disproves a claim; annotate the correction |
 
 Cross-repository package direction is `agents` producer → AI Hub installed

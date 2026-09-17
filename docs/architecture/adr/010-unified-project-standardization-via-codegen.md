@@ -8,13 +8,13 @@
   - [3. Canonical structure, facades, and naming (measured, then enforced)](#3-canonical-structure-facades-and-naming-measured-then-enforced)
   - [3a. Namespaced runtime directories via settings](#3a-namespaced-runtime-directories-via-settings)
   - [3b. Semantic discovery and automated rewiring](#3b-semantic-discovery-and-automated-rewiring)
-  - [4. Three ordered phases (same strategy as ADR-020/008/009)](#4-three-ordered-phases-same-strategy-as-adr-020008009)
+  - [4. Three ordered phases (same strategy as ADR-007/008/009)](#4-three-ordered-phases-same-strategy-as-adr-007008009)
   - [5. Applicability to independent and external projects](#5-applicability-to-independent-and-external-projects)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
 <!-- TOC END -->
-- **Status:** Accepted and active
+- **Status:** CURRENT IMPLEMENTATION
 - **Date:** 2026-07-18
 - **Last updated:** 2026-09-05
 - **Target line:** FLEXT `0.12.0-dev`, with `0.13.0` as the forward baseline.
@@ -205,7 +205,7 @@ enrichment. It never imports ai-hub or CRG as a library. Absence of that optiona
 host runtime does not fail the deterministic local cutover; if an available
 integration is selected, its first error propagates without normalization.
 
-### 4. Three ordered phases (same strategy as ADR-020/008/009)
+### 4. Three ordered phases (same strategy as ADR-007/008/009)
 
 1. **Validation-first.** The declared root validation interface and
    standardization audit report every drift (missing verbs, non-standard

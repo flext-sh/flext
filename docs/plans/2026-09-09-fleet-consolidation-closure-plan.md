@@ -1,5 +1,20 @@
 # PLANO — Consolidação da Frota FLEXT: fechamento integral (2026-09-09)
 
+<!-- TOC START -->
+- [Estado na aprovação (evidências gravadas)](#estado-na-aprovacao-evidencias-gravadas)
+- [Fase A — fechar flext-tests](#fase-a-fechar-flext-tests)
+- [Fase B — templates + fixed point do root](#fase-b-templates-fixed-point-do-root)
+- [Fase C — sweep onda 2 (3 subagentes, batches ~10 membros)](#fase-c-sweep-onda-2-3-subagentes-batches-10-membros)
+- [Fase D — ai-hub: 3 beads de contrato (1 subagente)](#fase-d-ai-hub-3-beads-de-contrato-1-subagente)
+- [Fase E — ~/.agents (executada na aprovação)](#fase-e-agents-executada-na-aprovacao)
+- [Fase F — campanha de dívida estática ai-hub (INCLUÍDA; subagentes em waves)](#fase-f-campanha-de-divida-estatica-ai-hub-incluida-subagentes-em-waves)
+- [Fase G — fechamento](#fase-g-fechamento)
+- [Ordem](#ordem)
+- [Status 2026-09-11 (execução corrente)](#status-2026-09-11-execucao-corrente)
+  - [Adendo 2026-09-11 (cadeia de runtime do daemon, mapeada com evidência)](#adendo-2026-09-11-cadeia-de-runtime-do-daemon-mapeada-com-evidencia)
+  - [Adendo 2 — mudanças por projeto (2026-09-11) + worktree dedicada](#adendo-2-mudancas-por-projeto-2026-09-11-worktree-dedicada)
+<!-- TOC END -->
+
 > Aprovado pelo operador (sim, tudo + campanha de dívida incluída).
 > Executor: orquestrador + esquadrão de subagentes.
 > Lei: `~/agents/AGENTS.md` + `flext-law` + `make-check` + `verification-loop`.

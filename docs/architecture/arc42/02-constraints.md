@@ -393,6 +393,6 @@
 
 ---
 
-**Last Updated**: 2025-01-XX
-**Version**: 1.0.0
+**Last Updated**: 2026-07-12
+**Version**: 0.12.0-dev
 **Maintainer**: FLEXT Architecture Team

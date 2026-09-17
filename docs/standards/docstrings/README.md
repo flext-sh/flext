@@ -1,5 +1,11 @@
 # FLEXT Python Docstring Standards
 
+<!-- TOC START -->
+- [Canonical reference](#canonical-reference)
+- [Principles](#principles)
+- [Canonical validation](#canonical-validation)
+<!-- TOC END -->
+
 This directory defines the public Python docstring contract for the FLEXT
 workspace.
 

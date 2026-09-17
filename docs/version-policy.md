@@ -12,11 +12,12 @@
 ## Workspace cycle
 
 The workspace develops on a named development branch per cycle
-(currently `0.12.0-dev`). Member package `pyproject.toml` files carry the
-development-cycle version (`version = "0.12.0-dev"`), while the root workspace
-manifest and `config/workspace.yaml` carry the release-candidate coordination
-version (`0.12.0rc0`). This distinction keeps package development metadata
-stable while the workspace release lane prepares a candidate.
+(currently `0.12.0-dev`). Package versions are generated from the release and
+project-profile owners: runtime libraries may carry the stable cycle version,
+while the workspace and release-candidate connector profiles may carry the
+release-candidate version. Read the generated `pyproject.toml` for a package's
+current projection; never hand-edit or generalize one profile's value across
+the fleet.
 Release notes per cycle live under
 `docs/releases/` (repo-only reference, e.g. `docs/releases/latest.md`).
 

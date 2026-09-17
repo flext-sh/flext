@@ -1,5 +1,16 @@
 # flext-tap-oracle-wms — legado + dead-code + protocols pilot
 
+<!-- TOC START -->
+- [Problem](#problem)
+- [Target: flext-tap-oracle-wms (why)](#target-flext-tap-oracle-wms-why)
+- [Usage universe (SSOT — memory:flext-external-consumer-universe)](#usage-universe-ssot-memoryflext-external-consumer-universe)
+- [Phase 1 — Quarantine tests + examples → legado/ (dir-level, out of every gate)](#phase-1-quarantine-tests-examples-legado-dir-level-out-of-every-gate)
+- [Phase 2 — Validate real code + classify-before-remove (memory:dead-code-classify-before-remove)](#phase-2-validate-real-code-classify-before-remove-memorydead-code-classify-before-remove)
+- [Phase 3 — Collapse polymorphic interfaces → canonical model + protocol](#phase-3-collapse-polymorphic-interfaces-canonical-model-protocol)
+- [Phase 4 — Static gate + CLI acceptance (no pytest)](#phase-4-static-gate-cli-acceptance-no-pytest)
+- [Out of scope](#out-of-scope)
+<!-- TOC END -->
+
 **Date:** 2026-07-12
 **Bead lane:** mro-rn88 (uncontested) + aligns with mro-pzxd (polymorphic/legado initiative)
 **Status:** approved design → implementation

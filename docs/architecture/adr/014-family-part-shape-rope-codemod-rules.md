@@ -15,7 +15,7 @@
 - [References](#references)
 <!-- TOC END -->
 
-- **Status:** Accepted and active
+- **Status:** CURRENT IMPLEMENTATION
 - **Date:** 2026-09-09
 - **Target line:** FLEXT `0.12.0-dev`, with `0.13.0` as the forward baseline.
 - **Scope:** Every internal FLEXT package with the five private families
