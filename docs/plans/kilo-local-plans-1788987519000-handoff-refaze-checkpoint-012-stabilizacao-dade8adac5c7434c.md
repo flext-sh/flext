@@ -9,16 +9,19 @@
 ## 1. Análise de arquitetura (o que aprendemos)
 
 ### 1.1 Stack de authory (ordem obrigatória)
+
 `~/.agents/AGENTS.md` → skill local branch-matched `flext-law` (`~/flext/.agents/skills/flext-law/SKILL.md`) → scope `AGENTS.md` do membro → Bead ativa. Governança gerida por projeções AIHUB em `AGENTS.md` (não editar seção managed à mão — só via owner).
 
 ### 1.2 Camadas FLEXT (comprovadas em código)
+
 Ordem: `settings → config → c → t → p → m → u → base → services → api → cli`
 
 - operacionais `r/e/x/h/d/s` — `flext-infra/_constants/namespace.py:35-62`.
-Índice de arquivo→camada em `flext-infra/_constants/namespace.py:48-61`
-(`_settings.py`→settings rank 0 … `api.py`→api rank 9).
+  Índice de arquivo→camada em `flext-infra/_constants/namespace.py:48-61`
+  (`_settings.py`→settings rank 0 … `api.py`→api rank 9).
 
 ### 1.3 CONTRADIÇÃO CRÍTICA EXPOSTA (achado principal desta sessão)
+
 A regra `NS-IMPORT` (`flext-infra/validate/_namespace_rules/imports.py:151`,
 `_reverse_import`) proíbe runtime-import de `t/m/u` em owner de camada
 settings/config — inclusive pela fachada raiz (`from flext_api import m, t, u`
@@ -44,6 +47,7 @@ model_validator` em `flext-core/src/flext_core/_settings.py:36`).
 - C) Suspender regra para settings (buraco na lei — proibido pelo operador).
 
 ### 1.4 Segunda regra a fechar por automação
+
 `NS-CONTRACT` (annotations banidas `dict/object/Any/Optional` — `namespace.py:78-83`,
 checado em `validate/_namespace_rules/contracts.py:85-108`):
 mapa canônico: `dict[K,V]` → `t.MappingKV[K,V]`; mutação local → `MutableMapping`
@@ -56,6 +60,7 @@ Makefile root:1061). TODO: mapear onde registramos codemods
 existente; testes em `tests/unit/codemod/`).
 
 ### 1.5 Estado do check flext-infra
+
 RED 1427 erros (namespace=1388, duplication=24, silent-failure=6, loc-cap=5,
 mypy=2, pyrefly=1, runtime-census=1) — **residuais aceitos** pelo operador no
 checkpoint (correção salva: `closeout.checkpoint_0_12_0`), donos
@@ -63,11 +68,11 @@ flext-h2ffh/flext-1wjg1.16.34/flext-ct0mo/flext-nnquz.
 
 ## 2. Estado atual (evidência)
 
-| Local | Branch | Tip | Estado |
-|---|---|---|---|
-| `~/flext` (root main) | `0.12.0-dev` | `c424043b85` | limpo no root; submodules em tips remotas |
-| `~/flext-release-012` (release) | `release/checkpoint-0.12.0` | `4147d43428` | publicado; **32 submodules com drift local NÃO commitado** |
-| flext-infra (release lane) | `release/checkpoint-0.12.0` | `0d29f44ee` | contém fix `_builtin-self-*` fora do `{% else %}` do Makefile.j2 (commit `3a447b553` recuperado via merge no-ff `9c503e16a`) — **fix NÃO absorvido em 0.12.0-dev** (main flext-infra = `459ddf9c4`, sem o fix) |
+| Local                           | Branch                      | Tip          | Estado                                                                                                                                                                                                         |
+| ------------------------------- | --------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `~/flext` (root main)           | `0.12.0-dev`                | `c424043b85` | limpo no root; submodules em tips remotas                                                                                                                                                                      |
+| `~/flext-release-012` (release) | `release/checkpoint-0.12.0` | `4147d43428` | publicado; **32 submodules com drift local NÃO commitado**                                                                                                                                                     |
+| flext-infra (release lane)      | `release/checkpoint-0.12.0` | `0d29f44ee`  | contém fix `_builtin-self-*` fora do `{% else %}` do Makefile.j2 (commit `3a447b553` recuperado via merge no-ff `9c503e16a`) — **fix NÃO absorvido em 0.12.0-dev** (main flext-infra = `459ddf9c4`, sem o fix) |
 
 **CRÍTICO — não perder:** o WIP do flext-api no release worktree está NO
 WORKING TREE (`528c9e7f` + não commitado): refatoração `_protocols/`→
@@ -87,10 +92,11 @@ fix-forward apenas**.
 - flext-core: 4 arquivos beartype (-17/+11) — investigar antes de absorver.
 
 ## 3. Violations remanescentes de namespace em flext-api (pós-correção settings)
+
 `make check` RED 47: pyrefly=10, mypy=4, **namespace=33**:
 
 - NS-STRUCT-001 module-alias: `api.py:194` (`api: FlextApi =
-  FlextApi.fetch_global()`), `base.py:46` (`s = FlextApiServiceBase` — redeclaração
+FlextApi.fetch_global()`), `base.py:46` (`s = FlextApiServiceBase` — redeclaração
   proibida do operational r/e/x/h/d/s; **init**.py mapea "flext_web"→(d,e,h,r,x)
   sem "s"), singleton `settings`/tests `tests/{base,constants,models,protocols,typings,utilities}.py`
 - NS-STRUCT-002: `tests/{constants,models,protocols,typings,utilities}.py:14/19`
@@ -101,6 +107,7 @@ fix-forward apenas**.
 - NS-CONTRACT dict — files 52/59 `_settings.py` → fechar via codemod 1.4
 
 ## 4. Cadência eedas a revisar criticamente (instrução permanente do operador)
+
 Não aceitar o que está escrito; validar contra projeto/planos real; se bead
 redundante/duplicada → avaliar regra e os blocks ANTES de fechar; nunca fechar
 sem re-run de gates no SHA merged + evidência (verb, cwd, exit, output, SHA).
@@ -109,7 +116,7 @@ sem re-run de gates no SHA merged + evidência (verb, cwd, exit, output, SHA).
 
 1. **Confirmar decisão 1.3** com operador (A/B/C) —ependency para flext-api.
 2. Re-construir planejamento v3 a partir deste handoff + beads
-  (`bd ready`, revisar `flext-yirgp`, `flext-482u9`, `flext-hkz4p`, PRs api #83/#84 CI vermelho em setup bootstrap → fleet blocker `flext-cpkk`/`flext-5k9r7`).
+   (`bd ready`, revisar `flext-yirgp`, `flext-482u9`, `flext-hkz4p`, PRs api #83/#84 CI vermelho em setup bootstrap → fleet blocker `flext-cpkk`/`flext-5k9r7`).
 3. Close cycle por membro (uma agulha): commit scoped → push FF → PR → merge
    no-ff na integração (`origin/0.12.0-dev`) → gates rerun no SHA merged →
    fecha bead → apaga worktree/branch do ciclo.
@@ -123,7 +130,7 @@ sem re-run de gates no SHA merged + evidência (verb, cwd, exit, output, SHA).
 ## 6. Guardrails (erros que custaram tempo nesta sessão)
 
 - `git submodule update` reseta gitlinks — usar checkout de submodule único.
-- `make mod` é cwd-scoped (Makefile._builtin_mod_apply:1061) — rodar POR MEMBRO.
+- `make mod` é cwd-scoped (Makefile.\_builtin_mod_apply:1061) — rodar POR MEMBRO.
 - Pipes com `tail` perdem exit code — guardar log completo.
 - Gate `check` de flext-api demora ~45-270s (runtime-census importa módulos);
   validar runtime com `uv run --no-sync python -c` antes do gate longo.
