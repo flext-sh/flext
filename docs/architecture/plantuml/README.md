@@ -175,7 +175,7 @@ java -jar plantuml.jar docs/architecture/plantuml/**/*.puml
 ### Online Usage
 
 1. Copy PlantUML code from `.puml` files
-2. Paste into [PlantUML Online Server](http://www.plantuml.com/plantuml/uml/)
+2. Paste into [PlantUML Online Server](https://www.plantuml.com/plantuml/uml/)
 3. Generate and download diagrams
 
 ### VS Code Integration

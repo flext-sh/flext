@@ -1,5 +1,14 @@
 # ADR-016: Settings/Config Singleton Contract, Performance and SSOT Alignment
 
+<!-- TOC START -->
+- [Status](#status)
+- [Context](#context)
+  - [Defect evidence (2026-09-15 session)](#defect-evidence-2026-09-15-session)
+  - [Performance and SSOT debt](#performance-and-ssot-debt)
+- [Decision](#decision)
+- [Consequences](#consequences)
+<!-- TOC END -->
+
 ## Status
 
 Proposed (2026-09-15) — accepted for planning; execution assigned to a dedicated

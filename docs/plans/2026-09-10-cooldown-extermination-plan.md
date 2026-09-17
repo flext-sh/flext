@@ -10,7 +10,7 @@
 - Ordem do operador: exterminar `exclude-newer` e família (cooldown) de tudo,
   no gerador (flext-infra), valendo para todos os projetos. Fix em projeção de
   consumidor não vale — o problema volta.
-- Lane: `/home/marlonsc/flext-work/flext-infra-cooldown-extermination`
+- Lane: `~/flext-work/flext-infra-cooldown-extermination`
   (branch `fix/exterminate-supply-chain-cooldown` de `origin/0.12.0-dev`).
 - Bead dono: `flext-fphyv`. Relacionadas: `flext-czzns` (superseded),
   `flext-3cabz` (reds pré-existentes da linha).

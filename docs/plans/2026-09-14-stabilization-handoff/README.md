@@ -72,10 +72,10 @@ precisam adaptação ao merge infra mais recente e revisão antes da geração/s
 
 ### Workspace e coordenação
 
-- Lane existente: `/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0`.
+- Lane existente: `~/flext/.claude/worktrees/bugfix+stabilize-0.12.0`.
 - Raiz e infra: `bugfix/stabilize-0.12.0`.
 - Demais membros: `bugfix/absorb-checkout-20260914`.
-- Checkout principal: `/home/marlonsc/flext`; cooperar com seu estado atual antes da propagação.
+- Checkout principal: `~/flext`; cooperar com seu estado atual antes da propagação.
 - Cursor: `flext-itpd1.1`; integração relacionada: `flext-yirgp`.
 - Não criar clones/worktrees, não apagar journal lock e não iniciar outro Make durante a geração.
 - Preservar todo WIP e resolver fix-forward. Sem reset, restore, checkout destrutivo, stash, clean, rebase, force-push ou no-verify.
@@ -226,9 +226,9 @@ Ruff, Pyrefly, Pyright, Mypy e testes precisam de rodada no candidato estabiliza
 
 Fontes canônicas de planejamento a reler integralmente ao retomar:
 
-- `/home/marlonsc/.claude/plans/happy-puzzling-flask.md` — plano completo, reconciliado com o operador mais recente.
-- `/home/marlonsc/.claude/plans/happy-puzzling-flask-handoff.md` — handoff anterior, evidência histórica.
-- `/home/marlonsc/.claude/plans/ai-hub-envrc-agent-hooks.md` — coordenação externa e fronteiras ai-hub.
+- `~/.claude/plans/happy-puzzling-flask.md` — plano completo, reconciliado com o operador mais recente.
+- `~/.claude/plans/happy-puzzling-flask-handoff.md` — handoff anterior, evidência histórica.
+- `~/.claude/plans/ai-hub-envrc-agent-hooks.md` — coordenação externa e fronteiras ai-hub.
 - `docs/plans/2026-09-14-stabilization-handoff/README.md` — handoff vigente, publicado como checkpoint; não comprova integração.
 
 Tracker central, sempre carregado por direnv:

@@ -40,6 +40,14 @@ These issues already appear across `flext-core` and are amplified in downstream 
 
 We will adopt the `0.13.0` platform baseline defined in `docs/architecture/baseline-v0.13.0.md`.
 
+> **Current runtime vs. forward baseline.** The sections below describe the
+> **v0.13.0 forward baseline** (planned), not the current `0.12.0-dev` runtime.
+> Verified current state in `flext-core` (`__init__.py`): `FlextDispatcher`,
+> `FlextHandlers` (plural, not `FlextHandler`), `FlextRegistry`, and
+> `FlextMixins`/`x` are **all currently exported**. `FlextCatalog` and
+> `FlextLogger` **do not yet exist**. `x` is **not removed** — it remains
+> exported in the current line; only the forward baseline retires it.
+
 ### Public Class Naming
 
 We will use simple direct public class names in the platform and in downstream projects.
@@ -65,28 +73,30 @@ Application code must not touch `dependency_injector` directly.
 
 We will replace the generic public registry concept with explicit typed extension storage:
 
-- `FlextCatalog` replaces extension registries
-- `FlextDispatcher` owns handler registration and dispatch
+- `FlextCatalog` replaces extension registries — **planned for 0.13.0**; does not exist in the current runtime
+- `FlextDispatcher` owns handler registration and dispatch — **currently exported** from `flext-core`
 - project services and facades own extension invocation
 
-`FlextRegistry` is removed from the forward public architecture.
+`FlextRegistry` **is currently exported** from `flext-core`; it is scheduled for
+removal in the forward baseline only.
 
 ### Public Runtime Surface
 
-We will keep a small direct runtime surface:
+We will keep a small direct runtime surface in the **forward baseline**:
 
 - `FlextRuntime`
 - `FlextDi`
-- `FlextLogger`
+- `FlextLogger` — **planned for 0.13.0**; does not exist in the current runtime
 - `FlextContext`
 - `FlextContainer`
 - `s`
 - `FlextDispatcher`
-- `FlextHandler`
-- `FlextCatalog`
+- `FlextHandlers` — **currently the real class name** (the ADR-002 §Context listing `FlextHandler` is the planned singular form)
+- `FlextCatalog` — **planned for 0.13.0**; not yet implemented
 - `d`
 
-`x` is removed from the forward public architecture.
+`x` is removed from the forward public baseline only. In the current `0.12.0-dev`
+runtime `x` (`FlextMixins`) remains exported.
 
 ### Workspace Taxonomy
 

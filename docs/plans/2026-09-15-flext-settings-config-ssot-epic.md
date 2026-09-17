@@ -72,8 +72,10 @@ em todos os módulos (incluindo as fachadas `c,t,p,m,u`). A sessão de
 
 ## 6. Relação com o P0 em andamento
 
-O plano P0 (`.kilo/plans/1789441874066-flext-p0-extermination-completion.md`)
-NÃO depende deste épico: o teste `clone` do flext-oracle-wms será endurecido
+O contexto P0 histórico foi registrado em um plano local não versionado; seu
+cursor durável é o Gas City Bead correspondente, enquanto este épico permanece
+em `flext-7pa7o`. O P0 NÃO depende deste épico: o teste `clone` do
+flext-oracle-wms será endurecido
 para before/after (contrato verdadeiro, sem congelar estado prévio) dentro do
 P0; a máquina do singleton é propriedade deste épico. O P0 não edita
 `_settings.py`.

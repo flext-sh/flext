@@ -1,0 +1,15 @@
+{
+  "identity": "e5660fdb802846691e6b81a0e2938015255bef4a5f287268683937ce6345aa83",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789489330487-loc-cap-config-landing-plan.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "c896d213b1bd6566d4a4092acee47068560aebd175f7a05094a7e6a1ca39ef8c",
+  "canonical_path": "kilo-local-plans-1789489330487-loc-cap-config-landing-plan-e5660fdb80284669.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.258179Z",
+  "attachments": []
+}

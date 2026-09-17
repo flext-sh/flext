@@ -1,0 +1,15 @@
+{
+  "identity": "efc81276571096680e98f25ce51459965b23a6b3536d1736b55b8e0c6b925b4e",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789247093764-mod-architecture-scale.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "b77cff6d64453356cc7480dd3d3a8f4f8f51697a861c9c3d5ef71856b1855ba7",
+  "canonical_path": "kilo-local-plans-1789247093764-mod-architecture-scale-efc8127657109668.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.235099Z",
+  "attachments": []
+}

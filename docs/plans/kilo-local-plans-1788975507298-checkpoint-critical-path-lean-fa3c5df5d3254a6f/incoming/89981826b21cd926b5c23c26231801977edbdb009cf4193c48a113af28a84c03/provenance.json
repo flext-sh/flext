@@ -1,0 +1,15 @@
+{
+  "identity": "fa3c5df5d3254a6fedf3078a78efaca5b0f28643bd8654b3e294fe104ccb21a8",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1788975507298-checkpoint-critical-path-lean.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "89981826b21cd926b5c23c26231801977edbdb009cf4193c48a113af28a84c03",
+  "canonical_path": "kilo-local-plans-1788975507298-checkpoint-critical-path-lean-fa3c5df5d3254a6f.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.206240Z",
+  "attachments": []
+}

@@ -1,8 +1,10 @@
 # Runbook — Rope-Gen Engine (owner, taxonomy, findings flow, resume)
 
-- **Status:** Active runbook (plan-of-record §F2.W0)
+- **Status:** Active, versioned runbook; resume authority updated 2026-09-17.
 - **Date:** 2026-09-15
-- **Plan:** `.kilo/plans/1789489334832-rope-gen-engine-strict-init.md` (unified v4)
+- **Tracking:** Gas City Bead `flext-itpd1.2` owns live execution state. Earlier
+  workspace-local plans are preserved as dated session evidence and are not the
+  published resume authority.
 - **Law:** ADR-014 §3b (rope-in-gen), ADR-010 §3b (alignment), render purity law
 - **Beads:** engine = `flext-crd1y` (discovered-from `flext-5fxu6.4`); loc-cap = `flext-471ws`;
   journal lock = `flext-fkfmu`; mission tests = `flext-wjozx` / `flext-c4k44`
@@ -56,7 +58,12 @@ snapshot (input-CAS, authenticated)
 
 ## 5. Resume procedure (new session)
 
-1. Read plan-of-record v4 (`.kilo/plans/1789489334832-…-strict-init.md`) — the only authority.
+> **Execution authority updated 2026-09-17.** Gas City Bead `flext-itpd1.2`
+> owns the live cursor. This runbook is the versioned resume contract; local Kilo
+> plans and their addenda remain session evidence only.
+
+1. Read Gas City Bead `flext-itpd1.2` and this runbook; reconcile their evidence
+   against the current integration tip before any effect.
 2. `git fetch` every touched repo; compare tips; confirm your lane basis (no peer lanes are open).
 3. `direnv exec <repo> gc bd ...` is the canonical beads route (Gas City shared standard;
    central DB flext, server mode). Record command + exit + decisive output per grain.
@@ -71,7 +78,7 @@ snapshot (input-CAS, authenticated)
    violations/warnings at the 0.12.0 checkpoint IF every Make verb completes in every cycle
    (correction recorded).
 
-## 6. Resume context (2026-09-15, proven)
+## 5b. Historical resume context (2026-09-15, proven — preserved as evidence)
 
 - flext-infra tip `c3f574807` (0.12.0-dev); `_conform` stale drift adopted via tip; `_models/_config`
   split (13 untracked + 2 M) ready to land through gen ×2 with parity probe 107/107 dunders vs

@@ -6,7 +6,7 @@
   - [1. Single standardization surface (SSOT)](#1-single-standardization-surface-ssot)
   - [2. Common verb surface for every project](#2-common-verb-surface-for-every-project)
   - [3. Canonical structure, facades, and naming (measured, then enforced)](#3-canonical-structure-facades-and-naming-measured-then-enforced)
-  - [3a. Namespaced runtime directories via `settings`](#3a-namespaced-runtime-directories-via-settings)
+  - [3a. Namespaced runtime directories via settings](#3a-namespaced-runtime-directories-via-settings)
   - [3b. Semantic discovery and automated rewiring](#3b-semantic-discovery-and-automated-rewiring)
   - [4. Three ordered phases (same strategy as ADR-020/008/009)](#4-three-ordered-phases-same-strategy-as-adr-020008009)
   - [5. Applicability to independent and external projects](#5-applicability-to-independent-and-external-projects)
@@ -41,10 +41,13 @@ This ADR does not create a new owner. It unifies and hardens the existing
 The workspace already has the right owners:
 
 - `flext-infra codegen conform` is the sole conformance/generation interface
-  (ADR-004), rendering managed files from `codegen.yaml`/`tooling.yaml` and the
-  templates under `flext_infra/templates/` (`base_verbs.mk.j2`, `base_venv.mk.j2`,
-  `project/base/{Makefile,pyproject.toml,.mise.toml,python-version,custom.mk}.j2`,
-  `module_skeleton.py.j2`, `static_package_init.py.j2`, `lazy_init_root.py.j2`).
+  (ADR-004), rendering managed files from `flext-infra/config/codegen.yaml` and
+  `flext-infra/config/tooling.yaml`, and the templates under
+  `flext_infra/templates/project/base/Makefile.j2`,
+  `pyproject.toml.j2`, `.mise.toml.j2`, `custom.mk.j2`,
+  `static_package_init.py.j2`, `lazy_init_root.py.j2`, `module_skeleton.py.j2`.
+  The retired templates `base_verbs.mk.j2` / `base_venv.mk.j2` are no longer
+  referenced.
 - `flext-tests` owns the shared test base and generic Make test behavior.
 - ADR-005 fixes facade layering `c -> t -> p -> m -> u` and the one-owner rule
   for `constants.py`/`utilities.py`/`api.py`/`base.py`/`_settings.py`/`_config.py`
@@ -258,6 +261,15 @@ These zero-drift/no-findings conditions describe completed standardization. The
 open, and gate results are never normalized. Generation fixed point and functional
 release evidence remain blocking.
 
+**Runtime status (2026-09-17):** the conditions above are the target contract,
+not a recorded state. The `0.12.0-dev` line is **not globally green**: `make
+check`/`make test` have no proven green run on the current integration tip, and
+the standardization audit reports open drift. Do not cite this ADR as proof of a
+green baseline. Durable execution state is owned by Gas City Bead
+`flext-itpd1.2`; the versioned recovery contract is
+`docs/ways-of-working/stabilization-checkpoint-0.12.md`. Workspace-local Kilo
+plans are session context, not published authority.
+
 ## References
 
 - [ADR-003 — Manifest-owned topology, profiles](003-workspace-tooling-hub-distribution.md)
@@ -268,5 +280,5 @@ release evidence remain blocking.
 - [ADR-008 — Neutral consumer boundaries](008-neutral-consumer-boundaries.md)
 - [ADR-009 — Ecosystem coordination](009-ecosystem-coordination-and-library-evaluation.md)
 - [Ecosystem coordination](../ecosystem-coordination.md)
-- SSOT: `flext-infra/src/flext_infra/config/codegen.yaml`, `tooling.yaml`;
-  templates under `flext_infra/templates/`.
+- SSOT: `flext-infra/config/codegen.yaml`, `flext-infra/config/tooling.yaml`;
+  templates under `flext_infra/templates/project/base/`.

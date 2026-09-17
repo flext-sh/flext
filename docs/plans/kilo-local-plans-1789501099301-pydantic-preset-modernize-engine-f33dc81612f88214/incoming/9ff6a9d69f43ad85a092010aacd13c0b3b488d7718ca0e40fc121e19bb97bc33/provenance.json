@@ -1,0 +1,15 @@
+{
+  "identity": "f33dc81612f8821492fe06766dfbe978962032e146c4c8db0b82b81f4e8dfca6",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789501099301-pydantic-preset-modernize-engine.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "9ff6a9d69f43ad85a092010aacd13c0b3b488d7718ca0e40fc121e19bb97bc33",
+  "canonical_path": "kilo-local-plans-1789501099301-pydantic-preset-modernize-engine-f33dc81612f88214.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.277381Z",
+  "attachments": []
+}

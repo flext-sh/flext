@@ -1,0 +1,15 @@
+{
+  "identity": "ec42e2f0e1f0811c9c1143ff491d539ed21ebdd4ea389ec30835af83e5131a8c",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789506814453-lazy-init-total-ownership-import-alignment.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "124b077620f9223751119a15200b2196f56f69e58450e54427ecc4f45c467fcd",
+  "canonical_path": "kilo-local-plans-1789506814453-lazy-init-total-ownership-import-alignment-ec42e2f0e1f0811c.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.280154Z",
+  "attachments": []
+}

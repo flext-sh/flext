@@ -1,0 +1,15 @@
+{
+  "identity": "7ce6b41085ca5e8da195032cc9eb85881674322cf7d94e32fc9abcb721d73d9c",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789048200851-closeout-ci-mise-mode-plan.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "e739b04403eb431344817be9829f0ab5b29b387fb0a0cd53aea209fece8ad128",
+  "canonical_path": "kilo-local-plans-1789048200851-closeout-ci-mise-mode-plan-7ce6b41085ca5e8d.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.215333Z",
+  "attachments": []
+}

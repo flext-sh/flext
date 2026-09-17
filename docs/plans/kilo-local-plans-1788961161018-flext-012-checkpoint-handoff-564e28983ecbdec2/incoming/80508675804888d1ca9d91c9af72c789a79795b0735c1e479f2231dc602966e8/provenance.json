@@ -1,0 +1,15 @@
+{
+  "identity": "564e28983ecbdec2f3c44dccd88f4e3f7baf9d6a59b3d7dd75cc58935c730425",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1788961161018-flext-012-checkpoint-handoff.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "80508675804888d1ca9d91c9af72c789a79795b0735c1e479f2231dc602966e8",
+  "canonical_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-handoff-564e28983ecbdec2.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.200211Z",
+  "attachments": []
+}

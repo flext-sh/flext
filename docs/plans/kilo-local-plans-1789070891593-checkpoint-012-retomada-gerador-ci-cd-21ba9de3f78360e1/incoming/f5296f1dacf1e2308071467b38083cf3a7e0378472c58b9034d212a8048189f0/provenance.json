@@ -1,0 +1,15 @@
+{
+  "identity": "21ba9de3f78360e177c0239e2d60c28be1916bb7045a68971e00fa58f6e362ad",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789070891593-checkpoint-012-retomada-gerador-ci-cd.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "f5296f1dacf1e2308071467b38083cf3a7e0378472c58b9034d212a8048189f0",
+  "canonical_path": "kilo-local-plans-1789070891593-checkpoint-012-retomada-gerador-ci-cd-21ba9de3f78360e1.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.224626Z",
+  "attachments": []
+}

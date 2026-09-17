@@ -1,0 +1,15 @@
+{
+  "identity": "3d08f271d0a32a0ab69de9595c19f747d19ed7a1df9e6dc127b3c29b268a4dd6",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789247197400-protocols-semantic-fleet-automation.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "6e6e01b8341497cc0a04f2cc8e96958d6b4f7c02211b47943ee4e3f071b5e13c",
+  "canonical_path": "kilo-local-plans-1789247197400-protocols-semantic-fleet-automation-3d08f271d0a32a0a.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.236698Z",
+  "attachments": []
+}

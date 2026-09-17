@@ -1,0 +1,15 @@
+{
+  "identity": "5f3e48eda7ab7c6ff2684f5820e7f0cb2b7d6fca2aa5e1f53b2029a09f3a56a0",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "2026-09-16-flext-infra-continuation-plan.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "1cbc2008db7033690fc6bf207b265ab35adcdf6f8974c9892046e7032ef47c85",
+  "canonical_path": "kilo-local-plans-2026-09-16-flext-infra-continuation-plan-5f3e48eda7ab7c6f.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.293520Z",
+  "attachments": []
+}

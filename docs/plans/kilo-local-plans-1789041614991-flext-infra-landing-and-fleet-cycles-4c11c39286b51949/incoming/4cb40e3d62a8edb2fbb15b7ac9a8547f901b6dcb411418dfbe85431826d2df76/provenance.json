@@ -1,0 +1,15 @@
+{
+  "identity": "4c11c39286b519492a4b4b47e171d9327b903738a6d5800c3594a940da5abdf0",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789041614991-flext-infra-landing-and-fleet-cycles.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "4cb40e3d62a8edb2fbb15b7ac9a8547f901b6dcb411418dfbe85431826d2df76",
+  "canonical_path": "kilo-local-plans-1789041614991-flext-infra-landing-and-fleet-cycles-4c11c39286b51949.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.212697Z",
+  "attachments": []
+}

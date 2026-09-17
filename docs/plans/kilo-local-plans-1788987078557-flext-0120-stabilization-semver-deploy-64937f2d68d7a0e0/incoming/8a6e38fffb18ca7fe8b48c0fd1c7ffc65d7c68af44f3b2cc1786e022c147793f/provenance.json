@@ -1,0 +1,15 @@
+{
+  "identity": "64937f2d68d7a0e0bed22db0d45f024f8437754ba94ba83dd1e8115089be05b8",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1788987078557-flext-0120-stabilization-semver-deploy.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "8a6e38fffb18ca7fe8b48c0fd1c7ffc65d7c68af44f3b2cc1786e022c147793f",
+  "canonical_path": "kilo-local-plans-1788987078557-flext-0120-stabilization-semver-deploy-64937f2d68d7a0e0.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.207538Z",
+  "attachments": []
+}

@@ -1,13 +1,22 @@
 # ADR-017 — Parametrized Rule Surfaces and the Single Modernize CLI
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+<!-- TOC END -->
+
 - **Status:** Accepted (draft evolving per cycle; program plan of 2026-09-15)
 - **Date:** 2026-09-15
 - **Target line:** FLEXT `0.12.0-dev`, forward baseline `0.13.0`
 - **Scope:** flext-infra modernize engine, rule/pattern storage, discovery and
   packaging for the whole fleet plus external consumers (ai-hub pilot)
 - **Complements:** ADR-005 (config SSOT), ADR-014 (family shape + codemod rules)
-- **Tracking:** program epic beads (P0..Cn+1), plan
-  `.kilo/plans/1789500358999-rope-modernize-unification.md`
+- **Tracking:** Gas City program epic `flext-itpd1` and documentation convergence
+  task `flext-itpd1.2`. The versioned resume contract is
+  `docs/roadmap/rope-gen-engine-runbook-2026-09-15.md`; workspace-local plans
+  are session evidence and do not define the published execution route.
 
 ## Context
 
@@ -21,29 +30,31 @@ inherit fleet rules.
 ## Decision
 
 1. **Verb taxonomy (operator law).** `mod` is the ONLY adjust/rewrite surface
-   (`make mod` / `refactor mod`). `ast` is the ast-grep engine: it runs as
-   phase 1 of `mod` and as a standalone scan (`refactor ast`). `gen` is the
-   template generator (`make gen`, conform `mode=CHECK|APPLY`) consuming the
-   SAME rope planners — generation, never adjustment. Public verbs
-   `fix/fmt/check/test` are unchanged. No other adjust verb survives
-   (`accessor-migrate`, `modernize-dataclass`, `fix-enforcement` executor die).
-2. **Rules are data under `config/rules/`** (repo-root SSOT, multiple files):
-   - `config/rules/mod/` — verb policy: preset-rewire, accessor-renames,
-     external-contracts exemptions, sed lists (`sed.yaml`);
-   - `config/rules/ast/` — engine patterns `*.yml` + fixtures `tests/`
-     (migrated from `src/flext_infra/codemod/{rules,utils,tests}`; the old
-     directory is deleted in the same change);
-   - `config/rules/rope/` — rope phase parameters and violation models.
-   Enforcement rows stay in `config/infra.yaml`; the beartype catalog stays in
-   flext-core. Project-specific renames stay in the project (ai-hub owns its
-   own rule files).
-3. **Distribution discovery (Option C).** `config/rules/` is force-included in
-   the wheel as distribution data; providers resolve their config through
-   `Distribution.locate_file("config/rules/ast")` (editable resolves the
-   checkout; a wheel resolves the included data). The `ruleDirs` jail is
-   re-anchored to the provider's `config/rules/<engine>/` root — never removed.
+   (`make mod` / `refactor mod`). `gen` is the template generator (`make gen`,
+   conform `mode=CHECK|APPLY`) consuming the SAME rope planners — generation,
+   never adjustment. Public verbs `fix/fmt/check/test` are unchanged. No other
+   adjust verb survives (`accessor-migrate`, `modernize-dataclass`,
+   `fix-enforcement` executor die). A separate standalone `ast` verb is planned
+   but not yet a public surface; ast-grep runs only as phase 1 of `mod`.
+2. **Rules are data under `flext-infra/config/rules/`** (SSOT, multiple files):
+   - `flext-infra/config/rules/mod/` — **current** verb policy: preset-rewire,
+     accessor-renames, external-contracts exemptions, sed lists (`sed.yaml`,
+     currently empty rules list);
+   - `config/rules/ast/` — **planned**, not yet materialized: engine patterns
+     `*.yml` + fixtures `tests/` (to be migrated from `src/flext_infra/codemod/`);
+   - `config/rules/rope/` — **planned**, not yet materialized: rope phase
+     parameters and violation models.
+   Enforcement rows stay in `flext-infra/config/infra.yaml`; the beartype
+   catalog stays in flext-core. Project-specific renames stay in the project
+   (ai-hub owns its own rule files).
+3. **Distribution discovery (Option C, planned).** `config/rules/` is planned to
+   be force-included in the wheel as distribution data; providers resolve their
+   config through `Distribution.locate_file("config/rules/ast")` (editable
+   resolves the checkout; a wheel resolves the included data). The `ruleDirs`
+   jail is re-anchored to the provider's `config/rules/<engine>/` root — never
+   removed. Not yet implemented.
 4. **Toggles are data, not flags.** Phase/component selection lives in
-   `config/tooling.yaml` (`mod.phases.*`) read through typed enums; dry-run is
+   `flext-infra/config/tooling.yaml` (`mod.phases.*`) read through typed enums; dry-run is
    scan mode without `--apply`.
 5. **Enforcement convergence.** ENFORCE-XXX rows with `fix_action` kind
    `codemod` execute the SAME rules/phases of `mod`; no second execution loop.

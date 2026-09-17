@@ -1,0 +1,15 @@
+{
+  "identity": "2dacc8fcdfa7c60274d8dc3ffa3b96ce66f0c60473eb496f5bca39192bf9b45a",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1788987809945-batch2-revalidation.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "ed897ca31f2702e7ddd29e0d2f19b3d8e4593239342f2e246bc4371390fed03e",
+  "canonical_path": "kilo-local-plans-1788987809945-batch2-revalidation-2dacc8fcdfa7c602.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.210225Z",
+  "attachments": []
+}

@@ -1,0 +1,15 @@
+{
+  "identity": "9580e181271e444de6e0e7d2e4da07d95322d1529e79f31d8f706fe2281e2387",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789441200000-stabilization-recovery-docs-automation.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "6b75c94fad6b5df4980aced2e6b90619b13702d137f9c6e4549c23ff53d55482",
+  "canonical_path": "kilo-local-plans-1789441200000-stabilization-recovery-docs-automation-9580e181271e444d.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.241162Z",
+  "attachments": []
+}

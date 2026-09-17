@@ -36,56 +36,56 @@ Found 50 node(s) with >= 100 lines (kind=Function):
 
 ## Results
 
-- __mise_bootstrap (`/home/marlonsc/flext/flext-api/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-auth/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-cli/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-core/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-db-oracle/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-dbt-ldap/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-dbt-ldif/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-dbt-oracle/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-dbt-oracle-wms/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-grpc/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-infra/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-infra/src/flext_infra/templates/bootstrap/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-ldap/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-ldif/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-meltano/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-observability/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-oracle-oic/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-oracle-wms/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-plugin/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-quality/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-tap-ldap/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-tap-ldif/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-tap-oracle/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-tap-oracle-oic/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-tap-oracle-wms/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-target-ldap/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-target-ldif/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-target-oracle/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-target-oracle-oic/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-target-oracle-wms/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-tests/bin/mise`)
-- __mise_bootstrap (`/home/marlonsc/flext/flext-web/bin/mise`)
-- install (`/home/marlonsc/flext/flext-api/bin/mise`)
-- install (`/home/marlonsc/flext/flext-auth/bin/mise`)
-- install (`/home/marlonsc/flext/flext-cli/bin/mise`)
-- install (`/home/marlonsc/flext/flext-core/bin/mise`)
-- install (`/home/marlonsc/flext/flext-db-oracle/bin/mise`)
-- install (`/home/marlonsc/flext/flext-dbt-ldap/bin/mise`)
-- install (`/home/marlonsc/flext/flext-dbt-ldif/bin/mise`)
-- install (`/home/marlonsc/flext/flext-dbt-oracle/bin/mise`)
-- install (`/home/marlonsc/flext/flext-dbt-oracle-wms/bin/mise`)
-- install (`/home/marlonsc/flext/flext-grpc/bin/mise`)
-- install (`/home/marlonsc/flext/flext-infra/bin/mise`)
-- install (`/home/marlonsc/flext/flext-infra/src/flext_infra/templates/bootstrap/mise`)
-- install (`/home/marlonsc/flext/flext-ldap/bin/mise`)
-- install (`/home/marlonsc/flext/flext-ldif/bin/mise`)
-- install (`/home/marlonsc/flext/flext-meltano/bin/mise`)
-- install (`/home/marlonsc/flext/flext-observability/bin/mise`)
-- install (`/home/marlonsc/flext/flext-oracle-oic/bin/mise`)
-- install (`/home/marlonsc/flext/flext-oracle-wms/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-api/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-auth/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-cli/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-core/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-db-oracle/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-dbt-ldap/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-dbt-ldif/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-dbt-oracle/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-dbt-oracle-wms/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-grpc/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-infra/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-infra/src/flext_infra/templates/bootstrap/mise`)
+- __mise_bootstrap (`~/flext/flext-ldap/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-ldif/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-meltano/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-observability/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-oracle-oic/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-oracle-wms/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-plugin/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-quality/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-tap-ldap/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-tap-ldif/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-tap-oracle/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-tap-oracle-oic/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-tap-oracle-wms/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-target-ldap/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-target-ldif/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-target-oracle/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-target-oracle-oic/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-target-oracle-wms/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-tests/bin/mise`)
+- __mise_bootstrap (`~/flext/flext-web/bin/mise`)
+- install (`~/flext/flext-api/bin/mise`)
+- install (`~/flext/flext-auth/bin/mise`)
+- install (`~/flext/flext-cli/bin/mise`)
+- install (`~/flext/flext-core/bin/mise`)
+- install (`~/flext/flext-db-oracle/bin/mise`)
+- install (`~/flext/flext-dbt-ldap/bin/mise`)
+- install (`~/flext/flext-dbt-ldif/bin/mise`)
+- install (`~/flext/flext-dbt-oracle/bin/mise`)
+- install (`~/flext/flext-dbt-oracle-wms/bin/mise`)
+- install (`~/flext/flext-grpc/bin/mise`)
+- install (`~/flext/flext-infra/bin/mise`)
+- install (`~/flext/flext-infra/src/flext_infra/templates/bootstrap/mise`)
+- install (`~/flext/flext-ldap/bin/mise`)
+- install (`~/flext/flext-ldif/bin/mise`)
+- install (`~/flext/flext-meltano/bin/mise`)
+- install (`~/flext/flext-observability/bin/mise`)
+- install (`~/flext/flext-oracle-oic/bin/mise`)
+- install (`~/flext/flext-oracle-wms/bin/mise`)
 
 ## Raw Output
 
@@ -102,8 +102,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 66933,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-api/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-api/bin/mise",
+      "qualified_name": "~/flext/flext-api/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-api/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -116,8 +116,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 67320,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-auth/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-auth/bin/mise",
+      "qualified_name": "~/flext/flext-auth/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-auth/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -130,8 +130,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 68096,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-cli/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-cli/bin/mise",
+      "qualified_name": "~/flext/flext-cli/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-cli/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -144,8 +144,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 71429,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-core/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-core/bin/mise",
+      "qualified_name": "~/flext/flext-core/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-core/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -158,8 +158,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 76820,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-db-oracle/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-db-oracle/bin/mise",
+      "qualified_name": "~/flext/flext-db-oracle/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-db-oracle/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -172,8 +172,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 77707,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-dbt-ldap/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-dbt-ldap/bin/mise",
+      "qualified_name": "~/flext/flext-dbt-ldap/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-dbt-ldap/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -186,8 +186,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 78010,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-dbt-ldif/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-dbt-ldif/bin/mise",
+      "qualified_name": "~/flext/flext-dbt-ldif/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-dbt-ldif/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -200,8 +200,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 78460,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-dbt-oracle/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-dbt-oracle/bin/mise",
+      "qualified_name": "~/flext/flext-dbt-oracle/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-dbt-oracle/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -214,8 +214,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 78659,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-dbt-oracle-wms/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-dbt-oracle-wms/bin/mise",
+      "qualified_name": "~/flext/flext-dbt-oracle-wms/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-dbt-oracle-wms/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -228,8 +228,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 78885,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-grpc/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-grpc/bin/mise",
+      "qualified_name": "~/flext/flext-grpc/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-grpc/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -242,8 +242,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 79504,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-infra/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-infra/bin/mise",
+      "qualified_name": "~/flext/flext-infra/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-infra/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -256,8 +256,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 83887,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-infra/src/flext_infra/templates/bootstrap/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-infra/src/flext_infra/templates/bootstrap/mise",
+      "qualified_name": "~/flext/flext-infra/src/flext_infra/templates/bootstrap/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-infra/src/flext_infra/templates/bootstrap/mise",
       "line_start": 5,
       "line_end": 405,
       "language": "bash",
@@ -270,8 +270,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 87918,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-ldap/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-ldap/bin/mise",
+      "qualified_name": "~/flext/flext-ldap/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-ldap/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -284,8 +284,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 88681,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-ldif/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-ldif/bin/mise",
+      "qualified_name": "~/flext/flext-ldif/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-ldif/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -298,8 +298,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 91554,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-meltano/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-meltano/bin/mise",
+      "qualified_name": "~/flext/flext-meltano/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-meltano/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -312,8 +312,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 92757,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-observability/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-observability/bin/mise",
+      "qualified_name": "~/flext/flext-observability/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-observability/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -326,8 +326,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 93210,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-oracle-oic/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-oracle-oic/bin/mise",
+      "qualified_name": "~/flext/flext-oracle-oic/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-oracle-oic/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -340,8 +340,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 93594,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-oracle-wms/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-oracle-wms/bin/mise",
+      "qualified_name": "~/flext/flext-oracle-wms/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-oracle-wms/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -354,8 +354,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 94213,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-plugin/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-plugin/bin/mise",
+      "qualified_name": "~/flext/flext-plugin/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-plugin/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -368,8 +368,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 94780,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-quality/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-quality/bin/mise",
+      "qualified_name": "~/flext/flext-quality/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-quality/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -382,8 +382,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 95678,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-tap-ldap/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-tap-ldap/bin/mise",
+      "qualified_name": "~/flext/flext-tap-ldap/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-tap-ldap/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -396,8 +396,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 95819,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-tap-ldif/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-tap-ldif/bin/mise",
+      "qualified_name": "~/flext/flext-tap-ldif/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-tap-ldif/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -410,8 +410,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 95990,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-tap-oracle/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-tap-oracle/bin/mise",
+      "qualified_name": "~/flext/flext-tap-oracle/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-tap-oracle/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -424,8 +424,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 96142,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-tap-oracle-oic/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-tap-oracle-oic/bin/mise",
+      "qualified_name": "~/flext/flext-tap-oracle-oic/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-tap-oracle-oic/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -438,8 +438,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 96422,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-tap-oracle-wms/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-tap-oracle-wms/bin/mise",
+      "qualified_name": "~/flext/flext-tap-oracle-wms/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-tap-oracle-wms/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -452,8 +452,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 96697,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-target-ldap/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-target-ldap/bin/mise",
+      "qualified_name": "~/flext/flext-target-ldap/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-target-ldap/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -466,8 +466,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 96970,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-target-ldif/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-target-ldif/bin/mise",
+      "qualified_name": "~/flext/flext-target-ldif/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-target-ldif/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -480,8 +480,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 97189,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-target-oracle/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-target-oracle/bin/mise",
+      "qualified_name": "~/flext/flext-target-oracle/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-target-oracle/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -494,8 +494,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 97599,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-target-oracle-oic/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-target-oracle-oic/bin/mise",
+      "qualified_name": "~/flext/flext-target-oracle-oic/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-target-oracle-oic/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -508,8 +508,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 97794,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-target-oracle-wms/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-target-oracle-wms/bin/mise",
+      "qualified_name": "~/flext/flext-target-oracle-wms/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-target-oracle-wms/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -522,8 +522,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 98176,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-tests/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-tests/bin/mise",
+      "qualified_name": "~/flext/flext-tests/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-tests/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -536,8 +536,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 99529,
       "kind": "Function",
       "name": "__mise_bootstrap",
-      "qualified_name": "/home/marlonsc/flext/flext-web/bin/mise::__mise_bootstrap",
-      "file_path": "/home/marlonsc/flext/flext-web/bin/mise",
+      "qualified_name": "~/flext/flext-web/bin/mise::__mise_bootstrap",
+      "file_path": "~/flext/flext-web/bin/mise",
       "line_start": 4,
       "line_end": 404,
       "language": "bash",
@@ -550,8 +550,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 66934,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-api/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-api/bin/mise",
+      "qualified_name": "~/flext/flext-api/bin/mise::install",
+      "file_path": "~/flext/flext-api/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -564,8 +564,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 67321,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-auth/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-auth/bin/mise",
+      "qualified_name": "~/flext/flext-auth/bin/mise::install",
+      "file_path": "~/flext/flext-auth/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -578,8 +578,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 68097,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-cli/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-cli/bin/mise",
+      "qualified_name": "~/flext/flext-cli/bin/mise::install",
+      "file_path": "~/flext/flext-cli/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -592,8 +592,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 71430,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-core/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-core/bin/mise",
+      "qualified_name": "~/flext/flext-core/bin/mise::install",
+      "file_path": "~/flext/flext-core/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -606,8 +606,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 76821,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-db-oracle/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-db-oracle/bin/mise",
+      "qualified_name": "~/flext/flext-db-oracle/bin/mise::install",
+      "file_path": "~/flext/flext-db-oracle/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -620,8 +620,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 77708,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-dbt-ldap/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-dbt-ldap/bin/mise",
+      "qualified_name": "~/flext/flext-dbt-ldap/bin/mise::install",
+      "file_path": "~/flext/flext-dbt-ldap/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -634,8 +634,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 78011,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-dbt-ldif/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-dbt-ldif/bin/mise",
+      "qualified_name": "~/flext/flext-dbt-ldif/bin/mise::install",
+      "file_path": "~/flext/flext-dbt-ldif/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -648,8 +648,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 78461,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-dbt-oracle/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-dbt-oracle/bin/mise",
+      "qualified_name": "~/flext/flext-dbt-oracle/bin/mise::install",
+      "file_path": "~/flext/flext-dbt-oracle/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -662,8 +662,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 78660,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-dbt-oracle-wms/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-dbt-oracle-wms/bin/mise",
+      "qualified_name": "~/flext/flext-dbt-oracle-wms/bin/mise::install",
+      "file_path": "~/flext/flext-dbt-oracle-wms/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -676,8 +676,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 78886,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-grpc/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-grpc/bin/mise",
+      "qualified_name": "~/flext/flext-grpc/bin/mise::install",
+      "file_path": "~/flext/flext-grpc/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -690,8 +690,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 79505,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-infra/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-infra/bin/mise",
+      "qualified_name": "~/flext/flext-infra/bin/mise::install",
+      "file_path": "~/flext/flext-infra/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -704,8 +704,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 83888,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-infra/src/flext_infra/templates/bootstrap/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-infra/src/flext_infra/templates/bootstrap/mise",
+      "qualified_name": "~/flext/flext-infra/src/flext_infra/templates/bootstrap/mise::install",
+      "file_path": "~/flext/flext-infra/src/flext_infra/templates/bootstrap/mise",
       "line_start": 28,
       "line_end": 402,
       "language": "bash",
@@ -718,8 +718,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 87919,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-ldap/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-ldap/bin/mise",
+      "qualified_name": "~/flext/flext-ldap/bin/mise::install",
+      "file_path": "~/flext/flext-ldap/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -732,8 +732,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 88682,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-ldif/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-ldif/bin/mise",
+      "qualified_name": "~/flext/flext-ldif/bin/mise::install",
+      "file_path": "~/flext/flext-ldif/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -746,8 +746,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 91555,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-meltano/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-meltano/bin/mise",
+      "qualified_name": "~/flext/flext-meltano/bin/mise::install",
+      "file_path": "~/flext/flext-meltano/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -760,8 +760,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 92758,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-observability/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-observability/bin/mise",
+      "qualified_name": "~/flext/flext-observability/bin/mise::install",
+      "file_path": "~/flext/flext-observability/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -774,8 +774,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 93211,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-oracle-oic/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-oracle-oic/bin/mise",
+      "qualified_name": "~/flext/flext-oracle-oic/bin/mise::install",
+      "file_path": "~/flext/flext-oracle-oic/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",
@@ -788,8 +788,8 @@ Found 50 node(s) with >= 100 lines (kind=Function):
       "id": 93595,
       "kind": "Function",
       "name": "install",
-      "qualified_name": "/home/marlonsc/flext/flext-oracle-wms/bin/mise::install",
-      "file_path": "/home/marlonsc/flext/flext-oracle-wms/bin/mise",
+      "qualified_name": "~/flext/flext-oracle-wms/bin/mise::install",
+      "file_path": "~/flext/flext-oracle-wms/bin/mise",
       "line_start": 27,
       "line_end": 401,
       "language": "bash",

@@ -43,7 +43,7 @@ authoring standards. These are hand-written and reviewed.
 | --- | --- | --- |
 | Architecture Index | [architecture/README.md](architecture/README.md) | Canonical architecture baseline + ADR index |
 | arc42 | [architecture/arc42/README.md](architecture/arc42/README.md) | 12-chapter architecture template |
-| ADRs | [architecture/adr/README.md](architecture/adr/README.md) | 10 formal decision records |
+| ADRs | [architecture/adr/README.md](architecture/adr/README.md) | 13 formal decision records (ADR-001–010, 014–017) |
 | Code Communities | [architecture/communities/index.md](architecture/communities/index.md) | CRG community wiki index |
 | Guides Index | [guides/README.md](guides/README.md) | Workflow, migration, day-to-day guides |
 | Standards | [standards/README.md](standards/README.md) | Cross-workspace authoring standards |

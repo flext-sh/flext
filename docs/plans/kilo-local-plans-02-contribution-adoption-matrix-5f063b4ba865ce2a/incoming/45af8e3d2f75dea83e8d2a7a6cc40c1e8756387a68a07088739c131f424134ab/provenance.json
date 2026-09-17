@@ -1,0 +1,15 @@
+{
+  "identity": "5f063b4ba865ce2a42a7202132bf7417e431691b8f371824e55d20cf3aba176e",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "addenda/2026-09-16-flext-infra-continuation/02-contribution-adoption-matrix.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "45af8e3d2f75dea83e8d2a7a6cc40c1e8756387a68a07088739c131f424134ab",
+  "canonical_path": "kilo-local-plans-02-contribution-adoption-matrix-5f063b4ba865ce2a.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.312926Z",
+  "attachments": []
+}

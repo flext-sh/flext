@@ -1,0 +1,15 @@
+{
+  "identity": "9df0d81699bf6fbfb3758c98ee3d5d1f0f308380667144e9e699493ce492f4df",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789475884207-fleet-check-green-finish.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "5dfd3b4e1a1c6293cfa8f916a2d8cdc496c5a44b904a36ce60c634231b27a185",
+  "canonical_path": "kilo-local-plans-1789475884207-fleet-check-green-finish-9df0d81699bf6fbf.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.250609Z",
+  "attachments": []
+}

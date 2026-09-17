@@ -1,0 +1,15 @@
+{
+  "identity": "db1fa3e7cde5e19b5363ca342af6dac0cd4ba7a2332d593834db933a3145295e",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1788883876060-make-deps-template-monopoly.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "82608dc229004b668612a8c80be02e1530f5543d83e4cba2b58a32b1b0dc23ba",
+  "canonical_path": "kilo-local-plans-1788883876060-make-deps-template-monopoly-db1fa3e7cde5e19b.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.198119Z",
+  "attachments": []
+}

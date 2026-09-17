@@ -19,11 +19,11 @@ executa numa lane própria do ai-hub com os gates nativos do ai-hub.
 ## 1. Sintoma medido
 
 - **Onde:** sessão Claude Code (job em background) rodando em
-  `/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0`.
+  `~/flext/.claude/worktrees/bugfix+stabilize-0.12.0`.
 - **Ambiente herdado do shell que lançou o agente, com o direnv do ai-hub:**
-  - `DIRENV_FILE=/home/marlonsc/ai-hub/.envrc`
+  - `DIRENV_FILE=~/ai-hub/.envrc`
   - `BEADS_DOLT_SERVER_DATABASE=aihub`
-  - `VIRTUAL_ENV=/home/marlonsc/ai-hub/.venv`
+  - `VIRTUAL_ENV=~/ai-hub/.venv`
 - **Efeito:** `bd list` no flext → `PROJECT IDENTITY MISMATCH` (banco `aihub` servido para o
   projeto flext).
 - **Contraprova:** o shell interativo do operador funciona (`BEADS_DOLT_SERVER_DATABASE=flext`),

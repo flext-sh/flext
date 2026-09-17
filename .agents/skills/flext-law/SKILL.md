@@ -149,24 +149,24 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
 - A rig keeps its own database identity on the city's single managed Dolt
   server. Identity mismatch is repaired only with the native
   `gc rig set-endpoint <rig> --inherit` run in the city; a metadata read is
-  not connectivity proof — confirm with a real `bd show <id> --json`.
+  not connectivity proof — confirm with a real
+  `direnv exec <repo> bd show <id> --json`.
 
 ## Resume entry points
 
 - Stabilization handoff (state table, first failure, next action):
   `flext-infra/docs/roadmap/namespace-automation-handoff-2026-09-14.md`.
-- Session plans live under `.kilo/plans/` (newest first); the master
-  stabilization plan is
-  `.kilo/plans/1789441200000-stabilization-recovery-docs-automation.md`.
-- Execution state belongs to central Beads; handoffs and plans carry
-  evidence and resume instructions only, never a second queue.
+- Live execution state belongs to Gas City task `flext-itpd1.2` under epic
+  `flext-itpd1`; session plans under `.kilo/plans/` are local evidence only,
+  never a published authority or second queue.
 - Stabilization runbook (canonical cycle, tracker contract, landing):
   `docs/ways-of-working/stabilization-checkpoint-0.12.md`.
 
 ## Fleet boundary
 
 - First-party FLEXT members and standalone repositories consume the same
-  branch-matched law, Make control plane, and generated conventions.- Third-party forks and content-only repositories are not FLEXT members: do
+  branch-matched law, Make control plane, and generated conventions.
+- Third-party forks and content-only repositories are not FLEXT members: do
   not impose FLEXT architecture, dependency injection, typing modernization,
   language features, lint, generation, or package layout on them. Follow the
   upstream architecture, style, runtime floor, toolchain, build, release, and

@@ -1,5 +1,10 @@
 # Política de supressões (mypy / pyright / pyrefly / Pylance)
 
+<!-- TOC START -->
+- [O que foi feito (correção na raiz)](#o-que-foi-feito-correcao-na-raiz)
+- [Atualizações (continuação do plano)](#atualizacoes-continuacao-do-plano)
+<!-- TOC END -->
+
 **Regras (AGENTS.md + decisão do repositório):**
 
 0. **Overrides** — Seguir sempre o modelo padrão de `pyproject.toml` sincronizado do repositório FLEXT por

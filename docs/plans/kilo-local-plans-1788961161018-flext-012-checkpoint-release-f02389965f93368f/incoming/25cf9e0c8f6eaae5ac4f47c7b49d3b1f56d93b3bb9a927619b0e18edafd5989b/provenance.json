@@ -1,0 +1,15 @@
+{
+  "identity": "f02389965f93368f42fab9e2fe998e8a66c07e24042064280dcb282e94dd2543",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1788961161018-flext-012-checkpoint-release.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "25cf9e0c8f6eaae5ac4f47c7b49d3b1f56d93b3bb9a927619b0e18edafd5989b",
+  "canonical_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-release-f02389965f93368f.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.202016Z",
+  "attachments": []
+}

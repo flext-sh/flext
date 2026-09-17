@@ -1,0 +1,15 @@
+{
+  "identity": "ef78e36fce2ca9d20b5544eb63f3cd816effbbe2812c6c4af76cb5dd31e32cb6",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789049587481-zero-variable-make-pendencias.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "f5fdb2e99978311df9003277e31bf228275c264ab4544037129e46c5b5e202d1",
+  "canonical_path": "kilo-local-plans-1789049587481-zero-variable-make-pendencias-ef78e36fce2ca9d2.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.216849Z",
+  "attachments": []
+}

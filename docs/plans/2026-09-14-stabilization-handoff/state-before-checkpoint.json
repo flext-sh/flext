@@ -10,7 +10,7 @@
         "stderr": "From github.com:flext-sh/flext\n * branch                  0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0",
         "head": {
           "exit": 0,
           "stdout": "79238b9720ea988c7f1dd94dfc20f99a56c88b00",
@@ -33,7 +33,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext",
+        "cwd": "~/flext",
         "head": {
           "exit": 0,
           "stdout": "206c02ee1dd3f714a8164ade4b5605a6f71b8856",
@@ -80,7 +80,7 @@
         "stderr": "From https://github.com/flext-sh/flext-api\n * branch              0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-api",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-api",
         "head": {
           "exit": 0,
           "stdout": "5333ec495870a8713d965582cce3aa599028f258",
@@ -103,7 +103,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-api",
+        "cwd": "~/flext/flext-api",
         "head": {
           "exit": 0,
           "stdout": "6f9a0bcf1234ba1c92887f546d9bb35df032c657",
@@ -150,7 +150,7 @@
         "stderr": "From https://github.com/flext-sh/flext-auth\n * branch              0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-auth",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-auth",
         "head": {
           "exit": 0,
           "stdout": "ab9e63085c10262443ab1d7b8559b9c54deac39c",
@@ -173,7 +173,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-auth",
+        "cwd": "~/flext/flext-auth",
         "head": {
           "exit": 0,
           "stdout": "74f71f9ef856965679937bdea5e2ea34f69395be",
@@ -220,7 +220,7 @@
         "stderr": "From https://github.com/flext-sh/flext-cli\n * branch              0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-cli",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-cli",
         "head": {
           "exit": 0,
           "stdout": "a167b79d1cbfc36439339918e03ff3c8a7274a0e",
@@ -243,7 +243,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-cli",
+        "cwd": "~/flext/flext-cli",
         "head": {
           "exit": 0,
           "stdout": "641700e5f1d82c841aaaea496e22733d56ca3133",
@@ -290,7 +290,7 @@
         "stderr": "From https://github.com/flext-sh/flext-core\n * branch                0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-core",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-core",
         "head": {
           "exit": 0,
           "stdout": "adbed6f49b4c4ef5e5d47cde98ad4145f675c99c",
@@ -313,7 +313,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-core",
+        "cwd": "~/flext/flext-core",
         "head": {
           "exit": 0,
           "stdout": "5a1317238e7e00a5d4250732bd4247c6dbce8d8c",
@@ -360,7 +360,7 @@
         "stderr": "From https://github.com/flext-sh/flext-db-oracle\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-db-oracle",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-db-oracle",
         "head": {
           "exit": 0,
           "stdout": "f77af7bb3932c285ac00633a904932527043d2fc",
@@ -383,7 +383,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-db-oracle",
+        "cwd": "~/flext/flext-db-oracle",
         "head": {
           "exit": 0,
           "stdout": "951237df67f48acf8ad49126ff4eb15234ba4b41",
@@ -430,7 +430,7 @@
         "stderr": "From https://github.com/flext-sh/flext-dbt-ldap\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-ldap",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-ldap",
         "head": {
           "exit": 0,
           "stdout": "06f500e7272f2b7372f588d810a9db98fd07fccf",
@@ -453,7 +453,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-dbt-ldap",
+        "cwd": "~/flext/flext-dbt-ldap",
         "head": {
           "exit": 0,
           "stdout": "27a5d5d2bc2c4e993127b17467499f71381f319a",
@@ -500,7 +500,7 @@
         "stderr": "From https://github.com/flext-sh/flext-dbt-ldif\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-ldif",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-ldif",
         "head": {
           "exit": 0,
           "stdout": "48719a3c2d1309fee11fee2da11e4cb75bbbd4c4",
@@ -523,7 +523,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-dbt-ldif",
+        "cwd": "~/flext/flext-dbt-ldif",
         "head": {
           "exit": 0,
           "stdout": "e40ccecfa6e72aab614e483736ffa1e892d5e8fd",
@@ -570,7 +570,7 @@
         "stderr": "From https://github.com/flext-sh/flext-dbt-oracle\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-oracle",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-oracle",
         "head": {
           "exit": 0,
           "stdout": "ee230b6b2f4c337dd553ef6a48c8639ed0a919d7",
@@ -593,7 +593,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-dbt-oracle",
+        "cwd": "~/flext/flext-dbt-oracle",
         "head": {
           "exit": 0,
           "stdout": "9b5d1b3cdd1938c7c381639cdd96cca9cf25625d",
@@ -640,7 +640,7 @@
         "stderr": "From https://github.com/flext-sh/flext-dbt-oracle-wms\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-oracle-wms",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-dbt-oracle-wms",
         "head": {
           "exit": 0,
           "stdout": "01d3a3ae925fc7f8a25b4e54e3309f687b405cc2",
@@ -663,7 +663,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-dbt-oracle-wms",
+        "cwd": "~/flext/flext-dbt-oracle-wms",
         "head": {
           "exit": 0,
           "stdout": "2a7933f58782a8f8433b005e1bd985c862a61cee",
@@ -710,7 +710,7 @@
         "stderr": "From https://github.com/flext-sh/flext-grpc\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-grpc",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-grpc",
         "head": {
           "exit": 0,
           "stdout": "1d6930102315278a8700036b3eafa9a5cdd5a7d7",
@@ -733,7 +733,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-grpc",
+        "cwd": "~/flext/flext-grpc",
         "head": {
           "exit": 0,
           "stdout": "58605cf8e71d42828c09935da846bd8e93d762b6",
@@ -780,7 +780,7 @@
         "stderr": "From https://github.com/flext-sh/flext-infra\n * branch                0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-infra",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-infra",
         "head": {
           "exit": 0,
           "stdout": "f9e0f61637a48477f6082312aee2e977dbde98cf",
@@ -803,7 +803,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-infra",
+        "cwd": "~/flext/flext-infra",
         "head": {
           "exit": 0,
           "stdout": "2e8fe9cf90c68411ced8fb57e4b1e81c63d7f3a1",
@@ -850,7 +850,7 @@
         "stderr": "From https://github.com/flext-sh/flext-ldap\n * branch              0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-ldap",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-ldap",
         "head": {
           "exit": 0,
           "stdout": "b81063793984b39669c7a796809ebe85db96b6f4",
@@ -873,7 +873,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-ldap",
+        "cwd": "~/flext/flext-ldap",
         "head": {
           "exit": 0,
           "stdout": "79d451e8980158ba0881d32b4ce9eed7879e84d6",
@@ -920,7 +920,7 @@
         "stderr": "From https://github.com/flext-sh/flext-ldif\n * branch              0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-ldif",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-ldif",
         "head": {
           "exit": 0,
           "stdout": "2f88eab7d9c969b05c54699ee30d5a9f3debd37b",
@@ -943,7 +943,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-ldif",
+        "cwd": "~/flext/flext-ldif",
         "head": {
           "exit": 0,
           "stdout": "048dc613c902b5ed4efa008607b51e61611525f4",
@@ -990,7 +990,7 @@
         "stderr": "From https://github.com/flext-sh/flext-meltano\n * branch              0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-meltano",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-meltano",
         "head": {
           "exit": 0,
           "stdout": "e72643c7c797621398f9850280fb819e269b91f5",
@@ -1013,7 +1013,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-meltano",
+        "cwd": "~/flext/flext-meltano",
         "head": {
           "exit": 0,
           "stdout": "cd99926a3637f91931719a2bf26a544dc45d2834",
@@ -1060,7 +1060,7 @@
         "stderr": "From https://github.com/flext-sh/flext-observability\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-observability",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-observability",
         "head": {
           "exit": 0,
           "stdout": "04a39f05868f0819ee77840a5b45db83e5b3d589",
@@ -1083,7 +1083,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-observability",
+        "cwd": "~/flext/flext-observability",
         "head": {
           "exit": 0,
           "stdout": "08cd0df50987fde10ffbd9b270383b2ac3d2f8b0",
@@ -1130,7 +1130,7 @@
         "stderr": "From https://github.com/flext-sh/flext-oracle-oic\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-oracle-oic",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-oracle-oic",
         "head": {
           "exit": 0,
           "stdout": "f19465a300837be3b7669f9715738711c3515699",
@@ -1153,7 +1153,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-oracle-oic",
+        "cwd": "~/flext/flext-oracle-oic",
         "head": {
           "exit": 0,
           "stdout": "a2c8af20cc73715c9b45fb66f4c4297263536864",
@@ -1200,7 +1200,7 @@
         "stderr": "From https://github.com/flext-sh/flext-oracle-wms\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-oracle-wms",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-oracle-wms",
         "head": {
           "exit": 0,
           "stdout": "45976a91f72ca2e153e472f0de92c7fe5ab5962e",
@@ -1223,7 +1223,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-oracle-wms",
+        "cwd": "~/flext/flext-oracle-wms",
         "head": {
           "exit": 0,
           "stdout": "64e0c9117ee1f96d5b550ebb623b429329a7a40e",
@@ -1270,7 +1270,7 @@
         "stderr": "From https://github.com/flext-sh/flext-plugin\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-plugin",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-plugin",
         "head": {
           "exit": 0,
           "stdout": "56161b849d6645293c1e1a11126ee493b6aabf02",
@@ -1293,7 +1293,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-plugin",
+        "cwd": "~/flext/flext-plugin",
         "head": {
           "exit": 0,
           "stdout": "8b5685f57a12bac2c31261719fed531d3901c185",
@@ -1340,7 +1340,7 @@
         "stderr": "From https://github.com/flext-sh/flext-quality\n * branch              0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-quality",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-quality",
         "head": {
           "exit": 0,
           "stdout": "fac3c6fe82e8fa0b12fc0fa3d65ad2020cd40d33",
@@ -1363,7 +1363,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-quality",
+        "cwd": "~/flext/flext-quality",
         "head": {
           "exit": 0,
           "stdout": "0edef2c0dee4b3b1111ba71678708c10849c972c",
@@ -1410,7 +1410,7 @@
         "stderr": "From https://github.com/flext-sh/flext-tap-ldap\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-ldap",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-ldap",
         "head": {
           "exit": 0,
           "stdout": "1f4a4812165fc03653072728f135196ab6868526",
@@ -1433,7 +1433,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-tap-ldap",
+        "cwd": "~/flext/flext-tap-ldap",
         "head": {
           "exit": 0,
           "stdout": "0a3ff6d223570f7696055ab0db58ee27e6b31f32",
@@ -1480,7 +1480,7 @@
         "stderr": "From https://github.com/flext-sh/flext-tap-ldif\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-ldif",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-ldif",
         "head": {
           "exit": 0,
           "stdout": "44403d4c42ad63c58dd66155b4bb77c8aee5b45d",
@@ -1503,7 +1503,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-tap-ldif",
+        "cwd": "~/flext/flext-tap-ldif",
         "head": {
           "exit": 0,
           "stdout": "887e5f1916ee5dc6b9acefa4dd42c234ff49f947",
@@ -1550,7 +1550,7 @@
         "stderr": "From https://github.com/flext-sh/flext-tap-oracle\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-oracle",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-oracle",
         "head": {
           "exit": 0,
           "stdout": "00c93e428bbb5253b65c4b4df6b0fd67eabf64ec",
@@ -1573,7 +1573,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-tap-oracle",
+        "cwd": "~/flext/flext-tap-oracle",
         "head": {
           "exit": 0,
           "stdout": "8cb6a9ce00b710fb01e8d23cd72d68de6b31d461",
@@ -1620,7 +1620,7 @@
         "stderr": "From https://github.com/flext-sh/flext-tap-oracle-oic\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-oracle-oic",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-oracle-oic",
         "head": {
           "exit": 0,
           "stdout": "9e7d68c7657edb334a9c35be577536244b8f9b03",
@@ -1643,7 +1643,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-tap-oracle-oic",
+        "cwd": "~/flext/flext-tap-oracle-oic",
         "head": {
           "exit": 0,
           "stdout": "0912536ace213246d107e81fe74336e6c84d0d60",
@@ -1690,7 +1690,7 @@
         "stderr": "From https://github.com/flext-sh/flext-tap-oracle-wms\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-oracle-wms",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tap-oracle-wms",
         "head": {
           "exit": 0,
           "stdout": "83acc0a38f822408f269705a782ce38cc0fcb2f0",
@@ -1713,7 +1713,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-tap-oracle-wms",
+        "cwd": "~/flext/flext-tap-oracle-wms",
         "head": {
           "exit": 0,
           "stdout": "f5aff85f7f78d7340280bd2066a55f1dfcc03db6",
@@ -1760,7 +1760,7 @@
         "stderr": "From https://github.com/flext-sh/flext-target-ldap\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-ldap",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-ldap",
         "head": {
           "exit": 0,
           "stdout": "579dd2b6a89b9ba6517470ad310df740f67b0df2",
@@ -1783,7 +1783,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-target-ldap",
+        "cwd": "~/flext/flext-target-ldap",
         "head": {
           "exit": 0,
           "stdout": "8ae57d9380f58c63fd0652ede77574ee59cf268d",
@@ -1830,7 +1830,7 @@
         "stderr": "From https://github.com/flext-sh/flext-target-ldif\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-ldif",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-ldif",
         "head": {
           "exit": 0,
           "stdout": "ad62b743c1206767fc557f70e16182b7a6176316",
@@ -1853,7 +1853,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-target-ldif",
+        "cwd": "~/flext/flext-target-ldif",
         "head": {
           "exit": 0,
           "stdout": "da46bb49837da02ae573b5d751e9c94b05716ad6",
@@ -1900,7 +1900,7 @@
         "stderr": "From https://github.com/flext-sh/flext-target-oracle\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-oracle",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-oracle",
         "head": {
           "exit": 0,
           "stdout": "ce0a40ba5309ad59d2d4e65a4e0c22ac8675c1be",
@@ -1923,7 +1923,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-target-oracle",
+        "cwd": "~/flext/flext-target-oracle",
         "head": {
           "exit": 0,
           "stdout": "0aebdd01934bfabb540e2ef78fa91cba7d135f69",
@@ -1970,7 +1970,7 @@
         "stderr": "From https://github.com/flext-sh/flext-target-oracle-oic\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-oracle-oic",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-oracle-oic",
         "head": {
           "exit": 0,
           "stdout": "c2007df089b599cee04f2454d13e033571aaa9aa",
@@ -1993,7 +1993,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-target-oracle-oic",
+        "cwd": "~/flext/flext-target-oracle-oic",
         "head": {
           "exit": 0,
           "stdout": "6e2bfc9155435e4ae46d0f7b64d8f4bc51a7c999",
@@ -2040,7 +2040,7 @@
         "stderr": "From https://github.com/flext-sh/flext-target-oracle-wms\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-oracle-wms",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-target-oracle-wms",
         "head": {
           "exit": 0,
           "stdout": "e84bbab1bd49b9e5428386aebc9e16f18ce63ed6",
@@ -2063,7 +2063,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-target-oracle-wms",
+        "cwd": "~/flext/flext-target-oracle-wms",
         "head": {
           "exit": 0,
           "stdout": "95a3cfe432a466fb058abca43a5f7853a738626e",
@@ -2110,7 +2110,7 @@
         "stderr": "From https://github.com/flext-sh/flext-tests\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tests",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-tests",
         "head": {
           "exit": 0,
           "stdout": "5f563be9a6b259451fd67c0867a1f582fcad6d13",
@@ -2133,7 +2133,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-tests",
+        "cwd": "~/flext/flext-tests",
         "head": {
           "exit": 0,
           "stdout": "1e0bb2b334943c8299ffb6ad1258522ce2fd6ce9",
@@ -2180,7 +2180,7 @@
         "stderr": "From https://github.com/flext-sh/flext-web\n * branch            0.12.0-dev -> FETCH_HEAD"
       },
       "lane": {
-        "cwd": "/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-web",
+        "cwd": "~/flext/.claude/worktrees/bugfix+stabilize-0.12.0/flext-web",
         "head": {
           "exit": 0,
           "stdout": "40a70dd1e52e06a49db102932f113b2956608d85",
@@ -2203,7 +2203,7 @@
         }
       },
       "primary": {
-        "cwd": "/home/marlonsc/flext/flext-web",
+        "cwd": "~/flext/flext-web",
         "head": {
           "exit": 0,
           "stdout": "0e816775baa38929feb6a6bb78ab1c300d13a014",

@@ -1,0 +1,15 @@
+{
+  "identity": "442fa37248dead92981a2d218ced37754d1e7d5f921fef734cb6b93ee93f5a72",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789564863139-envrc-beads-tiered-backend-chain.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "ed5b445b9fceccb5dee4a2edf174a764745dc143439137267072160e85016787",
+  "canonical_path": "kilo-local-plans-1789564863139-envrc-beads-tiered-backend-chain-442fa37248dead92.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.285344Z",
+  "attachments": []
+}

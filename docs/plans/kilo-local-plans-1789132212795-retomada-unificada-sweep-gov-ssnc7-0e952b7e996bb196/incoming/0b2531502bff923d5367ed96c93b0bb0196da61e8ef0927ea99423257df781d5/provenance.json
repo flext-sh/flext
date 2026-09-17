@@ -1,0 +1,15 @@
+{
+  "identity": "0e952b7e996bb1967321791ffa744052e3351bb24c7934e684802cd373d9b87f",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789132212795-retomada-unificada-sweep-gov-ssnc7.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "0b2531502bff923d5367ed96c93b0bb0196da61e8ef0927ea99423257df781d5",
+  "canonical_path": "kilo-local-plans-1789132212795-retomada-unificada-sweep-gov-ssnc7-0e952b7e996bb196.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.226077Z",
+  "attachments": []
+}

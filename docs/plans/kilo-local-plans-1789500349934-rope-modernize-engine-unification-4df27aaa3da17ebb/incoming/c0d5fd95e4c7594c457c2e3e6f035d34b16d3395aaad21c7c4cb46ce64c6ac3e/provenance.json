@@ -1,0 +1,15 @@
+{
+  "identity": "4df27aaa3da17ebbca5566ec49b86b7603e7f1b885292f470b118ef32f1cf5bc",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789500349934-rope-modernize-engine-unification.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "c0d5fd95e4c7594c457c2e3e6f035d34b16d3395aaad21c7c4cb46ce64c6ac3e",
+  "canonical_path": "kilo-local-plans-1789500349934-rope-modernize-engine-unification-4df27aaa3da17ebb.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.266922Z",
+  "attachments": []
+}

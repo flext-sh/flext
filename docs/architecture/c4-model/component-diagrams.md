@@ -1,5 +1,25 @@
 # FLEXT Component Diagrams
 
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [Overview](#overview)
+- [1. Pipeline Runtime Service Components](#1-pipeline-runtime-service-components)
+- [2. FLEXT Core Service Components](#2-flext-core-service-components)
+- [3. API Gateway Components](#3-api-gateway-components)
+- [4. LDAP Service Components](#4-ldap-service-components)
+- [5. Singer Platform Components](#5-singer-platform-components)
+- [Component Interaction Patterns](#component-interaction-patterns)
+  - [1. Request-Response Pattern](#1-request-response-pattern)
+  - [2. Event-Driven Pattern](#2-event-driven-pattern)
+  - [3. Pipeline Pattern](#3-pipeline-pattern)
+  - [4. CQRS Pattern](#4-cqrs-pattern)
+  - [5. Railway Pattern](#5-railway-pattern)
+- [Technology Stack by Component](#technology-stack-by-component)
+  - [Runtime Components](#runtime-components)
+  - [Python Components (FLEXT Services)](#python-components-flext-services)
+  - [Common Patterns](#common-patterns)
+<!-- TOC END -->
+
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 
 ## Table of Contents

@@ -9,6 +9,7 @@
   - [3b. rope-in-gen (one engine, two modes)](#3b-rope-in-gen-one-engine-two-modes)
   - [4. Centralized backup cycle](#4-centralized-backup-cycle)
   - [5. Gate alignment (one law, two engines)](#5-gate-alignment-one-law-two-engines)
+  - [6. Three instruments and the mod/ast/gen verb taxonomy (2026-09-15)](#6-three-instruments-and-the-modastgen-verb-taxonomy-2026-09-15)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
@@ -84,9 +85,12 @@ behind the workspace timestamped `.bak` artifacts).
 
 ### 2. Declarative Rope rules (one YAML file per rule)
 
-Structural shape rules for the Rope engine live in dedicated folders under
-`src/flext_infra/codemod/rope_rules/<rule-module>/*.yml`, one file per rule,
-mirroring the ast-grep rule file style of the ADR-010 cascade:
+Structural shape rules for the Rope engine are planned as declarative YAML
+files (one file per rule), mirroring the ast-grep rule file style of the
+ADR-010 cascade. Current rule fixtures live under
+`src/flext_infra/codemod/rules/`, `src/flext_infra/codemod/tests/`, and
+`src/flext_infra/codemod/utils/`; the planned `flext-infra/config/rules/rope/` surface
+(ADR-017) is not yet materialized:
 
 ```yaml
 id: hoist-family-orphan-class
@@ -140,7 +144,7 @@ plan-of-record `rope-gen engine strict/total init`, Bead `flext-crd1y`):
    the sibling parts' `__all__`: a sibling without `__all__` emits warning
    `GEN-W001`; a stale `__all__` (export listed but absent from the sibling) is
    an error (`GEN-E001`) that fails loud; a symbol collision between siblings
-   is an error. Exceptions are declared as one data line in `config/codegen.yaml`
+   is an error. Exceptions are declared as one data line in `flext-infra/config/codegen.yaml`
    (rules-as-data — never a detector branch).
 5. **Three levels.** gen emits `GEN-W*` warnings; `make fix` corrects the
    auto-fixable subset (relativized self-imports `GEN-W002`); `make check`
@@ -181,13 +185,19 @@ Only three instruments impose structural law: **rope** (semantic), **make mod**
 policy). Python rewrite engines (`re`/`ast`/`libcst`/`tokenize`) are
 exterminated, never encapsulated; consumers rewire to the three instruments.
 Verb taxonomy: `mod` is the single modernize surface; `ast` is the ast-grep
-engine (phase 1 of `mod`, standalone scan); `gen` is the template generator
-sharing the same rope planners. Rules and parameters live as data under
-`config/rules/{mod,ast,rope}/` (ADR-017). Execution runs in a dedicated
-complete-superproject worktree aligned to the integration tip; every sync is a
-`--no-ff` merge in each touched project (never rebase/reset/stash); landing is
-a scoped commit -> fast-forward push -> PR -> `--no-ff` integration merge. The
-extermination ledger is tracked by the program beads (W-waves).
+engine (phase 1 of `mod`; a standalone `ast` verb is planned, not yet public);
+`gen` is the template generator sharing the same rope planners. Rules and
+parameters live as data under `config/rules/{mod,ast,rope}/` (ADR-017). Execution
+runs in a dedicated complete-superproject worktree aligned to the integration
+tip; every sync is a `--no-ff` merge in each touched project (never
+rebase/reset/stash); landing is a scoped commit -> fast-forward push -> PR ->
+`--no-ff` integration merge. The extermination ledger is tracked by the program
+beads (W-waves).
+
+**Execution authority (2026-09-17):** Gas City Bead `flext-itpd1.2` owns the
+live structural-rewrite state; the versioned recovery contract is this ADR plus
+`docs/roadmap/rope-gen-engine-runbook-2026-09-15.md`. Workspace-local plans are
+dated evidence, not published authority.
 
 ## Consequences
 

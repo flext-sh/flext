@@ -1,0 +1,15 @@
+{
+  "identity": "0f3ee96a12700ab3cc5abc48e2703be021091e1a46cf31df7da39f6ced12b322",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789065585607-checkpoint-012-ci-green-cd-infra.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "f3e05bfcaf447fbff434a411654f3648eb2f98b185262cfa3937a93e281ce4e2",
+  "canonical_path": "kilo-local-plans-1789065585607-checkpoint-012-ci-green-cd-infra-0f3ee96a12700ab3.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.218169Z",
+  "attachments": []
+}

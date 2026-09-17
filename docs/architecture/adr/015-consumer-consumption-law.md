@@ -1,5 +1,23 @@
 # ADR-015: Consumer Consumption Law (R1-R6)
 
+<!-- TOC START -->
+- [Status](#status)
+- [Context](#context)
+- [Decision](#decision)
+  - [R1 — Facade-Only Import Grammar](#r1-facade-only-import-grammar)
+  - [R2 — No Duplication (Structural Scan)](#r2-no-duplication-structural-scan)
+  - [R3 — Layer Law (Declaration vs Behavior)](#r3-layer-law-declaration-vs-behavior)
+  - [R4 — Gates as Products](#r4-gates-as-products)
+  - [R5 — Release Consumption](#r5-release-consumption)
+  - [R6 — Contribution Path Law](#r6-contribution-path-law)
+- [Anti-Hardcode Law (Binding)](#anti-hardcode-law-binding)
+- [Consequences](#consequences)
+  - [Positive](#positive)
+  - [Negative](#negative)
+- [Implementation](#implementation)
+- [References](#references)
+<!-- TOC END -->
+
 ## Status
 
 Accepted (2026-09-11)
@@ -103,5 +121,5 @@ We ratify the **Consumer Consumption Law (R1-R6)** as the canonical standard for
 - `flext_core._utilities.family_surface` (R1 derivation SSOT)
 - `flext_infra.detectors.consumer_import_violations_detector` (R1 enforcement)
 - `flext_infra.gates.duplication` (R2 enforcement)
-- `config/codegen.yaml` (R4/R5 config SSOT)
+- `flext-infra/config/codegen.yaml` (R4/R5 config SSOT)
 - `docs/GOVERNANCE.md` (R6 router)

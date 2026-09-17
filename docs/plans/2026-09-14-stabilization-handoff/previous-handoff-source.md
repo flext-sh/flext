@@ -17,7 +17,7 @@ Pausado pelo operador em 2026-09-14 ~17:45Z. Plano aprovado (SSOT de escopo e de
 
 1. Tracker (não mudar config do beads):
    `export BEADS_DOLT_SERVER_HOST=127.0.0.1 BEADS_DOLT_SERVER_PORT=14499 BEADS_DOLT_SERVER_DATABASE=flext; bd show flext-itpd1.1`
-2. Lane: worktree `/home/marlonsc/flext/.claude/worktrees/bugfix+stabilize-0.12.0`
+2. Lane: worktree `~/flext/.claude/worktrees/bugfix+stabilize-0.12.0`
    (entrar com EnterWorktree `path`), branch `bugfix/stabilize-0.12.0` no super e no flext-infra.
 3. Ler o plano inteiro, depois esta seção "Estado" e seguir "Próximos passos" na ordem.
 

@@ -1,0 +1,15 @@
+{
+  "identity": "c35c571977c2be33a81864c62eea77fe12dbf17ca95b7def180b7e929e4f34ba",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789495049527-plan-v4-recovery-self-critique.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "8bd9052a5eed7ea6f32b7f23fe29c85a60cf4df3a363570587426ea1d211eba6",
+  "canonical_path": "kilo-local-plans-1789495049527-plan-v4-recovery-self-critique-c35c571977c2be33.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.264406Z",
+  "attachments": []
+}

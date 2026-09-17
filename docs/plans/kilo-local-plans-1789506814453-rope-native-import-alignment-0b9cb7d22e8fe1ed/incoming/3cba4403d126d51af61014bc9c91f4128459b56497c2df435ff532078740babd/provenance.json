@@ -1,0 +1,15 @@
+{
+  "identity": "0b9cb7d22e8fe1ed175808d03600e12a7867832f61e21528f3c6dd32f536b265",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789506814453-rope-native-import-alignment.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "3cba4403d126d51af61014bc9c91f4128459b56497c2df435ff532078740babd",
+  "canonical_path": "kilo-local-plans-1789506814453-rope-native-import-alignment-0b9cb7d22e8fe1ed.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.282614Z",
+  "attachments": []
+}

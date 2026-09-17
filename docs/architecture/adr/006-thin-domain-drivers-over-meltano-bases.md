@@ -20,6 +20,15 @@ Accepted (tap pilot realized 2026-07-17)
 (tap declarative pilot: **flext-tap-ldap**, landed). Rollout to the remaining `flext-(dbt|tap|target)-*` projects
 follows the flext-tap-ldap pilot.
 
+**Rollout status (verified 2026-09-17):**
+
+| Project | Status | Evidence |
+| --- | --- | --- |
+| `flext-tap-ldap` | **Converted** (declarative driver) | Pilot realized 2026-07-17: src 3276 → 914 LOC (−72%) |
+| `flext-tap-oracle` | **Not converted** | Still has hand-rolled `tap.py` (`:26/:91/:167/:220`) and `streams.py` (`:40/:268`); bypasses the meltano base entirely |
+| `flext-target-oracle` | **Not converted** | 3211 src LOC; `create_sink()` raises `TypeError` (`:api.py:30-37`) |
+| `flext-dbt-*` (all) | **Not converted** | Each pilot re-declares Oracle connection scalars from `settings.DbOracle` |
+
 **Depends:** builds on ADR-005 (config/settings SSOT) and the repository FLEXT law — §1.2 Pydantic-2 models everywhere,
 §3.2 types come from protocols `p.*` not concrete models, §3a JSON is Pydantic 2-way, §1.5 no duplicated declarations
 across projects.
@@ -114,7 +123,7 @@ their factory seams ( `create_tap_instance` / `create_sink` ).
   staged behind its own acceptance gate.
 - **Migration order (pilot):** (1) add `p.Meltano.DbtConnectionProfile` + retype the base; (2) dbt-oracle returns a
   direct model, delete its duplicated settings/model; (3) same for dbt-ldap/ldif/oracle-wms
-  (same-batch consumers of the base); (4) tap-oracle gains a real base subclass, delete hand-rolled tap/streams; (5)
+  (same-batch consumers of the base); (4) tap-oracle gains a real base subclass, delete hand-rolled tap/streams **— pending**; (5)
   target-oracle reuses `settings.DbOracle`, normalize its base, scope the loader cut separately. Each step: `uv run`
   per-file gate + `make check`/`make test` per project, net-LOC ≤ 0.
 

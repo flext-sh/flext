@@ -1,0 +1,15 @@
+{
+  "identity": "754ec0329f990a78afdad2c467b730ad568f96a23edaaaea8fb65b3008d88ac6",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789162200000-plano-idempotencia-gen-ssot.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "2fc9fc04ca4e8b7623033c3c4eb4d026d3d63398155b54d4bc524b26c6d18dd1",
+  "canonical_path": "kilo-local-plans-1789162200000-plano-idempotencia-gen-ssot-754ec0329f990a78.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.232466Z",
+  "attachments": []
+}
