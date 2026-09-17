@@ -1,6 +1,7 @@
 {
   "revisions": [
     {
+<<<<<<< HEAD
       "identity": "ba5cfc3a9d6f2fe693281f26958b3c286a0861ff3445642ce6d3cbf02f602e9f",
       "provider": "kilo",
       "source_id": "kilo-plans",
@@ -238,12 +239,882 @@
       "source_updated_at_original": null,
       "source_updated_at_utc": null,
       "collected_at": "2026-09-17T04:21:41.557678Z",
+=======
+      "identity": "db1fa3e7cde5e19b5363ca342af6dac0cd4ba7a2332d593834db933a3145295e",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1788883876060-make-deps-template-monopoly.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "82608dc229004b668612a8c80be02e1530f5543d83e4cba2b58a32b1b0dc23ba",
+      "canonical_path": "kilo-local-plans-1788883876060-make-deps-template-monopoly-db1fa3e7cde5e19b.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.198119Z",
+      "attachments": []
+    },
+    {
+      "identity": "564e28983ecbdec2f3c44dccd88f4e3f7baf9d6a59b3d7dd75cc58935c730425",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1788961161018-flext-012-checkpoint-handoff.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "80508675804888d1ca9d91c9af72c789a79795b0735c1e479f2231dc602966e8",
+      "canonical_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-handoff-564e28983ecbdec2.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.200211Z",
+      "attachments": []
+    },
+    {
+      "identity": "f02389965f93368f42fab9e2fe998e8a66c07e24042064280dcb282e94dd2543",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1788961161018-flext-012-checkpoint-release.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "25cf9e0c8f6eaae5ac4f47c7b49d3b1f56d93b3bb9a927619b0e18edafd5989b",
+      "canonical_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-release-f02389965f93368f.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.202016Z",
+      "attachments": []
+    },
+    {
+      "identity": "42b7585962cd813bb3dafd026df61685bb17f3de985c9b2a866c17caa876e11d",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1788961161018-flext-012-checkpoint-status.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "7a821f690f6b944599ed36c4f82d16d1aba9eca94398dc067ceb43b7e03e662f",
+      "canonical_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-status-42b7585962cd813b.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.203440Z",
+      "attachments": []
+    },
+    {
+      "identity": "9f5a46c550595d281f58d05dc823825917262d181684ba2ba4c028e1733ccce6",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1788975180492-execution-strategy-skills-automation.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "365946f9204a6daf6282461d36f38232353a685ad32615f5abd64a27ad42c6c5",
+      "canonical_path": "kilo-local-plans-1788975180492-execution-strategy-skills-automation-9f5a46c550595d28.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.204805Z",
+      "attachments": []
+    },
+    {
+      "identity": "fa3c5df5d3254a6fedf3078a78efaca5b0f28643bd8654b3e294fe104ccb21a8",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1788975507298-checkpoint-critical-path-lean.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "89981826b21cd926b5c23c26231801977edbdb009cf4193c48a113af28a84c03",
+      "canonical_path": "kilo-local-plans-1788975507298-checkpoint-critical-path-lean-fa3c5df5d3254a6f.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.206240Z",
+      "attachments": []
+    },
+    {
+      "identity": "64937f2d68d7a0e0bed22db0d45f024f8437754ba94ba83dd1e8115089be05b8",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1788987078557-flext-0120-stabilization-semver-deploy.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "8a6e38fffb18ca7fe8b48c0fd1c7ffc65d7c68af44f3b2cc1786e022c147793f",
+      "canonical_path": "kilo-local-plans-1788987078557-flext-0120-stabilization-semver-deploy-64937f2d68d7a0e0.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.207538Z",
+      "attachments": []
+    },
+    {
+      "identity": "dade8adac5c7434c99923569146ece218509bc80c27015b7d5fdd386d6d919bb",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1788987519000-handoff-refaze-checkpoint-012-stabilizacao.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "f64b5970cebcebcbebf9de054f9606a9b54c3b1df30b93b16885bd54842781b7",
+      "canonical_path": "kilo-local-plans-1788987519000-handoff-refaze-checkpoint-012-stabilizacao-dade8adac5c7434c.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.208838Z",
+      "attachments": []
+    },
+    {
+      "identity": "2dacc8fcdfa7c60274d8dc3ffa3b96ce66f0c60473eb496f5bca39192bf9b45a",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1788987809945-batch2-revalidation.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "ed897ca31f2702e7ddd29e0d2f19b3d8e4593239342f2e246bc4371390fed03e",
+      "canonical_path": "kilo-local-plans-1788987809945-batch2-revalidation-2dacc8fcdfa7c602.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.210225Z",
+      "attachments": []
+    },
+    {
+      "identity": "4300c9789ca5807391470d20f65ff989e7b73cda97da56bd77d52bb0c651cc95",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789041614991-deep-research-flext-beads-reconciliation.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "60478447a04164b109493b4c218c45c9d8994b87e1ced2789cf62c4a0c8482e7",
+      "canonical_path": "kilo-local-plans-1789041614991-deep-research-flext-beads-reconciliation-4300c9789ca58073.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.211476Z",
+      "attachments": []
+    },
+    {
+      "identity": "4c11c39286b519492a4b4b47e171d9327b903738a6d5800c3594a940da5abdf0",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789041614991-flext-infra-landing-and-fleet-cycles.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "4cb40e3d62a8edb2fbb15b7ac9a8547f901b6dcb411418dfbe85431826d2df76",
+      "canonical_path": "kilo-local-plans-1789041614991-flext-infra-landing-and-fleet-cycles-4c11c39286b51949.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.212697Z",
+      "attachments": []
+    },
+    {
+      "identity": "eb268bed9ced18ea4c77b2013e136b3666a1cfded094399f44b3af4d11383144",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789044029618-beads-reconciliation-continuation.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "aeabed21549d292efe815e9ed81dbfc3b6a2bf8e006921ecde569df16861d0f1",
+      "canonical_path": "kilo-local-plans-1789044029618-beads-reconciliation-continuation-eb268bed9ced18ea.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.213976Z",
+      "attachments": []
+    },
+    {
+      "identity": "7ce6b41085ca5e8da195032cc9eb85881674322cf7d94e32fc9abcb721d73d9c",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789048200851-closeout-ci-mise-mode-plan.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "e739b04403eb431344817be9829f0ab5b29b387fb0a0cd53aea209fece8ad128",
+      "canonical_path": "kilo-local-plans-1789048200851-closeout-ci-mise-mode-plan-7ce6b41085ca5e8d.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.215333Z",
+      "attachments": []
+    },
+    {
+      "identity": "ef78e36fce2ca9d20b5544eb63f3cd816effbbe2812c6c4af76cb5dd31e32cb6",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789049587481-zero-variable-make-pendencias.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "f5fdb2e99978311df9003277e31bf228275c264ab4544037129e46c5b5e202d1",
+      "canonical_path": "kilo-local-plans-1789049587481-zero-variable-make-pendencias-ef78e36fce2ca9d2.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.216849Z",
+      "attachments": []
+    },
+    {
+      "identity": "0f3ee96a12700ab3cc5abc48e2703be021091e1a46cf31df7da39f6ced12b322",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789065585607-checkpoint-012-ci-green-cd-infra.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "f3e05bfcaf447fbff434a411654f3648eb2f98b185262cfa3937a93e281ce4e2",
+      "canonical_path": "kilo-local-plans-1789065585607-checkpoint-012-ci-green-cd-infra-0f3ee96a12700ab3.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.218169Z",
+      "attachments": []
+    },
+    {
+      "identity": "f53ac1b5035299543f356b31e5b2186e42ab2aee3af2bc8b9d27b4e2ba3baa66",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789068025961-root-cause-deps-gen-and-checkpoint-012-closeout.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "c70cfe15ad2a595692cacaee50f342c437425e89e4f81efdfb167990c03dafb3",
+      "canonical_path": "kilo-local-plans-1789068025961-root-cause-deps-gen-and-checkpoint-012-closeout-f53ac1b503529954.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.219510Z",
+      "attachments": []
+    },
+    {
+      "identity": "60d59720cb1e1b4798b9f49aa7dea9d0045aab75a8b1dc11427730bf1d7e55fe",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789070856000-checkpoint-012-resume-ci-green.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "f6de1be2f3f7b1a79fe93a399ae3e908ede2d398d792f76612de6148c407ea33",
+      "canonical_path": "kilo-local-plans-1789070856000-checkpoint-012-resume-ci-green-60d59720cb1e1b47.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.220822Z",
+      "attachments": []
+    },
+    {
+      "identity": "21ba9de3f78360e177c0239e2d60c28be1916bb7045a68971e00fa58f6e362ad",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789070891593-checkpoint-012-retomada-gerador-ci-cd.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "f5296f1dacf1e2308071467b38083cf3a7e0378472c58b9034d212a8048189f0",
+      "canonical_path": "kilo-local-plans-1789070891593-checkpoint-012-retomada-gerador-ci-cd-21ba9de3f78360e1.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.224626Z",
+      "attachments": []
+    },
+    {
+      "identity": "0e952b7e996bb1967321791ffa744052e3351bb24c7934e684802cd373d9b87f",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789132212795-retomada-unificada-sweep-gov-ssnc7.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "0b2531502bff923d5367ed96c93b0bb0196da61e8ef0927ea99423257df781d5",
+      "canonical_path": "kilo-local-plans-1789132212795-retomada-unificada-sweep-gov-ssnc7-0e952b7e996bb196.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.226077Z",
+      "attachments": []
+    },
+    {
+      "identity": "1b21a0c6f27ba800831a93a62b271f2d7af8934c7b86d04ef5b2c46bd2c33fe1",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789143898419-make-cycle-idempotence-green-landing-plan.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "669b83b45070fd32fb1a6e015c72e334df060e6ff41230fbdb66a82bf1979c9c",
+      "canonical_path": "kilo-local-plans-1789143898419-make-cycle-idempotence-green-landing-plan-1b21a0c6f27ba800.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.227369Z",
+      "attachments": []
+    },
+    {
+      "identity": "8af3c5b36a5e6cf5fb884acd5d77ff5e74f469ae5679ffb50ae5501d22bff968",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789144856683-constants-declarations-remediation-plan.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "e4b8ef562c3d1e19edafd7f4576755eae9689a4a78fa61d66540ff29c47bad3f",
+      "canonical_path": "kilo-local-plans-1789144856683-constants-declarations-remediation-plan-8af3c5b36a5e6cf5.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.228730Z",
+      "attachments": []
+    },
+    {
+      "identity": "8ef7723d12559ea5fef3b6ee3cde585b268aca148e0c8c05b8ab636ea91f605a",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789162000000-proposta-f2-100-green.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "aeb57a802ef4de12f180c2a75b8e70395f9041065486f66c5dcc963e877952cd",
+      "canonical_path": "kilo-local-plans-1789162000000-proposta-f2-100-green-8ef7723d12559ea5.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.229944Z",
+      "attachments": []
+    },
+    {
+      "identity": "1b158f314478542db4c51588a4f62fb8f5006a6c3117acff2f2c3a5726769567",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789162100000-plano-retomada-conclusao.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "6e68fbd2e952c455c30939c5df9246fe747864104a2115f2a1da4d6cc1d61acc",
+      "canonical_path": "kilo-local-plans-1789162100000-plano-retomada-conclusao-1b158f314478542d.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.231135Z",
+      "attachments": []
+    },
+    {
+      "identity": "754ec0329f990a78afdad2c467b730ad568f96a23edaaaea8fb65b3008d88ac6",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789162200000-plano-idempotencia-gen-ssot.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "2fc9fc04ca4e8b7623033c3c4eb4d026d3d63398155b54d4bc524b26c6d18dd1",
+      "canonical_path": "kilo-local-plans-1789162200000-plano-idempotencia-gen-ssot-754ec0329f990a78.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.232466Z",
+      "attachments": []
+    },
+    {
+      "identity": "d833df2149c25cbdd112259041884a561ddca1893c184c821507f911cb33f8fa",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789164019000-prompt-continuacao.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "88ff17b80e631df6ff488b3ac3617acaf423e9ba117053d5500f5c83be3bf6ca",
+      "canonical_path": "kilo-local-plans-1789164019000-prompt-continuacao-d833df2149c25cbd.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.233816Z",
+      "attachments": []
+    },
+    {
+      "identity": "efc81276571096680e98f25ce51459965b23a6b3536d1736b55b8e0c6b925b4e",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789247093764-mod-architecture-scale.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "b77cff6d64453356cc7480dd3d3a8f4f8f51697a861c9c3d5ef71856b1855ba7",
+      "canonical_path": "kilo-local-plans-1789247093764-mod-architecture-scale-efc8127657109668.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.235099Z",
+      "attachments": []
+    },
+    {
+      "identity": "3d08f271d0a32a0ab69de9595c19f747d19ed7a1df9e6dc127b3c29b268a4dd6",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789247197400-protocols-semantic-fleet-automation.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "6e6e01b8341497cc0a04f2cc8e96958d6b4f7c02211b47943ee4e3f071b5e13c",
+      "canonical_path": "kilo-local-plans-1789247197400-protocols-semantic-fleet-automation-3d08f271d0a32a0a.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.236698Z",
+      "attachments": []
+    },
+    {
+      "identity": "e97f21e71f145706a18df5c5083d04d5cc1763e54c3ea719b5f375810f0b099f",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789440619733-stabilization-p0-finish-line.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "93febfe05ec5191753255460092f8df0a8b52ab11150ae3888c6bb8344f58fc1",
+      "canonical_path": "kilo-local-plans-1789440619733-stabilization-p0-finish-line-e97f21e71f145706.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.238041Z",
+      "attachments": []
+    },
+    {
+      "identity": "a1726ec9272e60ad76fdcac53befab2c1fe5c1bde7a88e0e6cfbd954577617e3",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789440924449-aihub-flext-gate-convergence-plan.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "7202ec831202e73bd279623301c94e59696ae902f7c011358dcf686333121ec8",
+      "canonical_path": "kilo-local-plans-1789440924449-aihub-flext-gate-convergence-plan-a1726ec9272e60ad.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.239316Z",
+      "attachments": []
+    },
+    {
+      "identity": "9580e181271e444de6e0e7d2e4da07d95322d1529e79f31d8f706fe2281e2387",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789441200000-stabilization-recovery-docs-automation.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "6b75c94fad6b5df4980aced2e6b90619b13702d137f9c6e4549c23ff53d55482",
+      "canonical_path": "kilo-local-plans-1789441200000-stabilization-recovery-docs-automation-9580e181271e444d.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.241162Z",
+      "attachments": []
+    },
+    {
+      "identity": "5e32a624ffbc2d622901d3c778d693491316a4a58ee9b80a06485e27c5ca1fd4",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789441874066-flext-p0-extermination-completion.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "acd9e63fdfca7e0c8be6a80140d929b405e6e69e9580d82f2844682f317ac8f8",
+      "canonical_path": "kilo-local-plans-1789441874066-flext-p0-extermination-completion-5e32a624ffbc2d62.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.244271Z",
+      "attachments": []
+    },
+    {
+      "identity": "c9880f5c9889c865575d6926929e48c9be5c6d14993aa8b4b5097735e36f4c3c",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789475880081-p0-finish-rewrite.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "dd97509303eb43f0802bb68af109776dda731b1f82b1aed774b78bfe43558c89",
+      "canonical_path": "kilo-local-plans-1789475880081-p0-finish-rewrite-c9880f5c9889c865.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.247253Z",
+      "attachments": []
+    },
+    {
+      "identity": "9df0d81699bf6fbfb3758c98ee3d5d1f0f308380667144e9e699493ce492f4df",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789475884207-fleet-check-green-finish.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "5dfd3b4e1a1c6293cfa8f916a2d8cdc496c5a44b904a36ce60c634231b27a185",
+      "canonical_path": "kilo-local-plans-1789475884207-fleet-check-green-finish-9df0d81699bf6fbf.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.250609Z",
+      "attachments": []
+    },
+    {
+      "identity": "441186435df2c975020bd2ff3510a3c5f2a72e256b5160a69542ff0e73f67604",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789476032590-facade-loc-cap-convergence-plan.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "42a65ca3f4af60a10ed678434edd8a26deacdbf79c633f38b379e56e47253de0",
+      "canonical_path": "kilo-local-plans-1789476032590-facade-loc-cap-convergence-plan-441186435df2c975.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.255214Z",
+      "attachments": []
+    },
+    {
+      "identity": "e5660fdb802846691e6b81a0e2938015255bef4a5f287268683937ce6345aa83",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789489330487-loc-cap-config-landing-plan.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "c896d213b1bd6566d4a4092acee47068560aebd175f7a05094a7e6a1ca39ef8c",
+      "canonical_path": "kilo-local-plans-1789489330487-loc-cap-config-landing-plan-e5660fdb80284669.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.258179Z",
+      "attachments": []
+    },
+    {
+      "identity": "8e7843cf3128fe23f799d120083f292f767a15f9c8ea1cd28882d5b52172c690",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789489334832-rope-gen-engine-strict-init.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "333ab29fe5ebcd872216f78b21bc19617999c97836c9c4dd11c28d8f5eb5db3b",
+      "canonical_path": "kilo-local-plans-1789489334832-rope-gen-engine-strict-init-8e7843cf3128fe23.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.261569Z",
+      "attachments": []
+    },
+    {
+      "identity": "c35c571977c2be33a81864c62eea77fe12dbf17ca95b7def180b7e929e4f34ba",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789495049527-plan-v4-recovery-self-critique.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "8bd9052a5eed7ea6f32b7f23fe29c85a60cf4df3a363570587426ea1d211eba6",
+      "canonical_path": "kilo-local-plans-1789495049527-plan-v4-recovery-self-critique-c35c571977c2be33.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.264406Z",
+      "attachments": []
+    },
+    {
+      "identity": "4df27aaa3da17ebbca5566ec49b86b7603e7f1b885292f470b118ef32f1cf5bc",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789500349934-rope-modernize-engine-unification.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "c0d5fd95e4c7594c457c2e3e6f035d34b16d3395aaad21c7c4cb46ce64c6ac3e",
+      "canonical_path": "kilo-local-plans-1789500349934-rope-modernize-engine-unification-4df27aaa3da17ebb.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.266922Z",
+      "attachments": []
+    },
+    {
+      "identity": "1e94126a92a3631fd338867702bfc181bc6fcfd5575a88e97d3320e9351b43c7",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789500358999-rope-modernize-unification.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "5b116110ab0610423bd24f99102732b8cc8fe4c70d0f7afdebcc8f548dfa3f73",
+      "canonical_path": "kilo-local-plans-1789500358999-rope-modernize-unification-1e94126a92a3631f.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.268607Z",
+      "attachments": []
+    },
+    {
+      "identity": "cb6e2adc75b351c166b685b29375c777b3f148a72bb4facef38ef46f3c302f79",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789500368402-rope-modernize-engine-plan.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "34bdc5176276accfdafa1f460f001943b64933301ac7bcf9d08c9c399b5d9177",
+      "canonical_path": "kilo-local-plans-1789500368402-rope-modernize-engine-plan-cb6e2adc75b351c1.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.270951Z",
+      "attachments": []
+    },
+    {
+      "identity": "d4b5b03f00620507a1a58af7179f7167cbd7ebd02b601972120984dba7aa36a9",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789500930535-accessor-modernize-rope-unification.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "26d6708925b78bb68b8ee52b1c6ec748f5bc51d47a13839013f7a8a458456fcd",
+      "canonical_path": "kilo-local-plans-1789500930535-accessor-modernize-rope-unification-d4b5b03f00620507.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.274311Z",
+      "attachments": []
+    },
+    {
+      "identity": "f33dc81612f8821492fe06766dfbe978962032e146c4c8db0b82b81f4e8dfca6",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789501099301-pydantic-preset-modernize-engine.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "9ff6a9d69f43ad85a092010aacd13c0b3b488d7718ca0e40fc121e19bb97bc33",
+      "canonical_path": "kilo-local-plans-1789501099301-pydantic-preset-modernize-engine-f33dc81612f88214.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.277381Z",
+      "attachments": []
+    },
+    {
+      "identity": "ec42e2f0e1f0811c9c1143ff491d539ed21ebdd4ea389ec30835af83e5131a8c",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789506814453-lazy-init-total-ownership-import-alignment.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "124b077620f9223751119a15200b2196f56f69e58450e54427ecc4f45c467fcd",
+      "canonical_path": "kilo-local-plans-1789506814453-lazy-init-total-ownership-import-alignment-ec42e2f0e1f0811c.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.280154Z",
+      "attachments": []
+    },
+    {
+      "identity": "0b9cb7d22e8fe1ed175808d03600e12a7867832f61e21528f3c6dd32f536b265",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789506814453-rope-native-import-alignment.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "3cba4403d126d51af61014bc9c91f4128459b56497c2df435ff532078740babd",
+      "canonical_path": "kilo-local-plans-1789506814453-rope-native-import-alignment-0b9cb7d22e8fe1ed.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.282614Z",
+      "attachments": []
+    },
+    {
+      "identity": "442fa37248dead92981a2d218ced37754d1e7d5f921fef734cb6b93ee93f5a72",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789564863139-envrc-beads-tiered-backend-chain.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "ed5b445b9fceccb5dee4a2edf174a764745dc143439137267072160e85016787",
+      "canonical_path": "kilo-local-plans-1789564863139-envrc-beads-tiered-backend-chain-442fa37248dead92.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.285344Z",
+      "attachments": []
+    },
+    {
+      "identity": "fd98a676eb967caf1567f2084fddd70d71a316fc5230121d71891c74c58878fd",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789582508056-flext-infra-runtime-modernization.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "24238232bb0e4ab9fc061ab06ddcd3252a2d9e5e4f5dfaad8146ed69f1b2573f",
+      "canonical_path": "kilo-local-plans-1789582508056-flext-infra-runtime-modernization-fd98a676eb967caf.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.288096Z",
+      "attachments": []
+    },
+    {
+      "identity": "8696a426efd9b5a98ae9a4615d4932759c98c88f360059ed5ebac6a45d8ce010",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "1789584897245-governance-documentation-convergence-plan.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "50b664baa28e8b87de4369627d05e2361559eabb7ad5cd238da6c8b8e78bc0ff",
+      "canonical_path": "kilo-local-plans-1789584897245-governance-documentation-convergence-plan-8696a426efd9b5a9.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.290822Z",
+      "attachments": []
+    },
+    {
+      "identity": "5f3e48eda7ab7c6ff2684f5820e7f0cb2b7d6fca2aa5e1f53b2029a09f3a56a0",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "2026-09-16-flext-infra-continuation-plan.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "1cbc2008db7033690fc6bf207b265ab35adcdf6f8974c9892046e7032ef47c85",
+      "canonical_path": "kilo-local-plans-2026-09-16-flext-infra-continuation-plan-5f3e48eda7ab7c6f.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.293520Z",
+      "attachments": []
+    },
+    {
+      "identity": "dcd80c3e480cefbf7a99c6e23e0589a6b6f4d582506c18254c9f677b2ab17703",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "addenda/1789582508056/00-index.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "fb2293d78395678d1c2f00db2ed02d31046053d56b06b2d7f26d84150001acd7",
+      "canonical_path": "kilo-local-plans-00-index-dcd80c3e480cefbf.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.296420Z",
+      "attachments": []
+    },
+    {
+      "identity": "0ae436d83486ff6fb08fb46bb646959607f18fc6c8fba90318eed09f7a06d3f5",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "addenda/1789582508056/01-session-timeline-and-evidence.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "54ad64e875173826d1e4f01f1b0ca46de8191f891db0923d49463a2cba40af7b",
+      "canonical_path": "kilo-local-plans-01-session-timeline-and-evidence-0ae436d83486ff6f.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.299407Z",
+      "attachments": []
+    },
+    {
+      "identity": "8506973c709dd91dda0baec21b1e052cbfa93d38df3a0be64a8876e9d61f0444",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "addenda/1789582508056/02-lane-adjudication-and-conflicts.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "d377b5ec5b6aa820b99c5f01c523c9dbf0a67cd7d09f33d468d28450a7bd6336",
+      "canonical_path": "kilo-local-plans-02-lane-adjudication-and-conflicts-8506973c709dd91d.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.302250Z",
+      "attachments": []
+    },
+    {
+      "identity": "b296d415c6485b2f74c806d2b4bf1d0d0a4ea4b789840c1a4145f231e81e6f11",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "addenda/1789582508056/03-current-baseline-and-acceptance.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "715ad13cc63b364d881913c63bad8eaee810d68d4697194dcb54a979fee6241b",
+      "canonical_path": "kilo-local-plans-03-current-baseline-and-acceptance-b296d415c6485b2f.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.304854Z",
+      "attachments": []
+    },
+    {
+      "identity": "0ee6ccb71efab845a5fcd72ede6e7cd50cea3bc66ee78cd00eeeec98b7201178",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "addenda/1789582508056/04-parallel-plan-reconciliation.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "8c86182ffc07b53528907c504614a58f64d3e808142c0241b613d65a056201ae",
+      "canonical_path": "kilo-local-plans-04-parallel-plan-reconciliation-0ee6ccb71efab845.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.307465Z",
+      "attachments": []
+    },
+    {
+      "identity": "7026a9b5e1d27b3eaa8e520d60e9a3322d34267b79be99799e73760360da7a13",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "addenda/2026-09-16-flext-infra-continuation/01-session-timeline.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "148f68651315cff0616de41eec895b92b642f472bc72247e42381b8baa1a31fa",
+      "canonical_path": "kilo-local-plans-01-session-timeline-7026a9b5e1d27b3e.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.310173Z",
+      "attachments": []
+    },
+    {
+      "identity": "5f063b4ba865ce2a42a7202132bf7417e431691b8f371824e55d20cf3aba176e",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "addenda/2026-09-16-flext-infra-continuation/02-contribution-adoption-matrix.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "45af8e3d2f75dea83e8d2a7a6cc40c1e8756387a68a07088739c131f424134ab",
+      "canonical_path": "kilo-local-plans-02-contribution-adoption-matrix-5f063b4ba865ce2a.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.312926Z",
+      "attachments": []
+    },
+    {
+      "identity": "1b5b894d1b9da15d236d4c19c8199e12ce432def0c838c8e50ed3bdad985815b",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "addenda/2026-09-16-flext-infra-continuation/03-gates-beads-and-conflicts.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "7c0f11638807fd4c65e44652513c5b71769a977f2e7a91313861370396cb91e0",
+      "canonical_path": "kilo-local-plans-03-gates-beads-and-conflicts-1b5b894d1b9da15d.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.315666Z",
+      "attachments": []
+    },
+    {
+      "identity": "5d3361281e57d8ae0cce3a8409e8de0e81a77008a684830b7be35150f342f818",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "addenda/2026-09-16-flext-infra-continuation/04-agent-coordination.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "3feb44f493439c3cd4dac2236ad9ff21b16dd801f55e1a831aedade64e458bab",
+      "canonical_path": "kilo-local-plans-04-agent-coordination-5d3361281e57d8ae.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.318428Z",
+      "attachments": []
+    },
+    {
+      "identity": "e23bb881352c6b2f5c8f5a25c483a8c6483a6bdd3579caf3b465ffb360c62173",
+      "provider": "kilo",
+      "source_id": "kilo-local-plans",
+      "source_path": "addenda/2026-09-16-flext-infra-continuation/README.md",
+      "driver": "flext-infra-files",
+      "driver_version": "1",
+      "digest": "a7684798726df61bdd2ef538992506fbd98bd5849a8e4b45f656f9fa18ce052e",
+      "canonical_path": "kilo-local-plans-README-e23bb881352c6b2f.md",
+      "source_updated_at": null,
+      "source_updated_at_original": null,
+      "source_updated_at_utc": null,
+      "collected_at": "2026-09-17T02:15:59.321314Z",
+>>>>>>> origin/0.12.0-dev
       "attachments": []
     }
   ],
   "artifacts": [
     {
       "relative_path": "collection-index.md",
+<<<<<<< HEAD
       "digest": "17ac5fbe43b175c57add0d4e86644b0e2832c25b94f2ee3856a45e2cc64f359d"
     },
     {
@@ -425,6 +1296,705 @@
     {
       "relative_path": "kilo-plans-current-state-conflicts-2026-09-16-040c5280cbeb5a2e.md",
       "digest": "4154835a9e32397db3832c038a4c5df6091642d31d79000b7eb40556a5169cdb"
+=======
+      "digest": "e049fe7e4b33941aeeb75eb00fb9194c8b57689dfecc9e12858dd7df42442b31"
+    },
+    {
+      "relative_path": "kilo-local-plans-00-index-dcd80c3e480cefbf/incoming/fb2293d78395678d1c2f00db2ed02d31046053d56b06b2d7f26d84150001acd7/plan.md",
+      "digest": "e9b956b3db92a4ef78f2cd091a7378e1fb3c2cf838f08881a53caf9634e18691"
+    },
+    {
+      "relative_path": "kilo-local-plans-00-index-dcd80c3e480cefbf/incoming/fb2293d78395678d1c2f00db2ed02d31046053d56b06b2d7f26d84150001acd7/provenance.json",
+      "digest": "341c7e6a9384beb550baaac90867dfd9f4e406e7f90c9589a6ff377b802c1ecc"
+    },
+    {
+      "relative_path": "kilo-local-plans-00-index-dcd80c3e480cefbf.md",
+      "digest": "e9b956b3db92a4ef78f2cd091a7378e1fb3c2cf838f08881a53caf9634e18691"
+    },
+    {
+      "relative_path": "kilo-local-plans-01-session-timeline-7026a9b5e1d27b3e/incoming/148f68651315cff0616de41eec895b92b642f472bc72247e42381b8baa1a31fa/plan.md",
+      "digest": "910e9e01a347ff23e8652b706cdd752530bacac4a97975c992889bdb5258a5ed"
+    },
+    {
+      "relative_path": "kilo-local-plans-01-session-timeline-7026a9b5e1d27b3e/incoming/148f68651315cff0616de41eec895b92b642f472bc72247e42381b8baa1a31fa/provenance.json",
+      "digest": "aee982b007d54e315183f44d762fb35b8d5cb98e3ef1072e1a761196192db68d"
+    },
+    {
+      "relative_path": "kilo-local-plans-01-session-timeline-7026a9b5e1d27b3e.md",
+      "digest": "910e9e01a347ff23e8652b706cdd752530bacac4a97975c992889bdb5258a5ed"
+    },
+    {
+      "relative_path": "kilo-local-plans-01-session-timeline-and-evidence-0ae436d83486ff6f/incoming/54ad64e875173826d1e4f01f1b0ca46de8191f891db0923d49463a2cba40af7b/plan.md",
+      "digest": "70420c5f4dd77d5758af23e5fc68ea40247cfe27917849d279cf0570293da216"
+    },
+    {
+      "relative_path": "kilo-local-plans-01-session-timeline-and-evidence-0ae436d83486ff6f/incoming/54ad64e875173826d1e4f01f1b0ca46de8191f891db0923d49463a2cba40af7b/provenance.json",
+      "digest": "676d0fe02c5d14411e85fa31258249f2bed9e3c0024ddcae249628d921fc9f4f"
+    },
+    {
+      "relative_path": "kilo-local-plans-01-session-timeline-and-evidence-0ae436d83486ff6f.md",
+      "digest": "70420c5f4dd77d5758af23e5fc68ea40247cfe27917849d279cf0570293da216"
+    },
+    {
+      "relative_path": "kilo-local-plans-02-contribution-adoption-matrix-5f063b4ba865ce2a/incoming/45af8e3d2f75dea83e8d2a7a6cc40c1e8756387a68a07088739c131f424134ab/plan.md",
+      "digest": "8928a6eb375627a887bfaac587b2f9b1e9e4a8a59fb2cdb0923efe4964168fa5"
+    },
+    {
+      "relative_path": "kilo-local-plans-02-contribution-adoption-matrix-5f063b4ba865ce2a/incoming/45af8e3d2f75dea83e8d2a7a6cc40c1e8756387a68a07088739c131f424134ab/provenance.json",
+      "digest": "7870fc5fa0561940ebd1946efaa390947b18274e1bcee8921b2d7e85d6c7f54b"
+    },
+    {
+      "relative_path": "kilo-local-plans-02-contribution-adoption-matrix-5f063b4ba865ce2a.md",
+      "digest": "8928a6eb375627a887bfaac587b2f9b1e9e4a8a59fb2cdb0923efe4964168fa5"
+    },
+    {
+      "relative_path": "kilo-local-plans-02-lane-adjudication-and-conflicts-8506973c709dd91d/incoming/d377b5ec5b6aa820b99c5f01c523c9dbf0a67cd7d09f33d468d28450a7bd6336/plan.md",
+      "digest": "53fcbef4af7627e8da5d77312e47c75a61498e3a4a57099e9e546346cec99f02"
+    },
+    {
+      "relative_path": "kilo-local-plans-02-lane-adjudication-and-conflicts-8506973c709dd91d/incoming/d377b5ec5b6aa820b99c5f01c523c9dbf0a67cd7d09f33d468d28450a7bd6336/provenance.json",
+      "digest": "e92b711d4b60631df96126a6022c7e82eb9fabdec5a9eb52601c0bb25543260e"
+    },
+    {
+      "relative_path": "kilo-local-plans-02-lane-adjudication-and-conflicts-8506973c709dd91d.md",
+      "digest": "53fcbef4af7627e8da5d77312e47c75a61498e3a4a57099e9e546346cec99f02"
+    },
+    {
+      "relative_path": "kilo-local-plans-03-current-baseline-and-acceptance-b296d415c6485b2f/incoming/715ad13cc63b364d881913c63bad8eaee810d68d4697194dcb54a979fee6241b/plan.md",
+      "digest": "22bf666c3ae81b4d532f6bd2f9654b7a124f5b7e6789c405ba5d5991717bea3f"
+    },
+    {
+      "relative_path": "kilo-local-plans-03-current-baseline-and-acceptance-b296d415c6485b2f/incoming/715ad13cc63b364d881913c63bad8eaee810d68d4697194dcb54a979fee6241b/provenance.json",
+      "digest": "3792ca037f2ec8544eff789ad10fad03a06369e7871feeb7d2e2e94004a3a33a"
+    },
+    {
+      "relative_path": "kilo-local-plans-03-current-baseline-and-acceptance-b296d415c6485b2f.md",
+      "digest": "22bf666c3ae81b4d532f6bd2f9654b7a124f5b7e6789c405ba5d5991717bea3f"
+    },
+    {
+      "relative_path": "kilo-local-plans-03-gates-beads-and-conflicts-1b5b894d1b9da15d/incoming/7c0f11638807fd4c65e44652513c5b71769a977f2e7a91313861370396cb91e0/plan.md",
+      "digest": "0bd241688c3283156dd0bd1c36185e5271f0d6ccf806d591c6a567dcbd480004"
+    },
+    {
+      "relative_path": "kilo-local-plans-03-gates-beads-and-conflicts-1b5b894d1b9da15d/incoming/7c0f11638807fd4c65e44652513c5b71769a977f2e7a91313861370396cb91e0/provenance.json",
+      "digest": "5bc025d413f33523f4f9dbfc7c1c5258f0047cbfc6d3c7e40950f2393af7ba85"
+    },
+    {
+      "relative_path": "kilo-local-plans-03-gates-beads-and-conflicts-1b5b894d1b9da15d.md",
+      "digest": "0bd241688c3283156dd0bd1c36185e5271f0d6ccf806d591c6a567dcbd480004"
+    },
+    {
+      "relative_path": "kilo-local-plans-04-agent-coordination-5d3361281e57d8ae/incoming/3feb44f493439c3cd4dac2236ad9ff21b16dd801f55e1a831aedade64e458bab/plan.md",
+      "digest": "ca5cb0bb98cd538440d03e3e3fb9a4fda041918d8575e8c365a3c29fafab8f2d"
+    },
+    {
+      "relative_path": "kilo-local-plans-04-agent-coordination-5d3361281e57d8ae/incoming/3feb44f493439c3cd4dac2236ad9ff21b16dd801f55e1a831aedade64e458bab/provenance.json",
+      "digest": "f8f2cf97702563c4b3bd09010356a17490409bee1c4fa7cc2ba90871d17b403f"
+    },
+    {
+      "relative_path": "kilo-local-plans-04-agent-coordination-5d3361281e57d8ae.md",
+      "digest": "ca5cb0bb98cd538440d03e3e3fb9a4fda041918d8575e8c365a3c29fafab8f2d"
+    },
+    {
+      "relative_path": "kilo-local-plans-04-parallel-plan-reconciliation-0ee6ccb71efab845/incoming/8c86182ffc07b53528907c504614a58f64d3e808142c0241b613d65a056201ae/plan.md",
+      "digest": "3aa6afa3ca35da381658660972414f59e4a8b0e95aa01f8a3fe8121d0684f386"
+    },
+    {
+      "relative_path": "kilo-local-plans-04-parallel-plan-reconciliation-0ee6ccb71efab845/incoming/8c86182ffc07b53528907c504614a58f64d3e808142c0241b613d65a056201ae/provenance.json",
+      "digest": "e0237150dce93cfdc0ae8ed486e6077e7dcb25533e2fb75b82a828e12b9586cc"
+    },
+    {
+      "relative_path": "kilo-local-plans-04-parallel-plan-reconciliation-0ee6ccb71efab845.md",
+      "digest": "3aa6afa3ca35da381658660972414f59e4a8b0e95aa01f8a3fe8121d0684f386"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788883876060-make-deps-template-monopoly-db1fa3e7cde5e19b/incoming/82608dc229004b668612a8c80be02e1530f5543d83e4cba2b58a32b1b0dc23ba/plan.md",
+      "digest": "c1ab57d3daa982327cfcabd1b54217081fb209ba3065cca0d89438dc595e92e0"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788883876060-make-deps-template-monopoly-db1fa3e7cde5e19b/incoming/82608dc229004b668612a8c80be02e1530f5543d83e4cba2b58a32b1b0dc23ba/provenance.json",
+      "digest": "b2d0dfdae7ab5c1b75f8f21a92d8acdcb798b63ff7acf49a151c67271c03e0e4"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788883876060-make-deps-template-monopoly-db1fa3e7cde5e19b.md",
+      "digest": "c1ab57d3daa982327cfcabd1b54217081fb209ba3065cca0d89438dc595e92e0"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-handoff-564e28983ecbdec2/incoming/80508675804888d1ca9d91c9af72c789a79795b0735c1e479f2231dc602966e8/plan.md",
+      "digest": "ed45127bf410efee1d28e322a5cb9d5d81a3534bbcccf9d4ebbc4d59a3aba374"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-handoff-564e28983ecbdec2/incoming/80508675804888d1ca9d91c9af72c789a79795b0735c1e479f2231dc602966e8/provenance.json",
+      "digest": "f3445275768ad67b2f1a12dad06f05fe80b3681bf06c5ddb17db160ed0143534"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-handoff-564e28983ecbdec2.md",
+      "digest": "ed45127bf410efee1d28e322a5cb9d5d81a3534bbcccf9d4ebbc4d59a3aba374"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-release-f02389965f93368f/incoming/25cf9e0c8f6eaae5ac4f47c7b49d3b1f56d93b3bb9a927619b0e18edafd5989b/plan.md",
+      "digest": "d14763bb92e2a26ffba45d47f29cb6baa44cd79bff6e15db3f4ad27cc8f97244"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-release-f02389965f93368f/incoming/25cf9e0c8f6eaae5ac4f47c7b49d3b1f56d93b3bb9a927619b0e18edafd5989b/provenance.json",
+      "digest": "80d2c66f07baaaf9e9a678fa0e34ec1257a00d6cf13dd006ab1d7b32ab034c23"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-release-f02389965f93368f.md",
+      "digest": "d14763bb92e2a26ffba45d47f29cb6baa44cd79bff6e15db3f4ad27cc8f97244"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-status-42b7585962cd813b/incoming/7a821f690f6b944599ed36c4f82d16d1aba9eca94398dc067ceb43b7e03e662f/plan.md",
+      "digest": "112e626652ad4695a7f6a70ced16e116a3aea2d5f5a8b2297690921e21981bbb"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-status-42b7585962cd813b/incoming/7a821f690f6b944599ed36c4f82d16d1aba9eca94398dc067ceb43b7e03e662f/provenance.json",
+      "digest": "057fe90d368e2d668cf1bc71d8e9a77bdb69c8136e8923b4ab43179f769ac1d1"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-status-42b7585962cd813b.md",
+      "digest": "112e626652ad4695a7f6a70ced16e116a3aea2d5f5a8b2297690921e21981bbb"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788975180492-execution-strategy-skills-automation-9f5a46c550595d28/incoming/365946f9204a6daf6282461d36f38232353a685ad32615f5abd64a27ad42c6c5/plan.md",
+      "digest": "da1b6e73c6bbe81b138907fc4afa0a064dd8ed7214588e866de242e2cdec1a06"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788975180492-execution-strategy-skills-automation-9f5a46c550595d28/incoming/365946f9204a6daf6282461d36f38232353a685ad32615f5abd64a27ad42c6c5/provenance.json",
+      "digest": "9c68192abdd5a80d207357c7eb5d56ed9c9d1116607f712e8aadb1c9fd21e218"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788975180492-execution-strategy-skills-automation-9f5a46c550595d28.md",
+      "digest": "da1b6e73c6bbe81b138907fc4afa0a064dd8ed7214588e866de242e2cdec1a06"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788975507298-checkpoint-critical-path-lean-fa3c5df5d3254a6f/incoming/89981826b21cd926b5c23c26231801977edbdb009cf4193c48a113af28a84c03/plan.md",
+      "digest": "ab089d0d0af5d76b11c20fc6ad44f7b59eda8c414e94bd8c6b1ca8723582a612"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788975507298-checkpoint-critical-path-lean-fa3c5df5d3254a6f/incoming/89981826b21cd926b5c23c26231801977edbdb009cf4193c48a113af28a84c03/provenance.json",
+      "digest": "6af45e3b70706cdf530bc6f9e2b387c5d7318621392e7f74b524649fc3c322f8"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788975507298-checkpoint-critical-path-lean-fa3c5df5d3254a6f.md",
+      "digest": "ab089d0d0af5d76b11c20fc6ad44f7b59eda8c414e94bd8c6b1ca8723582a612"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788987078557-flext-0120-stabilization-semver-deploy-64937f2d68d7a0e0/incoming/8a6e38fffb18ca7fe8b48c0fd1c7ffc65d7c68af44f3b2cc1786e022c147793f/plan.md",
+      "digest": "57a33cfc514633fcb72dae675302c7f66c601a3e6118858c8c27944b770f26f1"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788987078557-flext-0120-stabilization-semver-deploy-64937f2d68d7a0e0/incoming/8a6e38fffb18ca7fe8b48c0fd1c7ffc65d7c68af44f3b2cc1786e022c147793f/provenance.json",
+      "digest": "17c71b136ec74d42d4ab058258b7b2628b1ce37b990f3b850b49c09518e1e84c"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788987078557-flext-0120-stabilization-semver-deploy-64937f2d68d7a0e0.md",
+      "digest": "57a33cfc514633fcb72dae675302c7f66c601a3e6118858c8c27944b770f26f1"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788987519000-handoff-refaze-checkpoint-012-stabilizacao-dade8adac5c7434c/incoming/f64b5970cebcebcbebf9de054f9606a9b54c3b1df30b93b16885bd54842781b7/plan.md",
+      "digest": "07e490bb7223d30d47b7cb1aa3eaea536f9b75034ea047575e70f7f08c6e6f78"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788987519000-handoff-refaze-checkpoint-012-stabilizacao-dade8adac5c7434c/incoming/f64b5970cebcebcbebf9de054f9606a9b54c3b1df30b93b16885bd54842781b7/provenance.json",
+      "digest": "8e9c21bd200480a1ee72a5196664e6868a8381bad00d050d901e21ae471cc3e2"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788987519000-handoff-refaze-checkpoint-012-stabilizacao-dade8adac5c7434c.md",
+      "digest": "07e490bb7223d30d47b7cb1aa3eaea536f9b75034ea047575e70f7f08c6e6f78"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788987809945-batch2-revalidation-2dacc8fcdfa7c602/incoming/ed897ca31f2702e7ddd29e0d2f19b3d8e4593239342f2e246bc4371390fed03e/plan.md",
+      "digest": "3ef11b3a6d156696a33bf9cdafb95b4897b193d67862ab5e60015bd52dcc1f60"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788987809945-batch2-revalidation-2dacc8fcdfa7c602/incoming/ed897ca31f2702e7ddd29e0d2f19b3d8e4593239342f2e246bc4371390fed03e/provenance.json",
+      "digest": "f890f777446d8d5b62586f877bee65a0982b8614ba659afdaa15d5dead1a8c60"
+    },
+    {
+      "relative_path": "kilo-local-plans-1788987809945-batch2-revalidation-2dacc8fcdfa7c602.md",
+      "digest": "3ef11b3a6d156696a33bf9cdafb95b4897b193d67862ab5e60015bd52dcc1f60"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789041614991-deep-research-flext-beads-reconciliation-4300c9789ca58073/incoming/60478447a04164b109493b4c218c45c9d8994b87e1ced2789cf62c4a0c8482e7/plan.md",
+      "digest": "8457cbf739a51afffd43143f611c82cd3bf7895c723a6220a4a29baedd876a70"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789041614991-deep-research-flext-beads-reconciliation-4300c9789ca58073/incoming/60478447a04164b109493b4c218c45c9d8994b87e1ced2789cf62c4a0c8482e7/provenance.json",
+      "digest": "04d4810f20a352eb92d9a9dd658e15d8905b939373ed8b7e0f4bdb1986d92ff9"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789041614991-deep-research-flext-beads-reconciliation-4300c9789ca58073.md",
+      "digest": "8457cbf739a51afffd43143f611c82cd3bf7895c723a6220a4a29baedd876a70"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789041614991-flext-infra-landing-and-fleet-cycles-4c11c39286b51949/incoming/4cb40e3d62a8edb2fbb15b7ac9a8547f901b6dcb411418dfbe85431826d2df76/plan.md",
+      "digest": "a02a0d8ea910b9c1c589169383473c0698b8314874b8d0c61920cff15e703156"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789041614991-flext-infra-landing-and-fleet-cycles-4c11c39286b51949/incoming/4cb40e3d62a8edb2fbb15b7ac9a8547f901b6dcb411418dfbe85431826d2df76/provenance.json",
+      "digest": "5c17e4d191cd09299f6e5bd79df32be2fa9d6aeae905a91aa2ac1e863c2b7d74"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789041614991-flext-infra-landing-and-fleet-cycles-4c11c39286b51949.md",
+      "digest": "a02a0d8ea910b9c1c589169383473c0698b8314874b8d0c61920cff15e703156"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789044029618-beads-reconciliation-continuation-eb268bed9ced18ea/incoming/aeabed21549d292efe815e9ed81dbfc3b6a2bf8e006921ecde569df16861d0f1/plan.md",
+      "digest": "6800a9ff56f584de8e1718af02928411acb0e073959818b6c79d455cfe872665"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789044029618-beads-reconciliation-continuation-eb268bed9ced18ea/incoming/aeabed21549d292efe815e9ed81dbfc3b6a2bf8e006921ecde569df16861d0f1/provenance.json",
+      "digest": "8f89743570d5cf80cc8beaac0e0bf261cd1ab89a41e50e715b66d7b028c7a15c"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789044029618-beads-reconciliation-continuation-eb268bed9ced18ea.md",
+      "digest": "6800a9ff56f584de8e1718af02928411acb0e073959818b6c79d455cfe872665"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789048200851-closeout-ci-mise-mode-plan-7ce6b41085ca5e8d/incoming/e739b04403eb431344817be9829f0ab5b29b387fb0a0cd53aea209fece8ad128/plan.md",
+      "digest": "56e3fa99559afc7faac3d21ee62237e40658dd68c9d89f040257f1b3c12c51a2"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789048200851-closeout-ci-mise-mode-plan-7ce6b41085ca5e8d/incoming/e739b04403eb431344817be9829f0ab5b29b387fb0a0cd53aea209fece8ad128/provenance.json",
+      "digest": "5445cf6da63b1ebdb88b5b92e774d51915b638a6c8637bc4555925ba6d68f0bd"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789048200851-closeout-ci-mise-mode-plan-7ce6b41085ca5e8d.md",
+      "digest": "56e3fa99559afc7faac3d21ee62237e40658dd68c9d89f040257f1b3c12c51a2"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789049587481-zero-variable-make-pendencias-ef78e36fce2ca9d2/incoming/f5fdb2e99978311df9003277e31bf228275c264ab4544037129e46c5b5e202d1/plan.md",
+      "digest": "325191388112ade5335dbf4a7f06ee96624c884e5062a7fd3808d1578bfce3da"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789049587481-zero-variable-make-pendencias-ef78e36fce2ca9d2/incoming/f5fdb2e99978311df9003277e31bf228275c264ab4544037129e46c5b5e202d1/provenance.json",
+      "digest": "a4e571d443aa3e2030efd53a93ed9ad7ce46ecdc88e6ee9268ea7a013c8003f0"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789049587481-zero-variable-make-pendencias-ef78e36fce2ca9d2.md",
+      "digest": "325191388112ade5335dbf4a7f06ee96624c884e5062a7fd3808d1578bfce3da"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789065585607-checkpoint-012-ci-green-cd-infra-0f3ee96a12700ab3/incoming/f3e05bfcaf447fbff434a411654f3648eb2f98b185262cfa3937a93e281ce4e2/plan.md",
+      "digest": "d96ffbfcd83691e343339e077b341842cb1004c8da17578f61ec5163fe94e6cc"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789065585607-checkpoint-012-ci-green-cd-infra-0f3ee96a12700ab3/incoming/f3e05bfcaf447fbff434a411654f3648eb2f98b185262cfa3937a93e281ce4e2/provenance.json",
+      "digest": "3a9f87c2866229623bbeeb9256b39ae255ce734433ccd127715e05c319541bc8"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789065585607-checkpoint-012-ci-green-cd-infra-0f3ee96a12700ab3.md",
+      "digest": "d96ffbfcd83691e343339e077b341842cb1004c8da17578f61ec5163fe94e6cc"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789068025961-root-cause-deps-gen-and-checkpoint-012-closeout-f53ac1b503529954/incoming/c70cfe15ad2a595692cacaee50f342c437425e89e4f81efdfb167990c03dafb3/plan.md",
+      "digest": "afc6965058c6f1b2d221a585848175cf454ec6a868baa76f0a799ecf1d7592bf"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789068025961-root-cause-deps-gen-and-checkpoint-012-closeout-f53ac1b503529954/incoming/c70cfe15ad2a595692cacaee50f342c437425e89e4f81efdfb167990c03dafb3/provenance.json",
+      "digest": "6faf3c67276613cb2b6ea55908492ed7752007aa1af13b1d0458f32a2c146d06"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789068025961-root-cause-deps-gen-and-checkpoint-012-closeout-f53ac1b503529954.md",
+      "digest": "afc6965058c6f1b2d221a585848175cf454ec6a868baa76f0a799ecf1d7592bf"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789070856000-checkpoint-012-resume-ci-green-60d59720cb1e1b47/incoming/f6de1be2f3f7b1a79fe93a399ae3e908ede2d398d792f76612de6148c407ea33/plan.md",
+      "digest": "600443092d5144e50143b48d3da8223683dd7a295e9d9a08f7b39a7620a7975f"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789070856000-checkpoint-012-resume-ci-green-60d59720cb1e1b47/incoming/f6de1be2f3f7b1a79fe93a399ae3e908ede2d398d792f76612de6148c407ea33/provenance.json",
+      "digest": "674eb464f0f79ecfecb99faf34ee708943dd5f1fcc436dd9f20a86932670ac71"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789070856000-checkpoint-012-resume-ci-green-60d59720cb1e1b47.md",
+      "digest": "600443092d5144e50143b48d3da8223683dd7a295e9d9a08f7b39a7620a7975f"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789070891593-checkpoint-012-retomada-gerador-ci-cd-21ba9de3f78360e1/incoming/f5296f1dacf1e2308071467b38083cf3a7e0378472c58b9034d212a8048189f0/plan.md",
+      "digest": "a826fe25fa3c7a4dd824c41f740d640476fc89c36f80f105f8059cfa2a4ff491"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789070891593-checkpoint-012-retomada-gerador-ci-cd-21ba9de3f78360e1/incoming/f5296f1dacf1e2308071467b38083cf3a7e0378472c58b9034d212a8048189f0/provenance.json",
+      "digest": "3d2b5f86741198ece5363d33a5b678d75019a423c3cba54532f7064f9fceae4b"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789070891593-checkpoint-012-retomada-gerador-ci-cd-21ba9de3f78360e1.md",
+      "digest": "a826fe25fa3c7a4dd824c41f740d640476fc89c36f80f105f8059cfa2a4ff491"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789132212795-retomada-unificada-sweep-gov-ssnc7-0e952b7e996bb196/incoming/0b2531502bff923d5367ed96c93b0bb0196da61e8ef0927ea99423257df781d5/plan.md",
+      "digest": "f3e6aa7c0f1a4dfe0e0e638d83853d2eb04015e388c02b3cc4f7721ad6f3bda8"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789132212795-retomada-unificada-sweep-gov-ssnc7-0e952b7e996bb196/incoming/0b2531502bff923d5367ed96c93b0bb0196da61e8ef0927ea99423257df781d5/provenance.json",
+      "digest": "6947cd2f462ba7754a1b2743f5320bd00b730b31c5f229532e4f64010e34c142"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789132212795-retomada-unificada-sweep-gov-ssnc7-0e952b7e996bb196.md",
+      "digest": "f3e6aa7c0f1a4dfe0e0e638d83853d2eb04015e388c02b3cc4f7721ad6f3bda8"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789143898419-make-cycle-idempotence-green-landing-plan-1b21a0c6f27ba800/incoming/669b83b45070fd32fb1a6e015c72e334df060e6ff41230fbdb66a82bf1979c9c/plan.md",
+      "digest": "87231d95ce1f67f9bfa070d4d06adc669114e6ee6dc0a0af3060a0c7c636e03d"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789143898419-make-cycle-idempotence-green-landing-plan-1b21a0c6f27ba800/incoming/669b83b45070fd32fb1a6e015c72e334df060e6ff41230fbdb66a82bf1979c9c/provenance.json",
+      "digest": "aada523d97a82291771d4f35cf4b5d2ef4a4f7e2a9bf4db42394a62810019a4b"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789143898419-make-cycle-idempotence-green-landing-plan-1b21a0c6f27ba800.md",
+      "digest": "87231d95ce1f67f9bfa070d4d06adc669114e6ee6dc0a0af3060a0c7c636e03d"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789144856683-constants-declarations-remediation-plan-8af3c5b36a5e6cf5/incoming/e4b8ef562c3d1e19edafd7f4576755eae9689a4a78fa61d66540ff29c47bad3f/plan.md",
+      "digest": "7dc6007abdd80de05c0727e84216d90ddcb97f514007023099d1410b408aea34"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789144856683-constants-declarations-remediation-plan-8af3c5b36a5e6cf5/incoming/e4b8ef562c3d1e19edafd7f4576755eae9689a4a78fa61d66540ff29c47bad3f/provenance.json",
+      "digest": "b0fb8a228038b3d161b5087ddef6f3a3fc9794e95cae0adec336b073a45d78b4"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789144856683-constants-declarations-remediation-plan-8af3c5b36a5e6cf5.md",
+      "digest": "7dc6007abdd80de05c0727e84216d90ddcb97f514007023099d1410b408aea34"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789162000000-proposta-f2-100-green-8ef7723d12559ea5/incoming/aeb57a802ef4de12f180c2a75b8e70395f9041065486f66c5dcc963e877952cd/plan.md",
+      "digest": "192db7870fcee86c3b5a13e03736cff25e49980818959738751006c6ac5926c2"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789162000000-proposta-f2-100-green-8ef7723d12559ea5/incoming/aeb57a802ef4de12f180c2a75b8e70395f9041065486f66c5dcc963e877952cd/provenance.json",
+      "digest": "d350c78627286bd440bc42fde3afba231c94d1b8f291f4473f7c49582e1d3ab2"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789162000000-proposta-f2-100-green-8ef7723d12559ea5.md",
+      "digest": "192db7870fcee86c3b5a13e03736cff25e49980818959738751006c6ac5926c2"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789162100000-plano-retomada-conclusao-1b158f314478542d/incoming/6e68fbd2e952c455c30939c5df9246fe747864104a2115f2a1da4d6cc1d61acc/plan.md",
+      "digest": "c58c0743c8308eb82b0257e05261f5bbc7d8195d2bd513e23a2df8950ed5d94b"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789162100000-plano-retomada-conclusao-1b158f314478542d/incoming/6e68fbd2e952c455c30939c5df9246fe747864104a2115f2a1da4d6cc1d61acc/provenance.json",
+      "digest": "5a62cde16babf614685c90a0075ba0426ca58c23ecfbd6822636ed51207a35f5"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789162100000-plano-retomada-conclusao-1b158f314478542d.md",
+      "digest": "c58c0743c8308eb82b0257e05261f5bbc7d8195d2bd513e23a2df8950ed5d94b"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789162200000-plano-idempotencia-gen-ssot-754ec0329f990a78/incoming/2fc9fc04ca4e8b7623033c3c4eb4d026d3d63398155b54d4bc524b26c6d18dd1/plan.md",
+      "digest": "888b737078524eb0df61c49899201c12a6e9990c81c9684979dc7331b533f7a9"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789162200000-plano-idempotencia-gen-ssot-754ec0329f990a78/incoming/2fc9fc04ca4e8b7623033c3c4eb4d026d3d63398155b54d4bc524b26c6d18dd1/provenance.json",
+      "digest": "eb81fe497247dfb1261d75edc9a66b387bacbf196367918eaf1e6e439c1ce875"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789162200000-plano-idempotencia-gen-ssot-754ec0329f990a78.md",
+      "digest": "888b737078524eb0df61c49899201c12a6e9990c81c9684979dc7331b533f7a9"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789164019000-prompt-continuacao-d833df2149c25cbd/incoming/88ff17b80e631df6ff488b3ac3617acaf423e9ba117053d5500f5c83be3bf6ca/plan.md",
+      "digest": "dc5c58b88595a57f0b2937bba2157a6d337891c3c2701a17079d7dc3b8937a9c"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789164019000-prompt-continuacao-d833df2149c25cbd/incoming/88ff17b80e631df6ff488b3ac3617acaf423e9ba117053d5500f5c83be3bf6ca/provenance.json",
+      "digest": "e6a41892113ccb5f61f8b92eb289c3d572b79a07dd4b939be930d3071dc7799b"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789164019000-prompt-continuacao-d833df2149c25cbd.md",
+      "digest": "dc5c58b88595a57f0b2937bba2157a6d337891c3c2701a17079d7dc3b8937a9c"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789247093764-mod-architecture-scale-efc8127657109668/incoming/b77cff6d64453356cc7480dd3d3a8f4f8f51697a861c9c3d5ef71856b1855ba7/plan.md",
+      "digest": "a25347a657eddd0a548714292a3490d12e31e38efb5008b45087b0312391d5cc"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789247093764-mod-architecture-scale-efc8127657109668/incoming/b77cff6d64453356cc7480dd3d3a8f4f8f51697a861c9c3d5ef71856b1855ba7/provenance.json",
+      "digest": "3689330e9bd8bebf31244573184a5761e22c50a499e0298cd94fb17cc8515075"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789247093764-mod-architecture-scale-efc8127657109668.md",
+      "digest": "a25347a657eddd0a548714292a3490d12e31e38efb5008b45087b0312391d5cc"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789247197400-protocols-semantic-fleet-automation-3d08f271d0a32a0a/incoming/6e6e01b8341497cc0a04f2cc8e96958d6b4f7c02211b47943ee4e3f071b5e13c/plan.md",
+      "digest": "b7954ce0bbed2d3e4ccbbf69fb45c8fbdec89cc496653a97fb36df374b4d99b6"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789247197400-protocols-semantic-fleet-automation-3d08f271d0a32a0a/incoming/6e6e01b8341497cc0a04f2cc8e96958d6b4f7c02211b47943ee4e3f071b5e13c/provenance.json",
+      "digest": "0f3b30fcce4ec05d1807e42a570c27f0dce3ffa10734866aba002bf10142fff3"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789247197400-protocols-semantic-fleet-automation-3d08f271d0a32a0a.md",
+      "digest": "b7954ce0bbed2d3e4ccbbf69fb45c8fbdec89cc496653a97fb36df374b4d99b6"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789440619733-stabilization-p0-finish-line-e97f21e71f145706/incoming/93febfe05ec5191753255460092f8df0a8b52ab11150ae3888c6bb8344f58fc1/plan.md",
+      "digest": "6d913265c226e6af9b3a3781929e48ec919e36e77c25337bda75e45f70dfd1f1"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789440619733-stabilization-p0-finish-line-e97f21e71f145706/incoming/93febfe05ec5191753255460092f8df0a8b52ab11150ae3888c6bb8344f58fc1/provenance.json",
+      "digest": "73e48604b10fdaf262a872fb9ab2738de8975f89cdaf0cb7c8c28b260bf74d2e"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789440619733-stabilization-p0-finish-line-e97f21e71f145706.md",
+      "digest": "6d913265c226e6af9b3a3781929e48ec919e36e77c25337bda75e45f70dfd1f1"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789440924449-aihub-flext-gate-convergence-plan-a1726ec9272e60ad/incoming/7202ec831202e73bd279623301c94e59696ae902f7c011358dcf686333121ec8/plan.md",
+      "digest": "d5a5af0b436a481aa978e308116c5b1270ac16639f5b8d8fbb3516af959458c5"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789440924449-aihub-flext-gate-convergence-plan-a1726ec9272e60ad/incoming/7202ec831202e73bd279623301c94e59696ae902f7c011358dcf686333121ec8/provenance.json",
+      "digest": "f7b2c40b5e6c501f30838ebeb200be9ce3bd7328702c6c00fda85883f33de418"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789440924449-aihub-flext-gate-convergence-plan-a1726ec9272e60ad.md",
+      "digest": "d5a5af0b436a481aa978e308116c5b1270ac16639f5b8d8fbb3516af959458c5"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789441200000-stabilization-recovery-docs-automation-9580e181271e444d/incoming/6b75c94fad6b5df4980aced2e6b90619b13702d137f9c6e4549c23ff53d55482/plan.md",
+      "digest": "960ad1e3e139065604b8040a771389a391dc1ca26f5e4ebee146b578eb60ba79"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789441200000-stabilization-recovery-docs-automation-9580e181271e444d/incoming/6b75c94fad6b5df4980aced2e6b90619b13702d137f9c6e4549c23ff53d55482/provenance.json",
+      "digest": "0573d7f7263572d73db449c24a98ca30e2986bfe43e1c0d2f571a20a3885a9bc"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789441200000-stabilization-recovery-docs-automation-9580e181271e444d.md",
+      "digest": "960ad1e3e139065604b8040a771389a391dc1ca26f5e4ebee146b578eb60ba79"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789441874066-flext-p0-extermination-completion-5e32a624ffbc2d62/incoming/acd9e63fdfca7e0c8be6a80140d929b405e6e69e9580d82f2844682f317ac8f8/plan.md",
+      "digest": "defac0f30605dd84242c0eccc5ceaca0855c27dcc8dcf768dfdf85c4a60b3aac"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789441874066-flext-p0-extermination-completion-5e32a624ffbc2d62/incoming/acd9e63fdfca7e0c8be6a80140d929b405e6e69e9580d82f2844682f317ac8f8/provenance.json",
+      "digest": "358603d43c4cfdbcdd8e3c5893559a13be50f21795fb6df8fa31b45a678b5470"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789441874066-flext-p0-extermination-completion-5e32a624ffbc2d62.md",
+      "digest": "defac0f30605dd84242c0eccc5ceaca0855c27dcc8dcf768dfdf85c4a60b3aac"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789475880081-p0-finish-rewrite-c9880f5c9889c865/incoming/dd97509303eb43f0802bb68af109776dda731b1f82b1aed774b78bfe43558c89/plan.md",
+      "digest": "2d5b06120fe84e52cdfab4918c26b70c7d73a360b55800dfaf959da51d34c5bd"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789475880081-p0-finish-rewrite-c9880f5c9889c865/incoming/dd97509303eb43f0802bb68af109776dda731b1f82b1aed774b78bfe43558c89/provenance.json",
+      "digest": "b204e11561279ad82636c8f66e939896130dea6653720e59ca9f9cce2cd8c8cc"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789475880081-p0-finish-rewrite-c9880f5c9889c865.md",
+      "digest": "2d5b06120fe84e52cdfab4918c26b70c7d73a360b55800dfaf959da51d34c5bd"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789475884207-fleet-check-green-finish-9df0d81699bf6fbf/incoming/5dfd3b4e1a1c6293cfa8f916a2d8cdc496c5a44b904a36ce60c634231b27a185/plan.md",
+      "digest": "ef20e64aa2658225614d8769b9b1e73ec4a3f99b97e750d1a272a532b34c5079"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789475884207-fleet-check-green-finish-9df0d81699bf6fbf/incoming/5dfd3b4e1a1c6293cfa8f916a2d8cdc496c5a44b904a36ce60c634231b27a185/provenance.json",
+      "digest": "c49a0cb53a8fc98f88762f3f8670f9a2c3237d6e18e62d51145b35893a3824e7"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789475884207-fleet-check-green-finish-9df0d81699bf6fbf.md",
+      "digest": "ef20e64aa2658225614d8769b9b1e73ec4a3f99b97e750d1a272a532b34c5079"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789476032590-facade-loc-cap-convergence-plan-441186435df2c975/incoming/42a65ca3f4af60a10ed678434edd8a26deacdbf79c633f38b379e56e47253de0/plan.md",
+      "digest": "23256c939ca0d4c40646dc2fd076c0b868e2fc7715837fb961e693c6296845ba"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789476032590-facade-loc-cap-convergence-plan-441186435df2c975/incoming/42a65ca3f4af60a10ed678434edd8a26deacdbf79c633f38b379e56e47253de0/provenance.json",
+      "digest": "8ff8a1ef508eb28eb83a1475017970ef6c36f921ea2aafe03736e5369a7e09f2"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789476032590-facade-loc-cap-convergence-plan-441186435df2c975.md",
+      "digest": "23256c939ca0d4c40646dc2fd076c0b868e2fc7715837fb961e693c6296845ba"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789489330487-loc-cap-config-landing-plan-e5660fdb80284669/incoming/c896d213b1bd6566d4a4092acee47068560aebd175f7a05094a7e6a1ca39ef8c/plan.md",
+      "digest": "4850edbc4400e2f7b245ab6c9c134bfc7c7e22266ed3ca9747529c4bcd2b628c"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789489330487-loc-cap-config-landing-plan-e5660fdb80284669/incoming/c896d213b1bd6566d4a4092acee47068560aebd175f7a05094a7e6a1ca39ef8c/provenance.json",
+      "digest": "c4522c220df1bcfee24a8aeac3049404d7ef1fcb33537437bb152de1b53a5c5c"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789489330487-loc-cap-config-landing-plan-e5660fdb80284669.md",
+      "digest": "4850edbc4400e2f7b245ab6c9c134bfc7c7e22266ed3ca9747529c4bcd2b628c"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789489334832-rope-gen-engine-strict-init-8e7843cf3128fe23/incoming/333ab29fe5ebcd872216f78b21bc19617999c97836c9c4dd11c28d8f5eb5db3b/plan.md",
+      "digest": "4ca7824c82471c435b8bd0d6496fe54f6174e3c67701660e179aaa18fb66498e"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789489334832-rope-gen-engine-strict-init-8e7843cf3128fe23/incoming/333ab29fe5ebcd872216f78b21bc19617999c97836c9c4dd11c28d8f5eb5db3b/provenance.json",
+      "digest": "7eaff8bbbc51d273a7f3c4133579de5b81c262a4fcb0fa3b4e184ca39a8997a8"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789489334832-rope-gen-engine-strict-init-8e7843cf3128fe23.md",
+      "digest": "4ca7824c82471c435b8bd0d6496fe54f6174e3c67701660e179aaa18fb66498e"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789495049527-plan-v4-recovery-self-critique-c35c571977c2be33/incoming/8bd9052a5eed7ea6f32b7f23fe29c85a60cf4df3a363570587426ea1d211eba6/plan.md",
+      "digest": "b74b03e1e47df82c47ed82a79c7f2eece0cc3e89d0d00908fd0538f6a7e95ea9"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789495049527-plan-v4-recovery-self-critique-c35c571977c2be33/incoming/8bd9052a5eed7ea6f32b7f23fe29c85a60cf4df3a363570587426ea1d211eba6/provenance.json",
+      "digest": "1b2d83b7d4f2de1c249eaae2039cead43b72cd165ede05327291262d3c29614a"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789495049527-plan-v4-recovery-self-critique-c35c571977c2be33.md",
+      "digest": "b74b03e1e47df82c47ed82a79c7f2eece0cc3e89d0d00908fd0538f6a7e95ea9"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789500349934-rope-modernize-engine-unification-4df27aaa3da17ebb/incoming/c0d5fd95e4c7594c457c2e3e6f035d34b16d3395aaad21c7c4cb46ce64c6ac3e/plan.md",
+      "digest": "2fec734a3de14acce8ceca32c8c954574d2af5929ee01e3dbbb56fa8398e34cf"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789500349934-rope-modernize-engine-unification-4df27aaa3da17ebb/incoming/c0d5fd95e4c7594c457c2e3e6f035d34b16d3395aaad21c7c4cb46ce64c6ac3e/provenance.json",
+      "digest": "5c2d2ce179da0197582d17402da4a2f3412ed4e2068cd1e4493c155d2ee4a24c"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789500349934-rope-modernize-engine-unification-4df27aaa3da17ebb.md",
+      "digest": "2fec734a3de14acce8ceca32c8c954574d2af5929ee01e3dbbb56fa8398e34cf"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789500358999-rope-modernize-unification-1e94126a92a3631f/incoming/5b116110ab0610423bd24f99102732b8cc8fe4c70d0f7afdebcc8f548dfa3f73/plan.md",
+      "digest": "37a82ea49aabbfe2dbd2eb5b590ca7ba146a90f10fab8ff40246e614ce25b67d"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789500358999-rope-modernize-unification-1e94126a92a3631f/incoming/5b116110ab0610423bd24f99102732b8cc8fe4c70d0f7afdebcc8f548dfa3f73/provenance.json",
+      "digest": "4416b4def049d1ddc4eead165d62e9ef822eb2b67f3a67baedecb37769eb9109"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789500358999-rope-modernize-unification-1e94126a92a3631f.md",
+      "digest": "37a82ea49aabbfe2dbd2eb5b590ca7ba146a90f10fab8ff40246e614ce25b67d"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789500368402-rope-modernize-engine-plan-cb6e2adc75b351c1/incoming/34bdc5176276accfdafa1f460f001943b64933301ac7bcf9d08c9c399b5d9177/plan.md",
+      "digest": "828b550a75f9b70d35de526f904a89eccc1b95a42d0f5438c713b6fc9198fd3a"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789500368402-rope-modernize-engine-plan-cb6e2adc75b351c1/incoming/34bdc5176276accfdafa1f460f001943b64933301ac7bcf9d08c9c399b5d9177/provenance.json",
+      "digest": "f8ae8e29c4278e51252d9bc7f2ef57a35b160f4933ca0c23f83454f5ae31488d"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789500368402-rope-modernize-engine-plan-cb6e2adc75b351c1.md",
+      "digest": "828b550a75f9b70d35de526f904a89eccc1b95a42d0f5438c713b6fc9198fd3a"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789500930535-accessor-modernize-rope-unification-d4b5b03f00620507/incoming/26d6708925b78bb68b8ee52b1c6ec748f5bc51d47a13839013f7a8a458456fcd/plan.md",
+      "digest": "65e4e1bbc6f6cd29c8281de19cdc31a754d39fcdfc55136abbc6b8bb2fc88c72"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789500930535-accessor-modernize-rope-unification-d4b5b03f00620507/incoming/26d6708925b78bb68b8ee52b1c6ec748f5bc51d47a13839013f7a8a458456fcd/provenance.json",
+      "digest": "929329d6890c74bca6b8566de340adb78d4dd62a0414a469c532e12039d47e09"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789500930535-accessor-modernize-rope-unification-d4b5b03f00620507.md",
+      "digest": "65e4e1bbc6f6cd29c8281de19cdc31a754d39fcdfc55136abbc6b8bb2fc88c72"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789501099301-pydantic-preset-modernize-engine-f33dc81612f88214/incoming/9ff6a9d69f43ad85a092010aacd13c0b3b488d7718ca0e40fc121e19bb97bc33/plan.md",
+      "digest": "33e00cf97e1e219b6c249c7e72dc21fde6937f4daab5059fda894fd9b4fc5eeb"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789501099301-pydantic-preset-modernize-engine-f33dc81612f88214/incoming/9ff6a9d69f43ad85a092010aacd13c0b3b488d7718ca0e40fc121e19bb97bc33/provenance.json",
+      "digest": "3f4e0ea1401b1dff74219b781f5de340eb237ea73c14ad10338137ec7531d6ed"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789501099301-pydantic-preset-modernize-engine-f33dc81612f88214.md",
+      "digest": "33e00cf97e1e219b6c249c7e72dc21fde6937f4daab5059fda894fd9b4fc5eeb"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789506814453-lazy-init-total-ownership-import-alignment-ec42e2f0e1f0811c/incoming/124b077620f9223751119a15200b2196f56f69e58450e54427ecc4f45c467fcd/plan.md",
+      "digest": "5f8b3b1269c5d18db37371e07e71796225c0c6665061b53d646a0efa6cf4f3aa"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789506814453-lazy-init-total-ownership-import-alignment-ec42e2f0e1f0811c/incoming/124b077620f9223751119a15200b2196f56f69e58450e54427ecc4f45c467fcd/provenance.json",
+      "digest": "16215d07b1daa97fde55f66b5b9c8ed56009fa7d0cf5316e1fde9bfeb41e117c"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789506814453-lazy-init-total-ownership-import-alignment-ec42e2f0e1f0811c.md",
+      "digest": "5f8b3b1269c5d18db37371e07e71796225c0c6665061b53d646a0efa6cf4f3aa"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789506814453-rope-native-import-alignment-0b9cb7d22e8fe1ed/incoming/3cba4403d126d51af61014bc9c91f4128459b56497c2df435ff532078740babd/plan.md",
+      "digest": "de27ddff35f19d1d4ea41d0c51bfc558196d5166cd25a10e7ea5e9b83e44dae1"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789506814453-rope-native-import-alignment-0b9cb7d22e8fe1ed/incoming/3cba4403d126d51af61014bc9c91f4128459b56497c2df435ff532078740babd/provenance.json",
+      "digest": "2f681df223d7d4642c2321ef1ae3e5ada73c78922cf46579f2cac990a6e861e8"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789506814453-rope-native-import-alignment-0b9cb7d22e8fe1ed.md",
+      "digest": "de27ddff35f19d1d4ea41d0c51bfc558196d5166cd25a10e7ea5e9b83e44dae1"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789564863139-envrc-beads-tiered-backend-chain-442fa37248dead92/incoming/ed5b445b9fceccb5dee4a2edf174a764745dc143439137267072160e85016787/plan.md",
+      "digest": "3b0b4e68c3925086e8f4c8f7671f20d07a9a701961cce5b0cec1807f650611e9"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789564863139-envrc-beads-tiered-backend-chain-442fa37248dead92/incoming/ed5b445b9fceccb5dee4a2edf174a764745dc143439137267072160e85016787/provenance.json",
+      "digest": "79cc15b276842be704aa0e6710149d2881b28931a1117609563c3c8df2d2f1b0"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789564863139-envrc-beads-tiered-backend-chain-442fa37248dead92.md",
+      "digest": "3b0b4e68c3925086e8f4c8f7671f20d07a9a701961cce5b0cec1807f650611e9"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789582508056-flext-infra-runtime-modernization-fd98a676eb967caf/incoming/24238232bb0e4ab9fc061ab06ddcd3252a2d9e5e4f5dfaad8146ed69f1b2573f/plan.md",
+      "digest": "a5bfae27012d85a0d5f4e548c347f7ed38d6d99d1aab4f0593bdf09502e2c978"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789582508056-flext-infra-runtime-modernization-fd98a676eb967caf/incoming/24238232bb0e4ab9fc061ab06ddcd3252a2d9e5e4f5dfaad8146ed69f1b2573f/provenance.json",
+      "digest": "8802212a5f06c8e050fe991010fcc148c6aa81e0594a070952fdc8a3d076bd85"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789582508056-flext-infra-runtime-modernization-fd98a676eb967caf.md",
+      "digest": "a5bfae27012d85a0d5f4e548c347f7ed38d6d99d1aab4f0593bdf09502e2c978"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789584897245-governance-documentation-convergence-plan-8696a426efd9b5a9/incoming/50b664baa28e8b87de4369627d05e2361559eabb7ad5cd238da6c8b8e78bc0ff/plan.md",
+      "digest": "12d51c7b28e1f46dde9242ff5db884e1feca8266a646df74530acc9ac5450453"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789584897245-governance-documentation-convergence-plan-8696a426efd9b5a9/incoming/50b664baa28e8b87de4369627d05e2361559eabb7ad5cd238da6c8b8e78bc0ff/provenance.json",
+      "digest": "f0bc1bd2683af78a62d162ceccad5dc43b4de1e1bd2d64cbc9be1862fc4cd7e4"
+    },
+    {
+      "relative_path": "kilo-local-plans-1789584897245-governance-documentation-convergence-plan-8696a426efd9b5a9.md",
+      "digest": "12d51c7b28e1f46dde9242ff5db884e1feca8266a646df74530acc9ac5450453"
+    },
+    {
+      "relative_path": "kilo-local-plans-2026-09-16-flext-infra-continuation-plan-5f3e48eda7ab7c6f/incoming/1cbc2008db7033690fc6bf207b265ab35adcdf6f8974c9892046e7032ef47c85/plan.md",
+      "digest": "a9e3756bd376bcf2e724f957beb3144ca09139a06b8a32c56d357b4535aea468"
+    },
+    {
+      "relative_path": "kilo-local-plans-2026-09-16-flext-infra-continuation-plan-5f3e48eda7ab7c6f/incoming/1cbc2008db7033690fc6bf207b265ab35adcdf6f8974c9892046e7032ef47c85/provenance.json",
+      "digest": "38bd892e795b3f9f5f12039c62a2ebe8510fd1a4d2303f66ef344a8a66b33ab3"
+    },
+    {
+      "relative_path": "kilo-local-plans-2026-09-16-flext-infra-continuation-plan-5f3e48eda7ab7c6f.md",
+      "digest": "a9e3756bd376bcf2e724f957beb3144ca09139a06b8a32c56d357b4535aea468"
+    },
+    {
+      "relative_path": "kilo-local-plans-README-e23bb881352c6b2f/incoming/a7684798726df61bdd2ef538992506fbd98bd5849a8e4b45f656f9fa18ce052e/plan.md",
+      "digest": "5cbc976ef2838b6244dc65d983fb206acc4daa5e8908919b2203982c8aec2505"
+    },
+    {
+      "relative_path": "kilo-local-plans-README-e23bb881352c6b2f/incoming/a7684798726df61bdd2ef538992506fbd98bd5849a8e4b45f656f9fa18ce052e/provenance.json",
+      "digest": "2da40f71725960fe6b705e4e6f4133a779bbaabd38e95e95a4038207a543275e"
+    },
+    {
+      "relative_path": "kilo-local-plans-README-e23bb881352c6b2f.md",
+      "digest": "5cbc976ef2838b6244dc65d983fb206acc4daa5e8908919b2203982c8aec2505"
+>>>>>>> origin/0.12.0-dev
     }
   ]
 }

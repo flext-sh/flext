@@ -1,0 +1,15 @@
+{
+  "identity": "1b158f314478542db4c51588a4f62fb8f5006a6c3117acff2f2c3a5726769567",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789162100000-plano-retomada-conclusao.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "6e68fbd2e952c455c30939c5df9246fe747864104a2115f2a1da4d6cc1d61acc",
+  "canonical_path": "kilo-local-plans-1789162100000-plano-retomada-conclusao-1b158f314478542d.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.231135Z",
+  "attachments": []
+}

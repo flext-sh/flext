@@ -1,0 +1,15 @@
+{
+  "identity": "60d59720cb1e1b4798b9f49aa7dea9d0045aab75a8b1dc11427730bf1d7e55fe",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789070856000-checkpoint-012-resume-ci-green.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "f6de1be2f3f7b1a79fe93a399ae3e908ede2d398d792f76612de6148c407ea33",
+  "canonical_path": "kilo-local-plans-1789070856000-checkpoint-012-resume-ci-green-60d59720cb1e1b47.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.220822Z",
+  "attachments": []
+}

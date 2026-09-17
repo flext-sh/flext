@@ -1,0 +1,15 @@
+{
+  "identity": "0ee6ccb71efab845a5fcd72ede6e7cd50cea3bc66ee78cd00eeeec98b7201178",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "addenda/1789582508056/04-parallel-plan-reconciliation.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "8c86182ffc07b53528907c504614a58f64d3e808142c0241b613d65a056201ae",
+  "canonical_path": "kilo-local-plans-04-parallel-plan-reconciliation-0ee6ccb71efab845.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.307465Z",
+  "attachments": []
+}

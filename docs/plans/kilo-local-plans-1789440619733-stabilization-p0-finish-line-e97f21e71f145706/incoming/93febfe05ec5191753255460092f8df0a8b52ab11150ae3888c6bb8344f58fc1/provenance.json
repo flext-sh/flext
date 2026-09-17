@@ -1,0 +1,15 @@
+{
+  "identity": "e97f21e71f145706a18df5c5083d04d5cc1763e54c3ea719b5f375810f0b099f",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789440619733-stabilization-p0-finish-line.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "93febfe05ec5191753255460092f8df0a8b52ab11150ae3888c6bb8344f58fc1",
+  "canonical_path": "kilo-local-plans-1789440619733-stabilization-p0-finish-line-e97f21e71f145706.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.238041Z",
+  "attachments": []
+}

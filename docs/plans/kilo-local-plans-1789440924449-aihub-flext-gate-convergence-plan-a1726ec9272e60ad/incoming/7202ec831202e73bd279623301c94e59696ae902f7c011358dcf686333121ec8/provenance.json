@@ -1,0 +1,15 @@
+{
+  "identity": "a1726ec9272e60ad76fdcac53befab2c1fe5c1bde7a88e0e6cfbd954577617e3",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789440924449-aihub-flext-gate-convergence-plan.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "7202ec831202e73bd279623301c94e59696ae902f7c011358dcf686333121ec8",
+  "canonical_path": "kilo-local-plans-1789440924449-aihub-flext-gate-convergence-plan-a1726ec9272e60ad.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.239316Z",
+  "attachments": []
+}

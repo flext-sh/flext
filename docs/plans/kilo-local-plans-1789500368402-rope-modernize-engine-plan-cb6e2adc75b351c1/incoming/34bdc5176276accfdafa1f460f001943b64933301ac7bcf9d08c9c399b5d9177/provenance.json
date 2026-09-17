@@ -1,0 +1,15 @@
+{
+  "identity": "cb6e2adc75b351c166b685b29375c777b3f148a72bb4facef38ef46f3c302f79",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789500368402-rope-modernize-engine-plan.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "34bdc5176276accfdafa1f460f001943b64933301ac7bcf9d08c9c399b5d9177",
+  "canonical_path": "kilo-local-plans-1789500368402-rope-modernize-engine-plan-cb6e2adc75b351c1.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.270951Z",
+  "attachments": []
+}

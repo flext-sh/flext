@@ -1,0 +1,15 @@
+{
+  "identity": "d4b5b03f00620507a1a58af7179f7167cbd7ebd02b601972120984dba7aa36a9",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789500930535-accessor-modernize-rope-unification.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "26d6708925b78bb68b8ee52b1c6ec748f5bc51d47a13839013f7a8a458456fcd",
+  "canonical_path": "kilo-local-plans-1789500930535-accessor-modernize-rope-unification-d4b5b03f00620507.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.274311Z",
+  "attachments": []
+}

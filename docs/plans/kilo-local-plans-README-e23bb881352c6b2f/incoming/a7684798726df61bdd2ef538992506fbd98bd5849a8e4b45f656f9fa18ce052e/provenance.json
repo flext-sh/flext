@@ -1,0 +1,15 @@
+{
+  "identity": "e23bb881352c6b2f5c8f5a25c483a8c6483a6bdd3579caf3b465ffb360c62173",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "addenda/2026-09-16-flext-infra-continuation/README.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "a7684798726df61bdd2ef538992506fbd98bd5849a8e4b45f656f9fa18ce052e",
+  "canonical_path": "kilo-local-plans-README-e23bb881352c6b2f.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.321314Z",
+  "attachments": []
+}

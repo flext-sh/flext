@@ -1,0 +1,15 @@
+{
+  "identity": "fd98a676eb967caf1567f2084fddd70d71a316fc5230121d71891c74c58878fd",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789582508056-flext-infra-runtime-modernization.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "24238232bb0e4ab9fc061ab06ddcd3252a2d9e5e4f5dfaad8146ed69f1b2573f",
+  "canonical_path": "kilo-local-plans-1789582508056-flext-infra-runtime-modernization-fd98a676eb967caf.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.288096Z",
+  "attachments": []
+}

@@ -1,0 +1,15 @@
+{
+  "identity": "8506973c709dd91dda0baec21b1e052cbfa93d38df3a0be64a8876e9d61f0444",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "addenda/1789582508056/02-lane-adjudication-and-conflicts.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "d377b5ec5b6aa820b99c5f01c523c9dbf0a67cd7d09f33d468d28450a7bd6336",
+  "canonical_path": "kilo-local-plans-02-lane-adjudication-and-conflicts-8506973c709dd91d.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.302250Z",
+  "attachments": []
+}

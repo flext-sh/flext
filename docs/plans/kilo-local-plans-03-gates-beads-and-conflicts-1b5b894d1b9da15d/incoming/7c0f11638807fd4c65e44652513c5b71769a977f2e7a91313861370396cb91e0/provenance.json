@@ -1,0 +1,15 @@
+{
+  "identity": "1b5b894d1b9da15d236d4c19c8199e12ce432def0c838c8e50ed3bdad985815b",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "addenda/2026-09-16-flext-infra-continuation/03-gates-beads-and-conflicts.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "7c0f11638807fd4c65e44652513c5b71769a977f2e7a91313861370396cb91e0",
+  "canonical_path": "kilo-local-plans-03-gates-beads-and-conflicts-1b5b894d1b9da15d.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.315666Z",
+  "attachments": []
+}

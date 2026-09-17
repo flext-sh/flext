@@ -1,0 +1,15 @@
+{
+  "identity": "4300c9789ca5807391470d20f65ff989e7b73cda97da56bd77d52bb0c651cc95",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789041614991-deep-research-flext-beads-reconciliation.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "60478447a04164b109493b4c218c45c9d8994b87e1ced2789cf62c4a0c8482e7",
+  "canonical_path": "kilo-local-plans-1789041614991-deep-research-flext-beads-reconciliation-4300c9789ca58073.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.211476Z",
+  "attachments": []
+}

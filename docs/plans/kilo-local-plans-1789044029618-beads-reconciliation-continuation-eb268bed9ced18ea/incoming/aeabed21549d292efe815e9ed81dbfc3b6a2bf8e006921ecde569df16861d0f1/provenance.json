@@ -1,0 +1,15 @@
+{
+  "identity": "eb268bed9ced18ea4c77b2013e136b3666a1cfded094399f44b3af4d11383144",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789044029618-beads-reconciliation-continuation.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "aeabed21549d292efe815e9ed81dbfc3b6a2bf8e006921ecde569df16861d0f1",
+  "canonical_path": "kilo-local-plans-1789044029618-beads-reconciliation-continuation-eb268bed9ced18ea.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.213976Z",
+  "attachments": []
+}

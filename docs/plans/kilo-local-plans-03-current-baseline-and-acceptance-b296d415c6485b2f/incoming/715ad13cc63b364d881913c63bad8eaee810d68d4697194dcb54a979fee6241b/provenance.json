@@ -1,0 +1,15 @@
+{
+  "identity": "b296d415c6485b2f74c806d2b4bf1d0d0a4ea4b789840c1a4145f231e81e6f11",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "addenda/1789582508056/03-current-baseline-and-acceptance.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "715ad13cc63b364d881913c63bad8eaee810d68d4697194dcb54a979fee6241b",
+  "canonical_path": "kilo-local-plans-03-current-baseline-and-acceptance-b296d415c6485b2f.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.304854Z",
+  "attachments": []
+}

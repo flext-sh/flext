@@ -1,0 +1,15 @@
+{
+  "identity": "1b21a0c6f27ba800831a93a62b271f2d7af8934c7b86d04ef5b2c46bd2c33fe1",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789143898419-make-cycle-idempotence-green-landing-plan.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "669b83b45070fd32fb1a6e015c72e334df060e6ff41230fbdb66a82bf1979c9c",
+  "canonical_path": "kilo-local-plans-1789143898419-make-cycle-idempotence-green-landing-plan-1b21a0c6f27ba800.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.227369Z",
+  "attachments": []
+}

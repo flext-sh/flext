@@ -1,0 +1,15 @@
+{
+  "identity": "5d3361281e57d8ae0cce3a8409e8de0e81a77008a684830b7be35150f342f818",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "addenda/2026-09-16-flext-infra-continuation/04-agent-coordination.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "3feb44f493439c3cd4dac2236ad9ff21b16dd801f55e1a831aedade64e458bab",
+  "canonical_path": "kilo-local-plans-04-agent-coordination-5d3361281e57d8ae.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.318428Z",
+  "attachments": []
+}

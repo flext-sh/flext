@@ -1,0 +1,15 @@
+{
+  "identity": "9f5a46c550595d281f58d05dc823825917262d181684ba2ba4c028e1733ccce6",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1788975180492-execution-strategy-skills-automation.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "365946f9204a6daf6282461d36f38232353a685ad32615f5abd64a27ad42c6c5",
+  "canonical_path": "kilo-local-plans-1788975180492-execution-strategy-skills-automation-9f5a46c550595d28.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.204805Z",
+  "attachments": []
+}

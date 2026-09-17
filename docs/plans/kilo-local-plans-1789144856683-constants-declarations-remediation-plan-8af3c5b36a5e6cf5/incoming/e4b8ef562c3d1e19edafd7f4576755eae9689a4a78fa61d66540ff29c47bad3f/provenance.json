@@ -1,0 +1,15 @@
+{
+  "identity": "8af3c5b36a5e6cf5fb884acd5d77ff5e74f469ae5679ffb50ae5501d22bff968",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789144856683-constants-declarations-remediation-plan.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "e4b8ef562c3d1e19edafd7f4576755eae9689a4a78fa61d66540ff29c47bad3f",
+  "canonical_path": "kilo-local-plans-1789144856683-constants-declarations-remediation-plan-8af3c5b36a5e6cf5.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.228730Z",
+  "attachments": []
+}

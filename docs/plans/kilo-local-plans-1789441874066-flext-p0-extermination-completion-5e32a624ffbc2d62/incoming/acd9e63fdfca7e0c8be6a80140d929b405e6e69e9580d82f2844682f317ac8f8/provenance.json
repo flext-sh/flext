@@ -1,0 +1,15 @@
+{
+  "identity": "5e32a624ffbc2d622901d3c778d693491316a4a58ee9b80a06485e27c5ca1fd4",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789441874066-flext-p0-extermination-completion.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "acd9e63fdfca7e0c8be6a80140d929b405e6e69e9580d82f2844682f317ac8f8",
+  "canonical_path": "kilo-local-plans-1789441874066-flext-p0-extermination-completion-5e32a624ffbc2d62.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.244271Z",
+  "attachments": []
+}

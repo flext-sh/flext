@@ -1,0 +1,15 @@
+{
+  "identity": "8e7843cf3128fe23f799d120083f292f767a15f9c8ea1cd28882d5b52172c690",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789489334832-rope-gen-engine-strict-init.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "333ab29fe5ebcd872216f78b21bc19617999c97836c9c4dd11c28d8f5eb5db3b",
+  "canonical_path": "kilo-local-plans-1789489334832-rope-gen-engine-strict-init-8e7843cf3128fe23.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.261569Z",
+  "attachments": []
+}

@@ -1,0 +1,15 @@
+{
+  "identity": "441186435df2c975020bd2ff3510a3c5f2a72e256b5160a69542ff0e73f67604",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789476032590-facade-loc-cap-convergence-plan.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "42a65ca3f4af60a10ed678434edd8a26deacdbf79c633f38b379e56e47253de0",
+  "canonical_path": "kilo-local-plans-1789476032590-facade-loc-cap-convergence-plan-441186435df2c975.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.255214Z",
+  "attachments": []
+}

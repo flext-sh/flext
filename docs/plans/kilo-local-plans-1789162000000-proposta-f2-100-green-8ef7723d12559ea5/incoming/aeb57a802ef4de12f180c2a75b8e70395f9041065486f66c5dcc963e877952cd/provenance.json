@@ -1,0 +1,15 @@
+{
+  "identity": "8ef7723d12559ea5fef3b6ee3cde585b268aca148e0c8c05b8ab636ea91f605a",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789162000000-proposta-f2-100-green.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "aeb57a802ef4de12f180c2a75b8e70395f9041065486f66c5dcc963e877952cd",
+  "canonical_path": "kilo-local-plans-1789162000000-proposta-f2-100-green-8ef7723d12559ea5.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.229944Z",
+  "attachments": []
+}

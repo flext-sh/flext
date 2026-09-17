@@ -1,0 +1,15 @@
+{
+  "identity": "dade8adac5c7434c99923569146ece218509bc80c27015b7d5fdd386d6d919bb",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1788987519000-handoff-refaze-checkpoint-012-stabilizacao.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "f64b5970cebcebcbebf9de054f9606a9b54c3b1df30b93b16885bd54842781b7",
+  "canonical_path": "kilo-local-plans-1788987519000-handoff-refaze-checkpoint-012-stabilizacao-dade8adac5c7434c.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.208838Z",
+  "attachments": []
+}

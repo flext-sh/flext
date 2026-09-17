@@ -1,0 +1,15 @@
+{
+  "identity": "0ae436d83486ff6fb08fb46bb646959607f18fc6c8fba90318eed09f7a06d3f5",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "addenda/1789582508056/01-session-timeline-and-evidence.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "54ad64e875173826d1e4f01f1b0ca46de8191f891db0923d49463a2cba40af7b",
+  "canonical_path": "kilo-local-plans-01-session-timeline-and-evidence-0ae436d83486ff6f.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.299407Z",
+  "attachments": []
+}

@@ -1,0 +1,27 @@
+# Contribution Adoption Matrix
+
+| Contribution | Evidence | Decision | Required proof/action |
+|---|---|---|---|
+| Native Claude `ai-hub wip` program | Native session + `~/.claude/plans/wip-automation/` | **Adjacent / separate** | Track in ai-hub/Gas City; flext-infra consumes it only after its own canary/landing proof. |
+| Native Claude member/super pushes | Session event summary | **Pending proof** | Resolve exact SHAs, PRs, integration ancestry, clean trees, and post-merge Make results. |
+| agents#151 merge `61e7bea` | Native Claude event | **Tentatively accepted** | Confirm remote merge ancestry and relevant agents gates. |
+| flext-core#479 | Native Claude blocker | **Pending** | Keep as dependency; do not call fleet green. |
+| P0 docs/ADR `049cc4c00c` | Kilo stabilization transcript | **Pending ancestry review** | Compare against current docs/ADRs and integration SHA; adopt only unique current content. |
+| Restored `u.validate_value` bindings | Rope Ruff session, static inspection only | **Superseded** | Current tip uses newer owner implementations. Do not reapply; validate public modernizer/release/Mise behavior instead. |
+| `_conform_gitignore.py` SLF001 suppression | Rope Ruff session | **Rejected and absent from current tip** | No suppression. Elect a public utility owner or keep a cohesive implementation proven by runtime. |
+| Envrc automatic `direnv allow`, typed render context, `.envrc.local` residue removal | surf-hornet transcript, claimed commits `dce9192a0`/`1e49d70841`, live-file read | **Adopt if current tip/ancestry confirms** | Prove Gas City activation, generation fixed point, and no duplicate activation owner. |
+| Envrc `local` backend / local Dolt ledger | Historical envrc plan and current template | **Rejected by newer authority** | Remove or migrate local-ledger behavior through the canonical owner; Gas City is the only Beads engine. `none` may only mean Beads not selected, never another ledger. |
+| Conform/lazy-init path filter | Main/rope WIP and surf handoff | **Unvalidated WIP** | Resolve ownership once at transaction composition; use one filtered analysis object for journal and fixed-point validation. |
+| `_lazy_analysis` scope mismatch in main checkout | Cooperative runtime-modernization plan; absent in rope lane | **Conflict to adjudicate** | Re-read live integration tip. Adopt the valid fix from main WIP only if defect survives current owner merge. |
+| ProjectNew/lazy-init/pyproject fixed-point analysis | Current plan + fixed-point audit | **Accepted diagnosis** | Unify template, modernizer nested-tool ordering, and conform round-trip owner; first generation must already be canonical. |
+| aeolian test assertion rewrites | Stale lane transcript | **Re-derive, do not merge branch** | Compare each test to current public runtime. Reimplement useful behavior tests on current tip; delete invalid tests. |
+| aeolian root facade and generated `__init__` edits | Stale branch, unresolved 13 gates, manual generated edits | **Rejected** | Use current generator/facade owner and regenerate. |
+| aeolian hardcoded Singer map → `c.DbOracle.SINGER_TYPE_MAP` | Historical source change | **Candidate** | Confirm missing on current tip and validate actual Singer runtime before adopting. |
+| rope-modernize lane/PR cleanup (#235/#681 etc.) | Rope handoffs and PR audits | **Accept only with current remote proof** | Record closed/superseded contribution in Beads; do not reopen stale branches unless unique code is missing. |
+
+## Acceptance states
+
+- **Accepted:** present on current integration ancestry and proven through current canonical runtime/gates.
+- **Pending proof:** plausible work with incomplete SHA, ancestry, or gate evidence.
+- **Superseded:** intent is present through a newer owner; replay would regress architecture.
+- **Rejected:** violates current authority, uses suppression/compatibility/manual projections, or lacks a valid public behavior.

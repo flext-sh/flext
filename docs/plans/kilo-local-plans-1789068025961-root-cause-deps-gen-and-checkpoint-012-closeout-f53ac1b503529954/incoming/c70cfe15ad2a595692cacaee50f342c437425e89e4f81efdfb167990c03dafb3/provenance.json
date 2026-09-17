@@ -1,0 +1,15 @@
+{
+  "identity": "f53ac1b5035299543f356b31e5b2186e42ab2aee3af2bc8b9d27b4e2ba3baa66",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1789068025961-root-cause-deps-gen-and-checkpoint-012-closeout.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "c70cfe15ad2a595692cacaee50f342c437425e89e4f81efdfb167990c03dafb3",
+  "canonical_path": "kilo-local-plans-1789068025961-root-cause-deps-gen-and-checkpoint-012-closeout-f53ac1b503529954.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.219510Z",
+  "attachments": []
+}

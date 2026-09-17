@@ -1,0 +1,15 @@
+{
+  "identity": "42b7585962cd813bb3dafd026df61685bb17f3de985c9b2a866c17caa876e11d",
+  "provider": "kilo",
+  "source_id": "kilo-local-plans",
+  "source_path": "1788961161018-flext-012-checkpoint-status.md",
+  "driver": "flext-infra-files",
+  "driver_version": "1",
+  "digest": "7a821f690f6b944599ed36c4f82d16d1aba9eca94398dc067ceb43b7e03e662f",
+  "canonical_path": "kilo-local-plans-1788961161018-flext-012-checkpoint-status-42b7585962cd813b.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T02:15:59.203440Z",
+  "attachments": []
+}
