@@ -14,7 +14,7 @@
 
 ## Status
 
-Accepted (tap pilot realized 2026-07-17)
+Accepted — ACCEPTED TARGET (tap pilot realized 2026-07-17; full rollout in progress)
 
 **Tracking:** beads lane `mro-rn88` (dbt/target inventory) + `mro-6int.3`
 (tap declarative pilot: **flext-tap-ldap**, landed). Rollout to the remaining `flext-(dbt|tap|target)-*` projects

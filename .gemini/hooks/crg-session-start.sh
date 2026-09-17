@@ -7,7 +7,7 @@ cat > /dev/null || true
 
 msg="$(code-review-graph status --repo "~/flext" 2>&1 | head -n 1 || true)"
 
-CRG_MSG="$msg" python3 -c '
+CRG_MSG="${msg}" python3 -c '
 import json,os
 m=os.environ.get("CRG_MSG","")
 print(json.dumps({"systemMessage":m,"suppressOutput":True}))

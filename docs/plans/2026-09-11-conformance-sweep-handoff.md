@@ -1,5 +1,26 @@
 # Handoff — Sessão conformance sweep 2026-09-11 (12:43 UTC)
 
+<!-- TOC START -->
+- [1. Estado fino do projeto (verificado, não estimado)](#1-estado-fino-do-projeto-verificado-nao-estimado)
+- [2. Beads (the truth) — status real no bd](#2-beads-the-truth-status-real-no-bd)
+- [3. Onde está o conhecimento](#3-onde-esta-o-conhecimento)
+- [4. Como as conclusões foram obtidas (método, para reproduzir/validar)](#4-como-as-conclusoes-foram-obtidas-metodo-para-reproduzirvalidar)
+- [5. Como remontar os TODOs (protocolo)](#5-como-remontar-os-todos-protocolo)
+- [6. Ordem de retomada (primeiras 4 ações, em sequência)](#6-ordem-de-retomada-primeiras-4-acoes-em-sequencia)
+- [7. Proibições duráveis desta sessão (lidas no pós-mortem)](#7-proibicoes-duraveis-desta-sessao-lidas-no-pos-mortem)
+- [8. Numeros-chave (quick resume)](#8-numeros-chave-quick-resume)
+- [9. Reconciliação skills/ADRs/docs ↔ código (12:52 UTC — confronto pós-handoff v1)](#9-reconciliacao-skillsadrsdocs-codigo-1252-utc-confronto-pos-handoff-v1)
+  - [9.1 Tabela de mapeamento: contrato ADR-010 ↔ SLA do plano ↔ estado medido](#91-tabela-de-mapeamento-contrato-adr-010-sla-do-plano-estado-medido)
+  - [9.2 Drifts de DOCUMENTAÇÃO corrigidos nesta reconciliação](#92-drifts-de-documentacao-corrigidos-nesta-reconciliacao)
+  - [9.3 Regras que precisam ser CODIFICADAS para o piloto de produção com propagação completa (cadeia de fechamento)](#93-regras-que-precisam-ser-codificadas-para-o-piloto-de-producao-com-propagacao-completa-cadeia-de-fechamento)
+  - [9.4 Inputs atualizados nesta passada](#94-inputs-atualizados-nesta-passada)
+- [10. FUSÃO — handoff flext-gov (sessão irmão) × este handoff (13:05 UTC)](#10-fusao-handoff-flext-gov-sessao-irmao-este-handoff-1305-utc)
+  - [10.1 Duas cadeias de gate, uma sequência (sinergia central)](#101-duas-cadeias-de-gate-uma-sequencia-sinergia-central)
+  - [10.2 Estado de acumulação entre as sessões (o que uma deixou para a outra)](#102-estado-de-acumulacao-entre-as-sessoes-o-que-uma-deixou-para-a-outra)
+  - [10.3 Cadeia única de retomada (merge das duas ordens)](#103-cadeia-unica-de-retomada-merge-das-duas-ordens)
+  - [10.4 Decreto de continuidade (vigência dupla — aplica-se a ambas as sessões)](#104-decreto-de-continuidade-vigencia-dupla-aplica-se-a-ambas-as-sessoes)
+<!-- TOC END -->
+
 > Commeo restrito: pega-o-voa. Este documento é o CURSOR completo para retomar o trabalho. Tudo o que era nesário para o próximo agente executar sem re-pesquisar está aqui, com endereços exatos.
 
 ---

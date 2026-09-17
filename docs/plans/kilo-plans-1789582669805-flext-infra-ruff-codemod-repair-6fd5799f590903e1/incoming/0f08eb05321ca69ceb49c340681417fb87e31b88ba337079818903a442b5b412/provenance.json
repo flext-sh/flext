@@ -1,0 +1,15 @@
+{
+  "identity": "6fd5799f590903e11abaf7dd4fb206dc186d57afad5f431415eba5ba331dc9f9",
+  "provider": "kilo",
+  "source_id": "kilo-plans",
+  "source_path": "1789582669805-flext-infra-ruff-codemod-repair.md",
+  "driver": "kilo",
+  "driver_version": "1",
+  "digest": "0f08eb05321ca69ceb49c340681417fb87e31b88ba337079818903a442b5b412",
+  "canonical_path": "kilo-plans-1789582669805-flext-infra-ruff-codemod-repair-6fd5799f590903e1.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T01:09:51.555510Z",
+  "attachments": []
+}

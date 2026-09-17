@@ -29,7 +29,7 @@ orchestrated, and executed through one typed surface.
 
 - Lint, type-check, security, and tests run through the canonical `make` verbs; current status is produced by the gates,
   not restated here.
-- Run `make check PROJECT=flext-meltano` (lint + type-check) and `make val` for the full gate chain.
+- Run selector-free root `make check`, `make test`, and `make build`.
 
 ## Quick start
 
@@ -78,15 +78,15 @@ facade.
 
 ## Testing & quality
 
-- `make check PROJECT=flext-meltano` — Ruff + type-check on the project lane.
-- `make test PROJECT=flext-meltano` — unit and integration suites through the shared `flext-tests` helpers.
-- `make val` — full workspace validation chain (lint, types, security, tests, docs).
+- `make check` — lint, typing, security, and structural checks.
+- `make test` — suites through the shared Testmon cache.
+- `make build` — package candidate; runtime proof remains separate.
 - Typing is strict (no `Any`/`object`); all owned payloads are `m.Meltano.*` Pydantic models and all fallible paths
   return `r[T]`.
 
 ## Resources
 
-- [Project README](../../flext-meltano/README.md)
+- [Project README](https://github.com/flext-sh/flext-meltano/blob/0.12.0-dev/README.md)
 - [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
   meltano.md`
 - Project documentation under `flext-meltano/docs/`

@@ -19,7 +19,7 @@ utilities, and `r[T]` error handling. Package description: "FLEXT CLI — Develo
 
 - **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Quality gate**: `make check PROJECT=flext-cli` (Ruff + type checks) and `make val` for the full pipeline
+- **Quality gate**: selector-free root `make check`, `make test`, and `make build`
 - **Depends on**: `flext-core` (facades, result contract, container)
 
 ### Quality signals
@@ -72,14 +72,14 @@ unverified convenience method.
 
 ## Testing & quality
 
-- `make check PROJECT=flext-cli`: Ruff linting plus type checks
-- `make test PROJECT=flext-cli`: pytest suite (latest evidence under `reports/pytest/`)
-- `make val`: full pipeline; see `reports/coverage-scan-*` for the current coverage snapshot
+- `make check`: lint, typing, security, and structural checks
+- `make test`: pytest suite through the shared Testmon cache
+- `make build`: package candidate; runtime proof remains separate
 - Tests target the public `cli` facade surface only, per workspace testing law (U16)
 
 ## Resources
 
-- [Project README](../../flext-cli/README.md) (auto-generated module map and operation flow)
+- [Project README](https://github.com/flext-sh/flext-cli/blob/0.12.0-dev/README.md) (auto-generated module map and operation flow)
 - [Workspace AGENTS.md](../../AGENTS.md) — layering and zero-tolerance rules
 - `flext-cli/docs/api-reference/` — generated API documentation
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`

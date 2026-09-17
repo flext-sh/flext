@@ -1,5 +1,32 @@
 # PLANO — flext-gov: governance rules + gates (2026-09-11) — v2
 
+<!-- TOC START -->
+- [Autoridade](#autoridade)
+- [Snapshot (commits e estados, 2026-09-11 13:10)](#snapshot-commits-e-estados-2026-09-11-1310)
+  - [TODO vivo (1:1 com beads — verdade real bd list, nunca o texto)](#todo-vivo-11-com-beads-verdade-real-bd-list-nunca-o-texto)
+  - [Como ler as SKAs (rastreabilidade)](#como-ler-as-skas-rastreabilidade)
+  - [Mapa SKA → conteúdo por repo (rastreabilidade dos \[WIP\])](#mapa-ska-conteudo-por-repo-rastreabilidade-dos-wip)
+- [Lei anti-hardcode (vale TAMBÉM para tests)](#lei-anti-hardcode-vale-tambem-para-tests)
+- [Estado por workstream — entregue / lacunas / próximos (produção)](#estado-por-workstream-entregue-lacunas-proximos-producao)
+  - [WS-F1 — R1 grammática de import consumer · bead flext-ssnc7.1 · REABERTO](#ws-f1-r1-grammatica-de-import-consumer-bead-flext-ssnc71-reaberto)
+  - [WS-F2 — R2 duplicação consumer+família · bead flext-ssnc7.2](#ws-f2-r2-duplicacao-consumerfamilia-bead-flext-ssnc72)
+  - [WS-F3 — R3 lei de camadas · bead flext-ssnc7.3](#ws-f3-r3-lei-de-camadas-bead-flext-ssnc73)
+  - [WS-F4 — R4 gates-as-products · bead flext-ssnc7.4](#ws-f4-r4-gates-as-products-bead-flext-ssnc74)
+  - [WS-F5 — R5 release-consumption · bead flext-ssnc7.5 (aberto)](#ws-f5-r5-release-consumption-bead-flext-ssnc75-aberto)
+  - [WS-F6 — R6 lei do caminho de contribuição · bead flext-ssnc7.6](#ws-f6-r6-lei-do-caminho-de-contribuicao-bead-flext-ssnc76)
+  - [WS-F7 — docs bijection/owner · bead flext-ssnc7.7](#ws-f7-docs-bijectionowner-bead-flext-ssnc77)
+- [Matriz produção (critérios de aceite)](#matriz-producao-criterios-de-aceite)
+- [Onda de automação canonizada (pesquisa 2026-09-11 12:5x — APROVE-REQUEST\]](#onda-de-automacao-canonizada-pesquisa-2026-09-11-125x-aprove-request)
+  - [Piloto de homologação (proposta de objetivo produtivo)](#piloto-de-homologacao-proposta-de-objetivo-produtivo)
+  - [Pedido de aprovação ao operador](#pedido-de-aprovacao-ao-operador)
+- [Riscos vivos](#riscos-vivos)
+- [Referências](#referencias)
+<!-- TOC END -->
+
+> Historical evidence only. This plan records an earlier execution context and
+> its command examples are not current workspace guidance. Use the root
+> `AGENTS.md` and `make help` for the active contract.
+
 > Aprovado pelo operador. Monopólio do tema no lado flext (WS-F1..F7).
 > Epico beads: `flext-ssnc7` (+ filhos `.1`–`.7`, validações `.1.1`/`.2.1`).
 > Programas irmãos NÃO são executados aqui: agents WS-A..D e ai-hub runtime

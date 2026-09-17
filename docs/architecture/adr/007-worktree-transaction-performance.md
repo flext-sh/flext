@@ -10,7 +10,7 @@
   - [5. Generated-artifact linting is a single batched stage, not per template](#5-generated-artifact-linting-is-a-single-batched-stage-not-per-template)
 - [Consequences](#consequences)
 <!-- TOC END -->
-- **Status:** Accepted
+- **Status:** CURRENT IMPLEMENTATION
 - **Date:** 2026-07-17
 - **Scope:** `flext-infra` worktree transaction executor, `flext-cli` output
   formatting, and all mutating CLI commands that execute through the worktree

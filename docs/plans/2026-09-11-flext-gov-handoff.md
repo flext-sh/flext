@@ -1,5 +1,25 @@
 # HANDOFF — flext-gov program session 2026-09-11 (reinicio completo)
 
+<!-- TOC START -->
+- [1. Identity of this program (what you are resuming)](#1-identity-of-this-program-what-you-are-resuming)
+- [2. Authority resolution (strict order)](#2-authority-resolution-strict-order)
+- [3. Non-negotiables learned THIS session (a "must-not-repeat" list)](#3-non-negotiables-learned-this-session-a-must-not-repeat-list)
+- [4. HOW to rebuild the TODO list from the real world](#4-how-to-rebuild-the-todo-list-from-the-real-world)
+- [5. Current work trees / branches / pins (2026-09-11 EOD)](#5-current-work-trees-branches-pins-2026-09-11-eod)
+- [6. Bead status snapshot (source bd list at EOD)](#6-bead-status-snapshot-source-bd-list-at-eod)
+- [7. Pending approvals (ask the operator, THEN proceed)](#7-pending-approvals-ask-the-operator-then-proceed)
+- [8. Canonical execution cycle (per slice, no ad-hoc)](#8-canonical-execution-cycle-per-slice-no-ad-hoc)
+- [9. Workstreams depth (who owns what next)](#9-workstreams-depth-who-owns-what-next)
+- [10. Docs & ADRs you must read (order)](#10-docs-adrs-you-must-read-order)
+- [11. If you hit a new violation that isn't covered yet](#11-if-you-hit-a-new-violation-that-isnt-covered-yet)
+- [12. Reconciliação docs vs campo (auditoria 2026-09-11 final)](#12-reconciliacao-docs-vs-campo-auditoria-2026-09-11-final)
+- [13. Decreto de continuidade (OBRIGATÓRIO antes de qualquer efeito)](#13-decreto-de-continuidade-obrigatorio-antes-de-qualquer-efeito)
+<!-- TOC END -->
+
+> Historical evidence only. This plan records an earlier execution context and
+> its command examples are not current workspace guidance. Use the root
+> `AGENTS.md` and `make help` for the active contract.
+
 > Continuation-order: THIS fallback-first doc → `bd prime` → plan `docs/plans/2026-09-11-flext-gov-program.md` (TODO table is the Live mirror) → authority chain below.
 > Wrote-and-Stop: read this fully before ANY mutation; operator approval is REQUIRED at gate (see § Pending approvals).
 

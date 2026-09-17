@@ -20,7 +20,7 @@
 
 ## Status
 
-Accepted (2026-09-11)
+CURRENT IMPLEMENTATION (accepted 2026-09-11)
 
 ## Context
 
@@ -99,7 +99,8 @@ We ratify the **Consumer Consumption Law (R1-R6)** as the canonical standard for
 - Migration required for existing consumers using internal imports
 - Duplication gate may surface existing debt (must fix at owner)
 - Budget gate may require optimization of slow gates
-- ADR index repair needed (014 unindexed, 011/012 stranded on 0.20.0-dev)
+- Forward-line ADR numbering remains branch-specific; this branch's index is
+  authoritative for the `0.12.0-dev` decision set.
 
 ## Implementation
 

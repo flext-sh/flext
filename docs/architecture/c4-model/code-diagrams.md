@@ -104,7 +104,7 @@ classDiagram
         +resolve~T~(str key) r~T~
         +get~T~(str key) r~T~
         +is_registered(str key) bool
-        +get_global() FlextContainer
+        +shared() FlextContainer
         +clear() None
     }
 
@@ -605,7 +605,3 @@ classDiagram
 - **Plugin Runtime**: ~10MB per plugin
 
 ---
-
-**Last Updated**: 2025-01-XX
-**Version**: 1.0.0
-**Maintainer**: FLEXT Architecture Team

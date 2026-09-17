@@ -65,9 +65,9 @@ FLEXT is an enterprise-grade data integration platform built with:
 - **Clean Architecture** principles with clear layer separation
 - **Domain-Driven Design** patterns for business logic modeling
 - **Railway-Oriented Programming** for error handling
-- **CQRS** and **Event Sourcing** for data processing
 - **Dependency Injection** for loose coupling
-- **Microservices** architecture with Python services
+- **Typed package boundaries** across independently versioned libraries and
+  connectors
 
 ## 🏗 Key Architectural Patterns
 
@@ -115,12 +115,6 @@ FLEXT is an enterprise-grade data integration platform built with:
 
 - [Arc42 Architecture Documentation](../arc42/README.md)
 - [Architecture Decision Records](../adr/README.md)
-- Deployment Architecture (_Documentation coming soon_)
-- Security Architecture (_Documentation coming soon_)
+- [Deployment Architecture](../arc42/07-deployment-view.md)
+- [Security Architecture](../../guides/security.md)
 - [Data Architecture](../data/README.md)
-
----
-
-**Last Updated**: 2025-01-XX
-**Version**: 1.0.0
-**Maintainer**: FLEXT Architecture Team

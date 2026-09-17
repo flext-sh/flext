@@ -19,7 +19,8 @@ meltano` (Singer tap base) behind `r[T]` contracts and the canonical `c/m/p/t/u`
 
 - **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+
-- **Status**: Active development on the `0.12.0-dev` branch; the package builds and exports its full public surface.
+- **Status**: Active development on the `0.12.0-dev` branch; current health is
+  established by the root gates below, not by this page.
 - **Description** (from `pyproject.toml`): "FLEXT Tap Oracle OIC - Singer Tap for Oracle Integration Cloud"
 - **Dependencies**: `flext-core`, `flext-cli`, `flext-meltano`, `flext-oracle-oic`
 - **Console scripts**: `tap-oracle-oic` and `flext-tap-oracle-oic` (both bound to
@@ -27,18 +28,15 @@ meltano` (Singer tap base) behind `r[T]` contracts and the canonical `c/m/p/t/u`
 
 ### Quality signals
 
-- Quality gates run through the workspace Make contract: `make check PROJECT=flext-tap-oracle-oic`, `make test
-  PROJECT=flext-tap-oracle-oic`, and `make val`.
+- Quality gates run through the selector-free workspace Make contract:
+  `make check`, `make test`, and `make build`.
 - Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output
   rather than static claims in this page.
 
 ## Quick start
 
-```bash
-cd flext-tap-oracle-oic
-poetry install
-make check PROJECT=flext-tap-oracle-oic
-```
+From the workspace root, provision and validate with `make setup`, `make check`,
+and `make test`.
 
 Singer discovery and sync through the console script:
 
@@ -50,12 +48,11 @@ tap-oracle-oic --config settings.json --catalog catalog.json --state state.json
 Programmatic use via the public facade:
 
 ```python
-from flext_tap_oracle_oic import FlextTapOracleOicService, tap_oracle_oic
+from flext_tap_oracle_oic import tap_oracle_oic
 
 # tap_oracle_oic is the operational alias for FlextTapOracleOicService
 service = tap_oracle_oic()
 ```
-
 ## Architecture & modules
 
 ```text
@@ -90,14 +87,14 @@ src/flext_tap_oracle_oic/
 
 ## Testing & quality
 
-- Tests live under the project `tests/` tree and run via `make test PROJECT=flext-tap-oracle-oic`; Singer behavior is
+- Tests live under the project `tests/` tree and run via root `make test`; Singer behavior is
   exercised through the tap CLI and discovery flow.
-- Pre-merge verification: `make check PROJECT=flext-tap-oracle-oic` (lint + typing + security selectors) and `make val`.
+- Pre-merge verification uses root `make check`, `make test`, and `make build`.
 
 ## Resources
 
-- [Project README](../../flext-tap-oracle-oic/README.md)
-- [Project docs portal](../../flext-tap-oracle-oic/docs/index.md)
+- [Project README](https://github.com/flext-sh/flext-tap-oracle-oic/blob/0.12.0-dev/README.md)
+- [Project docs portal](https://github.com/flext-sh/flext-tap-oracle-oic/tree/0.12.0-dev/docs)
 - Related projects: `flext-oracle-oic`, `flext-meltano`, `flext-target-oracle-oic`, `flext-core`
 
 ## Support & issues

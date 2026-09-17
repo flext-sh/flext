@@ -1,5 +1,12 @@
 # Roadmap
 
+<<<<<<< HEAD
+<!-- TOC START -->
+- No sections found
+<!-- TOC END -->
+
+Roadmap updates are generated from docs validation outputs.
+=======
 This directory holds maintained roadmap and runbook documents for the FLEXT
 workspace. It is hand-curated, not generated.
 
@@ -31,3 +38,4 @@ canonical cycle (`make setup` → `make gen` ×2 → `make fix` → `make fmt` �
 `make check` → `make test` → `make build`) is the target contract; a proven
 green run on the integration tip is required before any lane reports
 completion. See `docs/ways-of-working/stabilization-checkpoint-0.12.md`.
+>>>>>>> origin/0.12.0-dev

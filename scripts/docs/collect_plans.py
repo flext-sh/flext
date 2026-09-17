@@ -1,5 +1,7 @@
 """Delegate workspace plan collection to the public Infra documentation CLI."""
 
+from __future__ import annotations
+
 from pathlib import Path
 
 from flext_infra import FlextInfraCli

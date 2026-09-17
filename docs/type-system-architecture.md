@@ -1,5 +1,48 @@
 # FLEXT Type System Architecture Guide
 
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [Overview](#overview)
+- [Type System Hierarchy](#type-system-hierarchy)
+  - [Project Dependency Order](#project-dependency-order)
+  - [Architecture Layering within Projects](#architecture-layering-within-projects)
+- [Canonical Type Patterns](#canonical-type-patterns)
+  - [Pattern 1: Simple Type Contract (No Namespace Needed)](#pattern-1-simple-type-contract-no-namespace-needed)
+  - [Pattern 2: Domain Collection Type (Nested Namespace)](#pattern-2-domain-collection-type-nested-namespace)
+  - [Pattern 3: TypeVar Bounded to Protocol (Avoiding Circular Imports)](#pattern-3-typevar-bounded-to-protocol-avoiding-circular-imports)
+  - [Pattern 4: Union → Protocol (Complexity Reduction)](#pattern-4-union-protocol-complexity-reduction)
+  - [Pattern 5: Covariance in Protocols](#pattern-5-covariance-in-protocols)
+  - [Pattern 6: TypeVar Reuse (Centralized)](#pattern-6-typevar-reuse-centralized)
+- [Namespace Architecture](#namespace-architecture)
+  - [Standard Namespace Structure](#standard-namespace-structure)
+  - [Namespace Organization by Project](#namespace-organization-by-project)
+  - [Models Namespace Architecture (m.*)](#models-namespace-architecture-m)
+- [Covariance and Variance Rules](#covariance-and-variance-rules)
+  - [Covariance (Subtype Compatibility)](#covariance-subtype-compatibility)
+  - [Protocol Return Types (Always Covariant)](#protocol-return-types-always-covariant)
+  - [Type Parameter Bounds (Always Covariant)](#type-parameter-bounds-always-covariant)
+- [# ✅ CORRECT: Use Iterable (covariant) not Sequence (invariant) @runtime_checkable class ItemProcessor(Protocol): def process_items(self, items: Iterable\[str\]) -> None: """Accepts any iterable source.""" # ❌ WRONG: Sequence is invariant @runtime_checkable class ItemProcessor(Protocol): def process_items(self, items: t.StrSequence) -> None: """Too restrictive - can't accept list subclasses."""](#correct-use-iterable-covariant-not-sequence-invariant-runtime_checkable-class-itemprocessorprotocol-def-process_itemsself-items-iterablestr-none-accepts-any-iterable-source-wrong-sequence-is-invariant-runtime_checkable-class-itemprocessorprotocol-def-process_itemsself-items-tstrsequence-none-too-restrictive-cant-accept-list-subclasses)
+- [Protocol Design](#protocol-design)
+  - [Protocol Organization Rules](#protocol-organization-rules)
+- [# ✅ CORRECT: Use Self for fluent interface from typing import Self @runtime_checkable class MutableEntry(Protocol): def set_attribute(self, name: str, values: t.StrSequence) -> Self: """Returns self for method chaining.""" # Usage: Fluent interface entry.set_attribute("mail", \["new@example.com"\]).add_attribute("cn", \["User"\])](#correct-use-self-for-fluent-interface-from-typing-import-self-runtime_checkable-class-mutableentryprotocol-def-set_attributeself-name-str-values-tstrsequence-self-returns-self-for-method-chaining-usage-fluent-interface-entryset_attributemail-newexamplecomadd_attributecn-user)
+- [TypeVar Organization](#typevar-organization)
+  - [Centralized TypeVars (flext-core)](#centralized-typevars-flext-core)
+  - [Domain-Specific TypeVars (When Necessary)](#domain-specific-typevars-when-necessary)
+- [Migration Guide](#migration-guide)
+  - [Migrating from Old Patterns to New](#migrating-from-old-patterns-to-new)
+- [Best Practices](#best-practices)
+  - [1. Use Complete Namespace Always](#1-use-complete-namespace-always)
+  - [2. No cast(), tipagem frouxa, ou TYPE_CHECKING](#2-no-cast-tipagem-frouxa-ou-type_checking)
+  - [3. Covariant Protocols for Read-Only](#3-covariant-protocols-for-read-only)
+  - [4. TypeVar with Proper Bounds](#4-typevar-with-proper-bounds)
+  - [5. Namespace Depth Management](#5-namespace-depth-management)
+- [Project Status](#project-status)
+  - [✅ Completed Projects](#completed-projects)
+  - [Type System Metrics](#type-system-metrics)
+  - [Validation Results](#validation-results)
+- [Summary](#summary)
+<!-- TOC END -->
+
 **Version**: 1.0.0
 **Last Updated**: 2025-12-10
 **Scope**: Complete FLEXT ecosystem type system
@@ -171,9 +214,7 @@ class DataProvider(Protocol):
 def process_data(provider: DataProvider) -> None:
     # Provider can return t.IntMapping, t.StrMapping, etc.
     data = provider.get_data()
-    ...
 ```
-
 ### Pattern 6: TypeVar Reuse (Centralized)
 
 **Rule**: Use flext-core TypeVars, add domain-specific only when absolutely necessary
@@ -203,7 +244,7 @@ FlextCliOutputT = TypeVar("FlextCliOutputT")  # NO - use generic R
 # CORRECT: 2-level maximum nesting
 class FlextTypes:
     class Core:
-        type Result[T] = "r[T]"
+        type Result[T] = r[T]
 
     class Utilities:
         type SettingsData = t.MappingKV[str, m.Tests.SettingsEntryModel]
@@ -221,7 +262,6 @@ class FlextTypes:
             class Details:
                 type SomeType = str  # TOO DEEP!
 ```
-
 ### Namespace Organization by Project
 
 **flext-core**:
@@ -278,11 +318,6 @@ m.Cli.CliCommand  # CLI command model
 m.Cli.CliSession  # CLI session model
 
 # ✅ CORRECT: Module-level aliases for common classes
-from flext_cli import (
-    SystemInfo,  # alias for m.Cli.SystemInfo
-    SessionStatistics,  # alias for m.Cli.SessionStatistics
-    CommandStatistics,  # alias for m.Cli.CommandStatistics
-)
 
 # ❌ WRONG: Over-nesting (3+ levels - PROHIBITED)
 m.Cli.Value.SystemInfo  # TOO DEEP - violates 2-level rule
@@ -292,7 +327,6 @@ m.Cli.Data.Command.Execution  # TOO DEEP - nested sub-concerns
 m.SystemInfo  # Missing domain context (m.Cli.*)
 m.Statistics  # Ambiguous - which domain?
 ```
-
 **Models Organization by Project**:
 
 **flext-core**:
@@ -354,7 +388,6 @@ result: t.BoolMapping = {"ok": True}
 process_dict(result)  # Type error: dict is invariant
 
 # ✅ COVARIANT - CORRECT
-from collections.abc import Mapping
 
 
 def process_mapping(data: t.MappingKV[str, m.Tests.ValueModel]) -> None: ...
@@ -363,7 +396,6 @@ def process_mapping(data: t.MappingKV[str, m.Tests.ValueModel]) -> None: ...
 result: t.BoolMapping = {"ok": True}
 process_mapping(result)  # OK: Mapping is covariant
 ```
-
 ### Protocol Return Types (Always Covariant)
 
 ```python
@@ -372,7 +404,6 @@ process_mapping(result)  # OK: Mapping is covariant
 class DataProvider(Protocol):
     def get_attributes(self) -> t.MappingKV[str, t.StrSequence]:
         """Returns read-only attributes - covariant."""
-        ...
 
 
 # Implementation can return more specific dict type
@@ -383,7 +414,6 @@ class MyProvider:
 
 provider: DataProvider = MyProvider()  # OK: dict is assignable to Mapping
 ```
-
 ### Type Parameter Bounds (Always Covariant)
 
 ```python
@@ -392,7 +422,6 @@ provider: DataProvider = MyProvider()  # OK: dict is assignable to Mapping
 class ItemProcessor(Protocol):
     def process_items(self, items: Iterable[str]) -> None:
         """Accepts any iterable source."""
-        ...
 
 
 # ❌ WRONG: Sequence is invariant
@@ -400,9 +429,7 @@ class ItemProcessor(Protocol):
 class ItemProcessor(Protocol):
     def process_items(self, items: t.StrSequence) -> None:
         """Too restrictive - can't accept list subclasses."""
-        ...
 ```
-
 ---
 
 ## Protocol Design
@@ -479,13 +506,11 @@ from typing import Self
 class MutableEntry(Protocol):
     def set_attribute(self, name: str, values: t.StrSequence) -> Self:
         """Returns self for method chaining."""
-        ...
 
 
 # Usage: Fluent interface
 entry.set_attribute("mail", ["new@example.com"]).add_attribute("cn", ["User"])
 ```
-
 ---
 
 ## TypeVar Organization
@@ -671,10 +696,7 @@ def process_model(
 
 
 # ❌ WRONG: TYPE_CHECKING (fix circular import instead)
-if TYPE_CHECKING:
-    from flext_ldif import ParserService
 ```
-
 ### 3. Covariant Protocols for Read-Only
 
 ```python

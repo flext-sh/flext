@@ -1,5 +1,39 @@
 # Link Management and Cross-Reference Procedures
 
+<!-- TOC START -->
+- [Overview](#overview)
+- [Link Reference Standards](#link-reference-standards)
+  - [Link Types and Patterns](#link-types-and-patterns)
+- ["Related Documentation" Section Pattern](#related-documentation-section-pattern)
+  - [Standard Structure](#standard-structure)
+  - [Section Guidelines](#section-guidelines)
+  - [When to Add](#when-to-add)
+- [Bidirectional Links](#bidirectional-links)
+  - [Principle](#principle)
+  - [Guidelines](#guidelines)
+  - [Example](#example)
+- [Link Update Procedures](#link-update-procedures)
+  - [When Adding New Documentation](#when-adding-new-documentation)
+  - [When Moving or Renaming Files](#when-moving-or-renaming-files)
+  - [When Removing Documentation](#when-removing-documentation)
+  - [Regular Maintenance](#regular-maintenance)
+- [Link Validation](#link-validation)
+  - [Automated Validation](#automated-validation)
+  - [Manual Validation Checklist](#manual-validation-checklist)
+- [Common Issues and Solutions](#common-issues-and-solutions)
+  - [Issue: Broken Internal Link](#issue-broken-internal-link)
+  - [Issue: Broken Cross-Project Link](#issue-broken-cross-project-link)
+  - [Issue: Missing "Related Documentation" Section](#issue-missing-related-documentation-section)
+  - [Issue: Inconsistent Link Patterns](#issue-inconsistent-link-patterns)
+- [Link Registry (Future Enhancement)](#link-registry-future-enhancement)
+  - [Automated Registry](#automated-registry)
+  - [Manual Registry](#manual-registry)
+- [Best Practices](#best-practices)
+  - [✅ DO](#do)
+  - [❌ DON'T](#dont)
+- [Related Documentation](#related-documentation)
+<!-- TOC END -->
+
 **Version**: 1.0  
 **Last Updated**: 2025-12-07  
 **Status**: Active
@@ -23,11 +57,11 @@ consistency, maintainability, and accuracy of all documentation links.
 
 - [Getting Started](./getting-started.md)
 - [Architecture Overview](../architecture/overview.md)
-- [API Reference](./api-reference/foundation.md)
+- [API Reference](../api-reference/generated/overview.md)
 
 ❌ WRONG - GitHub URLs within project
 
-- [Getting Started](https://github.com/organization/flext/tree/main/flext-core/docs/getting-started.md)
+- [Getting Started](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/getting-started.md)
 ```
 
 **Rationale**:
@@ -44,8 +78,8 @@ consistency, maintainability, and accuracy of all documentation links.
 ```markdown
 ✅ CORRECT - GitHub URLs for cross-project
 
-- [flext-core Foundation](https://github.com/organization/flext/tree/main/flext-core/docs/architecture/overview.md)
-- [flext-ldif Processing](https://github.com/organization/flext/tree/main/flext-ldif/docs/architecture.md)
+- [flext-core Foundation](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/architecture/overview.md)
+- [flext-ldif Processing](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-ldif/docs/architecture.md)
 
 ❌ WRONG - Relative paths for cross-project
 
@@ -70,7 +104,7 @@ consistency, maintainability, and accuracy of all documentation links.
 
 ❌ WRONG - GitHub URLs for workspace docs
 
-- [Workspace Documentation](https://github.com/organization/flext/tree/main/docs/index.md)
+- [Workspace Documentation](https://github.com/flext-sh/flext/tree/0.12.0-dev/docs/index.md)
 ```
 
 #### 4. External Resources
@@ -85,7 +119,7 @@ consistency, maintainability, and accuracy of all documentation links.
 
 ❌ WRONG - HTTP or incomplete URLs
 
-- [PEP 257](http://peps.python.org/pep-0257/)
+- [PEP 257](https://peps.python.org/pep-0257/)
 - [Google Style](google.github.io/styleguide/pyguide.html)
 ```
 
@@ -107,10 +141,10 @@ All major documentation files must include a "Related Documentation" section at 
 **Across Projects**:
 
 - [flext-core
-  Foundation](https://github.com/organization/flext/tree/main/flext-core/docs/architecture/overview.md)
+  Foundation](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/architecture/overview.md)
   - Clean architecture and CQRS patterns
 - [flext-core Service
-  Patterns](https://github.com/organization/flext/tree/main/flext-core/docs/guides/service-patterns.md)
+  Patterns](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/guides/service-patterns.md)
   - Service patterns and dependency injection
 
 **External Resources**:
@@ -159,7 +193,7 @@ document B to document A where it makes sense contextually.
 ```markdown
 **Across Projects**:
 
-- [flext-core Foundation](https://github.com/organization/flext/tree/main/flext-core/docs/architecture/overview.md)
+- [flext-core Foundation](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/architecture/overview.md)
 ```
 
 **Document B** (`flext-core/docs/architecture/overview.md`):
@@ -167,7 +201,7 @@ document B to document A where it makes sense contextually.
 ```markdown
 **Across Projects**:
 
-- [flext-ldif Processing](https://github.com/organization/flext/tree/main/flext-ldif/docs/getting-started.md)
+- [flext-ldif Processing](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-ldif/docs/getting-started.md)
 ```
 
 ## Link Update Procedures
@@ -324,7 +358,7 @@ For now, maintain awareness of key cross-project relationships:
 **Across Projects**:
 
 - [flext-core Documentation
-  Standards](https://github.com/organization/flext/tree/main/flext-core/docs/standards/documentation.md)
+  Standards](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/standards/documentation.md)
   - Core documentation patterns
 - [FLEXT Workspace Documentation](../README.md) - Workspace-level documentation
 

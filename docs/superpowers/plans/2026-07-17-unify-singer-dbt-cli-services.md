@@ -1,5 +1,15 @@
 # Unify Singer/dbt CLI + Services via flext-meltano — Implementation Plan
 
+<!-- TOC START -->
+- [Global Constraints (LOCKED — operator 2026-07-17)](#global-constraints-locked-operator-2026-07-17)
+- [File Structure (pilot: flext-tap-ldap)](#file-structure-pilot-flext-tap-ldap)
+- [Waves](#waves)
+<!-- TOC END -->
+
+> Historical evidence only. This plan records an earlier execution context and
+> its command examples are not current workspace guidance. Use the root
+> `AGENTS.md` and `make help` for the active contract.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:executing-plans. Steps use `- [ ]`.
 
 **Goal:** Establish ONE canonical, minimal, no-ceremony pattern for every FLEXT Singer tap/target and dbt project —

@@ -108,6 +108,7 @@ deliverable):
 
 ```python
 from pathlib import Path
+
 from flext_infra import FlextInfraRefactorCensus
 
 census = FlextInfraRefactorCensus(
@@ -122,7 +123,6 @@ for obj, parent_paths in collisions:
         f"{obj.kind} {obj.name} @ {obj.file_path}:{obj.line} — {len(parent_paths)} parents"
     )
 ```
-
 The method:
 
 - Builds a parent inventory by importing the 8 upstream packages ( `flext_core` , `flext_cli` , `flext_tests` ,

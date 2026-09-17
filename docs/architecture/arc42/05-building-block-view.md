@@ -29,17 +29,17 @@ The workspace is a Git workspace of independently versioned `flext-*`
 packages under one root. The dependency direction is one-way and enforced:
 
 ```text
-flext-core ──> flext-cli ──> flext-infra
-     │
-     └──────> flext-tests ──> all consumer packages (flext-ldap, flext-api, ...)
+consumer packages ──> flext-cli ──> flext-core
+flext-infra ───────────────────────> flext-cli ──> flext-core
+flext-tests ───────────────────────> flext-cli ──> flext-core
 ```
 
 | Package | Responsibility |
 | --- | --- |
-| `flext-core` | Runtime foundation: result railway (`r[T]`), settings/config base, container, logging, service runtime. Stdlib-only at runtime; never imports cli/infra. |
-| `flext-cli` | Universal CLI/template/config engine: Typer model-driven commands, Jinja2 templates, YAML/JSON/CSV/TOML I/O, output rendering. |
-| `flext-infra` | Workspace automation and enforcement: quality gates, docs engine, codegen, dependency sync. All static enforcement rules live as Pydantic-validated YAML data under `flext-infra/config/`. |
-| `flext-tests` | Test framework: fixtures, runtime aliases (`tm/tv/tt`), `Tests*` models, pytest dispatcher for the enforcement catalog. |
+| `flext-core` | Runtime foundation: result railway (`r[T]`), settings/config base, container, logging, service runtime, and the facade alphabet (`c/t/p/m/u` + `r/e/x/h/d/s`). It never imports another `flext-*` package; dependency floors remain owned by generated package metadata. |
+| `flext-cli` | Universal CLI/template/config engine: Typer model-driven commands, Jinja2 templates, YAML/JSON/CSV/TOML I/O, output rendering. Owns `FlextCliSettings`, `FlextCli`, and all CLI/process/file/output/config/schema/template behavior. |
+| `flext-infra` | Workspace automation and enforcement: quality gates, docs engine, codegen, dependency sync. All static enforcement rules live as Pydantic-validated YAML data under `flext-infra/config/`. **Not a runtime dependency** — reached via its CLI (`flext-infra` / `flext-docs`) or pytest plugin; only `flext-tests` may depend on it. Public facade: `FlextInfra` (`api.py`) + `FlextInfraCli` (`cli.py`). |
+| `flext-tests` | Test framework: fixtures, runtime aliases (`tm/tv/tt`), `Tests*` models, pytest dispatcher for the enforcement catalog. Depends on `flext-cli` (which depends on `flext-core`). |
 | consumers | Domain packages (LDAP, LDIF, Oracle, gRPC, Meltano taps/targets, API, auth, observability, …). They import the foundation packages; the foundation never imports them. |
 
 Cross-project imports flow consumer → foundation freely at runtime; the
@@ -53,7 +53,7 @@ layouts are removed, not maintained in parallel:
 ```text
 flext-<name>/
 ├── src/flext_<name>/
-│   ├── **init**.py          # export-only; generated lazy-init manifest
+│   ├── __init__.py          # export-only; generated lazy-init manifest
 │   ├── api.py               # thin MRO facade over the composed runtime class
 │   ├── cli.py               # CLI surface (flext-cli model-driven commands)
 │   ├── base.py              # service base; publishes the package `s` singleton base
@@ -62,8 +62,8 @@ flext-<name>/
 │   ├── protocols.py         # public `p` facade
 │   ├── typings.py           # public `t` facade
 │   ├── utilities.py         # public `u` facade
-│   ├── config.py            # project config singleton (`config.<Ns>.*`)
-│   ├── settings.py          # env-bound settings singleton (`settings.<Ns>.*`)
+│   ├── _config.py           # project config singleton owner (`config.<Ns>.*`)
+│   ├── _settings.py         # env-bound settings singleton owner (`settings.<Ns>.*`)
 │   ├── services/            # thin domain facades plus private `_domain/` parts
 │   └── _constants/ _models/ _protocols/ _typings/ _utilities/   # thin facet facades plus private domain parts
 ├── tests/                   # one unified conftest.py; unit/ integration/ e2e/; fixtures/
@@ -72,14 +72,16 @@ flext-<name>/
 └── pyproject.toml
 ```
 
-`config.py` and `settings.py` are the SSOT for all parametrization: every
+`_config.py` and `_settings.py` are the SSOT for all parametrization: every
 facet consumes `from <namespace> import config, settings` and reads the
-validated namespaced singletons directly — no intermediaries, proxies, or
-re-derivation.
+validated namespaced handles directly, without consumer-owned intermediaries or
+re-derivation. The public `config` and `settings` handles are published from
+these underscored modules (per ADR-005 §§1–2); their internal live proxies
+preserve reload semantics without changing the consumer contract.
 
 ## 5.3 Facade Level
 
-The public surface of a package is exactly the alias set `c, m, t, p, u`
+The public surface of a package is exactly the alias set `c, t, p, m, u`
 (plus operational aliases, see 5.4), each a namespace class composed by MRO:
 
 - **`c` — constants**: defaults and invariants. Pure declaration
@@ -110,7 +112,7 @@ parts:
 <layer>/
 ├── <domain>.py              # sole facade and external import path
 └── _<domain>/
-    ├── **init**.py          # static explicit re-exports or empty
+    ├── __init__.py          # static explicit re-exports or empty
     ├── <responsibility_a>.py
     └── <responsibility_b>.py
 ```
@@ -121,7 +123,7 @@ facades, services, codegen, refactor, dependency, validation, and tooling
 domains. External consumers never import private parts. PEP 562 lazy export is
 generated only in the production package root; private and subdirectory
 initializers are static or empty. A move updates every consumer and removes the
-old path in one continuously green cutover, leaving no `**unit**.py`, wrapper,
+old path in one continuously green cutover, leaving no stale initializer, wrapper,
 compatibility alias, duplicate implementation, or parallel path.
 
 ## 5.4 Operational Layer

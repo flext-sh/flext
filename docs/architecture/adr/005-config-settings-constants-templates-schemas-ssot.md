@@ -8,16 +8,19 @@
   - [3. Repository conformance is data-driven](#3-repository-conformance-is-data-driven)
   - [4. Rendering and application are deterministic transactions](#4-rendering-and-application-are-deterministic-transactions)
   - [5. Migration is deletion-first](#5-migration-is-deletion-first)
+- [6. Enforcement is declarative data over a rope-semantic engine](#6-enforcement-is-declarative-data-over-a-rope-semantic-engine)
 - [Consequences](#consequences)
-- [6. Enforcement is declarative data over a rope-only engine](#6-enforcement-is-declarative-data-over-a-rope-only-engine)
 - [Verification contract](#verification-contract)
 - [References](#references)
 <!-- TOC END -->
 - **Status:** Accepted
+- **Implementation status:** CURRENT IMPLEMENTATION (§§1–5); ACCEPTED TARGET
+  (§6 enforcement migration to rope-semantic)
 - **Date:** 2026-07-11
 - **Scope:** runtime configuration, declarative generation inputs, schemas,
-  templates, and enforcement across FLEXT consumers. Enforcement follows the
-  two laws in §6 (rules-as-data; rope-only static analysis).
+  templates, and enforcement across FLEXT consumers. §§1–5 are CURRENT
+  IMPLEMENTATION; §6 is ACCEPTED TARGET (enforcement migration from mixed
+  rope/ast to rope-semantic).
 - **Tracking:** `mro-wkii`, `mro-wkii.17`
 
 <!-- mro-wkii.17.6 (agent: codex) — make config ownership and the conform pipeline unambiguous. -->
@@ -126,6 +129,48 @@ gap. Replaced loaders, renderers, generators, templates, commands, and wrappers
 are removed with their callers in the same slice. Refactors target neutral or
 negative net source lines and never retain a compatibility or fallback path.
 
+## 6. Enforcement is declarative data over a rope-semantic engine
+
+<!-- mro-wkii.4.8 (agent) — operator laws 2026-07-12; coordinate with mro-wkii.4 / mro-wkii.17.6. -->
+
+**Status: ACCEPTED TARGET — CURRENT IMPLEMENTATION uses a mixed rope/ast engine.**
+
+Rope-semantic enforcement is the accepted target state. In the current tree,
+static enforcement uses a mix of rope semantic primitives and Python `ast`
+in the detection path; migration to rope-only is in progress and tracked by
+beads `mro-wkii.4`, `mro-wkii.4.1`, `mro-wkii.4.8`.
+
+**LAW1 — rules are data, never code.**
+
+- **CURRENT IMPLEMENTATION:** `flext-infra/config/infra.yaml` owns the typed
+  enforcement catalog, while specialized Python detectors and embedded rule
+  logic still exist during migration. Their presence is tracked debt, not a
+  second approved authority.
+- **ACCEPTED TARGET:** 100% of static enforcement rules live only under the
+  typed config owner as Pydantic-2-validated records. Bespoke per-rule detector
+  classes and `ClassVar` banned/allowlist tables are removed. Rule models remain
+  pure data; the shared fact base and closed operator set live in
+  `u.Infra`/services. `flext-core` owns runtime/beartype rules only and never
+  becomes the SSOT for static policy.
+
+**LAW2 — static analysis targets rope-semantic only.**
+
+- **CURRENT IMPLEMENTATION:** Enforcement detectors use a mix of rope semantic
+  model (`get_scope`/`get_defined_names`/`get_attributes`/`get_superclasses`/
+  `PyName`) and Python `ast` in some paths. For example,
+  `flext-infra/src/flext_infra/validate/namespace_validator.py` uses
+  `pymodule.get_ast()` and `ast.parse()`/`ast.walk()` for namespace validation;
+  `flext-infra/src/flext_infra/_utilities/_rope_analysis/exports.py` uses
+  `ast.parse()` for source-based export-name resolution. The flext-infra
+  `AGENTS.md` acknowledges this: "Enforcement target is rope-semantic
+  (ADR-005); some detectors still use AST — verify before claiming AST is banned."
+- **ACCEPTED TARGET:** Facts come ONLY from rope's semantic model
+  (`get_scope`/`get_defined_names`/`get_attributes`/`get_superclasses`/`PyName`).
+  `import ast`, `ast.parse`, `ast.walk`, `ast.Module`, and
+  `PyModule.get_ast()`/`walk_ast_nodes` are deprecated in the static enforcement
+  path and will be exterminated as detectors migrate to rope primitives.
+  One shared `rope_project` per run serves both detection and fix.
+
 ## Consequences
 
 - A declarative fact has one provenance and one validation contract.
@@ -133,33 +178,11 @@ negative net source lines and never retain a compatibility or fallback path.
   generated tree.
 - Runtime consumers remain typed and independent of rendering dependencies.
 - Configuration or managed-file drift fails before mutation.
-- Static enforcement rules have one provenance (`flext-infra/config/*.yaml`)
-  and one engine (rope-semantic fact base + closed operator set in `u.Infra`);
-  no rule logic lives in Python and no `ast`/`get_ast` path exists (§6).
+- Static enforcement converges on one provenance
+  (`flext-infra/config/infra.yaml`) and one rope-semantic engine; specialized
+  Python/ast detectors remain migration debt until §6 lands.
 - `flext-core` carries runtime/beartype rules only; static rules cannot drift
   into the runtime layer.
-
-## 6. Enforcement is declarative data over a rope-only engine
-
-<!-- mro-wkii.4.8 (agent) — operator laws 2026-07-12; coordinate with mro-wkii.4 / mro-wkii.17.6. -->
-
-**LAW1 — rules are data, never code.** 100% of static enforcement rules live ONLY
-under `flext-infra/config/*.yaml` as Pydantic-2-validated records — zero rule
-logic in Python. Bespoke per-rule detector classes and `ClassVar`
-banned/allowlist rule tables are invalid. The rule models are PURE DATA: full
-pydantic-2-way (`Field`/`Annotated`/discriminated unions/`computed_field`), with
-custom `field_validator`/`model_validator` only as a last resort, and NO methods
-of any kind. All behavior — the rope-semantic fact base and the closed operator
-set that evaluates rules — lives in `u.Infra`/services, never on a model.
-`flext-core` holds runtime/beartype rules only and is never the SSOT for a
-static rule.
-
-**LAW2 — static analysis is rope-semantic only.** Facts come only from rope's
-semantic model (`get_scope`/`get_defined_names`/`get_attributes`/
-`get_superclasses`/`PyName`). `import ast`, `ast.parse`, `ast.walk`,
-`ast.Module`, and `PyModule.get_ast()`/`walk_ast_nodes` are BANNED in the static
-path — `get_ast()` returns a stdlib `ast.Module`, which is AST. One shared
-`rope_project` per run serves both detection and fix.
 
 ## Verification contract
 

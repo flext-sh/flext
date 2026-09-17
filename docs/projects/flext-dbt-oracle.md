@@ -28,15 +28,12 @@ than hand-rolled profiles.
 - All service operations return `r[T]` (`p.Result[...]`) inherited from the `flext-meltano` dbt service contract.
 - Settings are validated Pydantic models: `FlextDbtOracleSettings` extends both `FlextDbOracleSettings` and
   `FlextMeltanoSettings`.
-- Gates: `make check PROJECT=flext-dbt-oracle`, `make test PROJECT=flext-dbt-oracle`, and `make val` produce the
+- Selector-free root `make check`, `make test`, and `make build` produce the
   authoritative evidence.
 
 ## Quick start
 
-```bash
-make boot                                # workspace bootstrap (once)
-make check PROJECT=flext-dbt-oracle      # lint + type gates
-```
+From the workspace root, run `make setup`, `make check`, and `make test`.
 
 ```python
 from flext_dbt_oracle import s  # FlextDbtOracleServiceBase
@@ -84,14 +81,15 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_oracle/`:
 
 ## Testing & quality
 
-- Tests live in the project `tests/` tree and run through `make test PROJECT=flext-dbt-oracle`.
+- Tests live in the project `tests/` tree and run through root `make test`.
 - dbt run paths need a reachable Oracle instance and a configured target; without one, unit suites and static gates are
   the evidence of record.
-- The authoritative quality verdict comes from `make check PROJECT=flext-dbt-oracle` and `make val`.
+- The authoritative quality verdict comes from root `make check`, `make test`,
+  and `make build`.
 
 ## Resources
 
-- [Project README](../../flext-dbt-oracle/README.md) (auto-generated module map and integration pointers)
+- [Project README](https://github.com/flext-sh/flext-dbt-oracle/blob/0.12.0-dev/README.md) (auto-generated module map and integration pointers)
 - [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law
 - Generated API overview: `flext-dbt-oracle/docs/api-reference/generated/overview.md`
 - Related projects: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-tap-oracle`, `flext-target-oracle`, `flext-
@@ -100,4 +98,4 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_oracle/`:
 ## Support & issues
 
 - Issues and discussions: <https://github.com/flext-sh/flext> (monorepo)
-- Before contributing, read the workspace `AGENTS.md` and run `make check PROJECT=flext-dbt-oracle` on your change.
+- Before contributing, read the workspace `AGENTS.md` and run root `make check`.
