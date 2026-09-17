@@ -1,5 +1,13 @@
 # Beads, lanes e PRs — reconciliação datada de 2026-09-16
 
+<!-- TOC START -->
+- [Regra](#regra)
+- [Beads observados](#beads-observados)
+- [Lanes/PRs observados por Claude](#lanesprs-observados-por-claude)
+- [Contribuições históricas com SHAs](#contribuicoes-historicas-com-shas)
+- [Checklist de releitura no início da execução](#checklist-de-releitura-no-inicio-da-execucao)
+<!-- TOC END -->
+
 ## Regra
 
 Somente a leitura atual via `direnv exec <rig> bd ...` e forge/Git decide o

@@ -1,5 +1,27 @@
 # FLEXT 0.12.0 — handoff de estabilização em andamento
 
+<!-- TOC START -->
+- [1. Estado vigente e próxima ação](#1-estado-vigente-e-proxima-acao)
+  - [Atualização das tips de integração](#atualizacao-das-tips-de-integracao)
+  - [Workspace e coordenação](#workspace-e-coordenacao)
+  - [Evidências encerradas](#evidencias-encerradas)
+  - [Patches aplicados depois dos respectivos testes, ainda não validados](#patches-aplicados-depois-dos-respectivos-testes-ainda-nao-validados)
+  - [Publicação não é integração](#publicacao-nao-e-integracao)
+  - [Checkpoint dos membros em 2026-09-15 UTC](#checkpoint-dos-membros-em-2026-09-15-utc)
+  - [Endereços dos 32 PRs de estabilização](#enderecos-dos-32-prs-de-estabilizacao)
+- [2. Falhas operacionais e reparos causais](#2-falhas-operacionais-e-reparos-causais)
+  - [Core](#core)
+  - [Oracle e provisionamento](#oracle-e-provisionamento)
+  - [Infra](#infra)
+  - [Ferramentas padrão](#ferramentas-padrao)
+- [3. Ordem de execução até o fechamento](#3-ordem-de-execucao-ate-o-fechamento)
+- [4. Plano, Beads e fontes](#4-plano-beads-e-fontes)
+  - [Auditoria histórica imutável](#auditoria-historica-imutavel)
+- [5. Crítica da execução e correções de método](#5-critica-da-execucao-e-correcoes-de-metodo)
+- [6. Reconciliação de S0–S8](#6-reconciliacao-de-s0s8)
+- [7. Contribuições históricas e adjudicação pendente](#7-contribuicoes-historicas-e-adjudicacao-pendente)
+<!-- TOC END -->
+
 Documento de transferência autorizado, preparado em 2026-09-14 após o encerramento da rodada de testes às 23:25:33 UTC. Não é tracker substituto: a execução permanece em `flext-itpd1.1`, no épico `flext-itpd1`. Estabilização não concluída.
 
 ## 1. Estado vigente e próxima ação
@@ -256,7 +278,7 @@ censo atual.
 
 ### Auditoria histórica imutável
 
-A auditoria anterior permanece no [commit `81873eeff9`](https://github.com/flext-sh/flext/blob/81873eeff9/docs/plans/2026-09-14-stabilization-handoff/README.md). Seus estados, ordens de pausa, ausência de autorização administrativa, resultados parciais e comandos futuros descrevem aquele instante; **não são instruções vigentes**.
+A auditoria anterior permanece no [commit `81873eeff9`](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/plans/2026-09-14-stabilization-handoff/README.md). Seus estados, ordens de pausa, ausência de autorização administrativa, resultados parciais e comandos futuros descrevem aquele instante; **não são instruções vigentes**.
 
 Anexos históricos mantidos no pacote, sem reescrevê-los como tracker:
 

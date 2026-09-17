@@ -74,13 +74,14 @@ flext-<name>/
 
 `_config.py` and `_settings.py` are the SSOT for all parametrization: every
 facet consumes `from <namespace> import config, settings` and reads the
-validated namespaced singletons directly — no intermediaries, proxies, or
-re-derivation. The public `config` and `settings` singletons are published
-from these underscored modules (per ADR-005 §§1–2).
+validated namespaced handles directly, without consumer-owned intermediaries or
+re-derivation. The public `config` and `settings` handles are published from
+these underscored modules (per ADR-005 §§1–2); their internal live proxies
+preserve reload semantics without changing the consumer contract.
 
 ## 5.3 Facade Level
 
-The public surface of a package is exactly the alias set `c, m, t, p, u`
+The public surface of a package is exactly the alias set `c, t, p, m, u`
 (plus operational aliases, see 5.4), each a namespace class composed by MRO:
 
 - **`c` — constants**: defaults and invariants. Pure declaration
@@ -111,7 +112,7 @@ parts:
 <layer>/
 ├── <domain>.py              # sole facade and external import path
 └── _<domain>/
-    ├── **init**.py          # static explicit re-exports or empty
+    ├── __init__.py          # static explicit re-exports or empty
     ├── <responsibility_a>.py
     └── <responsibility_b>.py
 ```

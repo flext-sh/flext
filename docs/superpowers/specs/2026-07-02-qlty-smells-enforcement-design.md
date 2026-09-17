@@ -1,5 +1,20 @@
 # qlty Smells → FLEXT Enforcement (detection-only, warnings para todos, sempre)
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decisões travadas (usuário)](#decisoes-travadas-usuario)
+- [Verificado por exploração (base factual)](#verificado-por-exploracao-base-factual)
+- [Arquitetura](#arquitetura)
+  - [A. flext-core — runtime + SSOT de regras (ENFORCE-067..074)](#a-flext-core-runtime-ssot-de-regras-enforce-067074)
+  - [B. flext-infra — gate smells (qlty SARIF, report-only, warna sempre)](#b-flext-infra-gate-smells-qlty-sarif-report-only-warna-sempre)
+  - [C. Cleanup (pressão net-LOC + higiene)](#c-cleanup-pressao-net-loc-higiene)
+  - [D. Beads (correções futuras + governança)](#d-beads-correcoes-futuras-governanca)
+- [Sequenciamento (R18: batches ≤5 arquivos, gates verdes por batch)](#sequenciamento-r18-batches-5-arquivos-gates-verdes-por-batch)
+- [Verificação (por batch, DIRETO via ~/flext/.venv — NUNCA make check)](#verificacao-por-batch-direto-via-flextvenv-nunca-make-check)
+- [Riscos aceitos](#riscos-aceitos)
+- [Passo 0 (pós-aprovação)](#passo-0-pos-aprovacao)
+<!-- TOC END -->
+
 ## Context
 
 `qlty smells --all --sarif --include-tests` reporta **1386 findings / 8 tipos** no workspace

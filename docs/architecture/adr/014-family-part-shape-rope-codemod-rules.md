@@ -9,6 +9,7 @@
   - [3b. rope-in-gen (one engine, two modes)](#3b-rope-in-gen-one-engine-two-modes)
   - [4. Centralized backup cycle](#4-centralized-backup-cycle)
   - [5. Gate alignment (one law, two engines)](#5-gate-alignment-one-law-two-engines)
+  - [6. Three instruments and the mod/ast/gen verb taxonomy (2026-09-15)](#6-three-instruments-and-the-modastgen-verb-taxonomy-2026-09-15)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)

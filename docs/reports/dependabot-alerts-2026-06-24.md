@@ -1,5 +1,10 @@
 # Dependabot Open Alerts Snapshot
 
+<!-- TOC START -->
+- [Resumo por pacote](#resumo-por-pacote)
+- [Top 30 alertas críticos e altos](#top-30-alertas-criticos-e-altos)
+<!-- TOC END -->
+
 Gerado em: 2026-06-24 17:18 UTC
 
 - Total de alertas em aberto: **101**

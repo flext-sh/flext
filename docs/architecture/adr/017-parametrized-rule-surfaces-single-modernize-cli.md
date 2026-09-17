@@ -1,5 +1,12 @@
 # ADR-017 — Parametrized Rule Surfaces and the Single Modernize CLI
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+<!-- TOC END -->
+
 - **Status:** ACCEPTED TARGET — implementation in progress
 - **Date:** 2026-09-15
 - **Target line:** FLEXT `0.12.0-dev`, forward baseline `0.13.0`

@@ -86,7 +86,7 @@ facade.
 
 ## Resources
 
-- [Project README](../../flext-meltano/README.md)
+- [Project README](https://github.com/flext-sh/flext-meltano/blob/0.12.0-dev/README.md)
 - [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
   meltano.md`
 - Project documentation under `flext-meltano/docs/`

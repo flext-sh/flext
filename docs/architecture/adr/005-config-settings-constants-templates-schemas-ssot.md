@@ -9,6 +9,7 @@
   - [4. Rendering and application are deterministic transactions](#4-rendering-and-application-are-deterministic-transactions)
   - [5. Migration is deletion-first](#5-migration-is-deletion-first)
 - [6. Enforcement is declarative data over a rope-semantic engine](#6-enforcement-is-declarative-data-over-a-rope-semantic-engine)
+- [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
 <!-- TOC END -->

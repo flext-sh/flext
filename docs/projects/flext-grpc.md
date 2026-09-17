@@ -86,7 +86,7 @@ The facade also exposes granular builders — `create_server`, `create_client`, 
 
 ## Resources
 
-- [Project README](../../flext-grpc/README.md) (auto-generated module map and operation flow)
+- [Project README](https://github.com/flext-sh/flext-grpc/blob/0.12.0-dev/README.md) (auto-generated module map and operation flow)
 - [Workspace AGENTS.md](../../AGENTS.md) — layering and zero-tolerance rules
 - `flext-grpc/docs/api-reference/` — generated API documentation
 - Related projects: `flext-core`, `flext-cli`, `flext-auth`

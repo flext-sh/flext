@@ -1,5 +1,31 @@
 # Plano revisado — modernização runtime-first de `rope-modernize` / `flext-infra`
 
+<!-- TOC START -->
+- [Objetivo e critério de término](#objetivo-e-criterio-de-termino)
+- [Reancoragem viva — 2026-09-17](#reancoragem-viva-2026-09-17)
+- [Adendos de continuidade e proveniência](#adendos-de-continuidade-e-proveniencia)
+- [Autocrítica do plano anterior](#autocritica-do-plano-anterior)
+- [Posição atual reconciliada após o repasse do Claude](#posicao-atual-reconciliada-apos-o-repasse-do-claude)
+  - [O que o Claude efetivamente avançou](#o-que-o-claude-efetivamente-avancou)
+  - [O que foi superseded pelo tip atual](#o-que-foi-superseded-pelo-tip-atual)
+  - [Estado vivo que substitui os snapshots anteriores](#estado-vivo-que-substitui-os-snapshots-anteriores)
+  - [Decisão operacional decorrente](#decisao-operacional-decorrente)
+- [Autoridades e invariantes](#autoridades-e-invariantes)
+- [Estratégia de execução por fatias](#estrategia-de-execucao-por-fatias)
+  - [Fase 0 — Reidratar execução e inventariar contribuição real](#fase-0-reidratar-execucao-e-inventariar-contribuicao-real)
+  - [Fase 1 — Desbloquear make setup no owner genérico](#fase-1-desbloquear-make-setup-no-owner-generico)
+  - [Fase 2 — Estabilizar make mod e make gen como produtos](#fase-2-estabilizar-make-mod-e-make-gen-como-produtos)
+  - [Fase 3 — Modernizar arquitetura somente nos módulos alcançados pelos gates](#fase-3-modernizar-arquitetura-somente-nos-modulos-alcancados-pelos-gates)
+  - [Fase 4 — Ciclo corretivo canônico](#fase-4-ciclo-corretivo-canonico)
+  - [Fase 5 — Revalidar e sanear testes da frota](#fase-5-revalidar-e-sanear-testes-da-frota)
+  - [Fase 6 — Check completo e correção de todos os gates](#fase-6-check-completo-e-correcao-de-todos-os-gates)
+  - [Fase 7 — Integração e propagação incremental](#fase-7-integracao-e-propagacao-incremental)
+- [Coordenação de agentes](#coordenacao-de-agentes)
+- [Evidência obrigatória por fatia](#evidencia-obrigatoria-por-fatia)
+- [Stop conditions reais](#stop-conditions-reais)
+- [Primeiro incremento executável](#primeiro-incremento-executavel)
+<!-- TOC END -->
+
 ## Objetivo e critério de término
 
 Entregar a modernização como produto funcionando, não como análise: partir dos Beads autoritativos do Gas City, adotar o tip atual de cada branch de integração, corrigir as causas raiz que impedem o ciclo canônico e propagar incrementos pequenos até a integração.

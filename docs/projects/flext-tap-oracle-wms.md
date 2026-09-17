@@ -47,12 +47,11 @@ tap-oracle-wms --config settings.json --catalog catalog.json --state state.json
 Programmatic use via the public facade:
 
 ```python
-from flext_tap_oracle_wms import FlextTapOracleWmsService, tap_oracle_wms
+from flext_tap_oracle_wms import tap_oracle_wms
 
 # tap_oracle_wms is the operational alias for FlextTapOracleWmsService
 service = tap_oracle_wms()
 ```
-
 ## Architecture & modules
 
 ```text
@@ -90,8 +89,8 @@ src/flext_tap_oracle_wms/
 
 ## Resources
 
-- [Project README](../../flext-tap-oracle-wms/README.md)
-- [Project docs portal](../../flext-tap-oracle-wms/docs/index.md)
+- [Project README](https://github.com/flext-sh/flext-tap-oracle-wms/blob/0.12.0-dev/README.md)
+- [Project docs portal](https://github.com/flext-sh/flext-tap-oracle-wms/tree/0.12.0-dev/docs)
 - Related projects: `flext-oracle-wms`, `flext-meltano`, `flext-target-oracle-wms`, `flext-core`
 
 ## Support & issues

@@ -92,8 +92,8 @@ src/flext_target_ldif/
 
 ## Resources
 
-- [Project README](../../flext-target-ldif/README.md)
-- [Project docs portal](../../flext-target-ldif/docs/index.md)
+- [Project README](https://github.com/flext-sh/flext-target-ldif/blob/0.12.0-dev/README.md)
+- [Project docs portal](https://github.com/flext-sh/flext-target-ldif/tree/0.12.0-dev/docs)
 - Related projects: `flext-ldif`, `flext-meltano`, `flext-core`
 
 ## Support & issues

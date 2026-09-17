@@ -7,6 +7,30 @@ work_item: flext-ro6mj.1
 
 # Verdict
 
+<!-- TOC START -->
+- [Active resumption — 2026-09-15T02:06:56Z](#active-resumption-2026-09-15t020656z)
+- [Current handoff — 2026-09-14T22:57:00Z](#current-handoff-2026-09-14t225700z)
+  - [Published versus integrated](#published-versus-integrated)
+  - [Latest bounded evidence and first failures](#latest-bounded-evidence-and-first-failures)
+  - [Resume at the actual causal boundary](#resume-at-the-actual-causal-boundary)
+- [Earlier audit, retained with corrections](#earlier-audit-retained-with-corrections)
+- [Authority and requested behavior](#authority-and-requested-behavior)
+- [Requirement-to-evidence assessment](#requirement-to-evidence-assessment)
+- [Deep critique of execution](#deep-critique-of-execution)
+  - [Blocker: implementation risk displaced the user-visible slice](#blocker-implementation-risk-displaced-the-user-visible-slice)
+  - [Blocker: source discovery was mistaken for adapter readiness](#blocker-source-discovery-was-mistaken-for-adapter-readiness)
+  - [Blocker: cross-repository contracts were changed out of landing order](#blocker-cross-repository-contracts-were-changed-out-of-landing-order)
+  - [Major: safety machinery is written but not demonstrated](#major-safety-machinery-is-written-but-not-demonstrated)
+  - [Major: historical gate and PR evidence became stale](#major-historical-gate-and-pr-evidence-became-stale)
+  - [Major: the active task became a multi-repository mega-lane](#major-the-active-task-became-a-multi-repository-mega-lane)
+  - [Major: orchestration needs stronger boundaries](#major-orchestration-needs-stronger-boundaries)
+- [Retain these sound choices](#retain-these-sound-choices)
+- [Implementation cursor and source map](#implementation-cursor-and-source-map)
+- [Native evidence ledger for this handoff only](#native-evidence-ledger-for-this-handoff-only)
+- [Ordered resumption contract](#ordered-resumption-contract)
+- [Publication receipts](#publication-receipts)
+<!-- TOC END -->
+
 ## Active resumption — 2026-09-15T02:06:56Z
 
 The operator requires fix-forward adoption of current work and freshly fetched

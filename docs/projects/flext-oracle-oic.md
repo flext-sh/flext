@@ -85,7 +85,7 @@ Source lives under `flext-oracle-oic/src/flext_oracle_oic/`:
 
 ## Resources
 
-- [Project README](../../flext-oracle-oic/README.md)
+- [Project README](https://github.com/flext-sh/flext-oracle-oic/blob/0.12.0-dev/README.md)
 - Source: `flext-oracle-oic/src/flext_oracle_oic/`
 - Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
 - Related packages: `flext-core`, `flext-cli`, `flext-auth`, `flext-api`, `flext-tap-oracle-oic`, `flext-target-oracle-

@@ -1,5 +1,27 @@
 # Rope Modernize — Plano de Execução v3 (absorção contínua automatizada + PR lane)
 
+<!-- TOC START -->
+- [0. EXCLUSÃO AUTORITATIVA (operador)](#0-exclusao-autoritativa-operador)
+- [1. NÚCLEO DE AUTOMAÇÃO — ~/wip-hier.sh (uso avançado, sem loops ad-hoc)](#1-nucleo-de-automacao-wip-hiersh-uso-avancado-sem-loops-ad-hoc)
+- [2. PR DA LANE NO GITHUB — abrir NO COMEÇO, manter vivo](#2-pr-da-lane-no-github-abrir-no-comeco-manter-vivo)
+- [3. LEI DE RESOLUÇÃO DE CONFLITOS (recorrente em toda absorção)](#3-lei-de-resolucao-de-conflitos-recorrente-em-toda-absorcao)
+- [4. ESTADO VERIFICADO (2026-09-16T14:30Z)](#4-estado-verificado-2026-09-16t1430z)
+- [5. FASES](#5-fases)
+  - [R0 — Pousar os merges em andamento + PR (primeira sessão de execução)](#r0-pousar-os-merges-em-andamento-pr-primeira-sessao-de-execucao)
+  - [R1 — Ciclo-padrão recorrente (executado NO INÍCIO DE CADA FASE/onda seguinte)](#r1-ciclo-padrao-recorrente-executado-no-inicio-de-cada-faseonda-seguinte)
+  - [R2 — Provar mod semantic phase-0 (desbloqueia flext-oquk7)](#r2-provar-mod-semantic-phase-0-desbloqueia-flext-oquk7)
+  - [R3 — Ondas de ataque aos 71 residuais (58F+13E, infra) — uma por vez, R1 antes de cada](#r3-ondas-de-ataque-aos-71-residuais-58f13e-infra-uma-por-vez-r1-antes-de-cada)
+  - [R4 — pyrefly 79 por ondas](#r4-pyrefly-79-por-ondas)
+  - [R5 — Fechamento](#r5-fechamento)
+- [6. REGRAS DE OURO (v2 §1 mantida + adições)](#6-regras-de-ouro-v2-1-mantida-adicoes)
+- [7. RISCOS](#7-riscos)
+- [8. Pendências de decisão do operador (não bloqueiam R0)](#8-pendencias-de-decisao-do-operador-nao-bloqueiam-r0)
+<!-- TOC END -->
+
+> Historical evidence only. This plan records an earlier execution context and
+> its command examples are not current workspace guidance. Use the root
+> `AGENTS.md` and `make help` for the active contract.
+
 Data: 2026-09-16T14:35Z · Worktree: `~/flext-worktrees/rope-modernize` · Lane: `feature/rope-modernize` (32/32 repos)
 Planos-base absorvidos: `1789500358999-rope-modernize-unification.md` (v4 render purity) + v2 (auto-crítica §1 mantida integralmente).
 

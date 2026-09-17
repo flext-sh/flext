@@ -1,4 +1,32 @@
+# Documentation
+
+<!-- TOC START -->
+- [Atualização de autoridade — 2026-09-14, auditoria de retomada](#atualizacao-de-autoridade-2026-09-14-auditoria-de-retomada)
+- [Contexto](#contexto)
+- [Decisões do operador em vigor (mais nova vence)](#decisoes-do-operador-em-vigor-mais-nova-vence)
+  - [S2b — Extermínio GitHub/gh (flext-infra + superprojeto)](#s2b-exterminio-githubgh-flext-infra-superprojeto)
+- [Estado medido (14/09 ~16:20Z)](#estado-medido-1409-1620z)
+- [Progresso 14/09 ~17:05Z (lane)](#progresso-1409-1705z-lane)
+- [Progresso 14/09 ~17:45Z — PAUSA (handoff)](#progresso-1409-1745z-pausa-handoff)
+- [Ciclo de cada fatia (sem exceção)](#ciclo-de-cada-fatia-sem-excecao)
+- [Fatias](#fatias)
+  - [S0 — Checkpoint do trabalho já feito](#s0-checkpoint-do-trabalho-ja-feito)
+  - [S1 — Superfície Make sem modo e sem validação de parâmetros](#s1-superficie-make-sem-modo-e-sem-validacao-de-parametros)
+  - [S2 — Extermínio ai-hub/Gas City + beads identidade-apenas (flext-infra)](#s2-exterminio-ai-hubgas-city-beads-identidade-apenas-flext-infra)
+  - [S3 — AGENTS.md gerido com 4 regiões](#s3-agentsmd-gerido-com-4-regioes)
+  - [S4 — Erros de execução do make check](#s4-erros-de-execucao-do-make-check)
+  - [S5 — Restante do P-1c (bootstrap seguro)](#s5-restante-do-p-1c-bootstrap-seguro)
+  - [S6 — Frota e flext-core](#s6-frota-e-flext-core)
+  - [S7 — Superprojeto e docs](#s7-superprojeto-e-docs)
+  - [S8 — Testes e pouso](#s8-testes-e-pouso)
+- [Verificação final](#verificacao-final)
+<!-- TOC END -->
+
 ## Atualização de autoridade — 2026-09-14, auditoria de retomada
+
+> Historical evidence only. This plan records an earlier execution context and
+> its command examples are not current workspace guidance. Use the root
+> `AGENTS.md` and `make help` for the active contract.
 
 Cursor atual: `~/.claude/plans/happy-puzzling-flask-handoff-20260914-audit.md`,
 bead `flext-itpd1.1`. O corpo abaixo preserva o plano histórico; números de PR,

@@ -88,7 +88,7 @@ hook processing.
 
 ## Resources
 
-- [Project README](../../flext-quality/README.md)
+- [Project README](https://github.com/flext-sh/flext-quality/blob/0.12.0-dev/README.md)
 - [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
   quality.md`
 - Project documentation under `flext-quality/docs/`

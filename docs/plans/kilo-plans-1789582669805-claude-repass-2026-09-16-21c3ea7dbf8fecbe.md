@@ -1,5 +1,15 @@
 # Adendo do plano 1789582669805 — repasse Claude e posição reconciliada
 
+<!-- TOC START -->
+- [Autoridade e limites](#autoridade-e-limites)
+- [Sessões Claude consideradas](#sessoes-claude-consideradas)
+- [Linha temporal aceita da sessão F2.W0](#linha-temporal-aceita-da-sessao-f2w0)
+- [Contribuições adjudicadas](#contribuicoes-adjudicadas)
+- [Posição do plano após o repasse](#posicao-do-plano-apos-o-repasse)
+- [Conflitos e coordenação com outros planos/agentes](#conflitos-e-coordenacao-com-outros-planosagentes)
+- [Próxima sequência mínima](#proxima-sequencia-minima)
+<!-- TOC END -->
+
 ## Autoridade e limites
 
 - Plano relacionado: `../1789582669805-flext-infra-ruff-codemod-repair.md`.

@@ -90,7 +90,7 @@ instruments any callable with execution metrics.
 
 ## Resources
 
-- [Project README](../../flext-observability/README.md)
+- [Project README](https://github.com/flext-sh/flext-observability/blob/0.12.0-dev/README.md)
 - [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
   observability.md`
 - Project documentation under `flext-observability/docs/`

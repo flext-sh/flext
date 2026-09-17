@@ -82,7 +82,7 @@ every public method returning `r[T]`. The same instance covers the full lifecycl
 
 ## Resources
 
-- [Project README](../../flext-plugin/README.md)
+- [Project README](https://github.com/flext-sh/flext-plugin/blob/0.12.0-dev/README.md)
 - [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
   plugin.md`
 - Project documentation under `flext-plugin/docs/`

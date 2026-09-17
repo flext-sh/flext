@@ -102,5 +102,5 @@ emitted to `.code-review-graph/wiki/` and copied into this directory during
 
 - [Architecture Overview](README.md)
 - [Code Communities Index](index.md)
-- [Documentation Knowledge Index](../knowledge-index.md)
+- [Documentation Knowledge Index](../../knowledge-index.md)
 - [API Reference Overview](../../api-reference/generated/overview.md)

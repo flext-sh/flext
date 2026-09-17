@@ -41,12 +41,11 @@ tap-ldif --config settings.json --catalog catalog.json --state state.json
 Programmatically:
 
 ```python
-from flext_tap_ldif import FlextTapLdif, FlextTapLdifService, FlextTapLdifSettings
+from flext_tap_ldif import FlextTapLdifService, FlextTapLdifSettings
 
 settings = FlextTapLdifSettings()  # namespaced under settings.TapLdif.*
 exit_code = FlextTapLdifService().cli_main()
 ```
-
 The `settings.TapLdif.*` group carries `file_path` / `directory_path`, `file_pattern`, `encoding`, `strict_parsing`, and
 `max_file_size_mb` (validated Pydantic fields).
 
@@ -80,7 +79,7 @@ Source lives under `flext-tap-ldif/src/flext_tap_ldif/`:
 
 ## Resources
 
-- [Project README](../../flext-tap-ldif/README.md)
+- [Project README](https://github.com/flext-sh/flext-tap-ldif/blob/0.12.0-dev/README.md)
 - Source: `flext-tap-ldif/src/flext_tap_ldif/`
 - Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
 - Related packages: `flext-ldif`, `flext-dbt-ldif`, `flext-target-ldif`, `flext-meltano`, `flext-core`, `flext-

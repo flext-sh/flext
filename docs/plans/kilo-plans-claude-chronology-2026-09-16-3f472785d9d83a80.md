@@ -1,5 +1,15 @@
 # Cronologia das sessões Claude paradas — 2026-09-16
 
+<!-- TOC START -->
+- [Fontes](#fontes)
+- [Antes da janela executada](#antes-da-janela-executada)
+  - [Referência declarada em 12:53Z — HANDOFF](#referencia-declarada-em-1253z-handoff)
+- [Sessão iniciada 10:08 — avanços com evidência de transcript](#sessao-iniciada-1008-avancos-com-evidencia-de-transcript)
+- [Fork criado 15:17 — continuação e regressão de conversão](#fork-criado-1517-continuacao-e-regressao-de-conversao)
+- [Sessão de reparo posterior — análise estática apenas](#sessao-de-reparo-posterior-analise-estatica-apenas)
+- [Disposição no tree atual](#disposicao-no-tree-atual)
+<!-- TOC END -->
+
 ## Fontes
 
 - `ses_f55aabd0effeadN531374fPbP0` — **Handoff Rope Modernize Engine — unificação**, criada 10:08 local.

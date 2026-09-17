@@ -1,5 +1,12 @@
 # Runbook de estabilização — checkpoint 0.12.0
 
+<!-- TOC START -->
+- [(a) Ciclo canônico](#a-ciclo-canonico)
+- [(b) Contrato beads central](#b-contrato-beads-central)
+- [(c) Integração](#c-integracao)
+- [(d) Extermínios vigentes](#d-exterminios-vigentes)
+<!-- TOC END -->
+
 ## (a) Ciclo canônico
 
 ```bash

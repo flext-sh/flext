@@ -1,5 +1,14 @@
 # Épico — FlextSettings/FlextConfig: contrato de singleton, desempenho e SSOT dos clientes
 
+<!-- TOC START -->
+- [1. Motivação e evidência viva](#1-motivacao-e-evidencia-viva)
+- [2. Escopo](#2-escopo)
+- [3. Ondas da sessão dedicada](#3-ondas-da-sessao-dedicada)
+- [4. Aceite (checklist)](#4-aceite-checklist)
+- [5. Riscos](#5-riscos)
+- [6. Relação com o P0 em andamento](#6-relacao-com-o-p0-em-andamento)
+<!-- TOC END -->
+
 **Estado:** planejado (2026-09-15) · execução em sessão dedicada · ADR: [ADR-016](../architecture/adr/016-settings-config-singleton-contract.md) · Bead: criado a partir deste documento (ver comentário em `flext-wjozx`).
 
 ## 1. Motivação e evidência viva

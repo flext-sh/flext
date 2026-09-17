@@ -95,7 +95,7 @@ migration compose with the same railway discipline.
 
 ## Resources
 
-- [Project README](../../flext-ldif/README.md)
+- [Project README](https://github.com/flext-sh/flext-ldif/blob/0.12.0-dev/README.md)
 - [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
   ldif.md`
 - Project documentation under `flext-ldif/docs/` (getting started, API reference, architecture, guides)

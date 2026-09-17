@@ -61,14 +61,13 @@ tap-oracle --config tap.json | target-oracle --config target.json
 Programmatic use via the public facade:
 
 ```python
-from flext_target_oracle import FlextTargetOracleService, target_oracle
+from flext_target_oracle import target_oracle
 
 # target_oracle is the operational alias for FlextTargetOracleService.
 # The service exposes run_about, run_load, and run_validate;
 # each command verb takes its typed command model and returns p.Result[str].
 service = target_oracle()
 ```
-
 ## Architecture & modules
 
 ```text
@@ -113,8 +112,8 @@ src/flext_target_oracle/
 
 ## Resources
 
-- [Project README](../../flext-target-oracle/README.md)
-- [Project docs portal](../../flext-target-oracle/docs/index.md)
+- [Project README](https://github.com/flext-sh/flext-target-oracle/blob/0.12.0-dev/README.md)
+- [Project docs portal](https://github.com/flext-sh/flext-target-oracle/tree/0.12.0-dev/docs)
 - Related projects: `flext-db-oracle`, `flext-meltano`, `flext-tap-oracle`, `flext-core`
 
 ## Support & issues

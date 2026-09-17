@@ -1,0 +1,15 @@
+{
+  "identity": "6bd0c7c4b8fd47bdad904dd08d4f789cccaf254693ac9caa8287db489bbaff06",
+  "provider": "kilo",
+  "source_id": "kilo-plans",
+  "source_path": "1789584824916-documentation-governance-convergence-plan.md",
+  "driver": "kilo",
+  "driver_version": "1",
+  "digest": "0c83aeca7442a486be378be89c0960484bd933885d515e73317afa3a4dcb0cf0",
+  "canonical_path": "kilo-plans-1789584824916-documentation-governance-convergence-plan-6bd0c7c4b8fd47bd.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T04:21:41.498017Z",
+  "attachments": []
+}

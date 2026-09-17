@@ -87,7 +87,7 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldap/`:
 
 ## Resources
 
-- [Project README](../../flext-dbt-ldap/README.md) (auto-generated module map and integration pointers)
+- [Project README](https://github.com/flext-sh/flext-dbt-ldap/blob/0.12.0-dev/README.md) (auto-generated module map and integration pointers)
 - [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law
 - Generated API overview: `flext-dbt-ldap/docs/api-reference/generated/overview.md`
 - Related projects: `flext-core`, `flext-ldap`, `flext-meltano`, `flext-tap-ldap`, `flext-target-ldap`, `flext-dbt-ldif`

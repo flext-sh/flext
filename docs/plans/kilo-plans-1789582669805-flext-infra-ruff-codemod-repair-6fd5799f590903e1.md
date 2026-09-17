@@ -1,5 +1,31 @@
 # Plano fleet-wide: estabilização, modernização e prova runtime FLEXT
 
+<!-- TOC START -->
+- [Resultado obrigatório](#resultado-obrigatorio)
+- [Auto-crítica e substituição dos planos anteriores](#auto-critica-e-substituicao-dos-planos-anteriores)
+- [Adendo de repasse e posição atual](#adendo-de-repasse-e-posicao-atual)
+  - [Avanço confirmado do Claude](#avanco-confirmado-do-claude)
+  - [Efeito na ordem de retomada](#efeito-na-ordem-de-retomada)
+- [Estado observado que inicia a execução](#estado-observado-que-inicia-a-execucao)
+- [Registro de progresso por fase](#registro-de-progresso-por-fase)
+  - [Retomada imediata, sem repetir trabalho](#retomada-imediata-sem-repetir-trabalho)
+- [Decisões de arquitetura e execução](#decisoes-de-arquitetura-e-execucao)
+- [Sequência de implementação](#sequencia-de-implementacao)
+  - [0. Restaurar Gas City e eleger o grafo autoritativo de trabalho](#0-restaurar-gas-city-e-eleger-o-grafo-autoritativo-de-trabalho)
+  - [1. Rebase zero: adotar tips, WIP, lanes e PRs](#1-rebase-zero-adotar-tips-wip-lanes-e-prs)
+  - [2. Capturar baseline real e parar no primeiro produtor vermelho](#2-capturar-baseline-real-e-parar-no-primeiro-produtor-vermelho)
+  - [3. Reparar os produtores antes das violações consumidoras](#3-reparar-os-produtores-antes-das-violacoes-consumidoras)
+  - [4. Modernizar flext-infra em slices arquiteturais verdes](#4-modernizar-flext-infra-em-slices-arquiteturais-verdes)
+  - [5. Zerar make check pela causa raiz](#5-zerar-make-check-pela-causa-raiz)
+  - [6. Revalidar testes por comportamento público](#6-revalidar-testes-por-comportamento-publico)
+  - [7. Ondas fleet-wide em ordem de dependência](#7-ondas-fleet-wide-em-ordem-de-dependencia)
+  - [8. Prova runtime standalone e workspace](#8-prova-runtime-standalone-e-workspace)
+  - [9. Landing incremental e encerramento](#9-landing-incremental-e-encerramento)
+- [Falhas e recuperação](#falhas-e-recuperacao)
+- [Critérios finais de aceite](#criterios-finais-de-aceite)
+- [Fora de escopo](#fora-de-escopo)
+<!-- TOC END -->
+
 ## Resultado obrigatório
 
 Entregar a frota FLEXT completa sobre os tips `origin/0.12.0-dev`, com `flext-infra` como único proprietário de setup, geração, conformidade, codemods e gates. O trabalho só termina quando:
@@ -28,8 +54,8 @@ Este plano absorve apenas decisões ainda válidas dos planos `1789564109553`, `
 ## Adendo de repasse e posição atual
 
 O repasse das sessões Claude paradas, com janela operacional, contribuição
-adjudicada, conflitos e matriz fase-a-fase, está em
-[`addenda/1789582669805-claude-repass-2026-09-16.md`](addenda/1789582669805-claude-repass-2026-09-16.md).
+adjudicada, conflitos e matriz fase-a-fase, está no source local
+`.kilo/plans/addenda/1789582669805-claude-repass-2026-09-16.md`.
 Esse adendo é evidência datada deste plano; Gas City Beads continua sendo o
 único tracker executável.
 

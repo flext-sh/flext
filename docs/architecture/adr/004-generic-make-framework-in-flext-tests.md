@@ -3,9 +3,9 @@
 <!-- TOC START -->
 - [Context](#context)
 - [Decision](#decision)
-  - [1. `flext-infra codegen conform` is the sole owner](#1-flext-infra-codegen-conform-is-the-sole-owner)
+  - [1. flext-infra codegen conform is the sole owner](#1-flext-infra-codegen-conform-is-the-sole-owner)
   - [2. The Makefile is a self-contained generated artifact](#2-the-makefile-is-a-self-contained-generated-artifact)
-  - [3. `custom.mk` is a narrow private extension surface](#3-custommk-is-a-narrow-private-extension-surface)
+  - [3. custom.mk is a narrow private extension surface](#3-custommk-is-a-narrow-private-extension-surface)
   - [4. Conformance is deterministic and fail-closed](#4-conformance-is-deterministic-and-fail-closed)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)

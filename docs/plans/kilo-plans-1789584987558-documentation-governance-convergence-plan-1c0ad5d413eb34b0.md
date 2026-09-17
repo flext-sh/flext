@@ -1,5 +1,27 @@
 # Plano de convergência documental e de governança
 
+<!-- TOC START -->
+- [Resultado esperado](#resultado-esperado)
+- [Estado de partida verificado](#estado-de-partida-verificado)
+- [Lições que passam a ser regras de execução](#licoes-que-passam-a-ser-regras-de-execucao)
+- [Adjudicação da auditoria global tardia](#adjudicacao-da-auditoria-global-tardia)
+- [Classificação obrigatória do corpus](#classificacao-obrigatoria-do-corpus)
+- [Sequência de implementação](#sequencia-de-implementacao)
+  - [1. Reancorar e estabilizar ownership](#1-reancorar-e-estabilizar-ownership)
+  - [2. Fechar autoridade global e projeção de providers](#2-fechar-autoridade-global-e-projecao-de-providers)
+  - [3. Convergir documentos hand-written](#3-convergir-documentos-hand-written)
+  - [4. Corrigir owners de projeção](#4-corrigir-owners-de-projecao)
+  - [5. Regenerar e provar fixed point](#5-regenerar-e-provar-fixed-point)
+  - [6. Landing multi-repo](#6-landing-multi-repo)
+  - [7. Encerrar Beads e memórias](#7-encerrar-beads-e-memorias)
+- [Falhas esperadas e resposta](#falhas-esperadas-e-resposta)
+- [Critérios finais](#criterios-finais)
+<!-- TOC END -->
+
+> Historical evidence only. This plan records an earlier execution context and
+> its command examples are not current workspace guidance. Use the root
+> `AGENTS.md` and `make help` for the active contract.
+
 ## Resultado esperado
 
 Convergir documentação, ADRs, skills, commands, projeções, Beads e memórias para um único estado verificável, sem transformar planos ou targets aceitos em alegações de runtime. O trabalho termina somente quando os owners canônicos estão corrigidos, as projeções atingem fixed point, os gates passam nos SHAs integrados e o Bead registra a evidência.

@@ -94,7 +94,7 @@ core/examples/` (`ex_01_flext_result.py` through dispatcher and settings walkthr
 
 ## Resources
 
-- [Project README](../../flext-core/README.md) (auto-generated module map and operation flow)
+- [Project README](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/README.md) (auto-generated module map and operation flow)
 - [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law (U2–U18)
 - `flext-core/examples/` — runnable examples for results, settings, logging, and dispatching
 - `flext-core/docs/api-reference/` — generated API documentation

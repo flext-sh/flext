@@ -95,7 +95,7 @@ and `filter_str` to the constants in `c.Ldap`. Use `FlextLdapEntryAdapter` to co
 
 ## Resources
 
-- [Project README](../../flext-ldap/README.md) (auto-generated module map and operation flow)
+- [Project README](https://github.com/flext-sh/flext-ldap/blob/0.12.0-dev/README.md) (auto-generated module map and operation flow)
 - [Workspace AGENTS.md](../../AGENTS.md) — layering and zero-tolerance rules
 - `flext-ldap/docs/api-reference/` — generated API documentation
 - Related projects: `flext-core`, `flext-ldif`, `flext-auth` (LDAP auth provider)

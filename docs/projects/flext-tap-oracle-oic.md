@@ -48,12 +48,11 @@ tap-oracle-oic --config settings.json --catalog catalog.json --state state.json
 Programmatic use via the public facade:
 
 ```python
-from flext_tap_oracle_oic import FlextTapOracleOicService, tap_oracle_oic
+from flext_tap_oracle_oic import tap_oracle_oic
 
 # tap_oracle_oic is the operational alias for FlextTapOracleOicService
 service = tap_oracle_oic()
 ```
-
 ## Architecture & modules
 
 ```text
@@ -94,8 +93,8 @@ src/flext_tap_oracle_oic/
 
 ## Resources
 
-- [Project README](../../flext-tap-oracle-oic/README.md)
-- [Project docs portal](../../flext-tap-oracle-oic/docs/index.md)
+- [Project README](https://github.com/flext-sh/flext-tap-oracle-oic/blob/0.12.0-dev/README.md)
+- [Project docs portal](https://github.com/flext-sh/flext-tap-oracle-oic/tree/0.12.0-dev/docs)
 - Related projects: `flext-oracle-oic`, `flext-meltano`, `flext-target-oracle-oic`, `flext-core`
 
 ## Support & issues

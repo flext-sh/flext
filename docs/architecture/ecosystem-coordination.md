@@ -5,16 +5,16 @@
 - [Dependency law](#dependency-law)
 - [End-to-end coordination flow](#end-to-end-coordination-flow)
 - [Per-project responsibilities](#per-project-responsibilities)
-  - [`dcdoc` (cosmos-docgen)](#dcdoc-cosmos-docgen)
+  - [dcdoc (cosmos-docgen)](#dcdoc-cosmos-docgen)
   - [DataOP](#dataop)
   - [DcBackup](#dcbackup)
-  - [`flext-cli`](#flext-cli)
-  - [`flext-infra`](#flext-infra)
-  - [`flext-core`](#flext-core)
+  - [flext-cli](#flext-cli)
+  - [flext-infra](#flext-infra)
+  - [flext-core](#flext-core)
 - [External platforms](#external-platforms)
-- [Open libraries and possible new `flext-*` (gated)](#open-libraries-and-possible-new-flext--gated)
+- [Open libraries and possible new flext-* (gated)](#open-libraries-and-possible-new-flext-gated)
 - [Project standardization (ADR-010)](#project-standardization-adr-010)
-- [Extraction gate for any new `flext-*`](#extraction-gate-for-any-new-flext-)
+- [Extraction gate for any new flext-*](#extraction-gate-for-any-new-flext-)
 - [Coordination Beads](#coordination-beads)
 <!-- TOC END -->
 
@@ -38,8 +38,8 @@ forward planning contract for `0.20.0-dev`; it does not retro-fit the
 | `flext-cli` | FLEXT library | `flext-cli` | ADR-008, `mro-ib6t.2` |
 | `flext-infra` | FLEXT tooling | `flext-infra` | ADR-003/004/008, `mro-ib6t.1` |
 | `dcdoc` | External application | `cosmos-docgen` | ADR-020 (`dcdoc-bhg1`) |
-| DataOP | External application | `~/dataop` | DataOP ADR-001 (`data-organization-pipeline-4dt`) |
-| DcBackup | External application | `/home/datacosmos.bkp/datacosmos-backup` | DcBackup ADR-001 (`datacosmos-backup-o6w`) |
+| DataOP | External application | `dataop` repository | DataOP ADR-001 (`data-organization-pipeline-4dt`) |
+| DcBackup | External application | `datacosmos-backup` | DcBackup ADR-001 (`datacosmos-backup-o6w`) |
 
 ## Dependency law
 

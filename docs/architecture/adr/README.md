@@ -1,20 +1,7 @@
 # ADR Index
 
 <!-- TOC START -->
-- [ADR-001](#adr-001-railway-oriented-programming-with-rt)
-- [ADR-002](#adr-002-v0130-platform-baseline)
-- [ADR-003](#adr-003-manifest-owned-topology-root-workspace-and-autonomous-git-libraries)
-- [ADR-004](#adr-004-generated-make-and-codegen-ssot-owned-by-flext-infra)
-- [ADR-005](#adr-005-config-settings-constants-templates-and-schemas-ssot)
-- [ADR-006](#adr-006-thin-domain-drivers-over-flext-meltano-bases--action-libraries)
-- [ADR-007](#adr-007-performance-optimization-of-worktree-transactions-and-mutating-cli-commands)
-- [ADR-008](#adr-008-neutral-consumer-boundaries-for-docs-office-bytes-and-artifact-metadata)
-- [ADR-009](#adr-009-ecosystem-coordination-and-reusable-library-evaluation)
-- [ADR-010](#adr-010-unified-project-standardization-make-scripts-tests-structure-via-codegen)
-- [ADR-014](#adr-014-family-part-shape-rope-codemod-rules)
-- [ADR-015](#adr-015-consumer-consumption-law-r1-r6)
-- [ADR-016](#adr-016-settingsconfig-singleton-contract)
-- [ADR-017](#adr-017-parametrized-rule-surfaces-and-the-single-modernize-cli)
+- [Published ADRs](#published-adrs)
 <!-- TOC END -->
 
 <!-- mro-wkii.17.7 (agent: codex) — keep ADR pointers aligned with the accepted conform architecture. -->

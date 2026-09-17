@@ -1,5 +1,16 @@
 # FLEXT API
 
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT API is the FLEXT platform's HTTP client layer: a typed REST client facade over `flext-web` with `r[T]` result
 contracts, Pydantic-validated settings, and the canonical `c/m/p/t/u` facade layout.
 
@@ -30,7 +41,7 @@ make check
 Programmatic use via the public facade:
 
 ```python
-from flext_api import FlextApi, api
+from flext_api import api
 
 # api is the global FlextApi instance (FlextApi.fetch_global()).
 # Settings resolve from FlextApiSettings (env prefix FLEXT_API_).
@@ -40,7 +51,6 @@ if result.success:
 else:
     u.Cli.print(result.error_message)
 ```
-
 `FlextApi` exposes `get`, `post`, `put`, `patch`, `delete`, `request`, and `execute`; each returns
 `p.Result[m.Api.HttpResponse]`. The underlying `FlextApiClient` is reachable through the `client` property.
 
@@ -82,8 +92,8 @@ src/flext_api/
 
 ## Resources
 
-- [Project README](../../../flext-api/README.md)
-- [Project docs portal](../../../flext-api/docs/index.md)
+- [Project README](https://github.com/flext-sh/flext-api/blob/0.12.0-dev/README.md)
+- [Project docs portal](https://github.com/flext-sh/flext-api/tree/0.12.0-dev/docs)
 - Related projects: `flext-web`, `flext-core`, `flext-grpc`
 
 ## Support & issues

@@ -98,8 +98,8 @@ src/flext_target_oracle_wms/
 
 ## Resources
 
-- [Project README](../../flext-target-oracle-wms/README.md)
-- [Project docs portal](../../flext-target-oracle-wms/docs/index.md)
+- [Project README](https://github.com/flext-sh/flext-target-oracle-wms/blob/0.12.0-dev/README.md)
+- [Project docs portal](https://github.com/flext-sh/flext-target-oracle-wms/tree/0.12.0-dev/docs)
 - Related projects: `flext-oracle-wms`, `flext-db-oracle`, `flext-meltano`, `flext-core`
 
 ## Support & issues

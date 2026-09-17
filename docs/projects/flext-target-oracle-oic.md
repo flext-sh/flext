@@ -94,8 +94,8 @@ src/flext_target_oracle_oic/
 
 ## Resources
 
-- [Project README](../../flext-target-oracle-oic/README.md)
-- [Project docs portal](../../flext-target-oracle-oic/docs/index.md)
+- [Project README](https://github.com/flext-sh/flext-target-oracle-oic/blob/0.12.0-dev/README.md)
+- [Project docs portal](https://github.com/flext-sh/flext-target-oracle-oic/tree/0.12.0-dev/docs)
 - Related projects: `flext-oracle-oic`, `flext-meltano`, `flext-core`
 
 ## Support & issues

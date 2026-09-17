@@ -4,51 +4,51 @@
 - [Objetivo](#objetivo)
 - [Escopo](#escopo)
   - [Projetos a Analisar](#projetos-a-analisar)
-  - Diretórios a Verificar
+  - [Diretórios a Verificar](#diretorios-a-verificar)
   - [Arquivos a Verificar](#arquivos-a-verificar)
-- Métodos Deprecados e Migrações Obrigatórias
-  - 1. tm (TestsFlextMatchers) - Métodos Deprecados
-  - 1. tt (TestsFlextFactories) - Métodos Deprecados
-  - 1. tf (TestsFlextFiles) - Métodos Deprecados
-  - 1. tv (TestsFlextValidator) - Verificar Uso Correto
-  - 1. tb (TestsFlextBuilders) - Verificar Uso Correto
-- Padrões a Identificar e Corrigir
+- [Métodos Deprecados e Migrações Obrigatórias](#metodos-deprecados-e-migracoes-obrigatorias)
+  - [1. tm (TestsFlextMatchers) - Métodos Deprecados](#1-tm-testsflextmatchers-metodos-deprecados)
+  - [2. tt (TestsFlextFactories) - Métodos Deprecados](#2-tt-testsflextfactories-metodos-deprecados)
+  - [3. tf (TestsFlextFiles) - Métodos Deprecados](#3-tf-testsflextfiles-metodos-deprecados)
+  - [4. tv (TestsFlextValidator) - Verificar Uso Correto](#4-tv-testsflextvalidator-verificar-uso-correto)
+  - [5. tb (TestsFlextBuilders) - Verificar Uso Correto](#5-tb-testsflextbuilders-verificar-uso-correto)
+- [Padrões a Identificar e Corrigir](#padroes-a-identificar-e-corrigir)
   - [1. Imports Incorretos](#1-imports-incorretos)
-  - 1. Uso de Métodos Privados ou Internos
+  - [2. Uso de Métodos Privados ou Internos](#2-uso-de-metodos-privados-ou-internos)
   - [3. Uso de Classes Aninhadas Deprecadas](#3-uso-de-classes-aninhadas-deprecadas)
-  - 1. Parâmetros Legacy/Deprecados
-  - 1. Uso de Métodos Não Documentados
-- Processo de Análise e Correção
-  - Fase 1: Identificação Completa
-  - Fase 2: Análise Contextual
-  - Fase 3: Correção Sistemática
-  - Fase 4: Validação
-- Checklist de Verificação
+  - [4. Parâmetros Legacy/Deprecados](#4-parametros-legacydeprecados)
+  - [5. Uso de Métodos Não Documentados](#5-uso-de-metodos-nao-documentados)
+- [Processo de Análise e Correção](#processo-de-analise-e-correcao)
+  - [Fase 1: Identificação Completa](#fase-1-identificacao-completa)
+  - [Fase 2: Análise Contextual](#fase-2-analise-contextual)
+  - [Fase 3: Correção Sistemática](#fase-3-correcao-sistematica)
+  - [Fase 4: Validação](#fase-4-validacao)
+- [Checklist de Verificação](#checklist-de-verificacao)
   - [Para cada projeto](#para-cada-projeto)
-- Exceções e Casos Especiais
+- [Exceções e Casos Especiais](#excecoes-e-casos-especiais)
   - [1. Testes de Deprecation Warnings](#1-testes-de-deprecation-warnings)
-  - 1. Código de Compatibilidade
-  - 1. Métodos Internos Legítimos
-- Documentação de Progresso
+  - [2. Código de Compatibilidade](#2-codigo-de-compatibilidade)
+  - [3. Métodos Internos Legítimos](#3-metodos-internos-legitimos)
+- [Documentação de Progresso](#documentacao-de-progresso)
 - [Resultado Esperado](#resultado-esperado)
-- Comandos Úteis
+- [Comandos Úteis](#comandos-uteis)
   - [Buscar usos deprecados em um projeto](#buscar-usos-deprecados-em-um-projeto)
   - [Executar testes de um projeto](#executar-testes-de-um-projeto)
   - [Verificar warnings](#verificar-warnings)
-- Estrutura e Organização de Testes
+- [Estrutura e Organização de Testes](#estrutura-e-organizacao-de-testes)
   - [Regras Fundamentais de Estrutura](#regras-fundamentais-de-estrutura)
-- Checklist de Estrutura e Organização
-  - [Para cada projeto](#para-cada-projeto)
-- Processo de Reorganização
-  - Fase 1: Identificação e Análise
-  - Fase 2: Consolidação
-  - Fase 3: Reorganização de Testes
-  - Fase 4: Automação
+- [Checklist de Estrutura e Organização](#checklist-de-estrutura-e-organizacao)
+  - [Para cada projeto](#para-cada-projeto_1)
+- [Processo de Reorganização](#processo-de-reorganizacao)
+  - [Fase 1: Identificação e Análise](#fase-1-identificacao-e-analise)
+  - [Fase 2: Consolidação](#fase-2-consolidacao)
+  - [Fase 3: Reorganização de Testes](#fase-3-reorganizacao-de-testes)
+  - [Fase 4: Automação](#fase-4-automacao)
   - [Fase 5: Limpeza](#fase-5-limpeza)
-- Comandos Úteis de Reorganização
+- [Comandos Úteis de Reorganização](#comandos-uteis-de-reorganizacao)
   - [Buscar estrutura atual](#buscar-estrutura-atual)
   - [Reorganizar testes](#reorganizar-testes)
-  - Verificar marcações
+  - [Verificar marcações](#verificar-marcacoes)
   - [Verificar nomenclatura](#verificar-nomenclatura)
 - [Notas Finais](#notas-finais)
 <!-- TOC END -->
@@ -225,9 +225,7 @@ from flext_tests import TestsFlextMatchers
 tm = TestsFlextMatchers()
 
 # ✅ CORRETO
-from flext_tests import tm
 ```
-
 ### 2. Uso de Métodos Privados ou Internos
 
 ```python
@@ -688,23 +686,16 @@ find . -name "conftest.py" | wc -l  # Deve retornar 1 (apenas em ~/flext)
 class TestsLdapUser:
     """Testes de unidade para User do flext-ldap."""
 
-    pass
-
 
 # tests/unit/services/test_entry.py
 class TestsLdapServicesEntry:
     """Testes de unidade para Entry service do flext-ldap."""
 
-    pass
-
 
 # tests/integration/test_sync.py
 class TestsLdapSync:
     """Testes de integração para Sync do flext-ldap."""
-
-    pass
 ```
-
 #### 6. Organização de Unit Tests
 
 **Requisitos obrigatórios:**
@@ -785,14 +776,12 @@ def generate_user_data(count: int = 1) -> t.SequenceOf[dict]:
 ```python
 # ~/flext/conftest.py
 import pytest
-from flext_tests import tm, tt, tf, tv, tb
 
 
 @pytest.fixture(scope="session")
 def test_container():
     """Container de dependências para testes."""
     # Automação completa
-    pass
 
 
 @pytest.fixture
@@ -801,9 +790,7 @@ def setup_test_environment():
     # Automação completa
     yield
     # Cleanup automático
-    pass
 ```
-
 #### 9. Priorização de Refatoração
 
 **Sempre priorizar:**

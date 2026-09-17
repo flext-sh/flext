@@ -1,5 +1,13 @@
 # Coordenação entre planos e agentes — 2026-09-16
 
+<!-- TOC START -->
+- [Planos relacionados](#planos-relacionados)
+- [Decisões harmonizadas](#decisoes-harmonizadas)
+- [Divisão de trabalho cooperativa](#divisao-de-trabalho-cooperativa)
+- [Critérios de aceite de resultados de outros agentes](#criterios-de-aceite-de-resultados-de-outros-agentes)
+- [Próximo alinhamento obrigatório](#proximo-alinhamento-obrigatorio)
+<!-- TOC END -->
+
 ## Planos relacionados
 
 | Plano | Papel aceito | Limite |

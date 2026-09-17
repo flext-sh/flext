@@ -6,7 +6,7 @@
   - [1. Single standardization surface (SSOT)](#1-single-standardization-surface-ssot)
   - [2. Common verb surface for every project](#2-common-verb-surface-for-every-project)
   - [3. Canonical structure, facades, and naming (measured, then enforced)](#3-canonical-structure-facades-and-naming-measured-then-enforced)
-  - [3a. Namespaced runtime directories via `settings`](#3a-namespaced-runtime-directories-via-settings)
+  - [3a. Namespaced runtime directories via settings](#3a-namespaced-runtime-directories-via-settings)
   - [3b. Semantic discovery and automated rewiring](#3b-semantic-discovery-and-automated-rewiring)
   - [4. Three ordered phases (same strategy as ADR-007/008/009)](#4-three-ordered-phases-same-strategy-as-adr-007008009)
   - [5. Applicability to independent and external projects](#5-applicability-to-independent-and-external-projects)

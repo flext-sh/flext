@@ -1,7 +1,13 @@
 # Adendos — rope-modernize / flext-infra
 
-Estes adendos complementam o plano coordenador
-[`../1789582482542-rope-modernize-phase1-plan.md`](../1789582482542-rope-modernize-phase1-plan.md).
+<!-- TOC START -->
+- [Convenção de evidência](#convencao-de-evidencia)
+- [Índice](#indice)
+- [Âncoras atuais](#ancoras-atuais)
+<!-- TOC END -->
+
+Estes adendos complementam o plano coordenador local
+`.kilo/plans/1789582482542-rope-modernize-phase1-plan.md`.
 Eles registram proveniência, cronologia e reconciliação; não substituem Gas City
 Beads como tracker nem os comandos runtime como evidência.
 
@@ -15,11 +21,11 @@ Beads como tracker nem os comandos runtime como evidência.
 
 ## Índice
 
-- [`claude-chronology-2026-09-16.md`](claude-chronology-2026-09-16.md) — horários e avanços das sessões Claude paradas.
-- [`current-state-conflicts-2026-09-16.md`](current-state-conflicts-2026-09-16.md) — aceite/rejeição dos claims e conflitos entre checkouts.
-- [`cross-plan-coordination-2026-09-16.md`](cross-plan-coordination-2026-09-16.md) — relação com planos Kilo concorrentes e divisão de responsabilidade.
-- [`beads-lanes-prs-2026-09-16.md`](beads-lanes-prs-2026-09-16.md) — estado histórico e releitura obrigatória de tracker/landing.
-- [`1789582669805-claude-repass-2026-09-16.md`](1789582669805-claude-repass-2026-09-16.md) — repasse e adjudicação datados do plano fleet-wide `1789582669805`; não é posição runtime atual.
+- `.kilo/plans/addenda/claude-chronology-2026-09-16.md` — horários e avanços das sessões Claude paradas.
+- `.kilo/plans/addenda/current-state-conflicts-2026-09-16.md` — aceite/rejeição dos claims e conflitos entre checkouts.
+- `.kilo/plans/addenda/cross-plan-coordination-2026-09-16.md` — relação com planos Kilo concorrentes e divisão de responsabilidade.
+- `.kilo/plans/addenda/beads-lanes-prs-2026-09-16.md` — estado histórico e releitura obrigatória de tracker/landing.
+- `.kilo/plans/addenda/1789582669805-claude-repass-2026-09-16.md` — repasse e adjudicação datados do plano fleet-wide `1789582669805`; não é posição runtime atual.
 
 ## Âncoras atuais
 

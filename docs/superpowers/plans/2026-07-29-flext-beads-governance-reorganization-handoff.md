@@ -1,5 +1,28 @@
 # FLEXT Beads Governance Reorganization — Autonomous Handoff Plan
 
+<!-- TOC START -->
+- [Outcome](#outcome)
+- [Root Epic Theme and Authority](#root-epic-theme-and-authority)
+- [Preconditions](#preconditions)
+- [Inviolable Graph Rules](#inviolable-graph-rules)
+- [Target Graph](#target-graph)
+- [Consolidation Ledger](#consolidation-ledger)
+- [Required Content of Every Executable Bead](#required-content-of-every-executable-bead)
+- [Internal Project Register](#internal-project-register)
+- [External Consumer Register](#external-consumer-register)
+- [Execution Waves](#execution-waves)
+  - [Wave 0 — Recover and Freeze the Semantic Baseline](#wave-0-recover-and-freeze-the-semantic-baseline)
+  - [Wave 1 — Establish the Single FLEXT Program](#wave-1-establish-the-single-flext-program)
+  - [Wave 2 — Consolidate and Re-parent](#wave-2-consolidate-and-re-parent)
+  - [Wave 3 — Build the Internal Rollout Register](#wave-3-build-the-internal-rollout-register)
+  - [Wave 4 — Build Reciprocal External Controls](#wave-4-build-reciprocal-external-controls)
+  - [Wave 5 — Normalize GitFlow and Promotion Reality](#wave-5-normalize-gitflow-and-promotion-reality)
+  - [Wave 6 — Validate and Synchronize](#wave-6-validate-and-synchronize)
+- [Validation Contract](#validation-contract)
+- [Stop Condition](#stop-condition)
+- [Handoff Starting Point](#handoff-starting-point)
+<!-- TOC END -->
+
 > Status: intentionally not executed by the author of this handoff.
 > This document preserves the original Beads-only plan so another orchestrator
 > can execute it after the P0 `bd`/Mise hotfix. Live execution state, evidence,

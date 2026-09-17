@@ -1,5 +1,14 @@
 # Estado atual e matriz de conflitos — 2026-09-16
 
+<!-- TOC START -->
+- [Trees distintos](#trees-distintos)
+- [Claims Claude versus source atual](#claims-claude-versus-source-atual)
+- [Conflito com o checkout principal](#conflito-com-o-checkout-principal)
+  - [Resolução](#resolucao)
+- [Estado das fases do plano principal](#estado-das-fases-do-plano-principal)
+- [Risco estrutural atual](#risco-estrutural-atual)
+<!-- TOC END -->
+
 ## Trees distintos
 
 | Tree | Estado confirmado | Uso |

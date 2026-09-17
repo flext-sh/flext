@@ -1,5 +1,30 @@
 # Plan: Audit and Refactor Global Root Governance Architecture
 
+<!-- TOC START -->
+- [Critical Constraints](#critical-constraints)
+- [Audit Findings Summary](#audit-findings-summary)
+  - [C1 — Precedence Contradiction (CRITICAL)](#c1-precedence-contradiction-critical)
+  - [C2 — "Never Deduce" — 4 copies (CONTRADICTION + DUPLICATION)](#c2-never-deduce-4-copies-contradiction-duplication)
+  - [C3 — "Validate-on-Change" — 3 copies (CONTRADICTION + DUPLICATION)](#c3-validate-on-change-3-copies-contradiction-duplication)
+  - [C4 — "Full Landing Cycle" — 3 copies (CONTRADICTION + DUPLICATION)](#c4-full-landing-cycle-3-copies-contradiction-duplication)
+  - [C5 — "No Rush / WIP" — 2-3 copies (DUPLICATION)](#c5-no-rush-wip-2-3-copies-duplication)
+  - [C6 — Additional Duplicated Laws in AGENTS.md](#c6-additional-duplicated-laws-in-agentsmd)
+  - [C7 — Stale/Project-Specific Facts in AGENTS.md](#c7-staleproject-specific-facts-in-agentsmd)
+  - [C8 — Size](#c8-size)
+  - [C9 — Link Validation](#c9-link-validation)
+- [Refactoring Strategy](#refactoring-strategy)
+- [File Changes](#file-changes)
+  - [1. AGENTS.md — Major rewrite (minimal root)](#1-agentsmd-major-rewrite-minimal-root)
+  - [2. VALIDATE_ON_CHANGE.md — Preface + link to canonical rule](#2-validate_on_changemd-preface-link-to-canonical-rule)
+  - [3. rules/coordination/operator-precedence.md — Add cross-reference](#3-rulescoordinationoperator-precedencemd-add-cross-reference)
+  - [4. New: rules/README.md — Category index (owner manifest for progressive disclosure)](#4-new-rulesreadmemd-category-index-owner-manifest-for-progressive-disclosure)
+  - [5. No changes to: config/governance.json, config/workspace.yaml, config/skills.json, config/evals.json](#5-no-changes-to-configgovernancejson-configworkspaceyaml-configskillsjson-configevalsjson)
+  - [6. No changes to individual skill bundles, rule files, or command files](#6-no-changes-to-individual-skill-bundles-rule-files-or-command-files)
+- [Content Mapping: AGENTS.md Inline Rules → Canonical Rule Files](#content-mapping-agentsmd-inline-rules-canonical-rule-files)
+- [Validation](#validation)
+- [Risk Mitigation](#risk-mitigation)
+<!-- TOC END -->
+
 ## Critical Constraints
 
 - **`law_surface.py`** (`src/agents_governance/law_surface.py`): AGENTS.md MUST start with `<!-- AIHUB-INVIOLABLE-LAW-PRELUDE v1 -->` and end the prelude with `<!-- /AIHUB-INVIOLABLE-LAW-PRELUDE -->`, followed by exactly one blank line. This constraint is enforced by code. The prelude (lines 1-37) stays intact.
