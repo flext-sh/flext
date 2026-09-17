@@ -7,32 +7,27 @@
 - [Verification contract](#verification-contract)
 <!-- TOC END -->
 
-<<<<<<< HEAD
 - **Status:** ACCEPTED TARGET — implementation in progress
-=======
-- **Status:** Accepted (draft evolving per cycle; program plan of 2026-09-15)
->>>>>>> origin/0.12.0-dev
 - **Date:** 2026-09-15
 - **Target line:** FLEXT `0.12.0-dev`, forward baseline `0.13.0`
 - **Scope:** flext-infra modernize engine, rule/pattern storage, discovery and
   packaging for the whole fleet plus external consumers (ai-hub pilot).
-  `make mod` is CURRENT IMPLEMENTATION; `config/rules/ast/` and repo-root
-  `config/rules/` are ACCEPTED TARGET (not yet present in tree).
+  `make mod` is wired in the current Make owner. The infra-owned
+  `config/rules/mod/` exists; the workspace-root `config/rules/` and
+  infra `config/rules/ast/` trees are absent in this source snapshot.
 - **Complements:** ADR-005 (config SSOT), ADR-014 (family shape + codemod rules)
-<<<<<<< HEAD
-- **Tracking:** program epic beads (P0..Cn+1), plan
-  `.kilo/plans/1789564109553-rope-modernize-execution-plan.md`
+- **Tracking:** `flext-itpd1.3` coordinates recovery under `flext-itpd1`;
+  `flext-itpd1.2` owns documentation and `flext-itpd1.4` owns Make machinery.
+  The historical AST/migration reference `flext-oquk7` is retained for owner
+  reconciliation, not a claim of its current status. Beads records execution
+  state; it does not establish runtime behavior. The versioned resume contract
+  is the [Rope-Gen runbook](../../roadmap/rope-gen-engine-runbook-2026-09-15.md).
+  Private plans are local context, not automatic authority or publication sources.
 
-As of 2026-09-17, `make mod` is the implemented unified modernization surface.
-The standalone `ast` verb and source-owned `config/rules/ast/` tree remain
-planned under Bead `flext-oquk7`; this ADR records the accepted target contract,
-not evidence that those surfaces are already available.
-=======
-- **Tracking:** Gas City program epic `flext-itpd1` and documentation convergence
-  task `flext-itpd1.2`. The versioned resume contract is
-  `docs/roadmap/rope-gen-engine-runbook-2026-09-15.md`; workspace-local plans
-  are session evidence and do not define the published execution route.
->>>>>>> origin/0.12.0-dev
+Source inspection on 2026-09-17 distinguishes Make verbs from CLI routes:
+`make mod` dispatches to `refactor mod --apply`; the current CLI source also
+registers `refactor ast`, but the Make verb catalog contains no `ast` verb.
+Neither CLI execution nor wheel discovery was validated by this reconciliation.
 
 ## Context
 
@@ -45,86 +40,53 @@ inherit fleet rules.
 
 ## Decision
 
-1. **Verb taxonomy (operator law).** `mod` is the ONLY adjust/rewrite surface
-<<<<<<< HEAD
-   (CURRENT IMPLEMENTATION: `make mod` / `refactor mod`). `ast` is the
-   ast-grep engine (ACCEPTED TARGET): it runs as phase 1 of `mod`
-   (`flext-infra/src/flext_infra/codemod/ast_scan.py` exists) but its
-   config/rules/ast/ pattern tree is not yet present in tree; standalone
-   `refactor ast` is planned under Bead `flext-oquk7`. `gen` is the
-   template generator (`make gen`, conform `mode=CHECK|APPLY`) consuming the
-   SAME rope planners — generation, never adjustment. Public verbs
-   `fix/fmt/check/test` are unchanged. No other adjust verb survives
-   (`accessor-migrate`, `modernize-dataclass`, `fix-enforcement` executor die).
-2. **Rules are data under `config/rules/`** (ACCEPTED TARGET — repo-root
-   tree not yet present in CURRENT IMPLEMENTATION):
-    - `flext-infra/config/rules/mod/sed.yaml` exists (sed-by-list rules,
-      currently empty — `rules: []`);
-    - `flext-infra/config/rules/rope/README.md` exists (rope phase
-      parameters, ADR-017);
-    - `config/rules/ast/` engine patterns `*.yml` + fixtures `tests/`
-      (migrated from `src/flext_infra/codemod/{rules,utils,tests}`;
-      the old directory is deleted in the same change) — ACCEPTED TARGET,
-      not yet present in tree.
-   Enforcement rows stay in `flext-infra/config/infra.yaml` (CURRENT
-   IMPLEMENTATION); the beartype catalog stays in flext-core. Project-specific
-   renames stay in the project (ai-hub owns its own rule files).
-
-   **Migration note:** ADR-017 §2 describes the target contract at repo-root
-   `config/rules/`. The CURRENT IMPLEMENTATION stores rules under
-   `flext-infra/config/rules/` (`mod/sed.yaml`, `rope/README.md`) with enforcement
-   rules in `flext-infra/config/infra.yaml`. Repo-root `config/rules/` and
-   `config/rules/ast/` are ACCEPTED TARGET artifacts tracked under program epic
-   beads (P0..Cn+1).
-3. **Distribution discovery (Option C).** `config/rules/` is ACCEPTED TARGET
-   (repo-root tree not present in CURRENT IMPLEMENTATION) and is planned
-   as force-included distribution data in the wheel; providers resolve
-   their config through `Distribution.locate_file("config/rules/ast")`
-   (editable resolves the checkout; a wheel resolves the included
-   data). The `ruleDirs` jail is re-anchored to the provider's
-   `config/rules/<engine>/` root — never removed.
-=======
-   (`make mod` / `refactor mod`). `gen` is the template generator (`make gen`,
-   conform `mode=CHECK|APPLY`) consuming the SAME rope planners — generation,
-   never adjustment. Public verbs `fix/fmt/check/test` are unchanged. No other
-   adjust verb survives (`accessor-migrate`, `modernize-dataclass`,
-   `fix-enforcement` executor die). A separate standalone `ast` verb is planned
-   but not yet a public surface; ast-grep runs only as phase 1 of `mod`.
-2. **Rules are data under `flext-infra/config/rules/`** (SSOT, multiple files):
-   - `flext-infra/config/rules/mod/` — **current** verb policy: preset-rewire,
-     accessor-renames, external-contracts exemptions, sed lists (`sed.yaml`,
-     currently empty rules list);
-   - `config/rules/ast/` — **planned**, not yet materialized: engine patterns
-     `*.yml` + fixtures `tests/` (to be migrated from `src/flext_infra/codemod/`);
-   - `config/rules/rope/` — **planned**, not yet materialized: rope phase
-     parameters and violation models.
-   Enforcement rows stay in `flext-infra/config/infra.yaml`; the beartype
-   catalog stays in flext-core. Project-specific renames stay in the project
-   (ai-hub owns its own rule files).
-3. **Distribution discovery (Option C, planned).** `config/rules/` is planned to
-   be force-included in the wheel as distribution data; providers resolve their
-   config through `Distribution.locate_file("config/rules/ast")` (editable
-   resolves the checkout; a wheel resolves the included data). The `ruleDirs`
-   jail is re-anchored to the provider's `config/rules/<engine>/` root — never
-   removed. Not yet implemented.
->>>>>>> origin/0.12.0-dev
-4. **Toggles are data, not flags.** Phase/component selection lives in
-   `flext-infra/config/tooling.yaml` (`mod.phases.*`) read through typed enums; dry-run is
-   scan mode without `--apply`.
-5. **Enforcement convergence.** ENFORCE-XXX rows with `fix_action` kind
-   `codemod` execute the SAME rules/phases of `mod`; no second execution loop.
+1. **Unified structural modernization.** `make mod` is the current public Make
+   surface for structural rewrites; its template invokes `refactor mod --apply`.
+   `make gen` invokes conform generation. Public `fix/fmt/check/test` remain;
+   `fix-enforcement` is also still declared in the Make catalog. Historical
+   removal proposals are targets, not proof that declared commands disappeared.
+   `refactor ast` is registered in `services/cli_routes_refactor.py`; this does
+   not establish a separate `make ast` verb or completion of AST rule migration.
+2. **Rules are data at their canonical owner.** The inspected infra tree contains
+   `flext-infra/config/rules/mod/sed.yaml` with `rules: []` and
+   `flext-infra/config/rules/rope/README.md`. A README records intent, not an
+   implemented parameter catalog. Do not claim preset/accessor/exemption files
+   are present in that directory when only `sed.yaml` is present. The accepted
+   AST pattern/fixture migration into `config/rules/ast/` remains unproved;
+   preserve the existing source owner until a complete validated cutover.
+   Enforcement and project-specific policies retain their typed owners; this
+   ADR does not authorize copying another project's rule catalog.
+3. **Distribution discovery (Option C, accepted target).** Distribution-owned
+   rule data must resolve from editable and wheel installations, with the
+   `ruleDirs` boundary preserved. The proposed
+   `Distribution.locate_file("config/rules/ast")` locator describes the target,
+   not a usable path demonstrated by this source inventory. Foreign-root and
+   built-wheel receipts are required before claiming this migration delivered.
+4. **Phase policy is data.** `flext-infra/config/tooling.yaml` currently declares
+   `mod.phases.import-alignment`. That declaration alone does not prove typed
+   consumption of every proposed phase. Public `make mod` applies its fixed
+   operation; do not document a Make dry-run toggle absent from its owner.
+5. **Enforcement convergence — ACCEPTED TARGET.** ENFORCE-XXX rows with
+   `fix_action` kind `codemod` must converge on the same rules/phases of `mod`,
+   without a second execution loop. This convergence is not established as
+   implemented or runtime-proven; the declared `fix-enforcement` route remains.
 
 ## Consequences
 
-- Python rewrite engines (re/ast/libcst/tokenize) are exterminated in
-  flext-infra, never encapsulated; consumers rewire to the three instruments
-  (rope, make mod, config rows).
+- The accepted target removes competing rewrite engines through a complete
+  owner/consumer cutover; this ADR does not certify that removal has happened.
 - Discovery must be proven from a foreign project root (tmp project with local
   sgconfig) and from a built wheel before each landing cycle closes.
 - Any new detector/transformer with embedded policy is a review defect.
 
 ## Verification contract
 
-- `make mod` dry-run reports zero pending findings after migration.
+- Public `make mod` must converge with zero actionable or detection-only
+  findings after migration; its Make route is apply, not a claimed dry-run.
 - Rule fixtures validate through the mod gate engine.
 - Foreign-root and wheel discovery tests stay green in every cycle.
+
+These are acceptance requirements, not recorded results. Fleet stability remains
+unproved until the canonical root lifecycle, runtime and applicable docs/link
+checks pass on the published integrated candidate, including repeated gen/fix/fmt
+no-op receipts. The coordinator owns that validation and closure.

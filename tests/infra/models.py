@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 class TestsFlextRootModels(m):
     """Infrastructure test models facade — extends flext_infra models."""
-    
+
     class _ModuleModels:
         """Module reference models."""
 
@@ -26,11 +26,13 @@ class TestsFlextRootModels(m):
             anchor_file: Annotated[
                 Path, u.Field(description="Absolute path to the module's anchor file.")
             ]
-            module_name: Annotated[str, u.Field(description="Fully qualified module name.")]
+            module_name: Annotated[
+                str, u.Field(description="Fully qualified module name.")
+            ]
             relative_path: Annotated[
                 str, u.Field(description="Module path relative to the workspace root.")
             ]
-    
+
     class _SyncModels:
         """Sync call models."""
 
@@ -50,4 +52,6 @@ class TestsFlextRootModels(m):
 
     class Tests(_ModuleModels, _SyncModels):
         """Test infrastructure model definitions."""
+
+
 __all__: list[str] = ["TestsFlextRootModels"]

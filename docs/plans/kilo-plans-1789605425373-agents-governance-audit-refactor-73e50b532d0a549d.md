@@ -41,6 +41,7 @@
 
 ### C1 — Precedence Contradiction (CRITICAL)
 Three different precedence hierarchies:
+
 - `AGENTS.md` line 17: `USER REQUEST > BEADS > ADRs > SKILLs > DOCS > default`
 - `VALIDATE_ON_CHANGE.md` line 107: `regra do operador > beads > ADRs > skills > docs`
 - `rules/coordination/operator-precedence.md` lines 20-21: `operator request > orchestration contract > canonical tracker > ADRs > skills > docs > defaults`
@@ -48,6 +49,7 @@ Three different precedence hierarchies:
 **Resolution**: `rules/coordination/operator-precedence.md` is the dedicated authority. AGENTS.md and VALIDATE_ON_CHANGE.md shall cite it instead of restating.
 
 ### C2 — "Never Deduce" — 4 copies (CONTRADICTION + DUPLICATION)
+
 - `AGENTS.md` lines 154-158 (brief Portuguese)
 - `AGENTS.md` lines 199-204 (expanded Portuguese)
 - `VALIDATE_ON_CHANGE.md` Rule 4 (Portuguese)
@@ -55,21 +57,25 @@ Three different precedence hierarchies:
 - `rules/ethics/never-deduce-research-first.md` (supplementary)
 
 ### C3 — "Validate-on-Change" — 3 copies (CONTRADICTION + DUPLICATION)
+
 - `AGENTS.md` lines 145-153
 - `VALIDATE_ON_CHANGE.md` Rule 1
 - `rules/coordination/validate-on-change.md` (canonical)
 
 ### C4 — "Full Landing Cycle" — 3 copies (CONTRADICTION + DUPLICATION)
+
 - `AGENTS.md` lines 205-210 ("Ciclo completo ou nada")
 - `VALIDATE_ON_CHANGE.md` Rule 3
 - `rules/coordination/full-landing-cycle.md` (canonical)
 
 ### C5 — "No Rush / WIP" — 2-3 copies (DUPLICATION)
+
 - `AGENTS.md` lines 160-165
 - `VALIDATE_ON_CHANGE.md` Rule 2
 - `rules/coordination/wip-persistence.md` (canonical, slightly different framing)
 
 ### C6 — Additional Duplicated Laws in AGENTS.md
+
 - Green/green landing: AGENTS.md lines 172-175 ↔ `rules/coordination/green-green-landing.md`
 - Strict typing: AGENTS.md lines 179-182 ↔ `rules/ethics/strict-typed-quality.md`
 - Zero residue: AGENTS.md line 138 ↔ `rules/runtime/zero-residue.md`
@@ -77,12 +83,14 @@ Three different precedence hierarchies:
 - Fix-forward permanente: AGENTS.md lines 130-131 ↔ `rules/coordination/fix-forward-collaboration.md`
 
 ### C7 — Stale/Project-Specific Facts in AGENTS.md
+
 - Lines 89-101: "FLEXT project law" — FLEXT-specific architecture inline; canonical home is `rules/architecture/internal-clean-architecture.md`
 - Lines 115-126: "Operator directive (auto-injected)" — specific dates, tool names (ast-grep/make mod/crg/LSP), project specifics
 - Lines 128-183: "Operator cycle lessons" — 55 lines of operational specifics (cosmos-main, Portuguese terminology, specific dates)
 - Lines 191-198: "Sem locks de frota" — fleet-specific lockfile prohibition
 
 ### C8 — Size
+
 - `AGENTS.md`: 211 lines, ~44% is inline rules duplicated elsewhere
 - "Operator cycle lessons" alone: 55 lines
 - No rule index/manifest in `rules/` (no `rules/index.md` or `rules/README.md`)
@@ -101,12 +109,14 @@ All links from AGENTS.md resolve: `VALIDATE_ON_CHANGE.md` ✓, `README.md` ✓, 
 ### 1. `AGENTS.md` — Major rewrite (minimal root)
 
 **Keep (preserved material rules):**
+
 - Lines 1-37: `AIHUB-INVIOLABLE-LAW-PRELUDE` — core universal law, stays intact
 - Lines 39-62: Package identity, public contract, development guidance — condense, link expanded detail
 - Lines 64-71: Repository development — condense to 3-4 lines with link to `rules/`
 - Lines 103-111: Lifecycle — condense to 3-4 lines with links
 
 **Remove inline, replace with links:**
+
 - Lines 87-101 "FLEXT project law" → link to `rules/architecture/internal-clean-architecture.md` (already has full canonical text)
 - Lines 113-126 "Operator directive" → link to `VALIDATE_ON_CHANGE.md` + `rules/coordination/operator-precedence.md`
 - Lines 128-183 "Operator cycle lessons" → link to categorized rules (see mapping below)

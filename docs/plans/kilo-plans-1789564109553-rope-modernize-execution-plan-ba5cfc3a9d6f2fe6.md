@@ -42,6 +42,7 @@ O script é o operador padrão de frota. Capacidades verificadas no código-font
 ```
 
 **Regras de uso:**
+
 - RODAR discovery antes de qualquer fase; o estado da frota decide o passo seguinte — nunca assumir.
 - `--apply` padrão; `--no-retire` somente enquanto houver lanes candidatas vivas (ex.: #235/#681 pré-absorção).
 - Conflitos que o git não resolve sozinho (modify/delete, conteúdo divergente) = resolução manual PELA LEI (§3) — o script para ali e o resolution é meu, nunca `git checkout --theirs/ours` cego.
@@ -85,6 +86,7 @@ O script é o operador padrão de frota. Capacidades verificadas no código-font
 ## 5. FASES
 
 ### R0 — Pousar os merges em andamento + PR (primeira sessão de execução)
+
 1. `~/wip-hier.sh` (discovery, background) → ler tabela; confirmar escopo dos 31 dirty.
 2. Absorver lanes candidatas (para o retirement não as matar e o conteúdo entrar na lane):
    - super: `git merge --no-ff origin/aeolian-sodalite` (2 preserve-commits, PR #235);
@@ -105,12 +107,14 @@ discovery (wip-hier dry-run) → há dirty/behind/nova lane?
 Nenhuma onda de código começa com a frota suja ou behind. Este ciclo substitui TODOS os loops ad-hoc de multi-repo da v2.
 
 ### R2 — Provar mod semantic phase-0 (desbloqueia flext-oquk7)
+
 1. Em `flext-infra`: `make mod` ×2 (background, log). Critérios: exit 0 ×2; 2ª rodada zero findings; journal sem dual-ownership em api.py/cli.py; tree limpa.
 2. Se phase-0 morreu por acoplamento ao lazy_init gen-side: root cause em `codemod/semantic_apply.py` (phase 0 self-contained); probe env-gated revertido antes do commit.
 3. Evidência por test-id → `bd close flext-oquk7` com números (governança permitida).
 
 ### R3 — Ondas de ataque aos 71 residuais (58F+13E, infra) — uma por vez, R1 antes de cada
 Regra por onda: root-cause no owner → fix → re-run do arquivo de teste owner (números por test-id) → commit scoped + push → `gh pr edit` anexando evidência. Testes não-conformes à lei: REMOVER após provar behavior atual pela rota pública (CLI/facade) — nunca adaptar para passar.
+
 - **W1 — DocsGenerateRequest/apply + docs/auditor (~12):** pesquisar dono atual do toggle apply (pipeline? CLI flag?); campo migrou → testes seguem a rota pública; campo exterminado → remover testes com prova de runtime. Arquivos: `test_codegen_conform`(2), `docs/main_*`(3), `generator_*`(4), `auditor_command_contract`(3).
 - **W2 — YAML timestamp precision (12, `test_plan_collection`):** fix no serializer (preservação por construction), não no teste.
 - **W3 — Fixture `.beads/metadata.json` (13 ERROR):** fixture usa caminho canônico de conform (é fixture de codegen, não trabalho de beads).

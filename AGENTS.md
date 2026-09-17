@@ -392,13 +392,8 @@ specifics and exclusions; it never copies or replaces either parent.
 | ------ | ---------- | ------- |
 | Foundation facades / result / DI | `flext-core/src/flext_core/` | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base |
 | Build/codegen/enforcement | `flext-infra/src/flext_infra/` | drives standard Make generation, conform, and lint rules |
-<<<<<<< HEAD
-| Test fixtures & builders | `flext-tests/src/flext_tests/` | `tm,tv,tt`; unified `conftest.py` pattern |
+| Test fixtures & builders | `flext-tests/src/flext_tests/` | public test facades and typed fixtures; unified `conftest.py` pattern |
 | Architectural decisions | `docs/architecture/adr/` | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization), ADR-014 (family shape + rope codemod), ADR-017 (parametrized rule surfaces + modernize CLI) |
-=======
-| Test fixtures & builders | `flext-tests/src/flext_tests/` | `tm`, `tv`; unified `conftest.py` pattern |
-| Architectural decisions | `docs/architecture/adr/` | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization) |
->>>>>>> origin/0.12.0-dev
 | Workspace topology | `config/workspace.yaml` | member list, codegen input (hand-written SSOT) |
 | A Singer connector | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006) |
 
@@ -408,7 +403,7 @@ specifics and exclusions; it never copies or replaces either parent.
 (the root dispatcher forwards to each project). Use `make`, never bare `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
 
 ```bash
-# Standard workspace lifecycle. Mutation uses only.
+# Standard selector-free workspace lifecycle.
 make setup
 make gen
 make mod
@@ -421,15 +416,23 @@ make test
 make build
 ```
 
-<<<<<<< HEAD
-**Pinned toolchain**: versions declared in `flext-infra/config/tooling.yaml` (ruff, mypy, pyright, pyrefly, pytest, etc.). Python strictly `>=3.13,<3.14`. The `.default-python-packages` file was removed; tool versions resolve through the cooldown-constrained SSOT.
-=======
-**Toolchain owner**: versions are declared by the typed toolchain configuration
-in `flext-infra/config/codegen.yaml` (ruff, mypy, pyright, pyrefly, pytest, and
-related tools). Python is strictly `>=3.13,<3.14`. The
-`.default-python-packages` file was removed; tool versions resolve through that
-SSOT.
->>>>>>> origin/0.12.0-dev
+Follow the lifecycle with the applicable public runtime and documentation/link
+validation. Prove repeated `make gen`, `make fix`, and `make fmt` are no-op,
+exit-zero operations on the unchanged candidate; later mutations invalidate
+affected receipts. No new stability cycle starts before the full fleet has a
+green integrated SHA receipt, without warnings or residual findings.
+
+The coordinator owns `flext-itpd1.3` recovery ordering, Beads, serialized gates,
+integration, and closure. Sibling workstreams `flext-itpd1.2` (documentation)
+and `flext-itpd1.4` (Make machinery) deliver bounded repairs under that
+coordination. Workers implement assigned owners and return evidence; they do
+not merge or close Beads.
+
+**Toolchain owner**: `flext-infra/config/codegen.yaml` defines
+`Infra.codegen.toolchain`, including the Python minor line and managed binary
+selectors. Python is strictly `>=3.13,<3.14`; setup resolves moving selectors.
+`flext-infra/config/tooling.yaml` owns tool configuration and policy, not a
+separate version catalog. The `.default-python-packages` file was removed.
 
 **Gotchas:** mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never run mypy uncapped, it can blow up RAM.
 Docs CI provisions through `make setup` and validates through `make docs`; no
@@ -468,7 +471,7 @@ the SSOT holds. Config/settings modules import only stdlib/pydantic/upstream bas
   the codegen source in `flext-infra` and run `make gen`.
 - **Root `pyproject.toml`** is a codegen projection from `flext-infra`
   templates + `flext-infra/config/codegen.yaml` (with `tooling.yaml` for tool
-  versions); `make deps` recalculates floors, then `make gen` projects them.
+  configuration and policy); `make deps` recalculates floors, then `make gen` projects them.
   The `[MANAGED]` directive comments in templates are consumed and stripped
   during projection by the inject-comments phase; they are not retained in
   output. Never hand-edit the projection.

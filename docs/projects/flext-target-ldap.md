@@ -56,7 +56,6 @@ The target consumes Singer JSONL on stdin and echoes STATE lines to stdout. Run 
 via Meltano) or programmatically:
 
 ```python
-
 # target_ldap is the operational alias for FlextTargetLdap;
 # config_class is FlextTargetLdapSettings.
 # FlextTargetLdap.run_cli(settings_path) reads Singer JSONL from stdin.

@@ -45,11 +45,8 @@ unexpected runtime exceptions into success or ad-hoc error dictionaries.
 ```python
 from __future__ import annotations
 
-<<<<<<< HEAD
-=======
 from math import isclose
 
->>>>>>> origin/0.12.0-dev
 from flext_core import p, r
 
 
