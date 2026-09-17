@@ -140,8 +140,10 @@ CWD-relative).
 ## 5. Root export (`<project>/**init**.py`)
 
 `config`/`settings` are emitted into the package root from the module `**all**`
-(`**all** = ["FlextXSettings", "settings"]` / `["FlextXConfig", "config"]`). Never hand-edit
-the generated `**init**.py`; run `make build` after adding the modules.
+(`__all__ = ["FlextXSettings", "settings"]` / `["FlextXConfig", "config"]`). Never hand-edit
+the generated `__init__.py`; run `make gen` after adding the modules, prove the
+second generation pass is a no-op, then validate imports through the public
+facade.
 
 ## 6. Forbidden (remove on sight)
 

@@ -19,7 +19,7 @@
 
 ## Status
 
-Accepted
+Accepted — ACCEPTED TARGET (forward baseline `0.13.0`; current line is `0.12.0-dev`)
 
 ## Context
 

@@ -23,7 +23,7 @@ contracts, Pydantic-validated settings, and the canonical `c/m/p/t/u` facade lay
 
 ```bash
 cd flext-api
-poetry install
+uv sync
 make check PROJECT=flext-api
 ```
 

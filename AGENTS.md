@@ -349,7 +349,7 @@ built on `flext-core`. Branch `0.12.0-dev`; forward baseline `0.13.0`.
 flext/                     # superproject: workspace manager + governance + docs
 ├── src/flext/             # flext-workspace CLI (thin orchestrator over flext-cli) — AUTO-GENERATED facets
 ├── config/                # workspace.yaml topology SSOT (codegen/conform input; never overwrite)
-├── docs/architecture/adr/ # ADR-001..010 — architectural decisions (see below)
+├── docs/architecture/adr/ # ADR-001..017 — architectural decisions (see below)
 ├── Makefile + *.mk        # root verb dispatcher (all work runs from here)
 ├── flext-core/            # foundation: c/t/p/m/u + r/e/x/h/d/s facades (every pkg depends on it)
 ├── flext-infra/           # build automation, codegen, enforcement (tooling; not a runtime dep)
@@ -393,7 +393,7 @@ specifics and exclusions; it never copies or replaces either parent.
 | Foundation facades / result / DI | `flext-core/src/flext_core/` | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base |
 | Build/codegen/enforcement | `flext-infra/src/flext_infra/` | drives standard Make generation, conform, and lint rules |
 | Test fixtures & builders | `flext-tests/src/flext_tests/` | `tm,tv,tt`; unified `conftest.py` pattern |
-| Architectural decisions | `docs/architecture/adr/` | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization) |
+| Architectural decisions | `docs/architecture/adr/` | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization), ADR-014 (family shape + rope codemod), ADR-017 (parametrized rule surfaces + modernize CLI) |
 | Workspace topology | `config/workspace.yaml` | member list, codegen input (hand-written SSOT) |
 | A Singer connector | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006) |
 
@@ -406,13 +406,14 @@ specifics and exclusions; it never copies or replaces either parent.
 # Standard workspace lifecycle. Mutation uses only.
 make setup
 make gen
+make mod
 make fix
 make fmt
 make check
 make test
 ```
 
-**Pinned toolchain**: versions declared in `config/codegen.yaml` scaffold.project.dev (ruff, mypy, pyright, pyrefly, pytest, etc.). Python strictly `>=3.13,<3.14`. The `.default-python-packages` file was removed; tool versions resolve through the cooldown-constrained SSOT.
+**Pinned toolchain**: versions declared in `flext-infra/config/tooling.yaml` (ruff, mypy, pyright, pyrefly, pytest, etc.). Python strictly `>=3.13,<3.14`. The `.default-python-packages` file was removed; tool versions resolve through the cooldown-constrained SSOT.
 
 **Gotchas:** mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never run mypy uncapped, it can blow up RAM.
 Docs CI needs
@@ -446,13 +447,15 @@ the SSOT holds. Config/settings modules import only stdlib/pydantic/upstream bas
 
 ## Conventions & Patterns
 
-- **`**init**.py`, `constants.py`, `models.py`, etc. facet roots are AUTO-GENERATED**
-(`# AUTO-GENERATED FILE — regenerate through`make gen`). Never hand-edit; change the codegen source in
-  `flext-infra`
-  - run `make gen`.
-- **Root `pyproject.toml` `[MANAGED]` sections** are rendered from
-  `flext-infra` templates + `config/codegen.yaml`; `make deps` recalculates
-  floors in that YAML, then `make gen` projects them. Never hand-edit.
+- **`__init__.py`, `constants.py`, `models.py`, etc. facet roots are AUTO-GENERATED**
+(`# AUTO-GENERATED FILE — regenerate through `make gen`). Never hand-edit; change
+  the codegen source in `flext-infra` and run `make gen`.
+- **Root `pyproject.toml`** is a codegen projection from `flext-infra`
+  templates + `flext-infra/config/codegen.yaml` (with `tooling.yaml` for tool
+  versions); `make deps` recalculates floors, then `make gen` projects them.
+  The `[MANAGED]` directive comments in templates are consumed and stripped
+  during projection by the inject-comments phase; they are not retained in
+  output. Never hand-edit the projection.
 - **Declaration layers are pure data:** models/protocols/constants/typings/settings/config carry ZERO methods
   (only Pydantic Field/validators/computed_field). Behavior lives only in `u`/services/`api`/`base`/`cli`.
 - **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No

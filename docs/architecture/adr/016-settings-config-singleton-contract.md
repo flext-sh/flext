@@ -2,8 +2,8 @@
 
 ## Status
 
-Proposed (2026-09-15) — accepted for planning; execution assigned to a dedicated
-session via epic bead and [epic plan](../../docs/plans/2026-09-15-flext-settings-config-ssot-epic.md).
+PROPOSED (2026-09-15) — accepted for planning; execution assigned to a dedicated
+session via epic bead and [epic plan](../../plans/2026-09-15-flext-settings-config-ssot-epic.md).
 This ADR becomes `Accepted` only when that session lands the full contract with
 runtime evidence.
 

@@ -56,18 +56,21 @@ See [Python docstring standards](docstrings/PEP257-GOOGLE-RUFF.md).
 Run the complete documentation propagation through the root dispatcher:
 
 ```bash
+make setup
+make gen
+make mod
 make gen
 make gen
 make fix
 make fmt
 make check
 make test
-make gen
+make build
 ```
 
-The second generation pass must be a fixed point. Test validation retains the
-canonical Testmon cache. A missing docs workflow is repaired at the Make or
-flext-infra owner before this sequence is rerun.
+The consecutive post-rewrite generation passes must reach a fixed point. Test
+validation retains the canonical Testmon cache. A missing docs workflow is
+repaired at the Make or flext-infra owner before this sequence is rerun.
 
 ## Publication
 

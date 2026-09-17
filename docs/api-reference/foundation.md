@@ -7,9 +7,11 @@
 
 **The `flext-core` foundation layer: what every FLEXT package builds on.**
 
-`flext-core` is the runtime-minimal root of the dependency chain
-(`flext-core → flext-cli → flext-infra`, with `flext-tests` beside it). It
-owns only what must exist at runtime for every consumer package.
+`flext-core` is the runtime-minimal root of the dependency chain. Every other package (`flext-cli`, `flext-infra`, and all members) depends on `flext-core`; `flext-core` imports none of them. `flext-tests` sits beside the chain as a test-only dependency, not a runtime one. It
+owns only what must exist at runtime for every consumer package. `flext-core`
+exposes a public `api.py` (`FlextApi`) and a public `cli.py` (`FlextCli`)
+despite being the foundation — it is not API-less; the distinction is that it
+never imports `flext-cli` or `flext-infra` at runtime.
 
 ## What it provides
 
@@ -26,7 +28,8 @@ owns only what must exist at runtime for every consumer package.
 
 ## Boundary rules
 
-- `flext-core` is stdlib-only at runtime: no Jinja2, no CLI or infra imports.
+- `flext-core` is runtime-minimal and imports no other `flext-*` package. Its
+  third-party runtime dependencies remain owned by generated package metadata.
 - Consumer packages import `flext-core` freely; `flext-core` never imports a
   consumer.
 - The detailed, always-current API surface is generated from the code — see

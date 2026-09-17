@@ -94,7 +94,7 @@ duplication.threshold-percent = 0.0
 
 **Budget gate**: New gate class + `_gate_classes` registry + `SARIF_TOOL_INFO` row + `codegen.yaml` entry. Registry divergence = hard error.
 
-**Primitives**: `u.FlextUtilities.append_atomic(path, data)` — generic, reusable across fleet.
+**Primitives**: `u.append_atomic(path, data)` — generic, reusable across fleet.
 
 **Enforcement**: budget gate delivered (`FlextInfraBudgetGate`, validates one declared budget row per `c.Infra.ALLOWED_GATES` gate); catalog row pending its next free ID (101) — WS-F4 validation. Runtime budget telemetry (measured time/memory in reports) remains open.
 

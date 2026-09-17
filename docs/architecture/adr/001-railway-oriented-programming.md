@@ -9,7 +9,7 @@
 - [Related Documents](#related-documents)
 <!-- TOC END -->
 
-**Status**: Accepted  
+**Status**: Accepted — CURRENT IMPLEMENTATION
 **Reviewed**: 2026-02-17
 
 ## Context

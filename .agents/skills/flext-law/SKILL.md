@@ -32,6 +32,12 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   owns reusable foundations, `services` owns use cases, `api` is the sole
   composition root, and `cli` is a thin transport adapter when the project
   declares a CLI. Do not create competing long-name or alias layers.
+- Family part shape (ADR-014, `$flext-family-shape`): the five private
+  families each begin with `base.py`; a part file nests entities directly
+  (models/enums/protocols/behavior, one level) — top-level orphan classes and
+  pure namespace-wrapper children are forbidden and repaired only through
+  `make mod` Rope rules (one YAML per rule) replicating changes via
+  the shared `do(changes)` cycle wrapped in `FlextInfraUtilitiesSafety`.
 - Dependencies cross use-case boundaries through `p` protocols and are
   provided explicitly by `api`. A service may not construct infrastructure,
   read process-global configuration, or resolve a dependency by string,
@@ -156,8 +162,7 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
 - Stabilization handoff (state table, first failure, next action):
   `flext-infra/docs/roadmap/namespace-automation-handoff-2026-09-14.md`.
 - Session plans live under `.kilo/plans/` (newest first); the master
-  stabilization plan is
-  `.kilo/plans/1789441200000-stabilization-recovery-docs-automation.md`.
+  stabilization plan is the most recent plan in that directory.
 - Execution state belongs to central Beads; handoffs and plans carry
   evidence and resume instructions only, never a second queue.
 - Stabilization runbook (canonical cycle, tracker contract, landing):
@@ -166,7 +171,8 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
 ## Fleet boundary
 
 - First-party FLEXT members and standalone repositories consume the same
-  branch-matched law, Make control plane, and generated conventions.- Third-party forks and content-only repositories are not FLEXT members: do
+  branch-matched law, Make control plane, and generated conventions.
+- Third-party forks and content-only repositories are not FLEXT members: do
   not impose FLEXT architecture, dependency injection, typing modernization,
   language features, lint, generation, or package layout on them. Follow the
   upstream architecture, style, runtime floor, toolchain, build, release, and

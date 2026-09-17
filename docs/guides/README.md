@@ -17,6 +17,12 @@ reference; they do not duplicate it.
 - [Configuration](configuration.md)
 - [Testing](testing.md)
 - [Troubleshooting](troubleshooting.md)
+- [Using flext-core](using-flext-core.md)
+- [Using flext-cli](using-flext-cli.md)
+- [Using flext-tests](using-flext-tests.md)
+- [Make Commands](make-commands.md)
+- [Skill Automation Pattern](skill-automation-pattern.md)
+- [Security Guide](security.md)
 
 ## Scope
 
