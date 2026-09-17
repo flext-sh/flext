@@ -1,0 +1,15 @@
+{
+  "identity": "64a6e63d4f86a9ecc2654e23eb8475d603a638edbec54b39a32310becf6fa97d",
+  "provider": "kilo",
+  "source_id": "kilo-plans",
+  "source_path": "addenda/cross-plan-coordination-2026-09-16.md",
+  "driver": "kilo",
+  "driver_version": "1",
+  "digest": "60092a8497b26dff76a717926322524b1f1752bff62c1d18908f08ea3e1f245e",
+  "canonical_path": "kilo-plans-cross-plan-coordination-2026-09-16-64a6e63d4f86a9ec.md",
+  "source_updated_at": null,
+  "source_updated_at_original": null,
+  "source_updated_at_utc": null,
+  "collected_at": "2026-09-17T01:09:51.593301Z",
+  "attachments": []
+}

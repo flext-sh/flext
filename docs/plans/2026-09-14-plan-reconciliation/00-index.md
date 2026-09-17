@@ -22,7 +22,7 @@ Resume from files and freshly measured state, not a provider conversation cursor
 Use the existing separate FLEXT worktree and its direnv. Read-only preflight:
 
 ```bash
-cd /home/marlonsc/flext-worktrees/plan-reconciliation
+cd ~/flext-worktrees/plan-reconciliation
 direnv exec . git status --short --branch
 direnv exec . git submodule status
 direnv exec . bd show flext-ro6mj flext-ro6mj.1 --json

@@ -18,7 +18,7 @@
 ## Fase A — fechar flext-tests
 
 1. Confirmar CI do `356e9e1`; se vermelho, causa raiz seguinte no ciclo standalone.
-2. Teardown da materialização `/home/marlonsc/flext-work/flext-tests` após verde (Lei 13).
+2. Teardown da materialização `~/flext-work/flext-tests` após verde (Lei 13).
 
 - **Gate:** CI success no tip.
 
@@ -97,7 +97,7 @@ Unidade roda ai-hub model-pipeline-daemon; runtime `0.4.8+90bca03a6cec` perdeu `
 
 ### Adendo 2 — mudanças por projeto (2026-09-11) + worktree dedicada
 
-- **ai-hub** (worktree dedicada `/home/marlonsc/ai-hub-wt/model-pipeline-v3`, 634M, branch `work/wip-hier-v3`, tip `995964e49`, PR #728 mergeable, reparada no registro após prune de terceiro): Fase D completa (fail_closed_events, foreign_groups skip, mcp root-replace), rename governance_law, golden in-tree, fixture socket compartilhada, fachada validate, recovery void-on-409, locks.
+- **ai-hub** (worktree dedicada `~/ai-hub-wt/model-pipeline-v3`, 634M, branch `work/wip-hier-v3`, tip `995964e49`, PR #728 mergeable, reparada no registro após prune de terceiro): Fase D completa (fail_closed_events, foreign_groups skip, mcp root-replace), rename governance_law, golden in-tree, fixture socket compartilhada, fachada validate, recovery void-on-409, locks.
 - **flext-infra** (`0.12.0-dev` `a0effff42`): `private_direct_refs` (intermediário) → **substituído** pela regra geral "source pyproject é a SSOT" (passthrough verbatim + allow-direct-references deduzido); audit honra refs fonte; validate de namespace deriva forma/nomes do código, nunca de listas (absorção do achado dirname).
 - **flext (umbrella)**: plano atualizado 2x (`ba1dc8f2a9`, `6b005bb935`+); merges no-ff absorvendo origin.
 - **ccs** (`e2dc8e6c`): `MODEL_PIPELINE_SCHEMA_VERSION 3`, strip de voláteis no CAS, diff canônico no erro 409.

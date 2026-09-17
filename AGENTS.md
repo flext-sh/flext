@@ -407,17 +407,20 @@ specifics and exclusions; it never copies or replaces either parent.
 make setup
 make gen
 make mod
+make gen
+make gen
 make fix
 make fmt
 make check
 make test
+make build
 ```
 
 **Pinned toolchain**: versions declared in `flext-infra/config/tooling.yaml` (ruff, mypy, pyright, pyrefly, pytest, etc.). Python strictly `>=3.13,<3.14`. The `.default-python-packages` file was removed; tool versions resolve through the cooldown-constrained SSOT.
 
 **Gotchas:** mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never run mypy uncapped, it can blow up RAM.
-Docs CI needs
-`uv sync --all-packages --all-groups --all-extras` for dev tools.
+Docs CI provisions through `make setup` and validates through `make docs`; no
+documentation workflow invokes `uv` directly.
 
 ## Architecture Overview
 

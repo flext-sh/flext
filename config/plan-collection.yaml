@@ -1,0 +1,12 @@
+canonical_dir: docs/plans
+sources:
+  - id: kilo-plans
+    provider: kilo
+    root: .kilo/plans
+    adapter: files
+    driver: kilo
+    driver_version: "1"
+    plan_globs:
+      - "*.md"
+      - "addenda/*.md"
+    publication: plan-artifacts

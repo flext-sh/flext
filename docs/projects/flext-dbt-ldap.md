@@ -27,15 +27,12 @@ patterns.
 
 - All operations return `r[T]` (`p.Result[...]`) with typed payload models under `m.DbtLdap.*`.
 - Settings are validated Pydantic models (`FlextDbtLdapSettings`); no direct environment reads in runtime code.
-- Gates: `make check PROJECT=flext-dbt-ldap`, `make test PROJECT=flext-dbt-ldap`, and `make val` produce the
+- Selector-free root `make check`, `make test`, and `make build` produce the
   authoritative evidence.
 
 ## Quick start
 
-```bash
-make boot                              # workspace bootstrap (once)
-make check PROJECT=flext-dbt-ldap      # lint + type gates
-```
+From the workspace root, run `make setup`, `make check`, and `make test`.
 
 ```python
 from flext_dbt_ldap import FlextDbtLdap
@@ -82,10 +79,11 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldap/`:
 
 ## Testing & quality
 
-- Tests live in the project `tests/` tree and run through `make test PROJECT=flext-dbt-ldap`.
+- Tests live in the project `tests/` tree and run through root `make test`.
 - Warehouse sync paths need a reachable LDAP directory and a dbt target; without them, unit suites and static gates are
   the evidence of record.
-- The authoritative quality verdict comes from `make check PROJECT=flext-dbt-ldap` and `make val`.
+- The authoritative quality verdict comes from root `make check`, `make test`,
+  and `make build`.
 
 ## Resources
 
@@ -97,4 +95,4 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldap/`:
 ## Support & issues
 
 - Issues and discussions: <https://github.com/flext-sh/flext> (monorepo)
-- Before contributing, read the workspace `AGENTS.md` and run `make check PROJECT=flext-dbt-ldap` on your change.
+- Before contributing, read the workspace `AGENTS.md` and run root `make check`.

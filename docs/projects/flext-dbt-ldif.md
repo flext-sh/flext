@@ -28,15 +28,12 @@ data quality.
 - All operations return `r[T]` (`p.Result[...]`) with typed payload models under `m.DbtLdif.*`.
 - Settings are validated Pydantic models (`FlextDbtLdifSettings`); configuration is consumed only through the settings
   SSOT.
-- Gates: `make check PROJECT=flext-dbt-ldif`, `make test PROJECT=flext-dbt-ldif`, and `make val` produce the
+- Selector-free root `make check`, `make test`, and `make build` produce the
   authoritative evidence.
 
 ## Quick start
 
-```bash
-make boot                              # workspace bootstrap (once)
-make check PROJECT=flext-dbt-ldif      # lint + type gates
-```
+From the workspace root, run `make setup`, `make check`, and `make test`.
 
 ```python
 from flext_dbt_ldif import FlextDbtLdif
@@ -82,9 +79,10 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldif/`:
 
 ## Testing & quality
 
-- Tests live in the project `tests/` tree and run through `make test PROJECT=flext-dbt-ldif`.
+- Tests live in the project `tests/` tree and run through root `make test`.
 - Workflow tests use synthetic LDIF fixtures; dbt execution paths need a configured dbt target.
-- The authoritative quality verdict comes from `make check PROJECT=flext-dbt-ldif` and `make val`.
+- The authoritative quality verdict comes from root `make check`, `make test`,
+  and `make build`.
 
 ## Resources
 
@@ -96,4 +94,4 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldif/`:
 ## Support & issues
 
 - Issues and discussions: <https://github.com/flext-sh/flext> (monorepo)
-- Before contributing, read the workspace `AGENTS.md` and run `make check PROJECT=flext-dbt-ldif` on your change.
+- Before contributing, read the workspace `AGENTS.md` and run root `make check`.

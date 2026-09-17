@@ -13,7 +13,8 @@
 - [References](#references)
 <!-- TOC END -->
 - **Status:** Accepted
-**Implementation status:** CURRENT IMPLEMENTATION (§§1–5); ACCEPTED TARGET (§6 enforcement migration to rope-semantic)
+- **Implementation status:** CURRENT IMPLEMENTATION (§§1–5); ACCEPTED TARGET
+  (§6 enforcement migration to rope-semantic)
 - **Date:** 2026-07-11
 - **Scope:** runtime configuration, declarative generation inputs, schemas,
   templates, and enforcement across FLEXT consumers. §§1–5 are CURRENT

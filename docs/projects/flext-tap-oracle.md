@@ -23,8 +23,8 @@ executable source lives under `flext-tap-oracle/src/flext_tap_oracle/`.
 
 ### Quality signals
 
-- Run `make check PROJECT=flext-tap-oracle` and
-  `make test PROJECT=flext-tap-oracle` through the workspace root.
+- Run selector-free `make check`, `make test`, and `make build` through the
+  workspace root.
 
 ## Quick start
 

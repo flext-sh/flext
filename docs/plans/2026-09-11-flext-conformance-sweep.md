@@ -149,7 +149,7 @@ Sweep não está "feito" quando minha Lane fica verde; está feito quando o ambi
 ## 8. Retomada rápida (nova sessão)
 
 ```bash
-cd /home/marlonsc/flext && git fetch origin 0.12.0-dev
+cd ~/flext && git fetch origin 0.12.0-dev
 env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json 2>/dev/null | jq -r '.[].id' | head   # == never inherit DB
 find . -name "*.bak" -not -path "*-worktrees/*" -not -path "*/.venv/*" -not -path "*/.git/*" -not -path "*/dist/*" | wc -l   # 0
 # Onda seguinte: flext-2h0un (fixed-point) → flext-9wwed (budget) → flext-gxgqp (gate) → docs PR (A2/A5)

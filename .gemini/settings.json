@@ -7,7 +7,7 @@
         "code-review-graph",
         "serve"
       ],
-      "cwd": "/home/marlonsc/flext"
+      "cwd": "~/flext"
     }
   },
   "hooks": {

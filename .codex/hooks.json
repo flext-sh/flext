@@ -16,7 +16,7 @@
       {
         "hooks": [
           {
-            "command": "export PATH=\"$HOME/go/bin:$HOME/.local/bin:$PATH\" \u0026\u0026 gc --city '/home/marlonsc/gc' hook run --when-managed-session -- handoff --auto --hook-format codex \"context cycle\"",
+            "command": "export PATH=\"$HOME/go/bin:$HOME/.local/bin:$PATH\" \u0026\u0026 gc --city '~/gc' hook run --when-managed-session -- handoff --auto --hook-format codex \"context cycle\"",
             "type": "command"
           }
         ],
@@ -37,7 +37,7 @@
       {
         "hooks": [
           {
-            "command": "export PATH=\"$HOME/go/bin:$HOME/.local/bin:$PATH\" \u0026\u0026 GC_MANAGED_SESSION_HOOK=1 GC_HOOK_EVENT_NAME=SessionStart gc --city '/home/marlonsc/gc' prime --hook --hook-format codex",
+            "command": "export PATH=\"$HOME/go/bin:$HOME/.local/bin:$PATH\" \u0026\u0026 GC_MANAGED_SESSION_HOOK=1 GC_HOOK_EVENT_NAME=SessionStart gc --city '~/gc' prime --hook --hook-format codex",
             "type": "command"
           }
         ],
@@ -58,11 +58,11 @@
       {
         "hooks": [
           {
-            "command": "export PATH=\"$HOME/go/bin:$HOME/.local/bin:$PATH\" \u0026\u0026 gc --city '/home/marlonsc/gc' hook run --timeout 15s --timeout-exit-code 0 -- nudge drain --inject --hook-format codex",
+            "command": "export PATH=\"$HOME/go/bin:$HOME/.local/bin:$PATH\" \u0026\u0026 gc --city '~/gc' hook run --timeout 15s --timeout-exit-code 0 -- nudge drain --inject --hook-format codex",
             "type": "command"
           },
           {
-            "command": "export PATH=\"$HOME/go/bin:$HOME/.local/bin:$PATH\" \u0026\u0026 gc --city '/home/marlonsc/gc' hook run --timeout 15s --timeout-exit-code 0 -- mail check --inject --hook-format codex",
+            "command": "export PATH=\"$HOME/go/bin:$HOME/.local/bin:$PATH\" \u0026\u0026 gc --city '~/gc' hook run --timeout 15s --timeout-exit-code 0 -- mail check --inject --hook-format codex",
             "type": "command"
           }
         ],

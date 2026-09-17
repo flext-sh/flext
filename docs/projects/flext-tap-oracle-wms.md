@@ -19,25 +19,23 @@ and the canonical `c/m/p/t/u` facade layout.
 
 - **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+
-- **Status**: Active development on the `0.12.0-dev` branch; the package builds and exports its full public surface.
+- **Status**: Active development on the `0.12.0-dev` branch; current health is
+  established by the root gates below, not by this page.
 - **Description** (from `pyproject.toml`): "FLEXT Tap Oracle WMS - Singer Tap for Oracle Warehouse Management System"
 - **Dependencies**: `flext-core`, `flext-cli`, `flext-meltano`, `flext-oracle-wms`
 - **Console scripts**: `tap-oracle-wms` and `flext-tap-oracle-wms` (both bound to `flext_tap_oracle_wms.cli:main`)
 
 ### Quality signals
 
-- Quality gates run through the workspace Make contract: `make check PROJECT=flext-tap-oracle-wms`, `make test
-  PROJECT=flext-tap-oracle-wms`, and `make val`.
+- Quality gates run through the selector-free workspace Make contract:
+  `make check`, `make test`, and `make build`.
 - Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output
   rather than static claims in this page.
 
 ## Quick start
 
-```bash
-cd flext-tap-oracle-wms
-poetry install
-make check PROJECT=flext-tap-oracle-wms
-```
+From the workspace root, provision and validate with `make setup`, `make check`,
+and `make test`.
 
 Singer discovery and sync through the console script:
 
@@ -86,9 +84,9 @@ src/flext_tap_oracle_wms/
 
 ## Testing & quality
 
-- Tests live under the project `tests/` tree and run via `make test PROJECT=flext-tap-oracle-wms`; Singer behavior is
+- Tests live under the project `tests/` tree and run via root `make test`; Singer behavior is
   exercised through the tap CLI and discovery flow.
-- Pre-merge verification: `make check PROJECT=flext-tap-oracle-wms` (lint + typing + security selectors) and `make val`.
+- Pre-merge verification uses root `make check`, `make test`, and `make build`.
 
 ## Resources
 

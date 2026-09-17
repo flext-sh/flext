@@ -8,7 +8,7 @@
 
 | Superfície | Estado |
 |------------|--------|
-| **Superproject** `/home/marlonsc/flext`, branch `0.12.0-dev` | tip local `516d9adc80` (pushed `4dea5c3712..516d9adc80`) |
+| **Superproject** `~/flext`, branch `0.12.0-dev` | tip local `516d9adc80` (pushed `4dea5c3712..516d9adc80`) |
 | **flext-infra** (submódulo) | HEAD `bff592284` — encadeado: meus `3000b6bc0` (cleanup APPLY 9 arq.) + `bff592284` (Law 13, **dono a verificar**, A0.1) |
 | **Base do meu pous** | `573eb3746` (wip `7a5e2e1e8` excisado via reset+cherry-pick→`dd65db77c`) |
 | **Worktrees de flext-infra** | `flext-infra/worktrees/promoted-framework-lift` (de outra lane — NÃO tocar) |
@@ -69,7 +69,7 @@ Regen: `env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json`
 ## 5. Como remontar os TODOs (protocolo)
 
 ```bash
-cd /home/marlonsc/flext
+cd ~/flext
 env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json | jq -r '.[] | "\(.priority)\t\(.id)\t\(.title)"' | sort -n
 # 1. mapear cada bead → item do todo (flext-3cabz→A1, 9wwed→B1/B2, gxgqp→gate backup, cpkk→A3-locking-actor, f73ii→lock, vo335→A0.3)
 # 2. completar com o plan-index: docs/plans/2026-09-11-flext-conformance-sweep.md §4 (A0-A5) + §11 (piloto A6)

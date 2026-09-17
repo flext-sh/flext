@@ -68,13 +68,13 @@ tracker is created here.
 
 | Owner / working directory | Command and result | Meaning / next action |
 | --- | --- | --- |
-| FLEXT separate worktree `/home/marlonsc/flext-worktrees/plan-reconciliation` | `direnv exec . make status`, exit 0 | Environment/status only; not functional acceptance |
+| FLEXT separate worktree `~/flext-worktrees/plan-reconciliation` | `direnv exec . make status`, exit 0 | Environment/status only; not functional acceptance |
 | Same FLEXT worktree | Two `make test` runs interrupted with exit 130 after repeated import failures | First `types.TypeAliasType` imports corrected in authored Tests modules; next failure importing `m` remains to revalidate after generator composition |
 | Same FLEXT worktree | `direnv exec . make gen`, session 88479, still running at this cut | Conform/publication progressed; Rope indexed 4,179 modules. Wait for final exit before any claim or concurrent write |
-| `/home/marlonsc/agents` | `make check`, session 3023, worker reports exit 0 | Ruff/Pyright/Mypy, 132 semantic suites, fixed point and 242 packaged resources passed for that snapshot; later test changes invalidate freshness |
-| `/home/marlonsc/agents` | `make test-full` then native test rerun, worker reports exit 2; 14 passed before MCP timeout | Real stdio consumer times out after 10 seconds. Cold-cache hypothesis disproved; locate lifecycle failure without suppressing it |
-| `/home/marlonsc/ai-hub` | External native test report: 188 passed, 2 failed; session exit not owned here | Installed older producer lacks `SkillRecord.resources`; refreshed lock alone is not an installed-runtime proof |
-| `/home/marlonsc/ai-hub` | `direnv exec . make setup`, session 87449, running | Installs the already refreshed producer lock; then repeat native consumer tests |
+| `~/agents` | `make check`, session 3023, worker reports exit 0 | Ruff/Pyright/Mypy, 132 semantic suites, fixed point and 242 packaged resources passed for that snapshot; later test changes invalidate freshness |
+| `~/agents` | `make test-full` then native test rerun, worker reports exit 2; 14 passed before MCP timeout | Real stdio consumer times out after 10 seconds. Cold-cache hypothesis disproved; locate lifecycle failure without suppressing it |
+| `~/ai-hub` | External native test report: 188 passed, 2 failed; session exit not owned here | Installed older producer lacks `SkillRecord.resources`; refreshed lock alone is not an installed-runtime proof |
+| `~/ai-hub` | `direnv exec . make setup`, session 87449, running | Installs the already refreshed producer lock; then repeat native consumer tests |
 
 The operator clarified that Ruff, Pyrefly, Pyright and Mypy remain mandatory;
 the exception concerns other Infra custom Make checks. No functional collection,
@@ -291,9 +291,9 @@ delete working changes because the overall increment remains incomplete.
 
 ## Implementation cursor and source map
 
-Primary worktree: `/home/marlonsc/flext-worktrees/plan-reconciliation`, branch
+Primary worktree: `~/flext-worktrees/plan-reconciliation`, branch
 `feature/plan-reconciliation`. Infra member: `fix/plan-reconciliation-make-contract`.
-Original `/home/marlonsc/flext` must not receive implementation edits. Earlier
+Original `~/flext` must not receive implementation edits. Earlier
 read-only evidence found its root at `0.12.0-dev`, but Infra had moved to
 `fix/docs-renderer-contract`; the earlier statement “all 32 currently on dev”
 is no longer established. Re-read, cooperate, and preserve, never reset.

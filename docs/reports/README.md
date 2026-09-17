@@ -23,8 +23,9 @@ scan outputs.
 
 ## Keeping Reports Fresh
 
-1. Run `make val` or the narrower `make check` targets before updating
-   documentation references that claim a certain scan exists.
+1. Run the applicable selector-free root gates, including `make check` and
+   `make test`, before updating documentation references that claim a scan
+   exists.
 2. After the run, copy the resulting artifact into `reports/` so the portal can
    still point to a real file.
 3. Link to the relevant artifact from anywhere in `docs/` when you declare a

@@ -26,15 +26,12 @@ targets, dbt adapters — reuses one typed connection, query, and schema-introsp
 
 - All fallible operations return `r[T]` (`p.Result[T]`); no exceptions cross the public API as control flow.
 - Settings are validated Pydantic models (`FlextDbOracleSettings`, env prefix `ORACLE_`, nested delimiter `__`).
-- Gates: `make check PROJECT=flext-db-oracle`, `make test PROJECT=flext-db-oracle`, and `make val` produce the
-  authoritative lint/type/test evidence — see those outputs rather than any number stated here.
+- Selector-free root `make check`, `make test`, and `make build` produce the
+  authoritative evidence; this page does not freeze gate totals.
 
 ## Quick start
 
-```bash
-make boot                                  # workspace bootstrap (once)
-make check PROJECT=flext-db-oracle         # lint + type gates
-```
+From the workspace root, run `make setup`, `make check`, and `make test`.
 
 ```python
 from flext_db_oracle import FlextDbOracleApi, FlextDbOracleSettings
@@ -87,11 +84,11 @@ The package follows the canonical FLEXT layout under `src/flext_db_oracle/`:
 
 ## Testing & quality
 
-- Tests live in the project `tests/` tree and run through `make test PROJECT=flext-db-oracle` (unit scope) and the
+- Tests live in the project `tests/` tree and run through root `make test` and the
   workspace gates.
 - Oracle-backed integration paths require a reachable Oracle instance; without one, unit suites and static gates are the
   evidence of record.
-- The authoritative quality verdict comes from `make check PROJECT=flext-db-oracle` and `make val` — consult their
+- The authoritative quality verdict comes from root `make check`, `make test`, and `make build` — consult their
   output for current lint, typing, and test status.
 
 ## Resources
@@ -104,4 +101,4 @@ The package follows the canonical FLEXT layout under `src/flext_db_oracle/`:
 ## Support & issues
 
 - Issues and discussions: <https://github.com/flext-sh/flext> (monorepo)
-- Before contributing, read the workspace `AGENTS.md` and run `make check PROJECT=flext-db-oracle` on your change.
+- Before contributing, read the workspace `AGENTS.md` and run root `make check`.

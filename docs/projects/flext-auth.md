@@ -20,7 +20,7 @@ Auth — Enterprise Authentication & Authorization Service".
 
 - **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Quality gate**: `make check PROJECT=flext-auth` (Ruff + type checks) and `make val` for the full pipeline
+- **Quality gate**: selector-free root `make check`, `make test`, and `make build`
 - **Depends on**: `flext-core` (facades, result contract, container)
 
 ### Quality signals
@@ -34,7 +34,7 @@ Auth — Enterprise Authentication & Authorization Service".
 
 ```bash
 make setup
-make check PROJECT=flext-auth
+make check
 ```
 
 ```python
@@ -84,9 +84,9 @@ process-wide singleton (`auth` alias). Providers implement the provider mixin/pr
 
 ## Testing & quality
 
-- `make check PROJECT=flext-auth`: Ruff linting plus type checks
-- `make test PROJECT=flext-auth`: pytest suite (latest evidence under `reports/pytest/`)
-- `make val`: full pipeline; see `reports/coverage-scan-*` for the current coverage snapshot
+- `make check`: lint, typing, security, and structural checks
+- `make test`: pytest suite through the shared Testmon cache
+- `make build`: package candidate; runtime proof remains separate
 - Tests target the public facade and exported models only, per workspace testing law (U16)
 
 ## Resources

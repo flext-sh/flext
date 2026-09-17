@@ -26,15 +26,11 @@ System (WMS) transformations with dbt. Its executable source lives in
 
 - The implementation follows the workspace config/settings SSOT and
   thin-driver architecture.
-- Authoritative evidence comes from the project-scoped root Make gates.
+- Authoritative evidence comes from the selector-free root Make gates.
 
 ## Quick start
 
-```bash
-make boot
-make check PROJECT=flext-dbt-oracle-wms
-make test PROJECT=flext-dbt-oracle-wms
-```
+From the workspace root, run `make setup`, `make check`, and `make test`.
 
 Use the generated API reference for public imports and method signatures; this
 page deliberately avoids stale hand-maintained call examples.
@@ -53,8 +49,7 @@ facade in `api.py`, CLI adapter in `cli.py`, service implementations in
 
 ## Testing & quality
 
-Use `make check PROJECT=flext-dbt-oracle-wms` and
-`make test PROJECT=flext-dbt-oracle-wms` for project evidence.
+Use root `make check`, `make test`, and `make build` for project evidence.
 
 ## Resources
 

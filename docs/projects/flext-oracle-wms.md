@@ -24,8 +24,8 @@ FLEXT Oracle WMS is the domain package for Oracle Warehouse Management System
 
 ### Quality signals
 
-- Run `make check PROJECT=flext-oracle-wms` and
-  `make test PROJECT=flext-oracle-wms` through the workspace root.
+- Run selector-free `make check`, `make test`, and `make build` through the
+  workspace root.
 
 ## Quick start
 

@@ -5,7 +5,7 @@
 
 ## 1. Papel e objetivo
 Você retoma o **monopólio de limpeza/conformidade do workspace FLEXT hospedado**
-(`/home/marlonsc/flext`, sub-frota `flext-*`), sob `AGENTS.md` raiz + skill
+(`~/flext`, sub-frota `flext-*`), sob `AGENTS.md` raiz + skill
 `flext-law`. Objetivo aberto: **D1–D6 do §3 do plano vivente** — ponto fixo de
 geração por membro, gate de regrowth em CI, budget de teste, reds estruturais
 (dono: ator), release v0.13.0, ativação. Pousos HOJE podem ser admin (autorizados),
@@ -44,7 +44,7 @@ mas **sempre** PR `--no-ff` → gates no SHA → prova de runtime.
 
 ## 5. Preflight da nova sessão (executar, registrar saída)
 ```bash
-cd /home/marlonsc/flext && git fetch origin 0.12.0-dev
+cd ~/flext && git fetch origin 0.12.0-dev
 git rev-parse origin/0.12.0-dev                                    # comparar com §2
 find . -name "*.bak" -not -path "*-worktrees/*" -not -path "*/.venv/*" -not -path "*/.git/*" -not -path "*/dist/*" | wc -l   # == 0
 env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open            # reconciliar §4 vs §5 do plano

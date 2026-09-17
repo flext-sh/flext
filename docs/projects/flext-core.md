@@ -20,7 +20,7 @@ builds on. Package description: "Enterprise Foundation Framework — Modern Pyth
 
 - **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Quality gate**: `make check PROJECT=flext-core` (Ruff + type checks) and `make val` for the full pipeline
+- **Quality gate**: selector-free root `make check`, `make test`, and `make build`
 - **Role**: root of the dependency chain; no runtime dependency on any other `flext-*` package (stdlib-first design)
 
 ### Quality signals
@@ -85,9 +85,9 @@ core/examples/` (`ex_01_flext_result.py` through dispatcher and settings walkthr
 
 ## Testing & quality
 
-- `make check PROJECT=flext-core`: Ruff linting plus type checks (pyrefly/mypy)
-- `make test PROJECT=flext-core`: pytest suite (see `reports/pytest/` for the latest run evidence)
-- `make val`: full validation pipeline; consult `reports/coverage-scan-*` for the current coverage snapshot rather than
+- `make check`: lint, typing, security, and structural checks
+- `make test`: pytest suite through the shared Testmon cache
+- `make build`: package candidate; consult `reports/coverage-scan-*` for the current coverage snapshot rather than
   trusting any fixed number in docs
 - Tests exercise only the public surface (facade aliases and exported classes), per the workspace testing law in
   `AGENTS.md` (U16)

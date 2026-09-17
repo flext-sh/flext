@@ -20,7 +20,7 @@ for FLEXT Framework".
 
 - **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Quality gate**: `make check PROJECT=flext-ldap` (Ruff + type checks) and `make val` for the full pipeline
+- **Quality gate**: selector-free root `make check`, `make test`, and `make build`
 - **Depends on**: `flext-core`, `flext-ldif` (entry models and LDIF conversion)
 
 ### Quality signals
@@ -88,9 +88,9 @@ and `filter_str` to the constants in `c.Ldap`. Use `FlextLdapEntryAdapter` to co
 
 ## Testing & quality
 
-- `make check PROJECT=flext-ldap`: Ruff linting plus type checks
-- `make test PROJECT=flext-ldap`: pytest suite (latest evidence under `reports/pytest/`)
-- `make val`: full pipeline; see `reports/coverage-scan-*` for the current coverage snapshot
+- `make check`: lint, typing, security, and structural checks
+- `make test`: pytest suite through the shared Testmon cache
+- `make build`: package candidate; runtime proof remains separate
 - Tests target the public facade and exported models only, per workspace testing law (U16)
 
 ## Resources
