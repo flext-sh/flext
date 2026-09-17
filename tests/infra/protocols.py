@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 class TestsFlextRootProtocols(p):
     """Infrastructure test protocols facade — extends flext_infra protocols."""
-    
+
     class _ModuleProtocols:
         """Module resolution protocols."""
 
@@ -48,7 +48,7 @@ class TestsFlextRootProtocols(p):
             """Protocol for module spec factory callables."""
 
             def __call__(self, name: str, location: Path) -> ModuleSpec | None: ...
-    
+
     class _RepoProtocols:
         """Repository metadata protocols."""
 
@@ -59,6 +59,10 @@ class TestsFlextRootProtocols(p):
             def get_branch(self) -> str: ...
             def get_remote_url(self) -> str: ...
 
-    class Tests(TestsFlextRootProtocols._ModuleProtocols, TestsFlextRootProtocols._RepoProtocols):
+    class Tests(
+        TestsFlextRootProtocols._ModuleProtocols, TestsFlextRootProtocols._RepoProtocols
+    ):
         """Test infrastructure protocol definitions."""
+
+
 __all__: list[str] = ["TestsFlextRootProtocols"]

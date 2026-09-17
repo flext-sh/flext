@@ -162,9 +162,15 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
 
 - Stabilization handoff (state table, first failure, next action):
   `flext-infra/docs/roadmap/namespace-automation-handoff-2026-09-14.md`.
-- Live execution state belongs to Gas City task `flext-itpd1.2` under epic
-  `flext-itpd1`; session plans under `.kilo/plans/` are local evidence only,
-  never a published authority or second queue.
+- Gas City task `flext-itpd1.3` under epic `flext-itpd1` owns recovery
+  coordination. Sibling workstreams `flext-itpd1.2` (documentation) and
+  `flext-itpd1.4` (Make machinery) retain their bounded ownership; the
+  coordinator owns Beads, serialized gates, integration, and closure.
+  Workers implement assigned repairs but never merge or close Beads.
+- Session plans under `.kilo/plans/` remain local evidence and resume context,
+  never a published authority or second queue. Follow the explicitly approved
+  recovery plan, not whichever filename is newest. Approval to use a private
+  plan does not authorize copying or publishing it.
 - Stabilization runbook (canonical cycle, tracker contract, landing):
   `docs/ways-of-working/stabilization-checkpoint-0.12.md`.
 

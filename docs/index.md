@@ -60,6 +60,16 @@ topology and environments and
 [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) for
 Make/codegen ownership.
 
+Run the standard lifecycle from the active workspace root: `make setup` →
+`make gen` → `make mod` → `make gen` → `make gen` → `make fix` → `make fmt` →
+`make check` → `make test` → `make build`, followed by applicable public runtime
+and native documentation/link validation. Repeated gen/fix/fmt must be no-op,
+exit-zero runs on the unchanged candidate. These are requirements, not green
+receipts; see the [stabilization runbook](ways-of-working/stabilization-checkpoint-0.12.md).
+
+Beads records execution state, not runtime truth. Local/private plans remain
+session context and are not automatic authority or publication sources.
+
 ## Scope Boundary
 
 The root portal governs only FLEXT packages and shared FLEXT infrastructure. If another internal directory lives in the

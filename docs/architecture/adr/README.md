@@ -9,6 +9,10 @@
 This directory contains the accepted Architecture Decision Records that are currently published in the root FLEXT
 portal.
 
+Catalog classifications describe recorded decision maturity, not fresh runtime
+receipts. Historical implementation labels require revalidation on the current
+integrated candidate; acceptance never proves fleet stability.
+
 **Status classification:**
 
 - **CURRENT IMPLEMENTATION** — decision is implemented and active in the current tree.
@@ -30,13 +34,27 @@ portal.
 - [ADR-014: Family Part Shape, Rope, Codemod Rules](014-family-part-shape-rope-codemod-rules.md) — **CURRENT IMPLEMENTATION**
 - [ADR-015: Consumer Consumption Law (R1-R6)](015-consumer-consumption-law.md) — **CURRENT IMPLEMENTATION**
 - [ADR-016: Settings/Config Singleton Contract](016-settings-config-singleton-contract.md) — **PROPOSED**
-- [ADR-017: Parametrized Rule Surfaces and the Single Modernize CLI](017-parametrized-rule-surfaces-single-modernize-cli.md) — **ACCEPTED TARGET** (make mod implemented; config/rules/ tree in progress)
+- [ADR-017: Parametrized Rule Surfaces and the Single Modernize CLI](017-parametrized-rule-surfaces-single-modernize-cli.md) — **ACCEPTED TARGET** (`make mod` wired; `flext-infra/config/rules/mod/` exists; distribution/migration acceptance remains unproved)
 
-**Execution authority (2026-09-17):** Gas City Bead `flext-itpd1.2` owns the
-live modernization state. The versioned resume route is
-`docs/ways-of-working/stabilization-checkpoint-0.12.md`; workspace-local plans
-remain session evidence only.
+> **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
+> ADR-011/012 with the forward line and ADR-012 with worktree transaction
+> performance (ADR-007 here). That remote catalog was not revalidated in this
+> reconciliation; the collision warning remains. This local catalog has no
+> ADR-011/012 files. ADR-016 indexes the proposed settings/config singleton
+> contract; ADR-005 (§1–§2) and the `_settings.py`/`_config.py` owner docstrings
+> define the canonical pattern on this line. The historical citation correction
+> remains attributed to `flext-z0zkq` (2026-09-11).
 
-**Runtime status (2026-09-17):** the `0.12.0-dev` line is **not globally green**. `make check`/`make test` have no proven green run on the current integration tip; ADR-010's verification contract (zero drift, zero findings, two consecutive green `make gen` runs) is a target, not a recorded state. Do not cite these ADRs as proof of a green baseline.
+**Recovery ownership (2026-09-17):** `flext-itpd1.3` coordinates the current
+cycle under `flext-itpd1`; sibling owners are `flext-itpd1.2` (documentation)
+and `flext-itpd1.4` (Make machinery). Beads records execution state, not runtime
+truth. See the [stabilization runbook](../../ways-of-working/stabilization-checkpoint-0.12.md).
+Local/private plans remain session context, never automatic authority or
+publication sources; only actual consumer and gate receipts prove behavior.
+
+**Runtime status (2026-09-17):** fleet stability on `0.12.0-dev` is **unproved**.
+ADR-010's verification contract (zero drift, zero findings, consecutive no-op
+generation) is an acceptance requirement, not a fresh receipt. Do not cite this
+catalog as proof of a green baseline.
 
 New ADRs should be added only when they represent a real architectural decision with an owning implementation path.

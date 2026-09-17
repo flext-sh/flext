@@ -1,12 +1,2 @@
-enabled: true
+enabled: false
 canonical_dir: docs/plans
-sources:
-  - id: kilo-local-plans
-    provider: kilo
-    root: .kilo/plans
-    adapter: files
-    driver: flext-infra-files
-    driver_version: "1"
-    plan_globs:
-      - "**/*.md"
-    publication: plan-artifacts

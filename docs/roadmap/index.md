@@ -1,22 +1,32 @@
 # Roadmap
 
+<!-- TOC START -->
+- No sections found
+<!-- TOC END -->
+
 This directory holds maintained roadmap and runbook documents for the FLEXT
-workspace. It is hand-curated, not generated.
+workspace. The prose is hand-curated; managed TOCs remain generator-owned.
+Documentation validation supplies evidence, not automatic execution status.
 
 ## Current documents
 
 - [Rope-Gen Engine runbook (2026-09-15)](rope-gen-engine-runbook-2026-09-15.md) —
   owner, taxonomy, findings flow and resume procedure for `make gen` /
   `make fix` / `make mod`. **Resume authority updated 2026-09-17:** the
-  canonical route is Gas City Bead `flext-itpd1.2` plus this versioned runbook;
-  earlier workspace-local plans remain dated history.
+  coordinator is Gas City Bead `flext-itpd1.3`; `flext-itpd1.2` owns documentation
+  and `flext-itpd1.4` owns Make machinery. The runbook retains concrete technical
+  Bead references for reconciliation, not unverified completion claims.
 
 ## Operational authority (2026-09-17)
 
-The live execution route for stabilization and modernization is Gas City Bead
-`flext-itpd1.2`. The versioned recovery contracts are this roadmap and
-`docs/ways-of-working/stabilization-checkpoint-0.12.md`. Workspace-local plans
-and addenda carry session evidence only and are intentionally not published.
+Gas City Bead `flext-itpd1.3` under `flext-itpd1` coordinates the current cycle,
+Beads, serialized gates, integration and closure. Sibling workstreams `.2`
+(documentation) and `.4` (Make machinery) deliver bounded owner repairs; workers
+do not merge or close Beads. The versioned recovery contracts are this roadmap
+and the [stabilization runbook](../ways-of-working/stabilization-checkpoint-0.12.md).
+Follow the explicitly approved recovery scope, not the newest local plan.
+Workspace-local plans and addenda remain session context; approval to use them
+does not authorize copying or publication.
 
 Earlier roadmap plans (`1789489334832`, `1789500358999`,
 `1789500368402`, `1789501099301`, `1789564863139`, and the
@@ -26,8 +36,11 @@ not define the resume or execution route.
 
 ## Runtime status
 
-The `0.12.0-dev` line is **not globally green** as of 2026-09-17. The
-canonical cycle (`make setup` → `make gen` → `make mod` → `make gen` ×2 → `make fix` → `make fmt` →
-`make check` → `make test` → `make build`) is the target contract; a proven
-green run on the integration tip is required before any lane reports
-completion. See `docs/ways-of-working/stabilization-checkpoint-0.12.md`.
+Fleet stability on `0.12.0-dev` is **unproved** as of this recovery update.
+The canonical root cycle is `make setup` → `make gen` → `make mod` →
+`make gen` → `make gen` → `make fix` → `make fmt` → `make check` →
+`make test` → `make build`, followed by applicable public runtime and native
+documentation/link validation. Repeated gen/fix/fmt must be no-op, exit-zero
+runs on the unchanged candidate. No new cycle starts before warning-free and
+finding-free fleet receipts on the published integrated SHAs. Later changes
+invalidate affected receipts; this roadmap is not runtime proof.
