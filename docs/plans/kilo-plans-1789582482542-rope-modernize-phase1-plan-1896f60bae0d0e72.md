@@ -1,6 +1,7 @@
 # Plano revisado — modernização runtime-first de `rope-modernize` / `flext-infra`
 
 <!-- TOC START -->
+
 - [Objetivo e critério de término](#objetivo-e-criterio-de-termino)
 - [Reancoragem viva — 2026-09-17](#reancoragem-viva-2026-09-17)
 - [Adendos de continuidade e proveniência](#adendos-de-continuidade-e-proveniencia)
@@ -24,6 +25,7 @@
 - [Evidência obrigatória por fatia](#evidencia-obrigatoria-por-fatia)
 - [Stop conditions reais](#stop-conditions-reais)
 - [Primeiro incremento executável](#primeiro-incremento-executavel)
+
 <!-- TOC END -->
 
 ## Objetivo e critério de término

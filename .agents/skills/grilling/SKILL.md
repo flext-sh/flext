@@ -7,7 +7,7 @@ description: >-
 metadata:
   category: development
   source:
-    repository: 'https://github.com/mattpocock/skills'
+    repository: "https://github.com/mattpocock/skills"
     path: skills/productivity/grilling
     license_path: LICENSE
     commit: 8370e760d0251a3738e006aeacec6d1cb31dd208

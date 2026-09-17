@@ -1,6 +1,7 @@
 # FLEXT Workspace Baseline v0.13.0
 
 <!-- TOC START -->
+
 - [Status](#status)
 - [Purpose](#purpose)
 - [Governed Scope](#governed-scope)
@@ -30,6 +31,7 @@
 - [Expansion Rules](#expansion-rules)
 - [Migration Entry Points](#migration-entry-points)
 - [References](#references)
+
 <!-- TOC END -->
 
 ## Status

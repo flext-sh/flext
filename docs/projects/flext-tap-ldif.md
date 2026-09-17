@@ -1,6 +1,7 @@
 # FLEXT Tap LDIF
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Tap LDIF (`flext-tap-ldif`) is the Singer tap that extracts records from LDIF files into the FLEXT data mesh.
@@ -46,6 +48,7 @@ from flext_tap_ldif import FlextTapLdifService, FlextTapLdifSettings
 settings = FlextTapLdifSettings()  # namespaced under settings.TapLdif.*
 exit_code = FlextTapLdifService().cli_main()
 ```
+
 The `settings.TapLdif.*` group carries `file_path` / `directory_path`, `file_pattern`, `encoding`, `strict_parsing`, and
 `max_file_size_mb` (validated Pydantic fields).
 
@@ -83,7 +86,7 @@ Source lives under `flext-tap-ldif/src/flext_tap_ldif/`:
 - Source: `flext-tap-ldif/src/flext_tap_ldif/`
 - Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
 - Related packages: `flext-ldif`, `flext-dbt-ldif`, `flext-target-ldif`, `flext-meltano`, `flext-core`, `flext-
-  observability`
+observability`
 
 ## Support & issues
 

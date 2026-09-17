@@ -1,6 +1,7 @@
 # FLEXT Utilities Usage Guide
 
 <!-- TOC START -->
+
 - [Overview](#overview)
 - [Utilities Architecture](#utilities-architecture)
   - [Inheritance Hierarchy](#inheritance-hierarchy)
@@ -23,6 +24,7 @@
   - [Example: Add new utility method](#example-add-new-utility-method)
 - [Quality Standards](#quality-standards)
 - [See Also](#see-also)
+
 <!-- TOC END -->
 
 **Last Updated**: 2025-12-28
@@ -62,6 +64,7 @@ matches = u.find_callable(predicates, value)
 
 # ❌ FORBIDDEN - Direct internal imports
 ```
+
 ---
 
 ## Centralized Utilities in flext-core

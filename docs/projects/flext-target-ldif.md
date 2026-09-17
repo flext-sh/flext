@@ -1,6 +1,7 @@
 # FLEXT Target LDIF
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Target LDIF (`flext-target-ldif`) is the Singer target that writes LDIF output. It composes the FLEXT facades with

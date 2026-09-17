@@ -29,11 +29,11 @@ integração `0.12.0-dev` (submódulos + superprojeto).
   (`_release_artifact_archive.py` já corrigido nesta sessão com `p.Result[bool]`.)
 - **Resíduo banido pelo operador**: `config/build-constraints.txt` rastreado em 12 repos
   (api, auth, cli, core, db-oracle, dbt-*, grpc, infra) + não rastreado em ~20;
-  `.waza.yaml.bak.1786122144` rastreado no flext-core; nenhum `*aihub-prior*` encontrado.
-  SSOT já atualizado: projeção removida do `config/codegen.yaml` (managed_files +
+  `.waza.yaml.bak.1786122144` rastreado no flext-core; nenhum `*aihub-prior\*`encontrado.
+  SSOT já atualizado: projeção removida do`config/codegen.yaml` (managed_files +
   templates), seção "Banned residue" adicionada ao gitignore SSOT.
 - **suspeitas de não-idempotência** (validar com evidência na Fase 2):
-  `.gitignore` derivado da topologia *viva* (diferente por worktree), re-render
+  `.gitignore` derivado da topologia _viva_ (diferente por worktree), re-render
   `[MANAGED]` do pyproject vs tomlsort/yamlfix, `metadata.json` do beads, `uv.lock`.
 
 ## Fase 0 — Absorver o WIP (fix-forward, um commit escopado por repo)
@@ -44,7 +44,7 @@ integração `0.12.0-dev` (submódulos + superprojeto).
    Gates antes do commit: ruff + mypy + pyrefly + pytest focado em result.
 2. `flext-infra`: commit escopado
    `fix(release): render build constraints from SSOT; typed archive boundary; exact
-   result families` — incluir `release/*`, `codegen/conform.py`, `config/codegen.yaml`,
+result families` — incluir `release/*`, `codegen/conform.py`, `config/codegen.yaml`,
    `_constants/base.py`, `_models/config.py`, tests (utilities_release,
    policy_fixture_root_tests, test_release_dag, protocol_tests, utilities_git).
 3. Superprojeto: commit escopado

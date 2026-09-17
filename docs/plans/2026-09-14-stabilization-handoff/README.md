@@ -1,6 +1,7 @@
 # FLEXT 0.12.0 — handoff de estabilização em andamento
 
 <!-- TOC START -->
+
 - [1. Estado vigente e próxima ação](#1-estado-vigente-e-proxima-acao)
   - [Atualização das tips de integração](#atualizacao-das-tips-de-integracao)
   - [Workspace e coordenação](#workspace-e-coordenacao)
@@ -20,6 +21,7 @@
 - [5. Crítica da execução e correções de método](#5-critica-da-execucao-e-correcoes-de-metodo)
 - [6. Reconciliação de S0–S8](#6-reconciliacao-de-s0s8)
 - [7. Contribuições históricas e adjudicação pendente](#7-contribuicoes-historicas-e-adjudicacao-pendente)
+
 <!-- TOC END -->
 
 Documento de transferência autorizado, preparado em 2026-09-14 após o encerramento da rodada de testes às 23:25:33 UTC. Não é tracker substituto: a execução permanece em `flext-itpd1.1`, no épico `flext-itpd1`. Estabilização não concluída.
@@ -52,11 +54,11 @@ ausentes: o provisionamento deve consumir os manifestos reais após inicializar
 submódulos. Não congelar grupos em testes nem inventar manifestos para passar gates.
 
 **Atualização do operador, 2026-09-15 00:35–00:36 UTC:** absorver os tips atuais do GitHub nos 32 projetos
- e publicar o resultado nas branches de integração; retirar `uv.lock`, `mise.lock` e o modo `APPLY`
- de produtores, consumidores, templates, testes e orientações vigentes. Não basta retirar rastreamento Git:
- setup ainda cria lock e consumidores ainda o exigem. Locks de journal/coordenação permanecem fora dessa retirada.
- A recomendação anterior de manter fixtures do modo aposentado está superada. A execução segue na bead,
- sem promover WIP como validação ou integração.
+e publicar o resultado nas branches de integração; retirar `uv.lock`, `mise.lock` e o modo `APPLY`
+de produtores, consumidores, templates, testes e orientações vigentes. Não basta retirar rastreamento Git:
+setup ainda cria lock e consumidores ainda o exigem. Locks de journal/coordenação permanecem fora dessa retirada.
+A recomendação anterior de manter fixtures do modo aposentado está superada. A execução segue na bead,
+sem promover WIP como validação ou integração.
 
 O pedido vigente é estabilizar operacionalmente e integrar os **32 projetos** (raiz e 31 membros) por PR com **merge commit** em `0.12.0-dev`, propagar o código integrado ao checkout principal, provar runtime e fechar as beads com evidência. Publicação de WIP preserva trabalho; não comprova pouso, aprovação de gates ou runtime.
 
@@ -104,16 +106,16 @@ precisam adaptação ao merge infra mais recente e revisão antes da geração/s
 
 ### Evidências encerradas
 
-| Operação | Evidência e limite |
-| --- | --- |
+| Operação                 | Evidência e limite                                                                                                                                                                                |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Absorção da base na raiz | `origin/0.12.0-dev` recém-buscado em `206c02ee1d`, incorporado por `04c4d724e84203588dccd2ede473d384c49780bc`; prova base → HEAD retornou 0 naquele candidato. Isso comprova absorção, não pouso. |
-| Absorção no infra | `1a7c784a6ae6be9d6d9125942220d83b8e85e485` incorporado na lane, ancestralidade para HEAD exit 0; não comprova merge de #731 em dev. |
-| `make setup` 61068 | Exit 0; 285 pacotes resolvidos, ldap3 instalado em 2.10.2rc4. |
-| `make gen` 22544 | Exit 0, 32/32; três efeitos lazy-init nos pacotes LDIF `_oid`, `_oud`, `_rfc`. Não houve segunda execução comprovada sobre aquele mesmo candidato. |
-| `make test` 25454 | Concluído às 23:25:33 UTC, **exit 2**, `total=32 completed=32 passed=25 failed=7`. |
-| `make fmt` 3139 | Exit 0, 32/32; formatação do candidato, sem comprovação funcional. |
-| `make gen` 17490 | Exit 0; 32 repositórios renderizados, lazy-init com zero efeitos em 333,32 s e verificações de ponto fixo/receipts concluídas. |
-| `make gen` 69562 | Exit 0; lazy-init com zero efeitos em 220,21 s, receipts e conformidade dos 32 concluídos. |
+| Absorção no infra        | `1a7c784a6ae6be9d6d9125942220d83b8e85e485` incorporado na lane, ancestralidade para HEAD exit 0; não comprova merge de #731 em dev.                                                               |
+| `make setup` 61068       | Exit 0; 285 pacotes resolvidos, ldap3 instalado em 2.10.2rc4.                                                                                                                                     |
+| `make gen` 22544         | Exit 0, 32/32; três efeitos lazy-init nos pacotes LDIF `_oid`, `_oud`, `_rfc`. Não houve segunda execução comprovada sobre aquele mesmo candidato.                                                |
+| `make test` 25454        | Concluído às 23:25:33 UTC, **exit 2**, `total=32 completed=32 passed=25 failed=7`.                                                                                                                |
+| `make fmt` 3139          | Exit 0, 32/32; formatação do candidato, sem comprovação funcional.                                                                                                                                |
+| `make gen` 17490         | Exit 0; 32 repositórios renderizados, lazy-init com zero efeitos em 333,32 s e verificações de ponto fixo/receipts concluídas.                                                                    |
+| `make gen` 69562         | Exit 0; lazy-init com zero efeitos em 220,21 s, receipts e conformidade dos 32 concluídos.                                                                                                        |
 
 Os sete membros com falha na rodada 25454 foram **API, core, infra, quality, tap-oracle-wms, target-oracle e target-oracle-wms**. O despachante completou os 32 projetos; isso não significa que todas as suites internas terminaram. Infra retornou **erro 241** antes de completar sua suite. Seus dois testes de release marcados FAILED não deixaram traceback final nem JUnit da execução interrompida; causa ainda desconhecida.
 
@@ -171,40 +173,40 @@ O restante da frota continua em execução; nenhuma contagem final ou integraç�
 
 Esta tabela é navegação, não atestado de merge ou consulta atual de checks.
 
-| Repositório | PR |
-| --- | --- |
-| flext | [#240](https://github.com/flext-sh/flext/pull/240) |
-| flext-api | [#99](https://github.com/flext-sh/flext-api/pull/99) |
-| flext-auth | [#100](https://github.com/flext-sh/flext-auth/pull/100) |
-| flext-cli | [#168](https://github.com/flext-sh/flext-cli/pull/168) |
-| flext-core | [#474](https://github.com/flext-sh/flext-core/pull/474) |
-| flext-db-oracle | [#101](https://github.com/flext-sh/flext-db-oracle/pull/101) |
-| flext-dbt-ldap | [#101](https://github.com/flext-sh/flext-dbt-ldap/pull/101) |
-| flext-dbt-ldif | [#110](https://github.com/flext-sh/flext-dbt-ldif/pull/110) |
-| flext-dbt-oracle | [#101](https://github.com/flext-sh/flext-dbt-oracle/pull/101) |
-| flext-dbt-oracle-wms | [#101](https://github.com/flext-sh/flext-dbt-oracle-wms/pull/101) |
-| flext-grpc | [#96](https://github.com/flext-sh/flext-grpc/pull/96) |
-| flext-infra | [#731](https://github.com/flext-sh/flext-infra/pull/731) |
-| flext-ldap | [#114](https://github.com/flext-sh/flext-ldap/pull/114) |
-| flext-ldif | [#110](https://github.com/flext-sh/flext-ldif/pull/110) |
-| flext-meltano | [#113](https://github.com/flext-sh/flext-meltano/pull/113) |
-| flext-observability | [#109](https://github.com/flext-sh/flext-observability/pull/109) |
-| flext-oracle-oic | [#100](https://github.com/flext-sh/flext-oracle-oic/pull/100) |
-| flext-oracle-wms | [#97](https://github.com/flext-sh/flext-oracle-wms/pull/97) |
-| flext-plugin | [#99](https://github.com/flext-sh/flext-plugin/pull/99) |
-| flext-quality | [#170](https://github.com/flext-sh/flext-quality/pull/170) |
-| flext-tap-ldap | [#99](https://github.com/flext-sh/flext-tap-ldap/pull/99) |
-| flext-tap-ldif | [#102](https://github.com/flext-sh/flext-tap-ldif/pull/102) |
-| flext-tap-oracle | [#94](https://github.com/flext-sh/flext-tap-oracle/pull/94) |
-| flext-tap-oracle-oic | [#97](https://github.com/flext-sh/flext-tap-oracle-oic/pull/97) |
-| flext-tap-oracle-wms | [#100](https://github.com/flext-sh/flext-tap-oracle-wms/pull/100) |
-| flext-target-ldap | [#100](https://github.com/flext-sh/flext-target-ldap/pull/100) |
-| flext-target-ldif | [#103](https://github.com/flext-sh/flext-target-ldif/pull/103) |
-| flext-target-oracle | [#105](https://github.com/flext-sh/flext-target-oracle/pull/105) |
+| Repositório             | PR                                                                   |
+| ----------------------- | -------------------------------------------------------------------- |
+| flext                   | [#240](https://github.com/flext-sh/flext/pull/240)                   |
+| flext-api               | [#99](https://github.com/flext-sh/flext-api/pull/99)                 |
+| flext-auth              | [#100](https://github.com/flext-sh/flext-auth/pull/100)              |
+| flext-cli               | [#168](https://github.com/flext-sh/flext-cli/pull/168)               |
+| flext-core              | [#474](https://github.com/flext-sh/flext-core/pull/474)              |
+| flext-db-oracle         | [#101](https://github.com/flext-sh/flext-db-oracle/pull/101)         |
+| flext-dbt-ldap          | [#101](https://github.com/flext-sh/flext-dbt-ldap/pull/101)          |
+| flext-dbt-ldif          | [#110](https://github.com/flext-sh/flext-dbt-ldif/pull/110)          |
+| flext-dbt-oracle        | [#101](https://github.com/flext-sh/flext-dbt-oracle/pull/101)        |
+| flext-dbt-oracle-wms    | [#101](https://github.com/flext-sh/flext-dbt-oracle-wms/pull/101)    |
+| flext-grpc              | [#96](https://github.com/flext-sh/flext-grpc/pull/96)                |
+| flext-infra             | [#731](https://github.com/flext-sh/flext-infra/pull/731)             |
+| flext-ldap              | [#114](https://github.com/flext-sh/flext-ldap/pull/114)              |
+| flext-ldif              | [#110](https://github.com/flext-sh/flext-ldif/pull/110)              |
+| flext-meltano           | [#113](https://github.com/flext-sh/flext-meltano/pull/113)           |
+| flext-observability     | [#109](https://github.com/flext-sh/flext-observability/pull/109)     |
+| flext-oracle-oic        | [#100](https://github.com/flext-sh/flext-oracle-oic/pull/100)        |
+| flext-oracle-wms        | [#97](https://github.com/flext-sh/flext-oracle-wms/pull/97)          |
+| flext-plugin            | [#99](https://github.com/flext-sh/flext-plugin/pull/99)              |
+| flext-quality           | [#170](https://github.com/flext-sh/flext-quality/pull/170)           |
+| flext-tap-ldap          | [#99](https://github.com/flext-sh/flext-tap-ldap/pull/99)            |
+| flext-tap-ldif          | [#102](https://github.com/flext-sh/flext-tap-ldif/pull/102)          |
+| flext-tap-oracle        | [#94](https://github.com/flext-sh/flext-tap-oracle/pull/94)          |
+| flext-tap-oracle-oic    | [#97](https://github.com/flext-sh/flext-tap-oracle-oic/pull/97)      |
+| flext-tap-oracle-wms    | [#100](https://github.com/flext-sh/flext-tap-oracle-wms/pull/100)    |
+| flext-target-ldap       | [#100](https://github.com/flext-sh/flext-target-ldap/pull/100)       |
+| flext-target-ldif       | [#103](https://github.com/flext-sh/flext-target-ldif/pull/103)       |
+| flext-target-oracle     | [#105](https://github.com/flext-sh/flext-target-oracle/pull/105)     |
 | flext-target-oracle-oic | [#100](https://github.com/flext-sh/flext-target-oracle-oic/pull/100) |
 | flext-target-oracle-wms | [#101](https://github.com/flext-sh/flext-target-oracle-wms/pull/101) |
-| flext-tests | [#110](https://github.com/flext-sh/flext-tests/pull/110) |
-| flext-web | [#92](https://github.com/flext-sh/flext-web/pull/92) |
+| flext-tests             | [#110](https://github.com/flext-sh/flext-tests/pull/110)             |
+| flext-web               | [#92](https://github.com/flext-sh/flext-web/pull/92)                 |
 
 As revisões independentes dos deltas de core/tests/Target Oracle, Quality/Web/Target LDAP e infra/Target WMS terminaram sem achados de código bloqueantes, condicionadas aos gates atuais. A revisão identificou documentação de herança em Target Oracle a alinhar. Nenhuma revisão afirmou sucesso funcional ou aprovação de CI.
 
@@ -309,17 +311,17 @@ Todos ficam em `docs/plans/2026-09-14-stabilization-handoff/`. A revisão deste 
 
 ## 6. Reconciliação de S0–S8
 
-| Fatia | Estado e limite de conclusão |
-| --- | --- |
-| S0/S1/A4/A5 | Entregas históricas #727 e membros registradas. Revalidar preservação após absorções; não repetir merges já incorporados como trabalho novo. |
-| S2 | Cutover completo ainda não comprovado. O inventário histórico encontrou gascity_enabled, WorkspaceBeadsServerSpec, beads_enabled, ledger_id e BeadsWorkspaceEnvironmentSpec. Conferir owner atual antes de remover; template parcial `95baa0c0d` não é entrega completa. |
-| S2b | Inventariar runtime externo retirado e preservar CI/actions próprios autorizados. Não exigir zero global de `.github`, GithubWorkflow ou GITHUB_* quando a CI continua parte do produto. |
-| S3 | Quatro regiões AGENTS ainda sem implementação/validação completa comprovada nesta sessão. Preservar conteúdo externo conforme fronteira autorizada. |
-| S4 | Custom gates têm outro responsável e estão excluídos desta implementação. Registrar resultados reais e coordenação, sem duplicar trabalho nem chamá-los de verdes. |
-| S5 | Bootstrap perdeu argumento vazio da retirada de APPLY. Restante precisa respeitar execução estrita: não adotar plano antigo que converte erro em warning ou pula repositório. |
-| S6 | Geração/locks/checkpoints avançaram; candidato final ainda precisa gates, integração e runtime nos 32. |
-| S7 | Gitlinks de merge, documentação, scripts/pacote e coordenação externa devem corresponder ao código integrado. Não publicar repin como se etapa operacional ausente estivesse concluída. |
-| S8 | Fechamento depende de gates atuais, merge dos 32, propagação, runtime, adjudicação de PRs e quatro fontes nas beads. Retirada exige prova recente e preservação. |
+| Fatia       | Estado e limite de conclusão                                                                                                                                                                                                                                             |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| S0/S1/A4/A5 | Entregas históricas #727 e membros registradas. Revalidar preservação após absorções; não repetir merges já incorporados como trabalho novo.                                                                                                                             |
+| S2          | Cutover completo ainda não comprovado. O inventário histórico encontrou gascity_enabled, WorkspaceBeadsServerSpec, beads_enabled, ledger_id e BeadsWorkspaceEnvironmentSpec. Conferir owner atual antes de remover; template parcial `95baa0c0d` não é entrega completa. |
+| S2b         | Inventariar runtime externo retirado e preservar CI/actions próprios autorizados. Não exigir zero global de `.github`, GithubWorkflow ou GITHUB\_\* quando a CI continua parte do produto.                                                                               |
+| S3          | Quatro regiões AGENTS ainda sem implementação/validação completa comprovada nesta sessão. Preservar conteúdo externo conforme fronteira autorizada.                                                                                                                      |
+| S4          | Custom gates têm outro responsável e estão excluídos desta implementação. Registrar resultados reais e coordenação, sem duplicar trabalho nem chamá-los de verdes.                                                                                                       |
+| S5          | Bootstrap perdeu argumento vazio da retirada de APPLY. Restante precisa respeitar execução estrita: não adotar plano antigo que converte erro em warning ou pula repositório.                                                                                            |
+| S6          | Geração/locks/checkpoints avançaram; candidato final ainda precisa gates, integração e runtime nos 32.                                                                                                                                                                   |
+| S7          | Gitlinks de merge, documentação, scripts/pacote e coordenação externa devem corresponder ao código integrado. Não publicar repin como se etapa operacional ausente estivesse concluída.                                                                                  |
+| S8          | Fechamento depende de gates atuais, merge dos 32, propagação, runtime, adjudicação de PRs e quatro fontes nas beads. Retirada exige prova recente e preservação.                                                                                                         |
 
 Cada fatia implementada muda seu próprio candidato e deve ser validada e pousada por PR com merge commit. S8 consolida essas provas; não estreia os testes. Enviar o SHA da S2 completa à sessão ai-hub somente após pouso e dentro da autorização de comunicação existente.
 

@@ -1,6 +1,7 @@
 # ADR-015: Consumer Consumption Law (R1-R6)
 
 <!-- TOC START -->
+
 - [Status](#status)
 - [Context](#context)
 - [Decision](#decision)
@@ -16,6 +17,7 @@
   - [Negative](#negative)
 - [Implementation](#implementation)
 - [References](#references)
+
 <!-- TOC END -->
 
 ## Status
@@ -104,17 +106,17 @@ We ratify the **Consumer Consumption Law (R1-R6)** as the canonical standard for
 
 ## Implementation
 
-| Workstream | Deliverable | Bead |
-|------------|-------------|------|
-| WS-F1 | R1 grammar + SSOT derivation cutover | flext-ssnc7.1 ✓ |
-| WS-F1.v | Synthetic RED/GREEN validation | flext-ssnc7.1.1 |
-| WS-F2 | Consumer+family structural scan | flext-ssnc7.2 |
-| WS-F2.v | Planted structural twin RED proof | flext-ssnc7.2.1 |
-| WS-F3 | consumption-law.md + ADR-015 + ADR index repair | flext-ssnc7.3 |
-| WS-F4 | `[tool.flext.project]` + budget gate + atomic append | flext-ssnc7.4 |
-| WS-F5 | 0.12.x tags + AI_HUB_CONSUMER versioned | flext-ssnc7.5 |
-| WS-F6 | Contribution path law | flext-ssnc7.6 |
-| WS-F7 | ADR bijection + owner-resolution gates + three-file gate docs | flext-ssnc7.7 |
+| Workstream | Deliverable                                                   | Bead            |
+| ---------- | ------------------------------------------------------------- | --------------- |
+| WS-F1      | R1 grammar + SSOT derivation cutover                          | flext-ssnc7.1 ✓ |
+| WS-F1.v    | Synthetic RED/GREEN validation                                | flext-ssnc7.1.1 |
+| WS-F2      | Consumer+family structural scan                               | flext-ssnc7.2   |
+| WS-F2.v    | Planted structural twin RED proof                             | flext-ssnc7.2.1 |
+| WS-F3      | consumption-law.md + ADR-015 + ADR index repair               | flext-ssnc7.3   |
+| WS-F4      | `[tool.flext.project]` + budget gate + atomic append          | flext-ssnc7.4   |
+| WS-F5      | 0.12.x tags + AI_HUB_CONSUMER versioned                       | flext-ssnc7.5   |
+| WS-F6      | Contribution path law                                         | flext-ssnc7.6   |
+| WS-F7      | ADR bijection + owner-resolution gates + three-file gate docs | flext-ssnc7.7   |
 
 ## References
 

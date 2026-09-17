@@ -1,9 +1,11 @@
 # Adendos — rope-modernize / flext-infra
 
 <!-- TOC START -->
+
 - [Convenção de evidência](#convencao-de-evidencia)
 - [Índice](#indice)
 - [Âncoras atuais](#ancoras-atuais)
+
 <!-- TOC END -->
 
 Estes adendos complementam o plano coordenador local

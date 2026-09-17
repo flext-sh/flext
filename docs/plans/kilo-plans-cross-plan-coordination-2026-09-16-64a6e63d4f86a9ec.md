@@ -1,22 +1,24 @@
 # Coordenação entre planos e agentes — 2026-09-16
 
 <!-- TOC START -->
+
 - [Planos relacionados](#planos-relacionados)
 - [Decisões harmonizadas](#decisoes-harmonizadas)
 - [Divisão de trabalho cooperativa](#divisao-de-trabalho-cooperativa)
 - [Critérios de aceite de resultados de outros agentes](#criterios-de-aceite-de-resultados-de-outros-agentes)
 - [Próximo alinhamento obrigatório](#proximo-alinhamento-obrigatorio)
+
 <!-- TOC END -->
 
 ## Planos relacionados
 
-| Plano | Papel aceito | Limite |
-|---|---|---|
-| `../1789582669805-flext-infra-ruff-codemod-repair.md` | autocrítica fleet-wide e histórico Ruff | não é estado runtime atual |
-| `../1789564109553-rope-modernize-execution-plan.md` | evidência histórica de R0, PRs e ondas | SHAs/contagens exigem reread |
-| `../1789565900000-wip-hier-refactor.md` | produto separado para o operador de frota | seu refactor não bloqueia flext-infra |
-| `~/flext/.kilo/plans/1789582508056-flext-infra-runtime-modernization.md` | plano cooperativo do checkout principal | contém WIP `_lazy_analysis` que não existe nesta lane |
-| `~/flext/.kilo/plans/2026-09-16-flext-infra-continuation-plan.md` | inventário detalhado de Beads, testes e conform | evidência histórica, revalidar no tip |
+| Plano                                                                    | Papel aceito                                    | Limite                                                |
+| ------------------------------------------------------------------------ | ----------------------------------------------- | ----------------------------------------------------- |
+| `../1789582669805-flext-infra-ruff-codemod-repair.md`                    | autocrítica fleet-wide e histórico Ruff         | não é estado runtime atual                            |
+| `../1789564109553-rope-modernize-execution-plan.md`                      | evidência histórica de R0, PRs e ondas          | SHAs/contagens exigem reread                          |
+| `../1789565900000-wip-hier-refactor.md`                                  | produto separado para o operador de frota       | seu refactor não bloqueia flext-infra                 |
+| `~/flext/.kilo/plans/1789582508056-flext-infra-runtime-modernization.md` | plano cooperativo do checkout principal         | contém WIP `_lazy_analysis` que não existe nesta lane |
+| `~/flext/.kilo/plans/2026-09-16-flext-infra-continuation-plan.md`        | inventário detalhado de Beads, testes e conform | evidência histórica, revalidar no tip                 |
 
 ## Decisões harmonizadas
 

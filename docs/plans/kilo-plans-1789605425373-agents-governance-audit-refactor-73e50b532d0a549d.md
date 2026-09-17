@@ -1,6 +1,7 @@
 # Plan: Audit and Refactor Global Root Governance Architecture
 
 <!-- TOC START -->
+
 - [Critical Constraints](#critical-constraints)
 - [Audit Findings Summary](#audit-findings-summary)
   - [C1 — Precedence Contradiction (CRITICAL)](#c1-precedence-contradiction-critical)
@@ -23,6 +24,7 @@
 - [Content Mapping: AGENTS.md Inline Rules → Canonical Rule Files](#content-mapping-agentsmd-inline-rules-canonical-rule-files)
 - [Validation](#validation)
 - [Risk Mitigation](#risk-mitigation)
+
 <!-- TOC END -->
 
 ## Critical Constraints
@@ -40,6 +42,7 @@
 ## Audit Findings Summary
 
 ### C1 — Precedence Contradiction (CRITICAL)
+
 Three different precedence hierarchies:
 
 - `AGENTS.md` line 17: `USER REQUEST > BEADS > ADRs > SKILLs > DOCS > default`
@@ -96,6 +99,7 @@ Three different precedence hierarchies:
 - No rule index/manifest in `rules/` (no `rules/index.md` or `rules/README.md`)
 
 ### C9 — Link Validation
+
 All links from AGENTS.md resolve: `VALIDATE_ON_CHANGE.md` ✓, `README.md` ✓, `rules/` ✓, `skills/` ✓, `docs/adr/README.md` ✓, `rules/coordination/gascity.md` ✓, `rules/architecture/internal-clean-architecture.md` ✓, `rules/workflow/full-standards-conformance-sweep.md` ✓. No broken links found in root files.
 
 ## Refactoring Strategy
@@ -141,6 +145,7 @@ All links from AGENTS.md resolve: `VALIDATE_ON_CHANGE.md` ✓, `README.md` ✓, 
 Create an index that maps every rule category to its files and summarizes scope. This serves as the "owner manifest that directly structures progressive disclosure" — it tells agents which category owns which domain, enables targeted loading, and prevents inline duplication.
 
 Structure:
+
 ```
 # Rules Index
 
@@ -169,29 +174,29 @@ The refactoring only touches root governance architecture: `AGENTS.md`, `VALIDAT
 
 ## Content Mapping: AGENTS.md Inline Rules → Canonical Rule Files
 
-| AGENTS.md content (lines) | Canonical location | Action |
-|---|---|---|
-| Lines 1-37 (Inviolable Law Prelude) | Stay in AGENTS.md | Keep |
-| Lines 50-62 (Public contract) | Stay in AGENTS.md | Keep, condense |
-| Lines 64-71 (Dev guidance) | Stay in AGENTS.md | Condense + link to `rules/` |
-| Lines 87-101 (FLEXT project law) | `rules/architecture/internal-clean-architecture.md` | Remove inline → link |
-| Lines 103-111 (Lifecycle) | Stay in AGENTS.md | Condense + link |
-| Line 17 (Precedence) | `rules/coordination/operator-precedence.md` | Replace with citation |
-| Lines 113-126 (Operator directive) | `VALIDATE_ON_CHANGE.md` | Remove → link |
-| Lines 128-137 (Fix-forward, Pouso) | `rules/coordination/fix-forward-collaboration.md` | Remove → link |
-| Lines 138 (Resíduo zero) | `rules/runtime/zero-residue.md` | Remove → link |
-| Lines 140-141 (Gate bare) | `rules/runtime/strict-execution.md` | Remove → link |
-| Lines 145-153 (Validate-on-change) | `rules/coordination/validate-on-change.md` | Remove → link |
-| Lines 154-158 (Nunca deduze brief) | `rules/coordination/never-deduce.md` | Remove → link |
-| Lines 160-165 (Nunca com pressa) | `rules/coordination/wip-persistence.md` | Remove → link |
-| Lines 166-171 (Plano aprovado, P0) | `rules/coordination/plan-topic-monopoly.md` + `rules/coordination/lane-adoption.md` | Remove → link |
-| Lines 172-175 (Green/green) | `rules/coordination/green-green-landing.md` | Remove → link |
-| Lines 176-178 (Subagentes em massa) | `rules/coordination/parallel-delegation.md` + `rules/coordination/fanout-qa-publication.md` | Remove → link |
-| Lines 179-182 (Tipagem strict) | `rules/ethics/strict-typed-quality.md` | Remove → link |
-| Lines 183-189 (Full-standards) | `rules/workflow/full-standards-conformance-sweep.md` | Already linked, remove inline summary |
-| Lines 191-198 (Locks de frota) | `rules/architecture/checkout-topology.md` (cross-link) | Remove → link to rules/architecture/ |
-| Lines 199-204 (Nunca deduze expanded) | `rules/coordination/never-deduce.md` | Remove → link (dedup with line 154) |
-| Lines 205-210 (Ciclo completo) | `rules/coordination/full-landing-cycle.md` | Remove → link |
+| AGENTS.md content (lines)             | Canonical location                                                                          | Action                                |
+| ------------------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------- |
+| Lines 1-37 (Inviolable Law Prelude)   | Stay in AGENTS.md                                                                           | Keep                                  |
+| Lines 50-62 (Public contract)         | Stay in AGENTS.md                                                                           | Keep, condense                        |
+| Lines 64-71 (Dev guidance)            | Stay in AGENTS.md                                                                           | Condense + link to `rules/`           |
+| Lines 87-101 (FLEXT project law)      | `rules/architecture/internal-clean-architecture.md`                                         | Remove inline → link                  |
+| Lines 103-111 (Lifecycle)             | Stay in AGENTS.md                                                                           | Condense + link                       |
+| Line 17 (Precedence)                  | `rules/coordination/operator-precedence.md`                                                 | Replace with citation                 |
+| Lines 113-126 (Operator directive)    | `VALIDATE_ON_CHANGE.md`                                                                     | Remove → link                         |
+| Lines 128-137 (Fix-forward, Pouso)    | `rules/coordination/fix-forward-collaboration.md`                                           | Remove → link                         |
+| Lines 138 (Resíduo zero)              | `rules/runtime/zero-residue.md`                                                             | Remove → link                         |
+| Lines 140-141 (Gate bare)             | `rules/runtime/strict-execution.md`                                                         | Remove → link                         |
+| Lines 145-153 (Validate-on-change)    | `rules/coordination/validate-on-change.md`                                                  | Remove → link                         |
+| Lines 154-158 (Nunca deduze brief)    | `rules/coordination/never-deduce.md`                                                        | Remove → link                         |
+| Lines 160-165 (Nunca com pressa)      | `rules/coordination/wip-persistence.md`                                                     | Remove → link                         |
+| Lines 166-171 (Plano aprovado, P0)    | `rules/coordination/plan-topic-monopoly.md` + `rules/coordination/lane-adoption.md`         | Remove → link                         |
+| Lines 172-175 (Green/green)           | `rules/coordination/green-green-landing.md`                                                 | Remove → link                         |
+| Lines 176-178 (Subagentes em massa)   | `rules/coordination/parallel-delegation.md` + `rules/coordination/fanout-qa-publication.md` | Remove → link                         |
+| Lines 179-182 (Tipagem strict)        | `rules/ethics/strict-typed-quality.md`                                                      | Remove → link                         |
+| Lines 183-189 (Full-standards)        | `rules/workflow/full-standards-conformance-sweep.md`                                        | Already linked, remove inline summary |
+| Lines 191-198 (Locks de frota)        | `rules/architecture/checkout-topology.md` (cross-link)                                      | Remove → link to rules/architecture/  |
+| Lines 199-204 (Nunca deduze expanded) | `rules/coordination/never-deduce.md`                                                        | Remove → link (dedup with line 154)   |
+| Lines 205-210 (Ciclo completo)        | `rules/coordination/full-landing-cycle.md`                                                  | Remove → link                         |
 
 ## Validation
 
@@ -199,7 +204,7 @@ The refactoring only touches root governance architecture: `AGENTS.md`, `VALIDAT
 2. **Link validation**: Every markdown link in rewritten AGENTS.md resolves to an existing file
 3. **No data loss**: Every rule cited from AGENTS.md exists in its canonical `rules/` target — verify by reading each target file
 4. **Precedence consistency**: Search all `.md` files in `rules/` and root for "precedence" / "Precedência" — confirm only `rules/coordination/operator-precedence.md` states the hierarchy; others cite it
-5. **No duplication**: Grep for "NUNCA.*deduzir" across `AGENTS.md` and `VALIDATE_ON_CHANGE.md` — should appear ≤1 time each after refactor
+5. **No duplication**: Grep for "NUNCA.\*deduzir" across `AGENTS.md` and `VALIDATE_ON_CHANGE.md` — should appear ≤1 time each after refactor
 6. **File size**: Final `AGENTS.md` ~80 lines (prelude 37 + essential brief + links)
 7. **Config manifests**: Verify `config/governance.json` bootstrap rules still resolve to existing files: `rtk python -c "import json; d=json.load(open('config/governance.json')); [print(x) for x in d['delivery']['guarantees']]"`
 8. **Rule README**: Verify `rules/README.md` index covers all `rules/*/*.md` files

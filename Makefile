@@ -33,12 +33,6 @@ GEN_INIT_ONLY := Y
 export GEN_INIT_ONLY
 endif
 endif
-ifeq ($(filter command line override,$(origin GEN_INIT_ONLY)),)
-ifneq ($(filter initialize,$(MAKECMDGOALS)),)
-GEN_INIT_ONLY := Y
-export GEN_INIT_ONLY
-endif
-endif
 
 # === SECTION: project identity (managed) ===
 # Source: config:dist / config:make_profile / config:repository_root_rel / config:uv_link_mode
@@ -206,7 +200,8 @@ export FLEXT_INFRA_PYTHON UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH
 .PHONY: _bootstrap_setup_tools
 
 _bootstrap_setup_tools:
-	@set -eu; \
+	# The lifecycle invokes recursive make through mise, so preserve jobserver FDs.
+	+@set -eu; \
 	uv_selector="latest"; \
 	if [ ! -f "$(SETUP_MISE)" ]; then \
 		printf 'ERROR: missing generated mise launcher: %s; run make gen\n' "$(SETUP_MISE)" >&2; \
@@ -851,7 +846,6 @@ _builtin-help:
 # === SECTION: submodule setup (managed) ===
 # Source: template (submodule_setup_recipe.j2)
 # Computed: workspace uses MANAGED_GITLINKS from config; standalone discovers
-# Computed: workspace uses MANAGED_GITLINKS from config; standalone discovers
 #           submodules with flext-managed=true from .gitmodules at runtime.
 # Rule: setup PROVISIONS an absent governed gitlink and VERIFIES a present one.
 #       An absent checkout holds no work, so setup initializes it at the recorded
@@ -1055,7 +1049,7 @@ _builtin-self-check: _builtin_require_environment
 		printf 'ERROR: no check gates remain after CI=Y filtering\n' >&2; \
 		exit 2; \
 	fi; \
-	$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gates "$$gates" --projects . --apply
+	$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gates "$$gates" --projects .
 
 _builtin-self-fmt: _builtin_require_environment
 	@$(UV_RUN) ruff format --preview $(RUFF_PATHS)
@@ -1063,6 +1057,9 @@ _builtin-self-fmt: _builtin_require_environment
 
 _builtin-self-fix: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gates "lint,markdown,canonical-alias,smells" --projects . --apply --report-findings
+
+_builtin-self-fix-enforcement: _builtin_require_environment
+	@$(PROJECT_FLEXT_INFRA) check fix-enforcement --repository-root "$(PROJECT_ROOT)" --safe-only --apply
 
 _builtin-self-build:
 	@$(UV) build --project "$(PROJECT_ROOT)"
@@ -1075,8 +1072,8 @@ _builtin-self-docs: _builtin_docs_all
 _builtin_build_artifacts:
 	@$(WORKSPACE_ORCHESTRATE) --verb build $(WORKSPACE_PROJECT_ARGS)
 
-# Check applies supported fixes and fails while findings remain. The workspace
-# delegates the same operation to each member; CI=Y keeps
+# Check validates without writing. `fix` and `fmt` own supported corrections.
+# The workspace delegates the same operation to each member; CI=Y keeps
 # make.ci.check_gates in each generated member handler.
 _builtin_check_all: _builtin_require_environment
 	@$(WORKSPACE_ORCHESTRATE) --verb check $(WORKSPACE_PROJECT_ARGS)

@@ -1,6 +1,7 @@
 # FLEXT Worker Lane Contract
 
 <!-- TOC START -->
+
 - [Canonical authorities](#canonical-authorities)
 - [1. One lane, one bead, one worktree](#1-one-lane-one-bead-one-worktree)
 - [2. Gates only through root Make verbs](#2-gates-only-through-root-make-verbs)
@@ -13,7 +14,7 @@
   - [8.1 Final worker lane](#81-final-worker-lane)
   - [8.2 Updated worker lane before merge](#82-updated-worker-lane-before-merge)
   - [8.3 Original target after integration](#83-original-target-after-integration)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 Every light worker owns exactly one bead in one branch and one dedicated worktree.
 Read the canonical authorities first; this file only adds lane discipline.
@@ -75,7 +76,7 @@ Done means all of the following:
 - Nothing reaches `0.12.0-dev` except through the lane's own reviewed PR: one
   bead -> one branch -> PR against `0.12.0-dev` -> green native gates -> PR
   Sheriff gate (`~/.agents/skills/tool/pr-sheriff/scripts/pr_triage.py gate
-  <owner/repo> <pr> --base 0.12.0-dev --head <oid>`) -> independent review or
+<owner/repo> <pr> --base 0.12.0-dev --head <oid>`) -> independent review or
   operator-authorized administrative merge -> merge commit -> post-merge
   runtime proof -> bead evidence -> branch cleanup.
 

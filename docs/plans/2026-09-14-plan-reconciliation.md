@@ -9,6 +9,7 @@ work_item: flext-ro6mj
 # Plan reconciliation and fixed Make contracts
 
 <!-- TOC START -->
+
 - [Audit and handoff amendment](#audit-and-handoff-amendment)
 - [Approved outcome](#approved-outcome)
 - [Sequential delivery](#sequential-delivery)
@@ -17,6 +18,7 @@ work_item: flext-ro6mj
 - [Collection contract](#collection-contract)
 - [Reconciliation and ADR consolidation](#reconciliation-and-adr-consolidation)
 - [Execution boundary and acceptance](#execution-boundary-and-acceptance)
+
 <!-- TOC END -->
 
 ## Audit and handoff amendment

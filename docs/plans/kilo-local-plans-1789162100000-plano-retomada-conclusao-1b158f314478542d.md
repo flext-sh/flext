@@ -5,14 +5,14 @@
 
 ## Onde estamos (reavaliação com evidência)
 
-| Fase | Bead | Estado | Evidência |
-|---|---|---|---|
-| F0 estrutura+correlação | flext-cpzjo.1 | ✅ CLOSED | lint 0 ×3 trackers; 322/134/33 com rota |
-| F1 remote-ização+host | flext-cpzjo.2 | ✅ CLOSED | 9 worktrees → PRs → removidas c/ 3 provas; f73ii pousada (#682) |
-| F2 fila de pousos | flext-cpzjo.3 | 🔶 ~60% | budget resolvido na raiz (36 regressões); #689 MERGED; #688/#225 OPEN; gen exit 0 alcançado 1×; 31+11 absorções membro pousadas; rollups 219-222 pousados |
-| F3 crg | flext-cpzjo.4 | ⏳ bloqueada por F2 | — |
-| F4 piloto | flext-cpzjo.5 | ⏳ bloqueada | — |
-| F5 universal | flext-cpzjo.6 | ⏳ bloqueada | — |
+| Fase                    | Bead          | Estado              | Evidência                                                                                                                                                 |
+| ----------------------- | ------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F0 estrutura+correlação | flext-cpzjo.1 | ✅ CLOSED           | lint 0 ×3 trackers; 322/134/33 com rota                                                                                                                   |
+| F1 remote-ização+host   | flext-cpzjo.2 | ✅ CLOSED           | 9 worktrees → PRs → removidas c/ 3 provas; f73ii pousada (#682)                                                                                           |
+| F2 fila de pousos       | flext-cpzjo.3 | 🔶 ~60%             | budget resolvido na raiz (36 regressões); #689 MERGED; #688/#225 OPEN; gen exit 0 alcançado 1×; 31+11 absorções membro pousadas; rollups 219-222 pousados |
+| F3 crg                  | flext-cpzjo.4 | ⏳ bloqueada por F2 | —                                                                                                                                                         |
+| F4 piloto               | flext-cpzjo.5 | ⏳ bloqueada        | —                                                                                                                                                         |
+| F5 universal            | flext-cpzjo.6 | ⏳ bloqueada        | —                                                                                                                                                         |
 
 Bloqueios ativos (provados): P1 deriva ambiente-dependente do gen-check (exclusões por filesystem,
 journal por conteúdo, lock global-host, hash em projection) · loc-cap ×5 · B404 · 224 erros tipagem root.
@@ -37,6 +37,7 @@ journal por conteúdo, lock global-host, hash em projection) · loc-cap ×5 · B
 - **Gate:** `make check` no infra sem B404; PR #688 só vermelho por loc-cap
 
 ### SR3-SR5 — P2 loc-cap ×5 (split estrutural via `make mod`)
+
 Ordem: `codegen.py` (piloto) → `rope_analysis.py` → `test_codegen_conform.py` → `conform.py` → `_models/config.py`
 
 - Cada split: crg impact → make mod → gen ×2 → facade-contract test (exports idênticos) → check → PR
@@ -61,6 +62,7 @@ Ordem: `codegen.py` (piloto) → `rope_analysis.py` → `test_codegen_conform.py
 - Cada unidade: bead + 4 evidências + gates no SHA merged; divergência plano×realidade conserta o PLANO
 
 ## Próxima ação imediata (SR1.1)
+
 `flext-infra`: localizar a derivação das exclusões (consumidor de `state_directory_name` no render de
 `.vscode/settings.json`/`.gitignore`), mover para leitura do SSOT declarado, regressão com/sem estado
 ambiente, PR — destrava o ciclo render-absorb do #225 e todo o resto da fila.

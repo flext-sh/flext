@@ -1,6 +1,7 @@
 # ADR-004 — Generated Make and codegen SSOT owned by `flext-infra`
 
 <!-- TOC START -->
+
 - [Context](#context)
 - [Decision](#decision)
   - [1. flext-infra codegen conform is the sole owner](#1-flext-infra-codegen-conform-is-the-sole-owner)
@@ -10,7 +11,9 @@
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
+
 <!-- TOC END -->
+
 - **Status:** Accepted (replaces the former Make registry decision)
 - **Date:** 2026-06-28
 - **Amended:** 2026-07-11
@@ -87,30 +90,30 @@ and alternative dispatch routes are invalid.
 
 The meanings are fixed (from the root `Makefile` `_builtin-help`):
 
-| Verb | Responsibility |
-| --- | --- |
-| `setup` | provision the pinned toolchain and environment |
-| `deps` | upgrade, lock, and conform every declared dependency |
-| `build` | build the project distribution artifacts |
-| `check` | run static and policy gates |
-| `test` | execute real behavior tests through the testmon cache |
-| `fmt` | apply ruff format + lint autofix |
-| `fix` | apply ruff check + all configured safe corrections |
+| Verb              | Responsibility                                                 |
+| ----------------- | -------------------------------------------------------------- |
+| `setup`           | provision the pinned toolchain and environment                 |
+| `deps`            | upgrade, lock, and conform every declared dependency           |
+| `build`           | build the project distribution artifacts                       |
+| `check`           | run static and policy gates                                    |
+| `test`            | execute real behavior tests through the testmon cache          |
+| `fmt`             | apply ruff format + lint autofix                               |
+| `fix`             | apply ruff check + all configured safe corrections             |
 | `fix-enforcement` | apply the safe fix actions declared by the enforcement catalog |
-| `audit` | inspect ownership, dependency, and generated-state health |
-| `status` | report the resolved runtime and repository state |
-| `docs` | generate, repair, build, and validate documentation |
-| `clean` | remove every declared disposable artifact |
-| `release-plan` | resolve the release decision through the public protocol |
-| `release-version` | materialize the planned version |
-| `release-tag` | tag the verified release commit |
-| `release-build` | build the release receipt and artifacts |
-| `publication` | publish only receipt-attested release artifacts |
-| `gen` | regenerate every managed projection atomically |
-| `initialize` | materialize the declared package initializer graph |
-| `mod` | apply the declared structural codemods |
-| `waza` | validate provider-neutral governance semantics with Waza |
-| `duplication` | run the canonical jscpd duplicate-code gate |
+| `audit`           | inspect ownership, dependency, and generated-state health      |
+| `status`          | report the resolved runtime and repository state               |
+| `docs`            | generate, repair, build, and validate documentation            |
+| `clean`           | remove every declared disposable artifact                      |
+| `release-plan`    | resolve the release decision through the public protocol       |
+| `release-version` | materialize the planned version                                |
+| `release-tag`     | tag the verified release commit                                |
+| `release-build`   | build the release receipt and artifacts                        |
+| `publication`     | publish only receipt-attested release artifacts                |
+| `gen`             | regenerate every managed projection atomically                 |
+| `initialize`      | materialize the declared package initializer graph             |
+| `mod`             | apply the declared structural codemods                         |
+| `waza`            | validate provider-neutral governance semantics with Waza       |
+| `duplication`     | run the canonical jscpd duplicate-code gate                    |
 
 ### 3. `custom.mk` is a narrow private extension surface
 

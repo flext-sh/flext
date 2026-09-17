@@ -18,10 +18,10 @@ These addenda reconcile stopped Claude sessions, parallel Kilo lanes, Gas City B
 
 ## Cooperative plan sources
 
-| Source | Use | Decision |
-|---|---|---|
-| `.kilo/plans/2026-09-16-flext-infra-continuation-plan.md` | Main implementation plan | Authoritative plan for this session |
-| `.kilo/plans/1789582508056-flext-infra-runtime-modernization.md` | Current checkout audit; concrete lazy-analysis defect; runtime-first ordering | Incorporated where current-source evidence agrees |
-| `flext-worktrees/rope-modernize/.kilo/plans/1789582669805-flext-infra-ruff-codemod-repair.md` | Rope lane fleet plan and integration state | Evidence source; does not override current tip or Beads |
-| `.kilo/plans/1789564863139-envrc-beads-tiered-backend-chain.md` | Historical envrc design and landed work | Partially superseded by Gas-City-only correction |
-| `~/.claude/plans/wip-automation/` | Native Claude plan for `ai-hub wip` / Gas City automation | Adjacent program; explicitly outside flext-infra modernization scope |
+| Source                                                                                        | Use                                                                           | Decision                                                             |
+| --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `.kilo/plans/2026-09-16-flext-infra-continuation-plan.md`                                     | Main implementation plan                                                      | Authoritative plan for this session                                  |
+| `.kilo/plans/1789582508056-flext-infra-runtime-modernization.md`                              | Current checkout audit; concrete lazy-analysis defect; runtime-first ordering | Incorporated where current-source evidence agrees                    |
+| `flext-worktrees/rope-modernize/.kilo/plans/1789582669805-flext-infra-ruff-codemod-repair.md` | Rope lane fleet plan and integration state                                    | Evidence source; does not override current tip or Beads              |
+| `.kilo/plans/1789564863139-envrc-beads-tiered-backend-chain.md`                               | Historical envrc design and landed work                                       | Partially superseded by Gas-City-only correction                     |
+| `~/.claude/plans/wip-automation/`                                                             | Native Claude plan for `ai-hub wip` / Gas City automation                     | Adjacent program; explicitly outside flext-infra modernization scope |

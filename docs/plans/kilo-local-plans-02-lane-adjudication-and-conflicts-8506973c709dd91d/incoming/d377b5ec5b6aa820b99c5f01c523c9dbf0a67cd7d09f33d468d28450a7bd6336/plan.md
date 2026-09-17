@@ -2,15 +2,15 @@
 
 ## Decisões
 
-| Lane/artefato | Decisão | Motivo |
-|---|---|---|
-| `surf-hornet` envrc | Adotar seletivamente | Recorte pousado e runtime comprovado; backend local conflita com Gas City-only |
-| `feature/rope-modernize` | Comparar e absorver por SHA | Tem commits reportados e graph atualizado; integração/PR não está comprovada |
-| `aeolian-sodalite`, PR #235 | Não mergear em bloco | PR fechado, 158 atrás, resets/reverts e gates incompletos |
-| `_config/` split | Preservar WIP compatível | Estrutura parcial útil; cortar duplicata god somente com paridade/runtime |
-| `_conform/` split | Preservar e concluir cutover | Família existe, mas god ainda vence MRO e duplica comportamento |
-| per-file ignore de `_conform_gitignore.py` | Reavaliar/remover | Suppressão não corrige owner e contradiz causa-raiz/zero warnings |
-| CRG dead-code 243 símbolos | Não aplicar automaticamente | Pydantic/config dinâmica produz falsos positivos |
+| Lane/artefato                              | Decisão                      | Motivo                                                                         |
+| ------------------------------------------ | ---------------------------- | ------------------------------------------------------------------------------ |
+| `surf-hornet` envrc                        | Adotar seletivamente         | Recorte pousado e runtime comprovado; backend local conflita com Gas City-only |
+| `feature/rope-modernize`                   | Comparar e absorver por SHA  | Tem commits reportados e graph atualizado; integração/PR não está comprovada   |
+| `aeolian-sodalite`, PR #235                | Não mergear em bloco         | PR fechado, 158 atrás, resets/reverts e gates incompletos                      |
+| `_config/` split                           | Preservar WIP compatível     | Estrutura parcial útil; cortar duplicata god somente com paridade/runtime      |
+| `_conform/` split                          | Preservar e concluir cutover | Família existe, mas god ainda vence MRO e duplica comportamento                |
+| per-file ignore de `_conform_gitignore.py` | Reavaliar/remover            | Suppressão não corrige owner e contradiz causa-raiz/zero warnings              |
+| CRG dead-code 243 símbolos                 | Não aplicar automaticamente  | Pydantic/config dinâmica produz falsos positivos                               |
 
 ## Conflitos que o coordenador resolve antes de delegar
 

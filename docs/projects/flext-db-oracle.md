@@ -1,6 +1,7 @@
 # FLEXT DB Oracle
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT DB Oracle is the enterprise Oracle Database operations library of the FLEXT ecosystem. It wraps `python-oracledb`

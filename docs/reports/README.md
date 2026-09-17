@@ -1,8 +1,10 @@
 # Reports & Validation Artifacts
 
 <!-- TOC START -->
+
 - [Key Subdirectories](#key-subdirectories)
 - [Keeping Reports Fresh](#keeping-reports-fresh)
+
 <!-- TOC END -->
 
 The `reports/` directory at the repository root stores every automated validation

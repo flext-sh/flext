@@ -1,6 +1,7 @@
 # FLEXT Component Diagrams
 
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [1. Pipeline Runtime Service Components](#1-pipeline-runtime-service-components)
@@ -18,7 +19,7 @@
   - [Runtime Components](#runtime-components)
   - [Python Components (FLEXT Services)](#python-components-flext-services)
   - [Common Patterns](#common-patterns)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 

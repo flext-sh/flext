@@ -1,6 +1,7 @@
 # FLEXT LDAP
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT LDAP is the directory-services library of the FLEXT platform. It wraps `ldap3` behind typed Pydantic models and

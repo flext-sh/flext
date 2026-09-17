@@ -1,6 +1,7 @@
 # FLEXT API
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT API is the FLEXT platform's HTTP client layer: a typed REST client facade over `flext-web` with `r[T]` result
@@ -51,6 +53,7 @@ if result.success:
 else:
     u.Cli.print(result.error_message)
 ```
+
 `FlextApi` exposes `get`, `post`, `put`, `patch`, `delete`, `request`, and `execute`; each returns
 `p.Result[m.Api.HttpResponse]`. The underlying `FlextApiClient` is reachable through the `client` property.
 

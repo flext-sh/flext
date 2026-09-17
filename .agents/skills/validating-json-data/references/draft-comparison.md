@@ -66,14 +66,14 @@ Feature availability across JSON Schema drafts supported by z-schema.
 ## Setting the draft version
 
 ```typescript
-import ZSchema from 'z-schema';
+import ZSchema from "z-schema";
 
 // Explicit (recommended when schema targets a specific draft)
-const validator = ZSchema.create({ version: 'draft-07' });
+const validator = ZSchema.create({ version: "draft-07" });
 
 // Default (draft-2020-12)
 const validator = ZSchema.create();
 
 // Auto-detect from $schema (use 'none' to let each schema declare its own)
-const validator = ZSchema.create({ version: 'none' });
+const validator = ZSchema.create({ version: "none" });
 ```

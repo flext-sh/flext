@@ -8,7 +8,7 @@ description: >-
 metadata:
   category: development
   source:
-    repository: 'https://github.com/ComposioHQ/awesome-claude-skills'
+    repository: "https://github.com/ComposioHQ/awesome-claude-skills"
     path: artifacts-builder
     license_path: artifacts-builder/LICENSE.txt
     commit: 92568c1edaff1bde5371154f036d959346c145a8
@@ -35,6 +35,7 @@ VERY IMPORTANT: To avoid what is often referred to as "AI slop", avoid using exc
 ### Step 1: Initialize Project
 
 Run the initialization script to create a new React project:
+
 ```bash
 bash scripts/init-artifact.sh <project-name>
 cd <project-name>
@@ -57,6 +58,7 @@ To build the artifact, edit the generated files. See **Common Development Tasks*
 ### Step 3: Bundle to Single HTML File
 
 To bundle the React app into a single HTML artifact:
+
 ```bash
 bash scripts/bundle-artifact.sh
 ```

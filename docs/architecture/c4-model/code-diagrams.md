@@ -1,6 +1,7 @@
 # FLEXT Code Diagrams
 
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [1. r\[T\] Class Diagram](#1-rt-class-diagram)
@@ -17,7 +18,7 @@
   - [Test Coverage by Component](#test-coverage-by-component)
   - [Performance Benchmarks](#performance-benchmarks)
   - [Memory Usage](#memory-usage)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 

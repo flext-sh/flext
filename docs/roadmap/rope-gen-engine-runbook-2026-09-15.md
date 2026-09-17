@@ -1,12 +1,14 @@
 # Runbook — Rope-Gen Engine (owner, taxonomy, findings flow, resume)
 
 <!-- TOC START -->
+
 - [1. Owner → responsibility](#1-owner-responsibility)
 - [2. Findings taxonomy (ONE vocabulary, engine + gates + receipts)](#2-findings-taxonomy-one-vocabulary-engine-gates-receipts)
 - [3. Findings flow (one detector, one consumer)](#3-findings-flow-one-detector-one-consumer)
 - [4. Transaction loop per repository](#4-transaction-loop-per-repository)
 - [5. Resume procedure (new session)](#5-resume-procedure-new-session)
 - [6. Resume context (2026-09-15, proven)](#6-resume-context-2026-09-15-proven)
+
 <!-- TOC END -->
 
 - **Status:** Active, versioned runbook; recovery ownership updated 2026-09-17.
@@ -24,27 +26,27 @@
 
 ## 1. Owner → responsibility
 
-| Concern | Owner | Hard rule |
-| --- | --- | --- |
-| Generated projections (`__init__`, lazy-init exports, facets) | `make gen` (flext-infra codegen) | change canonical sources; preserve and reconcile authored WIP before regeneration |
-| Auto-fixable findings (rel-import self-import, etc.) | `make fix` (rope via engine) | fix corrects, never suppresses |
-| Reporting of remaining findings | `make check` | detectors never disabled; no silent success |
-| Ad-hoc structural moves | `make mod` | consumes the same Rope primitives; one engine |
-| Config/rules surface | `flext-infra/config/codegen.yaml` and the owning typed rule configuration | rules-as-data; no exception that hides an in-scope defect |
-| Render inputs | SSOT + templates + PINS only | any environment input in render = P0 defect |
-| Landing | coordinator: reviewed merge commits into the verified integration branch, expected `0.12.0-dev`; members published before root gitlinks | no administrative bypass; local green or mergeability is not integrated proof |
+| Concern                                                       | Owner                                                                                                                                   | Hard rule                                                                         |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Generated projections (`__init__`, lazy-init exports, facets) | `make gen` (flext-infra codegen)                                                                                                        | change canonical sources; preserve and reconcile authored WIP before regeneration |
+| Auto-fixable findings (rel-import self-import, etc.)          | `make fix` (rope via engine)                                                                                                            | fix corrects, never suppresses                                                    |
+| Reporting of remaining findings                               | `make check`                                                                                                                            | detectors never disabled; no silent success                                       |
+| Ad-hoc structural moves                                       | `make mod`                                                                                                                              | consumes the same Rope primitives; one engine                                     |
+| Config/rules surface                                          | `flext-infra/config/codegen.yaml` and the owning typed rule configuration                                                               | rules-as-data; no exception that hides an in-scope defect                         |
+| Render inputs                                                 | SSOT + templates + PINS only                                                                                                            | any environment input in render = P0 defect                                       |
+| Landing                                                       | coordinator: reviewed merge commits into the verified integration branch, expected `0.12.0-dev`; members published before root gitlinks | no administrative bypass; local green or mergeability is not integrated proof     |
 
 ## 2. Findings taxonomy (ONE vocabulary, engine + gates + receipts)
 
-| Code | Meaning | Level | Behavior |
-| --- | --- | --- | --- |
-| `GEN-W001` | sibling part without `__all__` | gen emits warn; fix auto-fills from public surface union; check reports | warn → auto-fixable |
-| `GEN-W002` | module imports itself through absolute self path | fix relativizes (scope = declared table; flext-core overlay is a declared exception; lazy facets are exempt) | warn → auto-fixable |
-| `GEN-W003` | module outside its family layout | check reports; move via mod | report |
-| `GEN-W004` | format/header drift on generated facet | fix restores rendered shape | warn → auto-fixable |
-| `GEN-W005` | runtime SCC cycle in imports (SCC solver) | check reports; root cause at owner | report |
-| `GEN-E001` | stale `__all__` (export declared, absent in sibling) | gen FAILS LOUD | error |
-| siblings symbol collision | same public name in two parts of one family | gen FAILS LOUD | error |
+| Code                      | Meaning                                              | Level                                                                                                        | Behavior            |
+| ------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------- |
+| `GEN-W001`                | sibling part without `__all__`                       | gen emits warn; fix auto-fills from public surface union; check reports                                      | warn → auto-fixable |
+| `GEN-W002`                | module imports itself through absolute self path     | fix relativizes (scope = declared table; flext-core overlay is a declared exception; lazy facets are exempt) | warn → auto-fixable |
+| `GEN-W003`                | module outside its family layout                     | check reports; move via mod                                                                                  | report              |
+| `GEN-W004`                | format/header drift on generated facet               | fix restores rendered shape                                                                                  | warn → auto-fixable |
+| `GEN-W005`                | runtime SCC cycle in imports (SCC solver)            | check reports; root cause at owner                                                                           | report              |
+| `GEN-E001`                | stale `__all__` (export declared, absent in sibling) | gen FAILS LOUD                                                                                               | error               |
+| siblings symbol collision | same public name in two parts of one family          | gen FAILS LOUD                                                                                               | error               |
 
 ## 3. Findings flow (one detector, one consumer)
 

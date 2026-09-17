@@ -147,7 +147,7 @@ The first current test investigation starts from the recorded report rather than
    - `config/codegen.yaml` marks `tool.flext.namespace` MANAGED through `conflict_sections`, while `tool.flext.docs` is CUSTOM and must survive live overlay;
    - `pyproject.toml.j2` statically places `tool.flext.docs` before `tool.flext.namespace`;
    - `FlextInfraPyprojectModernizerPayloadMixin._reorder_document_inplace` sorts nested `tool` tables alphabetically because `tomlsort.sort_first` governs only top-level groups, while conform uses `tomlkit` round-trip preservation plus Taplo rather than the modernizer reorder path.
-   Elect one typed ordering policy for both managed and preserved custom `tool.flext.*` tables, consume it from template rendering and modernization, and make `compose_project_artifact` preserve that canonical result. Do not promote `tool.flext.docs` to managed merely to force order, and do not drop either section or its data.
+     Elect one typed ordering policy for both managed and preserved custom `tool.flext.*` tables, consume it from template rendering and modernization, and make `compose_project_artifact` preserve that canonical result. Do not promote `tool.flext.docs` to managed merely to force order, and do not drop either section or its data.
 6. Resolve `flext-bdmdg` at the model owner: remove the nonexistent render-spec reference and use the canonical typed model already owned by `m.Infra`; do not add an alias or compatibility model.
 7. Add/replace tests at public boundaries:
    - ProjectNew produces a usable project;

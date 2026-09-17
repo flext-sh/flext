@@ -53,11 +53,11 @@ Autocrítica da sessão (já registrada em `1789476032590`) mantida e AMPLIADA c
 
 ## 2. Mapa de propriedade (3 planos vivos, zero sobreposição)
 
-| Plano | Dono | Escopo |
-|---|---|---|
-| `1789489334832-rope-gen-engine` | outro ator | engine rope-gen; W1 quebra `_codegen/__init__.py` 51KB; W8 re-projeção frota |
-| `1789475880081-p0-finish-rewrite` | outro ator | gen×2, `make mod` rules, sweep fleet, centralização c/t/p/m/u, release 0.12.0 |
-| **este plano** | **esta lane (bead `flext-471ws`)** | **SÓ o pouso do split `_config` + fechamento do tema loc-cap** |
+| Plano                             | Dono                               | Escopo                                                                        |
+| --------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------- |
+| `1789489334832-rope-gen-engine`   | outro ator                         | engine rope-gen; W1 quebra `_codegen/__init__.py` 51KB; W8 re-projeção frota  |
+| `1789475880081-p0-finish-rewrite` | outro ator                         | gen×2, `make mod` rules, sweep fleet, centralização c/t/p/m/u, release 0.12.0 |
+| **este plano**                    | **esta lane (bead `flext-471ws`)** | **SÓ o pouso do split `_config` + fechamento do tema loc-cap**                |
 
 O tema loc-cap tem 3 alvos; 2 já pousados pelo peer (codegen, conform). Falta 1: `_config`.
 

@@ -22,7 +22,7 @@ Concluído e VALIDADO (runtime/provas), ainda NÃO commitado na maioria:
 
 ### Onda 0 — Landar o trabalho validado (primeiro incremento)
 
-1. `git -C flext-infra status` → adjudicar WIP do ator concorrente (conform.py, direnv_gate_tests, _pytest_runner/command.py — eles têm commited `48a229fdd`/`40bf142da`; absorver WIP não commitado via fix-forward NO MEU commit escopado; nunca descartar).
+1. `git -C flext-infra status` → adjudicar WIP do ator concorrente (conform.py, direnv_gate_tests, \_pytest_runner/command.py — eles têm commited `48a229fdd`/`40bf142da`; absorver WIP não commitado via fix-forward NO MEU commit escopado; nunca descartar).
 2. Commits escopados POR CATEGORIA, na ordem de dependência (flext-core → flext-cli/flext-tests → flext-infra → membros → raiz):
    - flext-core: lazy fix + result.py TYPE_CHECKING + refactor SLF001 dos 8 tests + projeções geradas.
    - flext-tests: typings fix + projeções.
@@ -40,15 +40,15 @@ Pré: rerun `make fix` + `make fmt` (flext-auth lint e flext-core SLF já corrig
 
 Fatias por repo (SUBAGENTES code paralelos em worktrees dedicadas alinhadas ao tip; main session coordena/commita/pusha; workers nunca merge/push):
 
-| Fatia | Conteúdo (evidência do check 09:2x) |
-|---|---|
-| flext-cli | namespace 579 (exemplos → facade pattern `ExamplesFlextCli` MRO; src NS-STRUCT/CONTRACT/IMPORT), tier-whitelist 10 (yaml bare imports → `u.Cli.*`), pyrefly 21, mypy 7, pyright 3, lint SLF001 3 |
-| flext-tests | namespace 229 (validator/tmatchers/enforcement conformance), mypy 26 (unreachable/unused-ignore/dict-item), runtime-census 54 (class_prefix, proto_not_runtime, smell_function_parameters, const_mutable), silent-failure 8 |
-| flext-web | namespace 77 (exemplos + layout base.py), silent-failure 4 (except→sentinel/pass), runtime-census 5 (ENFORCE-046/070/079) |
-| flext-api | pyrefly 13, mypy 15 (classe FlextResult-vs-Result — validar fix TYPE_CHECKING; senão anotar retorno como `p.Result` via `r[...].ok` covariance... sem `type: ignore`), pyright, namespace 5, runtime-census proto_inner_kind (agente já commiteou 02b43df8 — verificar) |
-| flext-core | codemod require-future-annotations nos `__init__.py` gerados (causa raiz: TEMPLATE do gerador não emite `from __future__ import annotations` em facets sem docstring de módulo — corrigir no owner flext-infra templates, não nos arquivos) |
-| raiz | direnv DIRENV_CONTRACT `$HOME` vazio no gate (owner: WIP direnv_gate_tests do ator concorrente — coordenar/absorver; o gate expande `$HOME` com env sem HOME → bug do gate, não do .envrc) |
-| conectores (db-oracle, dbt-*, grpc, ldap, ldif, meltano, observability, oracle-*, plugin, quality, tap-*, target-*) | classes exit=2: mesma taxonomia (namespace/example/test-conformance/pyrefly) — matar por CLASSE de violação ponta-a-ponta via `make mod` + ast-grep, não cottage manual |
+| Fatia                                                                                                               | Conteúdo (evidência do check 09:2x)                                                                                                                                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| flext-cli                                                                                                           | namespace 579 (exemplos → facade pattern `ExamplesFlextCli` MRO; src NS-STRUCT/CONTRACT/IMPORT), tier-whitelist 10 (yaml bare imports → `u.Cli.*`), pyrefly 21, mypy 7, pyright 3, lint SLF001 3                                                                        |
+| flext-tests                                                                                                         | namespace 229 (validator/tmatchers/enforcement conformance), mypy 26 (unreachable/unused-ignore/dict-item), runtime-census 54 (class_prefix, proto_not_runtime, smell_function_parameters, const_mutable), silent-failure 8                                             |
+| flext-web                                                                                                           | namespace 77 (exemplos + layout base.py), silent-failure 4 (except→sentinel/pass), runtime-census 5 (ENFORCE-046/070/079)                                                                                                                                               |
+| flext-api                                                                                                           | pyrefly 13, mypy 15 (classe FlextResult-vs-Result — validar fix TYPE_CHECKING; senão anotar retorno como `p.Result` via `r[...].ok` covariance... sem `type: ignore`), pyright, namespace 5, runtime-census proto_inner_kind (agente já commiteou 02b43df8 — verificar) |
+| flext-core                                                                                                          | codemod require-future-annotations nos `__init__.py` gerados (causa raiz: TEMPLATE do gerador não emite `from __future__ import annotations` em facets sem docstring de módulo — corrigir no owner flext-infra templates, não nos arquivos)                             |
+| raiz                                                                                                                | direnv DIRENV_CONTRACT `$HOME` vazio no gate (owner: WIP direnv_gate_tests do ator concorrente — coordenar/absorver; o gate expande `$HOME` com env sem HOME → bug do gate, não do .envrc)                                                                              |
+| conectores (db-oracle, dbt-_, grpc, ldap, ldif, meltano, observability, oracle-_, plugin, quality, tap-_, target-_) | classes exit=2: mesma taxonomia (namespace/example/test-conformance/pyrefly) — matar por CLASSE de violação ponta-a-ponta via `make mod` + ast-grep, não cottage manual                                                                                                 |
 
 Regras por fatia: mapear dono/consumidor com `code-review-graph` antes de mover símbolo; mutabilidade não é grafia (dict→Mapping só com prova de contrato); uma classe de violação por wave do `make mod`; revalidar `make check PROJECT=<repo>` por fatia landada.
 

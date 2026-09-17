@@ -25,6 +25,7 @@
 - [Integration with FLEXT Ecosystem](#integration-with-flext-ecosystem)
 - [Contributing](#contributing)
 - [License](#license)
+
 <!-- TOC END -->
 
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)

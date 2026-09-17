@@ -1,6 +1,7 @@
 # wip-hier.sh — Decomposição em módulos ~/wip-hier/ (DRY/YAGNI, flags-only)
 
 <!-- TOC START -->
+
 - [1. Objetivo e restrições](#1-objetivo-e-restricoes)
 - [2. Layout final](#2-layout-final)
 - [3. Mecânica de "import" (bash-nativo)](#3-mecanica-de-import-bash-nativo)
@@ -9,6 +10,7 @@
 - [6. Validação (gates de aceitação, em ordem)](#6-validacao-gates-de-aceitacao-em-ordem)
 - [7. Riscos e mitigações](#7-riscos-e-mitigacoes)
 - [8. Fora de escopo](#8-fora-de-escopo)
+
 <!-- TOC END -->
 
 Plano de implementação · Não altera o plano de execução rope-modernize (`1789564109553-rope-modernize-execution-plan.md`), que continua válido e referencia `~/wip-hier.sh` — que permanece funcionando como shim.

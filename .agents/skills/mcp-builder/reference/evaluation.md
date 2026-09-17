@@ -17,6 +17,7 @@ This document provides guidance on creating comprehensive evaluations for MCP se
 - Answers must be STABLE (won't change over time)
 
 ### Output Format
+
 ```xml
 <evaluation>
    <qa_pair>
@@ -47,10 +48,12 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 ### Core Requirements
 
 1. **Questions MUST be independent**
+
    - Each question should NOT depend on the answer to any other question
    - Should not assume prior write operations from processing another question
 
 2. **Questions MUST require ONLY NON-DESTRUCTIVE AND IDEMPOTENT tool use**
+
    - Should not instruct or require modifying state to arrive at the correct answer
 
 3. **Questions must be REALISTIC, CLEAR, CONCISE, and COMPLEX**
@@ -59,15 +62,18 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 ### Complexity and Depth
 
 1. **Questions must require deep exploration**
+
    - Consider multi-hop questions requiring multiple sub-questions and sequential tool calls
    - Each step should benefit from information found in previous questions
 
 2. **Questions may require extensive paging**
+
    - May need paging through multiple pages of results
    - May require querying old data (1-2 years out-of-date) to find niche information
    - The questions must be DIFFICULT
 
 3. **Questions must require deep understanding**
+
    - Rather than surface-level knowledge
    - May pose complex ideas as True/False questions requiring evidence
    - May use multiple-choice format where LLM must search different hypotheses
@@ -80,6 +86,7 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 ### Tool Testing
 
 1. **Questions should stress-test tool return values**
+
    - May elicit tools returning large JSON objects or lists, overwhelming the LLM
    - Should require understanding multiple modalities of data:
      - IDs and names
@@ -89,31 +96,34 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
    - Should probe the tool's ability to return all useful forms of data
 
 2. **Questions should MOSTLY reflect real human use cases**
+
    - The kinds of information retrieval tasks that HUMANS assisted by an LLM would care about
 
 3. **Questions may require dozens of tool calls**
-    - This challenges LLMs with limited context
-    - Encourages MCP server tools to reduce information returned
+
+   - This challenges LLMs with limited context
+   - Encourages MCP server tools to reduce information returned
 
 4. **Include ambiguous questions**
-    - May be ambiguous OR require difficult decisions on which tools to call
-    - Force the LLM to potentially make mistakes or misinterpret
-    - Ensure that despite AMBIGUITY, there is STILL A SINGLE VERIFIABLE ANSWER
+   - May be ambiguous OR require difficult decisions on which tools to call
+   - Force the LLM to potentially make mistakes or misinterpret
+   - Ensure that despite AMBIGUITY, there is STILL A SINGLE VERIFIABLE ANSWER
 
 ### Stability
 
 1. **Questions must be designed so the answer DOES NOT CHANGE**
-    - Do not ask questions that rely on "current state" which is dynamic
-    - For example, do not count:
-      - Number of reactions to a post
-      - Number of replies to a thread
-      - Number of members in a channel
+
+   - Do not ask questions that rely on "current state" which is dynamic
+   - For example, do not count:
+     - Number of reactions to a post
+     - Number of replies to a thread
+     - Number of members in a channel
 
 2. **DO NOT let the MCP server RESTRICT the kinds of questions you create**
-    - Create challenging and complex questions
-    - Some may not be solvable with the available MCP server tools
-    - Questions may require specific output formats (datetime vs. epoch time, JSON vs. MARKDOWN)
-    - Questions may require dozens of tool calls to complete
+   - Create challenging and complex questions
+   - Some may not be solvable with the available MCP server tools
+   - Questions may require specific output formats (datetime vs. epoch time, JSON vs. MARKDOWN)
+   - Questions may require dozens of tool calls to complete
 
 ## Answer Guidelines
 
@@ -146,6 +156,7 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 ### Stability
 
 1. **Answers must be STABLE/STATIONARY**
+
    - Look at old content (e.g., conversations that have ended, projects that have launched, questions answered)
    - Create QUESTIONS based on "closed" concepts that will always return the same answer
    - Questions may ask to consider a fixed time window to insulate from non-stationary answers
@@ -159,6 +170,7 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 ### Diversity
 
 1. **Answers must be DIVERSE**
+
    - Answer should be a single VERIFIABLE value in diverse modalities and formats
    - User concept: user ID, user name, display name, first name, last name, email address, phone number
    - Channel concept: channel ID, channel name, channel topic
@@ -254,6 +266,7 @@ Each QA pair consists of a question and an answer. The output should be an XML f
 ### Good Questions
 
 **Example 1: Multi-hop question requiring deep exploration (GitHub MCP)**
+
 ```xml
 <qa_pair>
    <question>Find the repository that was archived in Q3 2023 and had previously been the most forked project in the organization. What was the primary programming language used in that repository?</question>
@@ -270,6 +283,7 @@ This question is good because:
 - Based on historical (closed) data that won't change
 
 **Example 2: Requires understanding context without keyword matching (Project Management MCP)**
+
 ```xml
 <qa_pair>
    <question>Locate the initiative focused on improving customer onboarding that was completed in late 2023. The project lead created a retrospective document after completion. What was the lead's role title at that time?</question>
@@ -287,6 +301,7 @@ This question is good because:
 - Based on completed work (won't change)
 
 **Example 3: Complex aggregation requiring multiple steps (Issue Tracker MCP)**
+
 ```xml
 <qa_pair>
    <question>Among all bugs reported in January 2024 that were marked as critical priority, which assignee resolved the highest percentage of their assigned bugs within 48 hours? Provide the assignee's username.</question>
@@ -304,6 +319,7 @@ This question is good because:
 - Based on historical data from specific time period
 
 **Example 4: Requires synthesis across multiple data types (CRM MCP)**
+
 ```xml
 <qa_pair>
    <question>Find the account that upgraded from the Starter to Enterprise plan in Q4 2023 and had the highest annual contract value. What industry does this account operate in?</question>
@@ -323,6 +339,7 @@ This question is good because:
 ### Poor Questions
 
 **Example 1: Answer changes over time**
+
 ```xml
 <qa_pair>
    <question>How many open issues are currently assigned to the engineering team?</question>
@@ -337,6 +354,7 @@ This question is poor because:
 - Relies on "current state" which is dynamic
 
 **Example 2: Too easy with keyword search**
+
 ```xml
 <qa_pair>
    <question>Find the pull request with title "Add authentication feature" and tell me who created it.</question>
@@ -351,6 +369,7 @@ This question is poor because:
 - No synthesis or analysis needed
 
 **Example 3: Ambiguous answer format**
+
 ```xml
 <qa_pair>
    <question>List all the repositories that have Python as their primary language.</question>
@@ -402,6 +421,7 @@ After creating your evaluation file, you can use the provided evaluation harness
    ```
 
    Or install manually:
+
    ```bash
    pip install anthropic mcp
    ```
@@ -451,6 +471,7 @@ python scripts/evaluation.py \
 ```
 
 With environment variables:
+
 ```bash
 python scripts/evaluation.py \
   -t stdio \
@@ -518,6 +539,7 @@ sse/http options:
 The evaluation script generates a detailed report including:
 
 - **Summary Statistics**:
+
   - Accuracy (correct/total)
   - Average task duration
   - Average tool calls per task

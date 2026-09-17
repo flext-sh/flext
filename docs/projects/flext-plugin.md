@@ -1,6 +1,7 @@
 # FLEXT Plugin
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Plugin is the plugin system of the FLEXT platform. It provides discovery, registration, lifecycle management,
@@ -54,7 +56,7 @@ every public method returning `r[T]`. The same instance covers the full lifecycl
 ## Architecture & modules
 
 - **Facade**: `api.py` defines `FlextPluginApi`, a service facade over the platform service (`s` base from `flext-
-  core`), and rebinds it as the `plugin` alias at the package root.
+core`), and rebinds it as the `plugin` alias at the package root.
 - **Platform utilities** (`_utilities/`): `plugin_platform` (the default `PlatformService` implementation), `discovery`
   (plugin scanning), and `implementations` (concrete plugin adapters), wired in through `_build_default_platform`.
 - **Flat core modules**: `constants.py`, `typings.py`, `protocols.py`, `models.py`, `utilities.py` provide the
@@ -84,10 +86,10 @@ every public method returning `r[T]`. The same instance covers the full lifecycl
 
 - [Project README](https://github.com/flext-sh/flext-plugin/blob/0.12.0-dev/README.md)
 - [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
-  plugin.md`
+plugin.md`
 - Project documentation under `flext-plugin/docs/`
 - Related projects: `flext-core`, `flext-cli`, `flext-observability`, `flext-meltano`, and the Singer-based `flext-
-  tap-*` / `flext-target-*` families
+tap-*` / `flext-target-*` families
 
 ## Support & issues
 

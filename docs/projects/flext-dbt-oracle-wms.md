@@ -1,6 +1,7 @@
 # FLEXT dbt Oracle WMS
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT dbt Oracle WMS is the integration package for Oracle Warehouse Management
@@ -57,7 +59,7 @@ Use root `make check`, `make test`, and `make build` for project evidence.
 - [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law
 - [Workspace API overview](../api-reference/generated/flext-dbt-oracle-wms.md)
 - Related projects: `flext-core`, `flext-oracle-wms`, `flext-meltano`, `flext-tap-oracle-wms`, `flext-target-oracle-
-  wms`, `flext-dbt-oracle`
+wms`, `flext-dbt-oracle`
 
 ## Support & issues
 

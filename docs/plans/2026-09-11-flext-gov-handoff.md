@@ -1,6 +1,7 @@
 # HANDOFF — flext-gov program session 2026-09-11 (reinicio completo)
 
 <!-- TOC START -->
+
 - [1. Identity of this program (what you are resuming)](#1-identity-of-this-program-what-you-are-resuming)
 - [2. Authority resolution (strict order)](#2-authority-resolution-strict-order)
 - [3. Non-negotiables learned THIS session (a "must-not-repeat" list)](#3-non-negotiables-learned-this-session-a-must-not-repeat-list)
@@ -14,6 +15,7 @@
 - [11. If you hit a new violation that isn't covered yet](#11-if-you-hit-a-new-violation-that-isnt-covered-yet)
 - [12. Reconciliação docs vs campo (auditoria 2026-09-11 final)](#12-reconciliacao-docs-vs-campo-auditoria-2026-09-11-final)
 - [13. Decreto de continuidade (OBRIGATÓRIO antes de qualquer efeito)](#13-decreto-de-continuidade-obrigatorio-antes-de-qualquer-efeito)
+
 <!-- TOC END -->
 
 > Historical evidence only. This plan records an earlier execution context and
@@ -82,6 +84,7 @@ bd prime                                              # session contract
 bd list | grep ssnc7                                  # live statuses (SSOT)
 bd show flext-ssnc7 && bd show flext-ssnc7.<n>        # planned claims / notes
 ```
+
 Then reconcile § Status table below + plan TODO section. The rule: never
 move the plan text past reality — adjust the BEAD/describe or the STATUS,
 not the plan narrative to hide drift. If the TODO table disagrees with bd,
@@ -89,11 +92,11 @@ correct the pieces (or the actual bd state) to converge BEFORE faking.
 
 ## 5. Current work trees / branches / pins (2026-09-11 EOD)
 
-| Repo | Path | Branch | SKA chain |
-|---|---|---|---|
-| flext-core lane | `~/flext-work/flext-core-gov` | `feat/consumer-import-grammar` | `6440f1529` (F1 core: FamilySurface) → `14c63121d` (F4 core: Files + pins) |
-| flext-infra lane | `~/flext-work/flext-infra-gov` | `feat/consumer-gates` | `8c4ef3266` (F1 infra: detector) → `ba1e5ab70` (F2/F4) → `c8a429d59` (v2 audit repairs) |
-| super lane | `~/flext-work/flext-gov-super` | `feat/flext-gov-consumption-law` | `3ebf812055` (F3 docs) → `e9b8cf4050` (plan v2) → `b25d519d51` (ledger fix) → `bcf2a130bb` (automation proposal) → `551e936c88` (TODO sync) |
+| Repo             | Path                           | Branch                           | SKA chain                                                                                                                                   |
+| ---------------- | ------------------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| flext-core lane  | `~/flext-work/flext-core-gov`  | `feat/consumer-import-grammar`   | `6440f1529` (F1 core: FamilySurface) → `14c63121d` (F4 core: Files + pins)                                                                  |
+| flext-infra lane | `~/flext-work/flext-infra-gov` | `feat/consumer-gates`            | `8c4ef3266` (F1 infra: detector) → `ba1e5ab70` (F2/F4) → `c8a429d59` (v2 audit repairs)                                                     |
+| super lane       | `~/flext-work/flext-gov-super` | `feat/flext-gov-consumption-law` | `3ebf812055` (F3 docs) → `e9b8cf4050` (plan v2) → `b25d519d51` (ledger fix) → `bcf2a130bb` (automation proposal) → `551e936c88` (TODO sync) |
 
 - Core lane `uv.lock` pins (after re-resolution):
   `flext-infra rev=0.12.0-dev#bff59228`, `flext-cli` re-resolved.
@@ -104,18 +107,18 @@ correct the pieces (or the actual bd state) to converge BEFORE faking.
 
 ## 6. Bead status snapshot (source `bd list` at EOD)
 
- epic `flext-ssnc7` ○
- ├ `.1` F1 in_progress (reopened for premature close; detector v2 in place)
- │ └ `.1.1` open (validation twin synthetic RED→GREEN; starts after .1 lands)
- ├ `.2` F2 in_progress (config reader consumer+family; cross-contamination fix pending)
- │ └ `.2.1` open (planted-twin validation)
- ├ `.3` F3 in_progress (docs delivered to super lane; gates markdown pending)
- ├ `.4` F4 in_progress (budget gate derives ALLOWED_GATES; atomic primitives
- │ delivered; fsync/O_NOFOLLOW/EINTR + writer unification + telemetry pending)
- ├ `.5` F5 open (tags/AI_HUB_CONSUMER after F1+F4 land)
- ├ `.6` F6 open
- ├ `.7` F7 open
- └ `.8` F-AGE in_progress — AWAITING OPERATOR APPROVAL (proposal section in plan)
+epic `flext-ssnc7` ○
+├ `.1` F1 in_progress (reopened for premature close; detector v2 in place)
+│ └ `.1.1` open (validation twin synthetic RED→GREEN; starts after .1 lands)
+├ `.2` F2 in_progress (config reader consumer+family; cross-contamination fix pending)
+│ └ `.2.1` open (planted-twin validation)
+├ `.3` F3 in_progress (docs delivered to super lane; gates markdown pending)
+├ `.4` F4 in_progress (budget gate derives ALLOWED_GATES; atomic primitives
+│ delivered; fsync/O_NOFOLLOW/EINTR + writer unification + telemetry pending)
+├ `.5` F5 open (tags/AI_HUB_CONSUMER after F1+F4 land)
+├ `.6` F6 open
+├ `.7` F7 open
+└ `.8` F-AGE in_progress — AWAITING OPERATOR APPROVAL (proposal section in plan)
 
 Closed this session: none yet (kept honest — F1 close was reverted on
 self-audit; no push from any lane yet).
@@ -143,6 +146,7 @@ make check  # full gates
 make test   # scoped tests with testmon
 code-review-graph build | update --brief | doctor | detect-changes | dead-code | impact
 ```
+
 (automated references in
 `~/.agents/commands/flext/gov-automation-cycle.md`).
 
@@ -155,10 +159,9 @@ code-review-graph build | update --brief | doctor | detect-changes | dead-code |
   unify `_read_project_config` (single owner via base gate/u.Infra),
   ENFORCE-100, twin planted RED (.2.1).
 - F3 gates: make check markdown gate on the SUPER lane once docs land.
-- F4: fsync + O_NOFOLLOW + EINTR loop on atomic primitives; unify with
-  `u.Cli.atomic_write_*` (single owner, net-negative); budget telemetry
-  (measure time/memory per gate run); project_new emits
-  `[tool.flext.project]` keys via scaffold.
+- F4: fsync + O*NOFOLLOW + EINTR loop on atomic primitives; unify with
+  `u.Cli.atomic_write*\*`(single owner, net-negative); budget telemetry
+  (measure time/memory per gate run); project_new emits`[tool.flext.project]` keys via scaffold.
 - F6/F7: block on post-P0; workflow gates + docs bijection (three file docs).
 
 ## 10. Docs & ADRs you must read (order)
@@ -186,7 +189,7 @@ Confrontado código real contra docs/ADRs/skills ANTES de autorizar pouso:
 - [OK] `infra-gov` lane: docs de gates gerados (Makefile/README/
   pyproject/examples docs) foram reescritos pelo `make gen` — RESIDUO
   NÃO COMMITADO na lane (files: `M Makefile M README.md
-  M docs/api-reference/... M pyproject.toml`). Próximo agente DEVE:
+M docs/api-reference/... M pyproject.toml`). Próximo agente DEVE:
   abrir a lane, rodar `make check` para validar dir, e commitar o
   generated output por paths escopados ANTES do pouso — não migrar
   para um lane novo.

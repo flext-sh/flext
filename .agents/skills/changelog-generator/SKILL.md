@@ -8,7 +8,7 @@ description: >-
 metadata:
   category: development
   source:
-    repository: 'https://github.com/ComposioHQ/awesome-claude-skills'
+    repository: "https://github.com/ComposioHQ/awesome-claude-skills"
     path: changelog-generator
     commit: 92568c1edaff1bde5371154f036d959346c145a8
 license: NOASSERTION
@@ -73,6 +73,7 @@ guidelines from CHANGELOG_STYLE.md
 **User**: "Create a changelog for commits from the past 7 days"
 
 **Output**:
+
 ```markdown
 # Updates - Week of March 10, 2024
 

@@ -31,31 +31,31 @@ Convergir documentação, ADRs, skills, commands, projeções, Beads e memórias
 A auditoria read-only foi coletada antes do landing `~/agents@1c7e99a4`; cada
 finding deve ser reproduzido no SHA integrado antes de virar trabalho.
 
-| Finding | Disposição no plano |
-| --- | --- |
-| Refs `command:*` e `skill:*` em `config/governance.json` seriam phantom | Rejeitado no snapshot atual: `make check` executou `GovernanceBundle.load`, resolveu 132/19/66/90 e passou. Adicionar teste live-config apenas se uma reprodução no SHA atual falhar. |
-| Eval órfão de `scope-nav` | Resolvido em `1c7e99a4`; skill, suite, tasks e fixture foram removidos e `mod-check` passou 7/7. |
-| `flext-context-routing` ausente no repo global | O repo global é provider-neutral; a referência é a um delta local de projetos `internal_flext`. Exigir que o projector materialize esse delta em todo projeto elegível e falhe se faltar; não copiar o skill para o catálogo global por conveniência. |
-| `.agents/provider.toml` ausente em `~/agents` | Fora de escopo: `~/agents` não é um projeto `internal_flext`. Validar o manifest nos consumidores. No rope-modernize, corrigir `codemod_provider.sgconfig` se ele aponta para um path inexistente. |
-| 40 symlinks `.github/skills` quebrados | Finding runtime potencialmente real. Reproduzir após AI Hub sync; o projector deve recriar destinos válidos ou eliminar a superfície, nunca manter symlinks cacheados. |
-| `flext-gates-as-products` 66 versus 92 linhas | Não decidir por tamanho. Rodar `make waza` e cenários do suite contra a versão canônica; completar o menor skill que satisfaz outcomes, sem restaurar texto por diff. |
-| `triage-runtime-skew` sem extensão `.md` | Finding real até prova contrária: o loader usa `*.md`. Renomear atomicamente ou retirar o comando se não há consumidor; atualizar catalog/evals e provar bundle. |
-| `CLAUDE.md` cita `config/workspaces.yaml` inexistente | Finding real: corrigir no owner AI Hub/projector, não no output. O marker deve nomear source e verbo que realmente existem. |
-| `flext-law` excede budget por bytes | Rejeitado como métrica inválida; o gate `test_delivery_budget_holds_with_measured_composition` passou. Usar tokens medidos pelo owner, não bytes/estimativa. |
-| `uv.lock` global seria banido | Não transportar uma correção FLEXT para repo provider-neutral sem owner. Aplicar apenas se config/law global declarar o ban; em FLEXT permanece proibido. |
-| `VALIDATE_ON_CHANGE.md` sem owner | Finding real de composição: preservar a diretiva mais nova, intaká-la como regra/ADR canônica e depois substituir o root file por pointer ou removê-lo na mesma projeção. |
+| Finding                                                                 | Disposição no plano                                                                                                                                                                                                                                   |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Refs `command:*` e `skill:*` em `config/governance.json` seriam phantom | Rejeitado no snapshot atual: `make check` executou `GovernanceBundle.load`, resolveu 132/19/66/90 e passou. Adicionar teste live-config apenas se uma reprodução no SHA atual falhar.                                                                 |
+| Eval órfão de `scope-nav`                                               | Resolvido em `1c7e99a4`; skill, suite, tasks e fixture foram removidos e `mod-check` passou 7/7.                                                                                                                                                      |
+| `flext-context-routing` ausente no repo global                          | O repo global é provider-neutral; a referência é a um delta local de projetos `internal_flext`. Exigir que o projector materialize esse delta em todo projeto elegível e falhe se faltar; não copiar o skill para o catálogo global por conveniência. |
+| `.agents/provider.toml` ausente em `~/agents`                           | Fora de escopo: `~/agents` não é um projeto `internal_flext`. Validar o manifest nos consumidores. No rope-modernize, corrigir `codemod_provider.sgconfig` se ele aponta para um path inexistente.                                                    |
+| 40 symlinks `.github/skills` quebrados                                  | Finding runtime potencialmente real. Reproduzir após AI Hub sync; o projector deve recriar destinos válidos ou eliminar a superfície, nunca manter symlinks cacheados.                                                                                |
+| `flext-gates-as-products` 66 versus 92 linhas                           | Não decidir por tamanho. Rodar `make waza` e cenários do suite contra a versão canônica; completar o menor skill que satisfaz outcomes, sem restaurar texto por diff.                                                                                 |
+| `triage-runtime-skew` sem extensão `.md`                                | Finding real até prova contrária: o loader usa `*.md`. Renomear atomicamente ou retirar o comando se não há consumidor; atualizar catalog/evals e provar bundle.                                                                                      |
+| `CLAUDE.md` cita `config/workspaces.yaml` inexistente                   | Finding real: corrigir no owner AI Hub/projector, não no output. O marker deve nomear source e verbo que realmente existem.                                                                                                                           |
+| `flext-law` excede budget por bytes                                     | Rejeitado como métrica inválida; o gate `test_delivery_budget_holds_with_measured_composition` passou. Usar tokens medidos pelo owner, não bytes/estimativa.                                                                                          |
+| `uv.lock` global seria banido                                           | Não transportar uma correção FLEXT para repo provider-neutral sem owner. Aplicar apenas se config/law global declarar o ban; em FLEXT permanece proibido.                                                                                             |
+| `VALIDATE_ON_CHANGE.md` sem owner                                       | Finding real de composição: preservar a diretiva mais nova, intaká-la como regra/ADR canônica e depois substituir o root file por pointer ou removê-lo na mesma projeção.                                                                             |
 
 ## Classificação obrigatória do corpus
 
-| Classe | Owner gravável | Tratamento |
-| --- | --- | --- |
-| Guidance corrente | README/docs/standards/guides hand-written | Atualizar contra source/config/runtime e validar links/exemplos |
-| ADR | `docs/architecture/adr/` | Manter rationale; declarar `CURRENT IMPLEMENTATION`, `ACCEPTED TARGET` ou `PROPOSED` |
-| Projeção | template/config/generator declarado | Editar owner; regenerar; nunca editar output |
-| Histórico | releases/audits/handoffs/plans datados | Preservar conteúdo e rotular como histórico; não usar como comando atual |
-| Evidência runtime | reports/receipts/gates | Regenerar pelo comando canônico; nunca fabricar ou copiar totals |
-| Estado executivo | Gas City Beads | Atualizar status, dependências, critérios e receipts; docs só apontam |
-| Memória durável | `bd remember`; Kilo como contexto secundário | Guardar apenas decisões/constraints estáveis; corrigir memória obsoleta |
+| Classe            | Owner gravável                               | Tratamento                                                                           |
+| ----------------- | -------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Guidance corrente | README/docs/standards/guides hand-written    | Atualizar contra source/config/runtime e validar links/exemplos                      |
+| ADR               | `docs/architecture/adr/`                     | Manter rationale; declarar `CURRENT IMPLEMENTATION`, `ACCEPTED TARGET` ou `PROPOSED` |
+| Projeção          | template/config/generator declarado          | Editar owner; regenerar; nunca editar output                                         |
+| Histórico         | releases/audits/handoffs/plans datados       | Preservar conteúdo e rotular como histórico; não usar como comando atual             |
+| Evidência runtime | reports/receipts/gates                       | Regenerar pelo comando canônico; nunca fabricar ou copiar totals                     |
+| Estado executivo  | Gas City Beads                               | Atualizar status, dependências, critérios e receipts; docs só apontam                |
+| Memória durável   | `bd remember`; Kilo como contexto secundário | Guardar apenas decisões/constraints estáveis; corrigir memória obsoleta              |
 
 ## Sequência de implementação
 
@@ -165,15 +165,15 @@ Regras:
 
 ## Falhas esperadas e resposta
 
-| Falha | Resposta owner-correct |
-| --- | --- |
-| Subagente commita/avança gitlink prematuramente | Adotar o commit como input, revisar por hunk/ancestry, corrigir forward e validar; nunca resetar |
-| Provider falha/estoura contexto | Reduzir fatia uma vez; na segunda falha o coordenador assume |
-| `make gen` falha em journal/fixed point | Parar a invocação, corrigir `flext-ff28g`, provar abort e rerodar `make gen` |
-| Docs gate encontra comando aposentado em histórico | Rotular histórico/excluir pelo owner tipado; não reescrever evidência datada |
-| Projeção difere em muitos membros | Corrigir template/config uma vez, regenerar e provar amostra + sweep; não investigar ou editar por membro |
-| Gate encontra findings “preexistentes” | Adotar como red no blast radius e corrigir por classe; sem baseline/supressão |
-| AI Hub projeta bundle global inteiro no projeto | Corrigir perfil/provider no AI Hub; manter projeto com delta mínimo |
+| Falha                                              | Resposta owner-correct                                                                                    |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Subagente commita/avança gitlink prematuramente    | Adotar o commit como input, revisar por hunk/ancestry, corrigir forward e validar; nunca resetar          |
+| Provider falha/estoura contexto                    | Reduzir fatia uma vez; na segunda falha o coordenador assume                                              |
+| `make gen` falha em journal/fixed point            | Parar a invocação, corrigir `flext-ff28g`, provar abort e rerodar `make gen`                              |
+| Docs gate encontra comando aposentado em histórico | Rotular histórico/excluir pelo owner tipado; não reescrever evidência datada                              |
+| Projeção difere em muitos membros                  | Corrigir template/config uma vez, regenerar e provar amostra + sweep; não investigar ou editar por membro |
+| Gate encontra findings “preexistentes”             | Adotar como red no blast radius e corrigir por classe; sem baseline/supressão                             |
+| AI Hub projeta bundle global inteiro no projeto    | Corrigir perfil/provider no AI Hub; manter projeto com delta mínimo                                       |
 
 ## Critérios finais
 

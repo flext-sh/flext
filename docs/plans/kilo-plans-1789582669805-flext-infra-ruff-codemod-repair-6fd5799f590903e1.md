@@ -1,6 +1,7 @@
 # Plano fleet-wide: estabilização, modernização e prova runtime FLEXT
 
 <!-- TOC START -->
+
 - [Resultado obrigatório](#resultado-obrigatorio)
 - [Auto-crítica e substituição dos planos anteriores](#auto-critica-e-substituicao-dos-planos-anteriores)
 - [Adendo de repasse e posição atual](#adendo-de-repasse-e-posicao-atual)
@@ -24,6 +25,7 @@
 - [Falhas e recuperação](#falhas-e-recuperacao)
 - [Critérios finais de aceite](#criterios-finais-de-aceite)
 - [Fora de escopo](#fora-de-escopo)
+
 <!-- TOC END -->
 
 ## Resultado obrigatório
@@ -108,18 +110,18 @@ vermelho (`make gen`). Nenhum downstream é aceito antes de `gen ×2`.
 
 ## Registro de progresso por fase
 
-| Fase | Estado após repasse Claude | Critério para avançar |
-|---|---|---|
-| 0 — Gas City e owners | parcial | releitura live e owner único sem beads duplicados |
-| 1 — tips/WIP/lanes | parcial | ancestry, PRs e contribuição real confirmados |
-| 2 — baseline | setup histórico verde; gen vermelho | setup no tree atual + gen ×2 no-op |
-| 3 — produtores | em andamento apenas em geração | forward refs/fixed point verdes, depois journal/mod |
-| 4 — modernização infra | não iniciada como slices integrados | primeiro gate atual define owner |
-| 5 — check | sem baseline atual | check completo zero findings/warnings |
-| 6 — testes | sem suite atual verde | comportamento público, sem timeout/skip |
-| 7 — ondas fleet | absorção histórica parcial | cada repo no tip, PR integrado e rerun |
-| 8 — runtime | pendente | standalone, workspace e consumidores reais |
-| 9 — closeout | pendente | evidência no SHA integrado e trees limpos |
+| Fase                   | Estado após repasse Claude          | Critério para avançar                               |
+| ---------------------- | ----------------------------------- | --------------------------------------------------- |
+| 0 — Gas City e owners  | parcial                             | releitura live e owner único sem beads duplicados   |
+| 1 — tips/WIP/lanes     | parcial                             | ancestry, PRs e contribuição real confirmados       |
+| 2 — baseline           | setup histórico verde; gen vermelho | setup no tree atual + gen ×2 no-op                  |
+| 3 — produtores         | em andamento apenas em geração      | forward refs/fixed point verdes, depois journal/mod |
+| 4 — modernização infra | não iniciada como slices integrados | primeiro gate atual define owner                    |
+| 5 — check              | sem baseline atual                  | check completo zero findings/warnings               |
+| 6 — testes             | sem suite atual verde               | comportamento público, sem timeout/skip             |
+| 7 — ondas fleet        | absorção histórica parcial          | cada repo no tip, PR integrado e rerun              |
+| 8 — runtime            | pendente                            | standalone, workspace e consumidores reais          |
+| 9 — closeout           | pendente                            | evidência no SHA integrado e trees limpos           |
 
 ### Retomada imediata, sem repetir trabalho
 

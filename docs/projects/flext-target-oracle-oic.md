@@ -1,6 +1,7 @@
 # FLEXT Target Oracle OIC
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Target Oracle OIC (`flext-target-oracle-oic`) is the Singer target that loads data into Oracle Integration Cloud

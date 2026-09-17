@@ -1,6 +1,7 @@
 # ADR-002: v0.13.0 Platform Baseline
 
 <!-- TOC START -->
+
 - [Status](#status)
 - [Context](#context)
 - [Decision](#decision)
@@ -15,6 +16,7 @@
 - [Alternatives Considered](#alternatives-considered)
 - [Implementation Notes](#implementation-notes)
 - [References](#references)
+
 <!-- TOC END -->
 
 ## Status

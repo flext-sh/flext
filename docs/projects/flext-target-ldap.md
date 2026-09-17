@@ -1,6 +1,7 @@
 # FLEXT Target LDAP
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Target LDAP (`flext-target-ldap`) is the Singer target that loads records into LDAP directories. It consumes
@@ -60,6 +62,7 @@ via Meltano) or programmatically:
 # config_class is FlextTargetLdapSettings.
 # FlextTargetLdap.run_cli(settings_path) reads Singer JSONL from stdin.
 ```
+
 ## Architecture & modules
 
 ```text
@@ -91,7 +94,7 @@ src/flext_target_ldap/
 - **Orchestration**: `FlextTargetLdapOrchestrator` in `application/orchestrator.py` coordinates the load flow;
   sink classes in `_models/sinks.py` model sink state.
 - **DN construction**: record messages are normalized into LDAP distinguished names before being handed to the `flext-
-  ldap` client.
+ldap` client.
 - **Facade exports**: the package root lazily exports the canonical aliases `c`, `m`, `p`, `t`, `u`, and `settings`,
   plus `d/e/h/r/s/x` re-exported from `flext_ldap`.
 

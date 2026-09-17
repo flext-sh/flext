@@ -1,6 +1,7 @@
 # ADR-014 — Family Part Shape Law and Rope-Driven Codemod Rules
 
 <!-- TOC START -->
+
 - [Context](#context)
 - [Decision](#decision)
   - [1. Family directory and part-class law](#1-family-directory-and-part-class-law)
@@ -13,6 +14,7 @@
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
+
 <!-- TOC END -->
 
 - **Status:** CURRENT IMPLEMENTATION

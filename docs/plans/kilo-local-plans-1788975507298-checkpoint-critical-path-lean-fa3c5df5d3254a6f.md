@@ -100,15 +100,15 @@
 
 ## Efficiency levers (learnings encoded)
 
-| Lever | Effect |
-|---|---|
+| Lever                                   | Effect                                 |
+| --------------------------------------- | -------------------------------------- |
 | `closeout.checkpoint_0_12_0` acceptance | Phase A shrinks from 1432 fixes to ~31 |
-| One fleet regen | −30 lanes, no per-member PR cycles |
-| Wrapped CLI per-gate iteration | seconds instead of 310 s per loop |
-| Generator-first on generated surfaces | one fix kills N violations |
-| `make mod` for mechanical classes | bulk renames without hand-edits |
-| code-review skill per wave | catches regressions before landing |
-| Backlog re-parenting | active board = ~10 release beads |
+| One fleet regen                         | −30 lanes, no per-member PR cycles     |
+| Wrapped CLI per-gate iteration          | seconds instead of 310 s per loop      |
+| Generator-first on generated surfaces   | one fix kills N violations             |
+| `make mod` for mechanical classes       | bulk renames without hand-edits        |
+| code-review skill per wave              | catches regressions before landing     |
+| Backlog re-parenting                    | active board = ~10 release beads       |
 
 ## Validation
 

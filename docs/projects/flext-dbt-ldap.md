@@ -1,6 +1,7 @@
 # FLEXT dbt LDAP
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT dbt LDAP is the integration project that turns LDAP/Active Directory data into analytics-ready warehouse tables.
@@ -63,7 +65,7 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldap/`:
   warehouse sync, data-quality validation, analytics reports, with bookmark state persisted under `history/`.
 - `base.py` — service base (`s`) over `flext-meltano`'s dbt service base.
 - `_settings.py` / `config/` — settings SSOT (`FlextDbtLdapSettings`), consumed as `from flext_dbt_ldap import
-  settings`.
+settings`.
 - `_constants/`, `_models/`, `_utilities/`, `constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py` —
   `c/m/t/p/u` facet declarations and behavior.
 
@@ -72,7 +74,7 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldap/`:
 - **MRO composition**: one public facade class per project; behavior lives in service mixins, never in loose helper
   functions.
 - **Zero direct dbt/ldap imports**: directory access goes through `flext-ldap`; dbt execution goes through `flext-
-  meltano`.
+meltano`.
 - **Settings SSOT**: `FlextDbtLdapSettings.fetch_global()` supplies configuration when the caller passes no override.
 - **Typed payloads**: sync results, run status, and analytics reports are `m.DbtLdap.*` Pydantic models, not raw
   dictionaries.

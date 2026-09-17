@@ -60,30 +60,30 @@ The previous execution exposed planning defects that this plan forbids:
 
 ### Planning baseline — 2026-09-17
 
-| Repository/surface | Current evidence | Consequence |
-| --- | --- | --- |
-| `~/agents` | reconciled `dev` commits are ahead of `origin/dev`; setup/audit/check/runtime/test-full are green, but concurrent untracked `tools/sync_governance.py` claims a forbidden second projector | preserve AI Hub as sole projector; remove the foreign script after contribution review, then review/land/publish the bundle |
-| AI Hub | active `aihub-gvw99` documentation/projector reconciliation and existing addendum | compose with it; do not create a second projector plan |
-| FLEXT root | maintained-doc/local-law WIP plus generated effects in all member worktrees | classify by owner; no root aggregate commit |
-| flext-infra | docs generator WIP overlaps active runtime changes | source edits may proceed only on disjoint paths; validation waits for writer lease |
-| root docs transaction | `make docs` blocked by absent plan-publication authorization | implement explicit disabled state, never private-plan ingestion |
-| fleet generation | first pass completed; second pass invalidated by concurrent `docs_collection.py` change | current outputs are untrusted adoption input, not fixed-point proof |
-| plan collection residue | untracked `config/plan-collection.yaml`, `docs/plans/collection-*`, and `docs/plans/kilo-local-plans-*` may bridge ignored session plans into publishable docs | quarantine from staging immediately; prune only through the repaired docs transaction |
+| Repository/surface      | Current evidence                                                                                                                                                                           | Consequence                                                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| `~/agents`              | reconciled `dev` commits are ahead of `origin/dev`; setup/audit/check/runtime/test-full are green, but concurrent untracked `tools/sync_governance.py` claims a forbidden second projector | preserve AI Hub as sole projector; remove the foreign script after contribution review, then review/land/publish the bundle |
+| AI Hub                  | active `aihub-gvw99` documentation/projector reconciliation and existing addendum                                                                                                          | compose with it; do not create a second projector plan                                                                      |
+| FLEXT root              | maintained-doc/local-law WIP plus generated effects in all member worktrees                                                                                                                | classify by owner; no root aggregate commit                                                                                 |
+| flext-infra             | docs generator WIP overlaps active runtime changes                                                                                                                                         | source edits may proceed only on disjoint paths; validation waits for writer lease                                          |
+| root docs transaction   | `make docs` blocked by absent plan-publication authorization                                                                                                                               | implement explicit disabled state, never private-plan ingestion                                                             |
+| fleet generation        | first pass completed; second pass invalidated by concurrent `docs_collection.py` change                                                                                                    | current outputs are untrusted adoption input, not fixed-point proof                                                         |
+| plan collection residue | untracked `config/plan-collection.yaml`, `docs/plans/collection-*`, and `docs/plans/kilo-local-plans-*` may bridge ignored session plans into publishable docs                             | quarantine from staging immediately; prune only through the repaired docs transaction                                       |
 
 ## Authority and Ownership Map
 
-| Surface | Canonical owner | Projection/consumer | Rule |
-| --- | --- | --- | --- |
-| Provider-neutral rules, skills, commands, agents, evals | `~/agents` GovernanceBundle | installed provider homes and project projections | Project-specific FLEXT detail is forbidden here. |
-| Project discovery and provider projection | `~/ai-hub` manifests, models, templates, projector | `.github`, `.claude`, `.gemini`, `.kilo`, `.kilocode`, peer instruction files | AI Hub is the sole projector; generated files carry markers and are never edited in consumers. |
-| FLEXT branch-matched domain law | `flext/.agents/provider.toml`, router, `flext-law`, `flext-law` command | FLEXT members/standalone consumers | Contains only the FLEXT delta over `~/agents`. |
-| Hand-written FLEXT docs and ADRs | `flext/docs/**` maintained sources | MkDocs site and readers | Describe current reality or label target/proposal/history explicitly. |
-| API/catalog/MkDocs projections | `flext-infra` typed docs models, renderers, templates, transactions | root/member generated docs and `mkdocs.yml` | Renderer owner and stale-file pruning are mandatory. |
-| Documentation knowledge index | `flext-infra` docs inventory renderer | `docs/knowledge-index.md` | Indexes maintained pages; it does not invent CRG topology. |
-| CRG communities/reports | code-review-graph raw generator plus an AI Hub typed publication transaction | `docs/architecture/communities/**`, `crg-reports/**` | Publish only after graph freshness proof; no manual copy and no flext-infra CRG import. |
-| Execution state | Gas City Beads | agents/operators | No Markdown queue or local/embedded tracker. |
-| Durable project memory | `bd remember`; Kilo memory only where the client explicitly requires it | future sessions | Store stable decisions, never current line numbers, counts, ports, or WIP SHAs. |
-| Session evidence | `.kilo/plans/**`, reports, logs | current session/handoff | Never published as durable authority or collected without explicit authorization. |
+| Surface                                                 | Canonical owner                                                              | Projection/consumer                                                           | Rule                                                                                           |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Provider-neutral rules, skills, commands, agents, evals | `~/agents` GovernanceBundle                                                  | installed provider homes and project projections                              | Project-specific FLEXT detail is forbidden here.                                               |
+| Project discovery and provider projection               | `~/ai-hub` manifests, models, templates, projector                           | `.github`, `.claude`, `.gemini`, `.kilo`, `.kilocode`, peer instruction files | AI Hub is the sole projector; generated files carry markers and are never edited in consumers. |
+| FLEXT branch-matched domain law                         | `flext/.agents/provider.toml`, router, `flext-law`, `flext-law` command      | FLEXT members/standalone consumers                                            | Contains only the FLEXT delta over `~/agents`.                                                 |
+| Hand-written FLEXT docs and ADRs                        | `flext/docs/**` maintained sources                                           | MkDocs site and readers                                                       | Describe current reality or label target/proposal/history explicitly.                          |
+| API/catalog/MkDocs projections                          | `flext-infra` typed docs models, renderers, templates, transactions          | root/member generated docs and `mkdocs.yml`                                   | Renderer owner and stale-file pruning are mandatory.                                           |
+| Documentation knowledge index                           | `flext-infra` docs inventory renderer                                        | `docs/knowledge-index.md`                                                     | Indexes maintained pages; it does not invent CRG topology.                                     |
+| CRG communities/reports                                 | code-review-graph raw generator plus an AI Hub typed publication transaction | `docs/architecture/communities/**`, `crg-reports/**`                          | Publish only after graph freshness proof; no manual copy and no flext-infra CRG import.        |
+| Execution state                                         | Gas City Beads                                                               | agents/operators                                                              | No Markdown queue or local/embedded tracker.                                                   |
+| Durable project memory                                  | `bd remember`; Kilo memory only where the client explicitly requires it      | future sessions                                                               | Store stable decisions, never current line numbers, counts, ports, or WIP SHAs.                |
+| Session evidence                                        | `.kilo/plans/**`, reports, logs                                              | current session/handoff                                                       | Never published as durable authority or collected without explicit authorization.              |
 
 `~/.agents` resolves to `~/agents`; they are one authority, not
 two bundles to reconcile independently.
@@ -331,7 +331,7 @@ candidate SHAs.
    recorded current graph SHA, then publish/prune project pages through the
    merged AI Hub transaction. Manual copying is invalid evidence.
 10. Commit each member's attributable generated outputs in that member only.
-   Validate and land member commits before updating root gitlinks.
+    Validate and land member commits before updating root gitlinks.
 11. Before each root gitlink update, prove the member worktree is clean, its
     HEAD is the merged integration SHA, and the proposed gitlink equals that
     exact SHA. Dirty-status annotations are diagnostics, never gitlink values.

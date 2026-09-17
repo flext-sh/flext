@@ -70,17 +70,17 @@ contratos estáveis.
 
 ### Status das fases
 
-| Fase | Estado reconciliado | Critério para avançar |
-|---|---|---|
+| Fase                         | Estado reconciliado           | Critério para avançar                                                                                                    |
+| ---------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | 0. Autoridade/docs/projeções | Em execução (`flext-itpd1.2`) | owners mantidos convergentes; `agentsctl` implementado ou projeções explicitamente bloqueadas; Beads/memória atualizados |
-| 1. Preflight/Beads/lanes | Parcial | tip, PRs, lanes e Beads revalidados na mesma janela temporal |
-| 2. Setup/gen/conform | Parcial e vermelho | objeto lazy único; `setup` verde; `gen` ×2 no-op na tip |
-| 3. Ciclo canônico | Não aceito | `fix/fmt/check/test/build` verdes no mesmo SHA |
-| 4. SSOT `c/t/p/m/u` | Parcial | cortar owners duplicados antes dos moves estruturais |
-| 5. Facades MRO | Parcial | god deixa de vencer a família extraída; facade pública fina |
-| 6. Testes reais | Parcial, não pousado | auditoria por interface pública + suíte verde integrada |
-| 7. Frota | Parcial | consumidor-piloto e cada cluster verdes/pousados |
-| 8. Fechamento | Não iniciado | CI/runtime/Beads/PRs/worktrees encerrados com evidência |
+| 1. Preflight/Beads/lanes     | Parcial                       | tip, PRs, lanes e Beads revalidados na mesma janela temporal                                                             |
+| 2. Setup/gen/conform         | Parcial e vermelho            | objeto lazy único; `setup` verde; `gen` ×2 no-op na tip                                                                  |
+| 3. Ciclo canônico            | Não aceito                    | `fix/fmt/check/test/build` verdes no mesmo SHA                                                                           |
+| 4. SSOT `c/t/p/m/u`          | Parcial                       | cortar owners duplicados antes dos moves estruturais                                                                     |
+| 5. Facades MRO               | Parcial                       | god deixa de vencer a família extraída; facade pública fina                                                              |
+| 6. Testes reais              | Parcial, não pousado          | auditoria por interface pública + suíte verde integrada                                                                  |
+| 7. Frota                     | Parcial                       | consumidor-piloto e cada cluster verdes/pousados                                                                         |
+| 8. Fechamento                | Não iniciado                  | CI/runtime/Beads/PRs/worktrees encerrados com evidência                                                                  |
 
 ## Modelo de orquestração e aceite
 
@@ -109,9 +109,9 @@ Os workers executam em ondas, nunca com owner e projeção concorrentes:
 9. **Worker de testes:** revalida contribuições da lane aeolian sobre a tip, elimina
    apenas testes não aderentes e prova comportamento por interfaces públicas.
 10. **Workers de frota:** um cluster de repos por Bead, sem tocar o superprojeto; o
-   coordenador aprova os SHAs e só então atualiza gitlinks.
+    coordenador aprova os SHAs e só então atualiza gitlinks.
 11. **QA independente:** revisa CRG impact, runtime, gates, diff, idempotência e
-   proveniência. Resultado sem comando, cwd, exit, saída decisiva e SHA é rejeitado.
+    proveniência. Resultado sem comando, cwd, exit, saída decisiva e SHA é rejeitado.
 
 ## Autocrítica e correção de rumo
 

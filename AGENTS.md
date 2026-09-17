@@ -70,17 +70,20 @@ never allowed to hardcode, freeze, or implicitly assume the values that exist to
 
     conflicts or an action would be destructive; otherwise continue to the
     observable stop condition.
+
 13. **Short validated slices.** Deliver in small, independently validated
 
     units that merge to the integration branch quickly — one Bead, one
     reviewable PR, hours not days. Mega-lanes and long-lived WIP are defects;
     the orchestrator splits any unit that cannot merge green within a session.
+
 14. **Living documentation.** Project knowledge is durable, never rebuilt
 
     per session. On entering a project, read its docs first and validate key
     claims quickly against live reality. Every change that produces new
     understanding or behavior updates the affected docs in the SAME change;
     stale docs are defects filed as beads, never worked around.
+
 15. **Runtime reality precedes implementation and tests.** Establish the correct
     behavior from the official external contract and the real consumer first. For
     generated or deployed artifacts, validate the staged artifact with that real
@@ -176,7 +179,7 @@ never allowed to hardcode, freeze, or implicitly assume the values that exist to
     beats over-promising and abandoning. State honestly what fits THIS session.
 24. **Canonical-source-first, minimal-surgical, validate-before-claim.** Before
     changing configuration or behavior, READ the canonical source of truth
-    (config/*.yaml, models catalog, generator, schema) — never guess by grep or
+    (config/\*.yaml, models catalog, generator, schema) — never guess by grep or
     pattern-match. Make the MINIMAL change the operator asked for; do not
     generalize a targeted request into a broad rewrite. Never claim a change
     works from the fact that you wrote it: a config edit that requires a reload/
@@ -191,12 +194,12 @@ never allowed to hardcode, freeze, or implicitly assume the values that exist to
 The newest operator instruction has highest authority. Below it, FLEXT composes
 four non-competing layers:
 
-| Layer | Canonical owner | Permitted content |
-| --- | --- | --- |
-| Global | `~/.agents/AGENTS.md` and the global `flext-development`, `make-check`, and `verification-loop` skills | universal conduct, execution safety, command selection, evidence, and completion |
-| FLEXT | this root file and `.agents/skills/flext-law/SKILL.md` | FLEXT architecture, imports, MRO/lazy exports, workspace Make control plane, generation, and fleet boundaries |
-| Scope | the nearest member or standalone `AGENTS.md` | only narrower domain facts, public surfaces, and explicit exclusions |
-| Execution | the active Bead | current intent, ownership, dependencies, phase, evidence, and stop condition |
+| Layer     | Canonical owner                                                                                        | Permitted content                                                                                             |
+| --------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| Global    | `~/.agents/AGENTS.md` and the global `flext-development`, `make-check`, and `verification-loop` skills | universal conduct, execution safety, command selection, evidence, and completion                              |
+| FLEXT     | this root file and `.agents/skills/flext-law/SKILL.md`                                                 | FLEXT architecture, imports, MRO/lazy exports, workspace Make control plane, generation, and fleet boundaries |
+| Scope     | the nearest member or standalone `AGENTS.md`                                                           | only narrower domain facts, public surfaces, and explicit exclusions                                          |
+| Execution | the active Bead                                                                                        | current intent, ownership, dependencies, phase, evidence, and stop condition                                  |
 
 AI Hub distributes and validates managed projections; it does not become the
 authority for global or FLEXT law. The local provider exposes the exact
@@ -208,6 +211,7 @@ or branch-mismatched authority fails closed; never fall back to `main`, a
 historical branch, another worktree, or a same-named catalog entry.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f2c52d34 -->
+
 ## Issue Tracking with bd (beads)
 
 **IMPORTANT**: This project uses **bd (beads)** for ALL issue tracking. Do NOT use markdown TODOs, task lists, or other tracking methods.
@@ -273,10 +277,12 @@ bd close bd-42 --reason "Completed" --json
 5. **Complete**: `bd close <id> --reason "Done"`
 
 ### Quality
+
 - Use `--acceptance` and `--design` fields when creating issues
 - Use `--validate` to check description completeness
 
 ### Lifecycle
+
 - `bd defer <id>` / `bd supersede <id>` for issue management
 - `bd stale` / `bd orphans` / `bd lint` for hygiene
 - `bd human <id>` to flag for human decisions
@@ -319,6 +325,7 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 2. **Run quality gates** (if code changed) - Tests, linters, builds
 3. **Update issue status** - Close finished work, update in-progress items
 4. **Handle git/sync by active profile**:
+
    ```bash
    # Conservative/minimal/default: report status and proposed commands; wait for approval.
    git status
@@ -328,9 +335,11 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
    git push
    git status
    ```
+
 5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
 
 **Critical rules:**
+
 - Explicit user or orchestrator instructions override this Beads block.
 - Do not commit or push without clear authority from the active profile or the current user request.
 - If a required sync or push is blocked, stop and report the exact command and error.
@@ -378,7 +387,7 @@ Each submodule's `AGENTS.md` links back to this file. Which link to follow depen
   <https://raw.githubusercontent.com/flext-sh/flext/0.12.0-dev/AGENTS.md>
 ```
 
-  Always pin `<branch-or-tag>` to the SAME branch/release the package is built from
+Always pin `<branch-or-tag>` to the SAME branch/release the package is built from
 (e.g. `0.12.0-dev`, or the release tag), never `main`/`master` — the governance law is versioned with the code.
 
 Composition is identical in both modes: global authority → this branch-matched
@@ -388,14 +397,14 @@ specifics and exclusions; it never copies or replaces either parent.
 
 ## Where to Look
 
-| Task | Location | Notes |
-| ------ | ---------- | ------- |
-| Foundation facades / result / DI | `flext-core/src/flext_core/` | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base |
-| Build/codegen/enforcement | `flext-infra/src/flext_infra/` | drives standard Make generation, conform, and lint rules |
-| Test fixtures & builders | `flext-tests/src/flext_tests/` | public test facades and typed fixtures; unified `conftest.py` pattern |
-| Architectural decisions | `docs/architecture/adr/` | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization), ADR-014 (family shape + rope codemod), ADR-017 (parametrized rule surfaces + modernize CLI) |
-| Workspace topology | `config/workspace.yaml` | member list, codegen input (hand-written SSOT) |
-| A Singer connector | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006) |
+| Task                             | Location                           | Notes                                                                                                                                                                         |
+| -------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Foundation facades / result / DI | `flext-core/src/flext_core/`       | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base                                                                                                                                 |
+| Build/codegen/enforcement        | `flext-infra/src/flext_infra/`     | drives standard Make generation, conform, and lint rules                                                                                                                      |
+| Test fixtures & builders         | `flext-tests/src/flext_tests/`     | public test facades and typed fixtures; unified `conftest.py` pattern                                                                                                         |
+| Architectural decisions          | `docs/architecture/adr/`           | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization), ADR-014 (family shape + rope codemod), ADR-017 (parametrized rule surfaces + modernize CLI) |
+| Workspace topology               | `config/workspace.yaml`            | member list, codegen input (hand-written SSOT)                                                                                                                                |
+| A Singer connector               | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006)                                                                                                                              |
 
 ## Build & Test
 
@@ -467,8 +476,8 @@ the SSOT holds. Config/settings modules import only stdlib/pydantic/upstream bas
 ## Conventions & Patterns
 
 - **`__init__.py`, `constants.py`, `models.py`, etc. facet roots are AUTO-GENERATED**
-(`# AUTO-GENERATED FILE — regenerate through `make gen`). Never hand-edit; change
-  the codegen source in `flext-infra` and run `make gen`.
+  (`# AUTO-GENERATED FILE — regenerate through `make gen`). Never hand-edit; change
+the codegen source in `flext-infra`and run`make gen`.
 - **Root `pyproject.toml`** is a codegen projection from `flext-infra`
   templates + `flext-infra/config/codegen.yaml` (with `tooling.yaml` for tool
   configuration and policy); `make deps` recalculates floors, then `make gen` projects them.
@@ -498,14 +507,17 @@ the SSOT holds. Config/settings modules import only stdlib/pydantic/upstream bas
 - Toolchain: `uv` + `.venv` only, always via `make`.
 
 <!-- AIHUB-WORKSPACE-PROVIDERS-BEGIN -->
+
 ## Workspace providers
 
 These routes are generated from provider-owned manifests.
 
 - flext: read `.agents/skills/flext-context-routing/SKILL.md` first.
+
 <!-- AIHUB-WORKSPACE-PROVIDERS-END -->
 
 <!-- code-review-graph MCP tools -->
+
 ## MCP Tools: code-review-graph
 
 **This project has a knowledge graph. Start with the code-review-graph
@@ -532,16 +544,16 @@ gives you structural context (callers, dependents, test coverage) that file sear
 
 ### Key Tools
 
-| Tool | Use when |
-| ------ | ---------- |
-| `detect_changes_tool` | Reviewing code changes — gives risk-scored analysis |
-| `get_review_context_tool` | Need source snippets for review — token-efficient |
-| `get_impact_radius_tool` | Understanding blast radius of a change |
-| `get_affected_flows_tool` | Finding which execution paths are impacted |
-| `query_graph_tool` | Tracing callers, callees, imports, tests, dependencies |
-| `semantic_search_nodes_tool` | Finding functions/classes by name or keyword |
-| `get_architecture_overview_tool` | Understanding high-level codebase structure |
-| `refactor_tool` | Planning renames, finding dead code |
+| Tool                             | Use when                                               |
+| -------------------------------- | ------------------------------------------------------ |
+| `detect_changes_tool`            | Reviewing code changes — gives risk-scored analysis    |
+| `get_review_context_tool`        | Need source snippets for review — token-efficient      |
+| `get_impact_radius_tool`         | Understanding blast radius of a change                 |
+| `get_affected_flows_tool`        | Finding which execution paths are impacted             |
+| `query_graph_tool`               | Tracing callers, callees, imports, tests, dependencies |
+| `semantic_search_nodes_tool`     | Finding functions/classes by name or keyword           |
+| `get_architecture_overview_tool` | Understanding high-level codebase structure            |
+| `refactor_tool`                  | Planning renames, finding dead code                    |
 
 ### Workflow
 
@@ -549,9 +561,11 @@ gives you structural context (callers, dependents, test coverage) that file sear
 2. Use `detect_changes_tool` for code review.
 3. Use `get_affected_flows_tool` to understand impact.
 4. Use `query_graph_tool` pattern="tests_for" to check coverage.
+
 <!-- /code-review-graph MCP tools -->
 
 <!-- BEGIN BEADS CODEX SETUP: generated by bd setup codex -->
+
 ## Beads Issue Tracker
 
 Use Beads (`bd`) for durable task tracking in repositories that include it. Use the `beads` skill at `.agents/skills/beads/SKILL.md` (project install) or `~/.agents/skills/beads/SKILL.md` (global install) for Beads workflow guidance, then use the `bd` CLI for issue operations.
@@ -573,9 +587,11 @@ bd prime                # Refresh Beads context
 - Keep persistent project memory in Beads via `bd remember`; do not create ad hoc memory files.
 
 **Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
+
 <!-- END BEADS CODEX SETUP -->
 
 <!-- rtk-instructions v2 -->
+
 # RTK (Rust Token Killer) - Token-Optimized Commands
 
 ## Golden Rule
@@ -583,6 +599,7 @@ bd prime                # Refresh Beads context
 **Always prefix commands with `rtk`**. If RTK has a dedicated filter, it uses it. If not, it passes through unchanged. This means RTK is always safe to use.
 
 **Important**: Even in command chains with `&&`, use `rtk`:
+
 ```bash
 # ❌ Wrong
 git add . && git commit -m "msg" && git push
@@ -594,6 +611,7 @@ rtk git add . && rtk git commit -m "msg" && rtk git push
 ## RTK Commands by Workflow
 
 ### Build & Compile (80-90% savings)
+
 ```bash
 rtk cargo build         # Cargo build output
 rtk cargo check         # Cargo check output
@@ -605,6 +623,7 @@ rtk next build          # Next.js build with route metrics (87%)
 ```
 
 ### Test (60-99% savings)
+
 ```bash
 rtk cargo test          # Cargo test failures only (90%)
 rtk go test             # Go test failures only (90%)
@@ -618,6 +637,7 @@ rtk test <cmd>          # Generic test wrapper - failures only
 ```
 
 ### Git (59-80% savings)
+
 ```bash
 rtk git status          # Compact status
 rtk git log             # Compact log (works with all git flags)
@@ -636,6 +656,7 @@ rtk git worktree        # Compact worktree
 Note: Git passthrough works for ALL subcommands, even those not explicitly listed.
 
 ### GitHub (26-87% savings)
+
 ```bash
 rtk gh pr view <num>    # Compact PR view (87%)
 rtk gh pr checks        # Compact PR checks (79%)
@@ -645,6 +666,7 @@ rtk gh api              # Compact API responses (26%)
 ```
 
 ### JavaScript/TypeScript Tooling (70-90% savings)
+
 ```bash
 rtk pnpm list           # Compact dependency tree (70%)
 rtk pnpm outdated       # Compact outdated packages (80%)
@@ -656,6 +678,7 @@ rtk uv run <cmd>        # Compact uv project command output
 ```
 
 ### Files & Search (60-75% savings)
+
 ```bash
 rtk ls <path>           # Tree format, compact (65%)
 rtk read <file>         # Code reading with filtering (60%)
@@ -664,6 +687,7 @@ rtk find <pattern>      # Find grouped by directory (70%)
 ```
 
 ### Analysis & Debug (70-90% savings)
+
 ```bash
 rtk err <cmd>           # Filter errors only from any command
 rtk log <file>          # Deduplicated logs with counts
@@ -675,6 +699,7 @@ rtk diff                # Ultra-compact diffs
 ```
 
 ### Infrastructure (85% savings)
+
 ```bash
 rtk docker ps           # Compact container list
 rtk docker images       # Compact image list
@@ -684,12 +709,14 @@ rtk kubectl logs        # Deduplicated pod logs
 ```
 
 ### Network (65-70% savings)
+
 ```bash
 rtk curl <url>          # Compact HTTP responses (70%)
 rtk wget <url>          # Compact download output (65%)
 ```
 
 ### Meta Commands
+
 ```bash
 rtk gain                # View token savings statistics
 rtk gain --history      # View command history with savings
@@ -701,16 +728,17 @@ rtk init --global       # Add RTK to ~/.claude/CLAUDE.md
 
 ## Token Savings Overview
 
-| Category | Commands | Typical Savings |
-|----------|----------|-----------------|
-| Tests | vitest, playwright, cargo test | 90-99% |
-| Build | next, tsc, lint, prettier | 70-87% |
-| Git | status, log, diff, add, commit | 59-80% |
-| GitHub | gh pr, gh run, gh issue | 26-87% |
-| Package Managers | pnpm, npm, npx | 70-90% |
-| Files | ls, read, grep, find | 60-75% |
-| Infrastructure | docker, kubectl | 85% |
-| Network | curl, wget | 65-70% |
+| Category         | Commands                       | Typical Savings |
+| ---------------- | ------------------------------ | --------------- |
+| Tests            | vitest, playwright, cargo test | 90-99%          |
+| Build            | next, tsc, lint, prettier      | 70-87%          |
+| Git              | status, log, diff, add, commit | 59-80%          |
+| GitHub           | gh pr, gh run, gh issue        | 26-87%          |
+| Package Managers | pnpm, npm, npx                 | 70-90%          |
+| Files            | ls, read, grep, find           | 60-75%          |
+| Infrastructure   | docker, kubectl                | 85%             |
+| Network          | curl, wget                     | 65-70%          |
 
 Overall average: **60-90% token reduction** on common development operations.
+
 <!-- /rtk-instructions -->

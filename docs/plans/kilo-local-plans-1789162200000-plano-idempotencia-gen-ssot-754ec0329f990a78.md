@@ -13,12 +13,12 @@ verde. O gate `gen-check` do CI funcionava (catching drift real); o RENDERER é 
 
 ### CR1 — Render lê o AMBIENTE, não só o SSOT (a causa-mãe)
 
-| Entrada ambiente | Efeito observado (evidência) |
-|---|---|
-| Presença de `.flext-runtime/` no host | `**/.flext-runtime: true` em `.vscode/.gitignore` só no host; runner renderiza diferente → drift no CI (PR #225) |
+| Entrada ambiente                              | Efeito observado (evidência)                                                                                                                                                    |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Presença de `.flext-runtime/` no host         | `**/.flext-runtime: true` em `.vscode/.gitignore` só no host; runner renderiza diferente → drift no CI (PR #225)                                                                |
 | **Árvore de trabalho** (arquivos WIP do ator) | `compose_per_file_ignores(repository_root)` (conform.py:2824) derivou `"PLC2801","SLF001"` dos arquivos WIP; árvore limpa do runner não → projeção commitada ≠ render do runner |
-| Relógio do host | `year=time.localtime().tm_year` em `_project_render_context` — input de ambiente no render |
-| Resolução de dependências do ambiente | `--hash=sha256:c5132b4b…` projetado em arquivo auditável (CI PR #225) — hash pertence ao uv.lock |
+| Relógio do host                               | `year=time.localtime().tm_year` em `_project_render_context` — input de ambiente no render                                                                                      |
+| Resolução de dependências do ambiente         | `--hash=sha256:c5132b4b…` projetado em arquivo auditável (CI PR #225) — hash pertence ao uv.lock                                                                                |
 
 **Lei decorrente:** `render = f(SSOT, templates, PINS)` — e NADA mais. Qualquer leitura de filesystem
 fora do repositório git-checkout, relógio, locale, env-var ou estado de árvore não-commitada é defeito.
@@ -99,18 +99,19 @@ mudança no dono (ex.: flext-infra)
   → umbrella rollup (gitlinks+projeções) → gen ×2 exit 0 (prova de convergência)
   → integração verde ESTÁVEL (segunda rodada de gen = no-op)
 ```
+
 O passo final é o teste de fogo: **rodar gen de novo e nada mudar** — hoje é exatamente o contrário.
 
 ## 5. Ordem de execução e sessões
 
-| Sessão | Workstream | Entrega |
-|---|---|---|
-| R1 | WS-A (4 itens) + golden-test tri-ambiente | gen determinístico; merge #225 |
-| R2 | WS-B (journal+lock) + WS-C (escrita canônica) | fim dos falsos drifts e travamentos |
-| R3 | WS-D (escopo fix/fmt) + B404 | verbos seguros; check infra |
-| R4-R6 | loc-cap ×5 (via make mod) + #688 merge | infra 100% verde |
-| R7 | WS-E cascade + 31 membros + runtime | **F2 FECHADA** |
-| R8+ | F3 crg → F4 piloto/on tipagem → F5 universal | épico fechado |
+| Sessão | Workstream                                    | Entrega                             |
+| ------ | --------------------------------------------- | ----------------------------------- |
+| R1     | WS-A (4 itens) + golden-test tri-ambiente     | gen determinístico; merge #225      |
+| R2     | WS-B (journal+lock) + WS-C (escrita canônica) | fim dos falsos drifts e travamentos |
+| R3     | WS-D (escopo fix/fmt) + B404                  | verbos seguros; check infra         |
+| R4-R6  | loc-cap ×5 (via make mod) + #688 merge        | infra 100% verde                    |
+| R7     | WS-E cascade + 31 membros + runtime           | **F2 FECHADA**                      |
+| R8+    | F3 crg → F4 piloto/on tipagem → F5 universal  | épico fechado                       |
 
 ## 6. Decisões que peço ao operador
 
@@ -119,6 +120,7 @@ O passo final é o teste de fogo: **rodar gen de novo e nada mudar** — hoje é
 3. Confirmar prioridade WS-A antes do loc-cap (idempotência destrava o resto; loc-cap só ordena o verde)
 
 ## ✅ APROVAÇÃO REGISTRADA — 21:44Z de 2026-09-11
+
 O operador aprovou, via pedido formal:
 
 - **"Aprovo WS-A agora"** — execução imediata do WS-A (pureza de entrada + golden-test tri-ambiente; merge #225 quando CI verde)
@@ -129,7 +131,7 @@ O operador aprovou, via pedido formal:
 Estado da execução WS-A no fechamento desta sessão (21:4xZ):
 
 - Investigação cirúrgica concluída: `external_tool_state_dir` (project_discovery.py:127-153) é
-  computação pura de caminho (OK); `transaction_residue` (_mise_artifacts_state.py:356-383) faz
+  computação pura de caminho (OK); `transaction_residue` (\_mise_artifacts_state.py:356-383) faz
   `iterdir` do estado (legítimo como diagnóstico de resíduo; PROIBIDO como input de render);
   `compose_per_file_ignores(repository_root)` (conform.py:2824) lê a árvore de trabalho (PROVADO:
   ignores PLC2801/SLF001 só existiam com WIP na árvore) — este é o primeiro alvo do fix;

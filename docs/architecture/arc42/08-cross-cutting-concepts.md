@@ -1,6 +1,7 @@
 # 8. Cross-cutting Concepts
 
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [8.1 Result Railway](#81-result-railway)
 - [8.2 Strict Typing](#82-strict-typing)
@@ -10,6 +11,7 @@
 - [8.5 Pydantic 2-way Boundary](#85-pydantic-2-way-boundary)
 - [8.6 Enforcement as Data](#86-enforcement-as-data)
 - [8.7 Continuous Green](#87-continuous-green)
+
 <!-- TOC END -->
 
 **Reviewed**: 2026-07-12 | **Scope**: Concepts applied uniformly across the FLEXT workspace
@@ -74,6 +76,7 @@ the facade. Standalone "compat" aliases, pass-through proxies, and parallel
 old+new surfaces are removed in the same cycle they are replaced.
 
 <!-- mro-wkii.17.26 (agent: codex) — make thin-domain-facade decomposition a cross-cutting MRO invariant. -->
+
 ### 8.4.1 Facade Decomposition
 
 Composition modules remain thin regardless of layer. A `<domain>.py` facade

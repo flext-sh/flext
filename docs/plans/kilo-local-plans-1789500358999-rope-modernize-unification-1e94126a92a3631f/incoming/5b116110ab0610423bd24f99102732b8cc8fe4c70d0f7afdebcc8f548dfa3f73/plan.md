@@ -305,11 +305,11 @@ rope_source}.py`, `fixers/rope_fixer.py`, `FlextInfraRopeWorkspace`
 class_nesting_cst,class_nesting_references}.py`, `transformers/mro_remover.py`,
   `refactor/project_alias_migrator.py`) + rascunho `_lazy_init_import_layers.py`;
   `ast` **37–39** (contagem fechada pela varredura dirigida da C-ex term;
-  transformers: pydantic_modernizer, typing_unifier, compatibility_alias,
-  open_encoding, dataclass_modelizer, \_rewrite, smells/_; detectors:
-  silent_failure, deferred_self_reference, consumer_import_violations; gates:
-  duplication, abstraction_boundary, namespace_validator; `\_utilities/_\_ast.py`e afins; codegen/_lazy_init_planner_collision.py);`re`(transformers/pattern,
-hardcoded_version);`tokenize` (`\_accessor_rewrite.py`).
+  transformers: pydantic*modernizer, typing_unifier, compatibility_alias,
+  open_encoding, dataclass_modelizer, \_rewrite, smells/*; detectors:
+  silent*failure, deferred_self_reference, consumer_import_violations; gates:
+  duplication, abstraction_boundary, namespace_validator; `\_utilities/*\_ast.py`e afins; codegen/_lazy_init_planner_collision.py);`re`(transformers/pattern,
+  hardcoded_version);`tokenize` (`\_accessor_rewrite.py`).
 - **Cobaia ai-hub** (`dev`, WIP ~15 arquivos de outros agentes): 6 bases locais
   em `ai_hub/_models/base.py` → 482 refs / 66 arquivos (docstring declara o
   workaround); 37 dataclasses mapeadas (6 → `m.FrozenModel`, 30 skips

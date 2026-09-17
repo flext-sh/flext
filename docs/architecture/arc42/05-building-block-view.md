@@ -1,12 +1,14 @@
 # 5. Building Block View
 
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [5.1 Workspace Level](#51-workspace-level)
 - [5.2 Package Level](#52-package-level)
 - [5.3 Facade Level](#53-facade-level)
   - [5.3.1 Thin Domain Facade](#531-thin-domain-facade)
 - [5.4 Operational Layer](#54-operational-layer)
+
 <!-- TOC END -->
 
 **Reviewed**: 2026-07-12 | **Scope**: Static structure of the FLEXT workspace
@@ -34,13 +36,13 @@ flext-infra ──────────────────────�
 flext-tests ───────────────────────> flext-cli ──> flext-core
 ```
 
-| Package | Responsibility |
-| --- | --- |
-| `flext-core` | Runtime foundation: result railway (`r[T]`), settings/config base, container, logging, service runtime, and the facade alphabet (`c/t/p/m/u` + `r/e/x/h/d/s`). It never imports another `flext-*` package; dependency floors remain owned by generated package metadata. |
-| `flext-cli` | Universal CLI/template/config engine: Typer model-driven commands, Jinja2 templates, YAML/JSON/CSV/TOML I/O, output rendering. Owns `FlextCliSettings`, `FlextCli`, and all CLI/process/file/output/config/schema/template behavior. |
+| Package       | Responsibility                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `flext-core`  | Runtime foundation: result railway (`r[T]`), settings/config base, container, logging, service runtime, and the facade alphabet (`c/t/p/m/u` + `r/e/x/h/d/s`). It never imports another `flext-*` package; dependency floors remain owned by generated package metadata.                                                                                                                                 |
+| `flext-cli`   | Universal CLI/template/config engine: Typer model-driven commands, Jinja2 templates, YAML/JSON/CSV/TOML I/O, output rendering. Owns `FlextCliSettings`, `FlextCli`, and all CLI/process/file/output/config/schema/template behavior.                                                                                                                                                                     |
 | `flext-infra` | Workspace automation and enforcement: quality gates, docs engine, codegen, dependency sync. All static enforcement rules live as Pydantic-validated YAML data under `flext-infra/config/`. **Not a runtime dependency** — reached via its CLI (`flext-infra` / `flext-docs`) or pytest plugin; only `flext-tests` may depend on it. Public facade: `FlextInfra` (`api.py`) + `FlextInfraCli` (`cli.py`). |
-| `flext-tests` | Test framework: fixtures, runtime aliases (`tm/tv/tt`), `Tests*` models, pytest dispatcher for the enforcement catalog. Depends on `flext-cli` (which depends on `flext-core`). |
-| consumers | Domain packages (LDAP, LDIF, Oracle, gRPC, Meltano taps/targets, API, auth, observability, …). They import the foundation packages; the foundation never imports them. |
+| `flext-tests` | Test framework: fixtures, runtime aliases (`tm/tv/tt`), `Tests*` models, pytest dispatcher for the enforcement catalog. Depends on `flext-cli` (which depends on `flext-core`).                                                                                                                                                                                                                          |
+| consumers     | Domain packages (LDAP, LDIF, Oracle, gRPC, Meltano taps/targets, API, auth, observability, …). They import the foundation packages; the foundation never imports them.                                                                                                                                                                                                                                   |
 
 Cross-project imports flow consumer → foundation freely at runtime; the
 reverse direction is forbidden.
@@ -102,6 +104,7 @@ module.
 
 <!-- mro-wkii.17.26 (agent: codex) — document the universal thin-domain-facade building block requested by the
 operator. -->
+
 ### 5.3.1 Thin Domain Facade
 
 Every module that owns more than one implementation responsibility is split
@@ -131,14 +134,14 @@ compatibility alias, duplicate implementation, or parallel path.
 Runtime behavior is exposed through the operational aliases composed over
 `flext-core`:
 
-| Alias | Facade | Role |
-| --- | --- | --- |
-| `r` | `FlextResult` | Result railway `r[T]` — the only fallible-path contract |
-| `e` | `FlextExceptions` | Typed exception hierarchy |
-| `x` | `FlextMixins` | Reusable behavior mixins |
-| `h` | `FlextHandlers` | Handler abstractions |
-| `d` | `FlextDecorators` | Cross-cutting decorators |
-| `s` | `FlextService` | Service base/runtime; `base.py` publishes the project service base |
+| Alias | Facade            | Role                                                               |
+| ----- | ----------------- | ------------------------------------------------------------------ |
+| `r`   | `FlextResult`     | Result railway `r[T]` — the only fallible-path contract            |
+| `e`   | `FlextExceptions` | Typed exception hierarchy                                          |
+| `x`   | `FlextMixins`     | Reusable behavior mixins                                           |
+| `h`   | `FlextHandlers`   | Handler abstractions                                               |
+| `d`   | `FlextDecorators` | Cross-cutting decorators                                           |
+| `s`   | `FlextService`    | Service base/runtime; `base.py` publishes the project service base |
 
 `api.py` is a thin MRO facade over the composed runtime class and publishes
 the package operational entry point; `services/*` hold the actual behavior,

@@ -1,6 +1,7 @@
 # FLEXT dbt LDIF
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT dbt LDIF is the integration project that turns LDIF directory exports into analytics-ready dbt models. It composes
@@ -64,7 +66,7 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldif/`:
 - `services/unified_service.py` — `FlextDbtLdifUnifiedService`: unified orchestration surface.
 - `base.py` — service base (`s`) over `flext-meltano`'s dbt service base.
 - `_settings.py` / `config/` — settings SSOT (`FlextDbtLdifSettings`), consumed as `from flext_dbt_ldif import
-  settings`.
+settings`.
 - `constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py` — `c/m/t/p/u` facet declarations and
   behavior.
 

@@ -1,6 +1,7 @@
 # PLANO — Consolidação da Frota FLEXT: fechamento integral (2026-09-09)
 
 <!-- TOC START -->
+
 - [Estado na aprovação (evidências gravadas)](#estado-na-aprovacao-evidencias-gravadas)
 - [Fase A — fechar flext-tests](#fase-a-fechar-flext-tests)
 - [Fase B — templates + fixed point do root](#fase-b-templates-fixed-point-do-root)
@@ -13,7 +14,7 @@
 - [Status 2026-09-11 (execução corrente)](#status-2026-09-11-execucao-corrente)
   - [Adendo 2026-09-11 (cadeia de runtime do daemon, mapeada com evidência)](#adendo-2026-09-11-cadeia-de-runtime-do-daemon-mapeada-com-evidencia)
   - [Adendo 2 — mudanças por projeto (2026-09-11) + worktree dedicada](#adendo-2-mudancas-por-projeto-2026-09-11-worktree-dedicada)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 > Aprovado pelo operador (sim, tudo + campanha de dívida incluída).
 > Executor: orquestrador + esquadrão de subagentes.
@@ -68,16 +69,17 @@
 1. `git push -u origin feat/reval250909-adoption` (autorizado pelo operador).
 
 ## Fase F — campanha de dívida estática ai-hub (INCLUÍDA; subagentes em waves)
+
 Baseline capturado: namespace 1106 · codemod 1006 · pyrefly 68 · silent-failure 40 ·
 duplication 36 · mypy 13 · loc-cap 9 · tier-whitelist 1 · runtime-census 1.
 
-| Wave | Classe | Método canônico |
-|---|---|---|
-| F1 | codemod ~1006 | `make fix` + regras ast-grep; residue manual por cluster |
-| F2 | namespace ~1106 | `make mod` + renames mecânicos nomenclatura FLEXT, subagentes por diretório |
-| F3 | pyrefly + mypy ~81 | tipagem no dono, união discriminada, narrowing — subagentes por módulo |
-| F4 | silent-failure ~40 | excepts operacionais tipados (padrão installed_runtime) |
-| F5 | duplication + loc-cap + tier + census ~47 | owners compartilhados `u.*`; splits dos 5 arquivos >1000 LOC (1 subagente por arquivo, teste a cada extração) |
+| Wave | Classe                                    | Método canônico                                                                                               |
+| ---- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| F1   | codemod ~1006                             | `make fix` + regras ast-grep; residue manual por cluster                                                      |
+| F2   | namespace ~1106                           | `make mod` + renames mecânicos nomenclatura FLEXT, subagentes por diretório                                   |
+| F3   | pyrefly + mypy ~81                        | tipagem no dono, união discriminada, narrowing — subagentes por módulo                                        |
+| F4   | silent-failure ~40                        | excepts operacionais tipados (padrão installed_runtime)                                                       |
+| F5   | duplication + loc-cap + tier + census ~47 | owners compartilhados `u.*`; splits dos 5 arquivos >1000 LOC (1 subagente por arquivo, teste a cada extração) |
 
 - Cada wave: fix → fmt → check parcial da classe → commit escopado → push dev.
 - **Gate final:** `make check` 100% verde + `make test` testmon verde.
@@ -92,6 +94,7 @@ duplication 36 · mypy 13 · loc-cap 9 · tier-whitelist 1 · runtime-census 1.
 - **Gate final:** tips de integração com tudo pousado; zero beads abertos deste plano.
 
 ## Ordem
+
 A ∥ C(depende de B) ∥ E imediato → D ∥ F(parte quando B fechar) → G.
 **Risco:** F5 (splits config.py 3390 / conform.py 2837) — reescrita real; subagente
 dedicado com validação por teste a cada extração.
@@ -108,6 +111,7 @@ dedicado com validação por teste a cada extração.
 - **Frota (extra-session):** v3 do model-pipeline adotado no dono do CCS (`MODEL_PIPELINE_SCHEMA_VERSION 2→3`, build+restart, 400 de schema eliminado); recovery do pipeline anula candidato obsoleto em CAS 409; `flext-cli` click floor revertido+publicado e bumps `structlog` não-commitados revertidos — `uv lock --check` do umbrella exit 0; regras duráveis em `~/agents/rules/flext/process-owner-strictness.md`.
 
 ### Adendo 2026-09-11 (cadeia de runtime do daemon, mapeada com evidência)
+
 Unidade roda ai-hub model-pipeline-daemon; runtime `0.4.8+90bca03a6cec` perdeu `deployment.json`. Reblockeado por pin policy (`agents-governance @ git+ssh://…@v0.3.0` — dono: gate de release flext-infra). Desbloqueio: resolver pin, `make release-build` + install, purge stale, daemon bootstrap g1 (CCS vazio, recovery pousado). Depois: e2e + merge #728.
 
 ### Adendo 2 — mudanças por projeto (2026-09-11) + worktree dedicada

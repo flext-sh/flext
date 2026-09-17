@@ -1,6 +1,7 @@
 # PEP 257, Google Style, and Ruff
 
 <!-- TOC START -->
+
 - [Purpose](#purpose)
 - [General form](#general-form)
 - [Modules](#modules)
@@ -11,6 +12,7 @@
 - [Avoid](#avoid)
 - [Review checklist](#review-checklist)
 - [Canonical validation](#canonical-validation)
+
 <!-- TOC END -->
 
 FLEXT public docstrings follow PEP 257 structure and Google-style sections. The
@@ -51,6 +53,7 @@ def normalize_name(value: str) -> str:
 
     """
 ```
+
 ## Modules
 
 State the module's responsibility and ownership. Keep copyright and SPDX text

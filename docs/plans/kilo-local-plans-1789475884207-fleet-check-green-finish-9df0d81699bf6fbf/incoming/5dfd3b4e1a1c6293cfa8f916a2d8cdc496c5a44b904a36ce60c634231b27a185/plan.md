@@ -12,17 +12,17 @@ LANDED e pushed em `origin/0.12.0-dev` (tips):
 
 INVENTÁRIO FRESCO (make check 15:01, ~4200 violações 32/32 FAIL):
 
-| Classe | Escala | Owner da correção |
-|---|---|---|
-| namespace NS-STRUCT | ~2900 (struct) | exemplos→facade classes; módulos Single Class Nested |
-| namespace NS-CONTRACT/IMPORT + census ENFORCE | ~1150 + 1166 findings | bare `Flext*` imports → alias `c/t/p/m/u` |
-| NS-LAYOUT | ~180 | cli.py + `<família>/base.py` + services/ faltantes |
-| pyrefly/mypy/pyright | por repo (cli 21+6, api, tests 26…) | nos sites, sem suppression |
-| tier-whitelist | 10 (cli) | yaml bare imports → `u.Cli` |
-| silent-failure | ~12 | except propaga; `r.Fail` só em boundary e/u |
-| duplication (jscpd gate) | 2 (flext-api async_client) | extermiar clone, um owner |
-| codemod require-future-annotations | 21 (`_parts/__init__.py` docstring-only, maioria flext-core) | inserir future import pós-docstring |
-| DIRENV_CONTRACT `$HOME` vazio | 2+ | owner: gate flext-infra (operador) — coordenar, NÃO contornar |
+| Classe                                        | Escala                                                       | Owner da correção                                             |
+| --------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------- |
+| namespace NS-STRUCT                           | ~2900 (struct)                                               | exemplos→facade classes; módulos Single Class Nested          |
+| namespace NS-CONTRACT/IMPORT + census ENFORCE | ~1150 + 1166 findings                                        | bare `Flext*` imports → alias `c/t/p/m/u`                     |
+| NS-LAYOUT                                     | ~180                                                         | cli.py + `<família>/base.py` + services/ faltantes            |
+| pyrefly/mypy/pyright                          | por repo (cli 21+6, api, tests 26…)                          | nos sites, sem suppression                                    |
+| tier-whitelist                                | 10 (cli)                                                     | yaml bare imports → `u.Cli`                                   |
+| silent-failure                                | ~12                                                          | except propaga; `r.Fail` só em boundary e/u                   |
+| duplication (jscpd gate)                      | 2 (flext-api async_client)                                   | extermiar clone, um owner                                     |
+| codemod require-future-annotations            | 21 (`_parts/__init__.py` docstring-only, maioria flext-core) | inserir future import pós-docstring                           |
+| DIRENV_CONTRACT `$HOME` vazio                 | 2+                                                           | owner: gate flext-infra (operador) — coordenar, NÃO contornar |
 
 ESTADO DOS AGENTES AO ENCERRAR (worktrees dos membros, NÃO commitado):
 
@@ -35,7 +35,7 @@ ESTADO DOS AGENTES AO ENCERRAR (worktrees dos membros, NÃO commitado):
 1. Obedecer ao que `make setup/gen/fix/fmt/check/test` gera; nunca o contrário.
 2. Fix-forward adopt SEMPRE; proibido rollback/restore/stash/reset/revert; base de trabalho = tip `0.12.0-dev` de cada repo; push FF direto no tip, incremental.
 3. Causa raiz sempre — inclusive warnings, cosméticos e pré-existentes.
-4. Facade pattern OBRIGATÓRIO: `modulo.py` = pasta `_[modulo]/` (base.py + outros *.py); base.py ABSORVE TUDO das classes internas (MRO completa); PROIBIDO `_parts/`/`*_part_NN.py`; facade = só `from ._[modulo] import Classes` + classe MRO vazia; `make gen` gera `__init__` (execução CENTRAL, nunca nos subagentes).
+4. Facade pattern OBRIGATÓRIO: `modulo.py` = pasta `_[modulo]/` (base.py + outros _.py); base.py ABSORVE TUDO das classes internas (MRO completa); PROIBIDO `_parts/`/`__part_NN.py`; facade = só `from ._[modulo] import Classes`+ classe MRO vazia;`make gen`gera`**init**` (execução CENTRAL, nunca nos subagentes).
 5. Anti-GOD-module: Single Class Nested flext por módulo; DRY/SOLID/YAGNI/SSOT em settings/config/c-t-p-m-u/base/services/api/cli; protocols `p.*` + Pydantic `m.*` para tudo; ultra-DRY via c/t/p/m/u (REDUZIR LOC; ≤200 LOC lógicos).
 6. Tests = runtime law: validar comportamento via facades públicas; exterminar mocks/fakes/validação privada/hardcoded de config; tests não definem funcionamento — runtime define.
 7. jscpd para duplicados (exterminar); ruff e pyrefly SEMPRE verdes em todos os arquivos; zero `# noqa`/`type: ignore`.

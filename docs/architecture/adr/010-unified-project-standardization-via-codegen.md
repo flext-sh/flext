@@ -1,6 +1,7 @@
 # ADR-010 — Unified project standardization (Make, scripts, tests, structure) via flext-infra codegen and flext-tests
 
 <!-- TOC START -->
+
 - [Context](#context)
 - [Decision](#decision)
   - [1. Single standardization surface (SSOT)](#1-single-standardization-surface-ssot)
@@ -13,7 +14,9 @@
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
+
 <!-- TOC END -->
+
 - **Status:** CURRENT IMPLEMENTATION
 - **Date:** 2026-07-18
 - **Last updated:** 2026-09-05
@@ -119,12 +122,12 @@ Every project resolves its filesystem roots only through `settings`, never
 through ad-hoc `Path.home()`/`os.environ` derivations. `flext-core`
 `FlextSettings` (layer-0) exposes five XDG-aware directories:
 
-| Field | Linux default | Purpose |
-| --- | --- | --- |
-| `work_dir` | `$XDG_CACHE_HOME` or `~/.cache/<ns>` | scratch/cache |
-| `data_dir` | `$XDG_DATA_HOME` or `~/.local/share/<ns>` | durable data |
-| `config_dir` | `$XDG_CONFIG_HOME` or `~/.config/<ns>` | configuration |
-| `state_dir` | `$XDG_STATE_HOME` or `~/.local/state/<ns>` | state |
+| Field         | Linux default                               | Purpose                |
+| ------------- | ------------------------------------------- | ---------------------- |
+| `work_dir`    | `$XDG_CACHE_HOME` or `~/.cache/<ns>`        | scratch/cache          |
+| `data_dir`    | `$XDG_DATA_HOME` or `~/.local/share/<ns>`   | durable data           |
+| `config_dir`  | `$XDG_CONFIG_HOME` or `~/.config/<ns>`      | configuration          |
+| `state_dir`   | `$XDG_STATE_HOME` or `~/.local/state/<ns>`  | state                  |
 | `runtime_dir` | `$XDG_RUNTIME_DIR/<ns>` or `<work_dir>/run` | ephemeral sockets/PIDs |
 
 macOS and Windows map to their native equivalents (`~/Library/...`,

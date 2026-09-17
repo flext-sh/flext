@@ -1,6 +1,7 @@
 # 2. Constraints
 
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [2.1 Technical Constraints](#21-technical-constraints)
   - [2.1.1 Technology Stack Constraints](#211-technology-stack-constraints)
@@ -20,7 +21,7 @@
 - [2.5 Compliance Constraints](#25-compliance-constraints)
   - [2.5.1 Data Governance](#251-data-governance)
   - [2.5.2 Security Compliance](#252-security-compliance)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 
@@ -88,6 +89,7 @@
 #### Framework and Library Constraints
 
 - **flext-core**: Foundation library for all Python components
+
   - **Rationale**: Provides consistent architectural patterns across ecosystem
   - **Constraint**: All Python services must use flext-core patterns
   - **Impact**: Tight coupling to flext-core API, version compatibility requirements
@@ -100,6 +102,7 @@
 #### Database Constraints
 
 - **PostgreSQL 15+**: Primary database for metadata and configuration
+
   - **Rationale**: ACID compliance, JSON support, excellent performance
   - **Constraint**: Must use PostgreSQL-specific features (JSONB, arrays)
   - **Impact**: Database vendor lock-in, migration complexity
@@ -114,6 +117,7 @@
 #### Clean Architecture Requirements
 
 - **Dependency Inversion**: High-level modules cannot depend on low-level modules
+
   - **Constraint**: All dependencies must point inward toward the domain
   - **Impact**: Limits direct database access from application layer
 
@@ -124,6 +128,7 @@
 #### Domain-Driven Design Constraints
 
 - **Bounded Contexts**: Clear boundaries between different business domains
+
   - **Constraint**: Each context must have its own data model and business logic
   - **Impact**: Prevents shared data models across contexts
 
@@ -142,6 +147,7 @@
 #### Response Time Requirements
 
 - **API Response Time**: < 200ms for 95% of requests
+
   - **Constraint**: Must optimize database queries and external service calls
   - **Impact**: Requires caching, connection pooling, and query optimization
 
@@ -152,6 +158,7 @@
 #### Throughput Requirements
 
 - **Data Processing**: 1 million records per hour per pipeline
+
   - **Constraint**: Must use efficient data processing techniques
   - **Impact**: Requires streaming processing and memory optimization
 
@@ -164,6 +171,7 @@
 #### Authentication and Authorization
 
 - **Multi-Factor Authentication**: Required for all administrative access
+
   - **Constraint**: Must integrate with enterprise MFA systems
   - **Impact**: Requires additional infrastructure and complexity
 
@@ -174,6 +182,7 @@
 #### Data Protection
 
 - **Encryption at Rest**: All sensitive data must be encrypted
+
   - **Constraint**: Must use industry-standard encryption algorithms
   - **Impact**: Requires key management and performance overhead
 
@@ -188,6 +197,7 @@
 #### Development Team
 
 - **Python Developers**: 5-8 developers with Python expertise
+
   - **Constraint**: Limited Go expertise in team
   - **Impact**: Requires training and knowledge transfer
 
@@ -198,6 +208,7 @@
 #### Skill Level Constraints
 
 - **Domain Knowledge**: Limited understanding of data integration patterns
+
   - **Constraint**: Team needs training on Singer platform and DBT
   - **Impact**: Longer development cycles and potential design issues
 
@@ -210,6 +221,7 @@
 #### Development Process
 
 - **Agile Methodology**: 2-week sprints with continuous integration
+
   - **Constraint**: Must deliver working software every sprint
   - **Impact**: Requires careful sprint planning and scope management
 
@@ -220,6 +232,7 @@
 #### Quality Assurance
 
 - **Test Coverage**: 90%+ test coverage required
+
   - **Constraint**: All new code must have comprehensive tests
   - **Impact**: Significant development overhead but higher reliability
 
@@ -232,6 +245,7 @@
 #### Infrastructure Costs
 
 - **Cloud Infrastructure**: Limited budget for cloud resources
+
   - **Constraint**: Must optimize resource usage and costs
   - **Impact**: Requires careful capacity planning and cost monitoring
 
@@ -242,6 +256,7 @@
 #### Development Costs
 
 - **Team Size**: Fixed team size for development
+
   - **Constraint**: Cannot hire additional developers
   - **Impact**: Requires careful scope management and prioritization
 
@@ -256,10 +271,12 @@
 #### GDPR Compliance
 
 - **Data Minimization**: Only collect necessary data
+
   - **Constraint**: Must implement data minimization principles
   - **Impact**: Requires careful data collection and processing design
 
 - **Right to Erasure**: Support data deletion requests
+
   - **Constraint**: Must implement data deletion capabilities
   - **Impact**: Requires data lifecycle management and audit trails
 
@@ -270,6 +287,7 @@
 #### SOX Compliance
 
 - **Audit Trails**: Complete audit trail for all data changes
+
   - **Constraint**: Must log all data modifications
   - **Impact**: Requires comprehensive logging and audit capabilities
 
@@ -282,6 +300,7 @@
 #### Data Integration Standards
 
 - **Singer Specification**: Must comply with Singer platform standards
+
   - **Constraint**: Taps and targets must follow Singer specification
   - **Impact**: Limits flexibility in data integration patterns
 
@@ -292,6 +311,7 @@
 #### Security Standards
 
 - **OWASP Top 10**: Must address all OWASP security risks
+
   - **Constraint**: Must implement security controls for all identified risks
   - **Impact**: Requires comprehensive security testing and controls
 
@@ -306,6 +326,7 @@
 #### Network Constraints
 
 - **Firewall Rules**: Strict firewall rules limit network access
+
   - **Constraint**: Must work within existing network topology
   - **Impact**: Requires careful network design and port management
 
@@ -316,6 +337,7 @@
 #### Hardware Constraints
 
 - **Server Resources**: Limited CPU and memory on existing servers
+
   - **Constraint**: Must optimize resource usage
   - **Impact**: Requires performance optimization and resource monitoring
 
@@ -328,6 +350,7 @@
 #### Maintenance Windows
 
 - **Scheduled Maintenance**: Limited maintenance windows for updates
+
   - **Constraint**: Must minimize downtime during updates
   - **Impact**: Requires zero-downtime deployment strategies
 
@@ -338,6 +361,7 @@
 #### Monitoring Constraints
 
 - **Existing Monitoring**: Must integrate with existing monitoring systems
+
   - **Constraint**: Must use existing monitoring infrastructure
   - **Impact**: Requires integration with legacy monitoring tools
 
@@ -352,6 +376,7 @@
 #### Data Classification
 
 - **Sensitive Data**: Must identify and protect sensitive data
+
   - **Constraint**: Must implement data classification system
   - **Impact**: Requires data discovery and classification tools
 
@@ -362,6 +387,7 @@
 #### Audit Requirements
 
 - **Change Tracking**: Must track all system changes
+
   - **Constraint**: Must implement change management system
   - **Impact**: Requires version control and change tracking
 
@@ -374,6 +400,7 @@
 #### Vulnerability Management
 
 - **Security Scanning**: Must perform regular security scans
+
   - **Constraint**: Must integrate with security scanning tools
   - **Impact**: Requires security tool integration and monitoring
 
@@ -384,6 +411,7 @@
 #### Access Management
 
 - **Identity Management**: Must integrate with enterprise identity systems
+
   - **Constraint**: Must support SSO and LDAP integration
   - **Impact**: Requires identity provider integration
 

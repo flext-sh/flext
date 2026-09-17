@@ -1,4 +1,5 @@
 # SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
+
 # Plano: Continuação da Reconciliação de Beads + Sincronização GitHub
 
 ## Estado atual (evidência)
@@ -13,7 +14,7 @@
 Regra por bead: `bd show --json` re-leitura imediata antes da escrita; mutação em lote ≤20; evidência (id, ação, fonte) anexada ao coordenador após cada lote.
 
 1. **Lote A1 (000)**: titles/descriptions fracos (0c9o, 1ha3, 1wjg1.4/.7/.8/.9/.10/.13/.15); defer `0ftd.3` (P2, lane 0.20); claims mantidos (0kl7, 1wjg1, 1wjg1.11 — evidência viva); labels stale removidos.
-2. **Lote A2 (020)**: remover `reval250909` dos beads SonarQube 2wjm.*; `3cabz` task→bug (root, bugfix); `2nwjy` add integration-needed; `38p39` add partial-violation, rm phantom; titles factuais (1x0iy, 2k4ak).
+2. **Lote A2 (020)**: remover `reval250909` dos beads SonarQube 2wjm.\*; `3cabz` task→bug (root, bugfix); `2nwjy` add integration-needed; `38p39` add partial-violation, rm phantom; titles factuais (1x0iy, 2k4ak).
 3. **Lote A3 (040)**: fechar com DONE/OBSOLETE + evidência: `3zrg3`, `44he4`, `4sn0v`, `4vwj`, `5s0rj`; defer com data/motivo: `3wqv` (state:infrastructure), `4ndde`, `4o9a.1`, `4o9a.4`, `5ra33`, `6lsxp`; add `program:three-owner` (43ng, 4jhx, 5hzi, 654e); add `lane:release-0.12` (5j70p); melhorar desc (4jhx, 5hzi, 654e).
 4. **Lote A4 (080)**: fechar `ay7q` (DONE: leak verificado); remover `state:deferred-backlog` de abertos (c68a, d421); `bf8kx` rm bugfix; `bte4j`/`cxj9o` rm feature (são bugs); re-parent `cv8ys`/`cxj9o` para feature de integração ativa; claims mantidos (bkpj6, co1th, cu85s).
 

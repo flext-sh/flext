@@ -1,6 +1,7 @@
 # Development Standards
 
 <!-- TOC START -->
+
 - [Ownership and architecture](#ownership-and-architecture)
 - [Configuration and types](#configuration-and-types)
 - [Imports and modules](#imports-and-modules)
@@ -8,6 +9,7 @@
 - [Tests](#tests)
 - [Canonical workflow](#canonical-workflow)
 - [Related](#related)
+
 <!-- TOC END -->
 
 This standard summarizes the root `AGENTS.md` and branch-matched `flext-law`.
@@ -17,7 +19,7 @@ Those authorities, the nearest package scope, and the active Bead own execution.
 
 - Read the canonical owner and every consumer before mutation.
 - Keep the strict `settings -> config -> c -> t -> p -> m -> u -> base ->
-  services -> api -> cli` direction.
+services -> api -> cli` direction.
 - Put generic reusable declarations and behavior in the package's canonical
   `c`, `t`, `p`, `m`, or `u` facade.
 - Wire dependencies once through typed `p` protocols at the public composition

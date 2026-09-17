@@ -1,10 +1,12 @@
 # Performance Profiling Standard
 
 <!-- TOC START -->
+
 - [Before changing code](#before-changing-code)
 - [Optimize the measured owner](#optimize-the-measured-owner)
 - [Evidence](#evidence)
 - [Canonical validation](#canonical-validation)
+
 <!-- TOC END -->
 
 Performance changes require measured runtime evidence from the canonical command

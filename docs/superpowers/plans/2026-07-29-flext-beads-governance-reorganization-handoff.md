@@ -1,6 +1,7 @@
 # FLEXT Beads Governance Reorganization — Autonomous Handoff Plan
 
 <!-- TOC START -->
+
 - [Outcome](#outcome)
 - [Root Epic Theme and Authority](#root-epic-theme-and-authority)
 - [Preconditions](#preconditions)
@@ -21,6 +22,7 @@
 - [Validation Contract](#validation-contract)
 - [Stop Condition](#stop-condition)
 - [Handoff Starting Point](#handoff-starting-point)
+
 <!-- TOC END -->
 
 > Status: intentionally not executed by the author of this handoff.
@@ -124,15 +126,15 @@ embedded database, or a custom Beads build.
 
 The target is a small hierarchy with explicit execution order:
 
-| Level | Canonical responsibility | Required content |
-| --- | --- | --- |
-| Root program epic | FLEXT 0.12.0 development-to-production conformity | Scope, authority boundaries, global definition of done, fleet register, release sequence |
-| Engine epic/lane | `flext-infra` generators and canonical Make surface | SSOT owners, generated projections, RED/GREEN/surface contracts, affected consumers |
-| Domain owner links | `flext-core` and `flext-cli` changes required by the engine | Typed API/CLI contracts without duplicated infrastructure |
-| Internal rollout epic | Every first-party FLEXT repository and workspace | One child/register entry per project, divergence, branch/PR/SHA, gates, status |
-| External rollout epic | Independent consumers outside the FLEXT workspace | Reciprocal Bead reference, overlay, compatibility contract, branch/PR/SHA, validation |
-| GitFlow promotion epic | Validated development artifact promoted unchanged | develop validation, production application, rollback evidence, release closure |
-| Governance/audit lane | Staleness, duplicate ownership, broken references | Re-runnable graph checks and exact remediation |
+| Level                  | Canonical responsibility                                    | Required content                                                                         |
+| ---------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Root program epic      | FLEXT 0.12.0 development-to-production conformity           | Scope, authority boundaries, global definition of done, fleet register, release sequence |
+| Engine epic/lane       | `flext-infra` generators and canonical Make surface         | SSOT owners, generated projections, RED/GREEN/surface contracts, affected consumers      |
+| Domain owner links     | `flext-core` and `flext-cli` changes required by the engine | Typed API/CLI contracts without duplicated infrastructure                                |
+| Internal rollout epic  | Every first-party FLEXT repository and workspace            | One child/register entry per project, divergence, branch/PR/SHA, gates, status           |
+| External rollout epic  | Independent consumers outside the FLEXT workspace           | Reciprocal Bead reference, overlay, compatibility contract, branch/PR/SHA, validation    |
+| GitFlow promotion epic | Validated development artifact promoted unchanged           | develop validation, production application, rollback evidence, release closure           |
+| Governance/audit lane  | Staleness, duplicate ownership, broken references           | Re-runnable graph checks and exact remediation                                           |
 
 The existing `mro-wkii.17.41` topology/conform feature and `mro-d9d5`
 idempotent `make setup` bug are implementation authorities to link beneath the
@@ -146,19 +148,19 @@ The following identifiers came from the pre-hotfix audit and are candidates,
 not permission to mutate blindly. Resolve their current `mro-*` IDs, status,
 parents, children, dependencies, and notes with `bd 1.1.2` first.
 
-| Candidate | Intended action | Preservation rule |
-| --- | --- | --- |
-| `rysa`, `ek42`, `47r7` | Consolidate competing conform/generation epics into the surviving FLEXT engine epic | Move unique children and evidence first; supersede only after no unique scope remains |
-| `m8xq.8` | Split the portion that invades generic conform ownership from its project-specific remainder | Keep domain-specific work under its original owner; link generic work to the engine |
-| `zl4a.5`, `zl4a.5.1` | Re-parent Make/resolver defects out of the AWX/Teleport program | Preserve discovery provenance and link the consumer impact back to AWX/Teleport |
-| `ai-hub-67xi` | Already reported superseded by `ai-hub-raur.7.4` | Verify only; do not repeat the mutation |
-| timeout duplicates | Already reported consolidated into `ai-hub-7lyn.3.1.7.6` | Verify survivor contains every unique acceptance condition |
-| `ai-hub-t449.10` | Reported owner of universal governance contract | Keep universal law there; link FLEXT, do not copy FLEXT implementation details into it |
-| `raur.1` | Candidate surviving workspace-state execution slice | Absorb valid intent from `tael`, `mb90`, and `o13c` only after confirming they are truly duplicate or obsolete |
-| `tael`, `mb90`, `o13c` | Candidate superseded workspace contracts | Preserve any unique consumer/evidence; remove obsolete “same branch for every submodule” assumptions |
-| `5u5z` | Candidate owner for external dependencies | Verify authority, then move only external-consumer relationships |
-| `qtka` | Candidate owner for GitFlow validation | Verify authority, then centralize validation/promotion semantics without owning implementations |
-| `raur` | Candidate historical incident owner | Retain incident evidence only; no live implementation ownership |
+| Candidate              | Intended action                                                                              | Preservation rule                                                                                              |
+| ---------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `rysa`, `ek42`, `47r7` | Consolidate competing conform/generation epics into the surviving FLEXT engine epic          | Move unique children and evidence first; supersede only after no unique scope remains                          |
+| `m8xq.8`               | Split the portion that invades generic conform ownership from its project-specific remainder | Keep domain-specific work under its original owner; link generic work to the engine                            |
+| `zl4a.5`, `zl4a.5.1`   | Re-parent Make/resolver defects out of the AWX/Teleport program                              | Preserve discovery provenance and link the consumer impact back to AWX/Teleport                                |
+| `ai-hub-67xi`          | Already reported superseded by `ai-hub-raur.7.4`                                             | Verify only; do not repeat the mutation                                                                        |
+| timeout duplicates     | Already reported consolidated into `ai-hub-7lyn.3.1.7.6`                                     | Verify survivor contains every unique acceptance condition                                                     |
+| `ai-hub-t449.10`       | Reported owner of universal governance contract                                              | Keep universal law there; link FLEXT, do not copy FLEXT implementation details into it                         |
+| `raur.1`               | Candidate surviving workspace-state execution slice                                          | Absorb valid intent from `tael`, `mb90`, and `o13c` only after confirming they are truly duplicate or obsolete |
+| `tael`, `mb90`, `o13c` | Candidate superseded workspace contracts                                                     | Preserve any unique consumer/evidence; remove obsolete “same branch for every submodule” assumptions           |
+| `5u5z`                 | Candidate owner for external dependencies                                                    | Verify authority, then move only external-consumer relationships                                               |
+| `qtka`                 | Candidate owner for GitFlow validation                                                       | Verify authority, then centralize validation/promotion semantics without owning implementations                |
+| `raur`                 | Candidate historical incident owner                                                          | Retain incident evidence only; no live implementation ownership                                                |
 
 For every candidate, the executor records a before/after graph snapshot and a
 reason. A survivor must receive unique description, design, acceptance,

@@ -1,6 +1,7 @@
 # FLEXT gRPC
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT gRPC is the gRPC communication foundation of the FLEXT platform. It wraps grpcio/protobuf concerns behind typed
@@ -64,7 +66,7 @@ The facade also exposes granular builders — `create_server`, `create_client`, 
 - **Proto**: `proto/stubs.py` — protobuf stub integration.
 - **Entry point**: `api.py` defines `FlextGrpc` as the MRO composition of `FlextGrpcApiRuntime`, `FlextGrpcServer`,
   `FlextGrpcClient`, `FlextGrpcConnectionPool`, `FlextGrpcStream`, and `FlextGrpcMetrics`; `grpc =
-  FlextGrpc.fetch_global()` is the shared singleton; `__init__.py` exports the facade plus the standard aliases and
+FlextGrpc.fetch_global()` is the shared singleton; `__init__.py` exports the facade plus the standard aliases and
   `config`/`settings`.
 
 ### Key architectural patterns

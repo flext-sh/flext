@@ -2,22 +2,22 @@
 
 ## Trees distintos
 
-| Tree | Estado confirmado | Uso |
-|---|---|---|
+| Tree                                            | Estado confirmado                                                                 | Uso                                                       |
+| ----------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | `/home/marlonsc/flext-worktrees/rope-modernize` | super `89fc309633`; gitlink infra `96c52f1d6`; checkout infra `d83ccc616` com WIP | lane deste plano; checkout não equivale ao gitlink aceito |
-| `/home/marlonsc/flext` | integração + WIP concorrente em `flext-infra` | comparação/adjudicação, não copiar cegamente |
+| `/home/marlonsc/flext`                          | integração + WIP concorrente em `flext-infra`                                     | comparação/adjudicação, não copiar cegamente              |
 
 ## Claims Claude versus source atual
 
-| Claim histórico | Source atual da lane | Decisão |
-|---|---|---|
+| Claim histórico                                    | Source atual da lane                                                          | Decisão                            |
+| -------------------------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------- |
 | `modernizer.py` convertido para `u.validate_value` | adapters/model validation em `try/except c.ValidationError`; bindings existem | superseded; não reaplicar sem gate |
-| `rewritten` ausente em release metadata | `rewritten` está presente e consumido | resolvido no tip |
-| RET503/F841 em Mise state | retorno do model validado ocorre dentro do `try`; compensation no `except` | resolvido/superseded |
-| suppression SLF001 em `_conform_gitignore` | suppression ausente; mixin contém implementação completa | mudança Claude não aceita |
-| BLE001 é intencional | comentários registram agregação de falhas como violations | pendente de CLI/gate Ruff atual |
-| modernizer sem cobertura | CRG atual liga 19 testes à classe | claim inválido |
-| tudo implementado | nenhum ciclo Make/runtime foi executado na sessão final | rejeitado |
+| `rewritten` ausente em release metadata            | `rewritten` está presente e consumido                                         | resolvido no tip                   |
+| RET503/F841 em Mise state                          | retorno do model validado ocorre dentro do `try`; compensation no `except`    | resolvido/superseded               |
+| suppression SLF001 em `_conform_gitignore`         | suppression ausente; mixin contém implementação completa                      | mudança Claude não aceita          |
+| BLE001 é intencional                               | comentários registram agregação de falhas como violations                     | pendente de CLI/gate Ruff atual    |
+| modernizer sem cobertura                           | CRG atual liga 19 testes à classe                                             | claim inválido                     |
+| tudo implementado                                  | nenhum ciclo Make/runtime foi executado na sessão final                       | rejeitado                          |
 
 ## Conflito com o checkout principal
 
@@ -50,16 +50,16 @@ refeita antes de absorção ou landing.
 
 ## Estado das fases do plano principal
 
-| Fase | Estado atual | Evidência/decisão |
-|---|---|---|
-| 0 — Beads/tips/inventário | ativo | Bead `flext-3rld2` criado/reivindicado via direnv; gitlink e checkout infra divergem e exigem adjudicação |
-| 1 — setup | sem prova atual | executar no SHA atual; históricos não contam |
-| 2 — mod/gen | parcial histórico | gen x2 foi verde em SHA antigo; mod x2 não provado; rerun obrigatório |
-| 3 — modernização arquitetural | não iniciada de forma integrada | 60+ nós ≥200 LOC; nenhum slice MRO atual pousado por este plano |
-| 4 — ciclo corretivo | não iniciado no SHA atual | sem setup/gen/fix/fmt/check/test completo atual |
-| 5 — testes | inventário parcial | clusters históricos e auditorias; decisões remove/rewrite exigem runtime |
-| 6 — check | sem baseline atual | contagens antigas de census/duplication são históricas |
-| 7 — landing | parcial histórico | PRs/merges antigos precisam reconciliar com tips atuais |
+| Fase                          | Estado atual                    | Evidência/decisão                                                                                         |
+| ----------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| 0 — Beads/tips/inventário     | ativo                           | Bead `flext-3rld2` criado/reivindicado via direnv; gitlink e checkout infra divergem e exigem adjudicação |
+| 1 — setup                     | sem prova atual                 | executar no SHA atual; históricos não contam                                                              |
+| 2 — mod/gen                   | parcial histórico               | gen x2 foi verde em SHA antigo; mod x2 não provado; rerun obrigatório                                     |
+| 3 — modernização arquitetural | não iniciada de forma integrada | 60+ nós ≥200 LOC; nenhum slice MRO atual pousado por este plano                                           |
+| 4 — ciclo corretivo           | não iniciado no SHA atual       | sem setup/gen/fix/fmt/check/test completo atual                                                           |
+| 5 — testes                    | inventário parcial              | clusters históricos e auditorias; decisões remove/rewrite exigem runtime                                  |
+| 6 — check                     | sem baseline atual              | contagens antigas de census/duplication são históricas                                                    |
+| 7 — landing                   | parcial histórico               | PRs/merges antigos precisam reconciliar com tips atuais                                                   |
 
 ## Risco estrutural atual
 

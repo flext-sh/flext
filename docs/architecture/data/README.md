@@ -1,6 +1,7 @@
 # FLEXT Data Architecture
 
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [📋 Data Architecture Components](#data-architecture-components)
   - [1. Data Models](#1-data-models)
@@ -49,7 +50,7 @@
   - [Creating New Data Models](#creating-new-data-models)
   - [Updating Data Architecture](#updating-data-architecture)
   - [Review Process](#review-process)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 ## Table of Contents
 

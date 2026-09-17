@@ -13,7 +13,7 @@ license: MIT
 metadata:
   category: development
   source:
-    repository: 'https://github.com/DietrichGebert/ponytail'
+    repository: "https://github.com/DietrichGebert/ponytail"
     path: skills/ponytail
     commit: a945778b4a73b0b78c3c781a594b62cd3a324637
 ---

@@ -1,6 +1,7 @@
 # FLEXT Tap Oracle OIC
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Tap Oracle OIC is the Singer tap that extracts integrations, connections, packages, and related entities from
@@ -53,6 +55,7 @@ from flext_tap_oracle_oic import tap_oracle_oic
 # tap_oracle_oic is the operational alias for FlextTapOracleOicService
 service = tap_oracle_oic()
 ```
+
 ## Architecture & modules
 
 ```text

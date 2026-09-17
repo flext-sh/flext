@@ -27,6 +27,7 @@ Esses itens eram estado inicial relatado, não prova do tree atual.
 ## Sessão iniciada 10:08 — avanços com evidência de transcript
 
 1. **One-writer lazy-init — COMMAND/HISTORICAL**
+
    - removeu probe `FLEXT_DEBUG_LI` antes do commit;
    - removeu o alignment redundante do lado `gen`;
    - Ruff/format do arquivo reportado verde;
@@ -36,6 +37,7 @@ Esses itens eram estado inicial relatado, não prova do tree atual.
    - Bead `flext-j64nz` fechado via `bd` depois de corrigir o uso de `direnv`.
 
 2. **Suite `flext-infra` — COMMAND/HISTORICAL**
+
    - `make test` em background;
    - resultado classificado: 1.289 passed, 58 failed, 13 errors, 573s;
    - clusters: fixture Beads, `DocsGenerateRequest`, precisão YAML,
@@ -44,6 +46,7 @@ Esses itens eram estado inicial relatado, não prova do tree atual.
      valida o SHA atual.
 
 3. **Absorção fix-forward da frota — COMMAND/HISTORICAL**
+
    - integração absorvida em `flext-infra`, incluindo recuperação Mise por
      SHA256 e conflito modify/delete mantendo morto o antigo owner de alignment;
    - 30 membros e `flext-tests` absorvidos/pushed; superprojeto mesclado e
@@ -54,6 +57,7 @@ Esses itens eram estado inicial relatado, não prova do tree atual.
      durável de Beads e fixture truncada; super reportado em `e096f020e9`.
 
 4. **Mapas de dívida — COMMAND/HISTORICAL**
+
    - Pyrefly: 79 findings, agrupados em execute 20, models 19, render 16,
      plan 14 e cauda 10;
    - `DocsGenerateRequest.apply` identificado como contrato exterminado; teste

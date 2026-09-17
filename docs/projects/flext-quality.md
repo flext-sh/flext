@@ -1,6 +1,7 @@
 # FLEXT Quality
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Quality is the unified orchestration platform for Claude Code tooling in the FLEXT ecosystem. It combines a YAML-
@@ -90,7 +92,7 @@ hook processing.
 
 - [Project README](https://github.com/flext-sh/flext-quality/blob/0.12.0-dev/README.md)
 - [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
-  quality.md`
+quality.md`
 - Project documentation under `flext-quality/docs/`
 - Related projects: `flext-core`, `flext-cli`, `flext-observability`, `flext-web`, `flext-infra`
 

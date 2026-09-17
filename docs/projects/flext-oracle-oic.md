@@ -1,6 +1,7 @@
 # FLEXT Oracle OIC
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Oracle OIC (`flext-oracle-oic`) is the Oracle Integration Cloud (OIC) extension library of the FLEXT platform. It
@@ -89,7 +91,7 @@ Source lives under `flext-oracle-oic/src/flext_oracle_oic/`:
 - Source: `flext-oracle-oic/src/flext_oracle_oic/`
 - Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
 - Related packages: `flext-core`, `flext-cli`, `flext-auth`, `flext-api`, `flext-tap-oracle-oic`, `flext-target-oracle-
-  oic`
+oic`
 
 ## Support & issues
 

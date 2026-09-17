@@ -11,7 +11,7 @@ description: >-
 metadata:
   category: development
   source:
-    repository: 'https://github.com/zaggino/z-schema'
+    repository: "https://github.com/zaggino/z-schema"
     path: skills/validating-json-data
     license_path: LICENSE
     commit: 221f6d9d15a7adc117c2872ea657ab3a6c0aeedf
@@ -24,21 +24,21 @@ z-schema validates JSON data against JSON Schema (draft-04, draft-06, draft-07, 
 ## Quick start
 
 ```typescript
-import ZSchema from 'z-schema';
+import ZSchema from "z-schema";
 
 const validator = ZSchema.create();
 
 const schema = {
-  type: 'object',
+  type: "object",
   properties: {
-    name: { type: 'string' },
-    age: { type: 'integer', minimum: 0 },
+    name: { type: "string" },
+    age: { type: "integer", minimum: 0 },
   },
-  required: ['name'],
+  required: ["name"],
 };
 
 // Throws on invalid data
-validator.validate({ name: 'Alice', age: 30 }, schema);
+validator.validate({ name: "Alice", age: 30 }, schema);
 ```
 
 Install: `npm install z-schema`
@@ -57,7 +57,7 @@ z-schema has four modes based on two toggles: `async` and `safe`. Pick the one t
 ### Sync throw (default)
 
 ```typescript
-import ZSchema from 'z-schema';
+import ZSchema from "z-schema";
 
 const validator = ZSchema.create();
 
@@ -150,10 +150,12 @@ Pass `ValidateOptions` as the third argument to include or exclude specific erro
 
 ```typescript
 // Only report type errors
-validator.validate(data, schema, { includeErrors: ['INVALID_TYPE'] });
+validator.validate(data, schema, { includeErrors: ["INVALID_TYPE"] });
 
 // Suppress string-length errors
-validator.validate(data, schema, { excludeErrors: ['MIN_LENGTH', 'MAX_LENGTH'] });
+validator.validate(data, schema, {
+  excludeErrors: ["MIN_LENGTH", "MAX_LENGTH"],
+});
 ```
 
 For the full error code list, see [references/error-codes.md](references/error-codes.md).
@@ -167,19 +169,19 @@ const validator = ZSchema.create();
 
 const schemas = [
   {
-    id: 'address',
-    type: 'object',
-    properties: { city: { type: 'string' }, zip: { type: 'string' } },
-    required: ['city'],
+    id: "address",
+    type: "object",
+    properties: { city: { type: "string" }, zip: { type: "string" } },
+    required: ["city"],
   },
   {
-    id: 'person',
-    type: 'object',
+    id: "person",
+    type: "object",
     properties: {
-      name: { type: 'string' },
-      home: { $ref: 'address' },
+      name: { type: "string" },
+      home: { $ref: "address" },
     },
-    required: ['name'],
+    required: ["name"],
   },
 ];
 
@@ -187,7 +189,7 @@ const schemas = [
 validator.validateSchema(schemas);
 
 // Validate data using a compiled schema ID
-validator.validate({ name: 'Alice', home: { city: 'Paris' } }, 'person');
+validator.validate({ name: "Alice", home: { city: "Paris" } }, "person");
 ```
 
 ## Remote references
@@ -195,20 +197,26 @@ validator.validate({ name: 'Alice', home: { city: 'Paris' } }, 'person');
 ### Manual registration
 
 ```typescript
-ZSchema.setRemoteReference('http://example.com/schemas/address.json', addressSchema);
+ZSchema.setRemoteReference(
+  "http://example.com/schemas/address.json",
+  addressSchema,
+);
 // or per-instance:
-validator.setRemoteReference('http://example.com/schemas/person.json', personSchema);
+validator.setRemoteReference(
+  "http://example.com/schemas/person.json",
+  personSchema,
+);
 ```
 
 ### Automatic loading via schema reader
 
 ```typescript
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from "node:fs";
+import path from "node:path";
 
 ZSchema.setSchemaReader((uri) => {
-  const filePath = path.resolve(__dirname, 'schemas', uri + '.json');
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const filePath = path.resolve(__dirname, "schemas", uri + ".json");
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
 });
 ```
 
@@ -227,8 +235,8 @@ if (!valid && err) {
 ### Global (shared across all validator instances)
 
 ```typescript
-ZSchema.registerFormat('postal-code', (value) => {
-  return typeof value === 'string' && /^\d{5}(-\d{4})?$/.test(value);
+ZSchema.registerFormat("postal-code", (value) => {
+  return typeof value === "string" && /^\d{5}(-\d{4})?$/.test(value);
 });
 ```
 
@@ -236,8 +244,8 @@ ZSchema.registerFormat('postal-code', (value) => {
 
 ```typescript
 const validator = ZSchema.create();
-validator.registerFormat('postal-code', (value) => {
-  return typeof value === 'string' && /^\d{5}(-\d{4})?$/.test(value);
+validator.registerFormat("postal-code", (value) => {
+  return typeof value === "string" && /^\d{5}(-\d{4})?$/.test(value);
 });
 ```
 
@@ -246,7 +254,8 @@ validator.registerFormat('postal-code', (value) => {
 ```typescript
 const validator = ZSchema.create({
   customFormats: {
-    'postal-code': (value) => typeof value === 'string' && /^\d{5}(-\d{4})?$/.test(value),
+    "postal-code": (value) =>
+      typeof value === "string" && /^\d{5}(-\d{4})?$/.test(value),
   },
 });
 ```
@@ -257,8 +266,8 @@ Return `Promise<boolean>`. Requires `{ async: true }`.
 
 ```typescript
 const validator = ZSchema.create({ async: true });
-validator.registerFormat('user-exists', async (value) => {
-  if (typeof value !== 'number') return false;
+validator.registerFormat("user-exists", async (value) => {
+  if (typeof value !== "number") return false;
   const user = await db.findUser(value);
   return user != null;
 });
@@ -275,7 +284,7 @@ const formats = ZSchema.getRegisteredFormats();
 Set the draft explicitly if the schema targets a specific version:
 
 ```typescript
-const validator = ZSchema.create({ version: 'draft-07' });
+const validator = ZSchema.create({ version: "draft-07" });
 ```
 
 Valid values: `'draft-04'`, `'draft-06'`, `'draft-07'`, `'draft2019-09'`, `'draft2020-12'` (default), `'none'`.
@@ -301,7 +310,7 @@ For the full options reference, see [references/options.md](references/options.m
 Target a specific path within a schema:
 
 ```typescript
-validator.validate(carData, fullSchema, { schemaPath: 'definitions.car' });
+validator.validate(carData, fullSchema, { schemaPath: "definitions.car" });
 ```
 
 ## Browser usage (UMD)
@@ -311,7 +320,7 @@ validator.validate(carData, fullSchema, { schemaPath: 'definitions.car' });
 <script>
   var validator = ZSchema.create();
   try {
-    validator.validate({ name: 'test' }, { type: 'object' });
+    validator.validate({ name: "test" }, { type: "object" });
   } catch (err) {
     console.log(err.details);
   }
@@ -332,9 +341,9 @@ import type {
   ErrorCode, // Error code string literal type
   FormatValidatorFn, // (input: unknown) => boolean | Promise<boolean>
   SchemaReader, // (uri: string) => JsonSchema
-} from 'z-schema';
+} from "z-schema";
 
-import { ValidateError } from 'z-schema';
+import { ValidateError } from "z-schema";
 ```
 
 ## Reference files

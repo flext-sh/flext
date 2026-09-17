@@ -1,6 +1,7 @@
 # flext-tap-oracle-wms — legado + dead-code + protocols pilot
 
 <!-- TOC START -->
+
 - [Problem](#problem)
 - [Target: flext-tap-oracle-wms (why)](#target-flext-tap-oracle-wms-why)
 - [Usage universe (SSOT — memory:flext-external-consumer-universe)](#usage-universe-ssot-memoryflext-external-consumer-universe)
@@ -9,6 +10,7 @@
 - [Phase 3 — Collapse polymorphic interfaces → canonical model + protocol](#phase-3-collapse-polymorphic-interfaces-canonical-model-protocol)
 - [Phase 4 — Static gate + CLI acceptance (no pytest)](#phase-4-static-gate-cli-acceptance-no-pytest)
 - [Out of scope](#out-of-scope)
+
 <!-- TOC END -->
 
 **Date:** 2026-07-12
@@ -83,5 +85,5 @@ legado). Pathspec commit + fast-forward push per batch. Fix-forward only.
 
 ## Out of scope
 
-- Contested/foreign-lane projects (ldap/ldif/core/meltano/oracle-*/cli/web/auth, mro-pzxd's own targets).
+- Contested/foreign-lane projects (ldap/ldif/core/meltano/oracle-\*/cli/web/auth, mro-pzxd's own targets).
 - Rewiring legado back into any tool.

@@ -1,10 +1,12 @@
 # Plano 2026-09-10 — Extermínio do supply-chain cooldown + fix do scaffold fixed-point
 
 <!-- TOC START -->
+
 - [Contexto](#contexto)
 - [Diagnóstico do defeito do scaffold (bloqueia o pouso limpo)](#diagnostico-do-defeito-do-scaffold-bloqueia-o-pouso-limpo)
 - [Fases](#fases)
 - [Retomada](#retomada)
+
 <!-- TOC END -->
 
 > Status: EXECUÇÃO. Decisões do operador (2026-09-10): **consertar o scaffold
@@ -42,9 +44,9 @@ o verify-planeia desejado conformado (ordenado, sem headers). ~23 testes
 Suspeitos (conform.py):
 
 1. Guard silencioso: `if workspace is not None and codegen is not None and
-   repository is not None` (:1924) pula a conformação do pyproject.
+repository is not None` (:1924) pula a conformação do pyproject.
 2. Fallback silencioso do taplo: `rendered = formatted.value if
-   formatted.success else rendered` (:1948) engole falha de formatação.
+formatted.success else rendered` (:1948) engole falha de formatação.
 3. Divergência de render: verify usa `project_context=None` (:1855), apply usa
    contexto completo (:1606).
 
@@ -68,12 +70,12 @@ Suspeitos (conform.py):
   SUPERSEDED (sem cutoff, clamp óbito); `flext-3cabz` atualizada (reds
   corrigidos aqui ou documentados com causa raiz).
 - **F6 — Ciclo mcb (pós-merge flext)**: repin `make deps WHAT=upgrade
-  DEPENDENCY=flext-infra` (sem cutoff, `filelock>=3.32.6` resolve);
+DEPENDENCY=flext-infra` (sem cutoff, `filelock>=3.32.6` resolve);
   `make gen` (remoção incondicional extermina `exclude-newer` do mcb)
   - gen check verde; rebase do PR #238 (metade `.beads/*` mantida, metade
-  pyproject substituída); gates no escopo; merge develop (ruleset 1 review —
-  operador edita/aprova); atualizar mcb-w2xi/uaya, CSV reval250909,
-  `bd remember` final.
+    pyproject substituída); gates no escopo; merge develop (ruleset 1 review —
+    operador edita/aprova); atualizar mcb-w2xi/uaya, CSV reval250909,
+    `bd remember` final.
 - **F7 — ~/agents**: commit apenas `skills/tool/beads-reval/SKILL.md` (WIP de
   outros atores intocado).
 

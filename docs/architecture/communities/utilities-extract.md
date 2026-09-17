@@ -1,13 +1,14 @@
 # utilities-extract
 
 <!-- TOC START -->
+
 - [Overview](#overview)
 - [Members](#members)
 - [Execution Flows](#execution-flows)
 - [Dependencies](#dependencies)
   - [Outgoing](#outgoing)
   - [Incoming](#incoming)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 ## Overview
 
@@ -19,60 +20,60 @@ Community of 211 nodes
 
 ## Members
 
-| Name | Kind | File | Lines |
-|------|------|------|-------|
-| FlextLdifUtilitiesACL | Class | flext-ldif/src/flext_ldif/_utilities/acl.py | 13-770 |
-| _is_acl_subject_type | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 23-25 |
-| _build_extensions | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 48-78 |
-| extract_extra | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 60-64 |
-| _build_subject_and_permissions | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 81-104 |
-| _check_special_value | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 107-117 |
-| _extract_from_match | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 120-131 |
-| _extract_target_info | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 134-145 |
-| _extract_version_and_name | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 148-167 |
-| _normalize_permission | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 170-177 |
-| _process_permission_list | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 180-194 |
-| build_aci_subject | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 197-226 |
-| build_aci_target_clause | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 229-239 |
-| build_metadata_extensions | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 242-257 |
-| build_permissions_dict | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 260-276 |
-| extract_bind_rules | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 279-310 |
-| extract_bind_rules_from_extensions | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 313-338 |
-| _format_bind_rule_from_extension | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 341-368 |
-| extract_component | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 371-397 |
-| extract_permissions | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 400-442 |
-| extract_target_extensions | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 445-463 |
-| filter_supported_permissions | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 466-471 |
-| format_aci_line | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 474-494 |
-| format_aci_subject | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 497-509 |
-| format_conversion_comments | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 512-537 |
-| get_acl_attributes | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 540-561 |
-| is_acl_attribute | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 564-568 |
-| normalize_permission_key | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 571-573 |
-| map_oid_to_oud_permissions | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 576-604 |
-| map_oud_to_oid_permissions | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 607-630 |
-| build_mapped_permissions_dict | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 633-640 |
-| parse_aci | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 643-683 |
-| parse_targetattr | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 686-697 |
-| sanitize_acl_name | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 700-730 |
-| sanitize_char | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 705-713 |
-| split_acl_line | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 733-751 |
-| validate_aci_format | Function | flext-ldif/src/flext_ldif/_utilities/acl.py | 754-770 |
-| FlextLdifUtilitiesMetadata | Class | flext-ldif/src/flext_ldif/_utilities/metadata.py | 13-808 |
-| dump_json_payload | Function | flext-ldif/src/flext_ldif/_utilities/metadata.py | 19-26 |
-| dump_dynamic_metadata | Function | flext-ldif/src/flext_ldif/_utilities/metadata.py | 29-36 |
-| _add_to_dict_metadata | Function | flext-ldif/src/flext_ldif/_utilities/metadata.py | 39-57 |
-| _apply_category_update | Function | flext-ldif/src/flext_ldif/_utilities/metadata.py | 60-67 |
-| _apply_filter_update | Function | flext-ldif/src/flext_ldif/_utilities/metadata.py | 70-74 |
-| _apply_rejection_update | Function | flext-ldif/src/flext_ldif/_utilities/metadata.py | 77-81 |
-| _build_schema_format_model | Function | flext-ldif/src/flext_ldif/_utilities/metadata.py | 84-111 |
-| _extract_all_schema_details | Function | flext-ldif/src/flext_ldif/_utilities/metadata.py | 114-168 |
-| _extract_desc_details | Function | flext-ldif/src/flext_ldif/_utilities/metadata.py | 171-189 |
-| _extract_field_order | Function | flext-ldif/src/flext_ldif/_utilities/metadata.py | 192-216 |
-| _extract_leading_trailing_spaces | Function | flext-ldif/src/flext_ldif/_utilities/metadata.py | 219-228 |
-| _extract_matching_rule_details | Function | flext-ldif/src/flext_ldif/_utilities/metadata.py | 231-267 |
+| Name                               | Kind     | File                                              | Lines   |
+| ---------------------------------- | -------- | ------------------------------------------------- | ------- |
+| FlextLdifUtilitiesACL              | Class    | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 13-770  |
+| \_is_acl_subject_type              | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 23-25   |
+| \_build_extensions                 | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 48-78   |
+| extract_extra                      | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 60-64   |
+| \_build_subject_and_permissions    | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 81-104  |
+| \_check_special_value              | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 107-117 |
+| \_extract_from_match               | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 120-131 |
+| \_extract_target_info              | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 134-145 |
+| \_extract_version_and_name         | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 148-167 |
+| \_normalize_permission             | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 170-177 |
+| \_process_permission_list          | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 180-194 |
+| build_aci_subject                  | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 197-226 |
+| build_aci_target_clause            | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 229-239 |
+| build_metadata_extensions          | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 242-257 |
+| build_permissions_dict             | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 260-276 |
+| extract_bind_rules                 | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 279-310 |
+| extract_bind_rules_from_extensions | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 313-338 |
+| \_format_bind_rule_from_extension  | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 341-368 |
+| extract_component                  | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 371-397 |
+| extract_permissions                | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 400-442 |
+| extract_target_extensions          | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 445-463 |
+| filter_supported_permissions       | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 466-471 |
+| format_aci_line                    | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 474-494 |
+| format_aci_subject                 | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 497-509 |
+| format_conversion_comments         | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 512-537 |
+| get_acl_attributes                 | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 540-561 |
+| is_acl_attribute                   | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 564-568 |
+| normalize_permission_key           | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 571-573 |
+| map_oid_to_oud_permissions         | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 576-604 |
+| map_oud_to_oid_permissions         | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 607-630 |
+| build_mapped_permissions_dict      | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 633-640 |
+| parse_aci                          | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 643-683 |
+| parse_targetattr                   | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 686-697 |
+| sanitize_acl_name                  | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 700-730 |
+| sanitize_char                      | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 705-713 |
+| split_acl_line                     | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 733-751 |
+| validate_aci_format                | Function | flext-ldif/src/flext_ldif/\_utilities/acl.py      | 754-770 |
+| FlextLdifUtilitiesMetadata         | Class    | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 13-808  |
+| dump_json_payload                  | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 19-26   |
+| dump_dynamic_metadata              | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 29-36   |
+| \_add_to_dict_metadata             | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 39-57   |
+| \_apply_category_update            | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 60-67   |
+| \_apply_filter_update              | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 70-74   |
+| \_apply_rejection_update           | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 77-81   |
+| \_build_schema_format_model        | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 84-111  |
+| \_extract_all_schema_details       | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 114-168 |
+| \_extract_desc_details             | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 171-189 |
+| \_extract_field_order              | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 192-216 |
+| \_extract_leading_trailing_spaces  | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 219-228 |
+| \_extract_matching_rule_details    | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 231-267 |
 
-*... and 161 more members.*
+_... and 161 more members._
 
 ## Execution Flows
 

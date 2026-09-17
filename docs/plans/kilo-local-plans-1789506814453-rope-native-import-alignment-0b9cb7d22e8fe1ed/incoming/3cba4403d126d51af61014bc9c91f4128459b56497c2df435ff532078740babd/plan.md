@@ -11,19 +11,19 @@
 
 ## 2. Evidência do estado atual (reidratada, fix-forward)
 
-| Fato | Local | Prova |
-| --- | --- | --- |
-| Engine rope de imports já canônica: `ModuleImports`, `from_import(module, level, pairs)`, reescrita por `import_info`, `sort_imports`, `get_changed_source`, padrão violação→reescrita | `flext-infra/src/flext_infra/_utilities/rope_imports.py` | leitura completa |
-| Loop de fases rope do mod com `_apply_plan` + `_check_residue` (convergência a resíduo zero) e callbacks no fingerprint de progresso | `codemod/semantic_apply.py` | leitura |
-| Regras parametrizadas ast-grep + utils SSOT + testes snapshot | `codemod/rules/*.yml`, `codemod/utils/*.yml`, `sgconfig.yml`, `codemod/tests/` | leitura |
-| Regras de enforcement como dados ("detector owns no policy") | `config/infra.yaml` `enforcement.rules` | leitura |
-| Política de camadas já SSOT (T3 landed): `lazy-init.import-layer-order` + `reverse_import_mode` + `forward_import_form` | `config/tooling.yaml:711-730`, `_models/deps_tool_config.py:620-672` | leitura |
-| Integração lazy-init↔alignment commitada por ator concorrente (eb6a03131) apontando p/ mixin libcst | `codegen/lazy_init.py:20,27-31,190-212` | git log + leitura |
-| Rascunho libcst a exterminar (não commitado) | `codegen/_lazy_init_import_alignment.py`, `codegen/_lazy_init_import_layers.py` | git status |
-| Facade rope-AST sancionado (sem `import ast` no consumidor; flext-6flt) | `_wrapper_rewrite.py:20-24`, `FlextInfraUtilitiesRopeRuntime` | leitura |
-| Resíduos `ast`/`libcst` existentes fora do escopo desta fatia | `rope_imports.py:5,344`, `refactor/project_alias_migrator.py`, `transformers/*_cst.py`, etc. | grep |
-| Superfície mod: `make mod` → `refactor mod --apply` (escopo = cwd; dry-run = scan sem apply) | `Makefile:736-742,1199-1202` | leitura |
-| Trabalho concorrente a adotar (não tocar): `cli_routes_refactor.py`, `dataclass_modelizer.py`, `__init__.py` | git status flext-infra | leitura |
+| Fato                                                                                                                                                                                   | Local                                                                                        | Prova             |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------------- |
+| Engine rope de imports já canônica: `ModuleImports`, `from_import(module, level, pairs)`, reescrita por `import_info`, `sort_imports`, `get_changed_source`, padrão violação→reescrita | `flext-infra/src/flext_infra/_utilities/rope_imports.py`                                     | leitura completa  |
+| Loop de fases rope do mod com `_apply_plan` + `_check_residue` (convergência a resíduo zero) e callbacks no fingerprint de progresso                                                   | `codemod/semantic_apply.py`                                                                  | leitura           |
+| Regras parametrizadas ast-grep + utils SSOT + testes snapshot                                                                                                                          | `codemod/rules/*.yml`, `codemod/utils/*.yml`, `sgconfig.yml`, `codemod/tests/`               | leitura           |
+| Regras de enforcement como dados ("detector owns no policy")                                                                                                                           | `config/infra.yaml` `enforcement.rules`                                                      | leitura           |
+| Política de camadas já SSOT (T3 landed): `lazy-init.import-layer-order` + `reverse_import_mode` + `forward_import_form`                                                                | `config/tooling.yaml:711-730`, `_models/deps_tool_config.py:620-672`                         | leitura           |
+| Integração lazy-init↔alignment commitada por ator concorrente (eb6a03131) apontando p/ mixin libcst                                                                                    | `codegen/lazy_init.py:20,27-31,190-212`                                                      | git log + leitura |
+| Rascunho libcst a exterminar (não commitado)                                                                                                                                           | `codegen/_lazy_init_import_alignment.py`, `codegen/_lazy_init_import_layers.py`              | git status        |
+| Facade rope-AST sancionado (sem `import ast` no consumidor; flext-6flt)                                                                                                                | `_wrapper_rewrite.py:20-24`, `FlextInfraUtilitiesRopeRuntime`                                | leitura           |
+| Resíduos `ast`/`libcst` existentes fora do escopo desta fatia                                                                                                                          | `rope_imports.py:5,344`, `refactor/project_alias_migrator.py`, `transformers/*_cst.py`, etc. | grep              |
+| Superfície mod: `make mod` → `refactor mod --apply` (escopo = cwd; dry-run = scan sem apply)                                                                                           | `Makefile:736-742,1199-1202`                                                                 | leitura           |
+| Trabalho concorrente a adotar (não tocar): `cli_routes_refactor.py`, `dataclass_modelizer.py`, `__init__.py`                                                                           | git status flext-infra                                                                       | leitura           |
 
 ## 3. Decisões de design
 
@@ -71,15 +71,15 @@
 
 ## 5. Contrato de validação
 
-| Comando (cwd) | Aceite |
-| --- | --- |
-| flext-infra `make check` / `make test` | exit 0; zero achados ruff/pyrefly/pyright/mypy no escopo |
-| flext-infra `make gen` ×2 | 2º `Lazy-init plan: 0 effects` |
-| flext-infra `make mod` ×2 | 2ª passada sem efeitos (resíduo zero) |
-| testes T2–T4 | verdes; comportamento por fachadas públicas; ordem do SSOT |
-| ai-hub `make gen` ×2 + `make mod` ×2 | 1ª com efeitos; 2ª sem efeitos |
-| ai-hub `.venv/bin/python -m pytest --collect-only -q` | exit 0 (anti-ciclo) |
-| ai-hub `make check` / `make test` | exit 0 |
+| Comando (cwd)                                         | Aceite                                                     |
+| ----------------------------------------------------- | ---------------------------------------------------------- |
+| flext-infra `make check` / `make test`                | exit 0; zero achados ruff/pyrefly/pyright/mypy no escopo   |
+| flext-infra `make gen` ×2                             | 2º `Lazy-init plan: 0 effects`                             |
+| flext-infra `make mod` ×2                             | 2ª passada sem efeitos (resíduo zero)                      |
+| testes T2–T4                                          | verdes; comportamento por fachadas públicas; ordem do SSOT |
+| ai-hub `make gen` ×2 + `make mod` ×2                  | 1ª com efeitos; 2ª sem efeitos                             |
+| ai-hub `.venv/bin/python -m pytest --collect-only -q` | exit 0 (anti-ciclo)                                        |
+| ai-hub `make check` / `make test`                     | exit 0                                                     |
 
 ## 6. Riscos e bordas
 

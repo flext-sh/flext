@@ -1,6 +1,7 @@
 # Prompt: Migração Profunda de flext_tests - Análise e Correção Completa
 
 <!-- TOC START -->
+
 - [Objetivo](#objetivo)
 - [Escopo](#escopo)
   - [Projetos a Analisar](#projetos-a-analisar)
@@ -51,6 +52,7 @@
   - [Verificar marcações](#verificar-marcacoes)
   - [Verificar nomenclatura](#verificar-nomenclatura)
 - [Notas Finais](#notas-finais)
+
 <!-- TOC END -->
 
 ## Objetivo
@@ -226,6 +228,7 @@ tm = TestsFlextMatchers()
 
 # ✅ CORRETO
 ```
+
 ### 2. Uso de Métodos Privados ou Internos
 
 ```python
@@ -339,12 +342,14 @@ Qualquer método que não esteja na documentação pública deve ser investigado
 Para cada uso encontrado:
 
 1. **Ler o contexto completo:**
+
    - Arquivo completo ou seção relevante
    - Imports do arquivo
    - Função/método onde está sendo usado
    - Testes relacionados
 
 2. **Identificar o padrão de uso:**
+
    - Qual método deprecado está sendo usado
    - Quais parâmetros estão sendo passados
    - Qual é o resultado esperado
@@ -358,6 +363,7 @@ Para cada uso encontrado:
 ### Fase 3: Correção Sistemática
 
 1. **Para cada arquivo com usos deprecados:**
+
    - Ler o arquivo completo
    - Identificar todos os usos
    - Criar plano de migração
@@ -365,6 +371,7 @@ Para cada uso encontrado:
    - Verificar imports
 
 2. **Padrões de correção:**
+
    - Substituir método deprecado pelo método público atual
    - Ajustar parâmetros conforme necessário
    - Manter a mesma lógica e comportamento
@@ -387,6 +394,7 @@ Para cada uso encontrado:
    ```
 
 2. **Verificar warnings de deprecation:**
+
    - Não deve haver warnings de deprecation nos testes
    - Todos os métodos deprecados devem ter sido migrados
 
@@ -448,14 +456,17 @@ Alguns métodos podem ser usados internamente pela própria biblioteca `flext_te
 Manter um registro de:
 
 1. **Arquivos analisados:**
+
    - Lista de todos os arquivos verificados
    - Status de cada arquivo (limpo, migrado, pendente)
 
 2. **Métodos encontrados:**
+
    - Quantidade de cada método deprecado encontrado
    - Arquivos onde foram encontrados
 
 3. **Migrações realizadas:**
+
    - Quantidade de migrações por tipo
    - Arquivos modificados
 
@@ -608,15 +619,18 @@ class FlextModels(TestsFlextModels):
 **Processo obrigatório:**
 
 1. **Identificar classes base duplicadas:**
+
    - Buscar `constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py` em cada projeto
    - Buscar múltiplos `conftest.py` em projetos
 
 2. **Mover objetos para `~/flext`:**
+
    - Consolidar todas as classes base em `~/flext/`
    - Estender de `flext_tests` quando apropriado
    - Criar namespaces por projeto (`.Tests[Projeto]`)
 
 3. **Atualizar imports:**
+
    - Todos os projetos devem importar de `~/flext`
    - Remover imports locais de classes base
 
@@ -696,11 +710,13 @@ class TestsLdapServicesEntry:
 class TestsLdapSync:
     """Testes de integração para Sync do flext-ldap."""
 ```
+
 #### 6. Organização de Unit Tests
 
 **Requisitos obrigatórios:**
 
 1. **100% de cobertura com testes reais:**
+
    - ✅ Sem mocks desnecessários
    - ✅ Testes reais de funcionalidade
    - ✅ Validação de comportamento real
@@ -719,6 +735,7 @@ class TestsLdapSync:
    ```
 
 3. **Automação máxima com conftest:**
+
    - ✅ Todas as inicializações em `~/flext/conftest.py`
    - ✅ Conexões, containers, fixtures automáticas
    - ✅ Classes base avançadas de pytest
@@ -791,6 +808,7 @@ def setup_test_environment():
     yield
     # Cleanup automático
 ```
+
 #### 9. Priorização de Refatoração
 
 **Sempre priorizar:**
@@ -882,11 +900,13 @@ def setup_test_environment():
 ### Fase 2: Consolidação
 
 1. **Criar estrutura centralizada:**
+
    - Criar `~/flext/constants.py`, `models.py`, etc.
    - Estender de `flext_tests`
    - Criar namespaces por projeto
 
 2. **Mover e consolidar:**
+
    - Mover objetos comuns para `~/flext/`
    - Consolidar código duplicado
    - Criar domínios de teste (`.Tests[Projeto]`)
@@ -898,11 +918,13 @@ def setup_test_environment():
 ### Fase 3: Reorganização de Testes
 
 1. **Reorganizar diretórios:**
+
    - Criar `tests/unit/`, `tests/integration/`, etc.
    - Mover testes para diretórios corretos
    - Organizar por namespace quando necessário
 
 2. **Renomear arquivos e classes:**
+
    - Renomear para `test_[modulo].py`
    - Renomear classes para `Tests[Projeto][Modulo]`
    - Consolidar múltiplas classes em uma única
@@ -914,11 +936,13 @@ def setup_test_environment():
 ### Fase 4: Automação
 
 1. **Criar conftest centralizado:**
+
    - Consolidar todos os conftest.py em `~/flext/conftest.py`
    - Criar fixtures automáticas
    - Settingsurar containers e conexões
 
 2. **Implementar classes base:**
+
    - Criar classes base avançadas de pytest
    - Automatizar setup/teardown
    - Minimizar código de teste
@@ -939,6 +963,7 @@ def setup_test_environment():
    ```
 
 2. **Remover após validação:**
+
    - Executar todos os testes
    - Verificar que tudo funciona
    - Remover arquivos `.bak`

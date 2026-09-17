@@ -1,4 +1,5 @@
 # SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
+
 # Checkpoint 0.12.0 — Integrar PRs com CI verde + teste cd-infra (windows/macos/linux)
 
 Data: 2026-09-10 (rev2 pós-diagnóstico) · Bead-mãe: `flext-yirgp` · Integração: `origin/0.12.0-dev` (= `ec347f3867`, fetch feito)
@@ -53,12 +54,12 @@ Data: 2026-09-10 (rev2 pós-diagnóstico) · Bead-mãe: `flext-yirgp` · Integra
 
 ## Riscos
 
-| Risco | Contramedida |
-|---|---|
-| stash@{0} (hand-edits) voltar ao worktree | Não pop; documentar na bead como recovery ref only |
-| gen não-fixado (lazy-init abortado) | Rerun gen até no-op antes do commit |
-| index.lock por shells órfãos | Verificar `ps` antes de git de escrita; não matar processos de outros agentes |
-| Runners Windows custosos | Dispatch apenas nos 3 repos representativos |
+| Risco                                     | Contramedida                                                                  |
+| ----------------------------------------- | ----------------------------------------------------------------------------- |
+| stash@{0} (hand-edits) voltar ao worktree | Não pop; documentar na bead como recovery ref only                            |
+| gen não-fixado (lazy-init abortado)       | Rerun gen até no-op antes do commit                                           |
+| index.lock por shells órfãos              | Verificar `ps` antes de git de escrita; não matar processos de outros agentes |
+| Runners Windows custosos                  | Dispatch apenas nos 3 repos representativos                                   |
 
 ## Done
 

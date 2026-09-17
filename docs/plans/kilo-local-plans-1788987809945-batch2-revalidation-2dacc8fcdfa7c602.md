@@ -1,7 +1,9 @@
 # SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
+
 # Plan: Batch-2 bead revalidation (238 open beads → final aligned state)
 
 ## Goal
+
 Finish the fleet bead hygiene program: every open bead revalidated against the
 integration branch and worktrees, aligned to epics, and classified
 bugfix/hotfix with standardized tags in descriptions. Final state: bz (bd ready)
@@ -21,7 +23,7 @@ contains only real, current, prioritized work.
    reproduction/measurement on integration tip and either close with command
    evidence (exit code + decisive output) or downgrade/reprioritize with the
    finding. Known candidates: flext-5k9r7 (fix was reverted by 8ac1b2d5b2 —
-   re-verify live), flext-cpkk (CI green hold), flext-y3qpq.5, flext-dipb.*,
+   re-verify live), flext-cpkk (CI green hold), flext-y3qpq.5, flext-dipb.\*,
    flext-sikjh, flext-ozlu0.
 2. **P1 batch fix-evidence sweep** — grep `git log` per remaining P1 bead ID
    (as done in batch-1); any bead whose ID appears in a landed, non-reverted

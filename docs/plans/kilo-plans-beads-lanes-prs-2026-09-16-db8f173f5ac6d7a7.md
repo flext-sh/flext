@@ -1,11 +1,13 @@
 # Beads, lanes e PRs — reconciliação datada de 2026-09-16
 
 <!-- TOC START -->
+
 - [Regra](#regra)
 - [Beads observados](#beads-observados)
 - [Lanes/PRs observados por Claude](#lanesprs-observados-por-claude)
 - [Contribuições históricas com SHAs](#contribuicoes-historicas-com-shas)
 - [Checklist de releitura no início da execução](#checklist-de-releitura-no-inicio-da-execucao)
+
 <!-- TOC END -->
 
 ## Regra
@@ -16,27 +18,27 @@ com base em transcript histórico.
 
 ## Beads observados
 
-| Bead | Estado histórico | Disposição de planejamento |
-|---|---|---|
-| `flext-5fxu6.4` | IN_PROGRESS no audit read-only de 17:08; owner de generator/enforcement | reler primeiro; candidato ao Bead principal |
-| `flext-j64nz` | fechado por Claude após push do one-writer lazy-init | não reabrir sem regressão atual comprovada |
-| `flext-oquk7` | aberto; fechamento dependia de `make mod` x2 | continua pendente até prova atual |
-| `flext-1x66z` | recebeu mapa Pyrefly 79 | dados históricos; recontar via gate atual |
-| `flext-dcge0` / `flext-fkfmu` | intents sobrepostos de journal/lock | eleger um owner e superseder duplicata após preservar dependências |
-| `flext-9m4gc` / `flext-wjozx` / `flext-c4k44` | intents sobrepostos de testes inválidos | reconciliar; não criar quarto owner |
-| `flext-5k9r7` | setup/toolchain | vincular se `make setup` atual falhar nesse owner |
-| `flext-3d8bv` | determinismo de geração | vincular se gen x2 atual divergir |
-| `flext-gniuj` | envrc/Gas City | usuário confirmou Gas City operacional; só reativar por falha atual |
+| Bead                                          | Estado histórico                                                        | Disposição de planejamento                                          |
+| --------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `flext-5fxu6.4`                               | IN_PROGRESS no audit read-only de 17:08; owner de generator/enforcement | reler primeiro; candidato ao Bead principal                         |
+| `flext-j64nz`                                 | fechado por Claude após push do one-writer lazy-init                    | não reabrir sem regressão atual comprovada                          |
+| `flext-oquk7`                                 | aberto; fechamento dependia de `make mod` x2                            | continua pendente até prova atual                                   |
+| `flext-1x66z`                                 | recebeu mapa Pyrefly 79                                                 | dados históricos; recontar via gate atual                           |
+| `flext-dcge0` / `flext-fkfmu`                 | intents sobrepostos de journal/lock                                     | eleger um owner e superseder duplicata após preservar dependências  |
+| `flext-9m4gc` / `flext-wjozx` / `flext-c4k44` | intents sobrepostos de testes inválidos                                 | reconciliar; não criar quarto owner                                 |
+| `flext-5k9r7`                                 | setup/toolchain                                                         | vincular se `make setup` atual falhar nesse owner                   |
+| `flext-3d8bv`                                 | determinismo de geração                                                 | vincular se gen x2 atual divergir                                   |
+| `flext-gniuj`                                 | envrc/Gas City                                                          | usuário confirmou Gas City operacional; só reativar por falha atual |
 
 ## Lanes/PRs observados por Claude
 
-| Artefato | Estado histórico reportado | Releitura necessária |
-|---|---|---|
-| super PR `#247` | criado/atualizado com evidência R0 | verificar open/merged/closed e head SHA |
-| infra PR `#743` | criado/atualizado com evidência R0 | verificar open/merged/closed e head SHA |
-| super PR `#235` / `aeolian-sodalite` | contribuição absorvida, PR superseded/closed | provar ancestry no tip atual antes de retirement final |
-| infra PR `#681` / `promoted-framework-lift` | contribuição absorvida, PR superseded/closed | provar ancestry no tip atual |
-| PRs `#94/#95` | aposentados no passe parcial de retirement | nenhuma ação sem resíduo atual |
+| Artefato                                    | Estado histórico reportado                   | Releitura necessária                                   |
+| ------------------------------------------- | -------------------------------------------- | ------------------------------------------------------ |
+| super PR `#247`                             | criado/atualizado com evidência R0           | verificar open/merged/closed e head SHA                |
+| infra PR `#743`                             | criado/atualizado com evidência R0           | verificar open/merged/closed e head SHA                |
+| super PR `#235` / `aeolian-sodalite`        | contribuição absorvida, PR superseded/closed | provar ancestry no tip atual antes de retirement final |
+| infra PR `#681` / `promoted-framework-lift` | contribuição absorvida, PR superseded/closed | provar ancestry no tip atual                           |
+| PRs `#94/#95`                               | aposentados no passe parcial de retirement   | nenhuma ação sem resíduo atual                         |
 
 ## Contribuições históricas com SHAs
 

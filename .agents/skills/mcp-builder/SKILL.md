@@ -8,7 +8,7 @@ description: >-
 metadata:
   category: development
   source:
-    repository: 'https://github.com/ComposioHQ/awesome-claude-skills'
+    repository: "https://github.com/ComposioHQ/awesome-claude-skills"
     path: mcp-builder
     license_path: mcp-builder/LICENSE.txt
     commit: 92568c1edaff1bde5371154f036d959346c145a8
@@ -346,6 +346,7 @@ Load these resources as needed during development:
 ### Language-Specific Implementation Guides (Load During Phase 2)
 
 - [🐍 Python Implementation Guide](./reference/python_mcp_server.md) - Complete Python/FastMCP guide with:
+
   - Server initialization patterns
   - Pydantic model examples
   - Tool registration with `@mcp.tool`

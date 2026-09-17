@@ -1,6 +1,7 @@
 # FLEXT Meltano
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Meltano is the enterprise data integration platform of FLEXT. It wraps Meltano, the Singer protocol (taps,
@@ -60,7 +62,7 @@ facade.
   `meltano_plugin_discovery` (plugin registry), `dbt_project` / `dbt_runner` (dbt integration), `singer_catalog`,
   `singer_state`, `singer_sdk`, and `bridge`.
 - **Singer abstractions**: `Tap`, `Target`, `Stream`, and `Sink` base types are exported directly so downstream `flext-
-  tap-*` / `flext-target-*` packages build on them.
+tap-*` / `flext-target-*` packages build on them.
 - **Private facets**: `_constants`, `_models`, `_protocols`, `_typings`, `_utilities` back the public `c/m/p/t/u`
   facades; execution parametrization lives under `config/` and is consumed through the SSOT `config` / `settings` access
   form.
@@ -88,7 +90,7 @@ facade.
 
 - [Project README](https://github.com/flext-sh/flext-meltano/blob/0.12.0-dev/README.md)
 - [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
-  meltano.md`
+meltano.md`
 - Project documentation under `flext-meltano/docs/`
 - Related projects: `flext-core`, `flext-cli`, `flext-plugin`, and the Singer-based `flext-tap-*` / `flext-target-*` /
   `flext-dbt-*` families

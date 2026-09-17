@@ -1,6 +1,7 @@
 # FLEXT Observability
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Observability is the enterprise monitoring, metrics, and telemetry platform of FLEXT. It models every
@@ -92,7 +94,7 @@ instruments any callable with execution metrics.
 
 - [Project README](https://github.com/flext-sh/flext-observability/blob/0.12.0-dev/README.md)
 - [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
-  observability.md`
+observability.md`
 - Project documentation under `flext-observability/docs/`
 - Related projects: `flext-core`, `flext-cli`, `flext-api`, `flext-auth`, `flext-web`, `flext-quality`
 

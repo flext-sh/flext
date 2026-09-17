@@ -19,8 +19,8 @@ if TYPE_CHECKING:
 class TestsFlextRootProtocols(p):
     """Infrastructure test protocols facade — extends flext_infra protocols."""
 
-    class _ModuleProtocols:
-        """Module resolution protocols."""
+    class Tests:
+        """Test infrastructure protocol definitions."""
 
         @runtime_checkable
         class SpecLoader(Protocol):
@@ -33,7 +33,7 @@ class TestsFlextRootProtocols(p):
             """Protocol for module specifications."""
 
             name: str | None
-            loader: TestsFlextRootProtocols._ModuleProtocols.SpecLoader | None
+            loader: TestsFlextRootProtocols.Tests.SpecLoader | None
 
         @runtime_checkable
         class ModuleResolver(Protocol):
@@ -49,20 +49,12 @@ class TestsFlextRootProtocols(p):
 
             def __call__(self, name: str, location: Path) -> ModuleSpec | None: ...
 
-    class _RepoProtocols:
-        """Repository metadata protocols."""
-
         @runtime_checkable
         class RepoProvider(Protocol):
             """Protocol for repository metadata providers."""
 
             def get_branch(self) -> str: ...
             def get_remote_url(self) -> str: ...
-
-    class Tests(
-        TestsFlextRootProtocols._ModuleProtocols, TestsFlextRootProtocols._RepoProtocols
-    ):
-        """Test infrastructure protocol definitions."""
 
 
 __all__: list[str] = ["TestsFlextRootProtocols"]

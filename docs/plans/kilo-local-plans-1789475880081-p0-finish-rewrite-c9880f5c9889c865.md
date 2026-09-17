@@ -30,15 +30,15 @@ em ≤15min, e fechar ondas em ordem de dependência (gen → mod → check → 
 
 ## 1. Estado de verdade hoje (evidência da sessão)
 
-| Item | Estado |
-|---|---|
-| flext-infra | Meus reparos de adoção PARCIAIS NÃO-COMMITADOS (bootstrap fields, render staticmethod, beads.py container import, base.py MRO); `_models/_codegen/` adotado em `70dea697b`; `_conform` depth commitado (`c3f574807`); peer ainda com `_models/_config/` untracked e `conform.py` re-export 11 linhas uncommitted |
-| gen | Nunca verde ×2; última tentativa abortada; progresso camada-a-camada (imports → pydantic → MRO → template root → model_rebuild → repository_provider) |
-| wms-family tests | POUSADO nos tips (a1f077c, 1d0344d, 1a9b7bb, 28bf20c, 2d301a2); offline gate tap corrigido (item.path pytest 9) |
-| Marcadores SSOT | `f5a3bd711` pousado; projeção fleet parcialmente aplicada pelo conform do peer |
-| Beads | `flext-wjozx` in_progress (missão), `flext-fkfmu` open (lock/journal), `flext-c4k44` open (suíte infra), `flext-7pa7o` open (épico settings — sessão dedicada, FORA deste plano) |
-| Superprojeto | `8a524a755d` sincronizado; ADR-016 + épico docs pousados |
-| Lanes sujas | dbt-oracle (peer WIP `_config` etc.), flext-api/auth/core pyproject marker projections (1 arquivo cada), flext-infra-worktrees/ = lane estrangeira NÃO TOCAR |
+| Item             | Estado                                                                                                                                                                                                                                                                                                           |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| flext-infra      | Meus reparos de adoção PARCIAIS NÃO-COMMITADOS (bootstrap fields, render staticmethod, beads.py container import, base.py MRO); `_models/_codegen/` adotado em `70dea697b`; `_conform` depth commitado (`c3f574807`); peer ainda com `_models/_config/` untracked e `conform.py` re-export 11 linhas uncommitted |
+| gen              | Nunca verde ×2; última tentativa abortada; progresso camada-a-camada (imports → pydantic → MRO → template root → model_rebuild → repository_provider)                                                                                                                                                            |
+| wms-family tests | POUSADO nos tips (a1f077c, 1d0344d, 1a9b7bb, 28bf20c, 2d301a2); offline gate tap corrigido (item.path pytest 9)                                                                                                                                                                                                  |
+| Marcadores SSOT  | `f5a3bd711` pousado; projeção fleet parcialmente aplicada pelo conform do peer                                                                                                                                                                                                                                   |
+| Beads            | `flext-wjozx` in_progress (missão), `flext-fkfmu` open (lock/journal), `flext-c4k44` open (suíte infra), `flext-7pa7o` open (épico settings — sessão dedicada, FORA deste plano)                                                                                                                                 |
+| Superprojeto     | `8a524a755d` sincronizado; ADR-016 + épico docs pousados                                                                                                                                                                                                                                                         |
+| Lanes sujas      | dbt-oracle (peer WIP `_config` etc.), flext-api/auth/core pyproject marker projections (1 arquivo cada), flext-infra-worktrees/ = lane estrangeira NÃO TOCAR                                                                                                                                                     |
 
 ## 2. Ondas de execução (ordem de dependência estrita; cada onda fecha com commit+push+bead)
 
@@ -46,7 +46,7 @@ em ≤15min, e fechar ondas em ordem de dependência (gen → mod → check → 
 
 1. Commitar os reparos não-commitados do flext-infra como UM commit de adoção
    (`fix(codegen): complete _conform split adoption — fields, MRO order, part-qualified calls,
-   container import`): `bootstrap.py` (fields graft), `base.py` (MRO: parts antes de `s[...]`),
+container import`): `bootstrap.py` (fields graft), `base.py` (MRO: parts antes de `s[...]`),
    `render.py` (`_managed_gitlinks` staticmethod + owner-qualified), `beads.py` (runtime
    container import), mais qualquer `parent.parent` de profundidade errada que o `grep`
    apontar em `_conform/`.
@@ -133,7 +133,7 @@ em ≤15min, e fechar ondas em ordem de dependência (gen → mod → check → 
 ## 4. Fora de escopo deste plano
 
 - Épico FlextSettings/FlextConfig (`flext-7pa7o` + ADR-016) — sessão dedicada.
-- Validação de consumidores externos (ai-hub/cosmos-main/algar-*) — pertence ao épico.
+- Validação de consumidores externos (ai-hub/cosmos-main/algar-\*) — pertence ao épico.
 - `flext-infra-worktrees/` — lane estrangeira, nunca tocar nem concluir por ela.
 
 ## 5. Aceite final (checklist duro)

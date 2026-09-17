@@ -138,6 +138,7 @@ For tools that list resources:
 - **Include clear pagination info in responses**: Make it easy for LLMs to request more data
 
 Example pagination response structure:
+
 ```json
 {
   "total": 150,
@@ -162,6 +163,7 @@ To prevent overwhelming responses with too much data:
 - **Include truncation metadata**: Show what was truncated and how to get more
 
 Example truncation handling:
+
 ```python
 CHARACTER_LIMIT = 25000
 
@@ -236,13 +238,13 @@ MCP servers support multiple transport mechanisms for different deployment scena
 
 ### Transport Selection Criteria
 
-| Criterion | Stdio | HTTP | SSE |
-|-----------|-------|------|-----|
-| **Deployment** | Local | Remote | Remote |
-| **Clients** | Single | Multiple | Multiple |
+| Criterion         | Stdio         | HTTP             | SSE         |
+| ----------------- | ------------- | ---------------- | ----------- |
+| **Deployment**    | Local         | Remote           | Remote      |
+| **Clients**       | Single        | Multiple         | Multiple    |
 | **Communication** | Bidirectional | Request-Response | Server-Push |
-| **Complexity** | Low | Medium | Medium-High |
-| **Real-time** | No | No | Yes |
+| **Complexity**    | Low           | Medium           | Medium-High |
+| **Real-time**     | No            | No               | Yes         |
 
 ---
 
@@ -455,7 +457,7 @@ MCP servers that connect to external services should implement proper authentica
 
 These best practices represent the comprehensive guidelines for building secure, efficient, and compliant MCP servers that work well within the ecosystem. Developers should follow these guidelines to ensure their MCP servers meet the standards for inclusion in the MCP directory and provide a safe, reliable experience for users.
 
-----------
+---
 
 # Tools
 
@@ -549,12 +551,12 @@ Here's an example of implementing a basic tool in an MCP server:
       throw new Error("Tool not found");
     });
     ```
+
   </Tab>
 
   <Tab title="Python">
     ```python
     app = Server("example-server")
-
 
     @app.list_tools()
     async def list_tools() -> list[types.Tool]:
@@ -582,6 +584,7 @@ Here's an example of implementing a basic tool in an MCP server:
             return [types.TextContent(type="text", text=str(result))]
         raise ValueError(f"Tool not found: {name}")
     ```
+
   </Tab>
 </Tabs>
 
@@ -908,6 +911,7 @@ Here's how to define tools with annotations for different scenarios:
         result = a + b
         return str(result)
     ```
+
   </Tab>
 </Tabs>
 

@@ -25,14 +25,14 @@
 
 ## Âncoras (file:line, já verificadas)
 
-| Fato | Local |
-|---|---|
-| Ordem camadas settings→…→cli | `flext-infra/_constants/namespace.py:35-62` |
-| NS-IMPORT / `_reverse_import` | `flext-infra/validate/_namespace_rules/imports.py:151-164` |
-| `make mod` cwd-scoped | `Makefile:1017-1018` (`refactor mod --apply`) |
-| Catálogo de codemods | `flext-infra/_utilities/codemod_rules.py` (`codemod_rule_plan`) |
-| Mapa NS-CONTRACT | handoff §1.4 (`dict→t.MappingKV`, `object→t.JsonValue/JsonPayload`, `Optional→X \| None`) |
-| Tips | main `c424043b85`; release `4147d43428`; flext-api in-release `528c9e7f` + WIP não commitado |
+| Fato                          | Local                                                                                        |
+| ----------------------------- | -------------------------------------------------------------------------------------------- |
+| Ordem camadas settings→…→cli  | `flext-infra/_constants/namespace.py:35-62`                                                  |
+| NS-IMPORT / `_reverse_import` | `flext-infra/validate/_namespace_rules/imports.py:151-164`                                   |
+| `make mod` cwd-scoped         | `Makefile:1017-1018` (`refactor mod --apply`)                                                |
+| Catálogo de codemods          | `flext-infra/_utilities/codemod_rules.py` (`codemod_rule_plan`)                              |
+| Mapa NS-CONTRACT              | handoff §1.4 (`dict→t.MappingKV`, `object→t.JsonValue/JsonPayload`, `Optional→X \| None`)    |
+| Tips                          | main `c424043b85`; release `4147d43428`; flext-api in-release `528c9e7f` + WIP não commitado |
 
 ## Passos (executar nesta ordem; checkpoint após cada slice verde)
 
@@ -93,12 +93,13 @@
 ### 7. Deploy semver 0.12.0
 
 - `make release-*` (version bump + tag `0.12.0`) → `make publication
-  INDEX=Y` → verificação clean-install do PyPI com smoke runtime
+INDEX=Y` → verificação clean-install do PyPI com smoke runtime
   (import público em env limpo) → fechar beads de aceite (`flext-y3qpq.5/.6`,
   `flext-1wjg1.11/.12`) com SHA merged + digests + evidência runtime →
   teardown (worktree/branch release) só após prova remota.
 
 ## Validação (todo slice)
+
 Verb canônico exit 0 + log completo (sem pipe `tail`) + commit scoped + push FF +
 bead evidence `flext-yirgp` (verb/cwd/exit/decisive output/SHA).
 
@@ -114,6 +115,7 @@ bead evidence `flext-yirgp` (verb/cwd/exit/decisive output/SHA).
 - OOM em `make gen` (exit 137) → commit+push após cada slice verde (recuperação FF).
 
 ## Fora de escopo
+
 Novas ADRs, mudanças de AGENTS.md/lei, arquitetura de settings (decisão B),
 ai-hub/cosmos (`flext-mbowt.*`), qualquer refactor além do necessário para gates +
 runtime verdes e publicação 0.12.0.

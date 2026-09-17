@@ -1,12 +1,14 @@
 # Documentation Standards
 
 <!-- TOC START -->
+
 - [Writable owners](#writable-owners)
 - [Command and test examples](#command-and-test-examples)
 - [Authoring](#authoring)
 - [Docstrings](#docstrings)
 - [Generation and validation](#generation-and-validation)
 - [Publication](#publication)
+
 <!-- TOC END -->
 
 FLEXT documentation has one engine: the public docs services and utilities in

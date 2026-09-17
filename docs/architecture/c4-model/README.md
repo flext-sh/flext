@@ -1,6 +1,7 @@
 # FLEXT C4 Model Architecture Documentation
 
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [📋 C4 Model Levels](#c4-model-levels)
   - [1. System Context Diagram](#1-system-context-diagram)
@@ -16,6 +17,7 @@
   - [Runtime Layer](#runtime-layer)
 - [📊 Architecture Quality Attributes](#architecture-quality-attributes)
 - [🔗 Related Documentation](#related-documentation)
+
 <!-- TOC END -->
 
 ## Table of Contents

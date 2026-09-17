@@ -7,7 +7,7 @@ license: Complete terms in LICENSE.txt
 metadata:
   category: development
   source:
-    repository: 'https://github.com/ComposioHQ/awesome-claude-skills'
+    repository: "https://github.com/ComposioHQ/awesome-claude-skills"
     path: skill-share
     commit: 92568c1edaff1bde5371154f036d959346c145a8
 ---

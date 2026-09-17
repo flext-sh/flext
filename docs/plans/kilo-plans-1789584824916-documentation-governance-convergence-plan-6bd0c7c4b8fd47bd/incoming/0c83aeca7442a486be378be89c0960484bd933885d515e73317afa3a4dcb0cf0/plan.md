@@ -101,15 +101,15 @@ fleet-wide que não pertence à campanha documental.
 
 ## Autoridades e cadeia de projeção
 
-| Camada | Owner gravável | Projeções/consumidores | Verbo de prova |
-| --- | --- | --- | --- |
-| Governança global | `~/agents/{rules,skills,commands,agents,config}` | `GovernanceBundle`, hooks e pointers do bundle | `make runtime`, `make check`, `make test-full`, `make gen ×2` |
-| Adaptação/provider | `~/ai-hub/config/agents.yaml` + projector/services | capsules `AGENTS.md`, hooks, `.agents`, `.github`, homes de provider | `make setup`, `make gen ×2`, `make docs`, `make check`, `make test`, `make deploy` |
-| FLEXT tooling | `flext-infra/config/{codegen,tooling}.yaml`, templates e generators | `pyproject.toml`, Make/CI, lazy exports, project metadata | root `make gen ×2`, `make check`, `make test` |
-| Guides compartilhados | root `docs/guides` e docs generator | guides nos membros | root `make docs` |
-| Plan collection | `config/plan-collection.yaml` + collector | `docs/plans`, manifest, receipts, incoming revisions | root `make docs` duas vezes |
-| Execução | Gas City Beads | status, blockers, receipts e closure | `direnv exec <repo> bd show ... --json` |
-| Memória | `bd remember`; Kilo secundário | decisões/constraints estáveis | busca/readback das chaves |
+| Camada                | Owner gravável                                                      | Projeções/consumidores                                               | Verbo de prova                                                                     |
+| --------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Governança global     | `~/agents/{rules,skills,commands,agents,config}`                    | `GovernanceBundle`, hooks e pointers do bundle                       | `make runtime`, `make check`, `make test-full`, `make gen ×2`                      |
+| Adaptação/provider    | `~/ai-hub/config/agents.yaml` + projector/services                  | capsules `AGENTS.md`, hooks, `.agents`, `.github`, homes de provider | `make setup`, `make gen ×2`, `make docs`, `make check`, `make test`, `make deploy` |
+| FLEXT tooling         | `flext-infra/config/{codegen,tooling}.yaml`, templates e generators | `pyproject.toml`, Make/CI, lazy exports, project metadata            | root `make gen ×2`, `make check`, `make test`                                      |
+| Guides compartilhados | root `docs/guides` e docs generator                                 | guides nos membros                                                   | root `make docs`                                                                   |
+| Plan collection       | `config/plan-collection.yaml` + collector                           | `docs/plans`, manifest, receipts, incoming revisions                 | root `make docs` duas vezes                                                        |
+| Execução              | Gas City Beads                                                      | status, blockers, receipts e closure                                 | `direnv exec <repo> bd show ... --json`                                            |
+| Memória               | `bd remember`; Kilo secundário                                      | decisões/constraints estáveis                                        | busca/readback das chaves                                                          |
 
 Nenhum output da coluna “Projeções/consumidores” é editado manualmente para
 obter green. Se um arquivo não possui owner demonstrável, ele é classificado e
@@ -232,14 +232,14 @@ o owner; o report guarda ocorrências.
 
 Baseline de signatures já materializadas:
 
-| Signature | Owner candidato a provar | Consumidores observados | Corte esperado |
-| --- | --- | --- | --- |
-| `undefined-name u` em exemplos | `docs/guides/using-flext-core.md` | root, CLI, Meltano, Observability, Tap Oracle WMS | importar a facade pública correta uma vez; regenerar guides |
-| `undefined-name p` e comparação float direta | `docs/guides/using-flext-{core,tests}.md` | mesmos cinco scopes | imports por bloco + assertion pública sem igualdade float frágil |
-| links `../../flext-*/README.md` | generator de `docs/projects` derivado de `config/workspace.yaml` | todos os scopes amostrados | emitir URL HTTPS branch-matched no generator |
-| manual API duplicates generated ownership | template/owner de `docs/api-reference.md` e `docs/api/*.md` | root, gRPC, Meltano, Observability, Tap Oracle WMS | overview delega ao generated API; zero inventário duplicado |
-| output de Semgrep/Sonar marcado como Python | templates compartilhados de security triage | CLI, Meltano, Tap Oracle WMS | fences `text` para output; Python apenas para código executável |
-| `/home/...` em guidance/report | owner de ADR/ecosystem/security report | root e CLI | path sem host (`${HOME}`, repo URL ou descrição histórica) |
+| Signature                                    | Owner candidato a provar                                         | Consumidores observados                            | Corte esperado                                                   |
+| -------------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------- |
+| `undefined-name u` em exemplos               | `docs/guides/using-flext-core.md`                                | root, CLI, Meltano, Observability, Tap Oracle WMS  | importar a facade pública correta uma vez; regenerar guides      |
+| `undefined-name p` e comparação float direta | `docs/guides/using-flext-{core,tests}.md`                        | mesmos cinco scopes                                | imports por bloco + assertion pública sem igualdade float frágil |
+| links `../../flext-*/README.md`              | generator de `docs/projects` derivado de `config/workspace.yaml` | todos os scopes amostrados                         | emitir URL HTTPS branch-matched no generator                     |
+| manual API duplicates generated ownership    | template/owner de `docs/api-reference.md` e `docs/api/*.md`      | root, gRPC, Meltano, Observability, Tap Oracle WMS | overview delega ao generated API; zero inventário duplicado      |
+| output de Semgrep/Sonar marcado como Python  | templates compartilhados de security triage                      | CLI, Meltano, Tap Oracle WMS                       | fences `text` para output; Python apenas para código executável  |
+| `/home/...` em guidance/report               | owner de ADR/ecosystem/security report                           | root e CLI                                         | path sem host (`${HOME}`, repo URL ou descrição histórica)       |
 
 “Owner candidato” não autoriza edição imediata: localizar template/generator e
 confirmar que a mesma fonte produz as ocorrências antes de escrever.
@@ -363,18 +363,18 @@ integrados.
 
 ## Retry budget e tratamento de falhas
 
-| Falha | Resposta obrigatória |
-| --- | --- |
-| Provider/subagente falha uma vez | Nova sessão menor, sem herdar contexto inflado |
-| Segunda falha equivalente | Coordenador assume; zero retry adicional |
-| Snapshot muda durante planning | Preservar, reler, registrar, um retry após barreira |
-| Segunda mudança concorrente | Parar e identificar writer; não insistir no gate |
-| Lock timeout | Registrar, identificar owner, terminar somente owner autorizado; nunca remover lock |
-| Gate só imprime contagem | Ler report canônico; se inexistente/incompleto, corrigir reporter antes dos findings |
-| Artifact `incoming` diverge | Recuperar bytes autenticados por Git/manifest; corrigir fixer; nunca apagar history |
-| Projeção diverge em vários membros | Corrigir um owner e regenerar; não editar consumidores |
-| Subagente introduz selector/tool direto | Rejeitar hunk e corrigir pelo comando canônico |
-| Runtime contradiz teste/doc | Runtime e contrato externo vencem; corrigir owner/test/doc |
+| Falha                                   | Resposta obrigatória                                                                 |
+| --------------------------------------- | ------------------------------------------------------------------------------------ |
+| Provider/subagente falha uma vez        | Nova sessão menor, sem herdar contexto inflado                                       |
+| Segunda falha equivalente               | Coordenador assume; zero retry adicional                                             |
+| Snapshot muda durante planning          | Preservar, reler, registrar, um retry após barreira                                  |
+| Segunda mudança concorrente             | Parar e identificar writer; não insistir no gate                                     |
+| Lock timeout                            | Registrar, identificar owner, terminar somente owner autorizado; nunca remover lock  |
+| Gate só imprime contagem                | Ler report canônico; se inexistente/incompleto, corrigir reporter antes dos findings |
+| Artifact `incoming` diverge             | Recuperar bytes autenticados por Git/manifest; corrigir fixer; nunca apagar history  |
+| Projeção diverge em vários membros      | Corrigir um owner e regenerar; não editar consumidores                               |
+| Subagente introduz selector/tool direto | Rejeitar hunk e corrigir pelo comando canônico                                       |
+| Runtime contradiz teste/doc             | Runtime e contrato externo vencem; corrigir owner/test/doc                           |
 
 ## Schema mínimo de evidência por Bead
 

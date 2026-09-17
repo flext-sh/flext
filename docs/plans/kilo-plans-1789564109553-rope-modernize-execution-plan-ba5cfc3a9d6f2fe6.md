@@ -1,6 +1,7 @@
 # Rope Modernize — Plano de Execução v3 (absorção contínua automatizada + PR lane)
 
 <!-- TOC START -->
+
 - [0. EXCLUSÃO AUTORITATIVA (operador)](#0-exclusao-autoritativa-operador)
 - [1. NÚCLEO DE AUTOMAÇÃO — ~/wip-hier.sh (uso avançado, sem loops ad-hoc)](#1-nucleo-de-automacao-wip-hiersh-uso-avancado-sem-loops-ad-hoc)
 - [2. PR DA LANE NO GITHUB — abrir NO COMEÇO, manter vivo](#2-pr-da-lane-no-github-abrir-no-comeco-manter-vivo)
@@ -16,6 +17,7 @@
 - [6. REGRAS DE OURO (v2 §1 mantida + adições)](#6-regras-de-ouro-v2-1-mantida-adicoes)
 - [7. RISCOS](#7-riscos)
 - [8. Pendências de decisão do operador (não bloqueiam R0)](#8-pendencias-de-decisao-do-operador-nao-bloqueiam-r0)
+
 <!-- TOC END -->
 
 > Historical evidence only. This plan records an earlier execution context and
@@ -71,17 +73,17 @@ O script é o operador padrão de frota. Capacidades verificadas no código-font
 
 ## 4. ESTADO VERIFICADO (2026-09-16T14:30Z)
 
-| Item | Estado | Evidência |
-| --- | --- | --- |
-| lazy_init fix (flext-j64nz) | LANDED+PUSHED, bead CLOSED | infra `4ee618f59`; lane `3fb4505c7`; ruff verde; probe revertido |
-| Absorção tip anterior | 32/32 MERGED+PUSHED | infra `3fb4505c7`; 30 membros; flext-tests `da0a506`; super `a3793f9010` |
-| **MERGES EM ANDAMENTO** | **31/31 membros "modified content"** — WIP concorrente do estabilizador ativo (tabs: infra templates/cli_routes_refactor/_config/contract, grpc Makefile) | `git status` super 14:33Z |
-| Suíte infra | 58F+13E estável (sem regressão pré/pós-merge) | rodadas 573s/143s; conjunto por test-id idêntico |
-| pyrefly infra src | **79 erros** | `uv run pyrefly check src` |
-| gen ×2 super | RUN1 exit 0; RUN2 tree limpa | bgp_0aa960a2; super clean |
-| Lanes candidatas NÃO absorvidas | super: `origin/aeolian-sodalite` (2 commits, PR #235); infra: `origin/promoted-framework-lift` (1 commit, PR #681) | `git log HEAD..origin/*` |
-| mod ×2 alignment | NÃO validado | pendente (R2) |
-| PRs da lane | NÃO existem ainda | `gh pr list` (só #235/#681/#245/#246/#231) |
+| Item                            | Estado                                                                                                                                                     | Evidência                                                                |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| lazy_init fix (flext-j64nz)     | LANDED+PUSHED, bead CLOSED                                                                                                                                 | infra `4ee618f59`; lane `3fb4505c7`; ruff verde; probe revertido         |
+| Absorção tip anterior           | 32/32 MERGED+PUSHED                                                                                                                                        | infra `3fb4505c7`; 30 membros; flext-tests `da0a506`; super `a3793f9010` |
+| **MERGES EM ANDAMENTO**         | **31/31 membros "modified content"** — WIP concorrente do estabilizador ativo (tabs: infra templates/cli_routes_refactor/\_config/contract, grpc Makefile) | `git status` super 14:33Z                                                |
+| Suíte infra                     | 58F+13E estável (sem regressão pré/pós-merge)                                                                                                              | rodadas 573s/143s; conjunto por test-id idêntico                         |
+| pyrefly infra src               | **79 erros**                                                                                                                                               | `uv run pyrefly check src`                                               |
+| gen ×2 super                    | RUN1 exit 0; RUN2 tree limpa                                                                                                                               | bgp_0aa960a2; super clean                                                |
+| Lanes candidatas NÃO absorvidas | super: `origin/aeolian-sodalite` (2 commits, PR #235); infra: `origin/promoted-framework-lift` (1 commit, PR #681)                                         | `git log HEAD..origin/*`                                                 |
+| mod ×2 alignment                | NÃO validado                                                                                                                                               | pendente (R2)                                                            |
+| PRs da lane                     | NÃO existem ainda                                                                                                                                          | `gh pr list` (só #235/#681/#245/#246/#231)                               |
 
 ## 5. FASES
 
@@ -99,11 +101,13 @@ O script é o operador padrão de frota. Capacidades verificadas no código-font
 7. `~/wip-hier.sh --apply` (agora COM retirement) → limpa branches/worktrees/PRs já contidos.
 
 ### R1 — Ciclo-padrão recorrente (executado NO INÍCIO DE CADA FASE/onda seguinte)
+
 ```text
 discovery (wip-hier dry-run) → há dirty/behind/nova lane?
   sim  → absorb candidatos (merge --no-ff, lei §3) → wip-hier --apply → gen ×2 → push → PR edit (evidência)
   não  → prosseguir a onda
 ```
+
 Nenhuma onda de código começa com a frota suja ou behind. Este ciclo substitui TODOS os loops ad-hoc de multi-repo da v2.
 
 ### R2 — Provar mod semantic phase-0 (desbloqueia flext-oquk7)
@@ -113,6 +117,7 @@ Nenhuma onda de código começa com a frota suja ou behind. Este ciclo substitui
 3. Evidência por test-id → `bd close flext-oquk7` com números (governança permitida).
 
 ### R3 — Ondas de ataque aos 71 residuais (58F+13E, infra) — uma por vez, R1 antes de cada
+
 Regra por onda: root-cause no owner → fix → re-run do arquivo de teste owner (números por test-id) → commit scoped + push → `gh pr edit` anexando evidência. Testes não-conformes à lei: REMOVER após provar behavior atual pela rota pública (CLI/facade) — nunca adaptar para passar.
 
 - **W1 — DocsGenerateRequest/apply + docs/auditor (~12):** pesquisar dono atual do toggle apply (pipeline? CLI flag?); campo migrou → testes seguem a rota pública; campo exterminado → remover testes com prova de runtime. Arquivos: `test_codegen_conform`(2), `docs/main_*`(3), `generator_*`(4), `auditor_command_contract`(3).
@@ -121,12 +126,14 @@ Regra por onda: root-cause no owner → fix → re-run do arquivo de teste owner
 - **W4 — Conform round-trip + beads-projection + fanout/dispatch (~10).**
 - **W5 — Check CLI/extended + mod circuit (~10).**
 - **W6 — Cauda (~8):** lazy_init alias/helpers/process, pydantic_modernizer, ast-grep rules, root export, maintenance headers, invocation scope.
-Ferramentas: `code-review-graph impact` antes de mexer em owners; `ast-grep` search para padrões duplicados; `make mod` para fixes estruturais repetidos.
+  Ferramentas: `code-review-graph impact` antes de mexer em owners; `ast-grep` search para padrões duplicados; `make mod` para fixes estruturais repetidos.
 
 ### R4 — pyrefly 79 por ondas
+
 Recount por arquivo (output salvo/agrupado) → ondas por módulo (`_conform/{render,execute,plan}` primeiro — flext-1x66z) → `make check` verde no escopo → commit+push+PR edit. `safety.yaml`: conferir realidade dos 4 remanescentes antes.
 
 ### R5 — Fechamento
+
 Suíte numérica canônica por membro atingido (venv próprio, `make test` no dir); `~/.agents/VALIDATE_ON_CHANGE.md` += leis novas (probe-grep pré-commit; testmon totals não são prova; direnv beads; scripts de frota em arquivo; dirty idêntico = drift de projeção); board ALL + beads com evidência; PRs da lane atualizados com o mapa final.
 
 ## 6. REGRAS DE OURO (v2 §1 mantida + adições)

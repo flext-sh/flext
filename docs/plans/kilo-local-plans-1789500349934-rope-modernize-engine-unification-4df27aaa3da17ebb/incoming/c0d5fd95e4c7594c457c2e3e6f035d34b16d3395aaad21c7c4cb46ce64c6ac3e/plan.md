@@ -42,6 +42,7 @@ Toggles de componentes: estender o input model do `mod` (`m.Infra.ModScanReport`
 4. Skips não conversíveis (30 no ai-hub: `os.stat_result`, mutáveis, `__post_init__`) ficam catalogados no relatório da fase, não viram silêncio.
 
 ### W3 — Extermínio dos demais transformadores ast/re/libcst
+
 Inventário (11 arquivos): `pydantic_modernizer` (ast), `typing_unifier` (ast), `compatibility_alias` (ast), `pattern` (re), `open_encoding` (ast), `mro_remover` (libcst), `hardcoded_version` (re), `_rewrite` (ast, base compartilhada), `smells/boolean_logic` (ast), + `FlextInfraSourceRewriter`.
 
 - Mecânicos/textuais → sed-by-list (`text_rules.yml`) ou ast-grep rule: `open_encoding`, `hardcoded_version`, `pattern`.

@@ -1,6 +1,7 @@
 # PLANO — flext-gov: governance rules + gates (2026-09-11) — v2
 
 <!-- TOC START -->
+
 - [Autoridade](#autoridade)
 - [Snapshot (commits e estados, 2026-09-11 13:10)](#snapshot-commits-e-estados-2026-09-11-1310)
   - [TODO vivo (1:1 com beads — verdade real bd list, nunca o texto)](#todo-vivo-11-com-beads-verdade-real-bd-list-nunca-o-texto)
@@ -21,6 +22,7 @@
   - [Pedido de aprovação ao operador](#pedido-de-aprovacao-ao-operador)
 - [Riscos vivos](#riscos-vivos)
 - [Referências](#referencias)
+
 <!-- TOC END -->
 
 > Historical evidence only. This plan records an earlier execution context and
@@ -42,10 +44,10 @@ Operador > root `AGENTS.md` > `flext-law` skill > escopo > bead ativo.
 Uma autoridade por tópico: lei de consumo = `docs/standards/consumption-law.md`
 
 - ADR-015; routing = `docs/GOVERNANCE.md` (linhas, nunca texto duplicado);
-identidade de enforcement = catálogo `flext-core`; motor/gates = `flext-infra`.
-Fechamento de bead = 4 evidências: (1) estado registrado, (2) git history na
-lane de integração, (3) realidade medida (comando/cwd/exit/output), (4) código
-integrado. **Nenhum bead fecha com WIP não pousado** — lição aplicada ao F1.
+  identidade de enforcement = catálogo `flext-core`; motor/gates = `flext-infra`.
+  Fechamento de bead = 4 evidências: (1) estado registrado, (2) git history na
+  lane de integração, (3) realidade medida (comando/cwd/exit/output), (4) código
+  integrado. **Nenhum bead fecha com WIP não pousado** — lição aplicada ao F1.
 
 ## Snapshot (_commits_ e estados, 2026-09-11 13:10)
 
@@ -56,19 +58,19 @@ cadastrado, nunca o texto à mão para "concordar").
 
 ### TODO vivo (1:1 com beads — verdade real `bd list`, nunca o texto)
 
-| Bead | Status real (bd) | Lane/branch · SKA no lane | Última evidência | Próxima ação (dono) |
-|---|---|---|---|---|
-| `flext-ssnc7` (epic) | ○ | — | filhos abaixo | fechar após filhos com 4 evidências |
-| `.1` F1 R1 | ◐ in_progress | core `feat/consumer-import-grammar` `6440f1529`+`14c63121d`; infra `feat/consumer-gates` `8c4ef3266`+`c8a429d59` | detector v2 (lineno real, raízes derivadas); budget v2 | detector v3 (asname + memo); pouso R6 (push→PR→`--no-ff`) — agente flext |
-| `.1.1` validação F1 | ○ | — | — | twin sintético RED→GREEN após pouso |
-| `.2` F2 R2 | ◐ in_progress | infra `feat/consumer-gates` `ba1e5ab70` | config reader consumer+family | contaminação cruzada; apagar `_scope_paths`; unificar `_read_project_config`; ENFORCE-100 — agente flext |
-| `.2.1` validação F2 | ○ | — | — | twin plantado RED após pouso |
-| `.3` F3 docs | ◐ in_progress | super `feat/flext-gov-consumption-law` `3ebf812055`+`b25d519d51` | ledger honesto (ENFORCE pendências declaradas) | gates markdown do super após P0 — agente flext |
-| `.4` F4 gates-as-products | ◐ in_progress | infra `ba1e5ab70`+`c8a429d59`; core `14c63121d` | budget deriva de `ALLOWED_GATES`; primitivas provadas em runtime | fsync/O_NOFOLLOW/EINTR; domínio único (`u.Cli` → core `u`); telemetria budget; verdadeiro projection em project_new — agente flext |
-| `.5` F5 tags/versão consumível | ○ (bloqueado por .1 + .4) | — | — | tags 0.12.x + `AI_HUB_CONSUMER.md` após pousos que satisfaçam gates |
-| `.6` F6 contribuição | ○ | — | R6 descrito em `GOVERNANCE.md` | formalizar gates de workflow (fluxo separado) |
-| `.7` F7 docs auditor | ○ | — | — | three-file gate docs + bijection (pré-requisito F5) |
-| `.8` F-AGE automação/piloto | ◐ in_progress | super `bcf2a130bb` (proposta) | ciclo canonizado; crg doctor diagnosticou graph crítico e registrou fix | AGUARDA APROVAÇÃO DO OPERADOR → P0 pouso → `crg build` → piloto RED→GREEN |
+| Bead                           | Status real (bd)          | Lane/branch · SKA no lane                                                                                        | Última evidência                                                        | Próxima ação (dono)                                                                                                                |
+| ------------------------------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `flext-ssnc7` (epic)           | ○                         | —                                                                                                                | filhos abaixo                                                           | fechar após filhos com 4 evidências                                                                                                |
+| `.1` F1 R1                     | ◐ in_progress             | core `feat/consumer-import-grammar` `6440f1529`+`14c63121d`; infra `feat/consumer-gates` `8c4ef3266`+`c8a429d59` | detector v2 (lineno real, raízes derivadas); budget v2                  | detector v3 (asname + memo); pouso R6 (push→PR→`--no-ff`) — agente flext                                                           |
+| `.1.1` validação F1            | ○                         | —                                                                                                                | —                                                                       | twin sintético RED→GREEN após pouso                                                                                                |
+| `.2` F2 R2                     | ◐ in_progress             | infra `feat/consumer-gates` `ba1e5ab70`                                                                          | config reader consumer+family                                           | contaminação cruzada; apagar `_scope_paths`; unificar `_read_project_config`; ENFORCE-100 — agente flext                           |
+| `.2.1` validação F2            | ○                         | —                                                                                                                | —                                                                       | twin plantado RED após pouso                                                                                                       |
+| `.3` F3 docs                   | ◐ in_progress             | super `feat/flext-gov-consumption-law` `3ebf812055`+`b25d519d51`                                                 | ledger honesto (ENFORCE pendências declaradas)                          | gates markdown do super após P0 — agente flext                                                                                     |
+| `.4` F4 gates-as-products      | ◐ in_progress             | infra `ba1e5ab70`+`c8a429d59`; core `14c63121d`                                                                  | budget deriva de `ALLOWED_GATES`; primitivas provadas em runtime        | fsync/O_NOFOLLOW/EINTR; domínio único (`u.Cli` → core `u`); telemetria budget; verdadeiro projection em project_new — agente flext |
+| `.5` F5 tags/versão consumível | ○ (bloqueado por .1 + .4) | —                                                                                                                | —                                                                       | tags 0.12.x + `AI_HUB_CONSUMER.md` após pousos que satisfaçam gates                                                                |
+| `.6` F6 contribuição           | ○                         | —                                                                                                                | R6 descrito em `GOVERNANCE.md`                                          | formalizar gates de workflow (fluxo separado)                                                                                      |
+| `.7` F7 docs auditor           | ○                         | —                                                                                                                | —                                                                       | three-file gate docs + bijection (pré-requisito F5)                                                                                |
+| `.8` F-AGE automação/piloto    | ◐ in_progress             | super `bcf2a130bb` (proposta)                                                                                    | ciclo canonizado; crg doctor diagnosticou graph crítico e registrou fix | AGUARDA APROVAÇÃO DO OPERADOR → P0 pouso → `crg build` → piloto RED→GREEN                                                          |
 
 Pipeline congelado: ver `~/.agents/commands/flext/gov-automation-cycle.md` (gen → mod escopado → gates → crg → pouso).
 
@@ -83,14 +85,14 @@ da lane sem autorização explícita.
 
 ### Mapa SKA → conteúdo por repo (rastreabilidade dos [WIP])
 
-| Repo | Branch | SKA | Conteúdo |
-|---|---|---|---|
-| flext-core (lane) | `feat/consumer-import-grammar` | `6440f1529` | F1 core: `FlextUtilitiesFamilySurface` (owners + renames 33 derivados), `part_03` constants |
-| flext-core (lane) | ˆ | `14c63121d` | F4 core: `FlextUtilitiesFiles` (`append_atomic`/`write_atomic`, payload `r[int]`), pin refresh infra→`bff59228` + cli |
-| flext-infra (lane) | `feat/consumer-gates` | `8c4ef3266` | F1 infra: detector + model + engine wiring |
-| flext-infra (lane) | ˆ | `ba1e5ab70` | F2/F4: duplicação consumer+family + budget gate |
-| flext-infra (lane) | ˆ | `c8a429d59` | Autocrítica: detector v2 grounded; budget deriva de `ALLOWED_GATES` (−64 LOC líquida) |
-| super (lane) | `feat/flext-gov-consumption-law` | `3ebf812055` / `b25d519d51` | F3 docs + ledger honesto |
+| Repo               | Branch                           | SKA                         | Conteúdo                                                                                                              |
+| ------------------ | -------------------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| flext-core (lane)  | `feat/consumer-import-grammar`   | `6440f1529`                 | F1 core: `FlextUtilitiesFamilySurface` (owners + renames 33 derivados), `part_03` constants                           |
+| flext-core (lane)  | ˆ                                | `14c63121d`                 | F4 core: `FlextUtilitiesFiles` (`append_atomic`/`write_atomic`, payload `r[int]`), pin refresh infra→`bff59228` + cli |
+| flext-infra (lane) | `feat/consumer-gates`            | `8c4ef3266`                 | F1 infra: detector + model + engine wiring                                                                            |
+| flext-infra (lane) | ˆ                                | `ba1e5ab70`                 | F2/F4: duplicação consumer+family + budget gate                                                                       |
+| flext-infra (lane) | ˆ                                | `c8a429d59`                 | Autocrítica: detector v2 grounded; budget deriva de `ALLOWED_GATES` (−64 LOC líquida)                                 |
+| super (lane)       | `feat/flext-gov-consumption-law` | `3ebf812055` / `b25d519d51` | F3 docs + ledger honesto                                                                                              |
 
 Pins vivos (core lane `uv.lock`): flext-infra `rev=0.12.0-dev#bff59228`,
 flext-cli re-resolvido. **Nunca rodar `uv sync` sem
@@ -156,8 +158,8 @@ caminhos absolutos; config keys apenas.
 `flext-infra/src/flext_infra/gates/duplication.py` `_read_project_config`
 
 - `JSCPD_CONSUMER_FAMILY_SCOPE`/`JSCPD_STRUCTURAL_BAN_FORMS` em
-`_constants/check.py`; escopo canônico ampliado
-(src/testes/scripts/examples/templates/config).
+  `_constants/check.py`; escopo canônico ampliado
+  (src/testes/scripts/examples/templates/config).
 
 **Lacunas de qualidade (produção)**:
 
@@ -246,14 +248,14 @@ auditor — ver bead; prerequisite para F5.
 
 ## Matriz produção (critérios de aceite)
 
-| Entregável | Aceite de produção |
-|---|---|
-| R1 gate | RED sintética → GREEN; zero hardcode de rostos; consumidores (ai-hub pilot) lintam com gate em CI; docs R1 validados |
-| R2 gate | baselines por membro classificados; threshold sob config SSOT; ENFORCE-100 registrado |
-| Budget | telemetria real em GateExecution; warn→hard após 1 ciclo verde; ENFORCE-101 |
-| Primitivas | domínio único (core-u), consumidores `u.Cli` migrados/deletados, fsync+O_NOFOLLOW, fixed point (+idempotence) |
-| Tags F5 | tag após gates no SHA mesclado; AI_HUB_CONSUMER gerado e versionado |
-| Docs | markdown gates verdes no super; zero texto duplicado entre docs (router-only). |
+| Entregável | Aceite de produção                                                                                                   |
+| ---------- | -------------------------------------------------------------------------------------------------------------------- |
+| R1 gate    | RED sintética → GREEN; zero hardcode de rostos; consumidores (ai-hub pilot) lintam com gate em CI; docs R1 validados |
+| R2 gate    | baselines por membro classificados; threshold sob config SSOT; ENFORCE-100 registrado                                |
+| Budget     | telemetria real em GateExecution; warn→hard após 1 ciclo verde; ENFORCE-101                                          |
+| Primitivas | domínio único (core-u), consumidores `u.Cli` migrados/deletados, fsync+O_NOFOLLOW, fixed point (+idempotence)        |
+| Tags F5    | tag após gates no SHA mesclado; AI_HUB_CONSUMER gerado e versionado                                                  |
+| Docs       | markdown gates verdes no super; zero texto duplicado entre docs (router-only).                                       |
 
 ## Onda de automação canonizada (pesquisa 2026-09-11 12:5x — APROVE-REQUEST]
 
@@ -274,8 +276,8 @@ o plano v2 não explorava os escopos do `mod` nem o grafo de reviews.
    (doctor: critical) — primeira ação = `build`.
 3. **Ciclo canonizado** (documentado em skill+command novos em `~/.agents`):
    `gen → mod (escopado) → fix → fmt → check → test → crg evidence →
-   commit escopado → FF push → PR → --no-ff integr. → gates no SHA →
-   crg update no tip`.
+commit escopado → FF push → PR → --no-ff integr. → gates no SHA →
+crg update no tip`.
 
 ### Piloto de homologação (proposta de objetivo produtivo)
 

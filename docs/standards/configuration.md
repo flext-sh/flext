@@ -1,9 +1,11 @@
 # Configuration Standards
 
 <!-- TOC START -->
+
 - [Ownership](#ownership)
 - [Config-owned facts](#config-owned-facts)
 - [Validation](#validation)
+
 <!-- TOC END -->
 
 Configuration is executable architecture. Every fact has one typed owner and

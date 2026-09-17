@@ -1,6 +1,7 @@
 # FLEXT CLI
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT CLI is the command-line foundation of the FLEXT platform. It wraps Click, Rich, and Tabulate behind the FLEXT

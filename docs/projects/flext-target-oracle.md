@@ -1,6 +1,7 @@
 # FLEXT Target Oracle
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Target Oracle (`flext-target-oracle`) is the Singer target that loads data into Oracle databases. It composes the
@@ -68,6 +70,7 @@ from flext_target_oracle import target_oracle
 # each command verb takes its typed command model and returns p.Result[str].
 service = target_oracle()
 ```
+
 ## Architecture & modules
 
 ```text

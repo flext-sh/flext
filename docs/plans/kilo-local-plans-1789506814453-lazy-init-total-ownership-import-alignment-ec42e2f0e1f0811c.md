@@ -14,15 +14,15 @@
 
 ## 2. Evidência do estado atual
 
-| Fato | Local | Prova |
-| --- | --- | --- |
-| Exceção de init manual (`preserve_manual_init` → SKIP) | `flext-infra/src/flext_infra/codegen/lazy_init_planner.py:206-222` | leitura do código |
-| Marcador de posse do gerador | `_constants/codegen_lazy.py:20-25` `AUTOGEN_HEADERS`; `_is_generated` em `codegen/_lazy_init_generation_files.py:91-99` | leitura |
-| 41 inits manuais em ai-hub (2 classes: eager manuais; estilo-lazy escritos à mão sem marcador — ex. `services/__init__.py`, `_models/__init__.py`) | inventário `find src tests scripts examples -name __init__.py` | lista no apêndice A |
-| Lazy-init duplicado no conform | `codegen/_conform/execute.py` — branch CHECK linhas 276-291 e branch APPLY linhas 318-328, duas chamadas inline de `FlextInfraCodegenLazyInit.plan_files()` | leitura |
-| `LazyInitConfig` é modelo vazio (sem campos) | `_models/deps_tool_config.py:620-621` | leitura — ponto de extensão da política |
-| `ALL_SCAN_PATTERNS` exclui `scripts/` deliberadamente | `_constants/codegen_lazy.py:64-74` | leitura — exclusão revogada pela diretiva |
-| `make gen` no ai-hub hoje: `Lazy-init plan: 0 effects` (planner SKIP em tudo manual) | log do operador 2026-09-15 | transcript |
+| Fato                                                                                                                                               | Local                                                                                                                                                       | Prova                                     |
+| -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| Exceção de init manual (`preserve_manual_init` → SKIP)                                                                                             | `flext-infra/src/flext_infra/codegen/lazy_init_planner.py:206-222`                                                                                          | leitura do código                         |
+| Marcador de posse do gerador                                                                                                                       | `_constants/codegen_lazy.py:20-25` `AUTOGEN_HEADERS`; `_is_generated` em `codegen/_lazy_init_generation_files.py:91-99`                                     | leitura                                   |
+| 41 inits manuais em ai-hub (2 classes: eager manuais; estilo-lazy escritos à mão sem marcador — ex. `services/__init__.py`, `_models/__init__.py`) | inventário `find src tests scripts examples -name __init__.py`                                                                                              | lista no apêndice A                       |
+| Lazy-init duplicado no conform                                                                                                                     | `codegen/_conform/execute.py` — branch CHECK linhas 276-291 e branch APPLY linhas 318-328, duas chamadas inline de `FlextInfraCodegenLazyInit.plan_files()` | leitura                                   |
+| `LazyInitConfig` é modelo vazio (sem campos)                                                                                                       | `_models/deps_tool_config.py:620-621`                                                                                                                       | leitura — ponto de extensão da política   |
+| `ALL_SCAN_PATTERNS` exclui `scripts/` deliberadamente                                                                                              | `_constants/codegen_lazy.py:64-74`                                                                                                                          | leitura — exclusão revogada pela diretiva |
+| `make gen` no ai-hub hoje: `Lazy-init plan: 0 effects` (planner SKIP em tudo manual)                                                               | log do operador 2026-09-15                                                                                                                                  | transcript                                |
 
 ## 3. Decisões de design
 
@@ -38,7 +38,7 @@
 
 - `import_layer_order: VariadicTuple[NonEmptyStr]` — vocabulário ordenado declarado em `flext-infra/config/codegen.yaml` (`tooling.lazy-init.import-layer-order: [settings, config, c, t, p, m, u, base, services, api, cli]`);
 - `reverse_import_mode: Literal["type_checking"]`, `forward_import_form: Literal["relative_dot"]`.
-Classificador de rank (helper novo, planner mixin ou `u.Infra`): mapeia caminho de módulo → rank — `settings/_settings` (0), `config/_config(+_config/)` (1), `constants/_constants` (2), `typings/_typings` (3), `protocols/_protocols` (4), `models/_models` (5), `utilities/_utilities` (6), `base.py` (7), `services/` e qualquer outro (8), `api.py` (9), `cli.py` (10). Rank maior = camada mais alta. Direto = rank maior importa rank menor (runtime, dot relativo dentro do mesmo pacote); reverso = rank menor alcança rank maior (**somente** `TYPE_CHECKING`); mesmo rank = runtime dot relativo permitido. Imports stdlib/terceiros (incl. `flext_core`/upstream) ficam nos grupos isort existentes, inalterados; `from __future__ import annotations` permanece primeiro.
+  Classificador de rank (helper novo, planner mixin ou `u.Infra`): mapeia caminho de módulo → rank — `settings/_settings` (0), `config/_config(+_config/)` (1), `constants/_constants` (2), `typings/_typings` (3), `protocols/_protocols` (4), `models/_models` (5), `utilities/_utilities` (6), `base.py` (7), `services/` e qualquer outro (8), `api.py` (9), `cli.py` (10). Rank maior = camada mais alta. Direto = rank maior importa rank menor (runtime, dot relativo dentro do mesmo pacote); reverso = rank menor alcança rank maior (**somente** `TYPE_CHECKING`); mesmo rank = runtime dot relativo permitido. Imports stdlib/terceiros (incl. `flext_core`/upstream) ficam nos grupos isort existentes, inalterados; `from __future__ import annotations` permanece primeiro.
 
 **D4 — Fase de realinhamento dentro do lazy-init.** Novo mixin do planner (ex.: `codegen/_lazy_init_import_alignment.py`) + renderer CST (infra existente `transformers/_rewrite.py`/`pattern.py`), operando sobre o **mesmo** Rope workspace index já aberto pelo lazy-init (ADR-007: um índice, snapshot + content-hash skip). Para cada módulo das quatro superfícies, emite `CodegenFilePlan`s que: (a) movem imports reversos de runtime para bloco `if TYPE_CHECKING:`; (b) normalizam imports diretos intra-pacote para dot relativo; (c) ordenam os imports do projeto por `(rank, nome)` dentro do grupo de projeto. Publicação pela **mesma** fase lazy-init da transação do conform — um dono, um ponto fixo. `ALL_SCAN_PATTERNS` ganha `scripts/**/__init__.py` (docstring da exclusão deliberada reescrita; a diretiva revoga a razão anterior). Artefatos `__init__.py` gerados não passam por realinhamento (conteúdo é do template).
 
@@ -48,19 +48,19 @@ Classificador de rank (helper novo, planner mixin ou `u.Infra`): mapeia caminho 
 
 ## 4. Regras especiais existentes (análise pedida) — e como a mudança as respeita
 
-| Regra especial | Local | Tratamento |
-| --- | --- | --- |
-| `BOOTSTRAP_CYCLE_EXCEPTION_SEGMENTS` = `{_lazy_parts, _typings}` — inits vazios para não re-entrar no bootstrap de `flext_core.lazy` | `_constants/codegen_lazy.py:88-92` | Mantida integralmente; realinhamento não força init nessas superfícies; imports de módulos normais desses segmentos seguem a ordem canônica |
-| `LAZY_BOOTSTRAP_ROOT_PACKAGE` = `flext_core` — superfície privada do dono do bootstrap mantém inits sem efeito | `codegen_lazy.py:103` | Mantida; a posse total não contradiz (esses inits continuam gerados/vazios por lei do bootstrap) |
-| `NON_PUBLIC_LAZY_ROOTS` = `{examples, scripts, tests}` — raízes com plumbing lazy privado, não ABI pública | `codegen_lazy.py:75-80` | Mantida; `scripts` passa a ser superfície plenamente varrida (D4) mantendo o caráter privado |
-| Facade roots sempre WRITE; test-child WRITE vazio; sem exports + gerado → REMOVE | `lazy_init_planner.py` | Inalterado, exceto a adoção D1 |
-| Guardas de duplicata de nome de classe e colisão de export | `lazy_init.py:162-184` | Inalteradas |
-| `INFRA_ONLY_EXPORTS`, `ALIAS_NAMES`, `__version__` dunders eager | planner/constants | Inalteradas |
-| Config/settings zero-ciclo (importam só stdlib/pydantic/upstream) | root AGENTS.md §Architecture | Consistente por construção: ranks 0/1 não importam nada do projeto |
-| `c→t→p→m→u` direto runtime, reverso `TYPE_CHECKING`-only | root AGENTS.md | A ordem canônica **estende** esta lei (settings/config abaixo de `c`; base/services/api/cli acima de `u`) |
-| Pureza do render (render = f(SSOT, templates, PINS)) | memória `codegen.render_purity_law` | Realinhamento é planejado sobre snapshot imutável do Rope index; nada de ambiente entra no render |
-| Ruff sem `--select` (pyproject é a única política) | `codegen_lazy.py:110-114` | Output do realinhamento deve ser ruff-stável (regras I/E); o ponto fixo ×2 do gen é a prova |
-| Idempotência ×2 de gen/fix/fmt | memória `codegen.gen_idempotence_requirement` | Critério de aceite em toda tarefa |
+| Regra especial                                                                                                                       | Local                                         | Tratamento                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BOOTSTRAP_CYCLE_EXCEPTION_SEGMENTS` = `{_lazy_parts, _typings}` — inits vazios para não re-entrar no bootstrap de `flext_core.lazy` | `_constants/codegen_lazy.py:88-92`            | Mantida integralmente; realinhamento não força init nessas superfícies; imports de módulos normais desses segmentos seguem a ordem canônica |
+| `LAZY_BOOTSTRAP_ROOT_PACKAGE` = `flext_core` — superfície privada do dono do bootstrap mantém inits sem efeito                       | `codegen_lazy.py:103`                         | Mantida; a posse total não contradiz (esses inits continuam gerados/vazios por lei do bootstrap)                                            |
+| `NON_PUBLIC_LAZY_ROOTS` = `{examples, scripts, tests}` — raízes com plumbing lazy privado, não ABI pública                           | `codegen_lazy.py:75-80`                       | Mantida; `scripts` passa a ser superfície plenamente varrida (D4) mantendo o caráter privado                                                |
+| Facade roots sempre WRITE; test-child WRITE vazio; sem exports + gerado → REMOVE                                                     | `lazy_init_planner.py`                        | Inalterado, exceto a adoção D1                                                                                                              |
+| Guardas de duplicata de nome de classe e colisão de export                                                                           | `lazy_init.py:162-184`                        | Inalteradas                                                                                                                                 |
+| `INFRA_ONLY_EXPORTS`, `ALIAS_NAMES`, `__version__` dunders eager                                                                     | planner/constants                             | Inalteradas                                                                                                                                 |
+| Config/settings zero-ciclo (importam só stdlib/pydantic/upstream)                                                                    | root AGENTS.md §Architecture                  | Consistente por construção: ranks 0/1 não importam nada do projeto                                                                          |
+| `c→t→p→m→u` direto runtime, reverso `TYPE_CHECKING`-only                                                                             | root AGENTS.md                                | A ordem canônica **estende** esta lei (settings/config abaixo de `c`; base/services/api/cli acima de `u`)                                   |
+| Pureza do render (render = f(SSOT, templates, PINS))                                                                                 | memória `codegen.render_purity_law`           | Realinhamento é planejado sobre snapshot imutável do Rope index; nada de ambiente entra no render                                           |
+| Ruff sem `--select` (pyproject é a única política)                                                                                   | `codegen_lazy.py:110-114`                     | Output do realinhamento deve ser ruff-stável (regras I/E); o ponto fixo ×2 do gen é a prova                                                 |
+| Idempotência ×2 de gen/fix/fmt                                                                                                       | memória `codegen.gen_idempotence_requirement` | Critério de aceite em toda tarefa                                                                                                           |
 
 ## 5. Tarefas (ordenadas)
 
@@ -96,22 +96,22 @@ Classificador de rank (helper novo, planner mixin ou `u.Infra`): mapeia caminho 
 - `make setup`; `make gen` (1ª: ≥41 efeitos de init + efeitos de realinhamento); `make gen` (2ª: 0 efeitos); `make fix`; `make fmt`.
 - Corrigir na causa os módulos com dependência reversa real exposta (D5) — mover/inverter no módulo, nunca na engine.
 - Prova do operador: `.venv/bin/python -m pytest --collect-only -q` → exit 0 (sem ciclo de import).
-- Smoke de runtime dos nomes antes eager: `AiHubMcpGatewayClientCache` (services.mcp_runtime), `AiHubCrgRuntimeBundle` (_crg_runtime), `AiHubCodexTree` (_codex_parts), `ai_hub.AiHub`, `ai_hub.c/m/p/t/u`.
+- Smoke de runtime dos nomes antes eager: `AiHubMcpGatewayClientCache` (services.mcp_runtime), `AiHubCrgRuntimeBundle` (\_crg_runtime), `AiHubCodexTree` (\_codex_parts), `ai_hub.AiHub`, `ai_hub.c/m/p/t/u`.
 - `make check`; `make test`; commit escopado; PR → `dev` (ai-hub).
 
 **T8 — Frota + rastreio**: beads para a regeneração dos demais 31 membros no próximo `make gen` de cada um (projeção automática; fora do escopo deste plano). Trabalho rastreado via `bd` conforme política ativa por lane.
 
 ## 6. Contrato de validação
 
-| Comando (cwd) | Aceite |
-| --- | --- |
-| `flext-infra`: `make setup` / `make gen` ×2 / `make fix` / `make fmt` / `make check` / `make test` | exit 0; 2º gen `Lazy-init plan: 0 effects` |
-| `flext-infra`: testes novos T1–T4 | verdes; comportamento via fachadas públicas; ordem lida do SSOT |
-| `ai-hub`: `make gen` ×2 | 1ª ≥41 efeitos init (+realinhamento); 2ª `0 effects` |
-| `ai-hub`: `.venv/bin/python -m pytest --collect-only -q` | exit 0 — prova anti-ciclo do operador |
-| `ai-hub`: smoke imports (T7) | todos os nomes resolvem via lazy |
-| `ai-hub`: `make check` / `make test` | exit 0 |
-| Evidência | comando exato + cwd + exit code + saída decisiva registrados (regra 1) |
+| Comando (cwd)                                                                                      | Aceite                                                                 |
+| -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `flext-infra`: `make setup` / `make gen` ×2 / `make fix` / `make fmt` / `make check` / `make test` | exit 0; 2º gen `Lazy-init plan: 0 effects`                             |
+| `flext-infra`: testes novos T1–T4                                                                  | verdes; comportamento via fachadas públicas; ordem lida do SSOT        |
+| `ai-hub`: `make gen` ×2                                                                            | 1ª ≥41 efeitos init (+realinhamento); 2ª `0 effects`                   |
+| `ai-hub`: `.venv/bin/python -m pytest --collect-only -q`                                           | exit 0 — prova anti-ciclo do operador                                  |
+| `ai-hub`: smoke imports (T7)                                                                       | todos os nomes resolvem via lazy                                       |
+| `ai-hub`: `make check` / `make test`                                                               | exit 0                                                                 |
+| Evidência                                                                                          | comando exato + cwd + exit code + saída decisiva registrados (regra 1) |
 
 ## 7. Riscos e bordas
 

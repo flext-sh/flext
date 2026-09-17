@@ -1,13 +1,14 @@
 # services-server-grpc
 
 <!-- TOC START -->
+
 - [Overview](#overview)
 - [Members](#members)
 - [Execution Flows](#execution-flows)
 - [Dependencies](#dependencies)
   - [Outgoing](#outgoing)
   - [Incoming](#incoming)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 ## Overview
 
@@ -19,60 +20,60 @@ Community of 76 nodes
 
 ## Members
 
-| Name | Kind | File | Lines |
-|------|------|------|-------|
-| EchoResponse | Class | flext-grpc/src/flext_grpc/models.py | 44-51 |
-| HealthResponse | Class | flext-grpc/src/flext_grpc/models.py | 58-62 |
-| FlextGrpcServiceServicer | Class | flext-grpc/src/flext_grpc/proto/stubs.py | 18-19 |
-| FlextGrpcServiceStub | Class | flext-grpc/src/flext_grpc/proto/stubs.py | 22-41 |
-| **init** | Function | flext-grpc/src/flext_grpc/proto/stubs.py | 25-27 |
-| echo | Function | flext-grpc/src/flext_grpc/proto/stubs.py | 29-33 |
-| health_check | Function | flext-grpc/src/flext_grpc/proto/stubs.py | 35-41 |
-| add_flext_grpc_service_servicer_to_server | Function | flext-grpc/src/flext_grpc/proto/stubs.py | 44-48 |
-| FlextGrpcClient | Class | flext-grpc/src/flext_grpc/services/client.py | 17-163 |
-| GrpcClientManager | Class | flext-grpc/src/flext_grpc/services/client.py | 20-141 |
-| **init** | Function | flext-grpc/src/flext_grpc/services/client.py | 23-30 |
-| connect | Function | flext-grpc/src/flext_grpc/services/client.py | 32-50 |
-| disconnect | Function | flext-grpc/src/flext_grpc/services/client.py | 52-66 |
-| client_status | Function | flext-grpc/src/flext_grpc/services/client.py | 68-76 |
-| make_call | Function | flext-grpc/src/flext_grpc/services/client.py | 78-141 |
-| connect_client | Function | flext-grpc/src/flext_grpc/services/client.py | 147-149 |
-| disconnect_client | Function | flext-grpc/src/flext_grpc/services/client.py | 151-153 |
-| client_status | Function | flext-grpc/src/flext_grpc/services/client.py | 155-157 |
-| make_call | Function | flext-grpc/src/flext_grpc/services/client.py | 159-163 |
-| ConnectionPool | Class | flext-grpc/src/flext_grpc/services/connection_pool.py | 18-57 |
-| **init** | Function | flext-grpc/src/flext_grpc/services/connection_pool.py | 21-31 |
-| acquire | Function | flext-grpc/src/flext_grpc/services/connection_pool.py | 33-40 |
-| cleanup | Function | flext-grpc/src/flext_grpc/services/connection_pool.py | 42-48 |
-| release | Function | flext-grpc/src/flext_grpc/services/connection_pool.py | 50-57 |
-| _MetricValueModel | Class | flext-grpc/src/flext_grpc/services/metrics.py | 13-16 |
-| MetricsCollector | Class | flext-grpc/src/flext_grpc/services/metrics.py | 18-68 |
-| **init** | Function | flext-grpc/src/flext_grpc/services/metrics.py | 21-25 |
-| all_metrics | Function | flext-grpc/src/flext_grpc/services/metrics.py | 27-31 |
-| metric | Function | flext-grpc/src/flext_grpc/services/metrics.py | 33-42 |
-| record_metric | Function | flext-grpc/src/flext_grpc/services/metrics.py | 44-68 |
-| _normalize_value | Function | flext-grpc/src/flext_grpc/services/metrics.py | 53-58 |
-| FlextGrpcServer | Class | flext-grpc/src/flext_grpc/services/server.py | 24-189 |
-| _create_real_servicer | Function | flext-grpc/src/flext_grpc/services/server.py | 28-30 |
-| GrpcServerManager | Class | flext-grpc/src/flext_grpc/services/server.py | 32-173 |
-| **init** | Function | flext-grpc/src/flext_grpc/services/server.py | 35-42 |
-| server_metrics | Function | flext-grpc/src/flext_grpc/services/server.py | 44-61 |
-| start_server | Function | flext-grpc/src/flext_grpc/services/server.py | 63-74 |
-| stop_server | Function | flext-grpc/src/flext_grpc/services/server.py | 76-84 |
-| _start_new_server | Function | flext-grpc/src/flext_grpc/services/server.py | 86-103 |
-| _create_bound_runtime_server | Function | flext-grpc/src/flext_grpc/services/server.py | 105-126 |
-| _register_services | Function | flext-grpc/src/flext_grpc/services/server.py | 129-135 |
-| _activate_runtime_server | Function | flext-grpc/src/flext_grpc/services/server.py | 137-151 |
-| _stop_active_server | Function | flext-grpc/src/flext_grpc/services/server.py | 153-173 |
-| start_server | Function | flext-grpc/src/flext_grpc/services/server.py | 175-177 |
-| stop_server | Function | flext-grpc/src/flext_grpc/services/server.py | 179-181 |
-| server_status | Function | flext-grpc/src/flext_grpc/services/server.py | 183-185 |
-| FlextGrpcStream | Class | flext-grpc/src/flext_grpc/services/stream.py | 17-133 |
-| _StreamRuntimeState | Class | flext-grpc/src/flext_grpc/services/stream.py | 20-32 |
-| _new_stream_buffer | Function | flext-grpc/src/flext_grpc/services/stream.py | 35-36 |
-| GrpcStreamManager | Class | flext-grpc/src/flext_grpc/services/stream.py | 38-107 |
+| Name                                      | Kind     | File                                                  | Lines   |
+| ----------------------------------------- | -------- | ----------------------------------------------------- | ------- |
+| EchoResponse                              | Class    | flext-grpc/src/flext_grpc/models.py                   | 44-51   |
+| HealthResponse                            | Class    | flext-grpc/src/flext_grpc/models.py                   | 58-62   |
+| FlextGrpcServiceServicer                  | Class    | flext-grpc/src/flext_grpc/proto/stubs.py              | 18-19   |
+| FlextGrpcServiceStub                      | Class    | flext-grpc/src/flext_grpc/proto/stubs.py              | 22-41   |
+| **init**                                  | Function | flext-grpc/src/flext_grpc/proto/stubs.py              | 25-27   |
+| echo                                      | Function | flext-grpc/src/flext_grpc/proto/stubs.py              | 29-33   |
+| health_check                              | Function | flext-grpc/src/flext_grpc/proto/stubs.py              | 35-41   |
+| add_flext_grpc_service_servicer_to_server | Function | flext-grpc/src/flext_grpc/proto/stubs.py              | 44-48   |
+| FlextGrpcClient                           | Class    | flext-grpc/src/flext_grpc/services/client.py          | 17-163  |
+| GrpcClientManager                         | Class    | flext-grpc/src/flext_grpc/services/client.py          | 20-141  |
+| **init**                                  | Function | flext-grpc/src/flext_grpc/services/client.py          | 23-30   |
+| connect                                   | Function | flext-grpc/src/flext_grpc/services/client.py          | 32-50   |
+| disconnect                                | Function | flext-grpc/src/flext_grpc/services/client.py          | 52-66   |
+| client_status                             | Function | flext-grpc/src/flext_grpc/services/client.py          | 68-76   |
+| make_call                                 | Function | flext-grpc/src/flext_grpc/services/client.py          | 78-141  |
+| connect_client                            | Function | flext-grpc/src/flext_grpc/services/client.py          | 147-149 |
+| disconnect_client                         | Function | flext-grpc/src/flext_grpc/services/client.py          | 151-153 |
+| client_status                             | Function | flext-grpc/src/flext_grpc/services/client.py          | 155-157 |
+| make_call                                 | Function | flext-grpc/src/flext_grpc/services/client.py          | 159-163 |
+| ConnectionPool                            | Class    | flext-grpc/src/flext_grpc/services/connection_pool.py | 18-57   |
+| **init**                                  | Function | flext-grpc/src/flext_grpc/services/connection_pool.py | 21-31   |
+| acquire                                   | Function | flext-grpc/src/flext_grpc/services/connection_pool.py | 33-40   |
+| cleanup                                   | Function | flext-grpc/src/flext_grpc/services/connection_pool.py | 42-48   |
+| release                                   | Function | flext-grpc/src/flext_grpc/services/connection_pool.py | 50-57   |
+| \_MetricValueModel                        | Class    | flext-grpc/src/flext_grpc/services/metrics.py         | 13-16   |
+| MetricsCollector                          | Class    | flext-grpc/src/flext_grpc/services/metrics.py         | 18-68   |
+| **init**                                  | Function | flext-grpc/src/flext_grpc/services/metrics.py         | 21-25   |
+| all_metrics                               | Function | flext-grpc/src/flext_grpc/services/metrics.py         | 27-31   |
+| metric                                    | Function | flext-grpc/src/flext_grpc/services/metrics.py         | 33-42   |
+| record_metric                             | Function | flext-grpc/src/flext_grpc/services/metrics.py         | 44-68   |
+| \_normalize_value                         | Function | flext-grpc/src/flext_grpc/services/metrics.py         | 53-58   |
+| FlextGrpcServer                           | Class    | flext-grpc/src/flext_grpc/services/server.py          | 24-189  |
+| \_create_real_servicer                    | Function | flext-grpc/src/flext_grpc/services/server.py          | 28-30   |
+| GrpcServerManager                         | Class    | flext-grpc/src/flext_grpc/services/server.py          | 32-173  |
+| **init**                                  | Function | flext-grpc/src/flext_grpc/services/server.py          | 35-42   |
+| server_metrics                            | Function | flext-grpc/src/flext_grpc/services/server.py          | 44-61   |
+| start_server                              | Function | flext-grpc/src/flext_grpc/services/server.py          | 63-74   |
+| stop_server                               | Function | flext-grpc/src/flext_grpc/services/server.py          | 76-84   |
+| \_start_new_server                        | Function | flext-grpc/src/flext_grpc/services/server.py          | 86-103  |
+| \_create_bound_runtime_server             | Function | flext-grpc/src/flext_grpc/services/server.py          | 105-126 |
+| \_register_services                       | Function | flext-grpc/src/flext_grpc/services/server.py          | 129-135 |
+| \_activate_runtime_server                 | Function | flext-grpc/src/flext_grpc/services/server.py          | 137-151 |
+| \_stop_active_server                      | Function | flext-grpc/src/flext_grpc/services/server.py          | 153-173 |
+| start_server                              | Function | flext-grpc/src/flext_grpc/services/server.py          | 175-177 |
+| stop_server                               | Function | flext-grpc/src/flext_grpc/services/server.py          | 179-181 |
+| server_status                             | Function | flext-grpc/src/flext_grpc/services/server.py          | 183-185 |
+| FlextGrpcStream                           | Class    | flext-grpc/src/flext_grpc/services/stream.py          | 17-133  |
+| \_StreamRuntimeState                      | Class    | flext-grpc/src/flext_grpc/services/stream.py          | 20-32   |
+| \_new_stream_buffer                       | Function | flext-grpc/src/flext_grpc/services/stream.py          | 35-36   |
+| GrpcStreamManager                         | Class    | flext-grpc/src/flext_grpc/services/stream.py          | 38-107  |
 
-*... and 26 more members.*
+_... and 26 more members._
 
 ## Execution Flows
 

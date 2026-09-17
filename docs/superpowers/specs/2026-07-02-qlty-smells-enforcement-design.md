@@ -1,6 +1,7 @@
 # qlty Smells → FLEXT Enforcement (detection-only, warnings para todos, sempre)
 
 <!-- TOC START -->
+
 - [Context](#context)
 - [Decisões travadas (usuário)](#decisoes-travadas-usuario)
 - [Verificado por exploração (base factual)](#verificado-por-exploracao-base-factual)
@@ -13,6 +14,7 @@
 - [Verificação (por batch, DIRETO via ~/flext/.venv — NUNCA make check)](#verificacao-por-batch-direto-via-flextvenv-nunca-make-check)
 - [Riscos aceitos](#riscos-aceitos)
 - [Passo 0 (pós-aprovação)](#passo-0-pos-aprovacao)
+
 <!-- TOC END -->
 
 ## Context
@@ -78,8 +80,8 @@ erro de lint; testes 100% verdes.
 
 - `EnforcementSmellTag(StrEnum)` — 8 membros
   `smell_function_parameters, smell_function_complexity, smell_file_complexity,
-  smell_return_statements, smell_nested_control_flow, smell_boolean_logic, smell_similar_code,
-  smell_identical_code` (part_01).
+smell_return_statements, smell_nested_control_flow, smell_boolean_logic, smell_similar_code,
+smell_identical_code` (part_01).
 - `ENFORCEMENT_SMELL_THRESHOLDS: MappingProxyType[EnforcementSmellTag,int]` = {params:5, returns:5,
   nesting:4, function_complexity:14, file_complexity:49} — semântica documentada
   `violação quando observado > max` (reproduz qlty ≥15/≥50). +
@@ -101,7 +103,7 @@ erro de lint; testes 100% verdes.
     igualdade → membership `StrEnum`/`frozenset`; escadas booleanas por tipo → `match-case`.
   - `smell_similar_code`: composição MRO mixin no projeto root-most (flext-core > flext-cli/infra
     > consumers); abstração nova exige prova ≥8× LOC dedup; scaffolding codegen conserta-se no
-    TEMPLATE do gerador.
+    > TEMPLATE do gerador.
   - `smell_identical_code`: deletar toda cópia exceto a root-most; re-exportar via facade dona.
     Tolerância zero.
 - Catálogo: novo source kind `CODE_SMELL` (`EnforcementSourceKind` em
@@ -127,7 +129,7 @@ L36) + `FlextExceptions.SmellViolation` ClassVar (`exceptions.py:39`) + exports 
 - SEM predicate kind novo: estender `MethodShapeParams += max_params: int = 0`
   (`_params.py:116-121`) + branch em `v_method_shape`
   (`_utilities/_beartype/method_visitor.py`): `inspect.getattr_static` + `__code__.co_argcount +
-  co_kwonlyargcount` − offset self/cls (staticmethod 0, função/classmethod 1). Introspecção pura de
+co_kwonlyargcount` − offset self/cls (staticmethod 0, função/classmethod 1). Introspecção pura de
   code-object — beartype-style, zero leitura de source.
 - Exemptions LEGAIS (lei AGENTS.md, não silenciamento): dunders (`__*__`) e espelhos da API
   Pydantic (`model_*` — model_dump=13 espelha assinatura da lib, sem fix sancionado).
@@ -148,7 +150,7 @@ L36) + `FlextExceptions.SmellViolation` ClassVar (`exceptions.py:39`) + exports 
 - Guard test `test_enforcement_warning_visibility.py`: probe adicional `FlextSmellViolation`;
   assert presença no output do pytest sandboxed com filterwarnings reais.
 - Contrato subclass em `test_enforcement_reports.py`: `issubclass(FlextSmellViolation,
-  FlextMroViolation)` — umbrella herdado.
+FlextMroViolation)` — umbrella herdado.
 - `ensure_pytest.py`: sem mudança (MERGE só adiciona ignore de PytestCollectionWarning; nunca
   cala UserWarning descendants).
 
@@ -158,7 +160,7 @@ L36) + `FlextExceptions.SmellViolation` ClassVar (`exceptions.py:39`) + exports 
   `gate_id="smells"`, `can_fix=False`.
   - Resolver binário explícito: `shutil.which("qlty")` + fallback `Path.home()/".qlty/bin/qlty"`
     (constante). **Ausência = Issue visível severity NOTE/ERROR, nunca false-green**
-    (base_gate._run mascara spawn-failure como exit 1/stdout vazio — tratar).
+    (base_gate.\_run mascara spawn-failure como exit 1/stdout vazio — tratar).
   - cwd = workspace root (config SSOT em `<workspace>/.qlty/`; projetos são submodules) — novo
     hook template `_check_cwd()` em `base_gate.py` (+7 LOC, default project_dir, zero mudança nos
     10 gates existentes); comando
@@ -167,10 +169,10 @@ L36) + `FlextExceptions.SmellViolation` ClassVar (`exceptions.py:39`) + exports 
     `runs[0].results[]`; `ruleId "qlty:<type>"` → `Issue.code`; uri prefix-stripped; mensagem
     enriquecida = `"{sarif_text} — {problem}. Fix: {fix} [ENFORCE-NNN §anchor]"` via
     `c.Infra.SMELLS_RULE_TAGS` (ruleId→tag) + `from flext_core import c as c;
-    c.ENFORCEMENT_RULES_TEXT[tag]` — **SSOT de textos = flext-core, infra só mapeia** (drift
+c.ENFORCEMENT_RULES_TEXT[tag]` — **SSOT de textos = flext-core, infra só mapeia** (drift
     test).
   - **"Todos, sempre":** após parse, `warnings.warn(issue.formatted, FlextSmellViolation,
-    stacklevel=2)` por finding — warnings emitidos em TODA execução do gate, independente do modo.
+stacklevel=2)` por finding — warnings emitidos em TODA execução do gate, independente do modo.
   - `passed = True` em `GateMode.WARN`, `not issues` em STRICT; severity WARNING→ERROR no flip.
 - Constantes (`_constants/check.py`, +~30 LOC): `GateMode(StrEnum)` WARN/STRICT;
   `SMELLS_GATE_MODE = GateMode.WARN` (**flip = esta linha**); `QLTY_BINARY`,
@@ -225,7 +227,7 @@ flext-cli `qlty_smells.txt.bak`. O gate substitui `parse_smells.py`.
    `enforcement_part_01.py` (binding + **resplit make gen**, já 210 LOC),
    `enforcement_collect_part_02.py` (case widening), catalog rows part_04 (row ENFORCE-067
    BEARTYPE — mesmo batch, senão KeyError no builder). **Pré-scan:** `python -W default -c "import
-   flext_core, flext_cli"` contando FlextSmellViolation; **canário:** pytest flext-oracle-wms +
+flext_core, flext_cli"` contando FlextSmellViolation; **canário:** pytest flext-oracle-wms +
    flext-ldif.
 5. **B5 oracle-wms (1):** row `"default::flext_core.FlextMroViolation"` no filterwarnings de
    `flext-oracle-wms/pyproject.toml`. Canário pytest de novo.
@@ -233,15 +235,15 @@ flext-cli `qlty_smells.txt.bak`. O gate substitui `parse_smells.py`.
    `test_enforcement_accessors.py`, `test_enforcement_warning_visibility.py`,
    `test_enforcement_reports.py` (asserts conforme design: contagem by_kind, thresholds alinhados,
    binding contract, probe visibilidade, pytest.warns(FlextSmellViolation), negativos
-   *args/dunder/5-params, cls/staticmethod offsets).
-7. **B7 infra base (2):** `gates/base_gate.py` (_check_cwd hook), `_constants/check.py`
+   \*args/dunder/5-params, cls/staticmethod offsets).
+7. **B7 infra base (2):** `gates/base_gate.py` (\_check_cwd hook), `_constants/check.py`
    (constantes + SARIF_TOOL_INFO row).
 8. **B8 infra gate (4 + regen):** `gates/smells.py`, `workspace_check_gates.py` (registry), NOVO
    `tests/unit/check/smells_gate_tests.py` (identity, fixture SARIF pura, warn-mode passa com
    issues, binário ausente visível, drift test tags→textos core, warning emission),
    `gate_registry_tests.py` (+2 asserts); `make gen`.
 9. **B9 não-Python:** `base.mk` (allowlist+help+default), cleanup mv, smoke `make check
-   CHECK_GATES=smells` na raiz → exit 0 + contagens por tipo no report + warnings no stderr.
+CHECK_GATES=smells` na raiz → exit 0 + contagens por tipo no report + warnings no stderr.
 10. **B10 beads:** criar os 11 beads via `bd create`.
 
 ## Verificação (por batch, DIRETO via ~/flext/.venv — NUNCA make check)

@@ -1,10 +1,12 @@
 # ADR-017 — Parametrized Rule Surfaces and the Single Modernize CLI
 
 <!-- TOC START -->
+
 - [Context](#context)
 - [Decision](#decision)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
+
 <!-- TOC END -->
 
 - **Status:** ACCEPTED TARGET — implementation in progress

@@ -1,8 +1,10 @@
 # Política de supressões (mypy / pyright / pyrefly / Pylance)
 
 <!-- TOC START -->
+
 - [O que foi feito (correção na raiz)](#o-que-foi-feito-correcao-na-raiz)
 - [Atualizações (continuação do plano)](#atualizacoes-continuacao-do-plano)
+
 <!-- TOC END -->
 
 **Regras (AGENTS.md + decisão do repositório):**
@@ -31,12 +33,14 @@
 ## O que foi feito (correção na raiz)
 
 - **flext-dbt-ldap**
+
   - Removido `[[tool.mypy.overrides]]` por completo.
   - `reportUntypedBaseClass`: base tipada em flext-core; em `protocols.py` passamos a usar `p_core.Service[...]`
     (import de `flext_core.protocols.FlextProtocols`) em vez de `p_ldap.Service[...]`, para o pyright resolver o
     tipo da base.
 
 - **flext-tap-ldif**
+
   - Removido override de mypy em `pyproject.toml`.
   - Settings: `create_for_development` / `create_for_production` / `create_for_testing` passam a usar
     `overrides: m.SettingsOverridesModel` e defaults em modelos explícitos, mantendo `model_validate(...)` sem
@@ -53,7 +57,7 @@
 ## Atualizações (continuação do plano)
 
 - **flext-core**
-  - **FlextSettings.**init****: Removida abordagem permissiva de cast em fronteira de biblioteca; fronteira segue
+  - **FlextSettings.**init\*\*\*\*: Removida abordagem permissiva de cast em fronteira de biblioteca; fronteira segue
     contrato de modelo explícito e validação direta.
 - **flext-dbt-ldap**
   - **Unreachable**: Helper `_entry_attrs_mapping(entry)` no módulo; `normalize_attributes` / `_get_object_classes` e

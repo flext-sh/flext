@@ -1,6 +1,7 @@
 # ADR-007 — Performance optimization of worktree transactions and mutating CLI commands
 
 <!-- TOC START -->
+
 - [Context](#context)
 - [Decision](#decision)
   - [1. Transaction wrapper stages run in parallel when independent](#1-transaction-wrapper-stages-run-in-parallel-when-independent)
@@ -9,7 +10,9 @@
   - [4. No optimization may bypass gates or suppress diagnostics](#4-no-optimization-may-bypass-gates-or-suppress-diagnostics)
   - [5. Generated-artifact linting is a single batched stage, not per template](#5-generated-artifact-linting-is-a-single-batched-stage-not-per-template)
 - [Consequences](#consequences)
+
 <!-- TOC END -->
+
 - **Status:** CURRENT IMPLEMENTATION
 - **Date:** 2026-07-17
 - **Scope:** `flext-infra` worktree transaction executor, `flext-cli` output
@@ -117,7 +120,7 @@ is still reported and still fails generation; only the subprocess count drops.
   must target Rope/indexing, subprocess scheduling, and import/model construction
   inside `flext-infra/codegen`.
 - Batched generated-artifact linting (`mro-96j2.4`) removes one cold `ruff
-  check` subprocess per generated `**init**.py`. For a full-workspace run that
+check` subprocess per generated `**init**.py`. For a full-workspace run that
   generates ~225 initializers, the lint subprocess count drops from ~450
   (format + check per file) to ~226 (format per file + one batched check),
   proven byte-identical to the previous per-template output (`render_init`

@@ -4,9 +4,11 @@
 # CRG Dead Code
 
 <!-- TOC START -->
+
 - [Summary](#summary)
 - [Findings](#findings)
 - [Raw Output](#raw-output)
+
 <!-- TOC END -->
 
 ## Summary
@@ -20,12 +22,12 @@
 - jobs (`~/flext/docker/oracle-db/init.sql`:21)
 - FlextApiVersion (`~/flext/flext-api/src/flext_api/__version__.py`:19)
 - FlextAuthVersion (`~/flext/flext-auth/src/flext_auth/__version__.py`:19)
-- _KerberosAuthManager (`~/flext/flext-auth/src/flext_auth/providers/kerberos_support.py`:66)
+- \_KerberosAuthManager (`~/flext/flext-auth/src/flext_auth/providers/kerberos_support.py`:66)
 - FlextCliVersion (`~/flext/flext-cli/src/flext_cli/__version__.py`:19)
 - CliValidationError (`~/flext/flext-cli/src/flext_cli/_constants/exceptions.py`:33)
 - FlextCliUtilitiesCli (`~/flext/flext-cli/src/flext_cli/_utilities/_cli_namespace.py`:40)
-- _IoCounters (`~/flext/flext-cli/src/flext_cli/_utilities/_runtime_windows_job_start.py`:28)
-- _BasicLimitInformation (`~/flext/flext-cli/src/flext_cli/_utilities/_runtime_windows_job_start.py`:38)
+- \_IoCounters (`~/flext/flext-cli/src/flext_cli/_utilities/_runtime_windows_job_start.py`:28)
+- \_BasicLimitInformation (`~/flext/flext-cli/src/flext_cli/_utilities/_runtime_windows_job_start.py`:38)
 - FlextCliUtilitiesXlsxFormulaCodec (`~/flext/flext-cli/src/flext_cli/_utilities/_xlxx/xlsx_formula_codec.py`:9)
 - ScriptsFlextConstants (`~/flext/flext-core/scripts/constants.py`:9)
 - ScriptsFlextModels (`~/flext/flext-core/scripts/models.py`:9)

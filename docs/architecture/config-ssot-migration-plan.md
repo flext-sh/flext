@@ -1,6 +1,7 @@
 # Make/codegen, configuration, and uv SSOT migration plan
 
 <!-- TOC START -->
+
 - [Delivery rules](#delivery-rules)
 - [Canonical ownership](#canonical-ownership)
 - [Phase 1 — Consolidate the engine](#phase-1-consolidate-the-engine)
@@ -9,6 +10,7 @@
 - [Phase 4 — Conform Cosmos](#phase-4-conform-cosmos)
 - [Phase 5 — Conform standalone repositories](#phase-5-conform-standalone-repositories)
 - [Phase 6 — Fleet acceptance and deletion proof](#phase-6-fleet-acceptance-and-deletion-proof)
+
 <!-- TOC END -->
 
 This plan implements [ADR-003](adr/003-workspace-tooling-hub-distribution.md),
@@ -35,14 +37,14 @@ epic `mro-wkii.17`.
 
 ## Canonical ownership
 
-| Surface | Sole owner |
-| --- | --- |
-| repository catalog and workspace manifest | validated data under `flext-infra/config/` and each workspace `config/` |
-| universal config/schema/template/file/process operations | public `u.Cli.*` facades in `flext-cli` |
-| typed conformance plan, enforcement, and transaction | `flext-infra codegen conform` |
-| generated Makefiles | the single `flext-infra` template layer |
-| project-specific Make behavior | private handlers in versioned `custom.mk` |
-| runtime contracts and primitives | runtime-minimal `flext-core` |
+| Surface                                                  | Sole owner                                                              |
+| -------------------------------------------------------- | ----------------------------------------------------------------------- |
+| repository catalog and workspace manifest                | validated data under `flext-infra/config/` and each workspace `config/` |
+| universal config/schema/template/file/process operations | public `u.Cli.*` facades in `flext-cli`                                 |
+| typed conformance plan, enforcement, and transaction     | `flext-infra codegen conform`                                           |
+| generated Makefiles                                      | the single `flext-infra` template layer                                 |
+| project-specific Make behavior                           | private handlers in versioned `custom.mk`                               |
+| runtime contracts and primitives                         | runtime-minimal `flext-core`                                            |
 
 ## Phase 1 — Consolidate the engine
 

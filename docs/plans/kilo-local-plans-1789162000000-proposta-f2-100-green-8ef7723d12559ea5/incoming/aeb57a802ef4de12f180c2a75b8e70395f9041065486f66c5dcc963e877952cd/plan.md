@@ -7,13 +7,13 @@
 
 Causas-raiz já provadas nesta sessão (4 sub-defeitos, 1 já corrigido):
 
-| # | Defeito | Evidência | Reparo proposto (dono) |
-|---|---|---|---|
-| P1a | Comparador de drift comparava `bytes` vs `str` (sempre "diferente") | log CI: `content equal: mode-only drift` com diff vazio | ✅ JÁ CORRIGIDO (`codegen_file_plan.py` + 4 regressões) |
-| P1b | Exclusões `.vscode/.gitignore` derivadas do estado AMBIENTE (presença de `.flext-runtime` no host) em vez do SSOT | diff `**/.flext-runtime: true` aparecendo só no host | Derivar a lista de exclusões 100% do `config/codegen.yaml` (nomes canônicos declarados); nunca `iterdir` do filesystem |
-| P1c | Journal transacional keya em snapshot de conteúdo, não no PIN SHA → stale após rollup de gitlink | `generation state changed` falso-positivo pós-rollup | Journal grava `pin_sha` como chave de validade; conteúdo comparado só dentro do mesmo pin |
-| P1d | Lock do journal é global-host: `check run` do ai-hub travou o workspace flext por 3h | PID 3888377 (17:53→20:52), `filelock.Timeout` | Lock nomeado por `repository_root` (hash do caminho no nome do arquivo); isolamento flext×ai-hub |
-| P1e | Linha `--hash=sha256:c5132b4b…` renderizada no runner difere do host | log CI do PR #225 | Constraints com hash pertencem ao lock (uv.lock), nunca a arquivo gerado auditável; remover a projeção de hash para arquivo de texto ou keyar por pin |
+| #   | Defeito                                                                                                           | Evidência                                               | Reparo proposto (dono)                                                                                                                                |
+| --- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P1a | Comparador de drift comparava `bytes` vs `str` (sempre "diferente")                                               | log CI: `content equal: mode-only drift` com diff vazio | ✅ JÁ CORRIGIDO (`codegen_file_plan.py` + 4 regressões)                                                                                               |
+| P1b | Exclusões `.vscode/.gitignore` derivadas do estado AMBIENTE (presença de `.flext-runtime` no host) em vez do SSOT | diff `**/.flext-runtime: true` aparecendo só no host    | Derivar a lista de exclusões 100% do `config/codegen.yaml` (nomes canônicos declarados); nunca `iterdir` do filesystem                                |
+| P1c | Journal transacional keya em snapshot de conteúdo, não no PIN SHA → stale após rollup de gitlink                  | `generation state changed` falso-positivo pós-rollup    | Journal grava `pin_sha` como chave de validade; conteúdo comparado só dentro do mesmo pin                                                             |
+| P1d | Lock do journal é global-host: `check run` do ai-hub travou o workspace flext por 3h                              | PID 3888377 (17:53→20:52), `filelock.Timeout`           | Lock nomeado por `repository_root` (hash do caminho no nome do arquivo); isolamento flext×ai-hub                                                      |
+| P1e | Linha `--hash=sha256:c5132b4b…` renderizada no runner difere do host                                              | log CI do PR #225                                       | Constraints com hash pertencem ao lock (uv.lock), nunca a arquivo gerado auditável; remover a projeção de hash para arquivo de texto ou keyar por pin |
 
 **Validação:** `make gen` ×2 → exit 0 ×2, árvore estável, no rig E no runner (CI do PR #225 verde).
 

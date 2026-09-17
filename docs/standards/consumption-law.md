@@ -1,6 +1,7 @@
 # FLEXT Consumer Consumption Law
 
 <!-- TOC START -->
+
 - [R1 — Facade-Only Import Grammar (Consumer Legality)](#r1-facade-only-import-grammar-consumer-legality)
 - [R2 — No Duplication (Structural Scan)](#r2-no-duplication-structural-scan)
 - [R3 — Layer Law (Declaration vs Behavior)](#r3-layer-law-declaration-vs-behavior)
@@ -11,6 +12,7 @@
 - [Anti-Hardcode Law (Enforcement)](#anti-hardcode-law-enforcement)
 - [ADR Cross-Reference](#adr-cross-reference)
 - [Change Log](#change-log)
+
 <!-- TOC END -->
 
 > **Authority**: This document is the canonical R1-R6 consumption standard for the FLEXT fleet. All enforcement derives from this law; no parallel rules or bypass lists exist.
@@ -40,7 +42,7 @@ where `<symbol>` ∈ `pkg.__all__` (the published lazy export contract).
 - `from flext_core import lazy` (internal machinery)
 - Any `pkg.<submodule>` path — zero exceptions
 
-**Intra-family exemption**: Facade assembly *within the same package* remains legal (e.g., `flext_cli` importing `flext_cli._models`).
+**Intra-family exemption**: Facade assembly _within the same package_ remains legal (e.g., `flext_cli` importing `flext_cli._models`).
 
 **Fix hints**: Derived by inverting the published `_LAZY_IMPORTS` map — every `Flext*` long name maps to its canonical single-letter alias (`c,t,p,m,u,r,e,x,h,d,s`).
 
@@ -148,17 +150,17 @@ duplication.threshold-percent = 0.0
 
 ## Canonical Sources
 
-| Concern | SSOT Location |
-|---------|---------------|
-| R1 Grammar | `flext_core._utilities.family_surface.FlextUtilitiesFamilySurface` |
-| R1 Enforcement | `flext_infra.detectors.consumer_import_violations_detector` |
-| R2 Duplication | `flext_infra.gates.duplication.FlextInfraDuplicationGate` |
-| R3 Layer Law | `flext_infra.gates.namespace.FlextInfraNamespaceGate` |
-| R4 Config | `config/codegen.yaml` → `codegen.yaml` scaffold.project.dev |
-| R4 Budget Gate | `flext_infra.gates.budget` (new) |
-| R4 Primitives | `flext_core._utilities.files` (new) |
-| R5 Versioning | `config/codegen.yaml` scaffold.project.dev |
-| R6 Workflow | `docs/GOVERNANCE.md`, Gas City contracts |
+| Concern        | SSOT Location                                                      |
+| -------------- | ------------------------------------------------------------------ |
+| R1 Grammar     | `flext_core._utilities.family_surface.FlextUtilitiesFamilySurface` |
+| R1 Enforcement | `flext_infra.detectors.consumer_import_violations_detector`        |
+| R2 Duplication | `flext_infra.gates.duplication.FlextInfraDuplicationGate`          |
+| R3 Layer Law   | `flext_infra.gates.namespace.FlextInfraNamespaceGate`              |
+| R4 Config      | `config/codegen.yaml` → `codegen.yaml` scaffold.project.dev        |
+| R4 Budget Gate | `flext_infra.gates.budget` (new)                                   |
+| R4 Primitives  | `flext_core._utilities.files` (new)                                |
+| R5 Versioning  | `config/codegen.yaml` scaffold.project.dev                         |
+| R6 Workflow    | `docs/GOVERNANCE.md`, Gas City contracts                           |
 
 ---
 
@@ -181,20 +183,20 @@ duplication.threshold-percent = 0.0
 
 ## ADR Cross-Reference
 
-| ADR | Topic | Status |
-|-----|-------|--------|
-| ADR-001 | Railway Result (`r`) | Accepted |
-| ADR-005 | Config SSOT | Accepted |
-| ADR-006 | Thin Drivers (Meltano) | Accepted |
-| ADR-008 | Agent-runtime symmetry | Accepted |
-| ADR-010 | Codegen Standardization | Accepted |
-| ADR-014 | Codemod Governance | Accepted |
+| ADR         | Topic                                | Status       |
+| ----------- | ------------------------------------ | ------------ |
+| ADR-001     | Railway Result (`r`)                 | Accepted     |
+| ADR-005     | Config SSOT                          | Accepted     |
+| ADR-006     | Thin Drivers (Meltano)               | Accepted     |
+| ADR-008     | Agent-runtime symmetry               | Accepted     |
+| ADR-010     | Codegen Standardization              | Accepted     |
+| ADR-014     | Codemod Governance                   | Accepted     |
 | **ADR-015** | **Consumer Consumption Law (R1-R6)** | **Accepted** |
 
 ---
 
 ## Change Log
 
-| Version | Date | Change |
-|---------|------|--------|
-| 0.12.0 | 2026-09-11 | Initial ratification (ADR-015) |
+| Version | Date       | Change                         |
+| ------- | ---------- | ------------------------------ |
+| 0.12.0  | 2026-09-11 | Initial ratification (ADR-015) |

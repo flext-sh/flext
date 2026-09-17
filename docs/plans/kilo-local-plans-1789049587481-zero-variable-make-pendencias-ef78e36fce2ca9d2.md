@@ -1,4 +1,5 @@
 # SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
+
 # Plano — Zerar as pendências do ciclo Make 0.12.0-dev e pousar na integração sem erros
 
 Motivação do operador: "resolver o conflito e pendências — é culpa e responsabilidade sua";
@@ -32,6 +33,7 @@ atualizar as regras canônicas em `~/agents`; integrar tudo em `0.12.0-dev` vali
   (`git ls-files '*.bak'` limpo na frota).
 
 ### T2 — Adjudicação da lane rope órfã (flext-infra)
+
 Só um dos dois desfechos, sem descartar trabalho (fix-forward):
 
 - 2a. Se inventário mostrar WIP coerente (imports resolvem, `codemod/rope_rules/` tem `__init__`,
@@ -63,6 +65,7 @@ Só um dos dois desfechos, sem descartar trabalho (fix-forward):
 - Validação: pytest dos 4 tests alvo verde; suíte fast continua verde (10 passed baseline).
 
 ### T5 — Regras canônicas em `~/agents`
+
 Inventário já feito: `~/agents` é git repo (`feat/reval250909-adoption`), `~/.agents` é symlink
 para ele; projeção via `make propagate`.
 
@@ -86,6 +89,7 @@ para ele; projeção via `make propagate`.
   com bead.
 
 ## Ord fix dependencies
+
 T0 → T1 ∥ T2 → T3 (precisa árvore limpa) → T4 ∥ T5 → T6.
 
 ## Riscos

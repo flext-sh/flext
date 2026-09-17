@@ -8,6 +8,7 @@ work_item: flext-ro6mj.1
 # Verdict
 
 <!-- TOC START -->
+
 - [Active resumption — 2026-09-15T02:06:56Z](#active-resumption-2026-09-15t020656z)
 - [Current handoff — 2026-09-14T22:57:00Z](#current-handoff-2026-09-14t225700z)
   - [Published versus integrated](#published-versus-integrated)
@@ -29,6 +30,7 @@ work_item: flext-ro6mj.1
 - [Native evidence ledger for this handoff only](#native-evidence-ledger-for-this-handoff-only)
 - [Ordered resumption contract](#ordered-resumption-contract)
 - [Publication receipts](#publication-receipts)
+
 <!-- TOC END -->
 
 ## Active resumption — 2026-09-15T02:06:56Z
@@ -90,15 +92,15 @@ tracker is created here.
 
 ### Latest bounded evidence and first failures
 
-| Owner / working directory | Command and result | Meaning / next action |
-| --- | --- | --- |
-| FLEXT separate worktree `~/flext-worktrees/plan-reconciliation` | `direnv exec . make status`, exit 0 | Environment/status only; not functional acceptance |
-| Same FLEXT worktree | Two `make test` runs interrupted with exit 130 after repeated import failures | First `types.TypeAliasType` imports corrected in authored Tests modules; next failure importing `m` remains to revalidate after generator composition |
-| Same FLEXT worktree | `direnv exec . make gen`, session 88479, still running at this cut | Conform/publication progressed; Rope indexed 4,179 modules. Wait for final exit before any claim or concurrent write |
-| `~/agents` | `make check`, session 3023, worker reports exit 0 | Ruff/Pyright/Mypy, 132 semantic suites, fixed point and 242 packaged resources passed for that snapshot; later test changes invalidate freshness |
-| `~/agents` | `make test-full` then native test rerun, worker reports exit 2; 14 passed before MCP timeout | Real stdio consumer times out after 10 seconds. Cold-cache hypothesis disproved; locate lifecycle failure without suppressing it |
-| `~/ai-hub` | External native test report: 188 passed, 2 failed; session exit not owned here | Installed older producer lacks `SkillRecord.resources`; refreshed lock alone is not an installed-runtime proof |
-| `~/ai-hub` | `direnv exec . make setup`, session 87449, running | Installs the already refreshed producer lock; then repeat native consumer tests |
+| Owner / working directory                                       | Command and result                                                                           | Meaning / next action                                                                                                                                 |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| FLEXT separate worktree `~/flext-worktrees/plan-reconciliation` | `direnv exec . make status`, exit 0                                                          | Environment/status only; not functional acceptance                                                                                                    |
+| Same FLEXT worktree                                             | Two `make test` runs interrupted with exit 130 after repeated import failures                | First `types.TypeAliasType` imports corrected in authored Tests modules; next failure importing `m` remains to revalidate after generator composition |
+| Same FLEXT worktree                                             | `direnv exec . make gen`, session 88479, still running at this cut                           | Conform/publication progressed; Rope indexed 4,179 modules. Wait for final exit before any claim or concurrent write                                  |
+| `~/agents`                                                      | `make check`, session 3023, worker reports exit 0                                            | Ruff/Pyright/Mypy, 132 semantic suites, fixed point and 242 packaged resources passed for that snapshot; later test changes invalidate freshness      |
+| `~/agents`                                                      | `make test-full` then native test rerun, worker reports exit 2; 14 passed before MCP timeout | Real stdio consumer times out after 10 seconds. Cold-cache hypothesis disproved; locate lifecycle failure without suppressing it                      |
+| `~/ai-hub`                                                      | External native test report: 188 passed, 2 failed; session exit not owned here               | Installed older producer lacks `SkillRecord.resources`; refreshed lock alone is not an installed-runtime proof                                        |
+| `~/ai-hub`                                                      | `direnv exec . make setup`, session 87449, running                                           | Installs the already refreshed producer lock; then repeat native consumer tests                                                                       |
 
 The operator clarified that Ruff, Pyrefly, Pyright and Mypy remain mandatory;
 the exception concerns other Infra custom Make checks. No functional collection,
@@ -184,19 +186,19 @@ paused external consumer cut and remains in progress.
 
 ## Requirement-to-evidence assessment
 
-| Required outcome | What exists | What remains unproven or absent |
-| --- | --- | --- |
-| Automatic source collection | Typed collector, provenance, revision and file-plan owners | Root `config/plan-collection.yaml` absent; complete provider adapters absent |
-| All providers and annexes | Files/same-basename companions; Claude/Poolside parser sources | Codex, VS Code, Kimi schemas/adapters; OpenCode wiring; linked external annex traversal |
-| Temporal ordering | Original timestamp and UTC separated; unresolved precision explicit | Real corpus ordering and conflict adjudication; no invented timestamp allowed |
-| Safe home projection | External participants, leases, exact snapshots, absent-parent witnesses | Real first import, edits, interruption recovery, second-run convergence |
-| Usable `make docs` | Root pre-docs hook and thin script committed | Configuration, generated launcher, CLI/template contract and all native gates |
-| AI Hub propagation | Typed resource policy and binary/mode publication changes | Producer integration before consumer refresh; installed wheel/sdist fidelity and live propagation |
-| One-prompt sequential workflow | `plan-reconciliation` skill and `/reconcile-plans` command sources | Real activation, one-plan integration and interrupted resumption |
-| All Beads reconciled | Active epic/task updated, all-status revalidation procedure | Exhaustive open/closed sweep and four independent sources per adjudication |
-| Plans/ADRs consolidated | Approved semantics and limited owner documentation amendments | No completed corpus-wide semantic deduplication or linked-plan retirement proof |
-| Rope propagation | Callback and guarded replacement sources written | Last `make mod` failed before callback; necessary callsites remain unmigrated |
-| Integration of complete increment | Multiple published checkpoints and Draft PRs | No green native round, independent approval or post-merge proof for this increment |
+| Required outcome                  | What exists                                                             | What remains unproven or absent                                                                   |
+| --------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Automatic source collection       | Typed collector, provenance, revision and file-plan owners              | Root `config/plan-collection.yaml` absent; complete provider adapters absent                      |
+| All providers and annexes         | Files/same-basename companions; Claude/Poolside parser sources          | Codex, VS Code, Kimi schemas/adapters; OpenCode wiring; linked external annex traversal           |
+| Temporal ordering                 | Original timestamp and UTC separated; unresolved precision explicit     | Real corpus ordering and conflict adjudication; no invented timestamp allowed                     |
+| Safe home projection              | External participants, leases, exact snapshots, absent-parent witnesses | Real first import, edits, interruption recovery, second-run convergence                           |
+| Usable `make docs`                | Root pre-docs hook and thin script committed                            | Configuration, generated launcher, CLI/template contract and all native gates                     |
+| AI Hub propagation                | Typed resource policy and binary/mode publication changes               | Producer integration before consumer refresh; installed wheel/sdist fidelity and live propagation |
+| One-prompt sequential workflow    | `plan-reconciliation` skill and `/reconcile-plans` command sources      | Real activation, one-plan integration and interrupted resumption                                  |
+| All Beads reconciled              | Active epic/task updated, all-status revalidation procedure             | Exhaustive open/closed sweep and four independent sources per adjudication                        |
+| Plans/ADRs consolidated           | Approved semantics and limited owner documentation amendments           | No completed corpus-wide semantic deduplication or linked-plan retirement proof                   |
+| Rope propagation                  | Callback and guarded replacement sources written                        | Last `make mod` failed before callback; necessary callsites remain unmigrated                     |
+| Integration of complete increment | Multiple published checkpoints and Draft PRs                            | No green native round, independent approval or post-merge proof for this increment                |
 
 ## Deep critique of execution
 
@@ -332,7 +334,7 @@ Canonical owners and exact investigation entrypoints:
   `_mise_artifacts_{files,journal,verification,recovery}.py`, `_codegen_staging.py`.
 - Infra `_utilities/codegen_path_cutover.py`, `rope_runtime_refactors.py`,
   `_protocols/rope_runtime.py`, `codemod/{semantic_apply,batch_apply,batch_gates,
-  batch_replacements}.py`. Last mod failure preceded Rope; do not claim cutover.
+batch_replacements}.py`. Last mod failure preceded Rope; do not claim cutover.
 - Infra `_utilities/docs_contract.py`: `docs_workspace_contract` hardcodes
   `FLEXT Workspace`; root artifacts use it for standalone AI Hub. Reuse the
   metadata owner rather than modifying the consumer's expected title.
@@ -353,17 +355,17 @@ Canonical owners and exact investigation entrypoints:
 This is an immutable audit snapshot, not another tracker. Detailed earlier
 evidence remains in `flext-ro6mj.1` notes and native reports.
 
-| Cwd | Exact command | Exit and decisive scope |
-| --- | --- | --- |
-| FLEXT worktree | `direnv exec . make status` | 0; environment/Git only, not collection |
-| FLEXT worktree | `direnv exec . make check` | 2; 32 completed, 0 passed, 32 failed, earlier snapshot |
-| FLEXT worktree | `direnv exec . make audit` | 2; latest session68939 reached 32 repositories, generated differences |
-| FLEXT worktree | `direnv exec . make mod` | 2; session69763 expected 3 ast-grep errors, receipt contained 4; before Rope |
-| agents | `direnv exec . make check` | Earlier 0 invalidated by later changes; latest47706 exit2, 13 resource Pyright errors |
-| agents | `direnv exec . make test-full` | Earlier 0, 10 passed; not rerun after final parser/resource changes |
-| agents | `direnv exec . make setup` | 0; installed Pyright1.1.414, not overall gate proof |
-| agents | `direnv exec . make fmt` | 0; formatting only |
-| AI Hub | `direnv exec . make test` | 2; session35894, 1456 collected, 67 passed, 2 failed before new publisher tests |
+| Cwd            | Exact command                  | Exit and decisive scope                                                               |
+| -------------- | ------------------------------ | ------------------------------------------------------------------------------------- |
+| FLEXT worktree | `direnv exec . make status`    | 0; environment/Git only, not collection                                               |
+| FLEXT worktree | `direnv exec . make check`     | 2; 32 completed, 0 passed, 32 failed, earlier snapshot                                |
+| FLEXT worktree | `direnv exec . make audit`     | 2; latest session68939 reached 32 repositories, generated differences                 |
+| FLEXT worktree | `direnv exec . make mod`       | 2; session69763 expected 3 ast-grep errors, receipt contained 4; before Rope          |
+| agents         | `direnv exec . make check`     | Earlier 0 invalidated by later changes; latest47706 exit2, 13 resource Pyright errors |
+| agents         | `direnv exec . make test-full` | Earlier 0, 10 passed; not rerun after final parser/resource changes                   |
+| agents         | `direnv exec . make setup`     | 0; installed Pyright1.1.414, not overall gate proof                                   |
+| agents         | `direnv exec . make fmt`       | 0; formatting only                                                                    |
+| AI Hub         | `direnv exec . make test`      | 2; session35894, 1456 collected, 67 passed, 2 failed before new publisher tests       |
 
 AI Hub report: `.reports/tests/20260914T212449.338947Z-3105774/junit.xml`.
 Failures were textual import-purity policy and metadata-derived docs title.
@@ -428,16 +430,16 @@ complete. No private provider data was collected or published by this handoff.
 
 Publication amendment (2026-09-14):
 
-| Repository | Preserved checkpoint | PR / integration target |
-| --- | --- | --- |
-| FLEXT root | Handoff `a6f9be8985`; subsequent WIP records the exact member snapshot | [242](https://github.com/flext-sh/flext/pull/242), `0.12.0-dev` |
-| flext-infra | `df262eb228a9fefb76b0332515d9559523ddd241` | [733](https://github.com/flext-sh/flext-infra/pull/733), `0.12.0-dev` |
-| flext-cli | `9336a7cd20be2672fda7bc31fab88dacb9b9af89` | [169](https://github.com/flext-sh/flext-cli/pull/169), `0.12.0-dev` |
-| flext-core | `9c08b68b1b36d2f952bbbc14c4b401e7b94635c0` | [475](https://github.com/flext-sh/flext-core/pull/475), `0.12.0-dev` |
-| flext-tests | `a0a0ddb532f3fcca085fc6c1aa274f00bd9bf683` | [111](https://github.com/flext-sh/flext-tests/pull/111), `0.12.0-dev` |
-| agents | `db4cdaa55c5a91d03f399ddd8da8fdc40db9a767`, then `14210a111013568502dbe307ff1eb413fed7d3e7` | [148](https://github.com/datacosmos-br/agents/pull/148), `dev` |
-| AI Hub | `4d34b263e783e957c73d96bdc5936de486992a1f`, includes resource cut `8068298d1` | [774](https://github.com/datacosmos-br/ai-hub/pull/774), `dev` |
-| Cosmos GitOps | `5494ef755ad86f76c0091fc4c0f262507905a5f2`, includes annotations `64ff6a545` | [175](https://github.com/datacosmos-br/cosmos-gitops/pull/175), `develop` |
+| Repository    | Preserved checkpoint                                                                        | PR / integration target                                                   |
+| ------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| FLEXT root    | Handoff `a6f9be8985`; subsequent WIP records the exact member snapshot                      | [242](https://github.com/flext-sh/flext/pull/242), `0.12.0-dev`           |
+| flext-infra   | `df262eb228a9fefb76b0332515d9559523ddd241`                                                  | [733](https://github.com/flext-sh/flext-infra/pull/733), `0.12.0-dev`     |
+| flext-cli     | `9336a7cd20be2672fda7bc31fab88dacb9b9af89`                                                  | [169](https://github.com/flext-sh/flext-cli/pull/169), `0.12.0-dev`       |
+| flext-core    | `9c08b68b1b36d2f952bbbc14c4b401e7b94635c0`                                                  | [475](https://github.com/flext-sh/flext-core/pull/475), `0.12.0-dev`      |
+| flext-tests   | `a0a0ddb532f3fcca085fc6c1aa274f00bd9bf683`                                                  | [111](https://github.com/flext-sh/flext-tests/pull/111), `0.12.0-dev`     |
+| agents        | `db4cdaa55c5a91d03f399ddd8da8fdc40db9a767`, then `14210a111013568502dbe307ff1eb413fed7d3e7` | [148](https://github.com/datacosmos-br/agents/pull/148), `dev`            |
+| AI Hub        | `4d34b263e783e957c73d96bdc5936de486992a1f`, includes resource cut `8068298d1`               | [774](https://github.com/datacosmos-br/ai-hub/pull/774), `dev`            |
+| Cosmos GitOps | `5494ef755ad86f76c0091fc4c0f262507905a5f2`, includes annotations `64ff6a545`                | [175](https://github.com/datacosmos-br/cosmos-gitops/pull/175), `develop` |
 
 The root gitlink checkpoint is an explicit as-is preservation of the separate
 worktree, not a claim that its member tips contain the newest integration tips.

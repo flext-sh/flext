@@ -33,6 +33,7 @@
   - [FURTHER READING](#further-reading)
 - [Contributing](#contributing)
 - [License](#license)
+
 <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
@@ -145,12 +146,14 @@ All compose files follow naming convention: `docker-compose.{project}-{purpose}.
 **CRITICAL**: FLEXT ecosystem uses THREE distinct container types for different purposes:
 
 1. **Standard Oracle Database** (`flext-oracle-db-test`)
+
    - **Port**: 1522
    - **Compose File**: `docker-compose.db-oracle.yml`
    - **Purpose**: Standard Oracle Database for flext-db-oracle, flext-(dbt|tap|target)-oracle
    - **Fixture**: `oracle_container` from `flext_tests.fixtures`
 
 2. **FLEXT Oracle Unified Directory** (`flext-flext-oud-test`)
+
    - **Port**: 3389 (FLEXT production port)
    - **Compose File**: `docker-compose.flext-oud.yml`
    - **Purpose**: FLEXT Telecom OUD migration (OpenLDAP simulating OUD with dc=invaliddc, cn=invalid_user)

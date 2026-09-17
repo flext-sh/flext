@@ -1,6 +1,7 @@
 # Adendo do plano 1789582669805 — repasse Claude e posição reconciliada
 
 <!-- TOC START -->
+
 - [Autoridade e limites](#autoridade-e-limites)
 - [Sessões Claude consideradas](#sessoes-claude-consideradas)
 - [Linha temporal aceita da sessão F2.W0](#linha-temporal-aceita-da-sessao-f2w0)
@@ -8,6 +9,7 @@
 - [Posição do plano após o repasse](#posicao-do-plano-apos-o-repasse)
 - [Conflitos e coordenação com outros planos/agentes](#conflitos-e-coordenacao-com-outros-planosagentes)
 - [Próxima sequência mínima](#proxima-sequencia-minima)
+
 <!-- TOC END -->
 
 ## Autoridade e limites
@@ -19,12 +21,12 @@
 
 ## Sessões Claude consideradas
 
-| Sessão | Janela local observada | Papel | Confiança |
-|---|---:|---|---|
-| `ses_f55aabd0effeadN531374fPbP0` | desde 10:08 | execução/absorção inicial da engine rope-modernize | histórico corroborável por SHAs/PRs |
-| `ses_f548f8812ffeOFfaCAu1ljkpzX` | desde 15:17 | fork de continuação e conversão de validações | histórico; terminou sem ciclo verde |
+| Sessão                           |                 Janela local observada | Papel                                                               | Confiança                                            |
+| -------------------------------- | -------------------------------------: | ------------------------------------------------------------------- | ---------------------------------------------------- |
+| `ses_f55aabd0effeadN531374fPbP0` |                            desde 10:08 | execução/absorção inicial da engine rope-modernize                  | histórico corroborável por SHAs/PRs                  |
+| `ses_f548f8812ffeOFfaCAu1ljkpzX` |                            desde 15:17 | fork de continuação e conversão de validações                       | histórico; terminou sem ciclo verde                  |
 | `ses_f5491ffe7ffeYU1sf34jGHEkAf` | criada ~15:15; última atividade ~20:04 | P0/F2.W0, Beads/docs/ADRs, censo de lanes, setup e tentativa de gen | transcript direto; estado final exige releitura live |
-| `ses_f546d8b22ffe6x3rs6SRJ9xGYo` | criada ~15:54; encerrada ~17:07 | investigação conform/teste e replanejamento | não confundir com a execução F2.W0 |
+| `ses_f546d8b22ffe6x3rs6SRJ9xGYo` |        criada ~15:54; encerrada ~17:07 | investigação conform/teste e replanejamento                         | não confundir com a execução F2.W0                   |
 
 ## Linha temporal aceita da sessão F2.W0
 
@@ -44,35 +46,35 @@
 
 ## Contribuições adjudicadas
 
-| Contribuição | Disposição | Motivo/aceite necessário |
-|---|---|---|
-| `049cc4c00c` ADRs/runbook | **adotar se ancestry confirmar** | mudança documental publicada; validar alinhamento ao plano e Beads atuais |
-| comentários/novo Bead Gas City | **reconciliar** | store é correta; intenção pode duplicar owners existentes |
-| censo de lanes | **usar como índice, não estado** | resultado ficou parcial e envelhece rapidamente |
-| três commits infra publicados | **verificar e adotar por contribuição** | confirmar SHAs, ancestry, gates e ausência de regressão |
-| `make setup` exit 0 | **evidência histórica válida** | repetir no SHA escolhido antes de downstream |
-| hipótese de forward ref | **causa provável comprovada parcialmente** | requer source atual, import graph e runtime público |
-| edição de `mise_toolchain.py` | **WIP interrompido; repair-forward** | reler o arquivo; completar ou rejeitar hunks pela lei Pydantic, sem `model_rebuild`/shim |
-| `make gen` | **vermelho** | primeiro produtor confirmado da sessão; downstream não foi validado |
-| microfatia Ruff anterior | **não reaplicar automaticamente** | tip atual pode ter implementação diferente; somente gate atual reabre o problema |
+| Contribuição                   | Disposição                                 | Motivo/aceite necessário                                                                 |
+| ------------------------------ | ------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| `049cc4c00c` ADRs/runbook      | **adotar se ancestry confirmar**           | mudança documental publicada; validar alinhamento ao plano e Beads atuais                |
+| comentários/novo Bead Gas City | **reconciliar**                            | store é correta; intenção pode duplicar owners existentes                                |
+| censo de lanes                 | **usar como índice, não estado**           | resultado ficou parcial e envelhece rapidamente                                          |
+| três commits infra publicados  | **verificar e adotar por contribuição**    | confirmar SHAs, ancestry, gates e ausência de regressão                                  |
+| `make setup` exit 0            | **evidência histórica válida**             | repetir no SHA escolhido antes de downstream                                             |
+| hipótese de forward ref        | **causa provável comprovada parcialmente** | requer source atual, import graph e runtime público                                      |
+| edição de `mise_toolchain.py`  | **WIP interrompido; repair-forward**       | reler o arquivo; completar ou rejeitar hunks pela lei Pydantic, sem `model_rebuild`/shim |
+| `make gen`                     | **vermelho**                               | primeiro produtor confirmado da sessão; downstream não foi validado                      |
+| microfatia Ruff anterior       | **não reaplicar automaticamente**          | tip atual pode ter implementação diferente; somente gate atual reabre o problema         |
 
 ## Posição do plano após o repasse
 
-| Fase do plano | Estado | Evidência | Ação seguinte |
-|---|---|---|---|
-| 0 — Gas City/owners | **parcial** | `gc bd` respondeu; itens atualizados/criados | reler items e reconciliar duplicidade/owner |
-| 1 — tips/WIP/lanes | **parcial** | censo iniciado; docs commitadas; pushes reportados | confirmar Git/PR/ancestry live e contribuição real |
-| 2 — baseline Make | **parcial vermelho** | setup histórico 0; gen falhou | no tree escolhido: setup novamente, reparar forward ref, gen ×2 |
-| 3.1 — setup/toolchain | **verde apenas histórico** | 286 packages no checkout principal | repetir na lane/merged SHA |
-| 3.2 — journal/locks | **não concluída** | Beads sobrepostos permanecem | eleger owner e provar concorrência/recovery |
-| 3.3 — geração | **bloqueada** | forward ref + WIP interrompido | finalizar tipagem e fixed point |
-| 3.4 — codemod | **não provada** | nenhum mod ×2 após o repasse | executar somente após gen verde |
-| 4 — modernização infra | **não iniciada como slices integrados** | edits pontuais, sem ciclo completo | começar somente pelo owner do gate reproduzido |
-| 5 — check | **sem baseline atual** | relatórios antigos não validam tree | executar após produtores verdes |
-| 6 — testes | **sem suite atual verde** | clusters/timeout são históricos | diagnosticar pela superfície Make no SHA atual |
-| 7 — ondas fleet | **absorção histórica parcial** | PRs/SHAs relatados, não todos revalidados | verificar tip e integrar incrementalmente |
-| 8 — runtime standalone/workspace | **pendente** | nenhuma prova pós-WIP | executar após landing do produtor |
-| 9 — closeout | **pendente** | não há SHA integrado totalmente validado | fechar só após rerun integrado |
+| Fase do plano                    | Estado                                  | Evidência                                          | Ação seguinte                                                   |
+| -------------------------------- | --------------------------------------- | -------------------------------------------------- | --------------------------------------------------------------- |
+| 0 — Gas City/owners              | **parcial**                             | `gc bd` respondeu; itens atualizados/criados       | reler items e reconciliar duplicidade/owner                     |
+| 1 — tips/WIP/lanes               | **parcial**                             | censo iniciado; docs commitadas; pushes reportados | confirmar Git/PR/ancestry live e contribuição real              |
+| 2 — baseline Make                | **parcial vermelho**                    | setup histórico 0; gen falhou                      | no tree escolhido: setup novamente, reparar forward ref, gen ×2 |
+| 3.1 — setup/toolchain            | **verde apenas histórico**              | 286 packages no checkout principal                 | repetir na lane/merged SHA                                      |
+| 3.2 — journal/locks              | **não concluída**                       | Beads sobrepostos permanecem                       | eleger owner e provar concorrência/recovery                     |
+| 3.3 — geração                    | **bloqueada**                           | forward ref + WIP interrompido                     | finalizar tipagem e fixed point                                 |
+| 3.4 — codemod                    | **não provada**                         | nenhum mod ×2 após o repasse                       | executar somente após gen verde                                 |
+| 4 — modernização infra           | **não iniciada como slices integrados** | edits pontuais, sem ciclo completo                 | começar somente pelo owner do gate reproduzido                  |
+| 5 — check                        | **sem baseline atual**                  | relatórios antigos não validam tree                | executar após produtores verdes                                 |
+| 6 — testes                       | **sem suite atual verde**               | clusters/timeout são históricos                    | diagnosticar pela superfície Make no SHA atual                  |
+| 7 — ondas fleet                  | **absorção histórica parcial**          | PRs/SHAs relatados, não todos revalidados          | verificar tip e integrar incrementalmente                       |
+| 8 — runtime standalone/workspace | **pendente**                            | nenhuma prova pós-WIP                              | executar após landing do produtor                               |
+| 9 — closeout                     | **pendente**                            | não há SHA integrado totalmente validado           | fechar só após rerun integrado                                  |
 
 ## Conflitos e coordenação com outros planos/agentes
 

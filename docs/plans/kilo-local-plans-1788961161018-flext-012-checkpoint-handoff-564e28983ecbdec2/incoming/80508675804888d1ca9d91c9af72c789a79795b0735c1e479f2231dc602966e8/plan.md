@@ -45,14 +45,14 @@
 - `rules/class-nesting-mappings.yml` é proibido — substituir por descoberta
   estrutural no gerador canônico (SSOT).
 - Camada facade strict: settings → config → c → t → p → m → u → base.py →
-  services/*.py → api.py → cli.py. Reverse imports TYPE_CHECKING-only.
-  Pydantic-2 in/out. Tipagem `t.*/p.*` apenas. Proibido: `Any`, `object`,
+  services/_.py → api.py → cli.py. Reverse imports TYPE_CHECKING-only.
+  Pydantic-2 in/out. Tipagem `t._/p.\*`apenas. Proibido:`Any`, `object`,
   `Optional[X]`, contratos `dict`/`TypedDict`. CA/DI via `p` protocols no
   composition root único.
 - Fechamento completo OU nada: escopo completo + gates verdes + zero resíduo
   - commit scoped → push → PR → review resolvido → merge no-ff na branch de
-  integração declarada → gates rerun no merged SHA → runtime provado no
-  estado integrado → release/runtime ativo, cada com evidência própria.
+    integração declarada → gates rerun no merged SHA → runtime provado no
+    estado integrado → release/runtime ativo, cada com evidência própria.
 
 ## 4. Sequência de retomada (exatamente nesta ordem)
 
@@ -131,17 +131,17 @@ Somente após todos os gates verdes na branch de integração:
 
 ## 6. Constantes-chave
 
-| Item | Valor |
-|---|---|
-| Base de integração | `origin/0.12.0-dev` |
-| Worktree de release | `~/flext-release-012` |
-| Branch de release | `release/checkpoint-0.12.0` |
-| HEAD infra (não publicado) | `f2f4b526d` (PR #665) |
-| Flag de mutação | |
-| Flag de publicação | `INDEX=Y` (env, não seletor Make) |
-| Tag de reorganização Beads | `reval250909` |
-| CSV de retomada Beads | `~/flext/beads-reval250909.csv` |
-| Snapshot Beads | `~/flext/beads-reval250909.json` |
+| Item                       | Valor                             |
+| -------------------------- | --------------------------------- |
+| Base de integração         | `origin/0.12.0-dev`               |
+| Worktree de release        | `~/flext-release-012`             |
+| Branch de release          | `release/checkpoint-0.12.0`       |
+| HEAD infra (não publicado) | `f2f4b526d` (PR #665)             |
+| Flag de mutação            |                                   |
+| Flag de publicação         | `INDEX=Y` (env, não seletor Make) |
+| Tag de reorganização Beads | `reval250909`                     |
+| CSV de retomada Beads      | `~/flext/beads-reval250909.csv`   |
+| Snapshot Beads             | `~/flext/beads-reval250909.json`  |
 
 ## 7. Regras de parada
 

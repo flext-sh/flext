@@ -1,6 +1,7 @@
 # FLEXT dbt Oracle
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT dbt Oracle is the integration project that runs dbt transformations against Oracle Database inside the FLEXT
@@ -59,7 +61,7 @@ from `flext-meltano`'s service contract; the canonical `dbt_project_name` is `"d
 The package follows the canonical FLEXT layout under `src/flext_dbt_oracle/`:
 
 - `base.py` — `FlextDbtOracleServiceBase` (`s`): extends `FlextMeltanoDbtServiceBase`, pins `dbt_project_name = "dbt-
-  oracle"`, and builds `m.DbtOracle.DbtConnectionProfile` from the settings namespaces.
+oracle"`, and builds `m.DbtOracle.DbtConnectionProfile` from the settings namespaces.
 - `_settings.py` — `FlextDbtOracleSettings`: multiple-inheritance settings model over the db-oracle and meltano settings
   trees; runtime bootstrap wires it as the service settings type.
 - `_config.py` — `FlextDbtOracleConfig` over `FlextMeltanoConfig`; execution parametrization lives under `config/`.
@@ -93,7 +95,7 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_oracle/`:
 - [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law
 - Generated API overview: `flext-dbt-oracle/docs/api-reference/generated/overview.md`
 - Related projects: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-tap-oracle`, `flext-target-oracle`, `flext-
-  dbt-oracle-wms`
+dbt-oracle-wms`
 
 ## Support & issues
 

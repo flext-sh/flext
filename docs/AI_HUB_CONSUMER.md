@@ -1,9 +1,11 @@
 # ai-hub as a FLEXT Provider Consumer
 
 <!-- TOC START -->
+
 - [Ownership](#ownership)
 - [Boundary Contract](#boundary-contract)
 - [Drift Discipline](#drift-discipline)
+
 <!-- TOC END -->
 
 This document records the integration boundary only. It is not a second FLEXT
@@ -11,16 +13,16 @@ law or an ai-hub architecture specification.
 
 ## Ownership
 
-| Fact | Canonical owner |
-| --- | --- |
-| FLEXT provider identity, marker, and exported paths | active `~/.agents` provider authority |
-| FLEXT activation and skill selection | `~/.agents/skills/flext-context-routing/SKILL.md` |
-| Provider projection lifecycle | [Governance router](GOVERNANCE.md) |
-| FLEXT runtime/API behavior | owning `flext-core` declaration |
-| Git repositories and local Git operations | `flext-infra` public facades |
-| GitHub operations and credentials | ai-hub public runtime surface |
-| CRG runtime, database, watcher, and MCP route | ai-hub validated config and runtime |
-| ai-hub architecture and local policy | ai-hub source, validated config, root `AGENTS.md`, and `docs/GOVERNANCE.md` |
+| Fact                                                | Canonical owner                                                             |
+| --------------------------------------------------- | --------------------------------------------------------------------------- |
+| FLEXT provider identity, marker, and exported paths | active `~/.agents` provider authority                                       |
+| FLEXT activation and skill selection                | `~/.agents/skills/flext-context-routing/SKILL.md`                           |
+| Provider projection lifecycle                       | [Governance router](GOVERNANCE.md)                                          |
+| FLEXT runtime/API behavior                          | owning `flext-core` declaration                                             |
+| Git repositories and local Git operations           | `flext-infra` public facades                                                |
+| GitHub operations and credentials                   | ai-hub public runtime surface                                               |
+| CRG runtime, database, watcher, and MCP route       | ai-hub validated config and runtime                                         |
+| ai-hub architecture and local policy                | ai-hub source, validated config, root `AGENTS.md`, and `docs/GOVERNANCE.md` |
 
 ## Boundary Contract
 

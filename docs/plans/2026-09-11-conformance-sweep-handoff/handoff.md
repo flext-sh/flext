@@ -1,18 +1,21 @@
 # Handoff — FLEXT Conformance Sweep (sessão 2026-09-11) — PROMPT DE RETOMADA
 
 <!-- TOC START -->
+
 - [1. Papel e objetivo](#1-papel-e-objetivo)
 - [2. Estado medido ao fechar a sessão (2026-09-11 ~15:00Z)](#2-estado-medido-ao-fechar-a-sessao-2026-09-11-1500z)
 - [3. Beads — verdade ao fechar (re-verificar §4/§5 do plano)](#3-beads-verdade-ao-fechar-re-verificar-45-do-plano)
 - [4. Contexto que precisa sobreviver (lições já codificadas — verifique, não re-derivo)](#4-contexto-que-precisa-sobreviver-licoes-ja-codificadas-verifique-nao-re-derivo)
 - [5. Preflight da nova sessão (executar, registrar saída)](#5-preflight-da-nova-sessao-executar-registrar-saida)
 - [6. Primeira ação (se §12(a) confirmado; caso contrário: #1 do §4)](#6-primeira-acao-se-12a-confirmado-caso-contrario-1-do-4)
+
 <!-- TOC END -->
 
 > Cole este arquivo como 1ª mensagem de uma sessão nova (com `00-index.md` do diretório).
 > Execute o preflight §5 ANTES de qualquer mutação.
 
 ## 1. Papel e objetivo
+
 Você retoma o **monopólio de limpeza/conformidade do workspace FLEXT hospedado**
 (`~/flext`, sub-frota `flext-*`), sob `AGENTS.md` raiz + skill
 `flext-law`. Objetivo aberto: **D1–D6 do §3 do plano vivente** — ponto fixo de
@@ -22,15 +25,15 @@ mas **sempre** PR `--no-ff` → gates no SHA → prova de runtime.
 
 ## 2. Estado medido ao fechar a sessão (2026-09-11 ~15:00Z)
 
-| Superfície | Estado |
-|---|---|
-| flext `origin/0.12.0-dev` | `396b359a1e` (zero-variable APPLY regenerado) |
-| flext-infra `origin/0.12.0-dev` | `bff592284` (Law 13 — CI steps com) |
-| flext checkout local | `037a5cb561` (2° commits docs/plans `135de0efae`..: pendente de pousar via PR — **§12(d)**) |
-| Resíduo físico | `.bak` raiz = **0**; `persist_apply_backup` = **0** (grep no tip) |
-| Worktrees minhas | **NENHUMA** (todas retiradas com ancestry-proof) — abrir `hotfix/conformance-sweep-p` para Onda-P |
-| Worktrees do ator | `flext-infra-worktrees/z82dg-nsloc` (reforma estrutural, viva), `flext-work/*` (gov/cooldown/mdignore/ci-frozen), `flext-b3xmn` — **não invadir, não pushar sobre dirty alheio** |
-| CRG | watch-daemon multirepo ativo; **grafos podem estar `Built at 79dcca088` (2+ dias)** → `code-review-graph update` OBRIGATÓRIO antes de impact/query |
+| Superfície                      | Estado                                                                                                                                                                           |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| flext `origin/0.12.0-dev`       | `396b359a1e` (zero-variable APPLY regenerado)                                                                                                                                    |
+| flext-infra `origin/0.12.0-dev` | `bff592284` (Law 13 — CI steps com)                                                                                                                                              |
+| flext checkout local            | `037a5cb561` (2° commits docs/plans `135de0efae`..: pendente de pousar via PR — **§12(d)**)                                                                                      |
+| Resíduo físico                  | `.bak` raiz = **0**; `persist_apply_backup` = **0** (grep no tip)                                                                                                                |
+| Worktrees minhas                | **NENHUMA** (todas retiradas com ancestry-proof) — abrir `hotfix/conformance-sweep-p` para Onda-P                                                                                |
+| Worktrees do ator               | `flext-infra-worktrees/z82dg-nsloc` (reforma estrutural, viva), `flext-work/*` (gov/cooldown/mdignore/ci-frozen), `flext-b3xmn` — **não invadir, não pushar sobre dirty alheio** |
+| CRG                             | watch-daemon multirepo ativo; **grafos podem estar `Built at 79dcca088` (2+ dias)** → `code-review-graph update` OBRIGATÓRIO antes de impact/query                               |
 
 ## 3. Beads — verdade ao fechar (re-verificar §4/§5 do plano)
 
@@ -52,6 +55,7 @@ mas **sempre** PR `--no-ff` → gates no SHA → prova de runtime.
 6. **Pedidão ao operador sem resposta (§12)**: (a) Onda-P, (b) CRG padrão, (d) política de planos vivos na integração.
 
 ## 5. Preflight da nova sessão (executar, registrar saída)
+
 ```bash
 cd ~/flext && git fetch origin 0.12.0-dev
 git rev-parse origin/0.12.0-dev                                    # comparar com §2
@@ -59,9 +63,11 @@ find . -name "*.bak" -not -path "*-worktrees/*" -not -path "*/.venv/*" -not -pat
 env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open            # reconciliar §4 vs §5 do plano
 grep -rn "persist_apply_backup" flext-infra/src/ | wc -l           # == 0
 ```
+
 Divergência → investigar proveniência, consertar no dono, conservar trabalho dirty.
 
 ## 6. Primeira ação (se §12(a) confirmado; caso contrário: #1 do §4)
+
 Abrir worktree dedicado `hotfix/conformance-sweep-p` de `origin/0.12.0-dev` e
 declarar: objetivo = `flext-vo335` primeiro; gates = §11.3; stop = gates verdes
 no SHA integrado + bead fechada com 4 evidências + plano §4 atualizado

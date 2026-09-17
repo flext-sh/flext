@@ -1,6 +1,7 @@
 # FLEXT LDIF
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT LDIF is the enterprise LDIF processing library of the FLEXT platform. It provides RFC-based LDIF parsing and
@@ -97,7 +99,7 @@ migration compose with the same railway discipline.
 
 - [Project README](https://github.com/flext-sh/flext-ldif/blob/0.12.0-dev/README.md)
 - [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
-  ldif.md`
+ldif.md`
 - Project documentation under `flext-ldif/docs/` (getting started, API reference, architecture, guides)
 - Related projects: `flext-core`, `flext-cli`, `flext-ldap`, `flext-tap-ldif`, `flext-target-ldif`, `flext-dbt-ldif`
 

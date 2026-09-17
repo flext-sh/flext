@@ -1,11 +1,13 @@
 # Release 0.12.0-dev
 
 <!-- TOC START -->
+
 - [Status](#status)
 - [Scope](#scope)
 - [Checkpoint acceptance](#checkpoint-acceptance)
 - [Highlights in this cycle](#highlights-in-this-cycle)
 - [Projects impacted](#projects-impacted)
+
 <!-- TOC END -->
 
 ## Status

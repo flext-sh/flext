@@ -1,6 +1,7 @@
 # FLEXT Tap LDAP
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Tap LDAP (`flext-tap-ldap`) is the Singer tap that extracts LDAP directory entries — and, optionally, LDIF files —

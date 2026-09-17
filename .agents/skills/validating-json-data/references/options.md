@@ -115,11 +115,11 @@ const validator = ZSchema.create({
         if (value !== undefined) {
           if (seen.includes(value)) {
             report.addCustomError(
-              'NON_UNIQUE_PROPERTY_VALUE',
+              "NON_UNIQUE_PROPERTY_VALUE",
               'Property "{0}" has non-unique value: {1}',
               [prop, value],
               null,
-              schema.description
+              schema.description,
             );
           }
           seen.push(value);
@@ -144,7 +144,7 @@ Passed as the third argument to `validate()` / `validateSafe()`, not to `ZSchema
 
 ```typescript
 validator.validate(data, schema, {
-  schemaPath: 'definitions.car',
-  excludeErrors: ['MIN_LENGTH'],
+  schemaPath: "definitions.car",
+  excludeErrors: ["MIN_LENGTH"],
 });
 ```

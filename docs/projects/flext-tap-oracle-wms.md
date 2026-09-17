@@ -1,6 +1,7 @@
 # FLEXT Tap Oracle WMS
 
 <!-- TOC START -->
+
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)
 - [Quick start](#quick-start)
@@ -9,6 +10,7 @@
 - [Testing & quality](#testing-quality)
 - [Resources](#resources)
 - [Support & issues](#support-issues)
+
 <!-- TOC END -->
 
 FLEXT Tap Oracle WMS is the Singer tap that extracts data from Oracle Warehouse Management System (WMS). It composes the
@@ -52,6 +54,7 @@ from flext_tap_oracle_wms import tap_oracle_wms
 # tap_oracle_wms is the operational alias for FlextTapOracleWmsService
 service = tap_oracle_wms()
 ```
+
 ## Architecture & modules
 
 ```text

@@ -1,6 +1,7 @@
 # FLEXT arc42 Architecture Documentation
 
 <!-- TOC START -->
+
 - [Template Structure](#template-structure)
 - [FLEXT Architecture Overview](#flext-architecture-overview)
 - [Key Architectural Principles](#key-architectural-principles)
@@ -14,6 +15,7 @@
   - [Maintainability](#maintainability)
 - [Related Documentation](#related-documentation)
 - [Additional Resources](#additional-resources)
+
 <!-- TOC END -->
 
 **Reviewed**: 2026-07-12 | **Scope**: arc42 index and architecture overview

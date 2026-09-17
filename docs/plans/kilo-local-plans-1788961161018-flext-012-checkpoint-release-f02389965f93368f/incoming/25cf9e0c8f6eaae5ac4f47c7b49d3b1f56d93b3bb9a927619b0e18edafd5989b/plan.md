@@ -15,7 +15,7 @@ The latest operator instruction supersedes all earlier acceptance text:
 - **Reality > tests.** Runtime behavior and the real external contract are the
   authority; tests validate what the system does today.
 - **No invented selectors.** only. `make test`, `make check
- `, `make gen`, `make gen`, `make gen`. Never
+`, `make gen`, `make gen`, `make gen`. Never
   `PROJECT=`, `PYTEST_ARGS=`, `WHAT=`, `ARGS=`, `MATCH=`.
 - **testmon mandatory.** Every execution flows through the canonical per-member
   testmon cache. Raw full-suite bypasses are prohibited.
@@ -25,10 +25,9 @@ The latest operator instruction supersedes all earlier acceptance text:
 - **`rules/class-nesting-mappings.yml` is prohibited.** Structural discovery via
   the canonical SSOT generator only. Manual YAML must be exterminated.
 - **Strict facade layering.** settings → config → c → t → p → m → u →
-  base.py → services/*.py → api.py → cli.py; reverse imports are
-  `TYPE_CHECKING`-only; Pydantic-2 in/out; `t.*/p.*` typing only; `Any`,
-  `object`, `Optional`, dict contracts, `Optional[X]`, `dict`/`TypedDict`
-  contracts are banned; CA/DI via `p` protocols at the one composition root.
+  base.py → services/_.py → api.py → cli.py; reverse imports are
+  `TYPE_CHECKING`-only; Pydantic-2 in/out; `t._/p.\*`typing only;`Any`,
+  `object`, `Optional`, dict contracts, `Optional[X]`, `dict`/`TypedDict`contracts are banned; CA/DI via`p` protocols at the one composition root.
 
 These directives invalidate the prior "accepted debt" text in `docs/releases/
 latest.md` and ADRs. That contradiction is now a P0 doc-owner repair.
@@ -51,7 +50,7 @@ the existing flext-core publication pattern.
 
 1. Workspace root `~/flext/AGENTS.md`.
 2. Branch-matched local skill `~/flext/.agents/skills/flext-law/
-   SKILL.md`.
+SKILL.md`.
 3. Per-member `AGENTS.md` delta.
 4. Active Bead intent (`bd show`).
 
@@ -133,6 +132,7 @@ and close the remaining Beads.
 **Resume here:**
 
 1. **Read these two files first:**
+
    - `~/flext/.kilo/plans/1788961161018-flext-012-checkpoint-release.md`
    - `~/flext/.kilo/plans/1788961161018-flext-012-checkpoint-status.md`
 
@@ -160,14 +160,14 @@ and close the remaining Beads.
    parent context for integration decisions.
 
 6. **Canonical commands only.** `make setup`, `make gen`, `make fix
-  `, `make gen`, `make gen`, `make test`.
+`, `make gen`, `make gen`, `make test`.
    Never `PROJECT=`/`WHAT=`/`PYTEST_ARGS=`/etc.; never raw pytest/uv/ruff.
    testmon is mandatory on every test run.
 
 7. **Root-cause every finding.** If the workspace `structlog`/`Meltano` conflict
    resurfaces, resolve the constraint at `config/codegen.yaml` (the single
    SSOT), not via `--no-deps`/`override`. If `rules/
-   class-nesting-mappings.yml` is referenced, exterminate and rewire to the
+class-nesting-mappings.yml` is referenced, exterminate and rewire to the
    canonical generator.
 
 8. **Zero residue.** Remove dead code before the old owner dies, rewire
@@ -212,6 +212,7 @@ re-published fast-forward. Never rebase or force a shared lane; recover
 exclusives by merge and prove ancestry before publishing.
 
 **Stop only for a real blocker** — a genuine authority conflict or destructive
+
 ## action. State it precisely; then continue to full completion
 
 ## Session Continuation (2026-09-09 18:40 UTC) — Progress and Next Steps
@@ -273,7 +274,7 @@ fases serialmente desbloqueantes, cada uma com fechamento de beads.
   params), duplication=24, silent-failure=6, loc-cap=5, mypy=2, pyrefly=1,
   runtime-census=1 — medidos em 132 arquivos.
 - Método: ondas de correção na causa raiz → `make gen/fmt/fix/check/test
- ` em loop até GREEN no tip `459ddf9c4`.
+` em loop até GREEN no tip `459ddf9c4`.
 - Fecha na saída: `flext-h2ffh`, `flext-1wjg1.16.34`, `flext-ct0mo`,
   `flext-nnquz`, `flext-hkz4p` (evidência = gate verde com comando/exit).
 
@@ -281,14 +282,14 @@ fases serialmente desbloqueantes, cada uma com fechamento de beads.
 
 - As 30 lanes de semver (`flext-1wjg1.16.1/2/4/6–33`) fazem o mesmo passo por
   membro: pin + regen + PR + gates. Com o pin publicado, UM `make gen
- ` fleet-wide (prova: 32/32 conform nesta sessão) substitui todas.
+` fleet-wide (prova: 32/32 conform nesta sessão) substitui todas.
 - Fecha as 30 lanes como SUPERSEDED pelo regen em massa; mantém o owner
   `flext-1wjg1.16`. Redução imediata: −30 in_progress.
 
 ### Fase C — Versionar, publicar, aceitar
 
 - `make release-plan/version/tag/build` → `make publication
-  INDEX=Y` → clean-install do PyPI → fecha `flext-y3qpq.5/.6`,
+INDEX=Y` → clean-install do PyPI → fecha `flext-y3qpq.5/.6`,
   `flext-1wjg1.11/.12/.13/.14` com digests + SHA.
 
 ### Fase D — Backlog re-parentado (tracker mostra só o caminho crítico)
@@ -317,15 +318,15 @@ integration.
 
 Census (measured, check-report + full gate log):
 
-| Gate | Count | Disposition |
-|---|---|---|
-| namespace | 1388 (NS-STRUCT-001=309, -002=170, CONTRACT-001=160, -003=117, -004=77, ...) | ACCEPTED-RESIDUAL backlog → post-release program (0.20) |
-| runtime-census | 292 usages (1 gate fail) | ACCEPTED-RESIDUAL backlog |
-| duplication | 24 (clone codemod yml rules) | FIX NOW (delete clones, extend one owner) |
-| silent-failure | 6 (broad except / sentinel returns) | FIX NOW |
-| loc-cap | 5 (config.py 3679, conform.py 2879, rope_analysis.py 1709, test_codegen_conform.py 1474, codegen.py 1124) | backlog 0.20 (SUPREME LAW split, bounded) |
-| mypy | 1 (unreachable, qualified_names.py:52) | FIX NOW |
-| lint | 7 (ISC004 x5 auto-fixed, PT011 x1 fixed) | FIXED in working tree |
+| Gate           | Count                                                                                                     | Disposition                                             |
+| -------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| namespace      | 1388 (NS-STRUCT-001=309, -002=170, CONTRACT-001=160, -003=117, -004=77, ...)                              | ACCEPTED-RESIDUAL backlog → post-release program (0.20) |
+| runtime-census | 292 usages (1 gate fail)                                                                                  | ACCEPTED-RESIDUAL backlog                               |
+| duplication    | 24 (clone codemod yml rules)                                                                              | FIX NOW (delete clones, extend one owner)               |
+| silent-failure | 6 (broad except / sentinel returns)                                                                       | FIX NOW                                                 |
+| loc-cap        | 5 (config.py 3679, conform.py 2879, rope_analysis.py 1709, test_codegen_conform.py 1474, codegen.py 1124) | backlog 0.20 (SUPREME LAW split, bounded)               |
+| mypy           | 1 (unreachable, qualified_names.py:52)                                                                    | FIX NOW                                                 |
+| lint           | 7 (ISC004 x5 auto-fixed, PT011 x1 fixed)                                                                  | FIXED in working tree                                   |
 
 A1 (now): fix mypy 1 + silent-failure 6 + duplication 24 (~31 items, mechanical).
 A2 (backlog 0.20): namespace 1388 + runtime-census 292 + loc-cap 5, recorded in

@@ -16,29 +16,29 @@ per-member subagent triage so the parent context stays lean.
 
 ## Learnings → Strategy Shifts (evidence from this session)
 
-| # | Learning (evidence) | Shift |
-|---|---|---|
-| L1 | `make gen` renders whatever the template says — fixed-point green did NOT catch the self-gate block being inside the standalone branch (`_builtin-self-*` defect, fixed in `9c503e16a`) | After any template change, verify a rendered projection semantically (grep the target set), not only exit 0 |
-| L2 | Force-push dropped fix `3a447b553`; recovered only by no-ff merge | Hard law: never rebase/force shared lanes; prove `merge-base --is-ancestor` before every push |
-| L3 | fmt residue polluted the checkpoint WIP; clean closure required a second commit | Run `make gen` BEFORE closing a WIP slice; commit once, green |
-| L4 | OOM killed `make gen` (exit 137) leaving stale `transaction-*` trees that fail closed | Checkpoint cadence: after every green gate slice, commit+push scoped paths so recovery is a fast-forward, not forensics |
-| L5 | PR CI red ≠ PR defect (#83/#84 red at `make setup` = fleet blocker `flext-cpkk`) | Triage PR failures against fleet blockers before judging the PR |
-| L6 | Parent context burned on long gate logs; user had to abort | Bounded per-member discovery in subagents; parent only integrates |
-| L7 | RUF059/ISC004 violations recurred across members; hand-fixed one file at a time | Recurring violation classes (≥3 sites) become codemod rules; propagate via `make mod` |
-| L8 | `make mod` is cwd-scoped and selector-free (`refactor mod --apply`, root Makefile:1061) — safe blast radius per member | Use member-cwd `make mod` as the bulk-fix engine; never raw ast-grep/rope/LSP |
+| #   | Learning (evidence)                                                                                                                                                                     | Shift                                                                                                                   |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| L1  | `make gen` renders whatever the template says — fixed-point green did NOT catch the self-gate block being inside the standalone branch (`_builtin-self-*` defect, fixed in `9c503e16a`) | After any template change, verify a rendered projection semantically (grep the target set), not only exit 0             |
+| L2  | Force-push dropped fix `3a447b553`; recovered only by no-ff merge                                                                                                                       | Hard law: never rebase/force shared lanes; prove `merge-base --is-ancestor` before every push                           |
+| L3  | fmt residue polluted the checkpoint WIP; clean closure required a second commit                                                                                                         | Run `make gen` BEFORE closing a WIP slice; commit once, green                                                           |
+| L4  | OOM killed `make gen` (exit 137) leaving stale `transaction-*` trees that fail closed                                                                                                   | Checkpoint cadence: after every green gate slice, commit+push scoped paths so recovery is a fast-forward, not forensics |
+| L5  | PR CI red ≠ PR defect (#83/#84 red at `make setup` = fleet blocker `flext-cpkk`)                                                                                                        | Triage PR failures against fleet blockers before judging the PR                                                         |
+| L6  | Parent context burned on long gate logs; user had to abort                                                                                                                              | Bounded per-member discovery in subagents; parent only integrates                                                       |
+| L7  | RUF059/ISC004 violations recurred across members; hand-fixed one file at a time                                                                                                         | Recurring violation classes (≥3 sites) become codemod rules; propagate via `make mod`                                   |
+| L8  | `make mod` is cwd-scoped and selector-free (`refactor mod --apply`, root Makefile:1061) — safe blast radius per member                                                                  | Use member-cwd `make mod` as the bulk-fix engine; never raw ast-grep/rope/LSP                                           |
 
 ## Automation Map
 
-| Automation | Role in this checkpoint | Guard |
-|---|---|---|
-| `make gen` | Project every managed surface; fixed-point is the commit precondition | Verify rendered semantics (L1), not just exit 0 |
-| `make mod` (member cwd) | Bulk mechanical classes: `pytest.raises` narrowing (RUF059), ISC004 concat, import ordering — ONLY after the private-import cutover guard (bead `flext-sc3ud`, fix `05d48a886` on an unmerged lane) is verified present in the release lane | First run: one member, diff review; if the cutover guard is absent, land that lane first |
-| `code-review-graph` (manual, host tool `~/.local/share/ai-hub/host-tools/current/bin/`) | Pre-check structural pass over the release diff (superproject + flext-infra + flext-ldif) before the expensive `make check`: dead code, ownership drift, duplication hotspots | Scope to the checkpoint diff; findings feed `make fix`/`make mod`, never bypass gates |
-| `make fix/fmt/check/test` | The only evidence gates; testmon mandatory on every test run | Full output captured (no tail pipes); no invented selectors |
-| `code-review` skill (read-only diff review) | Human-grade review of each checkpoint commit before publish | Evidence-backed findings; no approve-by-default |
-| `pr-sheriff` + `gh` | PR landing loop: view mergeable/checks → local no-ff merge → gates → push → `gh pr merge --merge` → rerun gates on merged SHA | "mergeable"/open PR is never landed |
-| `bd` evidence loop | Append verb/cwd/exit/decisive output to `flext-yirgp` after every merged SHA and gate rerun | No closure claims without it |
-| Subagents (explore) | Bounded per-member gate triage; ancestry audits | Parent keeps merge/integration decisions |
+| Automation                                                                              | Role in this checkpoint                                                                                                                                                                                                                     | Guard                                                                                    |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `make gen`                                                                              | Project every managed surface; fixed-point is the commit precondition                                                                                                                                                                       | Verify rendered semantics (L1), not just exit 0                                          |
+| `make mod` (member cwd)                                                                 | Bulk mechanical classes: `pytest.raises` narrowing (RUF059), ISC004 concat, import ordering — ONLY after the private-import cutover guard (bead `flext-sc3ud`, fix `05d48a886` on an unmerged lane) is verified present in the release lane | First run: one member, diff review; if the cutover guard is absent, land that lane first |
+| `code-review-graph` (manual, host tool `~/.local/share/ai-hub/host-tools/current/bin/`) | Pre-check structural pass over the release diff (superproject + flext-infra + flext-ldif) before the expensive `make check`: dead code, ownership drift, duplication hotspots                                                               | Scope to the checkpoint diff; findings feed `make fix`/`make mod`, never bypass gates    |
+| `make fix/fmt/check/test`                                                               | The only evidence gates; testmon mandatory on every test run                                                                                                                                                                                | Full output captured (no tail pipes); no invented selectors                              |
+| `code-review` skill (read-only diff review)                                             | Human-grade review of each checkpoint commit before publish                                                                                                                                                                                 | Evidence-backed findings; no approve-by-default                                          |
+| `pr-sheriff` + `gh`                                                                     | PR landing loop: view mergeable/checks → local no-ff merge → gates → push → `gh pr merge --merge` → rerun gates on merged SHA                                                                                                               | "mergeable"/open PR is never landed                                                      |
+| `bd` evidence loop                                                                      | Append verb/cwd/exit/decisive output to `flext-yirgp` after every merged SHA and gate rerun                                                                                                                                                 | No closure claims without it                                                             |
+| Subagents (explore)                                                                     | Bounded per-member gate triage; ancestry audits                                                                                                                                                                                             | Parent keeps merge/integration decisions                                                 |
 
 ## Execution Sequence (gate slices, checkpoint after each green slice)
 
@@ -83,13 +83,13 @@ per-member subagent triage so the parent context stays lean.
 
 ## Risks & Guards
 
-| Risk | Guard |
-|---|---|
-| `make mod` cutover bug (flext-sc3ud) corrupts code at fleet scale | Precondition check (step 1); first run scoped to one member with diff review |
-| code-review-graph findings become a shortcut around gates | Findings only feed fix targets; `make check/test` remain the sole acceptance gates |
-| OOM on gen/check like the observed exit 137 | Slice cadence + stable-tip commits after each green slice |
-| Fleet blockers mask PR health | pr-sheriff triage against `flext-cpkk`/`flext-5k9r7` before judging PRs |
-| Context blowup in parent | Subagents for per-member triage; parent integrates only |
+| Risk                                                              | Guard                                                                              |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `make mod` cutover bug (flext-sc3ud) corrupts code at fleet scale | Precondition check (step 1); first run scoped to one member with diff review       |
+| code-review-graph findings become a shortcut around gates         | Findings only feed fix targets; `make check/test` remain the sole acceptance gates |
+| OOM on gen/check like the observed exit 137                       | Slice cadence + stable-tip commits after each green slice                          |
+| Fleet blockers mask PR health                                     | pr-sheriff triage against `flext-cpkk`/`flext-5k9r7` before judging PRs            |
+| Context blowup in parent                                          | Subagents for per-member triage; parent integrates only                            |
 
 ## Validation
 

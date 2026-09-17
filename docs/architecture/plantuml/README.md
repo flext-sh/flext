@@ -1,6 +1,7 @@
 # FLEXT PlantUML Diagrams
 
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [📋 Diagram Categories](#diagram-categories)
   - [1. System Architecture Diagrams](#1-system-architecture-diagrams)
@@ -37,7 +38,7 @@
   - [Creating New Diagrams](#creating-new-diagrams)
   - [Updating Existing Diagrams](#updating-existing-diagrams)
   - [Review Process](#review-process)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 ## Table of Contents
 

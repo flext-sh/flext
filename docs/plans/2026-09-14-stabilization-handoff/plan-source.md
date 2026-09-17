@@ -1,6 +1,7 @@
 # Documentation
 
 <!-- TOC START -->
+
 - [Atualização de autoridade — 2026-09-14, auditoria de retomada](#atualizacao-de-autoridade-2026-09-14-auditoria-de-retomada)
 - [Contexto](#contexto)
 - [Decisões do operador em vigor (mais nova vence)](#decisoes-do-operador-em-vigor-mais-nova-vence)
@@ -20,6 +21,7 @@
   - [S7 — Superprojeto e docs](#s7-superprojeto-e-docs)
   - [S8 — Testes e pouso](#s8-testes-e-pouso)
 - [Verificação final](#verificacao-final)
+
 <!-- TOC END -->
 
 ## Atualização de autoridade — 2026-09-14, auditoria de retomada
@@ -49,6 +51,7 @@ novo contém o estado fresco dos 32, pendências e crítica dessas contradiçõe
 # FLEXT 0.12.0 estável — execução contínua até o pouso (causa raiz, extermínio)
 
 ## Contexto
+
 Operador (14/09): estabilizar 0.12.0 sem falhas, sem rollback/remendo/workaround, exterminando
 over-engineering e bypass que duplica SSOT. Épico `flext-itpd1`, bead `flext-itpd1.1`
 (tracker: `export BEADS_DOLT_SERVER_HOST=127.0.0.1 BEADS_DOLT_SERVER_PORT=14499 BEADS_DOLT_SERVER_DATABASE=flext; bd …`).
@@ -60,7 +63,7 @@ com verbos canônicos + commit `[WIP]` + push FF + nota na bead; só se para por
 
 1. **flext não conhece nem usa ai-hub nem Gas City** (nenhum nome, chave, tool, diretório, doc, teste).
 2. **Beads = identidade apenas.** Gerado: `issue_prefix` (`.beads/config.yaml`), `backend/database/
-   dolt_database/project_id` (`.beads/metadata.json`), `config/beads.yaml` (workspace/database/prefix derivados
+dolt_database/project_id` (`.beads/metadata.json`), `config/beads.yaml` (workspace/database/prefix derivados
    do repo), instalação do `bd` via mise, seções de gitignore do `.beads`, `bd hooks install`. Servidor, host,
    porta, modo, auto-start, export, backup, tipos custom, rotas: **só do ambiente**.
 3. **Sem modo não-apply em nenhum verbo Make** (`setup gen fix fmt check test …`): `APPLY`/`CHECK_ONLY`/
@@ -86,16 +89,16 @@ com verbos canônicos + commit `[WIP]` + push FF + nota na bead; só se para por
 - Ordem (inventário 14/09):
   1. Mortos: `_models/settings.py:51-72` campos `GITHUB_*` + `_constants/base.py:394-399`; protocolo
      `GithubService` (`_protocols/base.py:675`); template órfão `.github/scripts/flext-law-loop.sh.j2` + cópia raiz.
-  2. **`.github/**` necessário aos projetos flext e gerado pelo SSOT do flext-infra FICA** (operador 14/09):
+  2. **`.github/**`necessário aos projetos flext e gerado pelo SSOT do flext-infra FICA** (operador 14/09):
      workflows CI/ci-matrix/docs/release, dependabot, ci-template, scripts de hooks/policy, prompts, pins de
-     actions e seus modelos/validadores/testes continuam no flext-infra. Arquivos custom em `.github/` também
+     actions e seus modelos/validadores/testes continuam no flext-infra. Arquivos custom em`.github/` também
      ficam. Sai apenas o que é projeção de runtime gerável pelo ai-hub (`.github/{agents,hooks,skills,
-     instructions}/**`, hooks `aihub-hooks/*`): flext-infra não gera/lê/valida (ex.: exclude
-     `GITHUB_AGENT_PROJECTION_DIRS` e `tooling.yaml` `.github/hooks` "owned by ai-hub" saem) e o pacote ai-hub
-     assume. Órfão `flext-law-loop.sh.j2` sem dono SSOT: remover junto com a cópia raiz após provar zero consumidor.
-     Fronteira sempre por `.gitignore` gerado (operador 14/09): custom em `.github/` nunca é apagado; os caminhos de
+instructions}/\*_`, hooks `aihub-hooks/_`): flext-infra não gera/lê/valida (ex.: exclude
+     `GITHUB_AGENT_PROJECTION_DIRS`e`tooling.yaml` `.github/hooks`"owned by ai-hub" saem) e o pacote ai-hub
+     assume. Órfão`flext-law-loop.sh.j2`sem dono SSOT: remover junto com a cópia raiz após provar zero consumidor.
+     Fronteira sempre por`.gitignore`gerado (operador 14/09): custom em`.github/`nunca é apagado; os caminhos de
      runtime geráveis externamente entram como padrões genéricos de ignore (sem nomear o gerador), e o que já está
-     rastreado sai do índice com `git rm --cached` (arquivo local preservado).
+     rastreado sai do índice com`git rm --cached` (arquivo local preservado).
   3. Release sem GitHub: `_orchestrator_dispatch._publish_release_branch` (`gh pr`), `_orchestrator_publish._github_release`
      (`gh release`), `GH`, `PULL_REQUEST_MERGE_SUBJECT_RE`/`pr_title`/`PR_TITLE`, `INDEX=N` "GitHub assets";
      release termina em tag + recibo + publicação de índice; testes de release religados.
@@ -123,7 +126,7 @@ com verbos canônicos + commit `[WIP]` + push FF + nota na bead; só se para por
   - flext-tests `runtime_census`: `TypeError str | ModelMetaclass` em
     `flext-tests/src/flext_tests/_typings/base.py:61` (`"TestobjectAtom"` entre aspas dentro de alias PEP 695).
 - **Não commitado em flext-infra** (validado por `flext-infra codegen conform --root flext-infra --what
-  makefile --mode check`: plan OK, só drift esperado do Makefile):
+makefile --mode check`: plan OK, só drift esperado do Makefile):
   - P-1c templates: WARN do mise não fatal; `uv` ausente no parse = `$(warning)`; setup faz `direnv allow` nos membros.
   - A5: `.gen` exterminado (yaml, enforcement, 9 specs, loader, `resolve_gen_path`, constantes); políticas
     `delegated/manual/create-only` exterminadas (vocabulário `full|merge`); exceção `.env.example` do release
@@ -155,6 +158,7 @@ com verbos canônicos + commit `[WIP]` + push FF + nota na bead; só se para por
   (ExitWorktree) e faz fetch/merge ff das integrações + `make gen`, adotando WIP local por fix-forward.
 
 ## Progresso 14/09 ~17:45Z — PAUSA (handoff)
+
 Retomada: `~/.claude/plans/happy-puzzling-flask-handoff.md` (tabela de estado + próximos passos em ordem).
 
 - Pousado em `0.12.0-dev`: flext-infra #727 merge `b13793fb1`; 30 membros (PRs de projeções regeneradas,
@@ -169,6 +173,7 @@ Retomada: `~/.claude/plans/happy-puzzling-flask-handoff.md` (tabela de estado + 
   → S7 → S8.
 
 ## Ciclo de cada fatia (sem exceção)
+
 edição no dono → `make gen` ×2 (2ª sem efeito) → `make setup` → `make fix` → `make fmt` → `make check`
 (tem de **executar até o fim**; achados não bloqueiam a fatia, erro de execução bloqueia) → grep de resíduo
 zero da fatia → commit `[WIP]` escopado (`git -C flext-infra commit -- <paths>`) → push FF → atualizar PR #727
@@ -182,6 +187,7 @@ e bead. `make test` entra na fatia S8.
 2. Ciclo completo; 3 commits separados: (a) templates P-1c, (b) A5 `.gen`+políticas, (c) A4 ancestralidade.
 
 ### S1 — Superfície Make sem modo e sem validação de parâmetros
+
 Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/codegen.yaml`,
 `_models/config.py`, `promoted/`, testes.
 
@@ -213,7 +219,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/
   `docs/guides/make-commands.md:42`, `docs/guides/using-flext-tests.md:120`,
   `docs/architecture/arc42/12-glossary.md:68`, `docs/standards/consumption-law.md:123`,
   `docs/standards/development.md:77`, ADR-004 (65,86,92), ADR-010 (81), `flext-infra/docs/guides/{make-commands,
-  using-flext-tests}.md`, `flext-infra/docs/index.md:49`. `flext-law-loop.sh.j2` `APPLY` local → `DO_APPLY`.
+using-flext-tests}.md`, `flext-infra/docs/index.md:49`. `flext-law-loop.sh.j2` `APPLY` local → `DO_APPLY`.
 - Prova: `make gen` aplica; `make check WHAT=xyz` falha no uso; grep `APPLY|CHECK_ONLY|check_mode` = 0
   em templates/config/src/tests/docs vivos; 32 Makefiles regenerados.
 
@@ -233,15 +239,15 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/
   `config/beads.yaml.j2`, `config/workspace.yaml.j2:113`, `.github/scripts/check-beads-policy.sh.j2`. Testes:
   `tests/utilities_fixture_workspace.py`, `tests/unit/codegen/test_codegen_beads_projection.py`,
   `tests/unit/workspace/{test_beads_environment_sync,worktree_fixture,test_workspace_member_ledger_identity,
-  test_repository_local_topology}.py`; config `config/codegen.yaml`.
+test_repository_local_topology}.py`; config `config/codegen.yaml`.
 - Chave-mestra: `gascity_enabled` fora de `WorkspaceSpec`, `RepositoryConformTarget`,
   `RepositoryPolicyOverlaySpec`, render specs (`GithubWorkflowRenderSpec`, `EnvrcRenderSpec.gascity`,
   `BeadsConfigRenderSpec`, `MiseTomlRenderSpec`), protocolos `_protocols/base.py`, `workspace/detector.py:289,
-  587-592,639`, `codegen/conform.py:811,2029-2098`.
+587-592,639`, `codegen/conform.py:811,2029-2098`.
 - Toolchain: `ToolchainSpec.gascity`, bloco `gascity:` e `protected_mise_tools` gascity (`codegen.yaml:77-97`),
   bloco gc em `.mise.toml.j2`.
 - Beads: `BeadsToolSpec.endpoint_origin/endpoint_status/required_custom_types/dolt_mode/export_auto/
-  backup_enabled/dolt_disable_event_flush` e yaml `codegen.yaml:115-143`; `BeadsEndpointSpec`;
+backup_enabled/dolt_disable_event_flush` e yaml `codegen.yaml:115-143`; `BeadsEndpointSpec`;
   `WorkspaceBeadsServerSpec`/`beads_server`; `ledger_id/ledger_prefix` + cross-check `detector.py:261-278`;
   `beads_enabled`; `BeadsProjectSpec.version/custom_issue_types` + validador; `BeadsWorkspaceEnvironmentSpec`;
   `workspace/environment_beads.py` mixin de sync + `.envrc.beads-workspace.j2` + rota CLI; `direnv allow` Python
@@ -269,7 +275,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, `config/
   `governance_authority_tests.py:82-83`, `test_infra_refactor_namespace_enforcer.py:480-488`,
   `test_infra_git_identity_submodules.py:230`) religados para fixtures neutras.
 - Prova: grep case-insensitive `ai-hub|ai_hub|aihub|agentsctl|gascity|gas city|gas_city|\.gc/|dolt-state|
-  inherited_city|AGENTS_GAS_CITY_ROOT` = 0 em flext-infra src/config/templates/tests/docs vivos e nas projeções;
+inherited_city|AGENTS_GAS_CITY_ROOT` = 0 em flext-infra src/config/templates/tests/docs vivos e nas projeções;
   `bd list` funciona com o ambiente do operador após `make gen` (sem export manual além do ambiente dele).
 
 ### S3 — AGENTS.md gerido com 4 regiões

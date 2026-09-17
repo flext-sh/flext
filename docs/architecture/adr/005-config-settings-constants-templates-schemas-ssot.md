@@ -1,6 +1,7 @@
 # ADR-005 — Config, settings, constants, templates, and schemas SSOT
 
 <!-- TOC START -->
+
 - [Context](#context)
 - [Decision](#decision)
   - [1. Each concern has exactly one owner](#1-each-concern-has-exactly-one-owner)
@@ -12,7 +13,9 @@
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
+
 <!-- TOC END -->
+
 - **Status:** Accepted
 - **Implementation status:** CURRENT IMPLEMENTATION (§§1–5); ACCEPTED TARGET
   (§6 enforcement migration to rope-semantic)
@@ -41,13 +44,13 @@ generated artifacts, while preserving the runtime dependency direction
 
 ### 1. Each concern has exactly one owner
 
-| Concern | Canonical owner |
-| --- | --- |
-| immutable invariants | private constant modules exposed through `c` |
-| configurable policy/defaults, generation inputs, and repository manifests | validated files under `config/` |
-| environment-overridable runtime values | typed `settings.<Namespace>.*` models |
-| generated bodies | `templates/*.j2` rendered only through `flext-cli` |
-| validation contracts | matching `schemas/*.schema.json` files |
+| Concern                                                                   | Canonical owner                                    |
+| ------------------------------------------------------------------------- | -------------------------------------------------- |
+| immutable invariants                                                      | private constant modules exposed through `c`       |
+| configurable policy/defaults, generation inputs, and repository manifests | validated files under `config/`                    |
+| environment-overridable runtime values                                    | typed `settings.<Namespace>.*` models              |
+| generated bodies                                                          | `templates/*.j2` rendered only through `flext-cli` |
+| validation contracts                                                      | matching `schemas/*.schema.json` files             |
 
 Large or derived structures are data-backed and generated; they are not
 hardcoded as Python constant tables. `config` and `settings` are independent

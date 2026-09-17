@@ -7,7 +7,7 @@ description: >-
 metadata:
   category: development
   source:
-    repository: 'https://github.com/ComposioHQ/awesome-claude-skills'
+    repository: "https://github.com/ComposioHQ/awesome-claude-skills"
     path: skill-creator
     license_path: skill-creator/LICENSE.txt
     commit: 92568c1edaff1bde5371154f036d959346c145a8
@@ -89,9 +89,9 @@ Skills use a three-level loading system to manage context efficiently:
 
 1. **Metadata (name + description)** - Always in context (~100 words)
 2. **SKILL.md body** - When skill triggers (<5k words)
-3. **Bundled resources** - As needed by the agent (Unlimited*)
+3. **Bundled resources** - As needed by the agent (Unlimited\*)
 
-*Unlimited because scripts can be executed without reading into context window.
+\*Unlimited because scripts can be executed without reading into context window.
 
 ## Skill Creation Process
 
@@ -198,6 +198,7 @@ scripts/package_skill.py <path/to/skill-folder> ./dist
 The packaging script will:
 
 1. **Validate** the skill automatically, checking:
+
    - YAML frontmatter format and required fields
    - Skill naming conventions and directory structure
    - Description completeness and quality

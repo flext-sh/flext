@@ -1,6 +1,7 @@
 # Ecosystem Coordination — FLEXT, Cosmos applications, and external platforms
 
 <!-- TOC START -->
+
 - [Projects and owners](#projects-and-owners)
 - [Dependency law](#dependency-law)
 - [End-to-end coordination flow](#end-to-end-coordination-flow)
@@ -12,10 +13,11 @@
   - [flext-infra](#flext-infra)
   - [flext-core](#flext-core)
 - [External platforms](#external-platforms)
-- [Open libraries and possible new flext-* (gated)](#open-libraries-and-possible-new-flext-gated)
+- [Open libraries and possible new flext-\* (gated)](#open-libraries-and-possible-new-flext-gated)
 - [Project standardization (ADR-010)](#project-standardization-adr-010)
-- [Extraction gate for any new flext-*](#extraction-gate-for-any-new-flext-)
+- [Extraction gate for any new flext-\*](#extraction-gate-for-any-new-flext-)
 - [Coordination Beads](#coordination-beads)
+
 <!-- TOC END -->
 
 This document is the consultable coordination reference for the whole Cosmos
@@ -32,14 +34,14 @@ forward planning contract for `0.20.0-dev`; it does not retro-fit the
 
 ## Projects and owners
 
-| Project | Kind | Repository | Owner ADR / tracker |
-| --- | --- | --- | --- |
-| `flext-core` | FLEXT library | `flext-core` | ADR-002/005/008 |
-| `flext-cli` | FLEXT library | `flext-cli` | ADR-008, `mro-ib6t.2` |
-| `flext-infra` | FLEXT tooling | `flext-infra` | ADR-003/004/008, `mro-ib6t.1` |
-| `dcdoc` | External application | `cosmos-docgen` | ADR-020 (`dcdoc-bhg1`) |
-| DataOP | External application | `dataop` repository | DataOP ADR-001 (`data-organization-pipeline-4dt`) |
-| DcBackup | External application | `datacosmos-backup` | DcBackup ADR-001 (`datacosmos-backup-o6w`) |
+| Project       | Kind                 | Repository          | Owner ADR / tracker                               |
+| ------------- | -------------------- | ------------------- | ------------------------------------------------- |
+| `flext-core`  | FLEXT library        | `flext-core`        | ADR-002/005/008                                   |
+| `flext-cli`   | FLEXT library        | `flext-cli`         | ADR-008, `mro-ib6t.2`                             |
+| `flext-infra` | FLEXT tooling        | `flext-infra`       | ADR-003/004/008, `mro-ib6t.1`                     |
+| `dcdoc`       | External application | `cosmos-docgen`     | ADR-020 (`dcdoc-bhg1`)                            |
+| DataOP        | External application | `dataop` repository | DataOP ADR-001 (`data-organization-pipeline-4dt`) |
+| DcBackup      | External application | `datacosmos-backup` | DcBackup ADR-001 (`datacosmos-backup-o6w`)        |
 
 ## Dependency law
 
@@ -114,28 +116,28 @@ added later under the extraction gate, never preemptively.
 
 ## External platforms
 
-| Platform | Role | Contract |
-| --- | --- | --- |
-| Airflow | Orchestration | Runs the coordination flow steps as isolated processes |
-| Dify / Weaviate | Content/RAG assist | Feeds structured content/tokens into `dcdoc`; no authority over layout/publish |
-| Google Drive / DMS | Publication target | `dcdoc` publishes via stage/apply; full DMS is a future gated capability |
-| Backstage TechDocs | Reader/catalog | Consumes MkDocs static output when deployed |
-| XWiki / PipesHub | Knowledge plane | Receive content by API when deployed; not FLEXT dependencies |
-| ClickHouse | Warehouse | DataOP sink/source |
+| Platform           | Role               | Contract                                                                       |
+| ------------------ | ------------------ | ------------------------------------------------------------------------------ |
+| Airflow            | Orchestration      | Runs the coordination flow steps as isolated processes                         |
+| Dify / Weaviate    | Content/RAG assist | Feeds structured content/tokens into `dcdoc`; no authority over layout/publish |
+| Google Drive / DMS | Publication target | `dcdoc` publishes via stage/apply; full DMS is a future gated capability       |
+| Backstage TechDocs | Reader/catalog     | Consumes MkDocs static output when deployed                                    |
+| XWiki / PipesHub   | Knowledge plane    | Receive content by API when deployed; not FLEXT dependencies                   |
+| ClickHouse         | Warehouse          | DataOP sink/source                                                             |
 
 Platform deployment status is planned/conditional until proven by executable
 evidence.
 
 ## Open libraries and possible new `flext-*` (gated)
 
-| Candidate | Verdict | Re-evaluation trigger |
-| --- | --- | --- |
-| `flext-docs` | Rejected | Second real consumer + deletion-positive extraction |
-| `flext-gworkspace` | Rejected in current form | Deployed DMS owner + neutral Google contract + 2 consumers |
-| Backup shared library | Not created | DcBackup primitive proven reusable by a second consumer |
-| Static-consumer docs mode | Accepted, to build | Immediate — `mro-ib6t.1` |
-| Generic Office byte completion | Accepted, to build | Immediate — `mro-ib6t.2` / `dcdoc-gsnp` |
-| Neutral artifact-envelope model | Deferred | Two consumers need the identical neutral contract |
+| Candidate                       | Verdict                  | Re-evaluation trigger                                      |
+| ------------------------------- | ------------------------ | ---------------------------------------------------------- |
+| `flext-docs`                    | Rejected                 | Second real consumer + deletion-positive extraction        |
+| `flext-gworkspace`              | Rejected in current form | Deployed DMS owner + neutral Google contract + 2 consumers |
+| Backup shared library           | Not created              | DcBackup primitive proven reusable by a second consumer    |
+| Static-consumer docs mode       | Accepted, to build       | Immediate — `mro-ib6t.1`                                   |
+| Generic Office byte completion  | Accepted, to build       | Immediate — `mro-ib6t.2` / `dcdoc-gsnp`                    |
+| Neutral artifact-envelope model | Deferred                 | Two consumers need the identical neutral contract          |
 
 ## Project standardization (ADR-010)
 

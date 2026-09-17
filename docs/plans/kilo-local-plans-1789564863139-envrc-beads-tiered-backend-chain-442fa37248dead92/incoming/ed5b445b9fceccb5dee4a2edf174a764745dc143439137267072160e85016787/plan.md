@@ -27,14 +27,14 @@
 1. **Modelo tipado (SSOT)** — `_models/_config/beads.py`:
    - Novo `BeadsActivationBackend = Literal["gascity","local","none"]` (tipado, zero hardcode de caminho/valor).
    - Extender spec de render do envrc com `backend` (o `BeadsWorkspaceEnvironmentSpec` vira payload do nível gascity; nível local/none levam campos de paths/metadados que já existem).
-2. **Detecção** — `workspace/environment.py `_sync_envrc``:
+2. **Detecção** — `workspace/environment.py `\_sync_envrc``:
    - Sem `config/beads.yaml` e sem `.beads/` → `backend=none` (renderiza igualmente o contexto tipado, termina em unset).
    - `config/beads.yaml` presente → backend = `gascity` se `workspace.gascity_enabled`, senão `local`.
 3. **Templates** — `.envrc.j2` + `_envrc_beads.j2`:
    - Um bloco beads com três ramos triviais por `backend`; manter `watch_file` (metadata/dolt-state por tier), `unset` de vars de orquestração herdada, `log_msg`/`log_error` por disponibilidade; manter current fail-loud do gascity tier.
 4. **Extermínio do resíduo `.envrc.local`**:
    - Conform normaliza `.envrc.local` dos membros removendo somente a seção gerada obsoleta ("Gas City Beads activation"), preservando overrides custom do operador (fix-forward; uses `_is_generated_environment_text` markers).
-   - Enforcer: greps = 0 de `AGENTS_GAS_CITY_ROOT` fora do `.envrc` gerado (regra em rules/*.yaml — linha de dados, não detector).
+   - Enforcer: greps = 0 de `AGENTS_GAS_CITY_ROOT` fora do `.envrc` gerado (regra em rules/\*.yaml — linha de dados, não detector).
 5. **Contratos e testes**:
    - `environment_contracts.py`: valida os três tiers (targets got accuracy: local/none tiers não exigem `dolt-state.json`).
    - Unit/fixture: `tests/utilities_fixture_workspace.py` já parametriza `gascity_enabled` — cobrir render gascity/local/none + idempotência (segunda `make gen` = no-op) + smoke runtime `direnv exec` por tier.

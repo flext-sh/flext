@@ -1,6 +1,7 @@
 # Testing Standards
 
 <!-- TOC START -->
+
 - [Public boundary](#public-boundary)
 - [Fixtures and assertions](#fixtures-and-assertions)
 - [Configuration independence](#configuration-independence)
@@ -8,6 +9,7 @@
 - [Canonical execution](#canonical-execution)
 - [Generated copies](#generated-copies)
 - [Related](#related)
+
 <!-- TOC END -->
 
 Tests confirm current observable behavior; they do not own the product contract

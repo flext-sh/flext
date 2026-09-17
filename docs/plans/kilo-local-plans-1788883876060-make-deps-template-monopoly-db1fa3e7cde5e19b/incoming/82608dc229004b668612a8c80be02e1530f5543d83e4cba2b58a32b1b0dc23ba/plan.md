@@ -39,10 +39,10 @@ Last `make gen` at `~/flext`: 32/32 conform OK, published `.beads/config.yaml`, 
 
 Same apply transaction. Delete the direct write in the same change.
 
-| Site | Today |
-| --- | --- |
-| `codegen/scaffolder.py` | `atomic_write_text_file` |
-| `codegen/version_file.py` | `atomic_write_text_file` |
+| Site                           | Today                        |
+| ------------------------------ | ---------------------------- |
+| `codegen/scaffolder.py`        | `atomic_write_text_file`     |
+| `codegen/version_file.py`      | `atomic_write_text_file`     |
 | `codegen/_layout_gitignore.py` | two `atomic_write_text_file` |
 
 Proof: those modules have no `atomic_write_text_file` / `files_write_text`. `make gen` still green.

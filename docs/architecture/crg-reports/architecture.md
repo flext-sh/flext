@@ -4,10 +4,12 @@
 # CRG Architecture Risk
 
 <!-- TOC START -->
+
 - [Summary](#summary)
 - [Architecture Warnings](#architecture-warnings)
 - [Top Communities](#top-communities)
 - [Raw Output](#raw-output)
+
 <!-- TOC END -->
 
 ## Summary

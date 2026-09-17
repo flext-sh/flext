@@ -1,6 +1,7 @@
 # FLEXT Type System Architecture Guide
 
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [Type System Hierarchy](#type-system-hierarchy)
@@ -16,7 +17,7 @@
 - [Namespace Architecture](#namespace-architecture)
   - [Standard Namespace Structure](#standard-namespace-structure)
   - [Namespace Organization by Project](#namespace-organization-by-project)
-  - [Models Namespace Architecture (m.*)](#models-namespace-architecture-m)
+  - [Models Namespace Architecture (m.\*)](#models-namespace-architecture-m)
 - [Covariance and Variance Rules](#covariance-and-variance-rules)
   - [Covariance (Subtype Compatibility)](#covariance-subtype-compatibility)
   - [Protocol Return Types (Always Covariant)](#protocol-return-types-always-covariant)
@@ -41,6 +42,7 @@
   - [Type System Metrics](#type-system-metrics)
   - [Validation Results](#validation-results)
 - [Summary](#summary)
+
 <!-- TOC END -->
 
 **Version**: 1.0.0
@@ -215,6 +217,7 @@ def process_data(provider: DataProvider) -> None:
     # Provider can return t.IntMapping, t.StrMapping, etc.
     data = provider.get_data()
 ```
+
 ### Pattern 6: TypeVar Reuse (Centralized)
 
 **Rule**: Use flext-core TypeVars, add domain-specific only when absolutely necessary
@@ -262,6 +265,7 @@ class FlextTypes:
             class Details:
                 type SomeType = str  # TOO DEEP!
 ```
+
 ### Namespace Organization by Project
 
 **flext-core**:
@@ -327,6 +331,7 @@ m.Cli.Data.Command.Execution  # TOO DEEP - nested sub-concerns
 m.SystemInfo  # Missing domain context (m.Cli.*)
 m.Statistics  # Ambiguous - which domain?
 ```
+
 **Models Organization by Project**:
 
 **flext-core**:
@@ -396,6 +401,7 @@ def process_mapping(data: t.MappingKV[str, m.Tests.ValueModel]) -> None: ...
 result: t.BoolMapping = {"ok": True}
 process_mapping(result)  # OK: Mapping is covariant
 ```
+
 ### Protocol Return Types (Always Covariant)
 
 ```python
@@ -414,6 +420,7 @@ class MyProvider:
 
 provider: DataProvider = MyProvider()  # OK: dict is assignable to Mapping
 ```
+
 ### Type Parameter Bounds (Always Covariant)
 
 ```python
@@ -430,6 +437,7 @@ class ItemProcessor(Protocol):
     def process_items(self, items: t.StrSequence) -> None:
         """Too restrictive - can't accept list subclasses."""
 ```
+
 ---
 
 ## Protocol Design
@@ -511,6 +519,7 @@ class MutableEntry(Protocol):
 # Usage: Fluent interface
 entry.set_attribute("mail", ["new@example.com"]).add_attribute("cn", ["User"])
 ```
+
 ---
 
 ## TypeVar Organization
@@ -697,6 +706,7 @@ def process_model(
 
 # ❌ WRONG: TYPE_CHECKING (fix circular import instead)
 ```
+
 ### 3. Covariant Protocols for Read-Only
 
 ```python

@@ -1,6 +1,7 @@
 # FLEXT System Context Diagram
 
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [System Context Diagram](#system-context-diagram)
@@ -19,7 +20,7 @@
   - [Data Storage](#data-storage)
   - [Integration Protocols](#integration-protocols)
   - [Monitoring and Observability](#monitoring-and-observability)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 ## Table of Contents
 
@@ -101,16 +102,19 @@ graph TB
 ### Primary Users
 
 1. **Data Engineers**
+
    - Configure and manage data pipelines
    - Monitor data quality and processing
    - Troubleshoot integration issues
 
 2. **System Administrators**
+
    - Deploy and maintain FLEXT infrastructure
    - Manage security and access controls
    - Monitor system health and performance
 
 3. **Business Users**
+
    - Access integrated data through APIs
    - View data quality reports
    - Request new data sources
@@ -123,21 +127,25 @@ graph TB
 ### External Systems
 
 1. **LDAP Systems**
+
    - Active Directory
    - OpenLDAP
    - Other LDAP-compliant directories
 
 2. **Oracle Systems**
+
    - Oracle Database
    - Oracle WMS (Warehouse Management)
    - Oracle OIC (Integration Cloud)
 
 3. **File Systems**
+
    - LDIF files for LDAP data
    - CSV/JSON files for data exchange
    - Configuration files
 
 4. **Monitoring Systems**
+
    - Prometheus for metrics collection
    - Grafana for visualization
    - Alerting systems
@@ -152,24 +160,28 @@ graph TB
 ### Core Capabilities
 
 1. **Data Integration**
+
    - Extract data from multiple sources
    - Transform data according to business rules
    - Load data into target systems
    - Ensure data quality and consistency
 
 2. **Pipeline Orchestration**
+
    - Schedule and execute data pipelines
    - Handle dependencies between tasks
    - Provide retry and error handling
    - Monitor pipeline execution
 
 3. **Data Quality Management**
+
    - Validate data against schemas
    - Detect and report data anomalies
    - Provide data lineage tracking
    - Generate quality reports
 
 4. **Security and Compliance**
+
    - Authenticate users and systems
    - Authorize access to data and functions
    - Encrypt data in transit and at rest

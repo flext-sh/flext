@@ -12,17 +12,17 @@ Evoluir a automacao existente em flext-infra para detectar desvios arquiteturais
 
 ## Fatos verificados (auditoria de codigo, leitura direta)
 
-Fontes: batch_apply.py, semantic_apply.py, batch_gates.py, class_nesting*.py, project_discovery.py, constants_quality_gate.py, Makefile.j2, cli_routes, consolidator.py. Referencias arquivo:linha do checkout atual.
+Fontes: batch_apply.py, semantic_apply.py, batch_gates.py, class_nesting\*.py, project_discovery.py, constants_quality_gate.py, Makefile.j2, cli_routes, consolidator.py. Referencias arquivo:linha do checkout atual.
 
 1. Circuitoo atual: batch_apply.py:21-88 descobre regras, preflight, aplica fase semantica (semantic_apply.py:21-100) + ast-grep, detecta repeticao por fingerprint e exige validacao final. Cinco fases semanticas: future-annotations, deferred-models, nesting, aliases (somente api.py), private-imports.
 2. VAZIO DE TRANSFORM: class_nesting_cst.py:39-111 so move ClassDef top-level para dentro de um owner. Nao existe: extracao de classe aninhada (hoist para fora), achatamento de wrapper com dados com rebinding X.Dbt.Y -> X.Y, nem remocao de alias em arquivo handwritten (semantic_apply.py:65-70 filtra ban-compat-alias por file.name == api.py). O piloto ADR-014 (flext-dbt-oracle-wms) exige exatamente esses tres transforms; sem eles, ou o desvio fica invisivel (sem regra) ou o circuito falha "made no progress" sem causa (com regra detection-only).
-3. GERADOS EXPOSTOS: project_discovery.py:89-110 monta targets ast-grep como project/scan_dirs + project.glob("*.py") sem exclusao AUTOGEN; o apply (batch_gates.py:487-499, --rewrite-all) nao pula gerados. O planner semantico pula (class_nesting.py:155; semantic_apply.py:138), gerando assimetria e risco de oscilacao gen x mod.
-4. ESCOPO LEXICAL: class_nesting_references.py:99-124 trata apenas FunctionDef/ClassDef como boundary; Lambda/compreensoes no corpo do owner mantem nome bare -> NameError. _nest_definitions nao verifica classe nao-movida definida antes do owner usando simbolo em definition-time.
-5. COBERTURA ASSIMETRICA: semantic_apply.py:107-119 inventaria apenas scan_dirs (exclui .py na raiz do projeto); ast-grep inclui project.glob("*.py"). Consumidor root-level recebe fix sem rewiring. Star import perde simbolo (class_nesting_references.py:87,191,223-250).
+3. GERADOS EXPOSTOS: project_discovery.py:89-110 monta targets ast-grep como project/scan_dirs + project.glob("\*.py") sem exclusao AUTOGEN; o apply (batch_gates.py:487-499, --rewrite-all) nao pula gerados. O planner semantico pula (class_nesting.py:155; semantic_apply.py:138), gerando assimetria e risco de oscilacao gen x mod.
+4. ESCOPO LEXICAL: class_nesting_references.py:99-124 trata apenas FunctionDef/ClassDef como boundary; Lambda/compreensoes no corpo do owner mantem nome bare -> NameError. \_nest_definitions nao verifica classe nao-movida definida antes do owner usando simbolo em definition-time.
+5. COBERTURA ASSIMETRICA: semantic_apply.py:107-119 inventaria apenas scan_dirs (exclui .py na raiz do projeto); ast-grep inclui project.glob("\*.py"). Consumidor root-level recebe fix sem rewiring. Star import perde simbolo (class_nesting_references.py:87,191,223-250).
 6. DIAGNOSTICO: no-progress nao atribui fase/regra; residuo-check pos-publicacao existe so para nesting (semantic_apply.py:93-100); findings text == replacement (batch_gates.py:331-340) nunca convergem e travam ate o dry-run; dry-run nao valida fixtures (batch_apply.py:27-43 vs 51-52).
 7. TOPOLOGIA TRIPLA: project_discovery.py:47-86 usa .gitmodules UU filhos com pyproject.toml; RefactorConfig().project_scan_dirs e default hardcoded de modelo (refactor_ast_grep.py:22-30). workspace.yaml e o SSOT declarado (AGENTS raiz). Eleicao necessaria.
 8. PUBLICACAO FORA DO JOURNAL: semantic_apply.py:191-192 escreve via atomic_write_text_file_guarded direto; o mecanismo u.Infra.publish_file_plans (journal + backup + recovery) nao e usado na unica fase multi-repo sem transacao.
-9. AUTOGEN DRIFT: semantic_apply.py:138 usa literal "# AUTO-GENERATED FILE"; class_nesting.py:155 usa c.Infra.AUTOGEN_HEADERS (variantes em _constants/codegen_lazy.py:20-26).
+9. AUTOGEN DRIFT: semantic_apply.py:138 usa literal "# AUTO-GENERATED FILE"; class_nesting.py:155 usa c.Infra.AUTOGEN_HEADERS (variantes em \_constants/codegen_lazy.py:20-26).
 10. QUALITY GATE FALSO: constants_quality_gate.py:244-246,331-333 fixam zeros; passed=(value==0) em 278-286 transforma nao-medido em PASS; modified_python_files depende de git status local.
 11. DEFAULT DO VERBO: Makefile.j2:698-699 encaminha mod para refactor mod --apply; linhas 351-355 rejeitam; linha 416 anuncia aplicacao por padrao. Inspecionar via make mod hoje nao e seguro.
 12. Regras compostas por metadata de distribuicao instalada (codemod_rules.py:24-66): editar YAML local nao prova propagacao; evidencia exige identidade de provider/regra.
@@ -46,7 +46,7 @@ Fontes: batch_apply.py, semantic_apply.py, batch_gates.py, class_nesting*.py, pr
 
 Regra transversal: a simplificacao/remocao de cruft NAO e um programa adicional; faz parte da execucao de cada unidade restante. Todo dono tocado em T1-T5 sai da unidade mais simples e direto no padrao FLEXT (skill simplify: complexidade acidental removida com contratos preservados; LOC liquido negativo ou neutro; cruft comprovadamente sem consumer removido no mesmo corte, skill safe-delete; corte atomico com rewiring). O inventario global do circuito (subagente em curso: LOC, superficie publica, consumers, duplicacao, mixins de implementacao unica, constantes sem leitor) e o INPUT que alimenta essas decisoes em cada unidade, nao uma fase posterior.
 
-Sem consumer provado NAO e cruft (dynamic dispatch/getattr/star-import/entrypoint/pytest plugin/template .j2/provider por metadata): hipotese sem prova vira bloqueio classificado na unidade, nao remocao. Candidatos suspeitos a confirmar pelo inventario: censos duplicados (codegen census vs refactor census e seus consumidores reais), cadeias de mixin com implementacao unica, fases/flags sem rota CLI, metricas/zeros mortos do quality gate, tabelas de _constants sem leitor.
+Sem consumer provado NAO e cruft (dynamic dispatch/getattr/star-import/entrypoint/pytest plugin/template .j2/provider por metadata): hipotese sem prova vira bloqueio classificado na unidade, nao remocao. Candidatos suspeitos a confirmar pelo inventario: censos duplicados (codegen census vs refactor census e seus consumidores reais), cadeias de mixin com implementacao unica, fases/flags sem rota CLI, metricas/zeros mortos do quality gate, tabelas de \_constants sem leitor.
 
 ### T1. Escopo unico e protecao de gerados
 
@@ -60,7 +60,7 @@ Sem consumer provado NAO e cruft (dynamic dispatch/getattr/star-import/entrypoin
 
 ### T2. Planejamento e evidencia confiaveis
 
-- Rotear _publish por u.Infra.publish_file_plans (journal + backup + recovery) (fato 8; decisao de projeto codegen.publish_file_plans).
+- Rotear \_publish por u.Infra.publish_file_plans (journal + backup + recovery) (fato 8; decisao de projeto codegen.publish_file_plans).
 - Residuo-check pos-publicacao para toda fase semantica, nao so nesting (fato 6b).
 - No-progress com atribuicao de causa (fase/regra responsavel no erro) (fato 6a).
 - Validar em validate_rule_fixtures o contrato fix != match (fato 6c) e declaracao "local-safe" por regra para fixes automaticos (fato 13).
@@ -72,7 +72,7 @@ Sem consumer provado NAO e cruft (dynamic dispatch/getattr/star-import/entrypoin
 
 ### T3. Transformer lexical e os tres transforms novos
 
-- Corrigir boundary lexical: Lambda/compreensoes/GeneratorExp como boundary em _resolves_bare_after_nesting (fato 4).
+- Corrigir boundary lexical: Lambda/compreensoes/GeneratorExp como boundary em \_resolves_bare_after_nesting (fato 4).
 - Verificar/ajustar ordenacao de definicao pos-rewrite no modulo (classe nao-movida antes do owner usando simbolo em definition-time).
 - Transform A (extracao/hoist): classe aninhada sai do wrapper para top-level e entra no part class certo (composto: extrair + aninhar).
 - Transform B (achatamento): wrapper com dados e achatado; membros sobem um nivel com rebinding X.Wrapper.Y -> X.Y em todos os consumidores; colisao usa prefixo derivado so com contrato e unicidade provados, senao bloqueia.
@@ -84,7 +84,7 @@ Sem consumer provado NAO e cruft (dynamic dispatch/getattr/star-import/entrypoin
 
 ### T4. Piloto flext-dbt-oracle-wms
 
-- Executar automaticamente: hoist de _Materialization (Transform A composto), achatamento de Dbt em base.py e enums.py (Transform B), retirada de aliases Materialization/DbtMaterialization (Transform C), rewiring de base.py:23, _models/dbt.py:28, _utilities/model_builder.py:34 e quaisquer referencias descobertas; regenerar exports pelo dono; validar facade/enum/modelo reais.
+- Executar automaticamente: hoist de \_Materialization (Transform A composto), achatamento de Dbt em base.py e enums.py (Transform B), retirada de aliases Materialization/DbtMaterialization (Transform C), rewiring de base.py:23, \_models/dbt.py:28, \_utilities/model_builder.py:34 e quaisquer referencias descobertas; regenerar exports pelo dono; validar facade/enum/modelo reais.
 - Verificar destino canonico de PROJECT_NAME conforme ADR-005 antes de presumir pertencimento a c.
 - Sem acionar operacoes Oracle externas para provar mudanca de namespace.
 - Aceite: consumidor real funciona; zero referencias locais obsoletas; exports convergentes; sem residuo.
@@ -105,7 +105,7 @@ Sem consumer provado NAO e cruft (dynamic dispatch/getattr/star-import/entrypoin
   - Verbos CLI-only com testes e SEM rota em qualquer Makefile/template: `codegen census` (cli_routes_codegen.py:115, tests/unit/codegen/census_tests.py), `codegen consolidate` (:169, consolidator_tests.py), `codegen auto-fix` (:133, autofix_workspace_tests.py), `codegen constants-quality-gate` (:160, constants_quality_gate_tests.py), `refactor census` (cli_routes_refactor.py:38, utilities_gates.py:14, test_main_cli.py:556). Classificacao: superficie CLI documentada, nao cruft; nao deletar por ausencia de rota Make. Uso operacional deles no programa: consolidate/census/quality-gate apoiam o eixo dedup pos-piloto.
   - `FlextInfraCodegenQualityGate` consumindo `FlextInfraRefactorCensus` (constants_quality_gate.py:56) com zeros fixos (fato 10): reparo em T2, nao remocao.
   - Dois censos coexistem com propositos distintos (codegen census = violacoes de namespace por projeto; refactor census = objetos Rope com kinds/duplicatas). Consolidacao ou manutencao decidida em T2 com evidencia de consumers (search-first); nao pre-decidida aqui.
-  - Mixins _census_* (14 arquivos, consumer unico FlextInfraRefactorCensus) e parts _lazy_init_*: padrao canonico de part-splitting da lei de LOC; fora do escopo de remocao.
+  - Mixins _census\_\_ (14 arquivos, consumer unico FlextInfraRefactorCensus) e parts *lazy_init*_: padrao canonico de part-splitting da lei de LOC; fora do escopo de remocao.
   - `consolidator.py` existe (verbo consolidate); referencia anterior do plano mantida.
 - Disciplina por corte (constante em T1-T5): search-first (lazy exports, providers por metadata, entrypoints, pytest plugin, templates) -> simplify no dono tocado -> safe-delete com recovery via journal/git e corte atomico.
 - Regra dura mantida: sem consumer provado NAO e cruft; hipotese sem prova vira bloqueio classificado.
@@ -114,7 +114,7 @@ Sem consumer provado NAO e cruft (dynamic dispatch/getattr/star-import/entrypoin
 
 - Fixtures ast-grep: positivos/negativos/decorators/comentarios/strings/multiplos donos/fora das familias; fix != match; nenhuma regra casa projecoes geradas.
 - Lexical novo: lambda/compreensao no corpo do owner; classe nao-movida antes do owner usando simbolo em definition-time; metodos/compreensoes.
-- Rewiring: A.X vs B.X; imports relativos/alias/shadowing; facade MRO multi-parts; enum aninhada (decorators/valores); alias/reexport removido com __all__ regenerado; star-import; consumidor root-level (conftest.py); anotacoes em string; templates e snippets executaveis.
+- Rewiring: A.X vs B.X; imports relativos/alias/shadowing; facade MRO multi-parts; enum aninhada (decorators/valores); alias/reexport removido com **all** regenerado; star-import; consumidor root-level (conftest.py); anotacoes em string; templates e snippets executaveis.
 - Cobertura: arquivo limpo pode ser consumidor; descoberta incompleta falha; provedores/regras identificados por versao/recurso.
 - Seguranca: arquivo alterado pos-preflight; falha no meio da publicacao (journal prova efeitos e recovery); caminho fora do escopo; fonte gerada; retomada sem perda de WIP.
 - Convergencia: mod x2; gen/fix/fmt x2; interacao gen x mod (oscilacao); dry-run nao muda snapshots; na aplicacao, snapshot atualizado sozinho nunca e unica evidencia.

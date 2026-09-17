@@ -7,7 +7,7 @@ Re-platform the FLEXT modernization stack onto **rope + parameterized YAML rules
 ## Ground truth (verified this session)
 
 - Current state: flext-core collection **2683 tests / 0 errors**; circular-import class and `result.py` twin-class runtime defect already fixed (board `board_8032fb78`).
-- Extermination inventory in `flext-infra/src/flext_infra`: **8 libcst files** (`codegen/_lazy_init_import_alignment.py`, `_utilities/{qualified_names,compatibility_alias_cst,private_import_cst,class_nesting_cst,class_nesting_references}.py`, `transformers/mro_remover.py`, `refactor/project_alias_migrator.py`) + **37 `import ast` files** (transformers/, detectors/, fixers/, gates/, _utilities/, codegen/).
+- Extermination inventory in `flext-infra/src/flext_infra`: **8 libcst files** (`codegen/_lazy_init_import_alignment.py`, `_utilities/{qualified_names,compatibility_alias_cst,private_import_cst,class_nesting_cst,class_nesting_references}.py`, `transformers/mro_remover.py`, `refactor/project_alias_migrator.py`) + **37 `import ast` files** (transformers/, detectors/, fixers/, gates/, \_utilities/, codegen/).
 - Rope foundation already exists: `_utilities/_rope/project.py`, `rope_structure.py`, `rope_imports.py`, `rope_source.py`, `fixers/rope_fixer.py`.
 - One-CLI anchor exists: `m.Infra.CodegenConformRequest` (`_models/_config/artifact.py:417`) with `root` / `what` / `scope` / `mode` — **`mode=CHECK` is already dry-run**, `mode=APPLY` is atomic apply via `CodegenFilePlan` (before-state + desired bytes, transaction-owned). Route: `services/cli_routes_codegen.py:67` (`codegen conform`).
 - `make mod` is canonical (root `Makefile:736` → `RUN_PUBLIC,mod`) — ast-grep + sed. **Keep.**

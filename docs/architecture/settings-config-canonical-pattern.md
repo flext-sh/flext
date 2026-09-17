@@ -1,13 +1,15 @@
 # Canonical Settings & Config Pattern (ADR-005 companion guide)
 
 <!-- TOC START -->
+
 - [1. Law (non-negotiable)](#1-law-non-negotiable)
 - [2. Minimal base surface (flext-core)](#2-minimal-base-surface-flext-core)
 - [3. Canonical project SETTINGS module — <project>/settings.py](#3-canonical-project-settings-module-projectsettingspy)
-- [4. Canonical project CONFIG module — <project>/_config.py](#4-canonical-project-config-module-project_configpy)
+- [4. Canonical project CONFIG module — <project>/\_config.py](#4-canonical-project-config-module-project_configpy)
 - [5. Root export (<project>/**init**.py)](#5-root-export-projectinitpy)
 - [6. Forbidden (remove on sight)](#6-forbidden-remove-on-sight)
 - [7. Propagation checklist (per project)](#7-propagation-checklist-per-project)
+
 <!-- TOC END -->
 
 **Status**: supporting guide | **Scope**: every FLEXT project (`flext-*`, integrations, `ai-hub`)
@@ -18,12 +20,11 @@ patterns. Reviewed 2026-07-09.
 <!-- mro-wkii.14 (agent: codegen) — errata por pedido vivo (precedencia U1). -->
 
 > **ERRATA (2026-07-10) — supersede parcial por `AGENTS.md` U2–U8.** Por pedido vivo do operador (precedência U1), as
-seções §1 ("no MRO composition") e §2 ("`FlextConfig` `extra=\"allow\"`") deste doc estão **SUPERSEDED**. Padrão
-vigente: acesso strict `from <pkg> import config`/`settings` →
-`config.<Namespace>.<domain>`/`settings.<Namespace>.<domain>` (U2); domínios **modelados**
-`frozen=True, extra="forbid"` com `model_validate` na borda, nunca `dict`/`Any`/`object` no consumo (U3); `ConfigProxy`
-tipado/lazy em `u.<Namespace>` (U4); MRO para demais config/settings (U5); typing estrito U6; zero helpers/aliases
-(U7). Referência viva: `cosmos-main/src/cosmos_main/` (`_constants|_models|_protocols|_utilities/{config,settings}.py`
+> seções §1 ("no MRO composition") e §2 ("`FlextConfig` `extra=\"allow\"`") deste doc estão **SUPERSEDED**. Padrão
+> vigente: acesso strict `from <pkg> import config`/`settings` →
+> `config.<Namespace>.<domain>`/`settings.<Namespace>.<domain>` (U2); domínios **modelados** > `frozen=True, extra="forbid"` com `model_validate` na borda, nunca `dict`/`Any`/`object` no consumo (U3); `ConfigProxy`
+> tipado/lazy em `u.<Namespace>` (U4); MRO para demais config/settings (U5); typing estrito U6; zero helpers/aliases
+> (U7). Referência viva: `cosmos-main/src/cosmos_main/` (`_constants|_models|_protocols|_utilities/{config,settings}.py`
 
 - `_config.py`/`_settings.py`). Reescrita integral deste doc fica na lane do standardizer (mro-wkii.11).
 
@@ -44,13 +45,13 @@ tipado/lazy em `u.<Namespace>` (U4); MRO para demais config/settings (U5); typin
 
 `FlextSettings` (mutable) and `FlextConfig` (frozen) expose ONLY:
 
-| Member | Purpose |
-| --- | --- |
-| `fetch_global()` | return the per-class singleton (lazy, thread-safe) — the accessor projects call |
-| `update_global(**overrides)` | Pydantic-2 `model_copy(update=…)` mutation of the singleton (settings only) |
-| `clone(**overrides)` | deep-copy + revalidate for isolated injection snapshots |
-| `reset_for_testing()` | drop the singleton slot for test isolation |
-| `resolve_env_file(namespace=None)` | `.env` discovery honouring `FLEXT_ENV_FILE` |
+| Member                             | Purpose                                                                         |
+| ---------------------------------- | ------------------------------------------------------------------------------- |
+| `fetch_global()`                   | return the per-class singleton (lazy, thread-safe) — the accessor projects call |
+| `update_global(**overrides)`       | Pydantic-2 `model_copy(update=…)` mutation of the singleton (settings only)     |
+| `clone(**overrides)`               | deep-copy + revalidate for isolated injection snapshots                         |
+| `reset_for_testing()`              | drop the singleton slot for test isolation                                      |
+| `resolve_env_file(namespace=None)` | `.env` discovery honouring `FLEXT_ENV_FILE`                                     |
 
 Root fields on `FlextSettings` (the only universal ones): `debug`, `trace`, `log_level`,
 `timezone`, `async_logging`. `FlextConfig` is **open** (`extra="allow"`, `frozen=True`, zero

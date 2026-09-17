@@ -1,9 +1,11 @@
 # Unify Singer/dbt CLI + Services via flext-meltano — Implementation Plan
 
 <!-- TOC START -->
+
 - [Global Constraints (LOCKED — operator 2026-07-17)](#global-constraints-locked-operator-2026-07-17)
 - [File Structure (pilot: flext-tap-ldap)](#file-structure-pilot-flext-tap-ldap)
 - [Waves](#waves)
+
 <!-- TOC END -->
 
 > Historical evidence only. This plan records an earlier execution context and
@@ -16,8 +18,8 @@
 CLI, services, settings/config SSOT — with a very negative net LOC, piloted on `flext-tap-ldap`,
 with the singer_sdk/dbt machinery owned exclusively by `flext-meltano`.
 
-**Architecture:** flext-meltano owns ALL external pipeline libs (singer_sdk, dbt).
-It exposes a *declarative* tap/target/dbt base where the consumer supplies only domain data
+**Architecture:** flext-meltano owns ALL external pipeline libs (singer*sdk, dbt).
+It exposes a \_declarative* tap/target/dbt base where the consumer supplies only domain data
 (stream specs + a record fetcher backed by flext-ldap/ldif/db-oracle).
 Each consumer project reduces to `base.py` (`s`), `api.py` (thin MRO facade Service),
 `cli.py` (`main()->Service.cli_main()`), `services/*` (import only `c,t,p,m,u` + `s`).
@@ -27,9 +29,9 @@ All adapters, custom Typer groups, custom stream base classes, and `_utilities/*
 
 ## Global Constraints (LOCKED — operator 2026-07-17)
 
-- ONLY `flext-meltano` imports `singer_sdk` / `dbt`; only each flext-* library imports its own external lib
+- ONLY `flext-meltano` imports `singer_sdk` / `dbt`; only each flext-\* library imports its own external lib
   and provides tools.
-- tap/target/dbt projects import ONLY flext-* libs (cli, meltano, ldap, ldif, db_oracle, oracle_wms, oracle_oic).
+- tap/target/dbt projects import ONLY flext-\* libs (cli, meltano, ldap, ldif, db_oracle, oracle_wms, oracle_oic).
 - `services/*` import ONLY `c, t, p, m, u` + `s` (from `base.py`).
   Nothing else.
 - Canonical files per project: `base.py`, `api.py`, `cli.py`, `services/*`, plus declaration layers
