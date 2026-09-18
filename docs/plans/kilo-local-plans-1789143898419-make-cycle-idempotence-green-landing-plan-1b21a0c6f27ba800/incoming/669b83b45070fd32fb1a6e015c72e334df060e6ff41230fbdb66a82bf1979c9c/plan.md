@@ -30,9 +30,8 @@ branch de integração `0.12.0-dev` (submódulos + superprojeto).
 - **Resíduo banido pelo operador**: `config/build-constraints.txt` rastreado em 12 repos
   (api, auth, cli, core, db-oracle, dbt-*, grpc, infra) + não rastreado em ~20;
   `.waza.yaml.bak.1786122144` rastreado no flext-core; nenhum
-  `*aihub-prior\*`encontrado. SSOT já atualizado: projeção removida
-  do`config/codegen.yaml` (managed_files + templates), seção "Banned residue" adicionada
-  ao gitignore SSOT.
+  `*aihub-prior\*`encontrado. SSOT já atualizado: projeção removida do`config/codegen.yaml`
+  (managed_files + templates), seção "Banned residue" adicionada ao gitignore SSOT.
 - **suspeitas de não-idempotência** (validar com evidência na Fase 2): `.gitignore`
   derivado da topologia _viva_ (diferente por worktree), re-render `[MANAGED]` do
   pyproject vs tomlsort/yamlfix, `metadata.json` do beads, `uv.lock`.

@@ -318,7 +318,7 @@ independente + warn→hard aplicado ao vivo; beads
 | PR de absorção misturando provenâncias                | uma branch/PR por superfície de origem; proveniência no corpo                         |
 | Origin mover durante execução                         | re-fetch + `--is-ancestor` a cada material-step; absorver hunk-a-hunk                 |
 | Red tratado como fora de escopo (DR3)                 | red no blast radius = bead no turno                                                   |
-| Duplicação SLA-3 × ENFORCE-101                        | cross-ref `flext-9wwed` ↔ `flext-ssnc7.4`                                             |
+| Duplicação SLA-3 × ENFORCE-101                        | cross-ref `flext-9wwed` ↔ `flext-ssnc7.4`                                            |
 | Grafo stale citado                                    | built-at por bloco (F3)                                                               |
 | Venv contaminado entre worktrees                      | guards `UV_PROJECT_ENVIRONMENT`/`VIRTUAL_ENV` sempre                                  |
 | Cápsula `~/agents`                                    | zero arquivos novos; absorção in-place; expansão = ADR com operador                   |

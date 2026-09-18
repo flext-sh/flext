@@ -25,9 +25,9 @@ The latest operator instruction supersedes all earlier acceptance text:
   canonical SSOT generator only. Manual YAML must be exterminated.
 - **Strict facade layering.** settings → config → c → t → p → m → u → base.py →
   services/_.py → api.py → cli.py; reverse imports are `TYPE_CHECKING`-only; Pydantic-2
-  in/out; `t._/p.\*`typing only;`Any`, `object`, `Optional`, dict contracts,
-  `Optional[X]`, `dict`/`TypedDict`contracts are banned; CA/DI via`p` protocols at the
-  one composition root.
+  in/out;
+  `t._/p.\*`typing only;`Any`, `object`, `Optional`, dict contracts, `Optional[X]`, `dict`/`TypedDict`contracts are banned; CA/DI via`p`
+  protocols at the one composition root.
 
 These directives invalidate the prior "accepted debt" text in `docs/releases/ latest.md`
 and ADRs. That contradiction is now a P0 doc-owner repair.

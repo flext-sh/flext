@@ -21,7 +21,7 @@ patterns. Reviewed 2026-07-09.
 <!-- mro-wkii.14 (agent: codegen) — errata por pedido vivo (precedencia U1). -->
 
 > **ERRATA (2026-07-10) — supersede parcial por `AGENTS.md` U2–U8.** Por pedido vivo do
-> operador (precedência U1), as seções §1 ("no MRO composition") e §2 ("`FlextConfig`
+> operador (precedência U1), as seções §1 ("no MRO composition") e §2 ("`FlextConfig` >
 > `extra=\"allow\"`") deste doc estão **SUPERSEDED**. Padrão vigente: acesso strict
 > `from <pkg> import config`/`settings` →
 > `config.<Namespace>.<domain>`/`settings.<Namespace>.<domain>` (U2); domínios

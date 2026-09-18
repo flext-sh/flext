@@ -104,20 +104,9 @@ Lane: worktree `.claude/worktrees/bugfix+stabilize-0.12.0`, branch
   1. Mortos: `_models/settings.py:51-72` campos `GITHUB_*` +
      `_constants/base.py:394-399`; protocolo `GithubService` (`_protocols/base.py:675`);
      template órfão `.github/scripts/flext-law-loop.sh.j2` + cópia raiz.
-  2. **`.github/**`necessário aos projetos flext e gerado pelo SSOT do flext-infra
-     FICA** (operador 14/09): workflows CI/ci-matrix/docs/release, dependabot,
-     ci-template, scripts de hooks/policy, prompts, pins de actions e seus
-     modelos/validadores/testes continuam no flext-infra. Arquivos custom em`.github/`
-     também ficam. Sai apenas o que é projeção de runtime gerável pelo ai-hub
-     (`.github/{agents,hooks,skills, instructions}/\*_`, hooks `aihub-hooks/_`):
-     flext-infra não gera/lê/valida (ex.: exclude
-     `GITHUB_AGENT_PROJECTION_DIRS`e`tooling.yaml` `.github/hooks`"owned by ai-hub"
-     saem) e o pacote ai-hub assume. Órfão`flext-law-loop.sh.j2`sem dono SSOT: remover
-     junto com a cópia raiz após provar zero consumidor. Fronteira sempre
-     por`.gitignore`gerado (operador 14/09): custom em`.github/`nunca é apagado; os
-     caminhos de runtime geráveis externamente entram como padrões genéricos de ignore
-     (sem nomear o gerador), e o que já está rastreado sai do índice
-     com`git rm --cached` (arquivo local preservado).
+  2. **`.github/**`necessário aos projetos flext e gerado pelo SSOT do flext-infra FICA** (operador 14/09): workflows CI/ci-matrix/docs/release, dependabot, ci-template, scripts de hooks/policy, prompts, pins de actions e seus modelos/validadores/testes continuam no flext-infra. Arquivos custom em`.github/` também ficam. Sai apenas o que é projeção de runtime gerável pelo ai-hub (`.github/{agents,hooks,skills,
+     instructions}/\*_`, hooks `aihub-hooks/_`): flext-infra não gera/lê/valida (ex.: exclude `GITHUB_AGENT_PROJECTION_DIRS`e`tooling.yaml` `.github/hooks`"owned by ai-hub" saem) e o pacote ai-hub assume. Órfão`flext-law-loop.sh.j2`sem dono SSOT: remover junto com a cópia raiz após provar zero consumidor. Fronteira sempre por`.gitignore`gerado (operador 14/09): custom em`.github/`nunca é apagado; os caminhos de runtime geráveis externamente entram como padrões genéricos de ignore (sem nomear o gerador), e o que já está rastreado sai do índice com`git
+     rm --cached` (arquivo local preservado).
   3. Release sem GitHub: `_orchestrator_dispatch._publish_release_branch` (`gh pr`),
      `_orchestrator_publish._github_release` (`gh release`), `GH`,
      `PULL_REQUEST_MERGE_SUBJECT_RE`/`pr_title`/`PR_TITLE`, `INDEX=N` "GitHub assets";

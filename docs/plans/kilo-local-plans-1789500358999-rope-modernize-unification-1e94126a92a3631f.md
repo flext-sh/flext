@@ -291,9 +291,8 @@ dos tipos — não é o default.
   dirigida da C-ex term; transformers: pydantic*modernizer, typing_unifier,
   compatibility_alias, open_encoding, dataclass_modelizer, \_rewrite, smells/*;
   detectors: silent*failure, deferred_self_reference, consumer_import_violations; gates:
-  duplication, abstraction_boundary, namespace_validator; `\_utilities/*\_ast.py`e
-  afins; codegen/_lazy_init_planner_collision.py);`re`(transformers/pattern,
-  hardcoded_version);`tokenize` (`\_accessor_rewrite.py`).
+  duplication, abstraction_boundary, namespace_validator;
+  `\_utilities/*\_ast.py`e afins; codegen/_lazy_init_planner_collision.py);`re`(transformers/pattern, hardcoded_version);`tokenize` (`\_accessor_rewrite.py`).
 - **Cobaia ai-hub** (`dev`, WIP ~15 arquivos de outros agentes): 6 bases locais em
   `ai_hub/_models/base.py` → 482 refs / 66 arquivos (docstring declara o workaround); 37
   dataclasses mapeadas (6 → `m.FrozenModel`, 30 skips catalogados); 3 accessors soltos
@@ -562,8 +561,8 @@ na mesma wave; ordem: read-only → mutadores)
   smells/boolean_logic, mro_remover (cst), project_alias_migrator (cst), qualified_names
   (cst) → ast-grep rule (mecânico) ou fase rope (semântico); `FlextInfraSourceRewriter`
   deletado quando órfão.
-- **W-detectors/utils**: `*_ast.py`, `*_cst.py`, private*import\**, class*nesting\**,
-  silent*failure\**, deferred*self_reference**, namespace, codegen_facades,
+- **W-detectors/utils**: `*_ast.py`, `*_cst.py`, private\*import\**, class*nesting\**,
+  silent*failure\**, deferred*self_reference\*\*, namespace, codegen_facades,
   protected_edit_apply, rope_source, rope_imports (resíduo
   `_referenced_runtime_aliases`), `codegen/_lazy_init_planner_collision.py`.
 - **W-gates**: duplication, abstraction_boundary, namespace_validator →

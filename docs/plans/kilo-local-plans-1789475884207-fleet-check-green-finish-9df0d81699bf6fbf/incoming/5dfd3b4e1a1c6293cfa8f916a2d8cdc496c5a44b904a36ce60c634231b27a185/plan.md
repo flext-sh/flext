@@ -50,8 +50,9 @@ ESTADO DOS AGENTES AO ENCERRAR (worktrees dos membros, NÃO commitado):
 3. Causa raiz sempre — inclusive warnings, cosméticos e pré-existentes.
 4. Facade pattern OBRIGATÓRIO: `modulo.py` = pasta `_[modulo]/` (base.py + outros _.py);
    base.py ABSORVE TUDO das classes internas (MRO completa); PROIBIDO
-   `_parts/`/`__part_NN.py`; facade = só `from ._[modulo] import Classes`+ classe MRO
-   vazia;`make gen`gera`**init**` (execução CENTRAL, nunca nos subagentes).
+   `_parts/`/`__part_NN.py`; facade = só `from ._[modulo] import
+   Classes`+ classe MRO vazia;`make gen`gera`**init**` (execução CENTRAL, nunca nos
+   subagentes).
 5. Anti-GOD-module: Single Class Nested flext por módulo; DRY/SOLID/YAGNI/SSOT em
    settings/config/c-t-p-m-u/base/services/api/cli; protocols `p.*` + Pydantic `m.*`
    para tudo; ultra-DRY via c/t/p/m/u (REDUZIR LOC; ≤200 LOC lógicos).

@@ -20,11 +20,10 @@
 
 > Historical evidence only. This plan records an earlier execution context and its
 > command examples are not current workspace guidance. Use the root `AGENTS.md` and
-> `make help` for the active contract.
-> Continuation-order: THIS fallback-first doc → `bd prime` → plan
-> `docs/plans/2026-09-11-flext-gov-program.md` (TODO table is the Live mirror) →
-> authority chain below. Wrote-and-Stop: read this fully before ANY mutation; operator
-> approval is REQUIRED at gate (see § Pending approvals).
+> `make help` for the active contract. Continuation-order: THIS fallback-first doc →
+> `bd prime` → plan `docs/plans/2026-09-11-flext-gov-program.md` (TODO table is the Live
+> mirror) → authority chain below. Wrote-and-Stop: read this fully before ANY mutation;
+> operator approval is REQUIRED at gate (see § Pending approvals).
 
 ## 1. Identity of this program (what you are resuming)
 
@@ -156,8 +155,8 @@ code-review-graph build | update --brief | doctor | detect-changes | dead-code |
   RED (.2.1).
 - F3 gates: make check markdown gate on the SUPER lane once docs land.
 - F4: fsync + O*NOFOLLOW + EINTR loop on atomic primitives; unify with
-  `u.Cli.atomic_write*\*`(single owner, net-negative); budget telemetry (measure
-  time/memory per gate run); project_new emits`[tool.flext.project]` keys via scaffold.
+  `u.Cli.atomic_write*\*`(single owner, net-negative); budget telemetry (measure time/memory per gate run); project_new emits`[tool.flext.project]`
+  keys via scaffold.
 - F6/F7: block on post-P0; workflow gates + docs bijection (three file docs).
 
 ## 10. Docs & ADRs you must read (order)

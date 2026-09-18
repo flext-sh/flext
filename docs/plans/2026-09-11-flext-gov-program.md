@@ -27,11 +27,10 @@
 
 > Historical evidence only. This plan records an earlier execution context and its
 > command examples are not current workspace guidance. Use the root `AGENTS.md` and
-> `make help` for the active contract.
-> Operator-approved. Flext-side topic monopoly (WS-F1..F7). Epic beads: `flext-ssnc7` (+
-> children `.1`–`.7`, validations `.1.1`/`.2.1`). Sibling programs are NOT executed
-> here: agents WS-A..D and the ai-hub runtime (WS-H1..H5) belong to other agents —
-> coordinate by workstream ID.
+> `make help` for the active contract. Operator-approved. Flext-side topic monopoly
+> (WS-F1..F7). Epic beads: `flext-ssnc7` (+ children `.1`–`.7`, validations
+> `.1.1`/`.2.1`). Sibling programs are NOT executed here: agents WS-A..D and the ai-hub
+> runtime (WS-H1..H5) belong to other agents — coordinate by workstream ID.
 >
 > **v2 (2026-09-11 12:35): self-critique applied.** F1 reopened (premature closure: no
 > landing on 0.12.0-dev). Detector/budget fixed at the root (`c8a429d59`). Docs ledger

@@ -247,11 +247,11 @@ warnings/skips/empty; first exception escapes with raw traceback.
    `_ENV_FILE_*` in `_settings.py`. Owner = `_settings.py` (chain bottom); delete
    `_constants` copies; rewire consumers via `settings.*` (layer-0 consumers import the
    settings owner module).
-2. `ENV_PREFIX` ↔ `app_env_prefix()`: settings owns the derived policy; `c` keeps only a
-   true protocol invariant, if any survives critique.
+2. `ENV_PREFIX` ↔ `app_env_prefix()`: settings owns the derived policy; `c` keeps only
+   a true protocol invariant, if any survives critique.
 3. `_constants/config.py` CONFIG\__ defaults: classify via the adjudication table —
-   loader-protocol invariants stay in `c` only if no `config/_.yaml`row can vary them;
-   configurable ones move to config + typed`\_config.py`fields, loader reads`config.\*`.
+   loader-protocol invariants stay in `c` only if no
+   `config/_.yaml`row can vary them; configurable ones move to config + typed`\_config.py`fields, loader reads`config.\*`.
 4. `DEFAULT_APP_NAME`, `DEFAULT_TIMEZONE`: env-overridable candidates → settings fields;
    `c` copies deleted, consumers rewired. Zero old+new coexistence per cut.
 
