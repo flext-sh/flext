@@ -11,7 +11,6 @@
 > Historical evidence only. This plan records an earlier execution context and its
 > command examples are not current workspace guidance. Use the root `AGENTS.md` and
 > `make help` for the active contract.
-
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:executing-plans. Steps use
 > `- [ ]`.
 

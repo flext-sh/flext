@@ -220,5 +220,9 @@
     "./.venv",
     "./*/.venv"
   ],
-  "shellcheck.useRepositoryRootAsCwd": true
+  "shellcheck.useRepositoryRootAsCwd": true,
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
+  }
 }

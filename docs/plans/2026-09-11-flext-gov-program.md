@@ -28,15 +28,14 @@
 > Historical evidence only. This plan records an earlier execution context and its
 > command examples are not current workspace guidance. Use the root `AGENTS.md` and
 > `make help` for the active contract.
-
-> Aprovado pelo operador. Monopólio do tema no lado flext (WS-F1..F7). Epico beads:
-> `flext-ssnc7` (+ filhos `.1`–`.7`, validações `.1.1`/`.2.1`). Programas irmãos NÃO são
-> executados aqui: agents WS-A..D e ai-hub runtime (WS-H1..H5) pertencem a outros
-> agentes — coordenacao por workstream ID.
+> Operator-approved. Flext-side topic monopoly (WS-F1..F7). Epic beads: `flext-ssnc7` (+
+> children `.1`–`.7`, validations `.1.1`/`.2.1`). Sibling programs are NOT executed
+> here: agents WS-A..D and the ai-hub runtime (WS-H1..H5) belong to other agents —
+> coordinate by workstream ID.
 >
-> **v2 (2026-09-11 12:35): autocrítica aplicada.** F1 reaberto (fechamento prematuro:
-> nenhum pouso em 0.12.0-dev). Detector/budget corrigidos na raiz (`c8a429d59`). Ledger
-> de docs alinhado à realidade (`b25d519d51`).
+> **v2 (2026-09-11 12:35): self-critique applied.** F1 reopened (premature closure: no
+> landing on 0.12.0-dev). Detector/budget fixed at the root (`c8a429d59`). Docs ledger
+> aligned with reality (`b25d519d51`).
 
 ## Autoridade
 

@@ -474,7 +474,7 @@ through `make docs`; no documentation workflow invokes `uv` directly.
 **Config/settings are the layer-0 SSOT** consumed BY the facades (ADR-005). Access is
 single-form only:
 
-```python
+```python notest
 from <namespace> import config, settings   # e.g. from flext_core import config, settings
 config.<Namespace>.*      settings.<Namespace>.*
 ```

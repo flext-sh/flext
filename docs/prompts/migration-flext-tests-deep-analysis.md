@@ -890,10 +890,10 @@ def setup_test_environment():
    ```bash
    # Buscar classes base duplicadas
    find . -name "constants.py" -o -name "models.py" -o -name "typings.py" | grep -v "~/flext"
-   
+
    # Buscar conftest.py duplicados
    find . -name "conftest.py" | grep -v "~/flext"
-   
+
    # Analisar estrutura de testes
    find . -type d -name "tests" | xargs -I {} find {} -type f -name "*.py"
    ```

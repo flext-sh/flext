@@ -331,17 +331,18 @@ Add utility method to flext-core when:
 ```python
 # In src/flext_core/_utilities/conversion.py
 
+
 class FlextUtilitiesConversion:
     @staticmethod
     def new_method(value: m.Tests.UtilityInputModel) -> p.Result[str]:
         """New utility method."""
         try:
-            result = ...process value...
+            result = ...  # process the value
             return r[str].ok(result)
         except Exception as e:
             return r[str].fail(f"Error: {e}")
 
-    # **all**: list[str] = ["FlextUtilitiesConversion"]  # Already exported
+    # __all__: list[str] = ["FlextUtilitiesConversion"]  # Already exported
 ```
 
 ---

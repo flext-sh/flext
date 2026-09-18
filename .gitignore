@@ -86,6 +86,8 @@ mise.lock
 !codex.md
 !.markdownlint.json
 !.markdownlintignore
+!.prettierrc
+!.prettierignore
 !.shellcheckrc
 
 # Git configuration

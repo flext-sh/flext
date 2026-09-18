@@ -21,7 +21,6 @@
 > Historical evidence only. This plan records an earlier execution context and its
 > command examples are not current workspace guidance. Use the root `AGENTS.md` and
 > `make help` for the active contract.
-
 > Continuation-order: THIS fallback-first doc → `bd prime` → plan
 > `docs/plans/2026-09-11-flext-gov-program.md` (TODO table is the Live mirror) →
 > authority chain below. Wrote-and-Stop: read this fully before ANY mutation; operator
