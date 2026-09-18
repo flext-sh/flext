@@ -47,6 +47,17 @@ We ratify the **Consumer Consumption Law (R1-R6)** as the canonical standard for
 - Enforcement: `FlextInfraConsumerImportViolationsDetector` → ENFORCE-099
 - Derivation: `FlextUtilitiesFamilySurface` from published lazy contract (`__all__` + `_LAZY_IMPORTS`)
 
+### R1a — Lazy-Init Re-Export Derivation
+
+How the generated root `__init__.py` builds `pkg.__all__` (see `docs/standards/consumption-law.md` R1a for the full rule):
+
+- `ALIAS_NAMES = {c, t, m, p, u, r, d, e, h, s, x, tc}` is the complete facade-letter set.
+- Local facade files win (`constants.py→c`, `typings.py→t`, `protocols.py→p`, `models.py→m`, `utilities.py→u`).
+- Operational letters (`r, d, e, h, s, x`) are inherited from the highest upstream flext library (`flext_cli`, sourced from `flext_core`) via `_resolve_inherited_alias_source`.
+- A local redeclaration published in `__all__` overrides the inherited ancestor.
+- `Flext*` module exports come from the current directory only.
+- Determinism (flext-b3xmn): the facade-letter set derives from the statically indexed workspace source, never the ambient installed surface.
+
 ### R2 — No Duplication (Structural Scan)
 
 - Extended duplication gate covers consumer+family scope

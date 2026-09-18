@@ -3,6 +3,7 @@
 <!-- TOC START -->
 
 - [R1 — Facade-Only Import Grammar (Consumer Legality)](#r1-facade-only-import-grammar-consumer-legality)
+- [R1a — Lazy-Init Re-Export Derivation (how `pkg.__all__` is built)](#r1a-lazy-init-re-export-derivation-how-pkg__all__-is-built)
 - [R2 — No Duplication (Structural Scan)](#r2-no-duplication-structural-scan)
 - [R3 — Layer Law (Declaration vs Behavior)](#r3-layer-law-declaration-vs-behavior)
 - [R4 — Gates as Products (Budget + Primitives)](#r4-gates-as-products-budget-primitives)
@@ -47,6 +48,19 @@ where `<symbol>` ∈ `pkg.__all__` (the published lazy export contract).
 **Fix hints**: Derived by inverting the published `_LAZY_IMPORTS` map — every `Flext*` long name maps to its canonical single-letter alias (`c,t,p,m,u,r,e,x,h,d,s`).
 
 **Enforcement**: `FlextInfraConsumerImportViolationsDetector` → ENFORCE-099 (flext-infra, source: `flext_infra_detector`, violation_field: `consumer_import_violations`).
+
+### R1a — Lazy-Init Re-Export Derivation (how `pkg.__all__` is built)
+
+The published lazy contract (`__all__` + `_LAZY_IMPORTS`) is generated, never hand-written. The root `__init__.py` derives it in this fixed order:
+
+1. **Local facade letters win.** Files present in the package directory map to single-letter aliases: `constants.py→c`, `typings.py→t`, `protocols.py→p`, `models.py→m`, `utilities.py→u`, `config.py→config`, `settings.py→settings` (`NAMESPACE_LAYER_BY_FILE`).
+2. **Operational letters are inherited from the highest upstream flext library.** `r`, `d`, `e`, `h`, `s`, `x` are re-exported from the immediate upstream (`flext_cli`, which sources them from `flext_core`) via `FlextInfraCodegenLazyInitPlannerAliasesMixin._resolve_aliases` / `_resolve_inherited_alias_source`. The full canonical set is `ALIAS_NAMES = {c, t, m, p, u, r, d, e, h, s, x, tc}`.
+3. **A local redeclaration published in `__all__` overrides the ancestor.** If the namespace redeclares any letter (e.g. `c`, `d`, `e`) and publishes it in its own `__all__`, the local declaration is used instead of the inherited upstream one.
+4. **Module exports come from the current directory only.** `Flext*` long-name classes are re-exported from the current directory's modules' `__all__` — never from subdirectories, parent directories, or sibling packages.
+
+**Determinism (flext-b3xmn)**: the facade-letter set derives from the statically indexed workspace source (`_export_names_for_package`), never from the ambient installed/editable venv surface. A local venv (branch tips) and a pinned CI checkout (gitlink SHAs) must render the identical root facade set; the prior ambient union of `installed_package_exports` caused environment-dependent drift.
+
+**Canonical source**: `flext_infra.codegen._lazy_init_planner_aliases` (owner `_resolve_aliases`) + `flext_infra._constants.validate.ALIAS_NAMES` + `flext_infra._constants.namespace.NAMESPACE_LAYER_BY_FILE`.
 
 ---
 
@@ -153,6 +167,7 @@ duplication.threshold-percent = 0.0
 | Concern        | SSOT Location                                                      |
 | -------------- | ------------------------------------------------------------------ |
 | R1 Grammar     | `flext_core._utilities.family_surface.FlextUtilitiesFamilySurface` |
+| R1a Lazy-Init  | `flext_infra.codegen._lazy_init_planner_aliases` (`_resolve_aliases`) |
 | R1 Enforcement | `flext_infra.detectors.consumer_import_violations_detector`        |
 | R2 Duplication | `flext_infra.gates.duplication.FlextInfraDuplicationGate`          |
 | R3 Layer Law   | `flext_infra.gates.namespace.FlextInfraNamespaceGate`              |
@@ -200,3 +215,4 @@ duplication.threshold-percent = 0.0
 | Version | Date       | Change                         |
 | ------- | ---------- | ------------------------------ |
 | 0.12.0  | 2026-09-11 | Initial ratification (ADR-015) |
+| 0.12.1  | 2026-09-18 | Add R1a lazy-init re-export derivation rule (ALIAS_NAMES, inherited operational letters, local-`__all__` override, directory-only module exports, flext-b3xmn determinism) |

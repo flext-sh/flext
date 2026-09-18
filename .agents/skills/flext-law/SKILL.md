@@ -47,6 +47,24 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   `__init__.py` with automatic lazy public exports. Custom import routers,
   eager alternatives, compatibility aliases, and duplicate facades are
   forbidden.
+- Lazy-init re-export (generated root `__init__.py`, PEP 562): the root
+  re-exports the canonical facade letters `ALIAS_NAMES = {c, t, m, p, u, r, d,
+  e, h, s, x, tc}` (owner `flext_infra._constants.validate`) resolved in this
+  order — (1) **local facade files** present in the directory win
+  (`constants.py→c`, `typings.py→t`, `protocols.py→p`, `models.py→m`,
+  `utilities.py→u`, `config.py→config`, `settings.py→settings`); (2) the
+  **operational letters** (`r`, `d`, `e`, `h`, `s`, `x`) are inherited from the
+  highest upstream flext library (`flext_cli`, which sources them from
+  `flext_core`) through
+  `FlextInfraCodegenLazyInitPlannerAliasesMixin._resolve_aliases` /
+  `_resolve_inherited_alias_source`; (3) a **local redeclaration published in
+  `__all__` overrides the inherited ancestor**; (4) `Flext*` long-name classes
+  re-export only modules from the **current directory** — never subdirectories,
+  parents, or siblings. The facade-letter set derives from the statically
+  indexed workspace source (`_export_names_for_package`), never the ambient
+  installed/editable venv surface (the flext-b3xmn divergence fix: local venv
+  and pinned CI checkout must render identically). Consumers import only
+  `from <namespace> import <symbol>` with `<symbol> ∈ pkg.__all__` (R1).
 - Service exposure follows the canonical short alias: `base.py` imports `s`
   from `flext_core`, the package root lazily re-exports `s`, and consumers use
   `from <namespace> import s`. Never rename it to `core_s` or substitute an
