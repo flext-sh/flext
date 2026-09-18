@@ -209,6 +209,9 @@ known_first_party = [
 ]
 pep621_dev_dependency_groups = ["dev"]
 
+[tool.flext.docs]
+package_name = "flext"
+
 [tool.hatch.metadata]
 allow-direct-references = true
 
@@ -847,8 +850,3 @@ workspace = true
 
 [tool.uv.sources.flext-web]
 workspace = true
-
-[tool.flext.docs]
-package_name = "flext"
-
-[tool.flext.namespace]

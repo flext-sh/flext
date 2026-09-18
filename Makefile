@@ -98,11 +98,15 @@ override export FLEXT_PYTEST_TARGET_RAW := tests
 PROJECT_STATE_ROOT := $(abspath $(PROJECT_ROOT)/../.flext-runtime/$(notdir $(PROJECT_ROOT)))
 # Scratch never lives inside a versioned tree: the home scratch root mirrors
 # the absolute checkout path so a sandbox is never a tracked scope of any
-# enclosing repository (workspace or linked worktree).
+# enclosing repository (workspace or linked worktree). Checkouts nested in a
+# VCS directory rename that segment, so the mirror never contains one; two
+# substitution passes rename adjacent repeated segments too.
 ifeq ($(strip $(HOME)),)
 $(error HOME is required to derive the scratch root)
 endif
-PROJECT_SCRATCH_ROOT := $(HOME)/tmp/.flext-runtime$(abspath $(PROJECT_ROOT))/scratch
+PROJECT_SCRATCH_IDENTITY := $(abspath $(PROJECT_ROOT))/
+PROJECT_SCRATCH_IDENTITY := $(subst /.git/,/_git/,$(subst /.git/,/_git/,$(PROJECT_SCRATCH_IDENTITY)))
+PROJECT_SCRATCH_ROOT := $(HOME)/tmp/.flext-runtime$(patsubst %/,%,$(PROJECT_SCRATCH_IDENTITY))/scratch
 TESTMON_DATAFILE := $(PROJECT_STATE_ROOT)/testmon/.testmondata
 export TESTMON_DATAFILE
 # === SECTION: REPOSITORY_ROOT isolation (managed) ===
@@ -538,19 +542,6 @@ define RUN_PUBLIC
 	$(if $(filter post-$(1),$(CUSTOM_DECLARED_TARGETS)),+@$(SELF_MAKE) post-$(1))
 endef
 
-
-# Without script dispatch, a WHAT-specific custom handler still routes before
-# the builtin; anything else falls through to the canonical builtin target.
-define _dispatch
-	@set -eu; \
-	what="$(WHAT)"; \
-	custom="_custom_$(1)_$$what"; \
-	if [ -n "$$what" ] && $(SELF_MAKE) -n "$$custom" >/dev/null 2>&1; then \
-		$(SELF_MAKE) "$$custom"; \
-	else \
-		$(SELF_MAKE) "_builtin-$(1)"; \
-	fi
-endef
 
 
 define _run_for_all_projects
@@ -1072,9 +1063,10 @@ _builtin-self-docs: _builtin_docs_all
 _builtin_build_artifacts:
 	@$(WORKSPACE_ORCHESTRATE) --verb build $(WORKSPACE_PROJECT_ARGS)
 
-# Check validates without writing. `fix` and `fmt` own supported corrections.
-# The workspace delegates the same operation to each member; CI=Y keeps
-# make.ci.check_gates in each generated member handler.
+# Check is read-only: it validates and reports, never rewrites the tree (fix
+# and fmt own mutation). The workspace delegates the same operation to each
+# member; CI=Y keeps make.ci.check_gates in each generated
+# member handler.
 _builtin_check_all: _builtin_require_environment
 	@$(WORKSPACE_ORCHESTRATE) --verb check $(WORKSPACE_PROJECT_ARGS)
 

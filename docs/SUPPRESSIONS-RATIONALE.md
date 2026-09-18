@@ -10,10 +10,14 @@
 **Regras (AGENTS.md + decisão do repositório):**
 
 0. **Overrides** — Seguir sempre o modelo padrão de `pyproject.toml` sincronizado do repositório FLEXT por
-   `make upgrade`. Não adicionar overrides de mypy/pyright fora desse padrão. A exceção permitida é o override de UI
-   em `.vscode/settings.json` para `python.analysis.diagnosticSeverityOverrides.reportUntypedBaseClass = "none"`:
-   Pylance marca falsamente como autorreferente o padrão canônico de facade MRO `from flext_cli import m`;
-   `class FlextPluginModels(m): ...`; `m = FlextPluginModels`. Esse override não altera os gates CLI
+   `make upgrade`. Não adicionar overrides de mypy/pyright fora desse padrão. A exceção permitida é o
+   `reportUntypedBaseClass = "none"` do `[tool.pyright]` em `pyproject.toml` (projetado de
+   `config/tooling.yaml` → `tools.pyright.extended-settings`): Pylance marca falsamente como autorreferente o
+   padrão canônico de facade MRO `from flext_cli import m`; `class FlextPluginModels(m): ...`;
+   `m = FlextPluginModels`. O dono canônico dessa supressão é o `[tool.pyright]`; `.vscode/settings.json` **não**
+   pode carregar `python.analysis.typeCheckingMode` nem `python.analysis.diagnosticSeverityOverrides` porque o
+   codegen (`config/codegen.yaml` → `vscode.stripped_keys`) os remove ativamente: com um `pyproject.toml` presente,
+   Pylance emite `settingsNotOverridable` e ignora as duas chaves. Essa supressão não altera os gates CLI
    (`pyright`, `pyrefly`, `mypy`).
 
 1. **Any** — Uso de `Any` é **terminantemente proibido** sem exceções.

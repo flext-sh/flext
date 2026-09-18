@@ -170,7 +170,7 @@ FlextMroViolation)` — umbrella herdado.
     enriquecida = `"{sarif_text} — {problem}. Fix: {fix} [ENFORCE-NNN §anchor]"` via
     `c.Infra.SMELLS_RULE_TAGS` (ruleId→tag) + `from flext_core import c as c;
 c.ENFORCEMENT_RULES_TEXT[tag]` — **SSOT de textos = flext-core, infra só mapeia** (drift
-    test).
+  test).
   - **"Todos, sempre":** após parse, `warnings.warn(issue.formatted, FlextSmellViolation,
 stacklevel=2)` por finding — warnings emitidos em TODA execução do gate, independente do modo.
   - `passed = True` em `GateMode.WARN`, `not issues` em STRICT; severity WARNING→ERROR no flip.

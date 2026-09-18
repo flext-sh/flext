@@ -21,6 +21,7 @@
     "**/.doltcfg": true,
     "**/.hypothesis": true,
     "**/.git": true,
+    "**/.mimosa": true,
     "**/.mypy_cache": true,
     "**/.omo": true,
     "**/.pytest_cache": true,
@@ -61,6 +62,7 @@
     "**/.doltcfg/**": true,
     "**/.hypothesis/**": true,
     "**/.git/**": true,
+    "**/.mimosa/**": true,
     "**/.mypy_cache/**": true,
     "**/.omo/**": true,
     "**/.pylance_cache/**": true,
@@ -173,6 +175,7 @@
     "**/.doltcfg": true,
     "**/.hypothesis": true,
     "**/.git": true,
+    "**/.mimosa": true,
     "**/.mypy_cache": true,
     "**/.omo": true,
     "**/.pytest_cache": true,
@@ -213,10 +216,6 @@
     "**/.forgejo/workflows/*.yml",
     "**/.forgejo/workflows/*.yaml"
   ],
-  "python.analysis.typeCheckingMode": "strict",
-  "python.analysis.diagnosticSeverityOverrides": {
-    "reportUntypedBaseClass": "none"
-  },
   "python-envs.workspaceSearchPaths": [
     "./.venv",
     "./*/.venv"
