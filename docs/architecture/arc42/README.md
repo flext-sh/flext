@@ -21,16 +21,20 @@
 **Reviewed**: 2026-07-12 | **Scope**: arc42 index and architecture overview
 
 This directory documents the FLEXT workspace architecture following the
-[arc42 template](https://arc42.org/). Each chapter is one numbered file; this
-page is the index and the high-level overview.
+[arc42 template](https://arc42.org/). Each chapter is one numbered file; this page is
+the index and the high-level overview.
 
 ## Template Structure
 
-1. [Introduction and Goals](./01-introduction-and-goals.md) — requirements, quality goals, stakeholders
+1. [Introduction and Goals](./01-introduction-and-goals.md) — requirements, quality
+   goals, stakeholders
 2. [Constraints](./02-constraints.md) — technical and organizational constraints
-3. [Context and Scope](./03-context-and-scope.md) — system context and external interfaces
-4. [Solution Strategy](./04-solution-strategy.md) — fundamental decisions and solution approaches
-5. [Building Block View](./05-building-block-view.md) — package layering, canonical structure, facades
+3. [Context and Scope](./03-context-and-scope.md) — system context and external
+   interfaces
+4. [Solution Strategy](./04-solution-strategy.md) — fundamental decisions and solution
+   approaches
+5. [Building Block View](./05-building-block-view.md) — package layering, canonical
+   structure, facades
 6. [Runtime View](./06-runtime-view.md) — key runtime scenarios
 7. [Deployment View](./07-deployment-view.md) — infrastructure and deployment
 8. [Cross-cutting Concepts](./08-cross-cutting-concepts.md) — workspace-wide invariants
@@ -41,22 +45,22 @@ page is the index and the high-level overview.
 
 ## FLEXT Architecture Overview
 
-FLEXT is an enterprise data-integration platform built on modern
-architectural patterns:
+FLEXT is an enterprise data-integration platform built on modern architectural patterns:
 
 - **Clean Architecture** — domain at the core, frameworks and drivers at the edge
 - **Domain-Driven Design** — business logic modeled in typed domain models
 - **Railway-Oriented Programming** — `r[T]` result composition for error handling
 - **Singer/Meltano ecosystem** — taps and targets for data-integration workflows
-- **Typed monorepo** — one foundation (`flext-core → flext-cli → flext-infra`)
-  shared by every `flext-*` package
+- **Typed monorepo** — one foundation (`flext-core → flext-cli → flext-infra`) shared by
+  every `flext-*` package
 
 ## Key Architectural Principles
 
 ### 1. Clean Architecture
 
 - **Dependency Inversion**: high-level modules do not depend on low-level modules
-- **Layer Separation**: clear boundaries between presentation, application, domain, and infrastructure
+- **Layer Separation**: clear boundaries between presentation, application, domain, and
+  infrastructure
 - **Testability**: each layer can be tested independently
 
 ### 2. Domain-Driven Design
@@ -75,20 +79,22 @@ architectural patterns:
 
 - **One canonical owner per concern**: facades, config, settings, rules
 - **Enforcement as data**: static rules are validated YAML records, not code
-- **Generated surfaces**: derived docs and manifests are reproduced by the
-  engine, never edited by hand
+- **Generated surfaces**: derived docs and manifests are reproduced by the engine, never
+  edited by hand
 
 ## Quality Attributes
 
 ### Reliability
 
-- **Typed contracts**: `r[T]` on every fallible path; Pydantic validation at every boundary
+- **Typed contracts**: `r[T]` on every fallible path; Pydantic validation at every
+  boundary
 - **Continuous green**: the tree stays importable and collectable at every commit
 - **Gate discipline**: lint, typecheck, tests, and docs audit are blocking
 
 ### Security
 
-- **Authentication**: pluggable providers (JWT, OAuth2, OIDC, SAML, LDAP, …) via `flext-auth`
+- **Authentication**: pluggable providers (JWT, OAuth2, OIDC, SAML, LDAP, …) via
+  `flext-auth`
 - **Data protection**: encryption and secure communication through the provider layer
 - **Audit trail**: structured logging across all services
 

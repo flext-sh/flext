@@ -27,9 +27,9 @@
   - [Validator (python — standalone)](#validator-python-standalone)
   <!-- TOC END -->
 
-> This is the canonical gate-contract document. Workspace validation uses the
-> root dispatcher (`make check`); script-specific CLI examples
-> remain explicit where no verified Make route exists.
+> This is the canonical gate-contract document. Workspace validation uses the root
+> dispatcher (`make check`); script-specific CLI examples remain explicit where no
+> verified Make route exists.
 >
 > Canonical specification for all validator and fixer scripts in the FLEXT repository.
 >
@@ -54,13 +54,15 @@ composable by the orchestrator and safe for CI.
 | **Fixer**        | Applies automated repairs    | Dry-run (report only)          | Only with `--apply` or `--fix` |
 | **Orchestrator** | Runs multiple gates          | Delegates to validators/fixers | Never directly                 |
 
-A script is exactly ONE role. A single script must never combine validate + fix
-in its default path.
+A script is exactly ONE role. A single script must never combine validate + fix in its
+default path.
 
 Canonical implementations in this repository:
 
-- Skill validator: `flext-infra validate skill-validate --skill <name>` (canonical CLI, one invocation per skill)
-- Enforcement fixer: `flext-infra codegen fix-enforcement` (dry-run by default; mutates only with `--apply`)
+- Skill validator: `flext-infra validate skill-validate --skill <name>` (canonical CLI,
+  one invocation per skill)
+- Enforcement fixer: `flext-infra codegen fix-enforcement` (dry-run by default; mutates
+  only with `--apply`)
 
 ---
 
@@ -70,22 +72,22 @@ Canonical implementations in this repository:
 
 Required flags:
 
-| Flag | Type | Default | Description | |
-| ------------------ | ------- | ------- | ----------------------- | ----------------------------- |
-| `--root <path>` | string | `.` | Repository root to scan | |
-| `--mode baseline\  | strict` | enum | `baseline` | Enforcement level (see Modes) | |
+| Flag              | Type    | Default | Description             |                               |
+| ----------------- | ------- | ------- | ----------------------- | ----------------------------- |
+| `--root <path>`   | string  | `.`     | Repository root to scan |                               |
+| `--mode baseline\ | strict` | enum    | `baseline`              | Enforcement level (see Modes) |     |
 
 Optional flags:
 
-| Flag | Type | Default | Description | |
-| ---------------------------- | ---------- | ---------------- | ------------------------------------ | -------------------------- |
-| `--report-file <path>` | string | contract default | Override report output path | |
-| `--baseline-file <path>` | string | contract default | Override baseline path | |
-| `--update-baseline` | boolean | `false` | Write current counts as new baseline | |
-| `--baseline-strategy total\  | per_group` | enum | `total` | Baseline comparison method | |
+| Flag                        | Type       | Default          | Description                          |                            |
+| --------------------------- | ---------- | ---------------- | ------------------------------------ | -------------------------- |
+| `--report-file <path>`      | string     | contract default | Override report output path          |                            |
+| `--baseline-file <path>`    | string     | contract default | Override baseline path               |                            |
+| `--update-baseline`         | boolean    | `false`          | Write current counts as new baseline |                            |
+| `--baseline-strategy total\ | per_group` | enum             | `total`                              | Baseline comparison method |     |
 
-Validators must also accept `--root` as a positional argument (last arg fallback)
-for backward compatibility with existing callers.
+Validators must also accept `--root` as a positional argument (last arg fallback) for
+backward compatibility with existing callers.
 
 ### Fixers
 
@@ -99,17 +101,17 @@ Required flags:
 
 Optional flags:
 
-| Flag | Type | Default | Description | |
+| Flag                   | Type   | Default          | Description                 |                          |
 | ---------------------- | ------ | ---------------- | --------------------------- | ------------------------ |
-| `--mode safe\          | risky` | enum | `safe` | Fix aggressiveness level | |
-| `--report-file <path>` | string | contract default | Override report output path | |
+| `--mode safe\          | risky` | enum             | `safe`                      | Fix aggressiveness level |     |
+| `--report-file <path>` | string | contract default | Override report output path |                          |
 
 A fixer must refuse to run if neither `--dry-run` nor `--apply` is provided (exit 2).
 
 ### Environment Variables
 
-Scripts may read environment variables as alternatives to CLI flags, following
-this naming convention:
+Scripts may read environment variables as alternatives to CLI flags, following this
+naming convention:
 
 | Variable                      | Equivalent flag           | Example               |
 | ----------------------------- | ------------------------- | --------------------- |
@@ -150,8 +152,8 @@ Scripts must never exit with codes outside 0-3.
 
 ### Mode not applicable
 
-Some validators don't have baseline semantics (e.g., syntax checks that must
-always pass). These scripts:
+Some validators don't have baseline semantics (e.g., syntax checks that must always
+pass). These scripts:
 
 - May omit `--mode` from their CLI.
 - Must document this in their header comment: `# Gate-Contract: no-mode`.
@@ -185,10 +187,12 @@ Do not write validation artifacts to `.sisyphus/`.
 ## Skill Rule Contract
 
 - Skill rules are loaded only from the active `~/.agents/skills/*/rules.yml`.
-- Rule fix metadata must use flat keys only: `fix_auto`, `fix_type`, `fix_file`, `fix_script`, `fix_instruction`, `fix_description`.
+- Rule fix metadata must use flat keys only: `fix_auto`, `fix_type`, `fix_file`,
+  `fix_script`, `fix_instruction`, `fix_description`.
 - Nested `fix:` metadata in `rules.yml` is invalid.
 - If `fix_auto: true`, the fix mechanism must be executable and target files must exist.
-- Prefer `type: ast-grep` rules; use `type: custom` only when AST matching is not applicable.
+- Prefer `type: ast-grep` rules; use `type: custom` only when AST matching is not
+  applicable.
 
 ### Report JSON Structure
 
@@ -272,11 +276,12 @@ The contract validator (`flext-infra validate skill-validate --skill <name>`) ve
 2. **Shebang line** present (`#!/usr/bin/env bash` or `#!/usr/bin/env python3`).
 3. **Exit code hygiene**: bash scripts use only `exit 0`, `exit 1`, `exit 2`, `exit 3`.
 4. **No interactive prompts** in default path (unless `--interactive` gated).
-5. **Artifact naming**: any explicit report paths in scripts must target `.reports/` and follow the naming contract.
+5. **Artifact naming**: any explicit report paths in scripts must target `.reports/` and
+   follow the naming contract.
 6. **Non-empty**: scripts classified as validators/fixers have >= 20 lines of code.
 
-Scripts not classified as validators or fixers (libraries, orchestrators) are
-exempt from gate contract validation but must still have Owner-Skill markers.
+Scripts not classified as validators or fixers (libraries, orchestrators) are exempt
+from gate contract validation but must still have Owner-Skill markers.
 
 ---
 
@@ -284,15 +289,14 @@ exempt from gate contract validation but must still have Owner-Skill markers.
 
 ### Validator (python — skill-based)
 
-- `flext-infra validate skill-validate --skill flext-strict-typing` — discovers
-  rules from the active `~/.agents` provider; accepts `--mode baseline|strict`;
-  exits 0/1
-- `flext-infra validate skill-validate --skill flext-pydantic-models --mode strict`
-  — same contract
+- `flext-infra validate skill-validate --skill flext-strict-typing` — discovers rules
+  from the active `~/.agents` provider; accepts `--mode baseline|strict`; exits 0/1
+- `flext-infra validate skill-validate --skill flext-pydantic-models --mode strict` —
+  same contract
 - one invocation per skill (see the Makefile `validate` targets); the retired
   `scripts/core/skill_validate.py --all` flag form no longer exists
 
 ### Validator (python — standalone)
 
-- `flext-infra validate skill-validate --skill <name>` — validates owner and
-  artifact metadata through the canonical provider; exits 0/1
+- `flext-infra validate skill-validate --skill <name>` — validates owner and artifact
+  metadata through the canonical provider; exits 0/1

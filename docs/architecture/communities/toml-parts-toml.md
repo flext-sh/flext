@@ -113,6 +113,8 @@ No execution flows pass through this community.
 - `toml_array` (8 edge(s))
 - `flext-cli/tests/unit/test_toml_utilities.py::TestsFlextCliTomlUtilities` (8 edge(s))
 - `list` (7 edge(s))
-- `flext-infra/tests/unit/deps/test_modernizer_helpers.py::TestsFlextInfraDepsModernizerHelpers` (7 edge(s))
-- `flext-cli/tests/unit/_cases/test_toml_utilities/testsflextclitomlutilities_part_02.py::TestsFlextCliTomlUtilities` (6 edge(s))
+- `flext-infra/tests/unit/deps/test_modernizer_helpers.py::TestsFlextInfraDepsModernizerHelpers`
+  (7 edge(s))
+- `flext-cli/tests/unit/_cases/test_toml_utilities/testsflextclitomlutilities_part_02.py::TestsFlextCliTomlUtilities`
+  (6 edge(s))
 - `toml_ensure_table` (6 edge(s))

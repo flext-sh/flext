@@ -102,7 +102,8 @@ _... and 20 more members._
 ### Incoming
 
 - `that` (30 edge(s))
-- `flext-meltano/tests/unit/test_validators.py::TestsFlextMeltanoValidators` (14 edge(s))
+- `flext-meltano/tests/unit/test_validators.py::TestsFlextMeltanoValidators` (14
+  edge(s))
 - `ok` (13 edge(s))
 - `validate_plugin_config` (10 edge(s))
 - `fail` (9 edge(s))
@@ -110,7 +111,8 @@ _... and 20 more members._
 - `flext-meltano/src/flext_meltano/api.py` (4 edge(s))
 - `flext-meltano/tests/unit/test_api.py::TestsFlextMeltanoApi` (3 edge(s))
 - `create_project` (3 edge(s))
-- `flext-meltano/tests/unit/test_tap_abstractions.py::TestFlextMeltanoAbstractionsComplete` (3 edge(s))
+- `flext-meltano/tests/unit/test_tap_abstractions.py::TestFlextMeltanoAbstractionsComplete`
+  (3 edge(s))
 - `hasattr` (3 edge(s))
 - `validate_transformation_business_rules` (3 edge(s))
 - `flext-meltano/src/flext_meltano/services/meltano_plugins.py` (2 edge(s))

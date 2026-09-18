@@ -32,32 +32,31 @@
 
 ## Conflito com o checkout principal
 
-O plano cooperativo `~/flext/.kilo/plans/1789582508056-flext-infra-runtime-modernization.md`
-identificou no WIP do checkout principal:
+O plano cooperativo
+`~/flext/.kilo/plans/1789582508056-flext-infra-runtime-modernization.md` identificou no
+WIP do checkout principal:
 
 - `_lazy_analysis` criado com files filtrados;
 - `append_phase_locked()` recebendo outros dados;
 - `_validate_managed_fixed_point()` referenciando `_lazy_analysis` fora de escopo.
 
 Leitura direta confirma esse defeito em
-`~/flext/flext-infra/src/flext_infra/codegen/_conform/execute.py`.
-Porém, o mesmo defeito **não existe** em
-`rope-modernize/flext-infra@469b26b4e0`. Esse fato permanece histórico. O
-checkout atual avançou para `d83ccc616` e contém WIP em
-`_models/config.py` e `codegen/conform.py`; portanto a adjudicação deve ser
-refeita antes de absorção ou landing.
+`~/flext/flext-infra/src/flext_infra/codegen/_conform/execute.py`. Porém, o mesmo
+defeito **não existe** em `rope-modernize/flext-infra@469b26b4e0`. Esse fato permanece
+histórico. O checkout atual avançou para `d83ccc616` e contém WIP em `_models/config.py`
+e `codegen/conform.py`; portanto a adjudicação deve ser refeita antes de absorção ou
+landing.
 
 ### Resolução
 
 1. Não editar nossa lane para “corrigir” um bug que só existe no WIP paralelo.
-2. Antes de absorver a integração/WIP principal, comparar a contribuição real:
-   intenção de excluir paths lazy já owned por conform versus implementação
-   quebrada.
-3. Se a exclusão é necessária, reimplementar atomicamente no owner de
-   transaction plan, passando um único `CodegenPhaseAnalysis` filtrado ao
-   append, journal e fixed-point validation.
-4. Validar ProjectNew → conform → lazy-init pelo runtime e `make gen` x2 antes
-   de aceitar o merge.
+2. Antes de absorver a integração/WIP principal, comparar a contribuição real: intenção
+   de excluir paths lazy já owned por conform versus implementação quebrada.
+3. Se a exclusão é necessária, reimplementar atomicamente no owner de transaction plan,
+   passando um único `CodegenPhaseAnalysis` filtrado ao append, journal e fixed-point
+   validation.
+4. Validar ProjectNew → conform → lazy-init pelo runtime e `make gen` x2 antes de
+   aceitar o merge.
 
 ## Estado das fases do plano principal
 
@@ -74,8 +73,8 @@ refeita antes de absorção ou landing.
 
 ## Risco estrutural atual
 
-O CRG de `flext-infra` lista pelo menos 60 nós ≥200 linhas. Prioridades por
-tamanho não substituem causalidade de gate:
+O CRG de `flext-infra` lista pelo menos 60 nós ≥200 linhas. Prioridades por tamanho não
+substituem causalidade de gate:
 
 - `_models/config.py`: 3.343 linhas;
 - `codegen/conform.py`: 2.990;
@@ -83,5 +82,5 @@ tamanho não substituem causalidade de gate:
 - `codegen/codegen_transaction.py`: 1.022;
 - `_utilities/pyproject_conform.py`: 1.012.
 
-O primeiro slice estrutural será o owner alcançado pela primeira falha runtime
-atual, depois de centralizar `c/t/p/m/u/config/settings`.
+O primeiro slice estrutural será o owner alcançado pela primeira falha runtime atual,
+depois de centralizar `c/t/p/m/u/config/settings`.

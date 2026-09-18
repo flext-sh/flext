@@ -43,9 +43,9 @@
 
 ## Overview
 
-This document provides detailed code-level diagrams showing the implementation structure of key components in the FLEXT
-platform,
-including class diagrams, entity relationship diagrams, and sequence diagrams.
+This document provides detailed code-level diagrams showing the implementation structure
+of key components in the FLEXT platform, including class diagrams, entity relationship
+diagrams, and sequence diagrams.
 
 ## 1. r[T] Class Diagram
 

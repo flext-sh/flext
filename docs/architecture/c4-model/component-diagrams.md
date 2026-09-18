@@ -45,8 +45,8 @@
 
 ## Overview
 
-This document provides detailed component diagrams for the key containers in the FLEXT platform,
-showing how each container is composed of components and their relationships.
+This document provides detailed component diagrams for the key containers in the FLEXT
+platform, showing how each container is composed of components and their relationships.
 
 ## 1. Pipeline Runtime Service Components
 

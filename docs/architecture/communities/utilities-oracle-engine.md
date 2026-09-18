@@ -104,7 +104,8 @@ No execution flows pass through this community.
 - `that` (63 edge(s))
 - `ok` (31 edge(s))
 - `generate_query_hash` (24 edge(s))
-- `flext-db-oracle/tests/unit/test_utilities.py::TestsFlextDbOracleUtilitiesUnit` (23 edge(s))
+- `flext-db-oracle/tests/unit/test_utilities.py::TestsFlextDbOracleUtilitiesUnit` (23
+  edge(s))
 - `flext-db-oracle/tests/unit/test_client.py::TestsFlextDbOracleClient` (14 edge(s))
 - `unwrap` (11 edge(s))
 - `escape_oracle_identifier` (9 edge(s))
@@ -115,4 +116,5 @@ No execution flows pass through this community.
 - `str` (3 edge(s))
 - `fail` (3 edge(s))
 - `bool` (2 edge(s))
-- `flext-db-oracle/tests/unit/test_constants.py::TestsFlextDbOracleConstants` (2 edge(s))
+- `flext-db-oracle/tests/unit/test_constants.py::TestsFlextDbOracleConstants` (2
+  edge(s))

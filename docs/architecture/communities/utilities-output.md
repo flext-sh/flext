@@ -103,13 +103,15 @@ No execution flows pass through this community.
 
 - `that` (113 edge(s))
 - `flext-cli/tests/unit/test_output_cov.py::TestsFlextCliOutputCov` (22 edge(s))
-- `flext-cli/tests/unit/_cases/test_output_cov/testsflextclioutputcov_part_01.py::TestsFlextCliOutputCov` (18 edge(s))
+- `flext-cli/tests/unit/_cases/test_output_cov/testsflextclioutputcov_part_01.py::TestsFlextCliOutputCov`
+  (18 edge(s))
 - `str` (16 edge(s))
 - `readouterr` (12 edge(s))
 - `resolve_report_dir` (9 edge(s))
 - `flext-cli/tests/unit/test_commands_utils_cov.py::TestsFlextCliCommands` (7 edge(s))
 - `resolve_report_path` (6 edge(s))
-- `flext-infra/tests/unit/test_infra_reporting_core.py::TestsFlextInfraInfraReportingCore` (6 edge(s))
+- `flext-infra/tests/unit/test_infra_reporting_core.py::TestsFlextInfraInfraReportingCore`
+  (6 edge(s))
 - `output_resolve_message_type` (5 edge(s))
 - `output_gate_line` (4 edge(s))
 - `output_progress_line` (4 edge(s))

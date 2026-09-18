@@ -2,9 +2,9 @@
 
 ## Regra
 
-Somente a leitura atual via `direnv exec <rig> bd ...` e forge/Git decide o
-estado. A tabela abaixo impede duplicação de trabalho, mas não autoriza mutação
-com base em transcript histórico.
+Somente a leitura atual via `direnv exec <rig> bd ...` e forge/Git decide o estado. A
+tabela abaixo impede duplicação de trabalho, mas não autoriza mutação com base em
+transcript histórico.
 
 ## Beads observados
 
@@ -34,14 +34,14 @@ com base em transcript histórico.
 
 - one-writer lazy-init lane: `f08e6b7c9`.
 - merge infra de promoted-framework-lift/tip: `20893e38e` reportado.
-- super absorções/pointers: `0554632a06`, `68942bbf05`, `e096f020e9`
-  reportados na sessão.
-- âncoras do snapshot de 2026-09-16 eram super `89fc309633`, infra
-  `469b26b4e0`. Em 2026-09-17, o super continua em `89fc309633`, registra o
-  gitlink infra `96c52f1d6` e tem o checkout infra em `d83ccc616` com WIP.
+- super absorções/pointers: `0554632a06`, `68942bbf05`, `e096f020e9` reportados na
+  sessão.
+- âncoras do snapshot de 2026-09-16 eram super `89fc309633`, infra `469b26b4e0`. Em
+  2026-09-17, o super continua em `89fc309633`, registra o gitlink infra `96c52f1d6` e
+  tem o checkout infra em `d83ccc616` com WIP.
 
-Esses SHAs antigos servem para `merge-base`/contribution archaeology, não como
-base de implementação.
+Esses SHAs antigos servem para `merge-base`/contribution archaeology, não como base de
+implementação.
 
 ## Checklist de releitura no início da execução
 
@@ -49,6 +49,5 @@ base de implementação.
 2. listar PRs da lane e seus head/base/merge SHAs.
 3. provar ancestry de contribuições históricas no tip atual.
 4. comparar branches/worktrees abandonados por hunks e Beads, não por nome.
-5. atualizar o Bead principal com super/infra SHAs atuais e primeiro gate
-   reproduzido.
+5. atualizar o Bead principal com super/infra SHAs atuais e primeiro gate reproduzido.
 6. somente então fechar/superseder/retirar qualquer artefato.

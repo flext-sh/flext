@@ -112,7 +112,9 @@ No execution flows pass through this community.
 - `Path` (7 edge(s))
 - `FlextSettings` (5 edge(s))
 - `flext-core/src/flext_core/_config.py` (4 edge(s))
-- `flext-core/tests/integration/test_settings_integration.py::TestsFlextSettingsIntegration` (2 edge(s))
+- `flext-core/tests/integration/test_settings_integration.py::TestsFlextSettingsIntegration`
+  (2 edge(s))
 - `singleton_disabled` (2 edge(s))
-- `flext-core/tests/integration/settings_integration_precedence.py::TestsFlextFlextSettingsPrecedenceCase` (1 edge(s))
+- `flext-core/tests/integration/settings_integration_precedence.py::TestsFlextFlextSettingsPrecedenceCase`
+  (1 edge(s))
 - `write_text` (1 edge(s))

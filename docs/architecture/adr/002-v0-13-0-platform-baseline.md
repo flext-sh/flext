@@ -25,30 +25,35 @@ Accepted — ACCEPTED TARGET (forward baseline `0.13.0`; current line is `0.12.0
 
 ## Context
 
-The workspace has accumulated a set of architectural problems that now block coherent platform evolution.
+The workspace has accumulated a set of architectural problems that now block coherent
+platform evolution.
 
 The recurring issues are:
 
 - hybrid registries that mix handler registration and plugin storage
-- hidden DI spread across runtime helpers, containers, contexts, services, decorators, and mixins
-- public mixin sprawl where cross-cutting behavior has become a catch-all public abstraction
+- hidden DI spread across runtime helpers, containers, contexts, services, decorators,
+  and mixins
+- public mixin sprawl where cross-cutting behavior has become a catch-all public
+  abstraction
 - inconsistent naming across files, classes, tests, examples, and scripts
-- unstable documentation where old architecture narratives conflict with current and target direction
+- unstable documentation where old architecture narratives conflict with current and
+  target direction
 
-These issues already appear across `flext-core` and are amplified in downstream FLEXT packages such as `flext-ldif` ,
-`flext-auth` , `flext-api` , and `flext-cli` .
+These issues already appear across `flext-core` and are amplified in downstream FLEXT
+packages such as `flext-ldif` , `flext-auth` , `flext-api` , and `flext-cli` .
 
 ## Decision
 
-We will adopt the `0.13.0` platform baseline defined in `docs/architecture/baseline-v0.13.0.md`.
+We will adopt the `0.13.0` platform baseline defined in
+`docs/architecture/baseline-v0.13.0.md`.
 
-> **Current runtime vs. forward baseline.** The sections below describe the
-> **v0.13.0 forward baseline** (planned), not the current `0.12.0-dev` runtime.
-> Verified current state in `flext-core` (`__init__.py`): `FlextDispatcher`,
-> `FlextHandlers` (plural, not `FlextHandler`), `FlextRegistry`, and
-> `FlextMixins`/`x` are **all currently exported**. `FlextCatalog` and
-> `FlextLogger` **do not yet exist**. `x` is **not removed** — it remains
-> exported in the current line; only the forward baseline retires it.
+> **Current runtime vs. forward baseline.** The sections below describe the **v0.13.0
+> forward baseline** (planned), not the current `0.12.0-dev` runtime. Verified current
+> state in `flext-core` (`__init__.py`): `FlextDispatcher`, `FlextHandlers` (plural, not
+> `FlextHandler`), `FlextRegistry`, and `FlextMixins`/`x` are **all currently
+> exported**. `FlextCatalog` and `FlextLogger` **do not yet exist**. `x` is **not
+> removed** — it remains exported in the current line; only the forward baseline retires
+> it.
 
 ### Public Class Naming
 
@@ -58,7 +63,8 @@ We will not use:
 
 - composed architecture-heavy names such as `RuntimeKernel`
 - public nested namespaces such as `Something.DI`
-- generic umbrella names such as `Registry` when the role is actually catalog, dispatcher, or handler
+- generic umbrella names such as `Registry` when the role is actually catalog,
+  dispatcher, or handler
 
 ### Dependency Injection
 
@@ -73,14 +79,17 @@ Application code must not touch `dependency_injector` directly.
 
 ### Extension Storage
 
-We will replace the generic public registry concept with explicit typed extension storage:
+We will replace the generic public registry concept with explicit typed extension
+storage:
 
-- `FlextCatalog` replaces extension registries — **planned for 0.13.0**; does not exist in the current runtime
-- `FlextDispatcher` owns handler registration and dispatch — **currently exported** from `flext-core`
+- `FlextCatalog` replaces extension registries — **planned for 0.13.0**; does not exist
+  in the current runtime
+- `FlextDispatcher` owns handler registration and dispatch — **currently exported** from
+  `flext-core`
 - project services and facades own extension invocation
 
-`FlextRegistry` **is currently exported** from `flext-core`; it is scheduled for
-removal in the forward baseline only.
+`FlextRegistry` **is currently exported** from `flext-core`; it is scheduled for removal
+in the forward baseline only.
 
 ### Public Runtime Surface
 
@@ -93,7 +102,8 @@ We will keep a small direct runtime surface in the **forward baseline**:
 - `FlextContainer`
 - `s`
 - `FlextDispatcher`
-- `FlextHandlers` — **currently the real class name** (the ADR-002 §Context listing `FlextHandler` is the planned singular form)
+- `FlextHandlers` — **currently the real class name** (the ADR-002 §Context listing
+  `FlextHandler` is the planned singular form)
 - `FlextCatalog` — **planned for 0.13.0**; not yet implemented
 - `d`
 
@@ -109,7 +119,8 @@ We will standardize the workspace layout for:
 - scripts
 - project-local extension naming
 
-The baseline applies to FLEXT platform packages, domain packages, integrations, and future FLEXT packages.
+The baseline applies to FLEXT platform packages, domain packages, integrations, and
+future FLEXT packages.
 
 ## Consequences
 
@@ -135,7 +146,8 @@ The baseline applies to FLEXT platform packages, domain packages, integrations, 
 - Keep `x` public and try to prune it incrementally
   - rejected because the abstraction itself is the source of leakage
 - Add compatibility aliases and parallel architecture layers
-  - rejected because the workspace already suffers from duplicate narratives and duplicate entry points
+  - rejected because the workspace already suffers from duplicate narratives and
+    duplicate entry points
 
 ## Implementation Notes
 
@@ -147,7 +159,8 @@ The baseline applies to FLEXT platform packages, domain packages, integrations, 
   - taxonomy checks
   - public API checks
   - import direction checks
-- Non-FLEXT directories in the same repository are out of scope for the root portal and must be documented locally.
+- Non-FLEXT directories in the same repository are out of scope for the root portal and
+  must be documented locally.
 
 ## References
 

@@ -16,20 +16,24 @@
   - [Adendo 2 — mudanças por projeto (2026-09-11) + worktree dedicada](#adendo-2-mudancas-por-projeto-2026-09-11-worktree-dedicada)
   <!-- TOC END -->
 
-> Aprovado pelo operador (sim, tudo + campanha de dívida incluída).
-> Executor: orquestrador + esquadrão de subagentes.
-> Lei: `~/agents/AGENTS.md` + `flext-law` + `make-check` + `verification-loop`.
-> Comandos: somente Make canônico com, prefixo `MISE_VERSION=2026.9.2`.
+> Aprovado pelo operador (sim, tudo + campanha de dívida incluída). Executor:
+> orquestrador + esquadrão de subagentes. Lei: `~/agents/AGENTS.md` + `flext-law` +
+> `make-check` + `verification-loop`. Comandos: somente Make canônico com, prefixo
+> `MISE_VERSION=2026.9.2`.
 
 ## Estado na aprovação (evidências gravadas)
 
-- flext-infra: #650, #653, #661 (CI `--locked` sob CI), #669 (markdown SSOT) MERGED; lanes extintas.
+- flext-infra: #650, #653, #661 (CI `--locked` sob CI), #669 (markdown SSOT) MERGED;
+  lanes extintas.
 - Sweep onda 1: 31/31 membros regen+push; super rollup `135fd2029a`.
 - ai-hub dev: consolidação in-tree do hook client, `.kilo` extinto, wip_hier conforme,
-  #669 absorvido — tips `4493dcfce`, `0bf24fc9a`, `b88a43350`; escopos tocados 100% verdes.
+  #669 absorvido — tips `4493dcfce`, `0bf24fc9a`, `b88a43350`; escopos tocados 100%
+  verdes.
 - Cosmos-docgen: #81+#144 MERGED; demais PRs já absorvidos; branches aposentadas.
-- flext-tests: materialização standalone (Lei 13) → lock PT0S `d5ebe37` + 19 projeções `356e9e1`.
-- ~/.agents: 3 correções de lei em `feat/reval250909-adoption` `04e1de7` (push autorizado).
+- flext-tests: materialização standalone (Lei 13) → lock PT0S `d5ebe37` + 19 projeções
+  `356e9e1`.
+- ~/.agents: 3 correções de lei em `feat/reval250909-adoption` `04e1de7` (push
+  autorizado).
 
 ## Fase A — fechar flext-tests
 
@@ -40,9 +44,9 @@
 
 ## Fase B — templates + fixed point do root
 
-1. `gc mail` à lane dona do WIP de templates (`Makefile.j2` script_dispatch, `.envrc.j2`,
-   codegen.yaml) pedindo landing; se estagnar, absorver fix-forward (conflito hunk-a-hunk,
-   funcionalidade mais nova vence).
+1. `gc mail` à lane dona do WIP de templates (`Makefile.j2` script_dispatch,
+   `.envrc.j2`, codegen.yaml) pedindo landing; se estagnar, absorver fix-forward
+   (conflito hunk-a-hunk, funcionalidade mais nova vence).
 2. Root `make gen` fixed point → commit das 5 projeções do super + gitlinks → push.
 
 - **Gate:** gen exit 0 + push FF.
@@ -57,9 +61,11 @@
 
 ## Fase D — ai-hub: 3 beads de contrato (1 subagente)
 
-1. `HookClientContract` projetar `fail_closed_events` (builder `AiHub.hook_client_contract`
+1. `HookClientContract` projetar `fail_closed_events` (builder
+   `AiHub.hook_client_contract`
    - degradação visível no daemon).
-2. `foreign_groups`: reconciliar skip-vs-fail de grupos não-mapeados com evidência runtime.
+2. `foreign_groups`: reconciliar skip-vs-fail de grupos não-mapeados com evidência
+   runtime.
 3. Fixture-leaker (`mod-rule-fixtures-*` no HOME) → `tmp_path` + seam `state_path`.
 
 - **Gate:** os 3 tests verdes.
@@ -95,30 +101,66 @@ duplication 36 · mypy 13 · loc-cap 9 · tier-whitelist 1 · runtime-census 1.
 
 ## Ordem
 
-A ∥ C(depende de B) ∥ E imediato → D ∥ F(parte quando B fechar) → G.
-**Risco:** F5 (splits config.py 3390 / conform.py 2837) — reescrita real; subagente
-dedicado com validação por teste a cada extração.
+A ∥ C(depende de B) ∥ E imediato → D ∥ F(parte quando B fechar) → G. **Risco:** F5
+(splits config.py 3390 / conform.py 2837) — reescrita real; subagente dedicado com
+validação por teste a cada extração.
 
 ## Status 2026-09-11 (execução corrente)
 
-- **Fase A (flext-tests):** pendente — CI do tip não revalidado nesta sessão; teardown da materialização não executado.
+- **Fase A (flext-tests):** pendente — CI do tip não revalidado nesta sessão; teardown
+  da materialização não executado.
 - **Fase B (templates + fixed point do root):** pendente.
 - **Fase C (sweep onda 2):** pendente.
-- **Fase D (3 beads de contrato): CONCLUÍDA.** `HookClientContract` projeta `fail_closed_events` (builder + degradação); `foreign_groups` skip de resíduo não-mapeado; merge MCP substitui root owned. Extras no blast radius: rename `universal_core→governance_law`, golden claude, fixed_socket_path, credencial proxy, fachada `AiHubGovernanceBundleService`, nesting `artifact_identity`. Gate: verde (deploy 84, opencode 23, wip_hier 5, validate 58) — PR ai-hub #728.
+- **Fase D (3 beads de contrato): CONCLUÍDA.** `HookClientContract` projeta
+  `fail_closed_events` (builder + degradação); `foreign_groups` skip de resíduo
+  não-mapeado; merge MCP substitui root owned. Extras no blast radius: rename
+  `universal_core→governance_law`, golden claude, fixed_socket_path, credencial proxy,
+  fachada `AiHubGovernanceBundleService`, nesting `artifact_identity`. Gate: verde
+  (deploy 84, opencode 23, wip_hier 5, validate 58) — PR ai-hub #728.
 - **Fase E:** feita na aprovação.
-- **Fase F (dívida estática):** waves não iniciadas. Baseline reconfirmado + 2 achados de dono: (1) gate `namespace` keyeado no dirname do checkout (flext-infra); (2) suíte ai-hub falha em pares rotativos de arquivos intocados (test-purity, bead aihub-70b34de6).
-- **Fase G:** parcial. Bead `aihub-l42it` com evidência completa; merge de #728 bloqueado por: (1) `ai-hub-model-pipeline.service` não ativa — CAS 409 "model or alias facts stale relative to CLIProxy" persiste após strip de voláteis; próximo passo de causa raiz: diffar `request.snapshot.inventory` (parseado) vs `liveInventory` do CCS no ponto do publish (`model-pipeline-publisher.ts:184`); (2) decisão de política: bead-exports rastreados embutem HOME na evidência vs validador de portabilidade.
-- **Frota (extra-session):** v3 do model-pipeline adotado no dono do CCS (`MODEL_PIPELINE_SCHEMA_VERSION 2→3`, build+restart, 400 de schema eliminado); recovery do pipeline anula candidato obsoleto em CAS 409; `flext-cli` click floor revertido+publicado e bumps `structlog` não-commitados revertidos — `uv lock --check` do umbrella exit 0; regras duráveis em `~/agents/rules/flext/process-owner-strictness.md`.
+- **Fase F (dívida estática):** waves não iniciadas. Baseline reconfirmado + 2 achados
+  de dono: (1) gate `namespace` keyeado no dirname do checkout (flext-infra); (2) suíte
+  ai-hub falha em pares rotativos de arquivos intocados (test-purity, bead
+  aihub-70b34de6).
+- **Fase G:** parcial. Bead `aihub-l42it` com evidência completa; merge de #728
+  bloqueado por: (1) `ai-hub-model-pipeline.service` não ativa — CAS 409 "model or alias
+  facts stale relative to CLIProxy" persiste após strip de voláteis; próximo passo de
+  causa raiz: diffar `request.snapshot.inventory` (parseado) vs `liveInventory` do CCS
+  no ponto do publish (`model-pipeline-publisher.ts:184`); (2) decisão de política:
+  bead-exports rastreados embutem HOME na evidência vs validador de portabilidade.
+- **Frota (extra-session):** v3 do model-pipeline adotado no dono do CCS
+  (`MODEL_PIPELINE_SCHEMA_VERSION 2→3`, build+restart, 400 de schema eliminado);
+  recovery do pipeline anula candidato obsoleto em CAS 409; `flext-cli` click floor
+  revertido+publicado e bumps `structlog` não-commitados revertidos — `uv lock --check`
+  do umbrella exit 0; regras duráveis em
+  `~/agents/rules/flext/process-owner-strictness.md`.
 
 ### Adendo 2026-09-11 (cadeia de runtime do daemon, mapeada com evidência)
 
-Unidade roda ai-hub model-pipeline-daemon; runtime `0.4.8+90bca03a6cec` perdeu `deployment.json`. Reblockeado por pin policy (`agents-governance @ git+ssh://…@v0.3.0` — dono: gate de release flext-infra). Desbloqueio: resolver pin, `make release-build` + install, purge stale, daemon bootstrap g1 (CCS vazio, recovery pousado). Depois: e2e + merge #728.
+Unidade roda ai-hub model-pipeline-daemon; runtime `0.4.8+90bca03a6cec` perdeu
+`deployment.json`. Reblockeado por pin policy (`agents-governance @ git+ssh://…@v0.3.0`
+— dono: gate de release flext-infra). Desbloqueio: resolver pin, `make release-build` +
+install, purge stale, daemon bootstrap g1 (CCS vazio, recovery pousado). Depois: e2e +
+merge #728.
 
 ### Adendo 2 — mudanças por projeto (2026-09-11) + worktree dedicada
 
-- **ai-hub** (worktree dedicada `~/ai-hub-wt/model-pipeline-v3`, 634M, branch `work/wip-hier-v3`, tip `995964e49`, PR #728 mergeable, reparada no registro após prune de terceiro): Fase D completa (fail_closed_events, foreign_groups skip, mcp root-replace), rename governance_law, golden in-tree, fixture socket compartilhada, fachada validate, recovery void-on-409, locks.
-- **flext-infra** (`0.12.0-dev` `a0effff42`): `private_direct_refs` (intermediário) → **substituído** pela regra geral "source pyproject é a SSOT" (passthrough verbatim + allow-direct-references deduzido); audit honra refs fonte; validate de namespace deriva forma/nomes do código, nunca de listas (absorção do achado dirname).
-- **flext (umbrella)**: plano atualizado 2x (`ba1dc8f2a9`, `6b005bb935`+); merges no-ff absorvendo origin.
-- **ccs** (`e2dc8e6c`): `MODEL_PIPELINE_SCHEMA_VERSION 3`, strip de voláteis no CAS, diff canônico no erro 409.
+- **ai-hub** (worktree dedicada `~/ai-hub-wt/model-pipeline-v3`, 634M, branch
+  `work/wip-hier-v3`, tip `995964e49`, PR #728 mergeable, reparada no registro após
+  prune de terceiro): Fase D completa (fail_closed_events, foreign_groups skip, mcp
+  root-replace), rename governance_law, golden in-tree, fixture socket compartilhada,
+  fachada validate, recovery void-on-409, locks.
+- **flext-infra** (`0.12.0-dev` `a0effff42`): `private_direct_refs` (intermediário) →
+  **substituído** pela regra geral "source pyproject é a SSOT" (passthrough verbatim +
+  allow-direct-references deduzido); audit honra refs fonte; validate de namespace
+  deriva forma/nomes do código, nunca de listas (absorção do achado dirname).
+- **flext (umbrella)**: plano atualizado 2x (`ba1dc8f2a9`, `6b005bb935`+); merges no-ff
+  absorvendo origin.
+- **ccs** (`e2dc8e6c`): `MODEL_PIPELINE_SCHEMA_VERSION 3`, strip de voláteis no CAS,
+  diff canônico no erro 409.
 - **~/agents**: `rules/flext/process-owner-strictness.md` novo.
-- **Dívidas registradas como itens do plano (lei estendida a tests):** (a) descobrir/executar o mecanismo canônico de install do runtime (elo não documentado) e ativar o daemon; (b) exterminar `class-nesting-mappings.yml` automatizando descoberta por SSOT; (c) fixture `FIXED_HOME` absoluta → tmp_path; (d) pares rotativos de purity (Fase F).
+- **Dívidas registradas como itens do plano (lei estendida a tests):** (a)
+  descobrir/executar o mecanismo canônico de install do runtime (elo não documentado) e
+  ativar o daemon; (b) exterminar `class-nesting-mappings.yml` automatizando descoberta
+  por SSOT; (c) fixture `FIXED_HOME` absoluta → tmp_path; (d) pares rotativos de purity
+  (Fase F).

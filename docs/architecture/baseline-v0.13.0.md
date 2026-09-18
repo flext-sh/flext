@@ -54,8 +54,9 @@ It replaces vague or stale architecture narratives with direct rules for:
 - workspace taxonomy
 - migration direction
 
-If this document conflicts with older architecture overviews, project-level architecture notes, or legacy refactoring
-plans, this baseline wins until the conflicting document is migrated.
+If this document conflicts with older architecture overviews, project-level architecture
+notes, or legacy refactoring plans, this baseline wins until the conflicting document is
+migrated.
 
 ## Governed Scope
 
@@ -69,8 +70,8 @@ This baseline governs the FLEXT workspace by project group.
 | Integrations               | all `flext-tap-*`, `flext-target-*`, `flext-dbt-*` projects                                                               |
 | Shared testing and tooling | `flext-tests`, `flext-infra`, `flext-quality`                                                                             |
 
-Non-FLEXT directories that may exist in the repository are outside the root FLEXT portal and must be documented locally
-in their own trees.
+Non-FLEXT directories that may exist in the repository are outside the root FLEXT portal
+and must be documented locally in their own trees.
 
 ## Authority
 
@@ -113,7 +114,8 @@ Per-project docs are subordinate to this baseline until each project is migrated
 
 ### Namespace Composition Classes
 
-The workspace currently exports many family composition classes from underscored packages, including:
+The workspace currently exports many family composition classes from underscored
+packages, including:
 
 - `FlextConstants*`
 - `FlextModels*`
@@ -121,8 +123,9 @@ The workspace currently exports many family composition classes from underscored
 - `FlextTypes*`
 - `FlextUtilities*`
 
-These classes remain valid for namespace composition and MRO assembly inside the family facades, but they are not
-forward runtime primitives. The forward architecture baseline is defined by the root public classes in the matrix above.
+These classes remain valid for namespace composition and MRO assembly inside the family
+facades, but they are not forward runtime primitives. The forward architecture baseline
+is defined by the root public classes in the matrix above.
 
 Application and orchestration code should target:
 
@@ -389,13 +392,15 @@ The only structural aliases are:
 
 Rules:
 
-- `c/t/p/m/u` never import `api.py`, `base.py`, `services/*`, or project facades and services.
+- `c/t/p/m/u` never import `api.py`, `base.py`, `services/*`, or project facades and
+  services.
 - helpers belong in `u`
 - orchestration belongs outside the structural aliases
 - application code targets the local facade alias, not underscored internals
 
-Operational aliases are not part of the forward structural baseline. They may continue to exist during migration, but
-they must not accumulate new architectural responsibilities.
+Operational aliases are not part of the forward structural baseline. They may continue
+to exist during migration, but they must not accumulate new architectural
+responsibilities.
 
 ## Extension Baseline
 
@@ -411,7 +416,8 @@ The required split is:
 - services and facades select the extension to use
 - services and facades execute the extension pipeline
 
-This baseline intentionally removes hybrid storage classes that both keep plugins and behave like handler registries.
+This baseline intentionally removes hybrid storage classes that both keep plugins and
+behave like handler registries.
 
 ## Project Naming Baseline
 
@@ -428,9 +434,11 @@ Required examples:
 
 Rules:
 
-- ban composed architecture names such as `RuntimeKernel`, `HandlerRegistry`, or similar framework-heavy labels
+- ban composed architecture names such as `RuntimeKernel`, `HandlerRegistry`, or similar
+  framework-heavy labels
 - ban nested public namespaces such as `FlextSomething.DI`
-- prefer a single direct noun for the public class and keep architectural detail in the document, not in the class name
+- prefer a single direct noun for the public class and keep architectural detail in the
+  document, not in the class name
 
 ## Workspace Taxonomy
 
@@ -478,8 +486,8 @@ The only forward script taxonomy is:
 Rules:
 
 - scripts are automation only
-- if code is reused by `src/`, `tests/`, or `examples/`, it belongs in `u` or a governed project package, not in
-  `scripts/`
+- if code is reused by `src/`, `tests/`, or `examples/`, it belongs in `u` or a governed
+  project package, not in `scripts/`
 
 ## Expansion Rules
 
@@ -496,7 +504,8 @@ Specific rules:
 This baseline is implemented alongside:
 
 - the formal decision record in [ADR-002](./adr/002-v0-13-0-platform-baseline.md)
-- the practical migration guide in [Migration to v0.13.0](../guides/migration-to-v0.13.0.md)
+- the practical migration guide in
+  [Migration to v0.13.0](../guides/migration-to-v0.13.0.md)
 
 ## References
 

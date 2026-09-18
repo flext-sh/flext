@@ -27,15 +27,15 @@
 
 <!-- TOC END -->
 
-**Last Updated**: 2025-12-28
-**Version**: 1.0.0
+**Last Updated**: 2025-12-28 **Version**: 1.0.0
 
 ---
 
 ## Overview
 
-This guide documents the centralized utilities system in the FLEXT ecosystem. All generic utility functionality is
-centralized in `flext-core`, with domain-specific utilities added in each project library.
+This guide documents the centralized utilities system in the FLEXT ecosystem. All
+generic utility functionality is centralized in `flext-core`, with domain-specific
+utilities added in each project library.
 
 ## Utilities Architecture
 
@@ -290,7 +290,8 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 1. **Use short aliases**: `from flext_core import u`
 2. **Access via namespace**: `u.method()`, `u.method()`
 3. **Chain operations**: `u.filter(...).map(...)`
-4. **Inherit for domain extensions**: Extend `FlextUtilities` for project-specific utilities
+4. **Inherit for domain extensions**: Extend `FlextUtilities` for project-specific
+   utilities
 5. **Reuse existing methods**: Check if method already exists before adding
 6. **Use full namespaces in type hints**: `u.to_str()`
 
@@ -300,7 +301,8 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 2. **Don't re-implement**: ❌ Create your own string conversion if `u.*` exists
 3. **Don't mix namespaces**: ❌ `from flext_core import FlextUtilities`
 4. **Don't use module imports**: ❌ `from flext_core import utilities as util`
-5. **Don't create new utility classes at same level**: ❌ Extend in your project, not flext-core root
+5. **Don't create new utility classes at same level**: ❌ Extend in your project, not
+   flext-core root
 
 ---
 

@@ -104,7 +104,8 @@ _... and 27 more members._
 - `ok` (37 edge(s))
 - `that` (35 edge(s))
 - `fail` (21 edge(s))
-- `flext-cli/tests/unit/_cases/test_files_cov/testsflextclifilescov_part_01.py::TestsFlextCliFilesCov` (13 edge(s))
+- `flext-cli/tests/unit/_cases/test_files_cov/testsflextclifilescov_part_01.py::TestsFlextCliFilesCov`
+  (13 edge(s))
 - `flext-cli/tests/unit/test_files_cov.py::TestsFlextCliFilesCov` (13 edge(s))
 - `write_text` (11 edge(s))
 - `load_file_auto_dict` (7 edge(s))
@@ -114,5 +115,7 @@ _... and 27 more members._
 - `read_binary_file` (4 edge(s))
 - `read_csv_file_with_headers` (4 edge(s))
 - `read_json_file` (4 edge(s))
-- `flext-cli/tests/unit/_cases/test_files_cov/testsflextclifilescov_part_02.py::TestsFlextCliFilesCov` (4 edge(s))
-- `flext-cli/tests/unit/test_file_derived_contracts.py::TestsFileDerivedContracts` (3 edge(s))
+- `flext-cli/tests/unit/_cases/test_files_cov/testsflextclifilescov_part_02.py::TestsFlextCliFilesCov`
+  (4 edge(s))
+- `flext-cli/tests/unit/test_file_derived_contracts.py::TestsFileDerivedContracts` (3
+  edge(s))

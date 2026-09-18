@@ -1,9 +1,9 @@
 ---
 name: vault-api
 description: >-
-  Use when working with HashiCorp Vault REST API — health checks, init/unseal,
-  auth login, KV read/write, policy management, token operations. Covers
-  endpoints, auth methods, curl examples.
+  Use when working with HashiCorp Vault REST API — health checks, init/unseal, auth
+  login, KV read/write, policy management, token operations. Covers endpoints, auth
+  methods, curl examples.
 metadata:
   category: development
   source:
@@ -17,9 +17,12 @@ metadata:
 
 ## Overview
 
-Vault exposes a RESTful JSON API on port 8200. All requests include `X-Vault-Token` header for authenticated endpoints. Unauthenticated endpoints (health, init) need no token.
+Vault exposes a RESTful JSON API on port 8200. All requests include `X-Vault-Token`
+header for authenticated endpoints. Unauthenticated endpoints (health, init) need no
+token.
 
-**Base URL:** `http://vault.vault:8200` (in-cluster) or `https://vault.kubexa.tech` (external via Gateway).
+**Base URL:** `http://vault.vault:8200` (in-cluster) or `https://vault.kubexa.tech`
+(external via Gateway).
 
 ## API Endpoints
 
@@ -181,10 +184,21 @@ curl -s http://vault.vault:8200/v1/sys/seal-status | jq '.sealed, .t, .n, .progr
 
 ## Common Mistakes
 
-- **KV v2 path includes `data/` prefix.** For KV v2 engine mounted at `secret`, the read path is `/v1/secret/data/myapp`, not `/v1/secret/myapp`. The latter returns a 404.
-- **Health endpoint returns non-200 for sealed/standby.** A 503 (sealed) is NOT an error — it's expected after restart. Check `initialized` and `sealed` fields in the response body, not the HTTP status alone.
-- **Token in URL is stripped by proxies.** Use `X-Vault-Token` header, not `?token=` query param. Proxies and load balancers may log or strip query params.
-- **Kubernetes auth needs SA token with right audience.** The `vault` audience must be configured in the SA or the default token may not be accepted. Use `kubectl create token` with `--audience=vault` for explicit audience.
-- **`list` capabilities for metadata listing.** Reading `/v1/secret/metadata/` (to list keys) requires `list` capability at that path, not `read`. Without it, the response is empty.
-- **Raft join after unseal.** A sealed node cannot join the Raft cluster. Always unseal before `raft join`. The joining node will sync data from the leader.
-- **Snapshot restore requires same cluster size.** Raft snapshots can only be restored to a cluster with the same number of peers. Adding/removing nodes after restore may fail.
+- **KV v2 path includes `data/` prefix.** For KV v2 engine mounted at `secret`, the read
+  path is `/v1/secret/data/myapp`, not `/v1/secret/myapp`. The latter returns a 404.
+- **Health endpoint returns non-200 for sealed/standby.** A 503 (sealed) is NOT an error
+  — it's expected after restart. Check `initialized` and `sealed` fields in the response
+  body, not the HTTP status alone.
+- **Token in URL is stripped by proxies.** Use `X-Vault-Token` header, not `?token=`
+  query param. Proxies and load balancers may log or strip query params.
+- **Kubernetes auth needs SA token with right audience.** The `vault` audience must be
+  configured in the SA or the default token may not be accepted. Use
+  `kubectl create token` with `--audience=vault` for explicit audience.
+- **`list` capabilities for metadata listing.** Reading `/v1/secret/metadata/` (to list
+  keys) requires `list` capability at that path, not `read`. Without it, the response is
+  empty.
+- **Raft join after unseal.** A sealed node cannot join the Raft cluster. Always unseal
+  before `raft join`. The joining node will sync data from the leader.
+- **Snapshot restore requires same cluster size.** Raft snapshots can only be restored
+  to a cluster with the same number of peers. Adding/removing nodes after restore may
+  fail.

@@ -1,6 +1,7 @@
 # Flext-Infra Continuation — Coordination Addenda
 
-These addenda reconcile stopped Claude sessions, parallel Kilo lanes, Gas City Beads, plans, Git evidence, and gate reports for the main plan:
+These addenda reconcile stopped Claude sessions, parallel Kilo lanes, Gas City Beads,
+plans, Git evidence, and gate reports for the main plan:
 
 - [`../../2026-09-16-flext-infra-continuation-plan.md`](../../2026-09-16-flext-infra-continuation-plan.md)
 - [`01-session-timeline.md`](01-session-timeline.md)
@@ -11,10 +12,15 @@ These addenda reconcile stopped Claude sessions, parallel Kilo lanes, Gas City B
 ## Evidence policy
 
 - Native Claude transcript evidence is private; only classified summaries appear here.
-- Session self-reports are navigation evidence, not proof of Git ancestry, integration, or runtime.
-- A contribution is accepted only when source/diff, current tip, Bead ownership, canonical Make result, and integrated SHA agree.
-- Gas City Beads remains the tracker. These files preserve planning context and conflict decisions; they are not a second task queue.
-- Times from native Claude extraction are UTC. Kilo/Agent Manager display times are host-local (`America/Sao_Paulo`, UTC−03 on 2026-09-16) and are converted explicitly in the timeline.
+- Session self-reports are navigation evidence, not proof of Git ancestry, integration,
+  or runtime.
+- A contribution is accepted only when source/diff, current tip, Bead ownership,
+  canonical Make result, and integrated SHA agree.
+- Gas City Beads remains the tracker. These files preserve planning context and conflict
+  decisions; they are not a second task queue.
+- Times from native Claude extraction are UTC. Kilo/Agent Manager display times are
+  host-local (`America/Sao_Paulo`, UTC−03 on 2026-09-16) and are converted explicitly in
+  the timeline.
 
 ## Cooperative plan sources
 

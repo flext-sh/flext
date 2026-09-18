@@ -19,11 +19,11 @@ by directory layout.
 
 ## Purpose
 
-Code communities are discovered by running the Leiden community-detection algorithm
-over the FLEXT call/import graph (maintained by `code-review-graph`). Each community is
-a cohesive cluster of symbols that tend to be used together. The wiki pages below
-list the member symbols, their locations, and line ranges so readers can navigate
-the codebase by architectural responsibility instead of by directory layout.
+Code communities are discovered by running the Leiden community-detection algorithm over
+the FLEXT call/import graph (maintained by `code-review-graph`). Each community is a
+cohesive cluster of symbols that tend to be used together. The wiki pages below list the
+member symbols, their locations, and line ranges so readers can navigate the codebase by
+architectural responsibility instead of by directory layout.
 
 Only significant non-test communities (>= 50 nodes) are published here. Smaller clusters
 appear in the full CRG wiki at `.code-review-graph/wiki/`.
@@ -95,10 +95,9 @@ From the workspace root:
 code-review-graph update && code-review-graph wiki
 ```
 
-The CRG graph is built by `code-review-graph build` and kept in sync incrementally
-by `code-review-graph watch` (running as a background daemon). Community pages are
-emitted to `.code-review-graph/wiki/` and copied into this directory during
-`make gen`.
+The CRG graph is built by `code-review-graph build` and kept in sync incrementally by
+`code-review-graph watch` (running as a background daemon). Community pages are emitted
+to `.code-review-graph/wiki/` and copied into this directory during `make gen`.
 
 ## See Also
 

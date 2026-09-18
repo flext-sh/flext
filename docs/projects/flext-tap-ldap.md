@@ -13,10 +13,11 @@
 
 <!-- TOC END -->
 
-FLEXT Tap LDAP (`flext-tap-ldap`) is the Singer tap that extracts LDAP directory entries — and, optionally, LDIF files —
-into the FLEXT data mesh. It is built on `flext-ldap` for directory connectivity and `flext-meltano` for the Singer tap
-contract, so discovery, catalog, and sync flows follow the Singer specification while every fallible operation returns
-`r[T]`.
+FLEXT Tap LDAP (`flext-tap-ldap`) is the Singer tap that extracts LDAP directory entries
+— and, optionally, LDIF files — into the FLEXT data mesh. It is built on `flext-ldap`
+for directory connectivity and `flext-meltano` for the Singer tap contract, so
+discovery, catalog, and sync flows follow the Singer specification while every fallible
+operation returns `r[T]`.
 
 ## Status & health
 
@@ -29,9 +30,11 @@ contract, so discovery, catalog, and sync flows follow the Singer specification 
 
 - Gates run through the selector-free workspace Make contract: `make check`,
   `make test`, and `make build` from the workspace root.
-- Strict typing per workspace `AGENTS.md`: no `Any`/`object`, Pydantic 2-way models, `r[T]` on every fallible path; LDAP
-  access goes through `flext-ldap`, Singer orchestration through `flext-meltano`.
-- No coverage or test-count metrics are asserted here; the gates above produce the authoritative numbers.
+- Strict typing per workspace `AGENTS.md`: no `Any`/`object`, Pydantic 2-way models,
+  `r[T]` on every fallible path; LDAP access goes through `flext-ldap`, Singer
+  orchestration through `flext-meltano`.
+- No coverage or test-count metrics are asserted here; the gates above produce the
+  authoritative numbers.
 
 ## Quick start
 
@@ -52,47 +55,55 @@ tap = FlextTapLdapTap()
 streams = tap.discover_streams()
 ```
 
-The `settings.TapLdap.*` group carries `host`, `port`, `use_ssl`, `timeout`, and `page_size` (validated Pydantic
-fields).
+The `settings.TapLdap.*` group carries `host`, `port`, `use_ssl`, `timeout`, and
+`page_size` (validated Pydantic fields).
 
 ## Architecture & modules
 
 Source lives under `flext-tap-ldap/src/flext_tap_ldap/`:
 
-- `tap.py` — `FlextTapLdapTap`, the Singer tap (built on `FlextMeltanoAbstractions`). `discover_streams()` yields the
-  LDAP streams plus the LDIF streams; `execute()` runs the tap and returns a `p.Result`.
-- `streams.py` — `FlextTapLdapStreams`, a unified namespace of nested stream classes: `UsersStream`, `GroupsStream`,
-  `OrganizationalUnitsStream`, `SchemaStream`, over the shared `LDAPBaseStream` (paged LDAP reads through `flext-ldap`).
-- `ldif_streams.py` — `FlextTapLdapLdifStreams` with `LdifStream` and `LdifAnalysisStream` for LDIF file extraction.
+- `tap.py` — `FlextTapLdapTap`, the Singer tap (built on `FlextMeltanoAbstractions`).
+  `discover_streams()` yields the LDAP streams plus the LDIF streams; `execute()` runs
+  the tap and returns a `p.Result`.
+- `streams.py` — `FlextTapLdapStreams`, a unified namespace of nested stream classes:
+  `UsersStream`, `GroupsStream`, `OrganizationalUnitsStream`, `SchemaStream`, over the
+  shared `LDAPBaseStream` (paged LDAP reads through `flext-ldap`).
+- `ldif_streams.py` — `FlextTapLdapLdifStreams` with `LdifStream` and
+  `LdifAnalysisStream` for LDIF file extraction.
 - `client.py` — `FlextTapLdapClient`, the directory client wrapper.
-- `api.py` — `FlextTapLdapService` (a `FlextMeltanoTapServiceBase`), exported as the operational alias `tap_ldap`.
+- `api.py` — `FlextTapLdapService` (a `FlextMeltanoTapServiceBase`), exported as the
+  operational alias `tap_ldap`.
 - `config/` — execution parametrization (SSOT per ADR-005).
-- Canonical facet facades: `c`, `m`, `p`, `t`, `u`, plus `settings` (`FlextTapLdapSettings`); operational aliases `d`,
-  `e`, `h`, `r`, `s`, `x` come from the parent chain (`flext_ldap`).
+- Canonical facet facades: `c`, `m`, `p`, `t`, `u`, plus `settings`
+  (`FlextTapLdapSettings`); operational aliases `d`, `e`, `h`, `r`, `s`, `x` come from
+  the parent chain (`flext_ldap`).
 
 ### Key architectural patterns
 
-- One tap class and one service facade per package, composed by MRO over `flext-meltano` bases; streams are nested
-  inside a single streams namespace per responsibility.
-- Settings/config are the only parametrization source: `settings.TapLdap.*` is validated once at singleton construction.
-- LDAP protocol access is never direct — it flows through `flext-ldap`; Singer protocol types come from `flext-meltano`
-  models.
+- One tap class and one service facade per package, composed by MRO over `flext-meltano`
+  bases; streams are nested inside a single streams namespace per responsibility.
+- Settings/config are the only parametrization source: `settings.TapLdap.*` is validated
+  once at singleton construction.
+- LDAP protocol access is never direct — it flows through `flext-ldap`; Singer protocol
+  types come from `flext-meltano` models.
 
 ## Testing & quality
 
-- Workspace quality evidence comes from `make check`, `make test`, and
-  `make build` at the workspace root.
-- Tests assert the public surface only (tap discovery/execution, exported models, stream behavior) per the workspace
-  testing law.
+- Workspace quality evidence comes from `make check`, `make test`, and `make build` at
+  the workspace root.
+- Tests assert the public surface only (tap discovery/execution, exported models, stream
+  behavior) per the workspace testing law.
 
 ## Resources
 
 - [Project README](https://github.com/flext-sh/flext-tap-ldap/blob/0.12.0-dev/README.md)
 - Source: `flext-tap-ldap/src/flext_tap_ldap/`
 - Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
-- Related packages: `flext-ldap`, `flext-ldif`, `flext-meltano`, `flext-core`, `flext-cli`, `flext-target-ldap`
+- Related packages: `flext-ldap`, `flext-ldif`, `flext-meltano`, `flext-core`,
+  `flext-cli`, `flext-target-ldap`
 
 ## Support & issues
 
 - Issues: <https://github.com/flext-sh/flext/issues>
-- Follow the workspace `AGENTS.md` and the project README before editing code or docs so this page stays accurate.
+- Follow the workspace `AGENTS.md` and the project README before editing code or docs so
+  this page stays accurate.

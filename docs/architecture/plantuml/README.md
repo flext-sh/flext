@@ -44,12 +44,17 @@
 
 - [FLEXT PlantUML Diagrams](#flext-plantuml-diagrams)
   - [📋 Diagram Categories](#-diagram-categories)
-    - [1. [System Architecture Diagrams](./system-architecture/)](#1-system-architecture-diagramssystem-architecture)
-    - [2. [Component Diagrams](./component-diagrams/)](#2-component-diagramscomponent-diagrams)
-    - [3. [Sequence Diagrams](./sequence-diagrams/)](#3-sequence-diagramssequence-diagrams)
+    - [1.
+      [System Architecture Diagrams](./system-architecture/)](#1-system-architecture-diagramssystem-architecture)
+    - [2.
+      [Component Diagrams](./component-diagrams/)](#2-component-diagramscomponent-diagrams)
+    - [3.
+      [Sequence Diagrams](./sequence-diagrams/)](#3-sequence-diagramssequence-diagrams)
     - [4. [Class Diagrams](./class-diagrams/)](#4-class-diagramsclass-diagrams)
-    - [5. [Deployment Diagrams](./deployment-diagrams/)](#5-deployment-diagramsdeployment-diagrams)
-    - [6. [Data Flow Diagrams](./data-flow-diagrams/)](#6-data-flow-diagramsdata-flow-diagrams)
+    - [5.
+      [Deployment Diagrams](./deployment-diagrams/)](#5-deployment-diagramsdeployment-diagrams)
+    - [6.
+      [Data Flow Diagrams](./data-flow-diagrams/)](#6-data-flow-diagramsdata-flow-diagrams)
   - [🎯 FLEXT Architecture Overview](#-flext-architecture-overview)
   - [🏗 Key Architectural Components](#-key-architectural-components)
     - [Foundation Layer (flext-core)](#foundation-layer-flext-core)
@@ -79,8 +84,9 @@
     - [Updating Existing Diagrams](#updating-existing-diagrams)
     - [Review Process](#review-process)
 
-This directory contains PlantUML diagrams for the FLEXT Enterprise Data Integration Platform,
-providing detailed visual representations of the system architecture, components, and interactions.
+This directory contains PlantUML diagrams for the FLEXT Enterprise Data Integration
+Platform, providing detailed visual representations of the system architecture,
+components, and interactions.
 
 ## 📋 Diagram Categories
 
@@ -284,6 +290,4 @@ Install the PlantUML extension for VS Code:
 
 ---
 
-**Last Updated**: 2025-01-XX
-**Version**: 1.0.0
-**Maintainer**: FLEXT Architecture Team
+**Last Updated**: 2025-01-XX **Version**: 1.0.0 **Maintainer**: FLEXT Architecture Team

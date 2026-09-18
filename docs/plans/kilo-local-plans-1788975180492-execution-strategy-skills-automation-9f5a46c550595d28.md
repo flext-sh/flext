@@ -1,18 +1,17 @@
 # 0.12.0 Checkpoint — Strategy v2: Skills & Automation-Accelerated Landing
 
 Created: 2026-09-09 18:50 UTC. Supersedes the execution detail in
-`1788961161018-flext-012-checkpoint-release.md` (operator directives there
-remain law). Live state:
-`1788961161018-flext-012-checkpoint-status.md`.
+`1788961161018-flext-012-checkpoint-release.md` (operator directives there remain law).
+Live state: `1788961161018-flext-012-checkpoint-status.md`.
 
 ## Goal
 
-Land the 0.12.0 checkpoint (all PRs, integration with `origin/0.12.0-dev`,
-gates green via testmon, version/publish/verify, acceptance Beads closed)
-faster by routing recurring work through the canonical automations instead of
-hand-edits: `make mod` for mechanical rewrites, manual `code-review-graph`
-pre-pass on the release diff, `pr-sheriff` evidence for PR landing, and
-per-member subagent triage so the parent context stays lean.
+Land the 0.12.0 checkpoint (all PRs, integration with `origin/0.12.0-dev`, gates green
+via testmon, version/publish/verify, acceptance Beads closed) faster by routing
+recurring work through the canonical automations instead of hand-edits: `make mod` for
+mechanical rewrites, manual `code-review-graph` pre-pass on the release diff,
+`pr-sheriff` evidence for PR landing, and per-member subagent triage so the parent
+context stays lean.
 
 ## Learnings → Strategy Shifts (evidence from this session)
 
@@ -42,44 +41,41 @@ per-member subagent triage so the parent context stays lean.
 
 ## Execution Sequence (gate slices, checkpoint after each green slice)
 
-1. **Sync & bead updates.** Update `flext-yirgp` with the v2 strategy adoption;
-   refresh the status file gate table. Verify `flext-sc3ud` cutover guard
-   presence in the release lane (`git log --all --oneline --grep=cutover`,
-   inspect `private_import_cst.py` guard) — precondition for step 4.
-2. **fmt full fleet.** `make gen` to completion (root already green;
-   infra fixed in `0d29f44ee`). Fix any member at root cause. Commit+push.
-3. **Manual code-review-graph pass.** Build/refresh graph on the release
-   worktree; review the checkpoint diff (`origin/0.12.0-dev...HEAD`).
-   Triage findings → `make fix` targets or beads. No gate bypass.
-4. **fix + mod slice.** `make gen`; for recurring classes surfaced by
-   step 3, add/extend the codemod rule at flext-infra, propagate with member-cwd
-   `make mod`, regen, re-fmt. Commit+push.
-5. **check full fleet.** `make gen` (ruff/pyrefly/pyright/mypy/
-   duplication/WAZA). Expected long pole (~1700 known findings, bead
-   `flext-hkz4p`): triage per member via subagents; parent fixes root causes;
-   structlog/Meltano constraint conflicts go to `config/codegen.yaml` only.
-6. **test full fleet.** `make test` through testmon, all 32.
-   No historical results count.
-7. **PR landing.** `gh pr merge 665 --merge` and `666 --merge` on flext-infra;
-   decide #83/#84 (merge only after fleet `setup` green). Rerun affected gates
-   on each merged SHA; bead evidence per merge.
-8. **Integration.** `git merge --no-ff origin/0.12.0-dev` into the release
-   lane; gates on the unified tree; commit+push.
-9. **Version/publish/verify.** `make release-*` →
-   `make publication INDEX=Y` → clean-install verify from PyPI →
-   close acceptance Beads (`flext-y3qpq.5`, `.6`, `flext-1wjg1.11`, `.12`)
-   with merged SHA + digests + runtime evidence.
+1. **Sync & bead updates.** Update `flext-yirgp` with the v2 strategy adoption; refresh
+   the status file gate table. Verify `flext-sc3ud` cutover guard presence in the
+   release lane (`git log --all --oneline --grep=cutover`, inspect
+   `private_import_cst.py` guard) — precondition for step 4.
+2. **fmt full fleet.** `make gen` to completion (root already green; infra fixed in
+   `0d29f44ee`). Fix any member at root cause. Commit+push.
+3. **Manual code-review-graph pass.** Build/refresh graph on the release worktree;
+   review the checkpoint diff (`origin/0.12.0-dev...HEAD`). Triage findings → `make fix`
+   targets or beads. No gate bypass.
+4. **fix + mod slice.** `make gen`; for recurring classes surfaced by step 3, add/extend
+   the codemod rule at flext-infra, propagate with member-cwd `make mod`, regen, re-fmt.
+   Commit+push.
+5. **check full fleet.** `make gen` (ruff/pyrefly/pyright/mypy/ duplication/WAZA).
+   Expected long pole (~1700 known findings, bead `flext-hkz4p`): triage per member via
+   subagents; parent fixes root causes; structlog/Meltano constraint conflicts go to
+   `config/codegen.yaml` only.
+6. **test full fleet.** `make test` through testmon, all 32. No historical results
+   count.
+7. **PR landing.** `gh pr merge 665 --merge` and `666 --merge` on flext-infra; decide
+   #83/#84 (merge only after fleet `setup` green). Rerun affected gates on each merged
+   SHA; bead evidence per merge.
+8. **Integration.** `git merge --no-ff origin/0.12.0-dev` into the release lane; gates
+   on the unified tree; commit+push.
+9. **Version/publish/verify.** `make release-*` → `make publication INDEX=Y` →
+   clean-install verify from PyPI → close acceptance Beads (`flext-y3qpq.5`, `.6`,
+   `flext-1wjg1.11`, `.12`) with merged SHA + digests + runtime evidence.
 10. **Teardown.** Delete release worktree/branches only after remote proof.
 
 ## Doc & Tracking Updates (this plan authorizes; execute in implementation)
 
-- `.kilo/plans/1788961161018-flext-012-checkpoint-status.md`: replace the
-  Immediate TODO with sequence steps 2–10; add L1/L2 lessons to the
-  environment-warnings block.
-- Bead `flext-yirgp`: append the v2 strategy note + L2 recovery law as the
-  standing evidence template (verb, cwd, exit, decisive output, SHA).
-- No ADR: this is execution-level, not architecture. No AGENTS.md change
-  (no law delta).
+- `.kilo/plans/1788961161018-flext-012-checkpoint-status.md`: replace the Immediate TODO
+  with sequence steps 2–10; add L1/L2 lessons to the environment-warnings block.
+- Bead `flext-yirgp`: append the v2 strategy note + L2 recovery law as the standing
+  evidence template (verb, cwd, exit, decisive output, SHA).
+- No ADR: this is execution-level, not architecture. No AGENTS.md change (no law delta).
 
 ## Risks & Guards
 
@@ -93,15 +89,15 @@ per-member subagent triage so the parent context stays lean.
 
 ## Validation
 
-- Every slice ends with: canonical verb exit 0, full log path recorded,
-  scoped commit pushed (fast-forward, ancestry-proven), bead evidence appended.
-- Acceptance only after steps 5–6 green on the integrated SHA and publication
-  verified from PyPI in a clean environment.
+- Every slice ends with: canonical verb exit 0, full log path recorded, scoped commit
+  pushed (fast-forward, ancestry-proven), bead evidence appended.
+- Acceptance only after steps 5–6 green on the integrated SHA and publication verified
+  from PyPI in a clean environment.
 
 ## Decisions
 
-- Adopted: member-cwd `make mod` as the bulk-fix engine (L7/L8) with the
-  cutover-guard precondition; manual `code-review-graph` as a pre-check
-  (not a gate); pr-sheriff for PR landing.
-- Out of scope: new ADRs, AGENTS.md law changes, ai-hub/cosmos beads
-  (separate epics `flext-mbowt.*`), deleting #83/#84 without a decision.
+- Adopted: member-cwd `make mod` as the bulk-fix engine (L7/L8) with the cutover-guard
+  precondition; manual `code-review-graph` as a pre-check (not a gate); pr-sheriff for
+  PR landing.
+- Out of scope: new ADRs, AGENTS.md law changes, ai-hub/cosmos beads (separate epics
+  `flext-mbowt.*`), deleting #83/#84 without a decision.

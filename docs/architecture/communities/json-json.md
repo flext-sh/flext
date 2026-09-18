@@ -106,7 +106,8 @@ No execution flows pass through this community.
 - `json_as_mapping` (21 edge(s))
 - `json_loads` (20 edge(s))
 - `flext-cli/tests/unit/test_json_cov.py::TestsFlextCliJsonCov` (18 edge(s))
-- `flext-cli/tests/unit/_cases/test_json_cov/testsflextclijsoncov_part_01.py::TestsFlextCliJsonCov` (17 edge(s))
+- `flext-cli/tests/unit/_cases/test_json_cov/testsflextclijsoncov_part_01.py::TestsFlextCliJsonCov`
+  (17 edge(s))
 - `json_read` (16 edge(s))
 - `json_pick_bool` (15 edge(s))
 - `validate_python` (13 edge(s))

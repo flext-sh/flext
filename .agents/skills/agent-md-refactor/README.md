@@ -1,23 +1,32 @@
 # Agent MD Refactor
 
-A skill that transforms bloated agent instruction files into clean, organized documentation using progressive disclosure principles.
+A skill that transforms bloated agent instruction files into clean, organized
+documentation using progressive disclosure principles.
 
-Based on <https://x.com/mattpocockuk/status/2012906065856270504> (Matt Pocock's Prompt Idea)
+Based on <https://x.com/mattpocockuk/status/2012906065856270504> (Matt Pocock's Prompt
+Idea)
 
 ## Purpose
 
-Over time, agent instruction files like `CLAUDE.md`, `AGENTS.md`, or `COPILOT.md` tend to grow into unwieldy documents containing hundreds of lines of mixed instructions. This creates several problems:
+Over time, agent instruction files like `CLAUDE.md`, `AGENTS.md`, or `COPILOT.md` tend
+to grow into unwieldy documents containing hundreds of lines of mixed instructions. This
+creates several problems:
 
-- **Context waste**: Every task loads the entire file, even when most instructions are irrelevant
+- **Context waste**: Every task loads the entire file, even when most instructions are
+  irrelevant
 - **Maintenance burden**: Finding and updating specific instructions becomes difficult
 - **Contradictions**: Conflicting guidelines accumulate without being noticed
-- **Signal-to-noise ratio**: Important rules get buried among obvious or vague statements
+- **Signal-to-noise ratio**: Important rules get buried among obvious or vague
+  statements
 
-This skill solves these problems by applying **progressive disclosure** - keeping only essential, universal instructions in the root file while organizing everything else into focused, linked documentation files.
+This skill solves these problems by applying **progressive disclosure** - keeping only
+essential, universal instructions in the root file while organizing everything else into
+focused, linked documentation files.
 
 ## When to Use
 
-Use this skill when you need to clean up agent instruction files. Common trigger phrases include:
+Use this skill when you need to clean up agent instruction files. Common trigger phrases
+include:
 
 - "refactor my AGENTS.md" / "refactor my CLAUDE.md"
 - "split my agent instructions"
@@ -39,11 +48,15 @@ The skill follows a systematic 5-phase process:
 
 ### Phase 1: Find Contradictions
 
-Before restructuring, the skill identifies conflicting instructions that need resolution. Examples include contradictory style guidelines ("use semicolons" vs "no semicolons") or incompatible workflow instructions. Each contradiction is surfaced with a question for the user to resolve.
+Before restructuring, the skill identifies conflicting instructions that need
+resolution. Examples include contradictory style guidelines ("use semicolons" vs "no
+semicolons") or incompatible workflow instructions. Each contradiction is surfaced with
+a question for the user to resolve.
 
 ### Phase 2: Identify the Essentials
 
-Extracts only what truly belongs in the root file - information that applies to every single task:
+Extracts only what truly belongs in the root file - information that applies to every
+single task:
 
 | Keep in Root                     | Move Out                      |
 | -------------------------------- | ----------------------------- |
@@ -192,7 +205,8 @@ Brief context for when these guidelines apply.
 
 1. **Commit current state** - Have a clean git state so you can review changes
 2. **Identify your goals** - Know what problems you want to solve
-3. **Gather all instruction files** - Some projects have instructions scattered across multiple locations
+3. **Gather all instruction files** - Some projects have instructions scattered across
+   multiple locations
 
 ### During Refactoring
 
@@ -205,7 +219,8 @@ Brief context for when these guidelines apply.
 
 1. **Verify all links work** - Test that referenced files exist
 2. **Check for lost instructions** - Ensure nothing important was dropped
-3. **Test with real tasks** - Run a few typical tasks to verify the agent can find needed instructions
+3. **Test with real tasks** - Run a few typical tasks to verify the agent can find
+   needed instructions
 
 ## Anti-Patterns to Avoid
 

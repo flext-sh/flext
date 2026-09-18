@@ -107,7 +107,8 @@ No execution flows pass through this community.
 - `write_text` (11 edge(s))
 - `mk_project` (7 edge(s))
 - `restore_env` (6 edge(s))
-- `flext-infra/tests/unit/check/extended_workspace_init_tests.py::TestWorkspaceChecker` (5 edge(s))
+- `flext-infra/tests/unit/check/extended_workspace_init_tests.py::TestWorkspaceChecker`
+  (5 edge(s))
 - `len` (4 edge(s))
 - `exists` (3 edge(s))
 - `FlextInfraWorkspaceChecker` (3 edge(s))

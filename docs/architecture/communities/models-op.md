@@ -106,11 +106,13 @@ No execution flows pass through this community.
 - `unwrap` (14 edge(s))
 - `ok` (12 edge(s))
 - `len` (9 edge(s))
-- `flext-plugin/tests/unit/test_domain_ports.py::TestsFlextPluginDomainPorts` (9 edge(s))
+- `flext-plugin/tests/unit/test_domain_ports.py::TestsFlextPluginDomainPorts` (9
+  edge(s))
 - `write_text` (7 edge(s))
 - `flext-ldap/tests/unit/test_utilities.py::TestsFlextLdapUtilitiesUnit` (6 edge(s))
 - `discover_plugins` (6 edge(s))
-- `flext-target-oracle-wms/tests/examples/test_examples.py::TestsFlextTargetOracleWmsExamples` (6 edge(s))
+- `flext-target-oracle-wms/tests/examples/test_examples.py::TestsFlextTargetOracleWmsExamples`
+  (6 edge(s))
 - `glob` (6 edge(s))
 - `flext-infra/src/flext_infra/_models/deps_toml.py` (5 edge(s))
 - `attr_to_str_list` (5 edge(s))

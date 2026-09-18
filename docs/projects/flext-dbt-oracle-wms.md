@@ -13,8 +13,8 @@
 
 <!-- TOC END -->
 
-FLEXT dbt Oracle WMS is the integration package for Oracle Warehouse Management
-System (WMS) transformations with dbt. Its executable source lives in
+FLEXT dbt Oracle WMS is the integration package for Oracle Warehouse Management System
+(WMS) transformations with dbt. Its executable source lives in
 `flext-dbt-oracle-wms/src/flext_dbt_oracle_wms/`.
 
 ## Status & health
@@ -22,31 +22,32 @@ System (WMS) transformations with dbt. Its executable source lives in
 - **Version**: `0.12.0-dev` (active development cycle)
 - **Python**: 3.13+
 - **Project class**: integration
-- **Dependencies**: `flext-core`, `flext-meltano`, `flext-oracle-wms`, `click`, `pydantic`
+- **Dependencies**: `flext-core`, `flext-meltano`, `flext-oracle-wms`, `click`,
+  `pydantic`
 
 ### Quality signals
 
-- The implementation follows the workspace config/settings SSOT and
-  thin-driver architecture.
+- The implementation follows the workspace config/settings SSOT and thin-driver
+  architecture.
 - Authoritative evidence comes from the selector-free root Make gates.
 
 ## Quick start
 
 From the workspace root, run `make setup`, `make check`, and `make test`.
 
-Use the generated API reference for public imports and method signatures; this
-page deliberately avoids stale hand-maintained call examples.
+Use the generated API reference for public imports and method signatures; this page
+deliberately avoids stale hand-maintained call examples.
 
 ## Architecture & modules
 
-The package uses the canonical `c -> t -> p -> m -> u` layout, with the public
-facade in `api.py`, CLI adapter in `cli.py`, service implementations in
-`services/`, and project configuration under `config/`.
+The package uses the canonical `c -> t -> p -> m -> u` layout, with the public facade in
+`api.py`, CLI adapter in `cli.py`, service implementations in `services/`, and project
+configuration under `config/`.
 
 ### Key architectural patterns
 
-- **Thin driver**: WMS access is owned by `flext-oracle-wms`; dbt
-  orchestration is owned by `flext-meltano`.
+- **Thin driver**: WMS access is owned by `flext-oracle-wms`; dbt orchestration is owned
+  by `flext-meltano`.
 - **Typed boundary**: payloads use Pydantic models and `r[T]` result flow.
 
 ## Testing & quality
@@ -58,11 +59,11 @@ Use root `make check`, `make test`, and `make build` for project evidence.
 - [Project README](https://github.com/flext-sh/flext-dbt-oracle-wms/blob/0.12.0-dev/README.md)
 - [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law
 - [Workspace API overview](../api-reference/generated/flext-dbt-oracle-wms.md)
-- Related projects: `flext-core`, `flext-oracle-wms`, `flext-meltano`, `flext-tap-oracle-wms`, `flext-target-oracle-
-wms`, `flext-dbt-oracle`
+- Related projects: `flext-core`, `flext-oracle-wms`, `flext-meltano`,
+  `flext-tap-oracle-wms`, `flext-target-oracle- wms`, `flext-dbt-oracle`
 
 ## Support & issues
 
 - Issues and discussions: <https://github.com/flext-sh/flext> (monorepo)
-- Before contributing, read the workspace `AGENTS.md` and run the project
-  gates through the root Make dispatcher.
+- Before contributing, read the workspace `AGENTS.md` and run the project gates through
+  the root Make dispatcher.

@@ -21,7 +21,10 @@
 
 ## Acceptance states
 
-- **Accepted:** present on current integration ancestry and proven through current canonical runtime/gates.
+- **Accepted:** present on current integration ancestry and proven through current
+  canonical runtime/gates.
 - **Pending proof:** plausible work with incomplete SHA, ancestry, or gate evidence.
-- **Superseded:** intent is present through a newer owner; replay would regress architecture.
-- **Rejected:** violates current authority, uses suppression/compatibility/manual projections, or lacks a valid public behavior.
+- **Superseded:** intent is present through a newer owner; replay would regress
+  architecture.
+- **Rejected:** violates current authority, uses suppression/compatibility/manual
+  projections, or lacks a valid public behavior.

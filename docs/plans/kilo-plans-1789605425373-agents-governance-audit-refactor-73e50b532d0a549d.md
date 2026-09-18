@@ -29,15 +29,30 @@
 
 ## Critical Constraints
 
-- **`law_surface.py`** (`src/agents_governance/law_surface.py`): AGENTS.md MUST start with `<!-- AIHUB-INVIOLABLE-LAW-PRELUDE v1 -->` and end the prelude with `<!-- /AIHUB-INVIOLABLE-LAW-PRELUDE -->`, followed by exactly one blank line. This constraint is enforced by code. The prelude (lines 1-37) stays intact.
-- **`pyproject.toml`** line 45: `"AGENTS.md" = "agents_governance/_data/AGENTS.md"` — root `AGENTS.md` is canonical source packaged into the wheel. Not a generated file.
-- **No tests** directly validate AGENTS.md content, line count, or PRELUDE boundaries in the test suite.
-- **`config/governance.json`** references rules by ID path (e.g., `"coordination/operator-precedence"`) — these IDs are stable and won't change with this refactor.
-- **`agents-refactor` skill** validation criteria: root file minimal, all links work, no contradictions, no lost instructions, each linked file self-contained.
+- **`law_surface.py`** (`src/agents_governance/law_surface.py`): AGENTS.md MUST start
+  with `<!-- AIHUB-INVIOLABLE-LAW-PRELUDE v1 -->` and end the prelude with
+  `<!-- /AIHUB-INVIOLABLE-LAW-PRELUDE -->`, followed by exactly one blank line. This
+  constraint is enforced by code. The prelude (lines 1-37) stays intact.
+- **`pyproject.toml`** line 45: `"AGENTS.md" = "agents_governance/_data/AGENTS.md"` —
+  root `AGENTS.md` is canonical source packaged into the wheel. Not a generated file.
+- **No tests** directly validate AGENTS.md content, line count, or PRELUDE boundaries in
+  the test suite.
+- **`config/governance.json`** references rules by ID path (e.g.,
+  `"coordination/operator-precedence"`) — these IDs are stable and won't change with
+  this refactor.
+- **`agents-refactor` skill** validation criteria: root file minimal, all links work, no
+  contradictions, no lost instructions, each linked file self-contained.
 
-`~/agents` is the global root governance authority (Bead flext-3rld2). `AGENTS.md` is 211 lines of dense inline content, with ~95 lines of "universal law" rules that are duplicated in dedicated `rules/` files, plus project-specific operational details that should not live in a root governance file. Three files state incompatible precedence orderings. The refactor targets minimal root + linked categorized authorities.
+`~/agents` is the global root governance authority (Bead flext-3rld2). `AGENTS.md` is
+211 lines of dense inline content, with ~95 lines of "universal law" rules that are
+duplicated in dedicated `rules/` files, plus project-specific operational details that
+should not live in a root governance file. Three files state incompatible precedence
+orderings. The refactor targets minimal root + linked categorized authorities.
 
-**Scope**: ONLY `~/agents/` — `AGENTS.md`, linked rule/index files, owner manifests (`config/governance.json`, `config/workspace.yaml`, `config/skills.json`, `config/evals.json`). NOT individual skill bundles, NOT projection code, NOT project repo files (`~/flext-worktrees/rope-modernize`).
+**Scope**: ONLY `~/agents/` — `AGENTS.md`, linked rule/index files, owner manifests
+(`config/governance.json`, `config/workspace.yaml`, `config/skills.json`,
+`config/evals.json`). NOT individual skill bundles, NOT projection code, NOT project
+repo files (`~/flext-worktrees/rope-modernize`).
 
 ## Audit Findings Summary
 
@@ -47,9 +62,11 @@ Three different precedence hierarchies:
 
 - `AGENTS.md` line 17: `USER REQUEST > BEADS > ADRs > SKILLs > DOCS > default`
 - `VALIDATE_ON_CHANGE.md` line 107: `regra do operador > beads > ADRs > skills > docs`
-- `rules/coordination/operator-precedence.md` lines 20-21: `operator request > orchestration contract > canonical tracker > ADRs > skills > docs > defaults`
+- `rules/coordination/operator-precedence.md` lines 20-21:
+  `operator request > orchestration contract > canonical tracker > ADRs > skills > docs > defaults`
 
-**Resolution**: `rules/coordination/operator-precedence.md` is the dedicated authority. AGENTS.md and VALIDATE_ON_CHANGE.md shall cite it instead of restating.
+**Resolution**: `rules/coordination/operator-precedence.md` is the dedicated authority.
+AGENTS.md and VALIDATE_ON_CHANGE.md shall cite it instead of restating.
 
 ### C2 — "Never Deduce" — 4 copies (CONTRADICTION + DUPLICATION)
 
@@ -79,17 +96,22 @@ Three different precedence hierarchies:
 
 ### C6 — Additional Duplicated Laws in AGENTS.md
 
-- Green/green landing: AGENTS.md lines 172-175 ↔ `rules/coordination/green-green-landing.md`
+- Green/green landing: AGENTS.md lines 172-175 ↔
+  `rules/coordination/green-green-landing.md`
 - Strict typing: AGENTS.md lines 179-182 ↔ `rules/ethics/strict-typed-quality.md`
 - Zero residue: AGENTS.md line 138 ↔ `rules/runtime/zero-residue.md`
 - Operator precedence: AGENTS.md line 17 ↔ `rules/coordination/operator-precedence.md`
-- Fix-forward permanente: AGENTS.md lines 130-131 ↔ `rules/coordination/fix-forward-collaboration.md`
+- Fix-forward permanente: AGENTS.md lines 130-131 ↔
+  `rules/coordination/fix-forward-collaboration.md`
 
 ### C7 — Stale/Project-Specific Facts in AGENTS.md
 
-- Lines 89-101: "FLEXT project law" — FLEXT-specific architecture inline; canonical home is `rules/architecture/internal-clean-architecture.md`
-- Lines 115-126: "Operator directive (auto-injected)" — specific dates, tool names (ast-grep/make mod/crg/LSP), project specifics
-- Lines 128-183: "Operator cycle lessons" — 55 lines of operational specifics (cosmos-main, Portuguese terminology, specific dates)
+- Lines 89-101: "FLEXT project law" — FLEXT-specific architecture inline; canonical home
+  is `rules/architecture/internal-clean-architecture.md`
+- Lines 115-126: "Operator directive (auto-injected)" — specific dates, tool names
+  (ast-grep/make mod/crg/LSP), project specifics
+- Lines 128-183: "Operator cycle lessons" — 55 lines of operational specifics
+  (cosmos-main, Portuguese terminology, specific dates)
 - Lines 191-198: "Sem locks de frota" — fleet-specific lockfile prohibition
 
 ### C8 — Size
@@ -100,49 +122,69 @@ Three different precedence hierarchies:
 
 ### C9 — Link Validation
 
-All links from AGENTS.md resolve: `VALIDATE_ON_CHANGE.md` ✓, `README.md` ✓, `rules/` ✓, `skills/` ✓, `docs/adr/README.md` ✓, `rules/coordination/gascity.md` ✓, `rules/architecture/internal-clean-architecture.md` ✓, `rules/workflow/full-standards-conformance-sweep.md` ✓. No broken links found in root files.
+All links from AGENTS.md resolve: `VALIDATE_ON_CHANGE.md` ✓, `README.md` ✓, `rules/` ✓,
+`skills/` ✓, `docs/adr/README.md` ✓, `rules/coordination/gascity.md` ✓,
+`rules/architecture/internal-clean-architecture.md` ✓,
+`rules/workflow/full-standards-conformance-sweep.md` ✓. No broken links found in root
+files.
 
 ## Refactoring Strategy
 
-**Principle**: AGENTS.md becomes the minimal inviolable prelude + structured links to categorized authorities. All "universal laws" live in their canonical `rules/` files; AGENTS.md references them.
+**Principle**: AGENTS.md becomes the minimal inviolable prelude + structured links to
+categorized authorities. All "universal laws" live in their canonical `rules/` files;
+AGENTS.md references them.
 
 ## File Changes
 
-**Hard constraint**: Lines 1-37 (prelude) + exactly one blank line must be preserved. `law_surface.py` validates this programmatically. Content after the blank line is the refactored section. Target final file: ~80 lines total (prelude 37 + essential 40 + links 10-15).
+**Hard constraint**: Lines 1-37 (prelude) + exactly one blank line must be preserved.
+`law_surface.py` validates this programmatically. Content after the blank line is the
+refactored section. Target final file: ~80 lines total (prelude 37 + essential 40 +
+links 10-15).
 
 ### 1. `AGENTS.md` — Major rewrite (minimal root)
 
 **Keep (preserved material rules):**
 
 - Lines 1-37: `AIHUB-INVIOLABLE-LAW-PRELUDE` — core universal law, stays intact
-- Lines 39-62: Package identity, public contract, development guidance — condense, link expanded detail
+- Lines 39-62: Package identity, public contract, development guidance — condense, link
+  expanded detail
 - Lines 64-71: Repository development — condense to 3-4 lines with link to `rules/`
 - Lines 103-111: Lifecycle — condense to 3-4 lines with links
 
 **Remove inline, replace with links:**
 
-- Lines 87-101 "FLEXT project law" → link to `rules/architecture/internal-clean-architecture.md` (already has full canonical text)
-- Lines 113-126 "Operator directive" → link to `VALIDATE_ON_CHANGE.md` + `rules/coordination/operator-precedence.md`
+- Lines 87-101 "FLEXT project law" → link to
+  `rules/architecture/internal-clean-architecture.md` (already has full canonical text)
+- Lines 113-126 "Operator directive" → link to `VALIDATE_ON_CHANGE.md` +
+  `rules/coordination/operator-precedence.md`
 - Lines 128-183 "Operator cycle lessons" → link to categorized rules (see mapping below)
 - Line 189 "Full-standards-conformance-sweep" reference → already correct, keep
 
 **Add:** Rule-to-category mapping section with links organized by domain.
 
-**Precedence fix**: Replace inline precedence statement (line 17) with citation: "Authority order per `rules/coordination/operator-precedence.md`."
+**Precedence fix**: Replace inline precedence statement (line 17) with citation:
+"Authority order per `rules/coordination/operator-precedence.md`."
 
 ### 2. `VALIDATE_ON_CHANGE.md` — Preface + link to canonical rule
 
-- Keep Rule 1-5 content (it's the canonical validate-on-change for this document's audience)
-- Replace line 107 standalone precedence statement with: "Precedence per `rules/coordination/operator-precedence.md`."
-- Remove duplication with `rules/coordination/validate-on-change.md` by noting it as the canonical English version and keeping this as the operator-mandate version
+- Keep Rule 1-5 content (it's the canonical validate-on-change for this document's
+  audience)
+- Replace line 107 standalone precedence statement with: "Precedence per
+  `rules/coordination/operator-precedence.md`."
+- Remove duplication with `rules/coordination/validate-on-change.md` by noting it as the
+  canonical English version and keeping this as the operator-mandate version
 
 ### 3. `rules/coordination/operator-precedence.md` — Add cross-reference
 
-- Already the canonical precedence authority. No content change needed, but ensure AGENTS.md and VALIDATE_ON_CHANGE.md cite it.
+- Already the canonical precedence authority. No content change needed, but ensure
+  AGENTS.md and VALIDATE_ON_CHANGE.md cite it.
 
 ### 4. New: `rules/README.md` — Category index (owner manifest for progressive disclosure)
 
-Create an index that maps every rule category to its files and summarizes scope. This serves as the "owner manifest that directly structures progressive disclosure" — it tells agents which category owns which domain, enables targeted loading, and prevents inline duplication.
+Create an index that maps every rule category to its files and summarizes scope. This
+serves as the "owner manifest that directly structures progressive disclosure" — it
+tells agents which category owns which domain, enables targeted loading, and prevents
+inline duplication.
 
 Structure:
 
@@ -166,11 +208,13 @@ By category:
 
 ### 5. No changes to: `config/governance.json`, `config/workspace.yaml`, `config/skills.json`, `config/evals.json`
 
-These are owner manifests. They reference rule IDs that remain valid. No stale project-specific facts to remove.
+These are owner manifests. They reference rule IDs that remain valid. No stale
+project-specific facts to remove.
 
 ### 6. No changes to individual skill bundles, rule files, or command files
 
-The refactoring only touches root governance architecture: `AGENTS.md`, `VALIDATE_ON_CHANGE.md` (operator mandate document), and the new `rules/README.md`.
+The refactoring only touches root governance architecture: `AGENTS.md`,
+`VALIDATE_ON_CHANGE.md` (operator mandate document), and the new `rules/README.md`.
 
 ## Content Mapping: AGENTS.md Inline Rules → Canonical Rule Files
 
@@ -200,19 +244,31 @@ The refactoring only touches root governance architecture: `AGENTS.md`, `VALIDAT
 
 ## Validation
 
-1. **PRELUDE constraint**: Run `python -c "from src.agents_governance.law_surface import LawSurface; LawSurface.load(Path('~/agents'))"` — must succeed without ValueError. Pre-draft, post-draft, and final validation.
-2. **Link validation**: Every markdown link in rewritten AGENTS.md resolves to an existing file
-3. **No data loss**: Every rule cited from AGENTS.md exists in its canonical `rules/` target — verify by reading each target file
-4. **Precedence consistency**: Search all `.md` files in `rules/` and root for "precedence" / "Precedência" — confirm only `rules/coordination/operator-precedence.md` states the hierarchy; others cite it
-5. **No duplication**: Grep for "NUNCA.\*deduzir" across `AGENTS.md` and `VALIDATE_ON_CHANGE.md` — should appear ≤1 time each after refactor
+1. **PRELUDE constraint**: Run
+   `python -c "from src.agents_governance.law_surface import LawSurface; LawSurface.load(Path('~/agents'))"`
+   — must succeed without ValueError. Pre-draft, post-draft, and final validation.
+2. **Link validation**: Every markdown link in rewritten AGENTS.md resolves to an
+   existing file
+3. **No data loss**: Every rule cited from AGENTS.md exists in its canonical `rules/`
+   target — verify by reading each target file
+4. **Precedence consistency**: Search all `.md` files in `rules/` and root for
+   "precedence" / "Precedência" — confirm only
+   `rules/coordination/operator-precedence.md` states the hierarchy; others cite it
+5. **No duplication**: Grep for "NUNCA.\*deduzir" across `AGENTS.md` and
+   `VALIDATE_ON_CHANGE.md` — should appear ≤1 time each after refactor
 6. **File size**: Final `AGENTS.md` ~80 lines (prelude 37 + essential brief + links)
-7. **Config manifests**: Verify `config/governance.json` bootstrap rules still resolve to existing files: `rtk python -c "import json; d=json.load(open('config/governance.json')); [print(x) for x in d['delivery']['guarantees']]"`
+7. **Config manifests**: Verify `config/governance.json` bootstrap rules still resolve
+   to existing files:
+   `rtk python -c "import json; d=json.load(open('config/governance.json')); [print(x) for x in d['delivery']['guarantees']]"`
 8. **Rule README**: Verify `rules/README.md` index covers all `rules/*/*.md` files
-9. **Cross-link validation**: Verify all `rules/*/*.md` "See also" and "Compose with" references resolve to existing files
+9. **Cross-link validation**: Verify all `rules/*/*.md` "See also" and "Compose with"
+   references resolve to existing files
 
 ## Risk Mitigation
 
-- Every removal from AGENTS.md is backed by an equivalent canonical rule file that already exists
+- Every removal from AGENTS.md is backed by an equivalent canonical rule file that
+  already exists
 - No new rule content is created — only relocation and linking
-- `VALIDATE_ON_CHANGE.md` retains its full operator mandate text (it is the operator's document); only its precedence line changes
+- `VALIDATE_ON_CHANGE.md` retains its full operator mandate text (it is the operator's
+  document); only its precedence line changes
 - `config/governance.json` references are by rule ID path; these paths don't change

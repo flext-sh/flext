@@ -13,8 +13,8 @@
 
 ## Purpose
 
-This file maps each change to its canonical owner. It does not restate
-engineering law or skill procedures.
+This file maps each change to its canonical owner. It does not restate engineering law
+or skill procedures.
 
 ## Authority
 
@@ -27,9 +27,8 @@ Apply the newest applicable source in this order:
 5. In-scope ADR in [`architecture/adr/`](architecture/adr/README.md).
 6. Supporting documentation.
 
-When a higher source changes reality, update the affected lower sources in the
-same change. Ask before acting only when the conflict cannot be resolved from
-this order.
+When a higher source changes reality, update the affected lower sources in the same
+change. Ask before acting only when the conflict cannot be resolved from this order.
 
 ## Owner Routing
 
@@ -50,51 +49,52 @@ this order.
 | CRG runtime, database, watcher, and graph services    | ai-hub validated config and runtime                                                                                                                      | ai-hub public health and routing evidence                               |
 | Structural codemods                                   | `flext-infra` ast-grep/Rope/LSP pipeline                                                                                                                 | preview, exact cardinality, apply, idempotence                          |
 
-The owning declaration, validated config, or fundamental rule is the source of
-truth. Tests and checks validate it; they never define the contract, catalog,
-or routing decision.
+The owning declaration, validated config, or fundamental rule is the source of truth.
+Tests and checks validate it; they never define the contract, catalog, or routing
+decision.
 
 ## Execution Contract
 
-- Use the workspace Beads database for the root and every member project.
-  Only an independent project owns a separate tracker.
-- Claim and record disjoint path ownership before writes. Append evidence after
-  every state-changing step.
+- Use the workspace Beads database for the root and every member project. Only an
+  independent project owns a separate tracker.
+- Claim and record disjoint path ownership before writes. Append evidence after every
+  state-changing step.
 - Inspect the real owner and all affected consumers before changing behavior.
-- Update docs, skills, agents, and provider metadata when reality changes; when
-  it does not, verify the impacted surfaces are current.
-- Keep one owner per fact. Delete replaced prose, aliases, wrappers, fallbacks,
-  and parallel paths in the same change.
+- Update docs, skills, agents, and provider metadata when reality changes; when it does
+  not, verify the impacted surfaces are current.
+- Keep one owner per fact. Delete replaced prose, aliases, wrappers, fallbacks, and
+  parallel paths in the same change.
 - Land only after narrow gates and the affected native gate pass. Use explicit
   pathspecs, a scoped commit, a fast-forward push, and Bead evidence.
 
-Static enforcement and structural codemods are separate responsibilities.
-Declarative enforcement data owns policy; the referenced codemod provider owns
-safe, deterministic source transformations. Neither duplicates the other.
-Public ai-hub runtime services may enrich discovery when available, but FLEXT
-never imports them as libraries and their absence does not invalidate its local
-deterministic path. A selected, available integration still fails causally.
+Static enforcement and structural codemods are separate responsibilities. Declarative
+enforcement data owns policy; the referenced codemod provider owns safe, deterministic
+source transformations. Neither duplicates the other. Public ai-hub runtime services may
+enrich discovery when available, but FLEXT never imports them as libraries and their
+absence does not invalidate its local deterministic path. A selected, available
+integration still fails causally.
 
 ## Universal test contract (P0)
 
-Tests must validate any change to config and settings by construction. They are
-never allowed to hardcode the values that happen to exist today.
+Tests must validate any change to config and settings by construction. They are never
+allowed to hardcode the values that happen to exist today.
 
-- The canonical owner of a fact is `config/*.yaml` and `settings`; tests and
-  golden files only validate that owner.
-- Expected config-owned values must be read from the same typed SSOT production
-  reads, or proven through a generator/consumer round-trip.
-- When config or settings change, tests must adapt automatically or fail with a
-  clear message pointing back to the config source.
-- A test that requires a rewrite to accommodate a legitimate config change is a
-  defect in the test, not a reason to freeze the configuration.
+- The canonical owner of a fact is `config/*.yaml` and `settings`; tests and golden
+  files only validate that owner.
+- Expected config-owned values must be read from the same typed SSOT production reads,
+  or proven through a generator/consumer round-trip.
+- When config or settings change, tests must adapt automatically or fail with a clear
+  message pointing back to the config source.
+- A test that requires a rewrite to accommodate a legitimate config change is a defect
+  in the test, not a reason to freeze the configuration.
 - This rule applies to all test tiers, markdown examples, and docstring snippets
   validated by the pytest plugin.
 - Literal expectations are reserved for immutable external protocol contracts.
 
 ## Baseline Commands
 
-Use the standard workspace commands; mutation is the verb's declared default operation (selector-free):
+Use the standard workspace commands; mutation is the verb's declared default operation
+(selector-free):
 
 ```bash
 make help
@@ -104,12 +104,13 @@ make test
 ```
 
 `make help` owns the current inventory; the complete lifecycle is documented in
-[Make Commands](guides/make-commands.md) without freezing a target count here.
-All FLEXT validation uses the root Make dispatcher and every Python test run
-retains the canonical testmon cache; never run bare `ruff`,
-`pyrefly`, `pyright`, `mypy`, or `pytest` commands.
+[Make Commands](guides/make-commands.md) without freezing a target count here. All FLEXT
+validation uses the root Make dispatcher and every Python test run retains the canonical
+testmon cache; never run bare `ruff`, `pyrefly`, `pyright`, `mypy`, or `pytest`
+commands.
 
-Record every red or green result with its exit code and decisive output in the
-active workspace Bead.
+Record every red or green result with its exit code and decisive output in the active
+workspace Bead.
 
-For the worker lane contract, see [`ways-of-working/worker-lane-contract.md`](ways-of-working/worker-lane-contract.md).
+For the worker lane contract, see
+[`ways-of-working/worker-lane-contract.md`](ways-of-working/worker-lane-contract.md).

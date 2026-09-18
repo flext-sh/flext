@@ -20,17 +20,16 @@
 
 <!-- TOC END -->
 
-This document is the consultable coordination reference for the whole Cosmos
-ecosystem from the FLEXT workspace. It is governed by
-[ADR-009](adr/009-ecosystem-coordination-and-library-evaluation.md) and must
-stay consistent with each owner-local ADR. It coordinates internal FLEXT
-packages and the independent external applications and platforms; it never makes
-an external repository a FLEXT dependency.
+This document is the consultable coordination reference for the whole Cosmos ecosystem
+from the FLEXT workspace. It is governed by
+[ADR-009](adr/009-ecosystem-coordination-and-library-evaluation.md) and must stay
+consistent with each owner-local ADR. It coordinates internal FLEXT packages and the
+independent external applications and platforms; it never makes an external repository a
+FLEXT dependency.
 
-**Target line:** FLEXT `0.20.0-dev` (early development and planning). This is a
-forward planning contract for `0.20.0-dev`; it does not retro-fit the
-`0.12.0-dev` release line. Every coordination Bead is labelled
-`branch:0.20.0-dev`.
+**Target line:** FLEXT `0.20.0-dev` (early development and planning). This is a forward
+planning contract for `0.20.0-dev`; it does not retro-fit the `0.12.0-dev` release line.
+Every coordination Bead is labelled `branch:0.20.0-dev`.
 
 ## Projects and owners
 
@@ -58,8 +57,8 @@ dcdoc       -X-> flext_infra   (runtime/source import)
 dcdoc -X-> DataOP -X-> DcBackup   (no lateral application imports)
 ```
 
-Applications cooperate only through versioned files, manifests, APIs, events,
-and an external orchestrator.
+Applications cooperate only through versioned files, manifests, APIs, events, and an
+external orchestrator.
 
 ## End-to-end coordination flow
 
@@ -78,41 +77,39 @@ Airflow / operator / CI
 
 ### `dcdoc` (cosmos-docgen)
 
-Owns `dcdoc.config.yaml`, documents/decks/charts/diagrams, brand, formulas,
-manifests, publication authorization, and Pandoc/Chromium/Marp orchestration.
-Produces artifacts and a neutral manifest. Invokes `flext-infra` externally for
-docs. Does not import `flext-infra`, DataOP, or DcBackup.
+Owns `dcdoc.config.yaml`, documents/decks/charts/diagrams, brand, formulas, manifests,
+publication authorization, and Pandoc/Chromium/Marp orchestration. Produces artifacts
+and a neutral manifest. Invokes `flext-infra` externally for docs. Does not import
+`flext-infra`, DataOP, or DcBackup.
 
 ### DataOP
 
-Owns dataset scan, `manifest.json`/`manifest.parquet`, provenance, source
-registry, ClickHouse/Iceberg adapters, and catalog/dedup/archive/report.
-Full-scale post-processing is still open work. Publishes datasets, manifests,
-and evidence as neutral outputs; is never imported by other projects.
+Owns dataset scan, `manifest.json`/`manifest.parquet`, provenance, source registry,
+ClickHouse/Iceberg adapters, and catalog/dedup/archive/report. Full-scale
+post-processing is still open work. Publishes datasets, manifests, and evidence as
+neutral outputs; is never imported by other projects.
 
 ### DcBackup
 
 Owns backup, snapshot, retention, restore, and recovery drills. Currently
-planning-first/fake-safe; live checksummed snapshot and verified restore are
-future work. Consumes neutral artifact inputs from `dcdoc`/DataOP; imports
-neither.
+planning-first/fake-safe; live checksummed snapshot and verified restore are future
+work. Consumes neutral artifact inputs from `dcdoc`/DataOP; imports neither.
 
 ### `flext-cli`
 
-Owns generic CLI/process/file/hash primitives and typed DOCX/PPTX/XLSX
-plan-to-byte boundaries. No application vocabulary or reverse dependency.
+Owns generic CLI/process/file/hash primitives and typed DOCX/PPTX/XLSX plan-to-byte
+boundaries. No application vocabulary or reverse dependency.
 
 ### `flext-infra`
 
-Owns repository tooling: generated Markdown, MkDocs config, strict build,
-validation, audit, publication. Needs a static non-FLEXT consumer mode
-(`mro-ib6t.1`) before Cosmos adoption, because current API pages use live
-`mkdocstrings`.
+Owns repository tooling: generated Markdown, MkDocs config, strict build, validation,
+audit, publication. Needs a static non-FLEXT consumer mode (`mro-ib6t.1`) before Cosmos
+adoption, because current API pages use live `mkdocstrings`.
 
 ### `flext-core`
 
-Owns generic typed foundations only. A neutral artifact-envelope model may be
-added later under the extraction gate, never preemptively.
+Owns generic typed foundations only. A neutral artifact-envelope model may be added
+later under the extraction gate, never preemptively.
 
 ## External platforms
 
@@ -125,8 +122,7 @@ added later under the extraction gate, never preemptively.
 | XWiki / PipesHub   | Knowledge plane    | Receive content by API when deployed; not FLEXT dependencies                   |
 | ClickHouse         | Warehouse          | DataOP sink/source                                                             |
 
-Platform deployment status is planned/conditional until proven by executable
-evidence.
+Platform deployment status is planned/conditional until proven by executable evidence.
 
 ## Open libraries and possible new `flext-*` (gated)
 
@@ -141,15 +137,14 @@ evidence.
 
 ## Project standardization (ADR-010)
 
-All projects — root, internal members, loose internal (independent), and
-external applications — share one generated base owned by `flext-infra` codegen
-with `flext-tests`: identical Make verbs, `.venv`/mise/direnv/`pyproject` setup,
-directory layout, `__init__.py` facades, `c/t/p/m/u` facade files and
+All projects — root, internal members, loose internal (independent), and external
+applications — share one generated base owned by `flext-infra` codegen with
+`flext-tests`: identical Make verbs, `.venv`/mise/direnv/`pyproject` setup, directory
+layout, `__init__.py` facades, `c/t/p/m/u` facade files and
 `_constants/*`/`_utilities/*` private namespaces, `api.py`/`base.py`/
 `_settings.py`/`_config.py`, and canonical module/class/prefix naming for `src`,
-`tests`, `examples`, `scripts`. Rollout is validation-first, then refactoring,
-then declarative enforcement. SSOT: `codegen.yaml` + `tooling.yaml` +
-`flext-tests`. See
+`tests`, `examples`, `scripts`. Rollout is validation-first, then refactoring, then
+declarative enforcement. SSOT: `codegen.yaml` + `tooling.yaml` + `flext-tests`. See
 [ADR-010](adr/010-unified-project-standardization-via-codegen.md).
 
 ## Extraction gate for any new `flext-*`
@@ -163,8 +158,8 @@ then declarative enforcement. SSOT: `codegen.yaml` + `tooling.yaml` +
 ## Coordination Beads
 
 - FLEXT boundaries: `mro-ib6t` (+ `mro-ib6t.1`, `mro-ib6t.2`).
-- Ecosystem coordination epic and open-library candidates: see the epic linked
-  from ADR-009.
+- Ecosystem coordination epic and open-library candidates: see the epic linked from
+  ADR-009.
 - Cosmos: `dcdoc-bhg1` (+ `dcdoc-bhg1.1`, `dcdoc-bhg1.2`), `dcdoc-gsnp`.
 - DataOP: `data-organization-pipeline-4dt`.
 - DcBackup: `datacosmos-backup-o6w` (+ `datacosmos-backup-o6w.1`).

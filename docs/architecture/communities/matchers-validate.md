@@ -107,7 +107,8 @@ _... and 105 more members._
 - `not_none` (58 edge(s))
 - `group` (30 edge(s))
 - `search` (24 edge(s))
-- `flext-infra/tests/unit/test_infra_patterns_core.py::TestsFlextInfraInfraPatternsCore` (20 edge(s))
+- `flext-infra/tests/unit/test_infra_patterns_core.py::TestsFlextInfraInfraPatternsCore`
+  (20 edge(s))
 - `ok` (9 edge(s))
 - `match` (9 edge(s))
 - `fail` (7 edge(s))

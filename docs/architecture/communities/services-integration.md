@@ -104,7 +104,8 @@ _... and 56 more members._
 - `getattr` (9 edge(s))
 - `from_failure` (9 edge(s))
 - `Mapping` (6 edge(s))
-- `flext-oracle-oic/src/flext_oracle_oic/services/integration_crud.py::FlextOracleOicIntegrationCrudMixin._as_text` (6 edge(s))
+- `flext-oracle-oic/src/flext_oracle_oic/services/integration_crud.py::FlextOracleOicIntegrationCrudMixin._as_text`
+  (6 edge(s))
 - `items` (5 edge(s))
 - `map` (5 edge(s))
 - `callable` (4 edge(s))

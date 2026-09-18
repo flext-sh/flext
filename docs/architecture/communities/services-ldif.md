@@ -96,7 +96,8 @@ _... and 43 more members._
 - `fetch_global` (5 edge(s))
 - `FlextDbtLdifSettings` (4 edge(s))
 - `lower` (4 edge(s))
-- `flext-dbt-ldif/src/flext_dbt_ldif/__init__.py::FlextDbtLdifSettings.fetch_global` (3 edge(s))
+- `flext-dbt-ldif/src/flext_dbt_ldif/__init__.py::FlextDbtLdifSettings.fetch_global` (3
+  edge(s))
 - `validate_python` (3 edge(s))
 
 ### Incoming
@@ -106,7 +107,8 @@ _... and 43 more members._
 - `unwrap` (23 edge(s))
 - `FlextDbtLdif` (10 edge(s))
 - `model_dump` (9 edge(s))
-- `flext-dbt-ldif/tests/unit/test_services_and_api.py::TestsFlextDbtLdifServicesAndApi` (8 edge(s))
+- `flext-dbt-ldif/tests/unit/test_services_and_api.py::TestsFlextDbtLdifServicesAndApi`
+  (8 edge(s))
 - `fail` (7 edge(s))
 - `list` (7 edge(s))
 - `str` (6 edge(s))

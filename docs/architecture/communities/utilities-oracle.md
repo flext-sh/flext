@@ -104,7 +104,8 @@ No execution flows pass through this community.
 - `ok` (11 edge(s))
 - `flext-target-oracle/src/flext_target_oracle/_utilities/errors.py` (5 edge(s))
 - `that` (5 edge(s))
-- `flext-target-oracle/tests/unit/test_loader.py::TestsFlextTargetOracleLoader` (3 edge(s))
+- `flext-target-oracle/tests/unit/test_loader.py::TestsFlextTargetOracleLoader` (3
+  edge(s))
 - `FlextTargetOracleLoader` (3 edge(s))
 - `load_record` (3 edge(s))
 - `fail_op` (2 edge(s))
@@ -113,6 +114,7 @@ No execution flows pass through this community.
 - `json_dumps` (2 edge(s))
 - `model_validate` (2 edge(s))
 - `finalize_all_streams` (2 edge(s))
-- `flext-target-oracle/tests/unit/test_target.py::TestsFlextTargetOracleTarget` (2 edge(s))
+- `flext-target-oracle/tests/unit/test_target.py::TestsFlextTargetOracleTarget` (2
+  edge(s))
 - `flext-target-oracle/src/flext_target_oracle/_utilities/client.py` (1 edge(s))
 - `test_connection` (1 edge(s))

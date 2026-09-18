@@ -45,10 +45,8 @@
 
 <!-- TOC END -->
 
-**Version**: 1.0.0
-**Last Updated**: 2025-12-10
-**Scope**: Complete FLEXT ecosystem type system
-**Status**: Specification and reference
+**Version**: 1.0.0 **Last Updated**: 2025-12-10 **Scope**: Complete FLEXT ecosystem type
+system **Status**: Specification and reference
 
 ---
 
@@ -69,7 +67,8 @@
 
 ## Overview
 
-The FLEXT type system provides a unified, composable type architecture across the core FLEXT projects:
+The FLEXT type system provides a unified, composable type architecture across the core
+FLEXT projects:
 
 1. **flext-core** - Foundation library with TypeVars, Protocols, and base types
 2. **flext-cli** - Command-line interface with CLI-specific types
@@ -78,11 +77,14 @@ The FLEXT type system provides a unified, composable type architecture across th
 
 **Key Principles**:
 
-- **2-level namespace maximum**: `t.Domain.Concept` (never `t.Domain.Concern.SubConcern.Type`)
-- **Covariance first**: Use `Mapping`/`Iterable` instead of `dict`/`Sequence` in protocols
+- **2-level namespace maximum**: `t.Domain.Concept` (never
+  `t.Domain.Concern.SubConcern.Type`)
+- **Covariance first**: Use `Mapping`/`Iterable` instead of `dict`/`Sequence` in
+  protocols
 - **Single source of truth**: No duplicate type definitions across namespace levels
 - **Protocol-based design**: Complex unions → Protocols for extensibility
-- **TypeVar centralization**: Use flext-core TypeVars, add domain-specific only when necessary
+- **TypeVar centralization**: Use flext-core TypeVars, add domain-specific only when
+  necessary
 - **Complete namespace always**: Never use root-level aliases or convenience methods
 
 ---
@@ -309,7 +311,8 @@ t.Ldap.Protocol             # Infrastructure (ldap3 wrappers)
 
 ### Models Namespace Architecture (m.\*)
 
-**CRITICAL RULE**: Models follow **2-level maximum** namespace: `m.Domain.Class` (not `m.Domain.Concern.SubClass`)
+**CRITICAL RULE**: Models follow **2-level maximum** namespace: `m.Domain.Class` (not
+`m.Domain.Concern.SubClass`)
 
 **Pattern**: Domain-level classes directly in namespace, no nested sub-namespaces
 
@@ -783,7 +786,8 @@ flext-ldap:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 
 ## Summary
 
-The FLEXT type system provides a **unified, composable, and extensible** architecture across the core projects with:
+The FLEXT type system provides a **unified, composable, and extensible** architecture
+across the core projects with:
 
 1. **Consistent namespace patterns** - 2-level maximum depth
 2. **Proper covariance** - Protocols use `Mapping`/`Iterable`
@@ -793,11 +797,10 @@ The FLEXT type system provides a **unified, composable, and extensible** archite
 6. **Complete type safety** - No `cast()`, tipagem frouxa, ou blocos `TYPE_CHECKING`
 7. **Comprehensive validation** - All projects pass type checking and linting
 
-This architecture enables maintainable, type-safe code across the entire FLEXT ecosystem while supporting future
-extensions and domain-specific requirements.
+This architecture enables maintainable, type-safe code across the entire FLEXT ecosystem
+while supporting future extensions and domain-specific requirements.
 
 ---
 
-**Document Status**: Complete and ready for reference
-**Last Validation**: 2025-12-10
+**Document Status**: Complete and ready for reference **Last Validation**: 2025-12-10
 **Next Review**: When new type patterns emerge or architecture decisions change

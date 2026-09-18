@@ -1,10 +1,10 @@
 ---
 name: changelog-generator
 description: >-
-  Automatically creates user-facing changelogs from git commits by analyzing
-  commit history, categorizing changes, and transforming technical commits into
-  clear, customer-friendly release notes. Turns hours of manual changelog
-  writing into minutes of automated generation.
+  Automatically creates user-facing changelogs from git commits by analyzing commit
+  history, categorizing changes, and transforming technical commits into clear,
+  customer-friendly release notes. Turns hours of manual changelog writing into minutes
+  of automated generation.
 metadata:
   category: development
   source:
@@ -16,7 +16,8 @@ license: NOASSERTION
 
 # Changelog Generator
 
-This skill transforms technical git commits into polished, user-friendly changelogs that your customers and users will actually understand and appreciate.
+This skill transforms technical git commits into polished, user-friendly changelogs that
+your customers and users will actually understand and appreciate.
 
 ## When to Use This Skill
 
@@ -30,9 +31,12 @@ This skill transforms technical git commits into polished, user-friendly changel
 
 ## What This Skill Does
 
-1. **Scans Git History**: Analyzes commits from a specific time period or between versions
-2. **Categorizes Changes**: Groups commits into logical categories (features, improvements, bug fixes, breaking changes, security)
-3. **Translates Technical → User-Friendly**: Converts developer commits into customer language
+1. **Scans Git History**: Analyzes commits from a specific time period or between
+   versions
+2. **Categorizes Changes**: Groups commits into logical categories (features,
+   improvements, bug fixes, breaking changes, security)
+3. **Translates Technical → User-Friendly**: Converts developer commits into customer
+   language
 4. **Formats Professionally**: Creates clean, structured changelog entries
 5. **Filters Noise**: Excludes internal commits (refactoring, tests, etc.)
 6. **Follows Best Practices**: Applies changelog guidelines and your brand voice
@@ -79,11 +83,11 @@ guidelines from CHANGELOG_STYLE.md
 
 ## ✨ New Features
 
-- **Team Workspaces**: Create separate workspaces for different
-  projects. Invite team members and keep everything organized.
+- **Team Workspaces**: Create separate workspaces for different projects. Invite team
+  members and keep everything organized.
 
-- **Keyboard Shortcuts**: Press ? to see all available shortcuts.
-  Navigate faster without touching your mouse.
+- **Keyboard Shortcuts**: Press ? to see all available shortcuts. Navigate faster
+  without touching your mouse.
 
 ## 🔧 Improvements
 

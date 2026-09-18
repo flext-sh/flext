@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document compiles essential best practices and guidelines for building Model Context Protocol (MCP) servers. It covers naming conventions, tool design, response formats, pagination, error handling, security, and compliance requirements.
+This document compiles essential best practices and guidelines for building Model
+Context Protocol (MCP) servers. It covers naming conventions, tool design, response
+formats, pagination, error handling, security, and compliance requirements.
 
 ---
 
@@ -84,7 +86,8 @@ The name should be:
 ### Tool Naming Best Practices
 
 1. **Use snake_case**: `search_users`, `create_project`, `get_channel_info`
-2. **Include service prefix**: Anticipate that your MCP server may be used alongside other MCP servers
+2. **Include service prefix**: Anticipate that your MCP server may be used alongside
+   other MCP servers
    - Use `slack_send_message` instead of just `send_message`
    - Use `github_create_issue` instead of just `create_issue`
    - Use `asana_list_tasks` instead of just `list_tasks`
@@ -97,7 +100,8 @@ The name should be:
 - Tool descriptions must narrowly and unambiguously describe functionality
 - Descriptions must precisely match actual functionality
 - Should not create confusion with other MCP servers
-- Should provide tool annotations (readOnlyHint, destructiveHint, idempotentHint, openWorldHint)
+- Should provide tool annotations (readOnlyHint, destructiveHint, idempotentHint,
+  openWorldHint)
 - Keep tool operations focused and atomic
 
 ---
@@ -118,7 +122,8 @@ All tools that return data should support multiple formats for flexibility:
 
 - Human-readable formatted text
 - Use headers, lists, and formatting for clarity
-- Convert timestamps to human-readable format (e.g., "2024-01-15 10:30:00 UTC" instead of epoch)
+- Convert timestamps to human-readable format (e.g., "2024-01-15 10:30:00 UTC" instead
+  of epoch)
 - Show display names with IDs in parentheses (e.g., "@john.doe (U123456)")
 - Omit verbose metadata (e.g., show only one profile image URL, not all sizes)
 - Group related information logically
@@ -130,12 +135,15 @@ All tools that return data should support multiple formats for flexibility:
 
 For tools that list resources:
 
-- **Always respect the `limit` parameter**: Never load all results when a limit is specified
+- **Always respect the `limit` parameter**: Never load all results when a limit is
+  specified
 - **Implement pagination**: Use `offset` or cursor-based pagination
-- **Return pagination metadata**: Include `has_more`, `next_offset`/`next_cursor`, `total_count`
+- **Return pagination metadata**: Include `has_more`, `next_offset`/`next_cursor`,
+  `total_count`
 - **Never load all results into memory**: Especially important for large datasets
 - **Default to reasonable limits**: 20-50 items is typical
-- **Include clear pagination info in responses**: Make it easy for LLMs to request more data
+- **Include clear pagination info in responses**: Make it easy for LLMs to request more
+  data
 
 Example pagination response structure:
 
@@ -455,7 +463,10 @@ MCP servers that connect to external services should implement proper authentica
 
 ## Summary
 
-These best practices represent the comprehensive guidelines for building secure, efficient, and compliant MCP servers that work well within the ecosystem. Developers should follow these guidelines to ensure their MCP servers meet the standards for inclusion in the MCP directory and provide a safe, reliable experience for users.
+These best practices represent the comprehensive guidelines for building secure,
+efficient, and compliant MCP servers that work well within the ecosystem. Developers
+should follow these guidelines to ensure their MCP servers meet the standards for
+inclusion in the MCP directory and provide a safe, reliable experience for users.
 
 ---
 
@@ -463,7 +474,9 @@ These best practices represent the comprehensive guidelines for building secure,
 
 > Enable LLMs to perform actions through your server
 
-Tools are a powerful primitive in the Model Context Protocol (MCP) that enable servers to expose executable functionality to clients. Through tools, LLMs can interact with external systems, perform computations, and take actions in the real world.
+Tools are a powerful primitive in the Model Context Protocol (MCP) that enable servers
+to expose executable functionality to clients. Through tools, LLMs can interact with
+external systems, perform computations, and take actions in the real world.
 
 <Note>
   Tools are designed to be **model-controlled**, meaning that tools are exposed from servers to clients with the intention of the AI model being able to automatically invoke them (with a human in the loop to grant approval).
@@ -471,13 +484,18 @@ Tools are a powerful primitive in the Model Context Protocol (MCP) that enable s
 
 ## Overview
 
-Tools in MCP allow servers to expose executable functions that can be invoked by clients and used by LLMs to perform actions. Key aspects of tools include:
+Tools in MCP allow servers to expose executable functions that can be invoked by clients
+and used by LLMs to perform actions. Key aspects of tools include:
 
-- **Discovery**: Clients can obtain a list of available tools by sending a `tools/list` request
-- **Invocation**: Tools are called using the `tools/call` request, where servers perform the requested operation and return results
+- **Discovery**: Clients can obtain a list of available tools by sending a `tools/list`
+  request
+- **Invocation**: Tools are called using the `tools/call` request, where servers perform
+  the requested operation and return results
 - **Flexibility**: Tools can range from simple calculations to complex API interactions
 
-Like [resources](/docs/concepts/resources), tools are identified by unique names and can include descriptions to guide their usage. However, unlike resources, tools represent dynamic operations that can modify state or interact with external systems.
+Like [resources](/docs/concepts/resources), tools are identified by unique names and can
+include descriptions to guide their usage. However, unlike resources, tools represent
+dynamic operations that can modify state or interact with external systems.
 
 ## Tool definition structure
 
@@ -557,7 +575,6 @@ Here's an example of implementing a basic tool in an MCP server:
   <Tab title="Python">
     ```python
     app = Server("example-server")
-
 
     @app.list_tools()
     async def list_tools() -> list[types.Tool]:
@@ -670,15 +687,25 @@ When implementing tools:
 
 ### Tool name conflicts
 
-MCP client applications and MCP server proxies may encounter tool name conflicts when building their own tool lists. For example, two connected MCP servers `web1` and `web2` may both expose a tool named `search_web`.
+MCP client applications and MCP server proxies may encounter tool name conflicts when
+building their own tool lists. For example, two connected MCP servers `web1` and `web2`
+may both expose a tool named `search_web`.
 
-Applications may disambiguiate tools with one of the following strategies (among others; not an exhaustive list):
+Applications may disambiguiate tools with one of the following strategies (among others;
+not an exhaustive list):
 
-- Concatenating a unique, user-defined server name with the tool name, e.g. `web1___search_web` and `web2___search_web`. This strategy may be preferable when unique server names are already provided by the user in a configuration file.
-- Generating a random prefix for the tool name, e.g. `jrwxs___search_web` and `6cq52___search_web`. This strategy may be preferable in server proxies where user-defined unique names are not available.
-- Using the server URI as a prefix for the tool name, e.g. `web1.example.com:search_web` and `web2.example.com:search_web`. This strategy may be suitable when working with remote MCP servers.
+- Concatenating a unique, user-defined server name with the tool name, e.g.
+  `web1___search_web` and `web2___search_web`. This strategy may be preferable when
+  unique server names are already provided by the user in a configuration file.
+- Generating a random prefix for the tool name, e.g. `jrwxs___search_web` and
+  `6cq52___search_web`. This strategy may be preferable in server proxies where
+  user-defined unique names are not available.
+- Using the server URI as a prefix for the tool name, e.g. `web1.example.com:search_web`
+  and `web2.example.com:search_web`. This strategy may be suitable when working with
+  remote MCP servers.
 
-Note that the server-provided name from the initialization flow is not guaranteed to be unique and is not generally suitable for disambiguation purposes.
+Note that the server-provided name from the initialization flow is not guaranteed to be
+unique and is not generally suitable for disambiguation purposes.
 
 ## Security considerations
 
@@ -719,7 +746,9 @@ MCP supports dynamic tool discovery:
 
 ## Error handling
 
-Tool errors should be reported within the result object, not as MCP protocol-level errors. This allows the LLM to see and potentially handle the error. When a tool encounters an error:
+Tool errors should be reported within the result object, not as MCP protocol-level
+errors. This allows the LLM to see and potentially handle the error. When a tool
+encounters an error:
 
 1. Set `isError` to `true` in the result
 2. Include error details in the `content` array
@@ -771,11 +800,14 @@ Here's an example of proper error handling for tools:
   </Tab>
 </Tabs>
 
-This approach allows the LLM to see that an error occurred and potentially take corrective action or request human intervention.
+This approach allows the LLM to see that an error occurred and potentially take
+corrective action or request human intervention.
 
 ## Tool annotations
 
-Tool annotations provide additional metadata about a tool's behavior, helping clients understand how to present and manage tools. These annotations are hints that describe the nature and impact of a tool, but should not be relied upon for security decisions.
+Tool annotations provide additional metadata about a tool's behavior, helping clients
+understand how to present and manage tools. These annotations are hints that describe
+the nature and impact of a tool, but should not be relied upon for security decisions.
 
 ### Purpose of tool annotations
 
@@ -918,22 +950,33 @@ Here's how to define tools with annotations for different scenarios:
 
 ### Best practices for tool annotations
 
-1. **Be accurate about side effects**: Clearly indicate whether a tool modifies its environment and whether those modifications are destructive.
+1. **Be accurate about side effects**: Clearly indicate whether a tool modifies its
+   environment and whether those modifications are destructive.
 
-2. **Use descriptive titles**: Provide human-friendly titles that clearly describe the tool's purpose.
+2. **Use descriptive titles**: Provide human-friendly titles that clearly describe the
+   tool's purpose.
 
-3. **Indicate idempotency properly**: Mark tools as idempotent only if repeated calls with the same arguments truly have no additional effect.
+3. **Indicate idempotency properly**: Mark tools as idempotent only if repeated calls
+   with the same arguments truly have no additional effect.
 
-4. **Set appropriate open/closed world hints**: Indicate whether a tool interacts with a closed system (like a database) or an open system (like the web).
+4. **Set appropriate open/closed world hints**: Indicate whether a tool interacts with a
+   closed system (like a database) or an open system (like the web).
 
-5. **Remember annotations are hints**: All properties in ToolAnnotations are hints and not guaranteed to provide a faithful description of tool behavior. Clients should never make security-critical decisions based solely on annotations.
+5. **Remember annotations are hints**: All properties in ToolAnnotations are hints and
+   not guaranteed to provide a faithful description of tool behavior. Clients should
+   never make security-critical decisions based solely on annotations.
 
 ## Testing tools
 
 A comprehensive testing strategy for MCP tools should cover:
 
-- **Functional testing**: Verify tools execute correctly with valid inputs and handle invalid inputs appropriately
-- **Integration testing**: Test tool interaction with external systems using both real and mocked dependencies
-- **Security testing**: Validate authentication, authorization, input sanitization, and rate limiting
-- **Performance testing**: Check behavior under load, timeout handling, and resource cleanup
-- **Error handling**: Ensure tools properly report errors through the MCP protocol and clean up resources
+- **Functional testing**: Verify tools execute correctly with valid inputs and handle
+  invalid inputs appropriately
+- **Integration testing**: Test tool interaction with external systems using both real
+  and mocked dependencies
+- **Security testing**: Validate authentication, authorization, input sanitization, and
+  rate limiting
+- **Performance testing**: Check behavior under load, timeout handling, and resource
+  cleanup
+- **Error handling**: Ensure tools properly report errors through the MCP protocol and
+  clean up resources

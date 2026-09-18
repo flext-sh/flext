@@ -2,37 +2,63 @@
 
 ## Resultado esperado
 
-Convergir documentação, ADRs, skills, commands, projeções, Beads e memórias para um único estado verificável, sem transformar planos ou targets aceitos em alegações de runtime. O trabalho termina somente quando os owners canônicos estão corrigidos, as projeções atingem fixed point, os gates passam nos SHAs integrados e o Bead registra a evidência.
+Convergir documentação, ADRs, skills, commands, projeções, Beads e memórias para um
+único estado verificável, sem transformar planos ou targets aceitos em alegações de
+runtime. O trabalho termina somente quando os owners canônicos estão corrigidos, as
+projeções atingem fixed point, os gates passam nos SHAs integrados e o Bead registra a
+evidência.
 
 ## Estado de partida verificado
 
-- Bead coordenador: `flext-3rld2`, ativo no Gas City; `bd lint --json` chegou a `total: 0`.
-- Autoridade global `~/agents`: `dev@1c7e99a4`, pushed e limpa. `make check`, `make docs` e `make test-full` passaram; bundle: 132 skills, 19 commands, 66 agents e 90 rules. Isso aprova o source bundle, não prova ainda os runtimes projetados de GitHub/Claude/Kilo/Codex/Gemini.
+- Bead coordenador: `flext-3rld2`, ativo no Gas City; `bd lint --json` chegou a
+  `total: 0`.
+- Autoridade global `~/agents`: `dev@1c7e99a4`, pushed e limpa. `make check`,
+  `make docs` e `make test-full` passaram; bundle: 132 skills, 19 commands, 66 agents e
+  90 rules. Isso aprova o source bundle, não prova ainda os runtimes projetados de
+  GitHub/Claude/Kilo/Codex/Gemini.
 - `scope-nav` e sua suíte foram exterminados; CRG é o mapper oficial.
-- Superprojeto: checkpoint cooperativo `4e4e30c274`, com ADRs/skills e gitlinks avançados. Há documentação e submódulos ainda dirty; não assumir que o checkpoint está validado.
-- ADR-005 e ADR-017 já distinguem implementação corrente, target aceito e proposta. `make mod` existe; `ast` separado e `config/rules/ast/` continuam target do Bead `flext-oquk7`.
-- O corpus `docs/projects/` foi retirado da gramática histórica `PROJECT=`, `make val`, `make boot` e instalações diretas, mas docs internas dos membros ainda precisam de sweep owner-aware.
-- A coleta de planos começou a produzir `config/plan-collection.yaml`, manifesto, índice e anexos sob `docs/plans/`; tratar tudo como candidato não validado até fixed point.
-- Drift gerado confirmado: `pyproject.toml` precisa do banner final do owner; headers heterogêneos precisam de validação pelo schema/template, não substituição estética. `base.mk` é superfície legada rastreada separadamente.
-- A tentativa temática de normalizar headers falhou no provedor antes de
-  executar. Nenhum template/test/output foi alterado por essa tentativa; a
-  fatia permanece integralmente pendente na etapa 4.
+- Superprojeto: checkpoint cooperativo `4e4e30c274`, com ADRs/skills e gitlinks
+  avançados. Há documentação e submódulos ainda dirty; não assumir que o checkpoint está
+  validado.
+- ADR-005 e ADR-017 já distinguem implementação corrente, target aceito e proposta.
+  `make mod` existe; `ast` separado e `config/rules/ast/` continuam target do Bead
+  `flext-oquk7`.
+- O corpus `docs/projects/` foi retirado da gramática histórica `PROJECT=`, `make val`,
+  `make boot` e instalações diretas, mas docs internas dos membros ainda precisam de
+  sweep owner-aware.
+- A coleta de planos começou a produzir `config/plan-collection.yaml`, manifesto, índice
+  e anexos sob `docs/plans/`; tratar tudo como candidato não validado até fixed point.
+- Drift gerado confirmado: `pyproject.toml` precisa do banner final do owner; headers
+  heterogêneos precisam de validação pelo schema/template, não substituição estética.
+  `base.mk` é superfície legada rastreada separadamente.
+- A tentativa temática de normalizar headers falhou no provedor antes de executar.
+  Nenhum template/test/output foi alterado por essa tentativa; a fatia permanece
+  integralmente pendente na etapa 4.
 
 ## Lições que passam a ser regras de execução
 
-1. Relatório de subagente não é evidência. Reabrir source, diff e owner antes de aceitar cada conclusão.
-2. Subagentes recebem paths disjuntos e modo explícito: `research-only`, `edit-only` ou `owner-and-test`. Não podem commitar, avançar gitlinks ou editar projeções sem autorização específica da fatia.
-3. Depois de duas falhas de provider/context, não repetir. Reduzir a fatia ou o coordenador assume.
-4. Nunca trocar um comando morto por outro comando direto. Em FLEXT, exemplos executáveis usam apenas verbos do Makefile raiz.
-5. Histórico permanece histórico. Planos, releases, audits e handoffs recebem rótulo de evidência datada; não são reescritos como guidance atual.
-6. Arquivo com aparência gerada não prova owner. Resolver config, template, política de merge, consumidor e verbo de regeneração antes de editar.
-7. Gerar somente depois que todos os writers da fatia terminaram. Rodar geração durante edits concorrentes invalida a projeção.
-8. Um commit de membro precede o gitlink do superprojeto. Nenhum checkpoint de docs pode avançar 31 gitlinks sem ancestry, gates e publicação dos membros.
+1. Relatório de subagente não é evidência. Reabrir source, diff e owner antes de aceitar
+   cada conclusão.
+2. Subagentes recebem paths disjuntos e modo explícito: `research-only`, `edit-only` ou
+   `owner-and-test`. Não podem commitar, avançar gitlinks ou editar projeções sem
+   autorização específica da fatia.
+3. Depois de duas falhas de provider/context, não repetir. Reduzir a fatia ou o
+   coordenador assume.
+4. Nunca trocar um comando morto por outro comando direto. Em FLEXT, exemplos
+   executáveis usam apenas verbos do Makefile raiz.
+5. Histórico permanece histórico. Planos, releases, audits e handoffs recebem rótulo de
+   evidência datada; não são reescritos como guidance atual.
+6. Arquivo com aparência gerada não prova owner. Resolver config, template, política de
+   merge, consumidor e verbo de regeneração antes de editar.
+7. Gerar somente depois que todos os writers da fatia terminaram. Rodar geração durante
+   edits concorrentes invalida a projeção.
+8. Um commit de membro precede o gitlink do superprojeto. Nenhum checkpoint de docs pode
+   avançar 31 gitlinks sem ancestry, gates e publicação dos membros.
 
 ## Adjudicação da auditoria global tardia
 
-A auditoria read-only foi coletada antes do landing `~/agents@1c7e99a4`; cada
-finding deve ser reproduzido no SHA integrado antes de virar trabalho.
+A auditoria read-only foi coletada antes do landing `~/agents@1c7e99a4`; cada finding
+deve ser reproduzido no SHA integrado antes de virar trabalho.
 
 | Finding                                                                 | Disposição no plano                                                                                                                                                                                                                                   |
 | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -64,61 +90,81 @@ finding deve ser reproduzido no SHA integrado antes de virar trabalho.
 
 ### 1. Reancorar e estabilizar ownership
 
-1. Parar novos writers e aguardar/cancelar apenas as fatias ainda ativas pelo mecanismo normal; não matar processos ou reverter trabalho.
-2. Executar preflight em `~/agents`, superprojeto e cada submódulo dirty: branch, HEAD, upstream, status e diff por path.
-3. Comparar o checkpoint `4e4e30c274` com seu parent. Classificar cada hunk e gitlink como contribuição aceita, projeção prematura ou mudança sem evidência.
-4. Atualizar `flext-3rld2` com a matriz `owner -> paths -> SHA -> writer -> gate -> estado`; não criar tracker paralelo.
-5. Rebuild incremental do CRG depois que o tree parar de mudar; source vence divergências do grafo.
+1. Parar novos writers e aguardar/cancelar apenas as fatias ainda ativas pelo mecanismo
+   normal; não matar processos ou reverter trabalho.
+2. Executar preflight em `~/agents`, superprojeto e cada submódulo dirty: branch, HEAD,
+   upstream, status e diff por path.
+3. Comparar o checkpoint `4e4e30c274` com seu parent. Classificar cada hunk e gitlink
+   como contribuição aceita, projeção prematura ou mudança sem evidência.
+4. Atualizar `flext-3rld2` com a matriz
+   `owner -> paths -> SHA -> writer -> gate -> estado`; não criar tracker paralelo.
+5. Rebuild incremental do CRG depois que o tree parar de mudar; source vence
+   divergências do grafo.
 
 **Stop:** ownership de todo path dirty conhecido; nenhum writer sobreposto.
 
 ### 2. Fechar autoridade global e projeção de providers
 
 1. Tratar `~/agents@1c7e99a4` como global SSOT aprovado.
-2. No `~/agents`, executar também `make waza`, `make build`,
-   `make validate-artifacts` e `make runtime`; gates já verdes não provam a
-   projeção externa.
-3. Resolver no source global o comando `commands/flext/triage-runtime-skew`
-   invisível ao glob `*.md` e fazer intake de `VALIDATE_ON_CHANGE.md` sem perder
-   a precedência da diretiva.
-4. No AI Hub, atualizar o pin/bundle e executar o projector oficial para Claude,
-   Kilo, Codex, Gemini e GitHub. Não editar `~/.agents`, `.github/skills` ou
-   capsules manualmente.
-5. Corrigir no projector o marker de `CLAUDE.md` para source/verbo existentes.
-   Validar todos os symlinks/destinos do provider depois do sync.
+2. No `~/agents`, executar também `make waza`, `make build`, `make validate-artifacts` e
+   `make runtime`; gates já verdes não provam a projeção externa.
+3. Resolver no source global o comando `commands/flext/triage-runtime-skew` invisível ao
+   glob `*.md` e fazer intake de `VALIDATE_ON_CHANGE.md` sem perder a precedência da
+   diretiva.
+4. No AI Hub, atualizar o pin/bundle e executar o projector oficial para Claude, Kilo,
+   Codex, Gemini e GitHub. Não editar `~/.agents`, `.github/skills` ou capsules
+   manualmente.
+5. Corrigir no projector o marker de `CLAUDE.md` para source/verbo existentes. Validar
+   todos os symlinks/destinos do provider depois do sync.
 6. Validar que projetos recebem somente bundles globais aplicáveis e que
    `.agents/provider.toml` mantém os deltas branch-matched. Todo projeto
    `internal_flext` deve materializar `flext-context-routing` e `flext-law`; repo
    provider-neutral não precisa dessas superfícies.
-7. No rope-modernize, provar que `codemod_provider.sgconfig` resolve ao arquivo
-   real; corrigir o manifest owner se o path atual não existe.
-8. Provar ausência de `scope-nav`, precedência duplicada, indexes copiados e
-   skills Gas City cacheadas no Git.
-9. Executar gates nativos do AI Hub e smoke real de ao menos Claude, Kilo e
-   GitHub antes de propagar à frota.
+7. No rope-modernize, provar que `codemod_provider.sgconfig` resolve ao arquivo real;
+   corrigir o manifest owner se o path atual não existe.
+8. Provar ausência de `scope-nav`, precedência duplicada, indexes copiados e skills Gas
+   City cacheadas no Git.
+9. Executar gates nativos do AI Hub e smoke real de ao menos Claude, Kilo e GitHub antes
+   de propagar à frota.
 
-**Stop:** runtime dos providers identifica o SHA global integrado e o projeto carrega apenas seu delta.
+**Stop:** runtime dos providers identifica o SHA global integrado e o projeto carrega
+apenas seu delta.
 
 ### 3. Convergir documentos hand-written
 
 Dividir em commits pequenos e independentes:
 
-1. Portal raiz e standards: comandos, ciclo, versões, links, ownership e linguagem CURRENT/TARGET/PROPOSED.
-2. ADRs: revisar o diff do checkpoint; em ADR-005 manter tanto rules-as-data quanto rope-only como targets enquanto houver detector Python/AST. Em ADR-017 manter `ast` separado e `config/rules/ast/` como target.
-3. Páginas `docs/projects/`: provar zero comandos aposentados sem alterar releases/audits.
-4. Docs internas dos membros por domínio: plataforma, LDAP/Oracle, taps, targets e DBT. Alterar somente guidance corrente; rotular planos históricos.
-5. Docstrings e exemplos executáveis somente quando o gate apontar drift; não ampliar para refactor de source nesta fatia.
+1. Portal raiz e standards: comandos, ciclo, versões, links, ownership e linguagem
+   CURRENT/TARGET/PROPOSED.
+2. ADRs: revisar o diff do checkpoint; em ADR-005 manter tanto rules-as-data quanto
+   rope-only como targets enquanto houver detector Python/AST. Em ADR-017 manter `ast`
+   separado e `config/rules/ast/` como target.
+3. Páginas `docs/projects/`: provar zero comandos aposentados sem alterar
+   releases/audits.
+4. Docs internas dos membros por domínio: plataforma, LDAP/Oracle, taps, targets e DBT.
+   Alterar somente guidance corrente; rotular planos históricos.
+5. Docstrings e exemplos executáveis somente quando o gate apontar drift; não ampliar
+   para refactor de source nesta fatia.
 
-**Validação por commit:** links locais, `git diff --check`, busca de contratos aposentados limitada à classe corrente e gate docs do owner.
+**Validação por commit:** links locais, `git diff --check`, busca de contratos
+aposentados limitada à classe corrente e gate docs do owner.
 
 ### 4. Corrigir owners de projeção
 
-1. Header provenance: alterar templates/testes do `flext-infra`, não outputs. O schema deve exigir quatro fatos sem impor tokens idênticos quando a sintaxe do formato difere: modo gerado, owner exato, ponto de ajuste e `make gen`.
-2. Provar que o `FlextInfraInjectCommentsPhase` injeta o banner final no `pyproject.toml`; depois regenerar todos os membros.
-3. Resolver `base.mk` pelo Bead owner: se não houver consumidor atual, remover template/config/callers e arquivos na mesma fatia; não apenas ignorar.
-4. Corrigir help/Make/CI projections pelos Beads existentes (`flext-5fxu6.4.*`), mantendo uma única registry tipada.
-5. Completar plan collection no owner transacional: manifest com provenance/revision/hash, anexos ligados, publicação atômica, remoção de projections órfãs e segundo run sem writes.
-6. Nunca executar `make gen` se `flext-ff28g` reproduzir falha transacional. Corrigir journal/phase analysis no owner, provar abort sem resíduo e rerodar o mesmo verbo.
+1. Header provenance: alterar templates/testes do `flext-infra`, não outputs. O schema
+   deve exigir quatro fatos sem impor tokens idênticos quando a sintaxe do formato
+   difere: modo gerado, owner exato, ponto de ajuste e `make gen`.
+2. Provar que o `FlextInfraInjectCommentsPhase` injeta o banner final no
+   `pyproject.toml`; depois regenerar todos os membros.
+3. Resolver `base.mk` pelo Bead owner: se não houver consumidor atual, remover
+   template/config/callers e arquivos na mesma fatia; não apenas ignorar.
+4. Corrigir help/Make/CI projections pelos Beads existentes (`flext-5fxu6.4.*`),
+   mantendo uma única registry tipada.
+5. Completar plan collection no owner transacional: manifest com
+   provenance/revision/hash, anexos ligados, publicação atômica, remoção de projections
+   órfãs e segundo run sem writes.
+6. Nunca executar `make gen` se `flext-ff28g` reproduzir falha transacional. Corrigir
+   journal/phase analysis no owner, provar abort sem resíduo e rerodar o mesmo verbo.
 
 **Stop:** owners e testes estreitos verdes; nenhum output editado à mão.
 
@@ -143,28 +189,38 @@ make build
 Regras:
 
 - Segundo `make gen` pós-`mod` deve ser byte-identical.
-- `make mod` com findings detection-only permanece vermelho; somente a fase apply evita falso stall.
+- `make mod` com findings detection-only permanece vermelho; somente a fase apply evita
+  falso stall.
 - Qualquer edit posterior invalida os gates sobrepostos.
 - Não usar `PROJECT`, `WHAT`, `APPLY`, comandos de ferramenta ou loops ad hoc.
 - Lock/pin proibido (`uv.lock`, `mise.lock`, `exclude-newer`) não pode reaparecer.
 
 ### 6. Landing multi-repo
 
-1. Em cada membro alterado: revisar diff, gates afetados, commit explícito, push fast-forward para lane/PR e merge `--no-ff` na integração.
+1. Em cada membro alterado: revisar diff, gates afetados, commit explícito, push
+   fast-forward para lane/PR e merge `--no-ff` na integração.
 2. Rerodar runtime/gates no SHA integrado do membro.
 3. Somente então atualizar o gitlink no superprojeto.
-4. No super: absorver integração por merge cooperativo, resolver conflitos fix-forward, repetir ciclo aplicável, commit explícito e push.
-5. Revalidar provider runtime, docs publicadas e uma amostra real de consumo após o merge do super.
+4. No super: absorver integração por merge cooperativo, resolver conflitos fix-forward,
+   repetir ciclo aplicável, commit explícito e push.
+5. Revalidar provider runtime, docs publicadas e uma amostra real de consumo após o
+   merge do super.
 
-**Proibido:** commit guarda-chuva que avance membros não publicados, rebase/force-push, ou fechar Bead com gates locais apenas.
+**Proibido:** commit guarda-chuva que avance membros não publicados, rebase/force-push,
+ou fechar Bead com gates locais apenas.
 
 ### 7. Encerrar Beads e memórias
 
 1. `bd lint --json` deve continuar em zero.
-2. Atualizar Beads de owner com comandos, SHAs, PRs, merge commits e runtime; fechar somente os realmente aceitos.
-3. `bd remember` mantém: autoridade `~/agents`, ciclo selector-free, estado `mod` versus `ast`, generated-owner law e warning/finding red.
-4. Kilo memory recebe apenas correções equivalentes; remover/corrigir records que ainda aleguem CLI Rope separada, `make tests`, tolerância atual a warnings ou `config/rules/ast/` implementado.
-5. Fechar `flext-3rld2` somente após projeção, integração e runtime; caso contrário manter `in_progress` com o primeiro gate vermelho e próxima ação exata.
+2. Atualizar Beads de owner com comandos, SHAs, PRs, merge commits e runtime; fechar
+   somente os realmente aceitos.
+3. `bd remember` mantém: autoridade `~/agents`, ciclo selector-free, estado `mod` versus
+   `ast`, generated-owner law e warning/finding red.
+4. Kilo memory recebe apenas correções equivalentes; remover/corrigir records que ainda
+   aleguem CLI Rope separada, `make tests`, tolerância atual a warnings ou
+   `config/rules/ast/` implementado.
+5. Fechar `flext-3rld2` somente após projeção, integração e runtime; caso contrário
+   manter `in_progress` com o primeiro gate vermelho e próxima ação exata.
 
 ## Falhas esperadas e resposta
 

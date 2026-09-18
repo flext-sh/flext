@@ -11,17 +11,17 @@
 
 <!-- TOC END -->
 
-- **Status:** Active, versioned runbook; recovery ownership updated 2026-09-17.
-  Fleet stability is unproved; this document is not a green runtime receipt.
+- **Status:** Active, versioned runbook; recovery ownership updated 2026-09-17. Fleet
+  stability is unproved; this document is not a green runtime receipt.
 - **Date:** 2026-09-15
-- **Tracking:** Gas City Bead `flext-itpd1.3` coordinates the current recovery
-  cycle under `flext-itpd1`. Sibling owners are `flext-itpd1.2` (documentation)
-  and `flext-itpd1.4` (Make machinery). Beads owns live execution state;
-  local plans remain session context, not a second queue or publication input.
+- **Tracking:** Gas City Bead `flext-itpd1.3` coordinates the current recovery cycle
+  under `flext-itpd1`. Sibling owners are `flext-itpd1.2` (documentation) and
+  `flext-itpd1.4` (Make machinery). Beads owns live execution state; local plans remain
+  session context, not a second queue or publication input.
 - **Law:** ADR-014 §3b (rope-in-gen), ADR-010 §3b (alignment), render purity law
-- **Beads:** engine = `flext-crd1y` (discovered-from `flext-5fxu6.4`); loc-cap = `flext-471ws`;
-  journal lock = `flext-fkfmu`; mission tests = `flext-wjozx` / `flext-c4k44`
-  These concrete owner references preserve investigation provenance; their
+- **Beads:** engine = `flext-crd1y` (discovered-from `flext-5fxu6.4`); loc-cap =
+  `flext-471ws`; journal lock = `flext-fkfmu`; mission tests = `flext-wjozx` /
+  `flext-c4k44` These concrete owner references preserve investigation provenance; their
   current status and dependencies require coordinator reconciliation in Beads.
 
 ## 1. Owner → responsibility
@@ -52,9 +52,11 @@
 
 1. Engine stages read typed rules (Pydantic models parsed once via `u.Cli.yaml_*`).
 2. `gen` emits warnings into the single per-repo receipt (findings + timings).
-3. `fix` consumes only fixable codes from the same table; re-runs gen to prove the fixed point.
+3. `fix` consumes only fixable codes from the same table; re-runs gen to prove the fixed
+   point.
 4. `check` reports the remainder; the invocation stays red while findings remain.
-5. New rule = typed section in `config/codegen.yaml` / `rules/*.yaml` — never an ad-hoc detector class.
+5. New rule = typed section in `config/codegen.yaml` / `rules/*.yaml` — never an ad-hoc
+   detector class.
 
 ## 4. Transaction loop per repository
 
@@ -66,52 +68,52 @@ snapshot (input-CAS, authenticated)
 ```
 
 - Failure mid-publication (gen **and** fix): recovery may undo only authenticated
-  effects owned by that invocation; preserve pre-existing and concurrent WIP.
-  Prove preservation through the public transaction contract, not an empty-tree
-  assumption. The journal owner remains `flext-fkfmu` pending reconciliation.
-- Race handling: preserve the first failed receipt, coordinate writers, adopt
-  compatible input changes and rerun only after reconciliation. Never hide a CAS
-  failure through retry or proceed with unresolved findings. Reset, restore,
-  stash, rebase and force-push of shared work are forbidden.
+  effects owned by that invocation; preserve pre-existing and concurrent WIP. Prove
+  preservation through the public transaction contract, not an empty-tree assumption.
+  The journal owner remains `flext-fkfmu` pending reconciliation.
+- Race handling: preserve the first failed receipt, coordinate writers, adopt compatible
+  input changes and rerun only after reconciliation. Never hide a CAS failure through
+  retry or proceed with unresolved findings. Reset, restore, stash, rebase and
+  force-push of shared work are forbidden.
 
 ## 5. Resume procedure (new session)
 
-> **Execution ownership updated 2026-09-17.** `flext-itpd1.3` owns recovery
-> ordering, serialized gates, integration and closure. Workers deliver bounded
-> repairs and evidence; they never merge or close Beads. Follow the explicitly
-> approved recovery scope, never the newest local filename. Approval to use a
-> private plan does not authorize copying or publishing it.
+> **Execution ownership updated 2026-09-17.** `flext-itpd1.3` owns recovery ordering,
+> serialized gates, integration and closure. Workers deliver bounded repairs and
+> evidence; they never merge or close Beads. Follow the explicitly approved recovery
+> scope, never the newest local filename. Approval to use a private plan does not
+> authorize copying or publishing it.
 
-1. Read coordinator Bead `flext-itpd1.3`, the assigned owner Bead and this
-   runbook. Reconcile historical receipts against the current candidate.
-2. Inventory current tips, registered worktrees and pending changes; never assume
-   peer lanes are absent or exclude existing work by its directory name.
+1. Read coordinator Bead `flext-itpd1.3`, the assigned owner Bead and this runbook.
+   Reconcile historical receipts against the current candidate.
+2. Inventory current tips, registered worktrees and pending changes; never assume peer
+   lanes are absent or exclude existing work by its directory name.
 3. Use the rig environment and the current tracker contract in the
-   [stabilization runbook](../ways-of-working/stabilization-checkpoint-0.12.md).
-   The coordinator owns semantic Beads updates and records command, cwd, exit,
-   decisive output and candidate identity.
-4. Preserve all WIP; implement only the explicitly assigned owner paths after
-   fresh inspection. Coordinate overlapping changes instead of discarding them.
+   [stabilization runbook](../ways-of-working/stabilization-checkpoint-0.12.md). The
+   coordinator owns semantic Beads updates and records command, cwd, exit, decisive
+   output and candidate identity.
+4. Preserve all WIP; implement only the explicitly assigned owner paths after fresh
+   inspection. Coordinate overlapping changes instead of discarding them.
 5. In the coordinator's serialized window, run the selector-free root lifecycle:
-   `make setup` → `make gen` → `make mod` → `make gen` → `make gen` →
-   `make fix` → `make fmt` → `make check` → `make test` → `make build`, followed
-   by applicable public runtime and native documentation/link validation.
-   Prove repeated gen/fix/fmt are no-op, exit-zero runs on the unchanged candidate.
+   `make setup` → `make gen` → `make mod` → `make gen` → `make gen` → `make fix` →
+   `make fmt` → `make check` → `make test` → `make build`, followed by applicable public
+   runtime and native documentation/link validation. Prove repeated gen/fix/fmt are
+   no-op, exit-zero runs on the unchanged candidate.
 6. Stay in the current recovery cycle until the entire fleet has warning-free,
-   finding-free integrated receipts. Owner repairs remain in that cycle; no
-   historical exception or successful partial gate authorizes closure.
-7. Publish members before root gitlinks and revalidate on the integrated SHAs.
-   Later mutations invalidate affected receipts. The recovery does not authorize
-   an unrelated release or tag; closure belongs to the coordinator after proof.
+   finding-free integrated receipts. Owner repairs remain in that cycle; no historical
+   exception or successful partial gate authorizes closure.
+7. Publish members before root gitlinks and revalidate on the integrated SHAs. Later
+   mutations invalidate affected receipts. The recovery does not authorize an unrelated
+   release or tag; closure belongs to the coordinator after proof.
 
 ## 5b. Historical resume context (2026-09-15, proven — preserved as evidence)
 
-The following is a dated report, not current runtime evidence or permission to
-resume its old commands. Current ownership and lifecycle above supersede its
-execution instructions.
+The following is a dated report, not current runtime evidence or permission to resume
+its old commands. Current ownership and lifecycle above supersede its execution
+instructions.
 
-- Reported flext-infra tip `c3f574807` (0.12.0-dev); `_conform` stale drift adopted via tip; `_models/_config`
-  split (13 untracked + 2 M) ready to land through gen ×2 with parity probe 107/107 dunders vs
-  `pre_config.json` (scratch snapshots intact).
+- Reported flext-infra tip `c3f574807` (0.12.0-dev); `_conform` stale drift adopted via
+  tip; `_models/_config` split (13 untracked + 2 M) ready to land through gen ×2 with
+  parity probe 107/107 dunders vs `pre_config.json` (scratch snapshots intact).
 - The historical session reported `bd`/`rg` shim problems. That report does not
   authorize bypassing the current rig environment or canonical command surface.

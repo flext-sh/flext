@@ -10,32 +10,29 @@
 <!-- TOC END -->
 
 Performance changes require measured runtime evidence from the canonical command
-surface. Optimization never weakens validation, clears Testmon, introduces an
-alternate fast path, or bypasses Make orchestration.
+surface. Optimization never weakens validation, clears Testmon, introduces an alternate
+fast path, or bypasses Make orchestration.
 
 ## Before changing code
 
 1. Identify the public root Make verb that exercises the real workflow.
-2. Use the profiling instrumentation owned by its typed flext-infra execution
-   context.
-3. Capture wall time, cumulative hotspots, call counts, subprocess time, and I/O
-   time for the unchanged baseline.
-4. Store profiling artifacts only in the configured external runtime-state
-   directory.
+2. Use the profiling instrumentation owned by its typed flext-infra execution context.
+3. Capture wall time, cumulative hotspots, call counts, subprocess time, and I/O time
+   for the unchanged baseline.
+4. Store profiling artifacts only in the configured external runtime-state directory.
 
-If `make help` exposes no profiling-capable workflow, add that capability at the
-root Make and flext-infra owners. A direct profiler or ad-hoc script is not valid
-evidence.
+If `make help` exposes no profiling-capable workflow, add that capability at the root
+Make and flext-infra owners. A direct profiler or ad-hoc script is not valid evidence.
 
 ## Optimize the measured owner
 
 Change the dominant measured path. Preserve typed OO/MRO boundaries, dependency
-injection, fail-fast behavior, and the full validation surface. Do not add a
-fallback, retry, hidden cache, partial run, or duplicated implementation.
+injection, fail-fast behavior, and the full validation surface. Do not add a fallback,
+retry, hidden cache, partial run, or duplicated implementation.
 
-Caching is allowed only when its invalidation authority is typed, explicit, and
-proved through the public runtime contract. Test selection remains owned by the
-retained Testmon cache.
+Caching is allowed only when its invalidation authority is typed, explicit, and proved
+through the public runtime contract. Test selection remains owned by the retained
+Testmon cache.
 
 ## Evidence
 
@@ -48,8 +45,8 @@ Record on the active Bead:
 - subprocess and I/O accounting;
 - the integrated runtime measurement after landing.
 
-An optimization without a material, repeatable improvement is removed in the
-same change.
+An optimization without a material, repeatable improvement is removed in the same
+change.
 
 ## Canonical validation
 
@@ -61,5 +58,5 @@ make test
 make gen
 ```
 
-Do not invoke profilers, test runners, or other underlying tools directly. Do
-not add project, file, pattern, action, phase, fix, or changed-only selectors.
+Do not invoke profilers, test runners, or other underlying tools directly. Do not add
+project, file, pattern, action, phase, fix, or changed-only selectors.

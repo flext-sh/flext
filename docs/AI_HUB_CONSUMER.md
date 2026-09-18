@@ -8,8 +8,8 @@
 
 <!-- TOC END -->
 
-This document records the integration boundary only. It is not a second FLEXT
-law or an ai-hub architecture specification.
+This document records the integration boundary only. It is not a second FLEXT law or an
+ai-hub architecture specification.
 
 ## Ownership
 
@@ -26,31 +26,30 @@ law or an ai-hub architecture specification.
 
 ## Boundary Contract
 
-- ai-hub consumes project metadata validated by `flext-core` and activates the
-  provider only when the normalized dependencies contain the marker declared
-  by its active provider authority.
-- ai-hub exposes workspace-local references to provider-owned surfaces. It does
-  not copy or redefine FLEXT commands, skills, rules, docs, or codemod data.
-- FLEXT may consume ai-hub commands, hooks, MCP routes, and `ai-hub-*` daemons
-  as optional external protocols. FLEXT never imports ai-hub or CRG packages.
-  If ai-hub is absent, deterministic FLEXT behavior remains available; if an
-  exposed integration is selected, its failure propagates unchanged.
-- Local Git behavior stays inside `flext-infra`. GitHub and CRG behavior cross
-  the boundary only through the public ai-hub runtime surface.
-- FLEXT changes update their owner in this repository and verify the ai-hub
-  consumer boundary. ai-hub changes update their owner in the independent
-  ai-hub workspace and verify provider projection.
-- Each independent workspace records work in its own root Beads database.
-  Member projects use their workspace tracker and never initialize a
-  nested database.
+- ai-hub consumes project metadata validated by `flext-core` and activates the provider
+  only when the normalized dependencies contain the marker declared by its active
+  provider authority.
+- ai-hub exposes workspace-local references to provider-owned surfaces. It does not copy
+  or redefine FLEXT commands, skills, rules, docs, or codemod data.
+- FLEXT may consume ai-hub commands, hooks, MCP routes, and `ai-hub-*` daemons as
+  optional external protocols. FLEXT never imports ai-hub or CRG packages. If ai-hub is
+  absent, deterministic FLEXT behavior remains available; if an exposed integration is
+  selected, its failure propagates unchanged.
+- Local Git behavior stays inside `flext-infra`. GitHub and CRG behavior cross the
+  boundary only through the public ai-hub runtime surface.
+- FLEXT changes update their owner in this repository and verify the ai-hub consumer
+  boundary. ai-hub changes update their owner in the independent ai-hub workspace and
+  verify provider projection.
+- Each independent workspace records work in its own root Beads database. Member
+  projects use their workspace tracker and never initialize a nested database.
 
 ## Drift Discipline
 
-When either side changes, inventory affected declarations, config, docs,
-skills, agents, and consumers. Update the owner and replace repeated content
-with a pointer in the same change. If behavior did not change, verify that the
-affected pointers and provider inventory are still current.
+When either side changes, inventory affected declarations, config, docs, skills, agents,
+and consumers. Update the owner and replace repeated content with a pointer in the same
+change. If behavior did not change, verify that the affected pointers and provider
+inventory are still current.
 
-Tests, snapshots, checks, examples, and generated projections validate the
-owners. They never become the source of provider identity, domain behavior,
-configuration, or fundamental rules.
+Tests, snapshots, checks, examples, and generated projections validate the owners. They
+never become the source of provider identity, domain behavior, configuration, or
+fundamental rules.

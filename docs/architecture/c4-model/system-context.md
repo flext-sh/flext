@@ -45,9 +45,9 @@
 
 ## Overview
 
-The FLEXT Enterprise Data Integration Platform serves as a comprehensive data integration solution for enterprise
-environments,
-connecting various data sources and destinations through a unified, scalable architecture.
+The FLEXT Enterprise Data Integration Platform serves as a comprehensive data
+integration solution for enterprise environments, connecting various data sources and
+destinations through a unified, scalable architecture.
 
 ## System Context Diagram
 

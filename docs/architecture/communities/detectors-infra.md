@@ -109,13 +109,15 @@ _... and 252 more members._
 - `detector_context` (31 edge(s))
 - `len` (26 edge(s))
 - `mkdir` (19 edge(s))
-- `flext-infra/tests/unit/refactor/test_infra_refactor_namespace_enforcer.py::TestsFlextInfraRefactorInfraRefactorNamespaceEnforcer` (16 edge(s))
+- `flext-infra/tests/unit/refactor/test_infra_refactor_namespace_enforcer.py::TestsFlextInfraRefactorInfraRefactorNamespaceEnforcer`
+  (16 edge(s))
 - `detect_file` (16 edge(s))
 - `getattr` (10 edge(s))
 - `enforcement_rule` (8 edge(s))
 - `open_project` (8 edge(s))
 - `read_text` (7 edge(s))
 - `isinstance` (7 edge(s))
-- `flext-infra/tests/unit/check/extended_runners_extra_tests.py::TestExtendedRunnerExtras` (6 edge(s))
+- `flext-infra/tests/unit/check/extended_runners_extra_tests.py::TestExtendedRunnerExtras`
+  (6 edge(s))
 - `create_checker_project` (6 edge(s))
 - `run_gate_check` (6 edge(s))

@@ -15,19 +15,19 @@
 
 <!-- TOC END -->
 
-FLEXT public docstrings follow PEP 257 structure and Google-style sections. The
-typed Ruff configuration is the executable authority for the precise rule set;
-this page owns authoring guidance, not a copied lint registry.
+FLEXT public docstrings follow PEP 257 structure and Google-style sections. The typed
+Ruff configuration is the executable authority for the precise rule set; this page owns
+authoring guidance, not a copied lint registry.
 
 ## Purpose
 
-A useful docstring explains why a symbol exists, what public contract it owns,
-and which non-obvious boundary or failure matters to a caller. It does not
-translate code into prose.
+A useful docstring explains why a symbol exists, what public contract it owns, and which
+non-obvious boundary or failure matters to a caller. It does not translate code into
+prose.
 
-Document public modules, classes, protocols, methods, functions, properties,
-and exported facade members. Private implementation earns a docstring only when
-its invariant is not evident from its name, annotation, and local context.
+Document public modules, classes, protocols, methods, functions, properties, and
+exported facade members. Private implementation earns a docstring only when its
+invariant is not evident from its name, annotation, and local context.
 
 ## General form
 
@@ -56,8 +56,8 @@ def normalize_name(value: str) -> str:
 
 ## Modules
 
-State the module's responsibility and ownership. Keep copyright and SPDX text
-inside the module docstring.
+State the module's responsibility and ownership. Keep copyright and SPDX text inside the
+module docstring.
 
 ```python
 """Resolve canonical public names for package consumers.
@@ -71,10 +71,10 @@ Do not place a copyright comment before the module docstring.
 
 ## Classes and protocols
 
-Describe the responsibility and boundary, not the class name. Protocol
-docstrings explain what consumers may rely on without naming an adapter.
-Constructor parameter documentation belongs with the public construction
-surface and is not repeated across class and initializer docstrings.
+Describe the responsibility and boundary, not the class name. Protocol docstrings
+explain what consumers may rely on without naming an adapter. Constructor parameter
+documentation belongs with the public construction surface and is not repeated across
+class and initializer docstrings.
 
 ## Functions and methods
 
@@ -86,23 +86,22 @@ Use sections only when they add information:
 - `Raises:` lists exceptions that intentionally escape the public boundary.
 - `Example:` is reserved for a short, public-facade behavior example.
 
-Never document swallowed, normalized, retried, or fallback errors. Such behavior
-is itself prohibited; the first causal exception must escape.
+Never document swallowed, normalized, retried, or fallback errors. Such behavior is
+itself prohibited; the first causal exception must escape.
 
 ## Properties
 
-Describe the value's meaning and invariant. Do not repeat “Get” or “Set” when
-the property name and annotation already express that fact.
+Describe the value's meaning and invariant. Do not repeat “Get” or “Set” when the
+property name and annotation already express that fact.
 
 ## Public examples
 
-Examples import public package facades and read project-controlled values from
-typed config or settings. They never import private modules, build internal
-classes, or freeze current configuration literals.
+Examples import public package facades and read project-controlled values from typed
+config or settings. They never import private modules, build internal classes, or freeze
+current configuration literals.
 
-Test examples use `tm`, the unified `conftest.py`, and typed shared fixtures.
-Mocks, fakes, stubs, patching, monkeypatch mutation, and copied setup are
-prohibited.
+Test examples use `tm`, the unified `conftest.py`, and typed shared fixtures. Mocks,
+fakes, stubs, patching, monkeypatch mutation, and copied setup are prohibited.
 
 ## Avoid
 
@@ -135,7 +134,7 @@ make test
 make gen
 ```
 
-The test verb retains Testmon. Never invoke Ruff, a test runner, or an ad-hoc
-script directly, and never add project, file, pattern, action, phase, fix, or
-changed-only selectors. If the declared Make surface cannot express a required
-check, repair its owner before continuing.
+The test verb retains Testmon. Never invoke Ruff, a test runner, or an ad-hoc script
+directly, and never add project, file, pattern, action, phase, fix, or changed-only
+selectors. If the declared Make surface cannot express a required check, repair its
+owner before continuing.

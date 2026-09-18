@@ -3,8 +3,8 @@
 ## Planos considerados
 
 - `../../1789582508056-flext-infra-runtime-modernization.md` — autoridade principal.
-- `../../2026-09-16-flext-infra-continuation-plan.md` — detalhes de execução e
-  falhas recentes; tratado como adendo, não substituto.
+- `../../2026-09-16-flext-infra-continuation-plan.md` — detalhes de execução e falhas
+  recentes; tratado como adendo, não substituto.
 - `../../1789564863139-envrc-beads-tiered-backend-chain.md` — recorte envrc já
   parcialmente implementado/pousado.
 - Planos rope-modernize de 2026-09-16 — candidatos de contribuição, dependentes de
@@ -34,6 +34,6 @@
 
 ## Próximos adendos
 
-Adicionar somente quando houver nova evidência integrada: baseline escolhido,
-resultado do primeiro ciclo canônico, decisão final do backend envrc e censo de
-lanes/PRs encerrado.
+Adicionar somente quando houver nova evidência integrada: baseline escolhido, resultado
+do primeiro ciclo canônico, decisão final do backend envrc e censo de lanes/PRs
+encerrado.

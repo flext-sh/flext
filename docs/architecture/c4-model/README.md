@@ -24,9 +24,12 @@
 
 - [FLEXT C4 Model Architecture Documentation](#flext-c4-model-architecture-documentation)
   - [📋 C4 Model Levels](#-c4-model-levels)
-    - [1. [System Context Diagram](./system-context.md)](#1-system-context-diagramsystem-contextmd)
-    - [2. [Container Diagram](./container-diagram.md)](#2-container-diagramcontainer-diagrammd)
-    - [3. [Component Diagrams](./component-diagrams.md)](#3-component-diagramscomponent-diagramsmd)
+    - [1.
+      [System Context Diagram](./system-context.md)](#1-system-context-diagramsystem-contextmd)
+    - [2.
+      [Container Diagram](./container-diagram.md)](#2-container-diagramcontainer-diagrammd)
+    - [3.
+      [Component Diagrams](./component-diagrams.md)](#3-component-diagramscomponent-diagramsmd)
     - [4. [Code Diagrams](./code-diagrams.md)](#4-code-diagramscode-diagramsmd)
   - [🎯 FLEXT Architecture Overview](#-flext-architecture-overview)
   - [🏗 Key Architectural Patterns](#-key-architectural-patterns)
@@ -38,19 +41,21 @@
   - [📊 Architecture Quality Attributes](#-architecture-quality-attributes)
   - [🔗 Related Documentation](#-related-documentation)
 
-This directory contains the C4 model diagrams for the FLEXT Enterprise Data Integration Platform,
-providing a comprehensive view of the system architecture at different levels of detail.
+This directory contains the C4 model diagrams for the FLEXT Enterprise Data Integration
+Platform, providing a comprehensive view of the system architecture at different levels
+of detail.
 
 ## 📋 C4 Model Levels
 
 ### 1. [System Context Diagram](./system-context.md)
 
-**Level 1** - Shows FLEXT in the context of its environment, external systems, and users.
+**Level 1** - Shows FLEXT in the context of its environment, external systems, and
+users.
 
 ### 2. [Container Diagram](./container-diagram.md)
 
-**Level 2** - Shows the high-level shape of the FLEXT architecture and how responsibilities are distributed across
-containers.
+**Level 2** - Shows the high-level shape of the FLEXT architecture and how
+responsibilities are distributed across containers.
 
 ### 3. [Component Diagrams](./component-diagrams.md)
 
@@ -58,7 +63,8 @@ containers.
 
 ### 4. [Code Diagrams](./code-diagrams.md)
 
-**Level 4** - Shows how components are implemented in code (UML class diagrams, entity relationship diagrams, etc.).
+**Level 4** - Shows how components are implemented in code (UML class diagrams, entity
+relationship diagrams, etc.).
 
 ## 🎯 FLEXT Architecture Overview
 
@@ -68,8 +74,7 @@ FLEXT is an enterprise-grade data integration platform built with:
 - **Domain-Driven Design** patterns for business logic modeling
 - **Railway-Oriented Programming** for error handling
 - **Dependency Injection** for loose coupling
-- **Typed package boundaries** across independently versioned libraries and
-  connectors
+- **Typed package boundaries** across independently versioned libraries and connectors
 
 ## 🏗 Key Architectural Patterns
 

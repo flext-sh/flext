@@ -26,7 +26,11 @@ CURRENT IMPLEMENTATION (accepted 2026-09-11)
 
 ## Context
 
-The FLEXT fleet (31+ `flext-*` packages) lacked a unified consumption standard. Consumers imported internal machinery (`flext_cli.models`, `flext_infra.workspace.detector`, `flext_core.lazy`), duplication went undetected across consumer+family scope, gates had hardcoded thresholds and bypass lists, and there was no budget enforcement or contribution path law.
+The FLEXT fleet (31+ `flext-*` packages) lacked a unified consumption standard.
+Consumers imported internal machinery (`flext_cli.models`,
+`flext_infra.workspace.detector`, `flext_core.lazy`), duplication went undetected across
+consumer+family scope, gates had hardcoded thresholds and bypass lists, and there was no
+budget enforcement or contribution path law.
 
 This led to:
 
@@ -38,25 +42,35 @@ This led to:
 
 ## Decision
 
-We ratify the **Consumer Consumption Law (R1-R6)** as the canonical standard for all FLEXT packages. This law is codified in `docs/standards/consumption-law.md` and enforced through the following mechanisms:
+We ratify the **Consumer Consumption Law (R1-R6)** as the canonical standard for all
+FLEXT packages. This law is codified in `docs/standards/consumption-law.md` and enforced
+through the following mechanisms:
 
 ### R1 — Facade-Only Import Grammar
 
 - Legal: `from <pkg> import X` where `X ∈ pkg.__all__`
-- Illegal: any `pkg.<submodule>` path (facet modules, reach-throughs, internal machinery)
+- Illegal: any `pkg.<submodule>` path (facet modules, reach-throughs, internal
+  machinery)
 - Enforcement: `FlextInfraConsumerImportViolationsDetector` → ENFORCE-099
-- Derivation: `FlextUtilitiesFamilySurface` from published lazy contract (`__all__` + `_LAZY_IMPORTS`)
+- Derivation: `FlextUtilitiesFamilySurface` from published lazy contract (`__all__` +
+  `_LAZY_IMPORTS`)
 
 ### R1a — Lazy-Init Re-Export Derivation
 
-How the generated root `__init__.py` builds `pkg.__all__` (see `docs/standards/consumption-law.md` R1a for the full rule):
+How the generated root `__init__.py` builds `pkg.__all__` (see
+`docs/standards/consumption-law.md` R1a for the full rule):
 
-- `ALIAS_NAMES = {c, t, m, p, u, r, d, e, h, s, x, tc}` is the complete facade-letter set.
-- Local facade files win (`constants.py→c`, `typings.py→t`, `protocols.py→p`, `models.py→m`, `utilities.py→u`).
-- Operational letters (`r, d, e, h, s, x`) are inherited from the highest upstream flext library (`flext_cli`, sourced from `flext_core`) via `_resolve_inherited_alias_source`.
+- `ALIAS_NAMES = {c, t, m, p, u, r, d, e, h, s, x, tc}` is the complete facade-letter
+  set.
+- Local facade files win (`constants.py→c`, `typings.py→t`, `protocols.py→p`,
+  `models.py→m`, `utilities.py→u`).
+- Operational letters (`r, d, e, h, s, x`) are inherited from the highest upstream flext
+  library (`flext_cli`, sourced from `flext_core`) via
+  `_resolve_inherited_alias_source`.
 - A local redeclaration published in `__all__` overrides the inherited ancestor.
 - `Flext*` module exports come from the current directory only.
-- Determinism (flext-b3xmn): the facade-letter set derives from the statically indexed workspace source, never the ambient installed surface.
+- Determinism (flext-b3xmn): the facade-letter set derives from the statically indexed
+  workspace source, never the ambient installed surface.
 
 ### R2 — No Duplication (Structural Scan)
 
@@ -87,12 +101,14 @@ How the generated root `__init__.py` builds `pkg.__all__` (see `docs/standards/c
 
 ### R6 — Contribution Path Law
 
-- Bead → formula lane → canonical Make verbs → WIP commits → PR → `--no-ff` merge → gates on merged SHA → roll-up gitlinks → bead closure with 4 evidences
+- Bead → formula lane → canonical Make verbs → WIP commits → PR → `--no-ff` merge →
+  gates on merged SHA → roll-up gitlinks → bead closure with 4 evidences
 - Zero residue: dead code/compat shims are defects
 
 ## Anti-Hardcode Law (Binding)
 
-- **No bypass lists**: `BOUNDARY_SKIP_PROJECTS`, `CLICK_FILES`, `TOML_ALLOWED`, `BOUNDARY_FLEXT_CLI_CONCRETE_RE`, `startswith("flext_")` — all exterminated
+- **No bypass lists**: `BOUNDARY_SKIP_PROJECTS`, `CLICK_FILES`, `TOML_ALLOWED`,
+  `BOUNDARY_FLEXT_CLI_CONCRETE_RE`, `startswith("flext_")` — all exterminated
 - **No frozen enumerations**: facts derivable from SSOT/code are never fixed
 - **No absolute paths**: config keys only
 - **Tests**: synthetic runtime-derived violations only; no committed fixtures

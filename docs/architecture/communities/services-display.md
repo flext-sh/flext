@@ -104,13 +104,16 @@ No execution flows pass through this community.
 - `that` (82 edge(s))
 - `readouterr` (30 edge(s))
 - `format_table` (19 edge(s))
-- `flext-cli/tests/unit/test_services_output_cov.py::TestsFlextCliServicesOutputCov` (18 edge(s))
+- `flext-cli/tests/unit/test_services_output_cov.py::TestsFlextCliServicesOutputCov` (18
+  edge(s))
 - `ok` (13 edge(s))
 - `unwrap` (9 edge(s))
 - `flext-cli/tests/unit/test_tables.py::TestsFlextCliTables` (9 edge(s))
-- `flext-cli/tests/unit/test_services_tables_branch_cov.py::TestsFlextCliServicesTablesBranchCov` (8 edge(s))
+- `flext-cli/tests/unit/test_services_tables_branch_cov.py::TestsFlextCliServicesTablesBranchCov`
+  (8 edge(s))
 - `show_table` (8 edge(s))
-- `flext-cli/tests/unit/test_services_tables_cov.py::TestsFlextCliServicesTablesCov` (7 edge(s))
+- `flext-cli/tests/unit/test_services_tables_cov.py::TestsFlextCliServicesTablesCov` (7
+  edge(s))
 - `flext-cli/tests/unit/test_formatters_cov.py::TestsFlextCliFormattersCov` (5 edge(s))
 - `display_text` (4 edge(s))
 - `flext-cli/src/flext_cli/api.py` (3 edge(s))

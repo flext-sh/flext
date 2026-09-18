@@ -13,9 +13,9 @@
 
 **Reviewed**: 2026-07-12 | **Scope**: Static structure of the FLEXT workspace
 
-This chapter describes the static decomposition of the FLEXT monorepo: the
-package layering, the canonical structure every `flext-*` package shares, and
-the facade model that is the single public surface of each package.
+This chapter describes the static decomposition of the FLEXT monorepo: the package
+layering, the canonical structure every `flext-*` package shares, and the facade model
+that is the single public surface of each package.
 
 ## Table of Contents
 
@@ -27,8 +27,8 @@ the facade model that is the single public surface of each package.
 
 ## 5.1 Workspace Level
 
-The workspace is a Git workspace of independently versioned `flext-*`
-packages under one root. The dependency direction is one-way and enforced:
+The workspace is a Git workspace of independently versioned `flext-*` packages under one
+root. The dependency direction is one-way and enforced:
 
 ```text
 consumer packages ──> flext-cli ──> flext-core
@@ -44,13 +44,13 @@ flext-tests ──────────────────────�
 | `flext-tests` | Test framework: fixtures, runtime aliases (`tm/tv/tt`), `Tests*` models, pytest dispatcher for the enforcement catalog. Depends on `flext-cli` (which depends on `flext-core`).                                                                                                                                                                                                                          |
 | consumers     | Domain packages (LDAP, LDIF, Oracle, gRPC, Meltano taps/targets, API, auth, observability, …). They import the foundation packages; the foundation never imports them.                                                                                                                                                                                                                                   |
 
-Cross-project imports flow consumer → foundation freely at runtime; the
-reverse direction is forbidden.
+Cross-project imports flow consumer → foundation freely at runtime; the reverse
+direction is forbidden.
 
 ## 5.2 Package Level
 
-Every `flext-*` package has exactly one canonical structure — alternative
-layouts are removed, not maintained in parallel:
+Every `flext-*` package has exactly one canonical structure — alternative layouts are
+removed, not maintained in parallel:
 
 ```text
 flext-<name>/
@@ -74,42 +74,39 @@ flext-<name>/
 └── pyproject.toml
 ```
 
-`_config.py` and `_settings.py` are the SSOT for all parametrization: every
-facet consumes `from <namespace> import config, settings` and reads the
-validated namespaced handles directly, without consumer-owned intermediaries or
-re-derivation. The public `config` and `settings` handles are published from
-these underscored modules (per ADR-005 §§1–2); their internal live proxies
-preserve reload semantics without changing the consumer contract.
+`_config.py` and `_settings.py` are the SSOT for all parametrization: every facet
+consumes `from <namespace> import config, settings` and reads the validated namespaced
+handles directly, without consumer-owned intermediaries or re-derivation. The public
+`config` and `settings` handles are published from these underscored modules (per
+ADR-005 §§1–2); their internal live proxies preserve reload semantics without changing
+the consumer contract.
 
 ## 5.3 Facade Level
 
-The public surface of a package is exactly the alias set `c, t, p, m, u`
-(plus operational aliases, see 5.4), each a namespace class composed by MRO:
+The public surface of a package is exactly the alias set `c, t, p, m, u` (plus
+operational aliases, see 5.4), each a namespace class composed by MRO:
 
 - **`c` — constants**: defaults and invariants. Pure declaration
   (`StrEnum`/`IntEnum`/`Literal`/`Final`/immutable containers); no behavior.
 - **`t` — typings**: type aliases and generic contracts. Pure declaration.
-- **`p` — protocols**: structural contracts (`Protocol`). Declaration only;
-  imports `m` under `TYPE_CHECKING` (reverse direction).
-- **`m` — models**: Pydantic 2-way models only — `model_validate` in,
-  `model_dump` out. Fields only; no methods. Imports `p` under
-  `TYPE_CHECKING`.
-- **`u` — utilities**: all behavior of the declaration facets. Functions and
-  classes that compute, transform, and validate live here, never in `c/t/p/m`.
+- **`p` — protocols**: structural contracts (`Protocol`). Declaration only; imports `m`
+  under `TYPE_CHECKING` (reverse direction).
+- **`m` — models**: Pydantic 2-way models only — `model_validate` in, `model_dump` out.
+  Fields only; no methods. Imports `p` under `TYPE_CHECKING`.
+- **`u` — utilities**: all behavior of the declaration facets. Functions and classes
+  that compute, transform, and validate live here, never in `c/t/p/m`.
 
-Import direction is strict `c → t → p → m → u` (later may import earlier at
-runtime; reverse is `TYPE_CHECKING`-only). Facade owner modules extend the
-upstream FLEXT facade by MRO and rebind the local alias at the bottom of the
-module.
+Import direction is strict `c → t → p → m → u` (later may import earlier at runtime;
+reverse is `TYPE_CHECKING`-only). Facade owner modules extend the upstream FLEXT facade
+by MRO and rebind the local alias at the bottom of the module.
 
 <!-- mro-wkii.17.26 (agent: codex) — document the universal thin-domain-facade building block requested by the
 operator. -->
 
 ### 5.3.1 Thin Domain Facade
 
-Every module that owns more than one implementation responsibility is split
-into one thin MRO/composition facade and one matching private package of focused
-parts:
+Every module that owns more than one implementation responsibility is split into one
+thin MRO/composition facade and one matching private package of focused parts:
 
 ```text
 <layer>/
@@ -120,19 +117,17 @@ parts:
     └── <responsibility_b>.py
 ```
 
-For example, `_utilities/rope.py` composes focused mixins from
-`_utilities/_rope/*.py`. The same shape governs `c/t/p/m/u`, operational
-facades, services, codegen, refactor, dependency, validation, and tooling
-domains. External consumers never import private parts. PEP 562 lazy export is
-generated only in the production package root; private and subdirectory
-initializers are static or empty. A move updates every consumer and removes the
-old path in one continuously green cutover, leaving no stale initializer, wrapper,
+For example, `_utilities/rope.py` composes focused mixins from `_utilities/_rope/*.py`.
+The same shape governs `c/t/p/m/u`, operational facades, services, codegen, refactor,
+dependency, validation, and tooling domains. External consumers never import private
+parts. PEP 562 lazy export is generated only in the production package root; private and
+subdirectory initializers are static or empty. A move updates every consumer and removes
+the old path in one continuously green cutover, leaving no stale initializer, wrapper,
 compatibility alias, duplicate implementation, or parallel path.
 
 ## 5.4 Operational Layer
 
-Runtime behavior is exposed through the operational aliases composed over
-`flext-core`:
+Runtime behavior is exposed through the operational aliases composed over `flext-core`:
 
 | Alias | Facade            | Role                                                               |
 | ----- | ----------------- | ------------------------------------------------------------------ |
@@ -143,7 +138,6 @@ Runtime behavior is exposed through the operational aliases composed over
 | `d`   | `FlextDecorators` | Cross-cutting decorators                                           |
 | `s`   | `FlextService`    | Service base/runtime; `base.py` publishes the project service base |
 
-`api.py` is a thin MRO facade over the composed runtime class and publishes
-the package operational entry point; `services/*` hold the actual behavior,
-composed by MRO. `cli.py` exposes the command surface through the `flext-cli`
-model-driven engine.
+`api.py` is a thin MRO facade over the composed runtime class and publishes the package
+operational entry point; `services/*` hold the actual behavior, composed by MRO.
+`cli.py` exposes the command surface through the `flext-cli` model-driven engine.

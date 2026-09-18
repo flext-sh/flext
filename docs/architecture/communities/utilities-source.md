@@ -102,7 +102,8 @@ No execution flows pass through this community.
 ### Incoming
 
 - `that` (8 edge(s))
-- `flext-infra/tests/refactor/test_rope_semantic.py::TestsFlextInfraRefactorRopeSemantic` (6 edge(s))
+- `flext-infra/tests/refactor/test_rope_semantic.py::TestsFlextInfraRefactorRopeSemantic`
+  (6 edge(s))
 - `not_none` (4 edge(s))
 - `get_class_bases` (3 edge(s))
 - `get_semantic_module_imports` (2 edge(s))
@@ -110,7 +111,8 @@ No execution flows pass through this community.
 - `write_text` (2 edge(s))
 - `flext-infra/src/flext_infra/_utilities/rope_analysis.py` (1 edge(s))
 - `read` (1 edge(s))
-- `flext-infra/tests/refactor/test_rope_stubs.py::TestsFlextInfraRefactorRopeStubs` (1 edge(s))
+- `flext-infra/tests/refactor/test_rope_stubs.py::TestsFlextInfraRefactorRopeStubs` (1
+  edge(s))
 - `mkdir` (1 edge(s))
 - `init_rope_project` (1 edge(s))
 - `get_resource_from_path` (1 edge(s))

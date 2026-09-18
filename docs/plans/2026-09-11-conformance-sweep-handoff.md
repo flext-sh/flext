@@ -22,7 +22,9 @@
   - [10.4 Decreto de continuidade (vigência dupla — aplica-se a ambas as sessões)](#104-decreto-de-continuidade-vigencia-dupla-aplica-se-a-ambas-as-sessoes)
   <!-- TOC END -->
 
-> Commeo restrito: pega-o-voa. Este documento é o CURSOR completo para retomar o trabalho. Tudo o que era nesário para o próximo agente executar sem re-pesquisar está aqui, com endereços exatos.
+> Commeo restrito: pega-o-voa. Este documento é o CURSOR completo para retomar o
+> trabalho. Tudo o que era nesário para o próximo agente executar sem re-pesquisar está
+> aqui, com endereços exatos.
 
 ---
 
@@ -80,11 +82,14 @@ Regen: `env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json`
 
 ## 4. Como as conclusões foram obtidas (método, para reproduzir/validar)
 
-1. **Toda afirmação = comando + cwd + saída decisiva** (lei 117). Evidência por file-log (diff/difflib nunca stdout-códigos — codegen inunda).
+1. **Toda afirmação = comando + cwd + saída decisiva** (lei 117). Evidência por file-log
+   (diff/difflib nunca stdout-códigos — codegen inunda).
 2. Bead ANTES de mutação; red → bead no MESMO cursor; fechamento = 4 evidências.
 3. Push FF na integração = **VIOL establecido**, reparo em A0.3 PR --no-ff pós-verde.
-4. Colisões entre lanes resolvidas por fix-forward + unificação de beads (3cabz classe / 2h0un instância / p8sjy→9wwed supersede).
-5. Todo-alviously-sempre reconstruído de: `bd list --status=open` + plan-index + skills body (nunca de memória narrativa).
+4. Colisões entre lanes resolvidas por fix-forward + unificação de beads (3cabz classe /
+   2h0un instância / p8sjy→9wwed supersede).
+5. Todo-alviously-sempre reconstruído de: `bd list --status=open` + plan-index + skills
+   body (nunca de memória narrativa).
 
 ---
 
@@ -99,16 +104,20 @@ env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json | jq -r '.[] | "\
 # 4. adição: capsule-budget resolução pendente ver §9.2 + seção 12 do plano
 ```
 
-Estado alvo: **todo ↔ plano ↔ beads com MESMAS refs e status**; atualiza o todo a cada transição, turno a turno.
+Estado alvo: **todo ↔ plano ↔ beads com MESMAS refs e status**; atualiza o todo a cada
+transição, turno a turno.
 
 ---
 
 ## 6. Ordem de retomada (primeiras 4 ações, em sequência)
 
-1. **crg update** e citação do built-at commit (todos os cliques subsequercitéticos de impact/query partem daí — §10 fatos)
-2. **Piloto A6 (§11.1 ciclo)** nas 2 unidades: ci_matrix red + make_environment B1/B2 fixture — ONE re-reg no snapshot-test; gate de aceite: ci_matrix 28/28 verde
+1. **crg update** e citação do built-at commit (todos os cliques subsequercitéticos de
+   impact/query partem daí — §10 fatos)
+2. **Piloto A6 (§11.1 ciclo)** nas 2 unidades: ci_matrix red + make_environment B1/B2
+   fixture — ONE re-reg no snapshot-test; gate de aceite: ci_matrix 28/28 verde
 3. **A0.1+A0.2 paralelos** (proveniência bff592284 + triagem submódulos)
-4. **A0.3 fret**: hotfix branch → PR → --no-ff → gates no SHA merged → fechar flext-vo335
+4. **A0.3 fret**: hotfix branch → PR → --no-ff → gates no SHA merged → fechar
+   flext-vo335
 
 ---
 
@@ -119,8 +128,10 @@ Estado alvo: **todo ↔ plano ↔ beads com MESMAS refs e status**; atualiza o t
 - Não citar grafo crg sem registrar seu Built at commit
 - Não `git add -A` em nenhum submodule/superprojeto
 - Não `rm -f` de lock de journal — bead `flext-f73ii` + kill do owner
-- Não invadir lantas ativas (`promoted-framework-lift`, `z82dg-nsloc`); absorver pós-merge
-- Não criar arquivos novos sob `~/agents/rules|commands|skills` sem ADR de capsule-budget; corpos in-place são livres
+- Não invadir lantas ativas (`promoted-framework-lift`, `z82dg-nsloc`); absorver
+  pós-merge
+- Não criar arquivos novos sob `~/agents/rules|commands|skills` sem ADR de
+  capsule-budget; corpos in-place são livres
 
 ---
 
@@ -143,7 +154,10 @@ _Fim do handoff. Próximo agente: comece da seção 6, item 1._
 
 ## 9. Reconciliação skills/ADRs/docs ↔ código (12:52 UTC — confronto pós-handoff v1)
 
-Método: leitura dos donos canônicos (deep-research router procedure, flext-development SKILL, ADR-010, rule `production-readiness`) confrontada contra o código real e o estado medido da sessão. O router-procedure de web-research (firecrawl/exa) não apply ab — tarefa de reconciliação local; propagationpreserved: nada foi normalizado.
+Método: leitura dos donos canônicos (deep-research router procedure, flext-development
+SKILL, ADR-010, rule `production-readiness`) confrontada contra o código real e o estado
+medido da sessão. O router-procedure de web-research (firecrawl/exa) não apply ab —
+tarefa de reconciliação local; propagationpreserved: nada foi normalizado.
 
 ### 9.1 Tabela de mapeamento: contrato ADR-010 ↔ SLA do plano ↔ estado medido
 
@@ -167,11 +181,16 @@ Método: leitura dos donos canônicos (deep-research router procedure, flext-dev
 
 Ordem ADR-010-conforme (cada gate fecha até o próximo abrir):
 
-1. **Fechar SLA-1** (`flext-3cabz`): idempotência pyproject.toml → item 1 do ADR-010 verificável.
+1. **Fechar SLA-1** (`flext-3cabz`): idempotência pyproject.toml → item 1 do ADR-010
+   verificável.
 2. **Fechar SLA-3** (`flext-9wwed`): budget fixture + PATH-strip → item 4 verificável.
-3. **Fechar SLA-2** (`flext-cpkk`, absorvendo XML do ator `z82dg-nsloc` fix-forward): item 2 audit-zero-drift + item 3 mod-zero-findings.
-4. **Landing canônico**: hotfix/conformance-sweep-d1d2 → PR → `--no-ff` → gates no SHA integrado (fecha `flext-vo335` V1-V3).
-5. **Piloto homologação** = estado onde os itens 1-4 do ADR-010 estão verdes no SHA integrado + `flext-gxgqp` (gate de regrowth) implementado — só aí a branch de integração está "produtiva para homologação".
+3. **Fechar SLA-2** (`flext-cpkk`, absorvendo XML do ator `z82dg-nsloc` fix-forward):
+   item 2 audit-zero-drift + item 3 mod-zero-findings.
+4. **Landing canônico**: hotfix/conformance-sweep-d1d2 → PR → `--no-ff` → gates no SHA
+   integrado (fecha `flext-vo335` V1-V3).
+5. **Piloto homologação** = estado onde os itens 1-4 do ADR-010 estão verdes no SHA
+   integrado + `flext-gxgqp` (gate de regrowth) implementado — só aí a branch de
+   integração está "produtiva para homologação".
 
 ### 9.4 Inputs atualizados nesta passada
 
@@ -180,13 +199,17 @@ Ordem ADR-010-conforme (cada gate fecha até o próximo abrir):
 - Plan: §10/§11 leem-se com a nota DR2 (rota CRG = ADR-010-sancionada).
 - Beads: `flext-3cabz` recebeu o mapeamento ADR-010↔SLA↔piloto como aceite.
 
-_Fim da reconciliação. Próximo agente: seção 6 do handoff v1 continua válida como ordem de retomada; a cadeia 9.3 substitui qualquer leitura de Reds como "fora de alcance"._
+_Fim da reconciliação. Próximo agente: seção 6 do handoff v1 continua válida como ordem
+de retomada; a cadeia 9.3 substitui qualquer leitura de Reds como "fora de alcance"._
 
 ---
 
 ## 10. FUSÃO — handoff flext-gov (sessão irmão) × este handoff (13:05 UTC)
 
-Fonte fundida: `~/flext-work/flext-gov-super/docs/plans/2026-09-11-flext-gov-handoff.md` (SKA a853d3e599) — programa de consumo/GOV (`epic flext-ssnc7`, ADR-015, consumption-law.md, GOVERNANCE.md). Nada do outro arquivo foi reescrito; a fusão vive AQUI como mapa único, e o decreto §13 deles (§10.4) governa as duas sessões.
+Fonte fundida: `~/flext-work/flext-gov-super/docs/plans/2026-09-11-flext-gov-handoff.md`
+(SKA a853d3e599) — programa de consumo/GOV (`epic flext-ssnc7`, ADR-015,
+consumption-law.md, GOVERNANCE.md). Nada do outro arquivo foi reescrito; a fusão vive
+AQUI como mapa único, e o decreto §13 deles (§10.4) governa as duas sessões.
 
 ### 10.1 Duas cadeias de gate, uma sequência (sinergia central)
 
@@ -200,21 +223,40 @@ Fonte fundida: `~/flext-work/flext-gov-super/docs/plans/2026-09-11-flext-gov-han
 
 ### 10.2 Estado de acumulação entre as sessões (o que uma deixou para a outra)
 
-1. **Meus pushes moveram `origin/0.12.0-dev`** (`396b359a1e..9526645ea9`) — o §12 do handoff-gov exige `git fetch` + `merge-base --is-ancestor` nas 3 lanes ANTES do `--no-ff` (absorção obrigatória, hunk-a-hunk). As 3 lanes NÃO pousadas podem estar atrás do meu tip.
-2. **Pino comum**: core lane `uv.lock` = `flext-infra rev=0.12.0-dev#bff592284` — MESMO tip que esta sessão modificou com `3000b6bc0`/`bff592284`; o `bd show ssnc7.1` (F1 detector) deve absorver meu cleanup + o gate ci_matrix pós-fix.
-3. **Resíduo operativos da lane infra-gov**: generated surfaces do `make gen` NÃO commitadas (`M Makefile M README M docs/api-reference M pyproject.toml`) — receita: abrir lane, `make check`, commitar escopado ANTES do pouso; nunca lane nova. Alinha com meu A0.2 (triagem dirty).
-4. **Beads** (SSOT dupla): `bd list | grep -E 'ssnc7|3cabz|9wwed|vo335|gxgqp|cpkk'` — TODOs dos dois planos convergem no bd; §13 do gov + §5 deste handoff remontam a partir do MESMO fonte.
-5. **ENFORCE**: 099 única linha viva; 100/101 pendentes — não "deliverar"; meu SLA-3 (budget) é complementar ao ENFORCE-101 (R4) de F4 — mesmo domínio, beads distintos: cross-referenciar, não duplicar.
-6. **Autoridade**: ADR-015 + consumption-law.md + meu ADR-010 §verification contract (reconciliação §9) formam o tripé — nenhum vencendo o outro; divergência = bead, nunca narrativa.
-7. **agentsctl sync é delivery, não dono** — vale para os dois lados; arquivo canônico > réplica.
+1. **Meus pushes moveram `origin/0.12.0-dev`** (`396b359a1e..9526645ea9`) — o §12 do
+   handoff-gov exige `git fetch` + `merge-base --is-ancestor` nas 3 lanes ANTES do
+   `--no-ff` (absorção obrigatória, hunk-a-hunk). As 3 lanes NÃO pousadas podem estar
+   atrás do meu tip.
+2. **Pino comum**: core lane `uv.lock` = `flext-infra rev=0.12.0-dev#bff592284` — MESMO
+   tip que esta sessão modificou com `3000b6bc0`/`bff592284`; o `bd show ssnc7.1` (F1
+   detector) deve absorver meu cleanup + o gate ci_matrix pós-fix.
+3. **Resíduo operativos da lane infra-gov**: generated surfaces do `make gen` NÃO
+   commitadas (`M Makefile M README M docs/api-reference M pyproject.toml`) — receita:
+   abrir lane, `make check`, commitar escopado ANTES do pouso; nunca lane nova. Alinha
+   com meu A0.2 (triagem dirty).
+4. **Beads** (SSOT dupla): `bd list | grep -E 'ssnc7|3cabz|9wwed|vo335|gxgqp|cpkk'` —
+   TODOs dos dois planos convergem no bd; §13 do gov + §5 deste handoff remontam a
+   partir do MESMO fonte.
+5. **ENFORCE**: 099 única linha viva; 100/101 pendentes — não "deliverar"; meu SLA-3
+   (budget) é complementar ao ENFORCE-101 (R4) de F4 — mesmo domínio, beads distintos:
+   cross-referenciar, não duplicar.
+6. **Autoridade**: ADR-015 + consumption-law.md + meu ADR-010 §verification contract
+   (reconciliação §9) formam o tripé — nenhum vencendo o outro; divergência = bead,
+   nunca narrativa.
+7. **agentsctl sync é delivery, não dono** — vale para os dois lados; arquivo canônico >
+   réplica.
 
 ### 10.3 Cadeia única de retomada (merge das duas ordens)
 
 1. Ler AMBOS os handoffs (§1-§9 aqui; §1-§13 lá) → revalidar TODO↔bd×2 (decree §13).
-2. Pedir **A1** ao operador → pousar 3 lanes gov com `--no-ff` (absorvendo meu tip 9526645ea9) + A0.3 do sweep em um PR por lane.
-3. Pedir **A2** → `crg update/build` nos tips integrados (fecha a lacuna de grafo das duas sessões).
-4. Executar **piloto A6 §11 + A3 §7-gov**: RED→GREEN ci_matrix/9wwed (esta cadeia) + RED→GREEN consumer (gov).
-5. Fechamento: beads das DUAS sessões fecham com 4 evidências cada; registro `bd remember` por transição de aprovação (protocolo END OF TURN do §13).
+2. Pedir **A1** ao operador → pousar 3 lanes gov com `--no-ff` (absorvendo meu tip
+   9526645ea9) + A0.3 do sweep em um PR por lane.
+3. Pedir **A2** → `crg update/build` nos tips integrados (fecha a lacuna de grafo das
+   duas sessões).
+4. Executar **piloto A6 §11 + A3 §7-gov**: RED→GREEN ci_matrix/9wwed (esta cadeia) +
+   RED→GREEN consumer (gov).
+5. Fechamento: beads das DUAS sessões fecham com 4 evidências cada; registro
+   `bd remember` por transição de aprovação (protocolo END OF TURN do §13).
 
 ### 10.4 Decreto de continuidade (vigência dupla — aplica-se a ambas as sessões)
 

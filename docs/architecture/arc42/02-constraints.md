@@ -83,7 +83,8 @@
 
 - **Python 3.13+**: Primary language for business logic and data processing
   - **Rationale**: Rich ecosystem for data processing, strong typing support
-  - **Constraint**: Must use Python 3.13+ features (pattern matching, improved error messages)
+  - **Constraint**: Must use Python 3.13+ features (pattern matching, improved error
+    messages)
   - **Impact**: Requires modern Python runtime, limits deployment options
 
 #### Framework and Library Constraints
@@ -121,7 +122,8 @@
   - **Constraint**: All dependencies must point inward toward the domain
   - **Impact**: Limits direct database access from application layer
 
-- **Layer Separation**: Clear boundaries between presentation, application, domain, and infrastructure
+- **Layer Separation**: Clear boundaries between presentation, application, domain, and
+  infrastructure
   - **Constraint**: No direct communication between non-adjacent layers
   - **Impact**: Requires careful design of interfaces and abstractions
 
@@ -355,8 +357,8 @@
   - **Impact**: Requires zero-downtime deployment strategies
 
 - **Backup Windows**: Limited time for database backups
-  - **Constraint**: Must optimize backup processes
-    -Impact\*\*: Requires efficient backup strategies and monitoring
+  - **Constraint**: Must optimize backup processes -Impact\*\*: Requires efficient
+    backup strategies and monitoring
 
 #### Monitoring Constraints
 
@@ -421,6 +423,5 @@
 
 ---
 
-**Last Updated**: 2026-07-12
-**Version**: 0.12.0-dev
-**Maintainer**: FLEXT Architecture Team
+**Last Updated**: 2026-07-12 **Version**: 0.12.0-dev **Maintainer**: FLEXT Architecture
+Team

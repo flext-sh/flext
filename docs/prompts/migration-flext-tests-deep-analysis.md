@@ -57,8 +57,9 @@
 
 ## Objetivo
 
-Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os projetos** do ecossistema FLEXT para
-identificar e corrigir **TODOS os usos de funções de `flext_tests` que estão fora do padrão atual e não suportadas**.
+Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os projetos**
+do ecossistema FLEXT para identificar e corrigir **TODOS os usos de funções de
+`flext_tests` que estão fora do padrão atual e não suportadas**.
 
 ## Escopo
 
@@ -432,7 +433,8 @@ Para cada uso encontrado:
 
 ### 1. Testes de Deprecation Warnings
 
-Arquivos que testam explicitamente os warnings de deprecation devem manter os métodos deprecados:
+Arquivos que testam explicitamente os warnings de deprecation devem manter os métodos
+deprecados:
 
 ```python
 # ✅ CORRETO - Teste de deprecation warning
@@ -445,11 +447,13 @@ def test_deprecation_warning():
 
 ### 2. Código de Compatibilidade
 
-Se houver código de compatibilidade que precisa manter métodos deprecados temporariamente, documentar claramente.
+Se houver código de compatibilidade que precisa manter métodos deprecados
+temporariamente, documentar claramente.
 
 ### 3. Métodos Internos Legítimos
 
-Alguns métodos podem ser usados internamente pela própria biblioteca `flext_tests`. Verificar se o uso é legítimo.
+Alguns métodos podem ser usados internamente pela própria biblioteca `flext_tests`.
+Verificar se o uso é legítimo.
 
 ## Documentação de Progresso
 
@@ -620,7 +624,8 @@ class FlextModels(TestsFlextModels):
 
 1. **Identificar classes base duplicadas:**
 
-   - Buscar `constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py` em cada projeto
+   - Buscar `constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py` em
+     cada projeto
    - Buscar múltiplos `conftest.py` em projetos
 
 2. **Mover objetos para `~/flext`:**
@@ -644,7 +649,7 @@ class FlextModels(TestsFlextModels):
 # Buscar classes base duplicadas
 find . -name "constants.py" -o -name "models.py" -o -name "typings.py" \
   -o -name "protocols.py" -o -name "utilities.py" | grep -v "~/flext"
-find . -name "conftest.py" | wc -l  # Deve retornar 1 (apenas em ~/flext)
+find . -name "conftest.py" | wc -l # Deve retornar 1 (apenas em ~/flext)
 ```
 
 #### 4. Estrutura de Diretórios de Testes
@@ -835,7 +840,8 @@ def setup_test_environment():
 - [ ] Classes base (`constants.py`, `models.py`, etc.) movidas para `~/flext/`
 - [ ] Classes base estendem de `flext_tests`
 - [ ] Namespaces fáceis criados (`c`, `m`, `t`, `p`, `u`)
-- [ ] Domínios de teste prefixados corretamente (`.Tests[Projeto]`, `.TestsCore`, `.TestsRoot`)
+- [ ] Domínios de teste prefixados corretamente (`.Tests[Projeto]`, `.TestsCore`,
+      `.TestsRoot`)
 - [ ] Imports atualizados para usar `~/flext/`
 - [ ] Arquivos locais renomeados para `.bak` e removidos
 
@@ -884,10 +890,10 @@ def setup_test_environment():
    ```bash
    # Buscar classes base duplicadas
    find . -name "constants.py" -o -name "models.py" -o -name "typings.py" | grep -v "~/flext"
-
+   
    # Buscar conftest.py duplicados
    find . -name "conftest.py" | grep -v "~/flext"
-
+   
    # Analisar estrutura de testes
    find . -type d -name "tests" | xargs -I {} find {} -type f -name "*.py"
    ```
@@ -1021,5 +1027,4 @@ grep -r "class.*Test" tests/ | grep -v "Tests\[Projeto\]"
 
 ---
 
-**Última atualização:** 2025-01-XX
-**Status:** Pronto para execução
+**Última atualização:** 2025-01-XX **Status:** Pronto para execução

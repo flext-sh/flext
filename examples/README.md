@@ -32,7 +32,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-Comprehensive examples demonstrating advanced FLEXT capabilities for enterprise data integration.
+Comprehensive examples demonstrating advanced FLEXT capabilities for enterprise data
+integration.
 
 **Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
 
@@ -48,11 +49,14 @@ Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 Demonstrates comprehensive Access Control List (ACL) processing capabilities:
 
-- **Parallel Batch Processing**: Using `ThreadPoolExecutor` for concurrent ACL operations.
-- **Intelligent Server Auto-detection**: Automatic detection of LDAP server types (OpenLDAP, Oracle OID, Oracle Unified
-  Directory, Active Directory, Apache DS).
-- **Integrated ACL Validation**: Complex context-based validation with custom rules per server type.
-- **Railway Pattern**: Failure-resistant pipeline that follows functional error handling principles.
+- **Parallel Batch Processing**: Using `ThreadPoolExecutor` for concurrent ACL
+  operations.
+- **Intelligent Server Auto-detection**: Automatic detection of LDAP server types
+  (OpenLDAP, Oracle OID, Oracle Unified Directory, Active Directory, Apache DS).
+- **Integrated ACL Validation**: Complex context-based validation with custom rules per
+  server type.
+- **Railway Pattern**: Failure-resistant pipeline that follows functional error handling
+  principles.
 - **Performance Analytics**: Comprehensive metrics and throughput analysis.
 
 **Key Features:**
@@ -254,4 +258,5 @@ We welcome contributions! Please see our Contributing Guide for details.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for
+details.

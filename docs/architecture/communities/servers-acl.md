@@ -96,7 +96,8 @@ No execution flows pass through this community.
 - `any` (9 edge(s))
 - `m.FrozenModel` (8 edge(s))
 - `set` (7 edge(s))
-- `flext-cli/examples/protocols.py::ExamplesFlextCliProtocols.CliMainWithGroups.group` (7 edge(s))
+- `flext-cli/examples/protocols.py::ExamplesFlextCliProtocols.CliMainWithGroups.group`
+  (7 edge(s))
 - `replace` (4 edge(s))
 
 ### Incoming

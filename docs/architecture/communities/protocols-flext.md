@@ -101,18 +101,24 @@ No execution flows pass through this community.
 
 ### Incoming
 
-- `flext-core/tests/unit/test_beartype_engine.py::TestsFlextCoreBeartypeEngine` (11 edge(s))
+- `flext-core/tests/unit/test_beartype_engine.py::TestsFlextCoreBeartypeEngine` (11
+  edge(s))
 - `derive_class_stem` (8 edge(s))
 - `attr_accept_constants` (7 edge(s))
-- `flext-core/src/flext_core/_utilities/_beartype/_class_visitor_parts/_parts/class_visitor_part_02_01.py` (3 edge(s))
-- `flext-core/tests/unit/test_models_project_metadata.py::TestsFlextModelsProjectMetadata` (3 edge(s))
-- `flext-core/tests/unit/test_project_metadata_facade_access.py::TestsFlextFacadeFlatSsotAccess` (3 edge(s))
+- `flext-core/src/flext_core/_utilities/_beartype/_class_visitor_parts/_parts/class_visitor_part_02_01.py`
+  (3 edge(s))
+- `flext-core/tests/unit/test_models_project_metadata.py::TestsFlextModelsProjectMetadata`
+  (3 edge(s))
+- `flext-core/tests/unit/test_project_metadata_facade_access.py::TestsFlextFacadeFlatSsotAccess`
+  (3 edge(s))
 - `flext-core/src/flext_core/_utilities/beartype_engine.py` (2 edge(s))
 - `defined_in_function_scope` (2 edge(s))
 - `defined_inside` (2 edge(s))
 - `contains_any` (2 edge(s))
-- `flext-core/tests/unit/test_enforcement_namespace.py::TestsFlextCoreEnforcementNamespace` (2 edge(s))
+- `flext-core/tests/unit/test_enforcement_namespace.py::TestsFlextCoreEnforcementNamespace`
+  (2 edge(s))
 - `catch_warnings` (2 edge(s))
 - `simplefilter` (2 edge(s))
 - `run_layer` (2 edge(s))
-- `flext-core/tests/unit/test_utilities_project_metadata_read.py::TestsFlextUtilitiesProjectMetadataRead` (2 edge(s))
+- `flext-core/tests/unit/test_utilities_project_metadata_read.py::TestsFlextUtilitiesProjectMetadataRead`
+  (2 edge(s))

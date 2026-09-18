@@ -43,8 +43,8 @@
 ## Overview
 
 This document defines the standards and procedures for managing links and
-cross-references across the FLEXT ecosystem documentation. It ensures
-consistency, maintainability, and accuracy of all documentation links.
+cross-references across the FLEXT ecosystem documentation. It ensures consistency,
+maintainability, and accuracy of all documentation links.
 
 ## Link Reference Standards
 
@@ -129,7 +129,8 @@ consistency, maintainability, and accuracy of all documentation links.
 
 ### Standard Structure
 
-All major documentation files must include a "Related Documentation" section at the end following this pattern:
+All major documentation files must include a "Related Documentation" section at the end
+following this pattern:
 
 ```markdown
 ## Related Documentation
@@ -142,11 +143,9 @@ All major documentation files must include a "Related Documentation" section at 
 
 **Across Projects**:
 
-- [flext-core
-  Foundation](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/architecture/overview.md)
+- [flext-core Foundation](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/architecture/overview.md)
   - Clean architecture and CQRS patterns
-- [flext-core Service
-  Patterns](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/guides/service-patterns.md)
+- [flext-core Service Patterns](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/guides/service-patterns.md)
   - Service patterns and dependency injection
 
 **External Resources**:
@@ -158,8 +157,10 @@ All major documentation files must include a "Related Documentation" section at 
 ### Section Guidelines
 
 1. **Within Project**: List 3-5 most relevant internal documentation files
-2. **Across Projects**: List 2-4 most relevant cross-project references (use GitHub URLs)
-3. **External Resources**: List 2-3 authoritative external references (RFCs, style guides, etc.)
+2. **Across Projects**: List 2-4 most relevant cross-project references (use GitHub
+   URLs)
+3. **External Resources**: List 2-3 authoritative external references (RFCs, style
+   guides, etc.)
 
 ### When to Add
 
@@ -180,7 +181,8 @@ document B to document A where it makes sense contextually.
 
 ### Guidelines
 
-1. **Not Always Required**: Bidirectional links should be contextually relevant, not forced
+1. **Not Always Required**: Bidirectional links should be contextually relevant, not
+   forced
 2. **Natural Flow**: Add reciprocal links only when they add value to the reader
 3. **Avoid Circular References**: Don't create circular link chains
 4. **Focus on Key Relationships**: Prioritize bidirectional links for:
@@ -279,7 +281,8 @@ flext-docs validate_links --projects-root ~/flext/flext-core
 **Solution**:
 
 1. Verify file exists in target project
-2. Check GitHub URL format: `https://github.com/organization/flext/tree/main/project/path/to/file.md`
+2. Check GitHub URL format:
+   `https://github.com/organization/flext/tree/main/project/path/to/file.md`
 3. Update link to correct GitHub URL
 4. Test link in browser
 
@@ -359,8 +362,7 @@ For now, maintain awareness of key cross-project relationships:
 
 **Across Projects**:
 
-- [flext-core Documentation
-  Standards](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/standards/documentation.md)
+- [flext-core Documentation Standards](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/standards/documentation.md)
   - Core documentation patterns
 - [FLEXT Workspace Documentation](../README.md) - Workspace-level documentation
 

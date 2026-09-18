@@ -117,7 +117,8 @@ _... and 540 more members._
 - `len` (32 edge(s))
 - `pop` (27 edge(s))
 - `validate_python` (23 edge(s))
-- `flext-core/tests/unit/test_models_container.py::TestsFlextCoreModelsContainer` (23 edge(s))
+- `flext-core/tests/unit/test_models_container.py::TestsFlextCoreModelsContainer` (23
+  edge(s))
 - `flext-core/tests/unit/test_runtime.py::TestsFlextCoreRuntime` (21 edge(s))
 - `generate` (20 edge(s))
 - `str` (17 edge(s))

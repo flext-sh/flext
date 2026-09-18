@@ -24,13 +24,20 @@
 
 ## 2. Como remontar os TODOs (método, não cópia)
 
-1. `env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open` (nunca herdar DB de outra sessão).
-2. Para cada cand=eira relevante (`vo335, 5k9r7, 2h0un, 3cabz, 9wwed, gxgqp`): `bd show <id>` e ler o status do HEADER (`OPEN/IN_PROGRESS/CLOSED/SUPERSEDED`).
-3. Cruzar com §4 do plano vivente (tabela v3) — divergência entre bead e plano = conserta o PLANO (bead é estado; plano projeta).
+1. `env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open` (nunca herdar DB de outra
+   sessão).
+2. Para cada cand=eira relevante (`vo335, 5k9r7, 2h0un, 3cabz, 9wwed, gxgqp`):
+   `bd show <id>` e ler o status do HEADER (`OPEN/IN_PROGRESS/CLOSED/SUPERSEDED`).
+3. Cruzar com §4 do plano vivente (tabela v3) — divergência entre bead e plano =
+   conserta o PLANO (bead é estado; plano projeta).
 4. Só então reivindicar UM próximo bead (§4 linha 1) e declarar objetivo/gates/stop.
 
 ## 3. Como as conclusões foram alcançadas (trilha)
 
-- Toda afirmação do §1 do plano nasceu de comando medido (grep/pip/find/merge-base) registrado em bead com **4 evidências** (registered state, git history, measured reality, integrated code) — lei `rules/…/beads-verification` + ADR-0007.
-- Automatização: fatos F1–F8 (§10) medidos em código-fonte dos donos (`codemod_rules.py`, Makefile, binários `code-review-graph`/`scope`).
-- Autocrítica vinda do erro real (pouso com CI pending, sed em bulk, fechamento de bead com gen vermelho) — §2, cada item com contramedida.
+- Toda afirmação do §1 do plano nasceu de comando medido (grep/pip/find/merge-base)
+  registrado em bead com **4 evidências** (registered state, git history, measured
+  reality, integrated code) — lei `rules/…/beads-verification` + ADR-0007.
+- Automatização: fatos F1–F8 (§10) medidos em código-fonte dos donos
+  (`codemod_rules.py`, Makefile, binários `code-review-graph`/`scope`).
+- Autocrítica vinda do erro real (pouso com CI pending, sed em bulk, fechamento de bead
+  com gen vermelho) — §2, cada item com contramedida.

@@ -143,27 +143,31 @@ All compose files follow naming convention: `docker-compose.{project}-{purpose}.
 
 ### Container Type Reference (THREE PRIMARY TYPES)
 
-**CRITICAL**: FLEXT ecosystem uses THREE distinct container types for different purposes:
+**CRITICAL**: FLEXT ecosystem uses THREE distinct container types for different
+purposes:
 
 1. **Standard Oracle Database** (`flext-oracle-db-test`)
 
    - **Port**: 1522
    - **Compose File**: `docker-compose.db-oracle.yml`
-   - **Purpose**: Standard Oracle Database for flext-db-oracle, flext-(dbt|tap|target)-oracle
+   - **Purpose**: Standard Oracle Database for flext-db-oracle,
+     flext-(dbt|tap|target)-oracle
    - **Fixture**: `oracle_container` from `flext_tests.fixtures`
 
 2. **FLEXT Oracle Unified Directory** (`flext-flext-oud-test`)
 
    - **Port**: 3389 (FLEXT production port)
    - **Compose File**: `docker-compose.flext-oud.yml`
-   - **Purpose**: FLEXT Telecom OUD migration (OpenLDAP simulating OUD with dc=invaliddc, cn=invalid_user)
+   - **Purpose**: FLEXT Telecom OUD migration (OpenLDAP simulating OUD with
+     dc=invaliddc, cn=invalid_user)
    - **Fixture**: `flext_oud_container` from `flext_tests.fixtures`
    - **Projects**: OUD migration workloads
 
 3. **Generic OpenLDAP** (`flext-openldap-test`)
    - **Port**: 3390
    - **Compose File**: `docker-compose.openldap.yml`
-   - **Purpose**: Generic LDAP/LDIF testing for flext-(ldap|ldif), flext-(dbt|tap|target)-(ldap|ldif)
+   - **Purpose**: Generic LDAP/LDIF testing for flext-(ldap|ldif),
+     flext-(dbt|tap|target)-(ldap|ldif)
    - **Fixture**: `ldap_container` from `flext_tests.fixtures`
 
 ### Infrastructure Services
@@ -358,13 +362,12 @@ ls ~/flext/docker/images/Dockerfile.* | wc -l
 ---
 
 **AUTHORITY**: This is the ONLY location for Docker artifacts in FLEXT ecosystem.
-**ENFORCEMENT**: All projects MUST use tk for container management.
-**ZERO DUPLICATION**: No Docker files allowed outside this centralized location.
+**ENFORCEMENT**: All projects MUST use tk for container management. **ZERO
+DUPLICATION**: No Docker files allowed outside this centralized location.
 
 ---
 
-**Last Updated**: 2025-09-30
-**Maintained By**: FLEXT Core Team
+**Last Updated**: 2025-09-30 **Maintained By**: FLEXT Core Team
 
 ## Contributing
 
@@ -372,4 +375,5 @@ Please see our Contributing Guide for details.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for
+details.

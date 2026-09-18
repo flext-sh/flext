@@ -6,10 +6,10 @@
 - O checkout raiz ainda contém o defeito `_lazy_analysis` em
   `flext-infra/src/flext_infra/codegen/_conform/execute.py`.
 - A lane envrc provou um recorte funcional, não o produto inteiro.
-- Resultados vermelhos recentes vieram de revisões diferentes: 914 findings de
-  check; 129→6 falhas no conform da lane envrc; 58F+13E em seleção pós-merge; 79
-  Pyrefly errors reportados. O próximo baseline substitui esses números com uma
-  execução única no mesmo SHA.
+- Resultados vermelhos recentes vieram de revisões diferentes: 914 findings de check;
+  129→6 falhas no conform da lane envrc; 58F+13E em seleção pós-merge; 79 Pyrefly errors
+  reportados. O próximo baseline substitui esses números com uma execução única no mesmo
+  SHA.
 - `config.py` (~3342 LOC) e `conform.py` (~2996 LOC) permanecem god modules no root.
 
 ## Primeiro pacote de delegação

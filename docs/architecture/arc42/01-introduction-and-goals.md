@@ -68,11 +68,13 @@ The FLEXT Enterprise Data Integration Platform must provide:
 
 #### Data Integration Capabilities
 
-- **Multi-Source Data Extraction**: Extract data from LDAP directories, Oracle databases, file systems, and other
-  enterprise sources
-- **Data Transformation**: Transform data according to business rules using DBT transformations
+- **Multi-Source Data Extraction**: Extract data from LDAP directories, Oracle
+  databases, file systems, and other enterprise sources
+- **Data Transformation**: Transform data according to business rules using DBT
+  transformations
 - **Multi-Destination Loading**: Load processed data into various target systems
-- **Real-time and Batch Processing**: Support both real-time streaming and batch processing workflows
+- **Real-time and Batch Processing**: Support both real-time streaming and batch
+  processing workflows
 
 #### Pipeline Orchestration
 
@@ -198,7 +200,8 @@ The FLEXT Enterprise Data Integration Platform must provide:
 
 ### 1.4.1 Business Context
 
-FLEXT serves as the central data integration platform for enterprise environments, enabling:
+FLEXT serves as the central data integration platform for enterprise environments,
+enabling:
 
 - **Data Consolidation**: Unify data from multiple sources into a coherent view
 - **Data Quality**: Ensure data accuracy and consistency across systems
@@ -255,6 +258,5 @@ FLEXT integrates with:
 
 ---
 
-**Last Updated**: 2026-07-12
-**Version**: 0.12.0-dev
-**Maintainer**: FLEXT Architecture Team
+**Last Updated**: 2026-07-12 **Version**: 0.12.0-dev **Maintainer**: FLEXT Architecture
+Team

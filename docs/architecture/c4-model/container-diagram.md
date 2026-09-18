@@ -73,8 +73,9 @@
 
 ## Overview
 
-The FLEXT platform is composed of multiple containers that work together to provide enterprise data integration
-capabilities. Each container has specific responsibilities and communicates through well-defined interfaces.
+The FLEXT platform is composed of multiple containers that work together to provide
+enterprise data integration capabilities. Each container has specific responsibilities
+and communicates through well-defined interfaces.
 
 ## Container Diagram
 

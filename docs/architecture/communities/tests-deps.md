@@ -111,8 +111,10 @@ No execution flows pass through this community.
 - `infra_mapping_result` (9 edge(s))
 - `mk_project` (7 edge(s))
 - `str` (7 edge(s))
-- `flext-infra/tests/unit/deps/test_detection_deptry.py::TestsFlextInfraDepsDetectionDeptry` (7 edge(s))
+- `flext-infra/tests/unit/deps/test_detection_deptry.py::TestsFlextInfraDepsDetectionDeptry`
+  (7 edge(s))
 - `fail` (7 edge(s))
 - `Path` (7 edge(s))
-- `flext-infra/tests/unit/check/extended_gate_bandit_markdown_tests.py::TestBanditAndMarkdownGates` (6 edge(s))
+- `flext-infra/tests/unit/check/extended_gate_bandit_markdown_tests.py::TestBanditAndMarkdownGates`
+  (6 edge(s))
 - `sequence_runner` (6 edge(s))

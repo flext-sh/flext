@@ -2,7 +2,8 @@
 
 ## Provider identity
 
-The phrase “Claude session” had been used for several imported/Kilo sessions. Native extraction resolved the actual Claude provider session separately.
+The phrase “Claude session” had been used for several imported/Kilo sessions. Native
+extraction resolved the actual Claude provider session separately.
 
 | Actor/session                                              | Working directory                          | Active window                                             | Verified outcome                                                                                                                                            |
 | ---------------------------------------------------------- | ------------------------------------------ | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -25,11 +26,26 @@ The phrase “Claude session” had been used for several imported/Kilo sessions
 | 22:44–22:48 | Referenced agents#151 merged at `61e7bea`; identified flext-core#479 blocker | Accept agents merge only after ancestry check; blocker remains open |
 | 22:53       | Session stopped due to usage/session limit                                   | Work incomplete; Gas City contract review remained pending          |
 
-Native Claude wrote `~/.claude/plans/replaneje-e-revise-esses-drifting-scott.md` plus `~/.claude/plans/wip-automation/`. That program belongs to ai-hub/Gas City lane automation and must not be folded into flext-infra code modernization. It may later provide the landing automation used by this plan after its own verified delivery.
+Native Claude wrote `~/.claude/plans/replaneje-e-revise-esses-drifting-scott.md` plus
+`~/.claude/plans/wip-automation/`. That program belongs to ai-hub/Gas City lane
+automation and must not be folded into flext-infra code modernization. It may later
+provide the landing automation used by this plan after its own verified delivery.
 
 ## Kilo session milestones relevant to flext-infra
 
-- The main stabilization session reported P0 docs/ADR commit `049cc4c00c`, Gas City Bead reorganization, lane census, and `make setup` exit 0, then stopped during a Pydantic/facade owner repair. Treat the commit as pending ancestry proof and the gate as SHA-scoped evidence only.
-- The rope Ruff session restored or verified five `u.validate_value` bindings and added an SLF001 per-file suppression, but ran no canonical Make gates. Current-source review later found the suppression absent and the bindings superseded by newer implementations. Do not replay that patch.
-- The surf-hornet session reported envrc commits `dce9192a0` (flext-infra) and `1e49d70841` (superproject), fleet gen fixed point, and runtime direnv smoke. Preserve its single-owner rendering, automatic `direnv allow`, and `.envrc.local` residue removal if current tip still contains them. Reopen the backend design because the latest authority permits only Gas City Beads.
-- The aeolian-sodalite session contains useful test-quality examples but also prohibited resets, `model_rebuild()` attempts, manual generated-export edits, and unresolved gates. Never merge the stale branch wholesale.
+- The main stabilization session reported P0 docs/ADR commit `049cc4c00c`, Gas City Bead
+  reorganization, lane census, and `make setup` exit 0, then stopped during a
+  Pydantic/facade owner repair. Treat the commit as pending ancestry proof and the gate
+  as SHA-scoped evidence only.
+- The rope Ruff session restored or verified five `u.validate_value` bindings and added
+  an SLF001 per-file suppression, but ran no canonical Make gates. Current-source review
+  later found the suppression absent and the bindings superseded by newer
+  implementations. Do not replay that patch.
+- The surf-hornet session reported envrc commits `dce9192a0` (flext-infra) and
+  `1e49d70841` (superproject), fleet gen fixed point, and runtime direnv smoke. Preserve
+  its single-owner rendering, automatic `direnv allow`, and `.envrc.local` residue
+  removal if current tip still contains them. Reopen the backend design because the
+  latest authority permits only Gas City Beads.
+- The aeolian-sodalite session contains useful test-quality examples but also prohibited
+  resets, `model_rebuild()` attempts, manual generated-export edits, and unresolved
+  gates. Never merge the stale branch wholesale.

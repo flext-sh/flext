@@ -16,32 +16,34 @@
   - [8.3 Original target after integration](#83-original-target-after-integration)
   <!-- TOC END -->
 
-Every light worker owns exactly one bead in one branch and one dedicated worktree.
-Read the canonical authorities first; this file only adds lane discipline.
+Every light worker owns exactly one bead in one branch and one dedicated worktree. Read
+the canonical authorities first; this file only adds lane discipline.
 
 ## Canonical authorities
 
 - Project law and routed skills: [`AGENTS.md`][agents-md]
 - Governance router: [`GOVERNANCE.md`][governance-md]
 - Local skills: [`flext-law`][flext-law]
-- Universal skills: `~/.agents/skills/project-wide/shell/make-check/SKILL.md`, `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`
+- Universal skills: `~/.agents/skills/project-wide/shell/make-check/SKILL.md`,
+  `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`
 - Config/settings SSOT: [ADR-005][adr-005]
 
 [agents-md]: https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md
 [governance-md]: ../GOVERNANCE.md
-[flext-law]: https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md
+[flext-law]:
+  https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md
 [adr-005]: ../architecture/adr/005-config-settings-constants-templates-schemas-ssot.md
 
 ## 1. One lane, one bead, one worktree
 
-Claim exactly one bead and stay inside the worktree created for it. Do not edit
-paths outside your declared scope; do not borrow files from another lane. If
-another lane's output blocks you, message the lead instead of patching around it.
+Claim exactly one bead and stay inside the worktree created for it. Do not edit paths
+outside your declared scope; do not borrow files from another lane. If another lane's
+output blocks you, message the lead instead of patching around it.
 
 ## 2. Gates only through root Make verbs
 
-Never invoke bare `ruff`, `pyrefly`, `pyright`, `mypy`, `pytest`, or `uv`. Use
-the dispatcher:
+Never invoke bare `ruff`, `pyrefly`, `pyright`, `mypy`, `pytest`, or `uv`. Use the
+dispatcher:
 
 ```bash
 make gen
@@ -49,21 +51,20 @@ make check
 make test
 ```
 
-Every Python test run retains the canonical testmon cache. Agents do not clear,
-replace, or bypass it and do not add selector variables to this standard flow.
+Every Python test run retains the canonical testmon cache. Agents do not clear, replace,
+or bypass it and do not add selector variables to this standard flow.
 
 ## 3. Cooperative git
 
 Treat every git command as `GIT_MASTER=1` safe. Commit by explicit pathspec after
-inspecting `git diff --cached --stat`. Never `git add -A`, stash, reset,
-checkout-away, clean, amend, or force-push. If foreign WIP appears in `git
-status`, leave it untouched and ask the lead. Fix forward only.
+inspecting `git diff --cached --stat`. Never `git add -A`, stash, reset, checkout-away,
+clean, amend, or force-push. If foreign WIP appears in `git status`, leave it untouched
+and ask the lead. Fix forward only.
 
 ## 4. Beads evidence only
 
-Append truthful notes with `bd comment <id> '...'`. Never change
-bead status, assignee, dependency, priority, or close/merge beads. The lead owns
-bead state.
+Append truthful notes with `bd comment <id> '...'`. Never change bead status, assignee,
+dependency, priority, or close/merge beads. The lead owns bead state.
 
 ## 5. Definition of done
 
@@ -73,18 +74,17 @@ Done means all of the following:
 - Exact Make-gate evidence is recorded: command, cwd, exit code, decisive line.
 - No new lint, type, or test failures are injected.
 - Changed files are clean and scoped.
-- Nothing reaches `0.12.0-dev` except through the lane's own reviewed PR: one
-  bead -> one branch -> PR against `0.12.0-dev` -> green native gates -> PR
-  Sheriff gate (`~/.agents/skills/tool/pr-sheriff/scripts/pr_triage.py gate
-<owner/repo> <pr> --base 0.12.0-dev --head <oid>`) -> independent review or
-  operator-authorized administrative merge -> merge commit -> post-merge
-  runtime proof -> bead evidence -> branch cleanup.
+- Nothing reaches `0.12.0-dev` except through the lane's own reviewed PR: one bead ->
+  one branch -> PR against `0.12.0-dev` -> green native gates -> PR Sheriff gate
+  (`~/.agents/skills/tool/pr-sheriff/scripts/pr_triage.py gate <owner/repo> <pr> --base 0.12.0-dev --head <oid>`)
+  -> independent review or operator-authorized administrative merge -> merge commit ->
+  post-merge runtime proof -> bead evidence -> branch cleanup.
 
 ## 6. Coordination protocol
 
-Coordinate only through the bead (`bd comment <id>`) and the PR thread. Report
-to the lead, then go idle; idle-after-report is correct. When blocked, message
-the lead the exact blocker and stop. Do not wander to other beads.
+Coordinate only through the bead (`bd comment <id>`) and the PR thread. Report to the
+lead, then go idle; idle-after-report is correct. When blocked, message the lead the
+exact blocker and stop. Do not wander to other beads.
 
 ## 7. Anti-patterns that burned us
 
@@ -98,47 +98,46 @@ Do not repeat these:
 
 ## 8. Three-boundary validation contract
 
-Any edit or automated adjustment — sync, codegen round-trip, auto-fix, or
-upstream merge — is a code change. Keep automated corrections atomic within the
-lane: one coherent commit or an explicit pathspec-bound set of commits.
+Any edit or automated adjustment — sync, codegen round-trip, auto-fix, or upstream merge
+— is a code change. Keep automated corrections atomic within the lane: one coherent
+commit or an explicit pathspec-bound set of commits.
 
-A WIP checkpoint preserves a scoped commit on its remote branch; it does not
-establish review readiness. Resolve the integration branch from the repository's
-current declaration before fetching it. With that branch substituted for
-`<integration>`, `git merge-base --is-ancestor origin/<integration> HEAD`
-proves base absorption; the reverse order proves that the lane commit is
-contained in integration. Neither proof replaces reviewed PR merge-commit
-evidence or runtime validation. Propagation requires fresh native validation in
-the original target checkout against the integrated candidate. Record these
-boundaries separately in the active Bead.
+A WIP checkpoint preserves a scoped commit on its remote branch; it does not establish
+review readiness. Resolve the integration branch from the repository's current
+declaration before fetching it. With that branch substituted for `<integration>`,
+`git merge-base --is-ancestor origin/<integration> HEAD` proves base absorption; the
+reverse order proves that the lane commit is contained in integration. Neither proof
+replaces reviewed PR merge-commit evidence or runtime validation. Propagation requires
+fresh native validation in the original target checkout against the integrated
+candidate. Record these boundaries separately in the active Bead.
 
 The following fresh evidence is mandatory at every boundary:
 
 - `make check` for the workspace;
-- `make test`, retaining the canonical testmon cache, for every
-  affected project and integration surface;
+- `make test`, retaining the canonical testmon cache, for every affected project and
+  integration surface;
 - real public-surface QA for the changed behavior; and
 - generator/consumer idempotence when generated outputs are involved.
 
 ### 8.1 Final worker lane
 
-After the final lane edit or automated adjustment, the worker runs the complete
-boundary above and records exact commands, cwd, exit codes, and decisive output.
+After the final lane edit or automated adjustment, the worker runs the complete boundary
+above and records exact commands, cwd, exit codes, and decisive output.
 
 ### 8.2 Updated worker lane before merge
 
-Before reporting `READY_FOR_REVIEW`, the worker must non-destructively merge the
-latest fetched integration branch into the lane, resolve resulting issues
-without discarding WIP, and rerun the complete boundary above. An upstream merge is
-absorbed only after this lane-context validation passes.
+Before reporting `READY_FOR_REVIEW`, the worker must non-destructively merge the latest
+fetched integration branch into the lane, resolve resulting issues without discarding
+WIP, and rerun the complete boundary above. An upstream merge is absorbed only after
+this lane-context validation passes.
 
 ### 8.3 Original target after integration
 
 After the lead/orchestrator integrates the lane into the original target, the
 orchestrator reruns the complete boundary on that target and performs the real
-public-surface QA. This is post-integration evidence, not worker evidence, and
-must not be claimed before integration.
+public-surface QA. This is post-integration evidence, not worker evidence, and must not
+be claimed before integration.
 
-Any red, inconclusive, timed-out without a verdict, zero-project, partial-scope,
-or stale-HEAD result blocks review or integration. Only complete, fresh green
-evidence at the applicable boundary permits `READY_FOR_REVIEW`.
+Any red, inconclusive, timed-out without a verdict, zero-project, partial-scope, or
+stale-HEAD result blocks review or integration. Only complete, fresh green evidence at
+the applicable boundary permits `READY_FOR_REVIEW`.

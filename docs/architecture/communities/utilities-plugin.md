@@ -102,7 +102,8 @@ No execution flows pass through this community.
 ### Incoming
 
 - `that` (34 edge(s))
-- `flext-plugin/tests/unit/test_platform_service.py::TestsFlextPluginPlatformService` (11 edge(s))
+- `flext-plugin/tests/unit/test_platform_service.py::TestsFlextPluginPlatformService`
+  (11 edge(s))
 - `PluginPlatformService` (11 edge(s))
 - `create` (8 edge(s))
 - `flext-plugin/src/flext_plugin/_utilities/plugin_platform.py` (5 edge(s))
@@ -110,8 +111,10 @@ No execution flows pass through this community.
 - `mark_completed` (4 edge(s))
 - `mark_started` (4 edge(s))
 - `str` (4 edge(s))
-- `flext-plugin/tests/unit/test_platform_service.py::TestsFlextPluginPlatformExecution` (3 edge(s))
-- `flext-plugin/tests/unit/test_platform_service.py::TestsFlextPluginPlatformService._make_plugin` (3 edge(s))
+- `flext-plugin/tests/unit/test_platform_service.py::TestsFlextPluginPlatformExecution`
+  (3 edge(s))
+- `flext-plugin/tests/unit/test_platform_service.py::TestsFlextPluginPlatformService._make_plugin`
+  (3 edge(s))
 - `register_plugin` (3 edge(s))
 - `fetch_execution` (3 edge(s))
 - `load_plugin` (3 edge(s))

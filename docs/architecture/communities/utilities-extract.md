@@ -105,7 +105,8 @@ _... and 161 more members._
 ### Incoming
 
 - `that` (54 edge(s))
-- `flext-ldif/tests/unit/test_parser_utilities.py::TestsFlextLdifParserUtilities` (16 edge(s))
+- `flext-ldif/tests/unit/test_parser_utilities.py::TestsFlextLdifParserUtilities` (16
+  edge(s))
 - `get_acl_attributes` (11 edge(s))
 - `flext-ldif/tests/unit/test_acl_registry.py::TestsFlextLdifAclRegistry` (10 edge(s))
 - `assert_success` (7 edge(s))
@@ -114,8 +115,10 @@ _... and 161 more members._
 - `is_acl_attribute` (6 edge(s))
 - `extract_from_definition` (5 edge(s))
 - `extract_extensions` (5 edge(s))
-- `flext-ldif/tests/unit/utilities/test_utilities_core.py::TestsFlextLdifUtilitiesCore` (5 edge(s))
+- `flext-ldif/tests/unit/utilities/test_utilities_core.py::TestsFlextLdifUtilitiesCore`
+  (5 edge(s))
 - `flext-ldif/src/flext_ldif/_utilities/schema.py` (4 edge(s))
 - `assert_failure` (4 edge(s))
 - `unfold_lines` (4 edge(s))
-- `flext-ldif/tests/unit/utilities/test_utilities_comprehensive.py::TestsFlextLdifUtilitiesComprehensive` (4 edge(s))
+- `flext-ldif/tests/unit/utilities/test_utilities_comprehensive.py::TestsFlextLdifUtilitiesComprehensive`
+  (4 edge(s))

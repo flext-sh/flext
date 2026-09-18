@@ -1,13 +1,13 @@
 ---
 name: validating-json-data
 description: >-
-  Validates JSON data against JSON Schema using the z-schema library. Use when
-  the user needs to validate JSON, check data against a schema, handle
-  validation errors, use custom format validators, work with JSON Schema drafts
-  04 through 2020-12, set up z-schema in a project, compile schemas with
-  cross-references, resolve remote $ref, configure validation options, or
-  inspect error details. Covers sync/async modes, safe error handling, schema
-  pre-compilation, remote references, TypeScript types, and browser/UMD usage.
+  Validates JSON data against JSON Schema using the z-schema library. Use when the user
+  needs to validate JSON, check data against a schema, handle validation errors, use
+  custom format validators, work with JSON Schema drafts 04 through 2020-12, set up
+  z-schema in a project, compile schemas with cross-references, resolve remote $ref,
+  configure validation options, or inspect error details. Covers sync/async modes, safe
+  error handling, schema pre-compilation, remote references, TypeScript types, and
+  browser/UMD usage.
 metadata:
   category: development
   source:
@@ -19,7 +19,8 @@ metadata:
 
 # Validating JSON Data with z-schema
 
-z-schema validates JSON data against JSON Schema (draft-04, draft-06, draft-07, draft-2019-09, draft-2020-12). Default draft: **draft-2020-12**.
+z-schema validates JSON data against JSON Schema (draft-04, draft-06, draft-07,
+draft-2019-09, draft-2020-12). Default draft: **draft-2020-12**.
 
 ## Quick start
 
@@ -45,7 +46,8 @@ Install: `npm install z-schema`
 
 ## Choosing a validation mode
 
-z-schema has four modes based on two toggles: `async` and `safe`. Pick the one that fits the use case.
+z-schema has four modes based on two toggles: `async` and `safe`. Pick the one that fits
+the use case.
 
 | Mode        | Factory call                                  | Returns                          | Use when                                 |
 | ----------- | --------------------------------------------- | -------------------------------- | ---------------------------------------- |
@@ -158,11 +160,13 @@ validator.validate(data, schema, {
 });
 ```
 
-For the full error code list, see [references/error-codes.md](references/error-codes.md).
+For the full error code list, see
+[references/error-codes.md](references/error-codes.md).
 
 ## Schema pre-compilation
 
-Compile schemas at startup for better runtime performance and to resolve cross-references:
+Compile schemas at startup for better runtime performance and to resolve
+cross-references:
 
 ```typescript
 const validator = ZSchema.create();
@@ -197,15 +201,9 @@ validator.validate({ name: "Alice", home: { city: "Paris" } }, "person");
 ### Manual registration
 
 ```typescript
-ZSchema.setRemoteReference(
-  "http://example.com/schemas/address.json",
-  addressSchema,
-);
+ZSchema.setRemoteReference("http://example.com/schemas/address.json", addressSchema);
 // or per-instance:
-validator.setRemoteReference(
-  "http://example.com/schemas/person.json",
-  personSchema,
-);
+validator.setRemoteReference("http://example.com/schemas/person.json", personSchema);
 ```
 
 ### Automatic loading via schema reader
@@ -287,9 +285,11 @@ Set the draft explicitly if the schema targets a specific version:
 const validator = ZSchema.create({ version: "draft-07" });
 ```
 
-Valid values: `'draft-04'`, `'draft-06'`, `'draft-07'`, `'draft2019-09'`, `'draft2020-12'` (default), `'none'`.
+Valid values: `'draft-04'`, `'draft-06'`, `'draft-07'`, `'draft2019-09'`,
+`'draft2020-12'` (default), `'none'`.
 
-For a feature comparison across drafts, see [references/draft-comparison.md](references/draft-comparison.md).
+For a feature comparison across drafts, see
+[references/draft-comparison.md](references/draft-comparison.md).
 
 ## Common options
 
@@ -348,13 +348,17 @@ import { ValidateError } from "z-schema";
 
 ## Reference files
 
-- [references/error-codes.md](references/error-codes.md) — Full error code list with descriptions and examples
-- [references/options.md](references/options.md) — Complete options reference with defaults
-- [references/draft-comparison.md](references/draft-comparison.md) — Feature comparison across JSON Schema drafts
+- [references/error-codes.md](references/error-codes.md) — Full error code list with
+  descriptions and examples
+- [references/options.md](references/options.md) — Complete options reference with
+  defaults
+- [references/draft-comparison.md](references/draft-comparison.md) — Feature comparison
+  across JSON Schema drafts
 
 ## Important conventions
 
-- Always use `ZSchema.create(options?)` — never `new ZSchema()`. The factory returns the correctly typed variant.
+- Always use `ZSchema.create(options?)` — never `new ZSchema()`. The factory returns the
+  correctly typed variant.
 - Error details are on `.details` (not `.errors`).
 - Import types with `import type { ... }` and values with `import { ValidateError }`.
 - Default draft is `draft2020-12`. Specify explicitly if targeting an older draft.

@@ -116,8 +116,10 @@ _... and 119 more members._
 - `update_metadata` (4 edge(s))
 - `should_sample` (4 edge(s))
 - `fail` (4 edge(s))
-- `flext-observability/src/flext_observability/services/http_client_instrumentation.py` (3 edge(s))
-- `flext-observability/src/flext_observability/services/http_instrumentation.py` (3 edge(s))
+- `flext-observability/src/flext_observability/services/http_client_instrumentation.py`
+  (3 edge(s))
+- `flext-observability/src/flext_observability/services/http_instrumentation.py` (3
+  edge(s))
 - `record_error` (3 edge(s))
 - `flext-observability/src/flext_observability/services/advanced_context.py` (2 edge(s))
 - `flext-observability/src/flext_observability/services/custom_metrics.py` (2 edge(s))

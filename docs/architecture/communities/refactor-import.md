@@ -70,8 +70,10 @@ No execution flows pass through this community.
 - `flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py::TestsFlextInfraRefactorInfraRefactorTypingUnifier.test_skips_duplicate_t_import_in_parenthesized_import_block`
   (3 edge(s))
 - `apply_to_source` (1 edge(s))
-- `flext-infra/src/flext_infra/transformers/typing_unifier.py::FlextInfraRefactorTypingUnifier` (1 edge(s))
-- `flext-quality/src/flext_quality/docs/dashboard.py::FlextQualityDocumentationDashboard.index` (1 edge(s))
+- `flext-infra/src/flext_infra/transformers/typing_unifier.py::FlextInfraRefactorTypingUnifier`
+  (1 edge(s))
+- `flext-quality/src/flext_quality/docs/dashboard.py::FlextQualityDocumentationDashboard.index`
+  (1 edge(s))
 
 ### Incoming
 

@@ -96,8 +96,10 @@ No execution flows pass through this community.
 - `split` (6 edge(s))
 - `isinstance` (5 edge(s))
 - `append` (5 edge(s))
-- `flext-ldif/src/flext_ldif/servers/relaxed.py::FlextLdifServersRelaxed.Acl._get_server_type` (4 edge(s))
-- `flext-ldif/src/flext_ldif/servers/relaxed.py::FlextLdifServersRelaxed.Schema._get_server_type` (4 edge(s))
+- `flext-ldif/src/flext_ldif/servers/relaxed.py::FlextLdifServersRelaxed.Acl._get_server_type`
+  (4 edge(s))
+- `flext-ldif/src/flext_ldif/servers/relaxed.py::FlextLdifServersRelaxed.Schema._get_server_type`
+  (4 edge(s))
 
 ### Incoming
 

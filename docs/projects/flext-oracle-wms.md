@@ -13,9 +13,8 @@
 
 <!-- TOC END -->
 
-FLEXT Oracle WMS is the domain package for Oracle Warehouse Management System
-(WMS) integration. Its executable source lives under
-`flext-oracle-wms/src/flext_oracle_wms/`.
+FLEXT Oracle WMS is the domain package for Oracle Warehouse Management System (WMS)
+integration. Its executable source lives under `flext-oracle-wms/src/flext_oracle_wms/`.
 
 ## Status & health
 
@@ -26,24 +25,23 @@ FLEXT Oracle WMS is the domain package for Oracle Warehouse Management System
 
 ### Quality signals
 
-- Run selector-free `make check`, `make test`, and `make build` through the
-  workspace root.
+- Run selector-free `make check`, `make test`, and `make build` through the workspace
+  root.
 
 ## Quick start
 
-Use the generated API reference for verified public imports and method
-signatures.
+Use the generated API reference for verified public imports and method signatures.
 
 ## Architecture & modules
 
 The project uses the canonical tiered layout: `api.py` is the public facade;
-`_utilities/` contains implementation details; and `config/` is the
-configuration source of truth.
+`_utilities/` contains implementation details; and `config/` is the configuration source
+of truth.
 
 ### Key architectural patterns
 
-- One public facade, Pydantic boundary models, and the workspace
-  config/settings SSOT define the package contract.
+- One public facade, Pydantic boundary models, and the workspace config/settings SSOT
+  define the package contract.
 
 ## Testing & quality
 
@@ -58,4 +56,5 @@ The root Make gates provide current quality evidence.
 ## Support & issues
 
 - Issues: <https://github.com/flext-sh/flext/issues>
-- Follow the workspace `AGENTS.md` and the project README before editing code or docs so this page stays accurate.
+- Follow the workspace `AGENTS.md` and the project README before editing code or docs so
+  this page stays accurate.

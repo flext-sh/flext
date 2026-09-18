@@ -2,7 +2,10 @@
 
 ## Overview
 
-This document provides Node/TypeScript-specific best practices and examples for implementing MCP servers using the MCP TypeScript SDK. It covers project structure, server setup, tool registration patterns, input validation with Zod, error handling, and complete working examples.
+This document provides Node/TypeScript-specific best practices and examples for
+implementing MCP servers using the MCP TypeScript SDK. It covers project structure,
+server setup, tool registration patterns, input validation with Zod, error handling, and
+complete working examples.
 
 ---
 
@@ -84,7 +87,8 @@ Create the following structure for Node/TypeScript MCP servers:
 
 ### Tool Naming
 
-Use snake_case for tool names (e.g., "search_users", "create_project", "get_channel_info") with clear, action-oriented names.
+Use snake_case for tool names (e.g., "search_users", "create_project",
+"get_channel_info") with clear, action-oriented names.
 
 **Avoid Naming Conflicts**: Include the service context to prevent overlaps:
 
@@ -97,7 +101,8 @@ Use snake_case for tool names (e.g., "search_users", "create_project", "get_chan
 Tools are registered using the `registerTool` method with the following requirements:
 
 - Use Zod schemas for runtime input validation and type safety
-- The `description` field must be explicitly provided - JSDoc comments are NOT automatically extracted
+- The `description` field must be explicitly provided - JSDoc comments are NOT
+  automatically extracted
 - Explicitly provide `title`, `description`, `inputSchema`, and `annotations`
 - The `inputSchema` must be a Zod schema object (not a JSON schema)
 - Type all parameters and return values explicitly
@@ -222,10 +227,7 @@ Error Handling:
 
       if (params.response_format === ResponseFormat.MARKDOWN) {
         // Human-readable markdown format
-        const lines: string[] = [
-          `# User Search Results: '${params.query}'`,
-          "",
-        ];
+        const lines: string[] = [`# User Search Results: '${params.query}'`, ""];
         lines.push(`Found ${total} users (showing ${users.length})`);
         lines.push("");
 
@@ -330,12 +332,7 @@ const PaginationSchema = z.object({
     .max(100)
     .default(20)
     .describe("Maximum results to return"),
-  offset: z
-    .number()
-    .int()
-    .min(0)
-    .default(0)
-    .describe("Number of results to skip"),
+  offset: z.number().int().min(0).default(0).describe("Number of results to skip"),
 });
 ```
 
@@ -883,7 +880,8 @@ Your implementation MUST prioritize composability and code reuse:
 2. **Avoid Duplication**:
    - NEVER copy-paste similar code between tools
    - If you find yourself writing similar logic twice, extract it into a function
-   - Common operations like pagination, filtering, field selection, and formatting should be shared
+   - Common operations like pagination, filtering, field selection, and formatting
+     should be shared
    - Authentication/authorization logic should be centralized
 
 ## Building and Running
@@ -901,7 +899,8 @@ npm start
 npm run dev
 ```
 
-Always ensure `npm run build` completes successfully before considering the implementation complete.
+Always ensure `npm run build` completes successfully before considering the
+implementation complete.
 
 ## Quality Checklist
 
@@ -920,8 +919,10 @@ Before finalizing your Node/TypeScript MCP server implementation, ensure:
 - [ ] FOCUSED IMPLEMENTATION: Most important and valuable tools implemented
 - [ ] All tools registered using `registerTool` with complete configuration
 - [ ] All tools include `title`, `description`, `inputSchema`, and `annotations`
-- [ ] Annotations correctly set (readOnlyHint, destructiveHint, idempotentHint, openWorldHint)
-- [ ] All tools use Zod schemas for runtime input validation with `.strict()` enforcement
+- [ ] Annotations correctly set (readOnlyHint, destructiveHint, idempotentHint,
+      openWorldHint)
+- [ ] All tools use Zod schemas for runtime input validation with `.strict()`
+      enforcement
 - [ ] All Zod schemas have proper constraints and descriptive error messages
 - [ ] All tools have comprehensive descriptions with explicit input/output types
 - [ ] Descriptions include return value examples and complete schema documentation

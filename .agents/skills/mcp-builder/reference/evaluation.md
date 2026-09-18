@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document provides guidance on creating comprehensive evaluations for MCP servers. Evaluations test whether LLMs can effectively use your MCP server to answer realistic, complex questions using only the tools provided.
+This document provides guidance on creating comprehensive evaluations for MCP servers.
+Evaluations test whether LLMs can effectively use your MCP server to answer realistic,
+complex questions using only the tools provided.
 
 ---
 
@@ -31,11 +33,15 @@ This document provides guidance on creating comprehensive evaluations for MCP se
 
 ## Purpose of Evaluations
 
-The measure of quality of an MCP server is NOT how well or comprehensively the server implements tools, but how well these implementations (input/output schemas, docstrings/descriptions, functionality) enable LLMs with no other context and access ONLY to the MCP servers to answer realistic and difficult questions.
+The measure of quality of an MCP server is NOT how well or comprehensively the server
+implements tools, but how well these implementations (input/output schemas,
+docstrings/descriptions, functionality) enable LLMs with no other context and access
+ONLY to the MCP servers to answer realistic and difficult questions.
 
 ## Evaluation Overview
 
-Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DESTRUCTIVE, and IDEMPOTENT operations to answer. Each question should be:
+Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT,
+NON-DESTRUCTIVE, and IDEMPOTENT operations to answer. Each question should be:
 
 - Realistic
 - Clear and concise
@@ -57,13 +63,15 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
    - Should not instruct or require modifying state to arrive at the correct answer
 
 3. **Questions must be REALISTIC, CLEAR, CONCISE, and COMPLEX**
-   - Must require another LLM to use multiple (potentially dozens of) tools or steps to answer
+   - Must require another LLM to use multiple (potentially dozens of) tools or steps to
+     answer
 
 ### Complexity and Depth
 
 1. **Questions must require deep exploration**
 
-   - Consider multi-hop questions requiring multiple sub-questions and sequential tool calls
+   - Consider multi-hop questions requiring multiple sub-questions and sequential tool
+     calls
    - Each step should benefit from information found in previous questions
 
 2. **Questions may require extensive paging**
@@ -81,7 +89,8 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 4. **Questions must not be solvable with straightforward keyword search**
    - Do not include specific keywords from the target content
    - Use synonyms, related concepts, or paraphrases
-   - Require multiple searches, analyzing multiple related items, extracting context, then deriving the answer
+   - Require multiple searches, analyzing multiple related items, extracting context,
+     then deriving the answer
 
 ### Tool Testing
 
@@ -97,7 +106,8 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 
 2. **Questions should MOSTLY reflect real human use cases**
 
-   - The kinds of information retrieval tasks that HUMANS assisted by an LLM would care about
+   - The kinds of information retrieval tasks that HUMANS assisted by an LLM would care
+     about
 
 3. **Questions may require dozens of tool calls**
 
@@ -122,7 +132,8 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 2. **DO NOT let the MCP server RESTRICT the kinds of questions you create**
    - Create challenging and complex questions
    - Some may not be solvable with the available MCP server tools
-   - Questions may require specific output formats (datetime vs. epoch time, JSON vs. MARKDOWN)
+   - Questions may require specific output formats (datetime vs. epoch time, JSON vs.
+     MARKDOWN)
    - Questions may require dozens of tool calls to complete
 
 ## Answer Guidelines
@@ -130,8 +141,10 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 ### Verification
 
 1. **Answers must be VERIFIABLE via direct string comparison**
-   - If the answer can be re-written in many formats, clearly specify the output format in the QUESTION
-   - Examples: "Use YYYY/MM/DD.", "Respond True or False.", "Answer A, B, C, or D and nothing else."
+   - If the answer can be re-written in many formats, clearly specify the output format
+     in the QUESTION
+   - Examples: "Use YYYY/MM/DD.", "Respond True or False.", "Answer A, B, C, or D and
+     nothing else."
    - Answer should be a single VERIFIABLE value such as:
      - User ID, user name, display name, first name, last name
      - Channel ID, channel name
@@ -149,7 +162,8 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 ### Readability
 
 1. **Answers should generally prefer HUMAN-READABLE formats**
-   - Examples: names, first name, last name, datetime, file name, message string, URL, yes/no, true/false, a/b/c/d
+   - Examples: names, first name, last name, datetime, file name, message string, URL,
+     yes/no, true/false, a/b/c/d
    - Rather than opaque IDs (though IDs are acceptable)
    - The VAST MAJORITY of answers should be human-readable
 
@@ -157,11 +171,14 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 
 1. **Answers must be STABLE/STATIONARY**
 
-   - Look at old content (e.g., conversations that have ended, projects that have launched, questions answered)
+   - Look at old content (e.g., conversations that have ended, projects that have
+     launched, questions answered)
    - Create QUESTIONS based on "closed" concepts that will always return the same answer
-   - Questions may ask to consider a fixed time window to insulate from non-stationary answers
+   - Questions may ask to consider a fixed time window to insulate from non-stationary
+     answers
    - Rely on context UNLIKELY to change
-   - Example: if finding a paper name, be SPECIFIC enough so answer is not confused with papers published later
+   - Example: if finding a paper name, be SPECIFIC enough so answer is not confused with
+     papers published later
 
 2. **Answers must be CLEAR and UNAMBIGUOUS**
    - Questions must be designed so there is a single, clear answer
@@ -172,7 +189,8 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 1. **Answers must be DIVERSE**
 
    - Answer should be a single VERIFIABLE value in diverse modalities and formats
-   - User concept: user ID, user name, display name, first name, last name, email address, phone number
+   - User concept: user ID, user name, display name, first name, last name, email
+     address, phone number
    - Channel concept: channel ID, channel name, channel topic
    - Message concept: message ID, message string, timestamp, month, day, year
 
@@ -183,7 +201,8 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
    - Not natural language text
    - UNLESS the answer can be straightforwardly verified using DIRECT STRING COMPARISON
    - And can be realistically reproduced
-   - It should be unlikely that an LLM would return the same list in any other order or format
+   - It should be unlikely that an LLM would return the same list in any other order or
+     format
 
 ## Evaluation Process
 
@@ -194,7 +213,8 @@ Read the documentation of the target API to understand:
 - Available endpoints and functionality
 - If ambiguity exists, fetch additional information from the web
 - Parallelize this step AS MUCH AS POSSIBLE
-- Ensure each subagent is ONLY examining documentation from the file system or on the web
+- Ensure each subagent is ONLY examining documentation from the file system or on the
+  web
 
 ### Step 2: Tool Inspection
 
@@ -212,19 +232,23 @@ Repeat steps 1 & 2 until you have a good understanding:
 - Think about the kinds of tasks you want to create
 - Refine your understanding
 - At NO stage should you READ the code of the MCP server implementation itself
-- Use your intuition and understanding to create reasonable, realistic, but VERY challenging tasks
+- Use your intuition and understanding to create reasonable, realistic, but VERY
+  challenging tasks
 
 ### Step 4: Read-Only Content Inspection
 
 After understanding the API and tools, USE the MCP server tools:
 
 - Inspect content using READ-ONLY and NON-DESTRUCTIVE operations ONLY
-- Goal: identify specific content (e.g., users, channels, messages, projects, tasks) for creating realistic questions
+- Goal: identify specific content (e.g., users, channels, messages, projects, tasks) for
+  creating realistic questions
 - Should NOT call any tools that modify state
 - Will NOT read the code of the MCP server implementation itself
 - Parallelize this step with individual sub-agents pursuing independent explorations
-- Ensure each subagent is only performing READ-ONLY, NON-DESTRUCTIVE, and IDEMPOTENT operations
-- BE CAREFUL: SOME TOOLS may return LOTS OF DATA which would cause you to run out of CONTEXT
+- Ensure each subagent is only performing READ-ONLY, NON-DESTRUCTIVE, and IDEMPOTENT
+  operations
+- BE CAREFUL: SOME TOOLS may return LOTS OF DATA which would cause you to run out of
+  CONTEXT
 - Make INCREMENTAL, SMALL, AND TARGETED tool calls for exploration
 - In all tool call requests, use the `limit` parameter to limit results (<10)
 - Use pagination
@@ -238,7 +262,8 @@ After inspecting the content, create 10 human-readable questions:
 
 ## Output Format
 
-Each QA pair consists of a question and an answer. The output should be an XML file with this structure:
+Each QA pair consists of a question and an answer. The output should be an XML file with
+this structure:
 
 ```xml
 <evaluation>
@@ -282,7 +307,8 @@ This question is good because:
 - Answer is a simple, verifiable value
 - Based on historical (closed) data that won't change
 
-**Example 2: Requires understanding context without keyword matching (Project Management MCP)**
+**Example 2: Requires understanding context without keyword matching (Project Management
+MCP)**
 
 ```xml
 <qa_pair>
@@ -293,7 +319,8 @@ This question is good because:
 
 This question is good because:
 
-- Doesn't use specific project name ("initiative focused on improving customer onboarding")
+- Doesn't use specific project name ("initiative focused on improving customer
+  onboarding")
 - Requires finding completed projects from specific timeframe
 - Needs to identify the project lead and their role
 - Requires understanding context from retrospective documents
@@ -389,19 +416,22 @@ This question is poor because:
 After creating evaluations:
 
 1. **Examine the XML file** to understand the schema
-2. **Load each task instruction** and in parallel using the MCP server and tools, identify the correct answer by attempting to solve the task YOURSELF
+2. **Load each task instruction** and in parallel using the MCP server and tools,
+   identify the correct answer by attempting to solve the task YOURSELF
 3. **Flag any operations** that require WRITE or DESTRUCTIVE operations
 4. **Accumulate all CORRECT answers** and replace any incorrect answers in the document
 5. **Remove any `<qa_pair>`** that require WRITE or DESTRUCTIVE operations
 
-Remember to parallelize solving tasks to avoid running out of context, then accumulate all answers and make changes to the file at the end.
+Remember to parallelize solving tasks to avoid running out of context, then accumulate
+all answers and make changes to the file at the end.
 
 ## Tips for Creating Quality Evaluations
 
 1. **Think Hard and Plan Ahead** before generating tasks
 2. **Parallelize Where Opportunity Arises** to speed up the process and manage context
 3. **Focus on Realistic Use Cases** that humans would actually want to accomplish
-4. **Create Challenging Questions** that test the limits of the MCP server's capabilities
+4. **Create Challenging Questions** that test the limits of the MCP server's
+   capabilities
 5. **Ensure Stability** by using historical data and closed concepts
 6. **Verify Answers** by solving the questions yourself using the MCP server tools
 7. **Iterate and Refine** based on what you learn during the process
@@ -410,7 +440,8 @@ Remember to parallelize solving tasks to avoid running out of context, then accu
 
 # Running Evaluations
 
-After creating your evaluation file, you can use the provided evaluation harness to test your MCP server.
+After creating your evaluation file, you can use the provided evaluation harness to test
+your MCP server.
 
 ## Setup
 
@@ -455,8 +486,10 @@ The evaluation script (`scripts/evaluation.py`) supports three transport types:
 
 **Important:**
 
-- **stdio transport**: The evaluation script automatically launches and manages the MCP server process for you. Do not run the server manually.
-- **sse/http transports**: You must start the MCP server separately before running the evaluation. The script connects to the already-running server at the specified URL.
+- **stdio transport**: The evaluation script automatically launches and manages the MCP
+  server process for you. Do not run the server manually.
+- **sse/http transports**: You must start the MCP server separately before running the
+  evaluation. The script connects to the already-running server at the specified URL.
 
 ### 1. Local STDIO Server
 

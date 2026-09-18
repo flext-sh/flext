@@ -94,7 +94,8 @@ No execution flows pass through this community.
 - `validate_message` (8 edge(s))
 - `decode` (7 edge(s))
 - `fail_op` (6 edge(s))
-- `flext-core/tests/unit/test_handlers_dispatch.py::TestsFlextHandlersDispatch.ConcreteTestHandler` (6 edge(s))
+- `flext-core/tests/unit/test_handlers_dispatch.py::TestsFlextHandlersDispatch.ConcreteTestHandler`
+  (6 edge(s))
 - `TestsFlextFlextHandlers` (5 edge(s))
 - `super` (4 edge(s))
 - `format` (4 edge(s))
@@ -107,12 +108,15 @@ No execution flows pass through this community.
 - `assert_failure` (12 edge(s))
 - `handle` (10 edge(s))
 - `validate_message` (8 edge(s))
-- `flext-core/tests/unit/test_handlers_dispatch.py::TestsFlextHandlersDispatch.ConcreteTestHandler` (6 edge(s))
+- `flext-core/tests/unit/test_handlers_dispatch.py::TestsFlextHandlersDispatch.ConcreteTestHandler`
+  (6 edge(s))
 - `flext-core/tests/unit/test_handlers_dispatch.py` (5 edge(s))
-- `flext-core/tests/unit/test_handlers_factory.py::TestsFlextCoreHandlersFactory.ConcreteTestHandler` (4 edge(s))
+- `flext-core/tests/unit/test_handlers_factory.py::TestsFlextCoreHandlersFactory.ConcreteTestHandler`
+  (4 edge(s))
 - `flext-core/tests/unit/test_handlers_validation_context.py` (4 edge(s))
 - `flext-core/tests/unit/_handlers_support.py` (3 edge(s))
 - `execute` (3 edge(s))
-- `flext-core/tests/unit/test_handlers_lifecycle.py::TestsFlextHandlersLifecycle.ConcreteTestHandler` (3 edge(s))
+- `flext-core/tests/unit/test_handlers_lifecycle.py::TestsFlextHandlersLifecycle.ConcreteTestHandler`
+  (3 edge(s))
 - `ok` (3 edge(s))
 - `that` (3 edge(s))

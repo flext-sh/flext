@@ -16,8 +16,10 @@
 
 - Plano relacionado: `../1789582669805-flext-infra-ruff-codemod-repair.md`.
 - Tracker executável: exclusivamente Gas City Beads.
-- Este arquivo registra proveniência humana; não cria tarefas nem substitui estado de Beads.
-- Transcript, self-report e logs antigos são evidência histórica. Git, Beads, forge e comandos Make no SHA atual decidem execução.
+- Este arquivo registra proveniência humana; não cria tarefas nem substitui estado de
+  Beads.
+- Transcript, self-report e logs antigos são evidência histórica. Git, Beads, forge e
+  comandos Make no SHA atual decidem execução.
 
 ## Sessões Claude consideradas
 
@@ -30,19 +32,33 @@
 
 ## Linha temporal aceita da sessão F2.W0
 
-1. Leu o plano `1789489334832-rope-gen-engine-strict-init.md` e recebeu mandato para reorganizar Beads/docs/ADRs antes da execução.
-2. Confirmou que a rota `bd` respondia; após correção do operador, verificou que `gc bd` respondia pelo rig `flext`, sem criar segunda store.
-3. Criou o item `flext-crd1y` e adicionou contexto aos itens `flext-fkfmu`, `flext-471ws` e `flext-5fxu6.4`. Esses itens devem ser reconciliados com a hierarquia existente; criação no Gas City não prova ausência de duplicidade sem `bd show` atual.
-4. Atualizou ADR-014, ADR-010 e criou o runbook `docs/roadmap/rope-gen-engine-runbook-2026-09-15.md`.
+1. Leu o plano `1789489334832-rope-gen-engine-strict-init.md` e recebeu mandato para
+   reorganizar Beads/docs/ADRs antes da execução.
+2. Confirmou que a rota `bd` respondia; após correção do operador, verificou que `gc bd`
+   respondia pelo rig `flext`, sem criar segunda store.
+3. Criou o item `flext-crd1y` e adicionou contexto aos itens `flext-fkfmu`,
+   `flext-471ws` e `flext-5fxu6.4`. Esses itens devem ser reconciliados com a hierarquia
+   existente; criação no Gas City não prova ausência de duplicidade sem `bd show` atual.
+4. Atualizou ADR-014, ADR-010 e criou o runbook
+   `docs/roadmap/rope-gen-engine-runbook-2026-09-15.md`.
 5. Commitou e publicou a fatia documental como `049cc4c00c`.
-6. Iniciou censo de branches, worktrees, PRs e 32 membros. O resultado longo foi parcial/truncado; nenhuma aposentadoria adicional é aceita sem releitura atual.
-7. Publicou três commits locais de `flext-infra` que estavam à frente do remoto. Os SHAs exatos e ancestry no tip atual devem ser confirmados por Git antes de marcar landing concluído.
-8. Executou `make setup` no checkout principal e reportou exit 0 com 286 packages. Essa prova é histórica e ligada ao SHA/tree daquela sessão; não transfere green à lane `rope-modernize`.
-9. Executou `make gen`; falhou em Pydantic forward refs de `MiseTomlRenderSpec`/`FlextInfraModelsMiseToolchain` pela rota `m.Infra`.
+6. Iniciou censo de branches, worktrees, PRs e 32 membros. O resultado longo foi
+   parcial/truncado; nenhuma aposentadoria adicional é aceita sem releitura atual.
+7. Publicou três commits locais de `flext-infra` que estavam à frente do remoto. Os SHAs
+   exatos e ancestry no tip atual devem ser confirmados por Git antes de marcar landing
+   concluído.
+8. Executou `make setup` no checkout principal e reportou exit 0 com 286 packages. Essa
+   prova é histórica e ligada ao SHA/tree daquela sessão; não transfere green à lane
+   `rope-modernize`.
+9. Executou `make gen`; falhou em Pydantic forward refs de
+   `MiseTomlRenderSpec`/`FlextInfraModelsMiseToolchain` pela rota `m.Infra`.
 10. Reexecutou `make setup`; o erro persistiu, provando que não era somente venv stale.
 11. Provou em isolamento que o namespace runtime ausente resolvia a forward ref.
-12. Editou `flext-infra/src/flext_infra/_models/mise_toolchain.py`, reordenando `ProtectedMiseToolSpec`/`BeadsToolSpec` e alterando referências para nomes resolvíveis.
-13. A sessão parou durante essa edição. Não há prova de arquivo sintaticamente íntegro, `make gen` verde, commit, push, PR ou gate posterior para esse WIP.
+12. Editou `flext-infra/src/flext_infra/_models/mise_toolchain.py`, reordenando
+    `ProtectedMiseToolSpec`/`BeadsToolSpec` e alterando referências para nomes
+    resolvíveis.
+13. A sessão parou durante essa edição. Não há prova de arquivo sintaticamente íntegro,
+    `make gen` verde, commit, push, PR ou gate posterior para esse WIP.
 
 ## Contribuições adjudicadas
 
@@ -78,16 +94,27 @@
 
 ## Conflitos e coordenação com outros planos/agentes
 
-- O plano `1789582482542` e o plano do checkout principal `1789582508056` são planos cooperativos separados. Eles não substituem este plano; fornecem evidência e decisões reutilizáveis.
-- O checkout principal registrou um WIP `_lazy_analysis` inconsistente em `_conform/execute.py`. A lane `rope-modernize` não deve copiar esse código; deve aceitar somente a intenção one-writer e exigir um único `CodegenPhaseAnalysis` filtrado em append, journal e fixed-point.
-- Outros agentes Kilo produziram addenda de cronologia, conflitos, coordenação e Beads/PRs. Este adendo referencia suas conclusões, mas mantém a disposição específica do plano 1789582669805.
+- O plano `1789582482542` e o plano do checkout principal `1789582508056` são planos
+  cooperativos separados. Eles não substituem este plano; fornecem evidência e decisões
+  reutilizáveis.
+- O checkout principal registrou um WIP `_lazy_analysis` inconsistente em
+  `_conform/execute.py`. A lane `rope-modernize` não deve copiar esse código; deve
+  aceitar somente a intenção one-writer e exigir um único `CodegenPhaseAnalysis`
+  filtrado em append, journal e fixed-point.
+- Outros agentes Kilo produziram addenda de cronologia, conflitos, coordenação e
+  Beads/PRs. Este adendo referencia suas conclusões, mas mantém a disposição específica
+  do plano 1789582669805.
 - Resultado de subagente sem SHA/comando/exit é orientação, não conclusão.
 
 ## Próxima sequência mínima
 
 1. Reler via Gas City os Beads acima e eleger owner único para generator/journal/testes.
-2. Capturar Git/PR live: `049cc4c00c`, três commits infra, tips, ancestry e WIP atual de `mise_toolchain.py`.
+2. Capturar Git/PR live: `049cc4c00c`, três commits infra, tips, ancestry e WIP atual de
+   `mise_toolchain.py`.
 3. Escolher um tree a partir do tip de integração e adotar apenas contribuição íntegra.
-4. Reler `mise_toolchain.py` e o import graph Pydantic; completar fix-forward sem comportamento em models, `model_rebuild`, alias compat ou namespace artificial.
-5. Rodar `make setup`; se verde, `make gen` duas vezes. O primeiro erro atual governa o próximo slice.
-6. Somente depois: `mod ×2`, `gen ×2` se necessário, `fix ×2`, `fmt ×2`, `check`, `test`, `build`, runtime e landing.
+4. Reler `mise_toolchain.py` e o import graph Pydantic; completar fix-forward sem
+   comportamento em models, `model_rebuild`, alias compat ou namespace artificial.
+5. Rodar `make setup`; se verde, `make gen` duas vezes. O primeiro erro atual governa o
+   próximo slice.
+6. Somente depois: `mod ×2`, `gen ×2` se necessário, `fix ×2`, `fmt ×2`, `check`,
+   `test`, `build`, runtime e landing.

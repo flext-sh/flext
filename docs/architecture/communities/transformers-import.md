@@ -109,10 +109,12 @@ No execution flows pass through this community.
 - `mkdir` (5 edge(s))
 - `flext-infra/src/flext_infra/refactor/project_alias_migrator.py` (4 edge(s))
 - `str` (4 edge(s))
-- `flext-infra/tests/unit/transformers/test_infra_transformer_enforcement_fixers.py` (4 edge(s))
+- `flext-infra/tests/unit/transformers/test_infra_transformer_enforcement_fixers.py` (4
+  edge(s))
 - `Path` (3 edge(s))
 - `count` (3 edge(s))
 - `flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py` (2 edge(s))
-- `flext-infra/tests/unit/transformers/test_infra_transformer_cast_remover.py` (2 edge(s))
+- `flext-infra/tests/unit/transformers/test_infra_transformer_cast_remover.py` (2
+  edge(s))
 - `SimpleNamespace` (2 edge(s))
 - `FixEnforcementCommand` (2 edge(s))

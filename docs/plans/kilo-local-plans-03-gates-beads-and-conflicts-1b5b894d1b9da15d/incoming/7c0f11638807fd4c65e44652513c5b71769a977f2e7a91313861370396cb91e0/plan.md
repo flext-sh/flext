@@ -16,14 +16,20 @@
 
 Two historical observations conflict:
 
-1. surf-hornet reported healthy runtime publication on port 14499 and successful `direnv exec` smoke;
-2. a later rope audit reported missing/unhealthy Dolt publication and intermittent MySQL timeout.
+1. surf-hornet reported healthy runtime publication on port 14499 and successful
+   `direnv exec` smoke;
+2. a later rope audit reported missing/unhealthy Dolt publication and intermittent MySQL
+   timeout.
 
-Resolution: neither report is timeless. Phase 0 must perform a live `direnv exec <rig> bd show <active-bead> --json` and city health proof. The latest operator correction is binding: **Gas City is the sole Beads engine**. No embedded/local alternate database may be created or selected.
+Resolution: neither report is timeless. Phase 0 must perform a live
+`direnv exec <rig> bd show <active-bead> --json` and city health proof. The latest
+operator correction is binding: **Gas City is the sole Beads engine**. No embedded/local
+alternate database may be created or selected.
 
 ## Tracker owner reconciliation
 
-Re-read live records through Gas City before mutation; passive files are not authoritative.
+Re-read live records through Gas City before mutation; passive files are not
+authoritative.
 
 | Intent                              | Candidate Beads                                            | Provisional owner decision                                                                                                       |
 | ----------------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -37,16 +43,30 @@ Re-read live records through Gas City before mutation; passive files are not aut
 
 ## Conflict decisions
 
-1. **Main checkout vs rope lane:** the `_lazy_analysis` defect was observed in the main checkout but not in rope `flext-infra@469b26b4e`. Treat it as parallel WIP to adjudicate, not as a universal current defect.
-2. **Static CRG vs runtime coverage:** CRG can miss dynamic dispatch (`tm.ok`, `transaction.state.*`). Graph gaps prioritize inspection but never authorize duplicate tests or production changes.
-3. **Test expectation vs generated Make:** the template/runtime uses Mise-owned `override UV := ... exec -- uv`; the obsolete `UV ?= uv` expectation is invalid, subject to public generated-project runtime proof.
-4. **Half-migrated conform:** `conform.py` remains runtime owner while `_conform/*` contains parallel/duplicated implementations. Do not patch both indefinitely. Centralize contracts, then complete one MRO cutover and delete the god copies.
-5. **LOC gate:** the operator requires ≤200 logical LOC as the completion outcome. A temporary higher gate may exist only as an explicit migration stage; it is not acceptance and may not hide touched-module debt.
+1. **Main checkout vs rope lane:** the `_lazy_analysis` defect was observed in the main
+   checkout but not in rope `flext-infra@469b26b4e`. Treat it as parallel WIP to
+   adjudicate, not as a universal current defect.
+2. **Static CRG vs runtime coverage:** CRG can miss dynamic dispatch (`tm.ok`,
+   `transaction.state.*`). Graph gaps prioritize inspection but never authorize
+   duplicate tests or production changes.
+3. **Test expectation vs generated Make:** the template/runtime uses Mise-owned
+   `override UV := ... exec -- uv`; the obsolete `UV ?= uv` expectation is invalid,
+   subject to public generated-project runtime proof.
+4. **Half-migrated conform:** `conform.py` remains runtime owner while `_conform/*`
+   contains parallel/duplicated implementations. Do not patch both indefinitely.
+   Centralize contracts, then complete one MRO cutover and delete the god copies.
+5. **LOC gate:** the operator requires ≤200 logical LOC as the completion outcome. A
+   temporary higher gate may exist only as an explicit migration stage; it is not
+   acceptance and may not hide touched-module debt.
 
 ## Immediate next slice
 
-1. Read current integration tips and current WIP; classify every hunk against this matrix.
+1. Read current integration tips and current WIP; classify every hunk against this
+   matrix.
 2. Prove Gas City connectivity and reread the active/overlap Beads.
-3. Confirm whether built-in Make verb shadowing and `_lazy_analysis` mismatch survive on the integration tip.
-4. Adopt the smallest producer fix and run `make setup`; stop at its first causal failure.
-5. After setup is green, prove gen fixed point before continuing to mod/fix/fmt/check/test/build.
+3. Confirm whether built-in Make verb shadowing and `_lazy_analysis` mismatch survive on
+   the integration tip.
+4. Adopt the smallest producer fix and run `make setup`; stop at its first causal
+   failure.
+5. After setup is green, prove gen fixed point before continuing to
+   mod/fix/fmt/check/test/build.

@@ -1,9 +1,9 @@
 ---
 name: agent-md-refactor
 description: >-
-  Refactor bloated AGENTS.md, CLAUDE.md, or similar agent instruction files to
-  follow progressive disclosure principles. Splits monolithic files into
-  organized, linked documentation.
+  Refactor bloated AGENTS.md, CLAUDE.md, or similar agent instruction files to follow
+  progressive disclosure principles. Splits monolithic files into organized, linked
+  documentation.
 metadata:
   category: development
   source:
@@ -15,7 +15,9 @@ metadata:
 
 # Agent MD Refactor
 
-Refactor bloated agent instruction files (AGENTS.md, CLAUDE.md, COPILOT.md, etc.) to follow **progressive disclosure principles** - keeping essentials at root and organizing the rest into linked, categorized files.
+Refactor bloated agent instruction files (AGENTS.md, CLAUDE.md, COPILOT.md, etc.) to
+follow **progressive disclosure principles** - keeping essentials at root and organizing
+the rest into linked, categorized files.
 
 ---
 
@@ -62,8 +64,7 @@ Identify any instructions that conflict with each other.
 ```markdown
 ## Contradiction Found
 
-**Instruction A:** [quote]
-**Instruction B:** [quote]
+**Instruction A:** [quote] **Instruction B:** [quote]
 
 **Question:** Which should take precedence, or should both be conditional?
 ```
@@ -74,7 +75,8 @@ Ask the user to resolve before proceeding.
 
 ### Phase 2: Identify the Essentials
 
-Extract ONLY what belongs in the root agent file. The root should be minimal - information that applies to **every single task**.
+Extract ONLY what belongs in the root agent file. The root should be minimal -
+information that applies to **every single task**.
 
 **Essential content (keep in root):**
 
@@ -187,15 +189,11 @@ Brief context for when these guidelines apply.
 
 ### Good
 
-\`\`\`typescript
-// Example of correct pattern
-\`\`\`
+\`\`\`typescript // Example of correct pattern \`\`\`
 
 ### Avoid
 
-\`\`\`typescript
-// Example of what not to do
-\`\`\`
+\`\`\`typescript // Example of what not to do \`\`\`
 ```
 
 ---
@@ -270,19 +268,16 @@ This is a React project.
 - Use 2 spaces
 - Use semicolons
 - Prefer const over let
-- Use arrow functions
-  ... (200 more lines)
+- Use arrow functions ... (200 more lines)
 
 ## Testing
 
 - Use Jest
-- Coverage > 80%
-  ... (100 more lines)
+- Coverage > 80% ... (100 more lines)
 
 ## TypeScript
 
-- Enable strict mode
-  ... (150 more lines)
+- Enable strict mode ... (150 more lines)
 ```
 
 ### After (Progressive Disclosure)

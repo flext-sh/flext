@@ -109,7 +109,8 @@ _... and 42 more members._
 - `tk` (12 edge(s))
 - `assert_success` (11 edge(s))
 - `ContainerConfig` (10 edge(s))
-- `flext-tests/tests/unit/_docker_parts/operations.py::DockerOperationsMixin` (10 edge(s))
+- `flext-tests/tests/unit/_docker_parts/operations.py::DockerOperationsMixin` (10
+  edge(s))
 - `setenv` (9 edge(s))
 - `not_none` (8 edge(s))
 - `stack` (8 edge(s))

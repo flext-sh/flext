@@ -103,7 +103,8 @@ No execution flows pass through this community.
 
 - `that` (48 edge(s))
 - `TapConfig` (25 edge(s))
-- `flext-meltano/tests/unit/test_tap_abstractions.py::TestFlextMeltanoAbstractionsComplete` (16 edge(s))
+- `flext-meltano/tests/unit/test_tap_abstractions.py::TestFlextMeltanoAbstractionsComplete`
+  (16 edge(s))
 - `model_validate` (14 edge(s))
 - `object` (9 edge(s))
 - `flext-meltano/tests/unit/test_models.py::TestsFlextMeltanoModelsUnit` (8 edge(s))

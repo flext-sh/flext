@@ -14,51 +14,66 @@
 
 ## Summary
 
-Architecture: 2469 communities, 2437 cross-community edges, showing 100 of 2437, 42 warning(s)
+Architecture: 2469 communities, 2437 cross-community edges, showing 100 of 2437, 42
+warning(s)
 
 ## Architecture Warnings
 
 - High coupling (52 edges) between 'utilities-filter' and 'unit-records'
 - High coupling (31 edges) between 'codegen-infra' and 'phases-apply'
-- High coupling (24 edges) between 'flext-tests-compose' and 'unit-tests-flext-tests-docker'
+- High coupling (24 edges) between 'flext-tests-compose' and
+  'unit-tests-flext-tests-docker'
 - High coupling (23 edges) between 'utilities-flext' and 'unit-tests-flext-core-models'
 - High coupling (22 edges) between 'utilities-output' and 'unit-fake'
 - High coupling (21 edges) between 'utilities-flext' and 'unit-tests-flext-core-runtime'
 - High coupling (21 edges) between 'docs-config' and 'unit-tests-flext-quality'
 - High coupling (20 edges) between 'codegen-infra-flext' and 'codegen-flext'
-- High coupling (20 edges) between 'unit-tests-flext-infra-infra-patterns' and 'matchers-validate'
+- High coupling (20 edges) between 'unit-tests-flext-infra-infra-patterns' and
+  'matchers-validate'
 - High coupling (18 edges) between 'json-json' and 'unit-tests-flext-cli-json-cov'
 - High coupling (18 edges) between 'cli-parts-cli' and 'unit-options'
-- High coupling (18 edges) between 'services-display' and 'unit-tests-flext-cli-services'
+- High coupling (18 edges) between 'services-display' and
+  'unit-tests-flext-cli-services'
 - High coupling (17 edges) between 'codegen-infra' and 'release-release'
 - High coupling (17 edges) between 'flext-quality-hook' and 'unit-flext-quality'
-- High coupling (16 edges) between 'flext-core-container' and 'unit-tests-flext-core-context'
+- High coupling (16 edges) between 'flext-core-container' and
+  'unit-tests-flext-core-context'
 - High coupling (16 edges) between 'utilities-flext' and 'unit-color'
 - High coupling (16 edges) between 'codegen-infra' and 'codegen-conform'
 - High coupling (16 edges) between 'detectors-infra' and 'refactor-infra'
 - High coupling (16 edges) between 'models-config' and 'unit-test-flext-meltano'
-- High coupling (16 edges) between 'utilities-flext' and 'unit-tests-flext-target-oracle-wms-schema'
-- High coupling (15 edges) between 'unit-handler' and 'utilities-flext-tests-handler-helpers'
-- High coupling (15 edges) between 'utilities-str' and 'unit-tests-flext-core-utilities-domain'
-- High coupling (15 edges) between 'utilities-oracle-engine' and 'flext-db-oracle-operation'
+- High coupling (16 edges) between 'utilities-flext' and
+  'unit-tests-flext-target-oracle-wms-schema'
+- High coupling (15 edges) between 'unit-handler' and
+  'utilities-flext-tests-handler-helpers'
+- High coupling (15 edges) between 'utilities-str' and
+  'unit-tests-flext-core-utilities-domain'
+- High coupling (15 edges) between 'utilities-oracle-engine' and
+  'flext-db-oracle-operation'
 - High coupling (15 edges) between 'utilities-flext' and 'unit-record-msg'
 - High coupling (14 edges) between 'tests-deps' and 'deps-infra'
 - High coupling (14 edges) between 'utilities-auth' and 'unit-wms'
 - High coupling (14 edges) between 'utilities-plugin' and 'flext-plugin-plugin'
-- High coupling (13 edges) between 'utilities-cli-matches' and 'unit-tests-flext-cli-matching-cov'
+- High coupling (13 edges) between 'utilities-cli-matches' and
+  'unit-tests-flext-cli-matching-cov'
 - High coupling (13 edges) between 'utilities-flext' and 'utilities-sample-model'
-- High coupling (13 edges) between 'flext-grpc-flext-grpc' and 'unit-tests-flext-grpc-api'
-- High coupling (13 edges) between 'docs-quality' and 'unit-tests-flext-quality-documentation'
+- High coupling (13 edges) between 'flext-grpc-flext-grpc' and
+  'unit-tests-flext-grpc-api'
+- High coupling (13 edges) between 'docs-quality' and
+  'unit-tests-flext-quality-documentation'
 - High coupling (13 edges) between 'flext-web-app' and 'unit-tests-flext-web-settings'
 - High coupling (12 edges) between 'protocols-flext' and 'unit-flext-engine'
 - High coupling (12 edges) between 'gates-check' and 'tests-deps'
 - High coupling (12 edges) between 'utilities-attributes' and 'unit-search'
-- High coupling (12 edges) between 'utilities-filter' and 'unit-tests-flext-oracle-wms-helpers'
+- High coupling (12 edges) between 'utilities-filter' and
+  'unit-tests-flext-oracle-wms-helpers'
 - High coupling (12 edges) between 'flext-tests-fixture' and 'unit-flext-domains'
-- High coupling (11 edges) between 'utilities-tables' and 'unit-tests-flext-cli-tables-branch'
+- High coupling (11 edges) between 'utilities-tables' and
+  'unit-tests-flext-cli-tables-branch'
 - High coupling (11 edges) between 'utilities-violation' and 'unit-flext-utilities'
 - High coupling (11 edges) between 'services-oracle' and 'integration-oracle'
-- High coupling (11 edges) between 'mro-nwc-19-target' and 'mro-nwc-19-tests-flext-target-oracle-wms'
+- High coupling (11 edges) between 'mro-nwc-19-target' and
+  'mro-nwc-19-tests-flext-target-oracle-wms'
 - High coupling (11 edges) between 'utilities-flext' and 'unit-msg-wms'
 
 ## Top Communities

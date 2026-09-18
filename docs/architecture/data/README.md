@@ -104,9 +104,8 @@
     - [Updating Data Architecture](#updating-data-architecture)
     - [Review Process](#review-process)
 
-This directory contains comprehensive documentation of the FLEXT data architecture, including data models, flow
-patterns,
-storage strategies, and integration approaches.
+This directory contains comprehensive documentation of the FLEXT data architecture,
+including data models, flow patterns, storage strategies, and integration approaches.
 
 ## 📋 Data Architecture Components
 
@@ -138,7 +137,8 @@ Data governance, compliance, and audit requirements.
 
 FLEXT implements a comprehensive data architecture that supports:
 
-- **Multi-Source Data Integration**: LDAP, Oracle, file systems, and other enterprise sources
+- **Multi-Source Data Integration**: LDAP, Oracle, file systems, and other enterprise
+  sources
 - **Real-time and Batch Processing**: Both streaming and batch data processing workflows
 - **Data Transformation**: DBT-based data transformation and modeling
 - **Data Quality Management**: Comprehensive data quality validation and monitoring
@@ -372,6 +372,4 @@ FLEXT implements a comprehensive data architecture that supports:
 
 ---
 
-**Last Updated**: 2025-01-XX
-**Version**: 1.0.0
-**Maintainer**: FLEXT Architecture Team
+**Last Updated**: 2025-01-XX **Version**: 1.0.0 **Maintainer**: FLEXT Architecture Team

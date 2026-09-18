@@ -22,50 +22,67 @@
 - jobs (`~/flext/docker/oracle-db/init.sql`:21)
 - FlextApiVersion (`~/flext/flext-api/src/flext_api/__version__.py`:19)
 - FlextAuthVersion (`~/flext/flext-auth/src/flext_auth/__version__.py`:19)
-- \_KerberosAuthManager (`~/flext/flext-auth/src/flext_auth/providers/kerberos_support.py`:66)
+- \_KerberosAuthManager
+  (`~/flext/flext-auth/src/flext_auth/providers/kerberos_support.py`:66)
 - FlextCliVersion (`~/flext/flext-cli/src/flext_cli/__version__.py`:19)
 - CliValidationError (`~/flext/flext-cli/src/flext_cli/_constants/exceptions.py`:33)
-- FlextCliUtilitiesCli (`~/flext/flext-cli/src/flext_cli/_utilities/_cli_namespace.py`:40)
-- \_IoCounters (`~/flext/flext-cli/src/flext_cli/_utilities/_runtime_windows_job_start.py`:28)
-- \_BasicLimitInformation (`~/flext/flext-cli/src/flext_cli/_utilities/_runtime_windows_job_start.py`:38)
-- FlextCliUtilitiesXlsxFormulaCodec (`~/flext/flext-cli/src/flext_cli/_utilities/_xlxx/xlsx_formula_codec.py`:9)
+- FlextCliUtilitiesCli
+  (`~/flext/flext-cli/src/flext_cli/_utilities/_cli_namespace.py`:40)
+- \_IoCounters
+  (`~/flext/flext-cli/src/flext_cli/_utilities/_runtime_windows_job_start.py`:28)
+- \_BasicLimitInformation
+  (`~/flext/flext-cli/src/flext_cli/_utilities/_runtime_windows_job_start.py`:38)
+- FlextCliUtilitiesXlsxFormulaCodec
+  (`~/flext/flext-cli/src/flext_cli/_utilities/_xlxx/xlsx_formula_codec.py`:9)
 - ScriptsFlextConstants (`~/flext/flext-core/scripts/constants.py`:9)
 - ScriptsFlextModels (`~/flext/flext-core/scripts/models.py`:9)
 - ScriptsFlextTypes (`~/flext/flext-core/scripts/typings.py`:8)
 - ScriptsFlextUtilities (`~/flext/flext-core/scripts/utilities.py`:9)
-- FlextConstantsEnforcementCatalogInfraRowsExtended (`~/flext/flext-core/src/flext_core/_constants/_enforcement_catalog_rows_parts/flextconstantsenforcementcatalogrows_part_05.py`:12)
+- FlextConstantsEnforcementCatalogInfraRowsExtended
+  (`~/flext/flext-core/src/flext_core/_constants/_enforcement_catalog_rows_parts/flextconstantsenforcementcatalogrows_part_05.py`:12)
 - FlextSmellViolation (`~/flext/flext-core/src/flext_core/_constants/enforcement.py`:43)
 - FlextDecorators (`~/flext/flext-core/src/flext_core/_decorators/__init__.py`:12)
-- IdentifiableMixin (`~/flext/flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_02.py`:153)
-- VersionableMixin (`~/flext/flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_03.py`:65)
+- IdentifiableMixin
+  (`~/flext/flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_02.py`:153)
+- VersionableMixin
+  (`~/flext/flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_03.py`:65)
 - FlextResultBehavior (`~/flext/flext-core/src/flext_core/_result/behavior.py`:10)
 - FlextResultUnwrap (`~/flext/flext-core/src/flext_core/_result/unwrap.py`:15)
 - DependencyIntegration (`~/flext/flext-core/src/flext_core/_runtime/_dependency.py`:15)
-- DynamicContainerWithConfig (`~/flext/flext-core/src/flext_core/_runtime/_dependency_types.py`:26)
+- DynamicContainerWithConfig
+  (`~/flext/flext-core/src/flext_core/_runtime/_dependency_types.py`:26)
 - BridgeContainer (`~/flext/flext-core/src/flext_core/_runtime/_dependency_types.py`:31)
 - FlextTypesAnnotateds (`~/flext/flext-core/src/flext_core/_typings/annotateds.py`:16)
 - FlextTypesPydantic (`~/flext/flext-core/src/flext_core/_typings/pydantic.py`:23)
-- FlextUtilitiesBeartypeAliasVisitor (`~/flext/flext-core/src/flext_core/_utilities/_beartype/_alias_visitor.py`:16)
-- FlextUtilitiesBeartypeLibraryVisitor (`~/flext/flext-core/src/flext_core/_utilities/_beartype/_library_visitor.py`:13)
+- FlextUtilitiesBeartypeAliasVisitor
+  (`~/flext/flext-core/src/flext_core/_utilities/_beartype/_alias_visitor.py`:16)
+- FlextUtilitiesBeartypeLibraryVisitor
+  (`~/flext/flext-core/src/flext_core/_utilities/_beartype/_library_visitor.py`:13)
 - FlextModels (`~/flext/flext-core/src/flext_core/models.py`:38)
 - FlextUtilities (`~/flext/flext-core/src/flext_core/utilities.py`:45)
 - FlextDbOracleVersion (`~/flext/flext-db-oracle/src/flext_db_oracle/__version__.py`:19)
-- StrictIntValue (`~/flext/flext-db-oracle/src/flext_db_oracle/_utilities/db_oracle.py`:43)
+- StrictIntValue
+  (`~/flext/flext-db-oracle/src/flext_db_oracle/_utilities/db_oracle.py`:43)
 - CountValue (`~/flext/flext-db-oracle/src/flext_db_oracle/_utilities/db_oracle.py`:48)
 - FlextDbtLdapVersion (`~/flext/flext-dbt-ldap/src/flext_dbt_ldap/__version__.py`:19)
 - FlextDbtLdifVersion (`~/flext/flext-dbt-ldif/src/flext_dbt_ldif/__version__.py`:19)
-- FlextDbtOracleVersion (`~/flext/flext-dbt-oracle/src/flext_dbt_oracle/__version__.py`:19)
+- FlextDbtOracleVersion
+  (`~/flext/flext-dbt-oracle/src/flext_dbt_oracle/__version__.py`:19)
 - ModelBuilder (`~/flext/flext-dbt-oracle/src/flext_dbt_oracle/utilities.py`:75)
-- FlextDbtOracleWmsVersion (`~/flext/flext-dbt-oracle-wms/src/flext_dbt_oracle_wms/__version__.py`:19)
-- ModelBuilder (`~/flext/flext-dbt-oracle-wms/src/flext_dbt_oracle_wms/utilities.py`:128)
+- FlextDbtOracleWmsVersion
+  (`~/flext/flext-dbt-oracle-wms/src/flext_dbt_oracle_wms/__version__.py`:19)
+- ModelBuilder
+  (`~/flext/flext-dbt-oracle-wms/src/flext_dbt_oracle_wms/utilities.py`:128)
 - FlextGrpcVersion (`~/flext/flext-grpc/src/flext_grpc/__version__.py`:19)
 - FlextInfraVersion (`~/flext/flext-infra/src/flext_infra/__version__.py`:19)
 - CensusPatterns (`~/flext/flext-infra/src/flext_infra/_constants/census.py`:15)
 - ReadMixin (`~/flext/flext-infra/src/flext_infra/_models/mixins.py`:73)
 - WriteMixin (`~/flext/flext-infra/src/flext_infra/_models/mixins.py`:102)
 - VersionTagMixin (`~/flext/flext-infra/src/flext_infra/_models/mixins.py`:153)
-- AbsoluteFilePathTextMixin (`~/flext/flext-infra/src/flext_infra/_models/mixins.py`:166)
-- RequiredNonNegativeLineMixin (`~/flext/flext-infra/src/flext_infra/_models/mixins.py`:176)
+- AbsoluteFilePathTextMixin
+  (`~/flext/flext-infra/src/flext_infra/_models/mixins.py`:166)
+- RequiredNonNegativeLineMixin
+  (`~/flext/flext-infra/src/flext_infra/_models/mixins.py`:176)
 - NonNegativeLineMixin (`~/flext/flext-infra/src/flext_infra/_models/mixins.py`:181)
 - ... and 87 more
 

@@ -64,4 +64,5 @@ No execution flows pass through this community.
 
 ### Incoming
 
-- `flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py` (1 edge(s))
+- `flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py`
+  (1 edge(s))

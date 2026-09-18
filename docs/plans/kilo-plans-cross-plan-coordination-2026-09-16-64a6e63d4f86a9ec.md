@@ -28,23 +28,23 @@
 4. Centralizar `c/t/p/m/u/config/settings` antes de decompor god modules.
 5. Facade alvo: `_<module>/`, classes coesas, `base.py` MRO, facade pública fina,
    `__init__.py` gerado, sem `_part`/shim/dual path.
-6. Absorção do tip na lane é fix-forward; entrega da lane na integração é PR
-   com merge commit `--no-ff`.
-7. Longos em processo rastreado; análise de logs delegada; nenhum output
-   truncado vira evidência.
+6. Absorção do tip na lane é fix-forward; entrega da lane na integração é PR com merge
+   commit `--no-ff`.
+7. Longos em processo rastreado; análise de logs delegada; nenhum output truncado vira
+   evidência.
 
 ## Divisão de trabalho cooperativa
 
 - **Coordenador desta lane:** plano, conflitos, qualidade de aceite e estado
   consolidado; não implementa.
-- **Checkout principal:** adjudicar/corrigir o WIP `_lazy_analysis` e publicar
-  uma contribuição íntegra ou descartá-la antes da absorção.
+- **Checkout principal:** adjudicar/corrigir o WIP `_lazy_analysis` e publicar uma
+  contribuição íntegra ou descartá-la antes da absorção.
 - **Worker setup/runtime:** primeiro gate atual e owner de provisioning.
 - **Worker conform/codegen:** ProjectNew, lazy-init, journal e fixed point.
-- **Worker testes:** classificar por contrato público, sem alterar produção para
-  salvar teste inválido.
-- **Worker arquitetura:** somente após baseline verde; centralização e slices
-  MRO/LOC pequenos.
+- **Worker testes:** classificar por contrato público, sem alterar produção para salvar
+  teste inválido.
+- **Worker arquitetura:** somente após baseline verde; centralização e slices MRO/LOC
+  pequenos.
 - **Revisor independente:** CRG/diff/runtime/Make antes de aceitar cada slice.
 
 ## Critérios de aceite de resultados de outros agentes
@@ -61,14 +61,14 @@ Um resultado só entra no plano como concluído quando contém:
 - rerun no SHA integrado;
 - indicação explícita de trabalho superseded/resíduo.
 
-Self-report “feito”, CRG risk 0, linha presente, teste isolado ou relatório de
-SHA antigo não são aceitos como conclusão.
+Self-report “feito”, CRG risk 0, linha presente, teste isolado ou relatório de SHA
+antigo não são aceitos como conclusão.
 
 ## Próximo alinhamento obrigatório
 
 1. Reler Beads/PRs/branches via `direnv`/Git na abertura da sessão de execução.
 2. Adjudicar o WIP `_lazy_analysis` do checkout principal contra nossa lane.
-3. Executar `make setup` no tree escolhido; a primeira falha atual define o
-   worker e o primeiro slice.
-4. Atualizar este adendo e o plano principal somente após cada landing, não a
-   cada tentativa intermediária.
+3. Executar `make setup` no tree escolhido; a primeira falha atual define o worker e o
+   primeiro slice.
+4. Atualizar este adendo e o plano principal somente após cada landing, não a cada
+   tentativa intermediária.

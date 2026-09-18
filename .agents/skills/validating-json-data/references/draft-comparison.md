@@ -59,7 +59,8 @@ Feature availability across JSON Schema drafts supported by z-schema.
 
 ### Draft-2019-09 → Draft-2020-12
 
-- Array-form `items` replaced by `prefixItems`; `items` now means "additional items schema"
+- Array-form `items` replaced by `prefixItems`; `items` now means "additional items
+  schema"
 - `$recursiveRef`/`$recursiveAnchor` replaced by `$dynamicRef`/`$dynamicAnchor`
 - `additionalItems` replaced by `items` (when `prefixItems` is present)
 

@@ -104,9 +104,11 @@ No execution flows pass through this community.
 - `that` (42 edge(s))
 - `join` (24 edge(s))
 - `ok` (16 edge(s))
-- `flext-core/tests/unit/test_utilities_domain.py::TestsFlextCoreUtilitiesDomain` (15 edge(s))
+- `flext-core/tests/unit/test_utilities_domain.py::TestsFlextCoreUtilitiesDomain` (15
+  edge(s))
 - `to_str` (11 edge(s))
-- `flext-core/tests/unit/test_utilities_coverage.py::TestsFlextCoreUtilitiesCoverage` (10 edge(s))
+- `flext-core/tests/unit/test_utilities_coverage.py::TestsFlextCoreUtilitiesCoverage`
+  (10 edge(s))
 - `parse_ldif` (10 edge(s))
 - `write_text` (8 edge(s))
 - `to_str_list` (7 edge(s))

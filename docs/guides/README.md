@@ -7,8 +7,8 @@
 
 <!-- TOC END -->
 
-Guides are curated documents for workflow, migration, and day-to-day maintenance. They complement generated API
-reference; they do not duplicate it.
+Guides are curated documents for workflow, migration, and day-to-day maintenance. They
+complement generated API reference; they do not duplicate it.
 
 ## Canonical Guides
 
@@ -29,5 +29,6 @@ reference; they do not duplicate it.
 ## Scope
 
 - architecture direction belongs in `docs/architecture/`
-- generated API details belong in `docs/api-reference/` and each project's local generated docs
+- generated API details belong in `docs/api-reference/` and each project's local
+  generated docs
 - project-specific operational playbooks remain local to the owning project

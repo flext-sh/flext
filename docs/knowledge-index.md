@@ -14,9 +14,8 @@
 
 <!-- TOC END -->
 
-> **AUTO-GENERATED — DO NOT EDIT MANUALLY.**
-> Sources: `docs/` tree (manual-curated), CRG graph (code knowledge graph),
-> and `mkdocstrings` directives (live from code).
+> **AUTO-GENERATED — DO NOT EDIT MANUALLY.** Sources: `docs/` tree (manual-curated), CRG
+> graph (code knowledge graph), and `mkdocstrings` directives (live from code).
 > Regenerate with: `make gen`
 
 ## Purpose
@@ -24,22 +23,23 @@
 This index is the single entry point for finding documentation across the three
 documentation layers of the FLEXT workspace:
 
-1. **Manual & Curated** — human-authored guides, ADRs, arc42 architecture, and standards.
+1. **Manual & Curated** — human-authored guides, ADRs, arc42 architecture, and
+   standards.
 2. **Community Wiki (CRG)** — code knowledge graph communities discovered by
    `code-review-graph`, linking responsibility clusters to concrete source symbols.
 3. **Auto-Generated API Reference** — `mkdocstrings`-driven pages generated from
    `pyproject.toml`, public exports, and docstrings.
 
-Each section below cross-references the other layers so readers can navigate from
-a conceptual topic (ADR) → the code community that implements it (CRG wiki) →
-the live API surface for that package (mkdocstrings).
+Each section below cross-references the other layers so readers can navigate from a
+conceptual topic (ADR) → the code community that implements it (CRG wiki) → the live API
+surface for that package (mkdocstrings).
 
 ## Documentation Layers
 
 ### 1. Manual & Curated
 
-Curated documents that own architectural decisions, workflow guidance, and
-authoring standards. These are hand-written and reviewed.
+Curated documents that own architectural decisions, workflow guidance, and authoring
+standards. These are hand-written and reviewed.
 
 | Topic              | Document                                                                     | What It Covers                                    |
 | ------------------ | ---------------------------------------------------------------------------- | ------------------------------------------------- |
@@ -54,11 +54,11 @@ authoring standards. These are hand-written and reviewed.
 
 ### 2. Community Wiki (CRG)
 
-The CRG knowledge graph (SQLite at `.code-review-graph/graph.db`) indexes every
-file, class, function, and test across all submodules. The `wiki` subcommand
-runs Leiden community detection on the call/import graph and emits one page per
-community. Only communities with >= 50 nodes are published here; smaller
-clusters exist in the full CRG wiki.
+The CRG knowledge graph (SQLite at `.code-review-graph/graph.db`) indexes every file,
+class, function, and test across all submodules. The `wiki` subcommand runs Leiden
+community detection on the call/import graph and emits one page per community. Only
+communities with >= 50 nodes are published here; smaller clusters exist in the full CRG
+wiki.
 
 | Community              | Size | Primary Package     | Link                                                                        |
 | ---------------------- | ---- | ------------------- | --------------------------------------------------------------------------- |
@@ -73,14 +73,13 @@ clusters exist in the full CRG wiki.
 | `services-context`     | 169  | flext-core/cli      | [services-context.md](architecture/communities/services-context.md)         |
 | `matchers-validate`    | 155  | flext-quality       | [matchers-validate.md](architecture/communities/matchers-validate.md)       |
 
-See the [full community index](architecture/communities/index.md) for all 50
-published clusters.
+See the [full community index](architecture/communities/index.md) for all 50 published
+clusters.
 
 ### 3. Auto-Generated API Reference
 
-Every FLEXT package renders its API from live code via
-`mkdocstrings`. The root portal aggregates; per-package detail lives with each
-project.
+Every FLEXT package renders its API from live code via `mkdocstrings`. The root portal
+aggregates; per-package detail lives with each project.
 
 | Layer               | Source                               | Link                                                                         |
 | ------------------- | ------------------------------------ | ---------------------------------------------------------------------------- |
@@ -131,8 +130,8 @@ project.
 
 ## Cross-Reference Map
 
-The map below links conceptual topics to their implementing code communities and
-live API surfaces.
+The map below links conceptual topics to their implementing code communities and live
+API surfaces.
 
 | Concept                      | ADR                                                                                 | Community (CRG)          | API Reference                                               |
 | ---------------------------- | ----------------------------------------------------------------------------------- | ------------------------ | ----------------------------------------------------------- |
@@ -149,18 +148,18 @@ live API surfaces.
 
 ## Regeneration
 
-The knowledge index is refreshed by the codegen conform transaction. From the
-workspace root:
+The knowledge index is refreshed by the codegen conform transaction. From the workspace
+root:
 
 ```bash
 make gen
 ```
 
 - **Manual & Curated** sections are authored by hand and synced via PR review.
-- **Community Wiki** pages are regenerated by `code-review-graph wiki` and copied
-  into `docs/architecture/communities/` during `make gen`.
-- **Auto-Generated API Reference** pages are regenerated from live code exports
-  and docstrings via `mkdocstrings`.
+- **Community Wiki** pages are regenerated by `code-review-graph wiki` and copied into
+  `docs/architecture/communities/` during `make gen`.
+- **Auto-Generated API Reference** pages are regenerated from live code exports and
+  docstrings via `mkdocstrings`.
 
 ## See Also
 

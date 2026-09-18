@@ -19,8 +19,8 @@ Generated API reference comes from:
 3. exported public symbols
 4. module, class, and function docstrings
 
-If the generated API output is wrong, fix the code, the exports, or the docstrings. Do not write duplicate API prose at
-the root.
+If the generated API output is wrong, fix the code, the exports, or the docstrings. Do
+not write duplicate API prose at the root.
 
 ## Root Outputs
 
@@ -34,4 +34,5 @@ Each FLEXT project owns its detailed generated API reference in its local tree:
 - `docs/api-reference/generated/public-api.md`
 - `docs/api-reference/generated/modules/*.md`
 
-The root portal keeps the workspace summary; the detailed API surface lives with each project.
+The root portal keeps the workspace summary; the detailed API surface lives with each
+project.
