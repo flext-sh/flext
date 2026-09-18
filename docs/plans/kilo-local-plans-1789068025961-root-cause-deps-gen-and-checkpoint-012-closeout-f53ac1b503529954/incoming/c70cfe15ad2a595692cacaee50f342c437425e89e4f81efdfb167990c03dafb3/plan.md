@@ -10,10 +10,10 @@ Resolver definitivamente os conflitos de dependência (structlog cap<26, click f
 
 ## Estado atual (evidência desta sessão)
 
-- **SSOT já corrigido e commitado** em `flext-infra/config/codegen.yaml` @ `f41875666`: perfil `flext_core` com `structlog>=25.5.0,<26` (obedece o decreto meltano 4.2.2/structlog<26). `click>=8.3.3` já está no perfil `flext-cli` (linha ~1164). Ambos os valores são os decretados (memória: `flext.structlog_cap`, `deps.floor_ceiling_conflict`).
+- **SSOT já corrigido e commitado** em `flext-infra/config/codegen.yaml` @ `f41875666`: perfil `flext_core` com `structlog>=25.5.0,<27` (obedece o decreto meltano 4.2.2/structlog<26). `click>=8.3.3` já está no perfil `flext-cli` (linha ~1164). Ambos os valores são os decretados (memória: `flext.structlog_cap`, `deps.floor_ceiling_conflict`).
 - **Problema do `m.Cli.AtomicFileState` era venv desatualizado**: `flext-cli` instalado no venv compartilhado apontava para git @659571ca (código antigo sem o modelo completo). Após instalação do checkout local, desapareceu.
 - **Hand-edits não canônicos feitos como unblock** (devem ser superseded pelo gen — mesmos valores, mas precisa virar projeção do gerador):
-  - `structlog>=25.5.0,<26` em ~29 `flext-*/pyproject.toml` + `flext/pyproject.toml` (root).
+  - `structlog>=25.5.0,<27` em ~29 `flext-*/pyproject.toml` + `flext/pyproject.toml` (root).
   - `click>=8.3.3,<8.4` + structlog em `flext-cli/pyproject.toml`.
 - **Bloqueio da Fase 1 do plano original esclarecido**: `make setup` no flext-infra agora passa (pós-fixes). Falhas anteriores: structlog>=26.1.0 vs capa<26 (resolvido no SSOT); click>=8.4.2 vs meltano click<8.4 (resolvido no SSOT).
 - **Descoberta nova**: `make gen` no **root** falhou validando `config/workspace.yaml` com 66 erros (`RepositoryRef.checkout` required, `kind` extra_forbidden) — mas o `RepositoryRef` no working tree do flext-infra TEM `kind` e `checkout` com default. Portanto o gen do root importou **flext_infra de outra fonte** (venv compartilhado `~/flext/.venv` tem `_editable_impl_flext_infra.pth` + `flext_infra-0.12.0.dist-info`; PYTHONPATH do root é `flext/src`, que não contém `flext_infra`). Causa provável: pth/dist-info apontando para worktree antigo (release worktree). A sido corrigido por setup canônico do root re-provisionando editables.
@@ -79,7 +79,7 @@ Resolver definitivamente os conflitos de dependência (structlog cap<26, click f
 ## Critério de Done
 
 1. `make setup/gen/check/test` verde no root (full fleet) e no flext-infra — **projetado pelo gerador**, zero hand-edit residual (diff `git status` limpo em pyprojects).
-2. Deps resolvidas pelo SSOT: structlog `>=25.5.0,<26` e click `>=8.3.3` derivados de `config/codegen.yaml`, com fixed-point de gen.
+2. Deps resolvidas pelo SSOT: structlog `>=25.5.0,<27` e click `>=8.3.3` derivados de `config/codegen.yaml`, com fixed-point de gen.
 3. PR #668 fechado (merged/absorvido) com CVI verde re-executado no SHA merged.
 4. `ci-matrix.yml` com switch manual restaurado nos 32 projetos via template + `make gen`.
 5. Dispatch manual com 3 jobs success (windows/macos/linux-matrix) em flext-infra/flext-core/flext; evidência em beads.

@@ -25,7 +25,7 @@
 
 ## Fase B — Raiz do flext-tvenh (modernizer × contratos)
 
-1. Corrigir `deps modernize --rewrite-constraints` para clampear floors reescritos ao envelope `uv_constraint_dependencies` (structlog permanece `>=25.5.0,<26` na frota). Owner: flext-infra deps/modernizer + SSOT comment já existente é o contrato.
+1. Corrigir `deps modernize --rewrite-constraints` para clampear floors reescritos ao envelope `uv_constraint_dependencies` (structlog permanece `>=25.5.0,<27` na frota). Owner: flext-infra deps/modernizer + SSOT comment já existente é o contrato.
 2. Teste de contrato: reescrita contra um floor proibido pela constraint falha/clampa (não congela valores de config no teste).
 3. `make test` + `make check` em flext-infra; commit; push (mesmo protocolo FF/merge).
 4. Fechar `flext-tvenh` com `DONE:` + comando/exit/SHA.

@@ -9,7 +9,7 @@ Rev4 (consolida rev3 + sessões "Finalização release 0.12.0" e "Fixing make se
 1. **Já poussado**: PR #211 merged (`ec347f3867` = origin tip); setup reparado (click 8.3.3); feature do gerador commitada e poussada em flext-infra (`b616988c9` auto-dispatch de script verbs, `1b575a329` structlog floor, `2e92a92ad` fixtures) — infra HEAD = origin tip; `flext-sikjh` fechada (SSH identity `172e363a4`); skills `~/agents` sincronizadas com a fonte canônica (`~/agents`, RC-IDENTICAL).
 2. **flext-infra — drift residual não-commitado (4 arquivos, +30/-3)**:
    - `Makefile`: projeção com drift (header `make gen`, define `_dispatch`, blank-lines fantasmas).
-   - `pyproject.toml`: linha `structlog>=25.5.0,<26` (inline `<26` — igual ao padrão hand-edit do `stash@{0}`; SUSPEITO, o gen fixed-point é o árbitro) + reformato tomlsort do ruff per-file-ignores (legítimo).
+   - `pyproject.toml`: linha `structlog>=25.5.0,<27` (inline `<26` — igual ao padrão hand-edit do `stash@{0}`; SUSPEITO, o gen fixed-point é o árbitro) + reformato tomlsort do ruff per-file-ignores (legítimo).
    - `_utilities/__init__.py`: lazy export `MypyDarwinSupervisor` (módulo existe) — export legítimo faltando.
    - `tests/unit/__init__.py`: lazy export `policy_violation_project` (fixture existe em `tests/unit/fixtures.py:224`) — legítimo.
 3. **Root @ `ec347f3867`**: Makefile + `scripts/{hooks,workspace}/__init__.py` + `uv.lock` modificados; 31 membros `m` (drift de projeção Makefile, sem commits locais além de origin — flext-core 0 ahead); gitlink infra `MM` (staged defasado vs HEAD atual).
