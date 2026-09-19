@@ -1,6 +1,7 @@
 # flext-tap-ldif Module Index
 
 <!-- TOC START -->
+
 - No sections found
 <!-- TOC END -->
 

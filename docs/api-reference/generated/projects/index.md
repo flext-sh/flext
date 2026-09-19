@@ -1,6 +1,7 @@
 # Workspace Module Pages
 
 <!-- TOC START -->
+
 - No sections found
 <!-- TOC END -->
 
@@ -35,9 +36,7 @@ Each project renders one page per public module, driven by docstrings.
 - [flext-target-ldap](flext-target-ldap/modules/index.md) — `0` modules
 - [flext-target-ldif](flext-target-ldif/modules/index.md) — `0` modules
 - [flext-target-oracle](flext-target-oracle/modules/index.md) — `0` modules
-- [flext-target-oracle-oic](flext-target-oracle-oic/modules/index.md) — `0`
-  modules
-- [flext-target-oracle-wms](flext-target-oracle-wms/modules/index.md) — `0`
-  modules
+- [flext-target-oracle-oic](flext-target-oracle-oic/modules/index.md) — `0` modules
+- [flext-target-oracle-wms](flext-target-oracle-wms/modules/index.md) — `0` modules
 - [flext-tests](flext-tests/modules/index.md) — `0` modules
 - [flext-web](flext-web/modules/index.md) — `0` modules

@@ -58,14 +58,14 @@ Each mutating verb owns exactly one operation per tool, and `make check` is stri
 read-only — no verb repeats another verb's work across the canonical sequence
 `make fix && make fmt && make check`:
 
-| Gate / tool | `make check` (read-only) | `make fmt` (formatters) | `make fix` (one mutation) |
-| --- | --- | --- | --- |
-| `lint` — ruff | read-only `ruff` verdict | — | one `ruff` repair pass |
-| `format` — ruff | — (mutating) | `ruff` format pass | — |
-| `markdown` — rumdl | `rumdl check` | — | `rumdl fmt` |
-| `markdown-format` — prettier | `prettier --check` | `prettier --write` | — |
-| `markdown-code` — ruff (embedded) | format verdict on parseable blocks | — | one format pass, clean round-trips spliced |
-| `canonical-alias`, `smells` | read-only scan | — | declared repair |
+| Gate / tool                       | `make check` (read-only)           | `make fmt` (formatters) | `make fix` (one mutation)                  |
+| --------------------------------- | ---------------------------------- | ----------------------- | ------------------------------------------ |
+| `lint` — ruff                     | read-only `ruff` verdict           | —                       | one `ruff` repair pass                     |
+| `format` — ruff                   | — (mutating)                       | `ruff` format pass      | —                                          |
+| `markdown` — rumdl                | `rumdl check`                      | —                       | `rumdl fmt`                                |
+| `markdown-format` — prettier      | `prettier --check`                 | `prettier --write`      | —                                          |
+| `markdown-code` — ruff (embedded) | format verdict on parseable blocks | —                       | one format pass, clean round-trips spliced |
+| `canonical-alias`, `smells`       | read-only scan                     | —                       | declared repair                            |
 
 `make fmt` never runs a lint pass and `make fix` never formats: each operation runs once
 per verb, residue found by a mutation is reported there and enforced only by
