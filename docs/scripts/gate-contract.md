@@ -73,14 +73,14 @@ Canonical implementations in this repository:
 Required flags:
 
 | Flag               | Type    | Default | Description             |                               |
-| ------------------ | ------- | ------- | ----------------------- | ----------------------------- |
+| ------------------ | ------- | ------- | ----------------------- | ----------------------------- | --- |
 | `--root <path>`    | string  | `.`     | Repository root to scan |                               |
 | `--mode baseline\  | strict` | enum    | `baseline`              | Enforcement level (see Modes) |     |
 
 Optional flags:
 
 | Flag                         | Type       | Default          | Description                          |                            |
-| ---------------------------- | ---------- | ---------------- | ------------------------------------ | -------------------------- |
+| ---------------------------- | ---------- | ---------------- | ------------------------------------ | -------------------------- | --- |
 | `--report-file <path>`       | string     | contract default | Override report output path          |                            |
 | `--baseline-file <path>`     | string     | contract default | Override baseline path               |                            |
 | `--update-baseline`          | boolean    | `false`          | Write current counts as new baseline |                            |
@@ -102,7 +102,7 @@ Required flags:
 Optional flags:
 
 | Flag                   | Type   | Default          | Description                 |                          |
-| ---------------------- | ------ | ---------------- | --------------------------- | ------------------------ |
+| ---------------------- | ------ | ---------------- | --------------------------- | ------------------------ | --- |
 | `--mode safe\          | risky` | enum             | `safe`                      | Fix aggressiveness level |     |
 | `--report-file <path>` | string | contract default | Override report output path |                          |
 

@@ -14,8 +14,8 @@ CLAUDE.md
 .benchmarks/**
 .hypothesis/**
 .mypy_cache/**
-.pytest_cache/**
-.ruff_cache/**
+.pytest_cache__
+.ruff_cache__
 .venv/**
 __pycache__/**
 node_modules/**
@@ -33,3 +33,12 @@ target/**
 docs/knowledge-index.md
 docs/architecture/communities/README.md
 docs/architecture/crg-reports/**
+docs/plans/**
+docs/roadmap/rope-gen-engine-runbook-2026-09-15.md
+docs/superpowers/plans/2026-07-29-flext-beads-governance-reorganization-handoff.md
+docs/superpowers/specs/2026-07-02-qlty-smells-enforcement-design.md
+docs/architecture/adr/006-thin-domain-drivers-over-meltano-bases.md
+docs/architecture/adr/009-ecosystem-coordination-and-library-evaluation.md
+docs/architecture/adr/010-unified-project-standardization-via-codegen.md
+docs/scripts/gate-contract.md
+docs/ways-of-working/worker-lane-contract.md

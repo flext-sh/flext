@@ -67,8 +67,8 @@ flext-<name>/
 │   ├── _config.py           # project config singleton owner (`config.<Ns>.*`)
 │   ├── _settings.py         # env-bound settings singleton owner (`settings.<Ns>.*`)
 │   ├── services/            # thin domain facades plus private `_domain/` parts
-│   └── _constants/ _models/ _protocols/ _typings/ _utilities/   # thin facet facades
-plus private domain parts
+│   └── _constants/ _models/ _protocols/
+│       _typings/ _utilities/   # thin facet facades plus private domain parts
 ├── tests/                   # one unified conftest.py; unit/ integration/ e2e/; fixtures/
 ├── config/                  # execution parametrization (YAML, SSOT per ADR-005)
 ├── docs/                    # project documentation (hand-written + generated/)
