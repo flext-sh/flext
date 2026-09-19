@@ -119,7 +119,8 @@ graph TB
     class HTTPRouter,Middleware http
     class CommandHandlers,QueryHandlers,EventHandlers app
     class DomainServices,Aggregates,Values domain
-    class EventStore,PluginManager,ServiceRegistry,DatabaseConn,RedisConn,PythonRuntime infra
+    class EventStore,PluginManager,ServiceRegistry,
+        DatabaseConn,RedisConn,PythonRuntime infra
     class PostgreSQL,Redis,PythonPlugins external
 ```
 

@@ -1,6 +1,7 @@
 # flext API Overview
 
 <!-- TOC START -->
+
 - [Next Pages](#next-pages)
 <!-- TOC END -->
 
@@ -11,8 +12,7 @@
 - Governed projects: `31`
 - Project classes: `domain`=15, `infra`=1, `integration`=14, `test`=1
 
-Generated from workspace discovery, `pyproject.toml`, public exports, and
-docstrings.
+Generated from workspace discovery, `pyproject.toml`, public exports, and docstrings.
 
 ## Next Pages
 

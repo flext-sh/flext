@@ -33,5 +33,8 @@
   "MD057": false,
   "MD060": false,
   "MD076": false,
-  "default": true
+  "default": true,
+  "ignorePaths": [
+    "docs/plans/**/*.md"
+  ]
 }
