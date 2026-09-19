@@ -42,10 +42,10 @@
   para o novo owner antes do antigo morrer; sem shims, aliases, dual-path.
 - `rules/class-nesting-mappings.yml` é proibido — substituir por descoberta estrutural
   no gerador canônico (SSOT).
-- Camada facade strict: settings → config → c → t → p → m → u → base.py → services/_.py
+- Camada facade strict: settings → config → c → t → p → m → u → base.py → services/\_.py
   → api.py → cli.py. Reverse imports TYPE_CHECKING-only. Pydantic-2 in/out. Tipagem
-  `t._/p.\*`apenas. Proibido:`Any`, `object`, `Optional[X]`, contratos `dict`/`TypedDict`. CA/DI via `p`
-  protocols no composition root único.
+  `t.*`/`p.*` apenas. Proibido: `Any`, `object`, `Optional[X]`, contratos
+  `dict`/`TypedDict`. CA/DI via `p` protocols no composition root único.
 - Fechamento completo OU nada: escopo completo + gates verdes + zero resíduo
   - commit scoped → push → PR → review resolvido → merge no-ff na branch de integração
     declarada → gates rerun no merged SHA → runtime provado no estado integrado →

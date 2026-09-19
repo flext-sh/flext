@@ -75,7 +75,9 @@ Unificação de 4 planos: `1789489334832-rope-gen-engine-strict-init` (v3, engin
 
 ## 3. Fases unificadas (ordem de dependência estrita; cada onda fecha com commit+push+bead)
 
-### F0 — Estabilizar + pousar `_config` (lane loc-cap; primeira porque limpa o tree para tudo)
+### F0 — Estabilizar + pousar `_config` (lane loc-cap; primeira porque limpa o tree para
+
+tudo)
 
 1. **F0.1** `git fetch`; confirmar tip;
    `git checkout -- src/flext_infra/codegen/_conform/` (descarta drift stale meu; tip é

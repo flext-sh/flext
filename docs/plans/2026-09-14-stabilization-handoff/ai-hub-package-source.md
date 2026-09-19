@@ -106,7 +106,9 @@ ai-hub.
    - A parte do flext-infra (`.envrc.j2` e bootstrap) está sendo feita na sessão flext
      (P-1b/P-1c).
 
-## 3b. Defeito adicional encontrado: projeções de governança commitadas com marcadores de conflito
+## 3b. Defeito adicional encontrado: projeções de governança commitadas com marcadores
+
+de conflito
 
 - **Onde:** `flext-cli`, no commit que o superprojeto aponta (`5b2b182d`).
 - **Arquivos rastreados com `<<<<<<< HEAD` /

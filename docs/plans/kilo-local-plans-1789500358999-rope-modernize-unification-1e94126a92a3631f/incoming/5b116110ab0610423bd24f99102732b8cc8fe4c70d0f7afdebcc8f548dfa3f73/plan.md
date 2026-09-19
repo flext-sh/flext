@@ -122,7 +122,9 @@ de dual-writer no journal é impossível por construção.
   nova, safety 4 = resolução cross-package do stub — reavaliar pós-E4) + waves W
   restantes do programa.
 
-## UNIFICAÇÃO — plano `1789489334832-rope-gen-engine-strict-init` (v4) + pendentes (2026-09-16T12:20Z)
+## UNIFICAÇÃO — plano `1789489334832-rope-gen-engine-strict-init` (v4) + pendentes
+
+(2026-09-16T12:20Z)
 
 O plano v4 (engine rope-gen + LOC-cap + fechamento 0.12.0; supersede de 3) é **absorvido
 neste programa** como linha de execução paralela — decisões herdadas e válidas: render
@@ -285,14 +287,16 @@ dos tipos — não é o default.
   `reverse-import-mode: type_checking`, `forward-import-form: relative_dot`).
 - **Inventário a exterminar (flext-infra)**: `libcst` **8** arquivos
   (`codegen/_lazy_init_import_alignment.py`,
-  `_utilities/{qualified_names,compatibility_alias_cst,private_import_cst, class_nesting_cst,class_nesting_references}.py`,
-  `transformers/mro_remover.py`, `refactor/project_alias_migrator.py`) + rascunho
-  `_lazy_init_import_layers.py`; `ast` **37–39** (contagem fechada pela varredura
-  dirigida da C-ex term; transformers: pydantic*modernizer, typing_unifier,
-  compatibility_alias, open_encoding, dataclass_modelizer, \_rewrite, smells/*;
-  detectors: silent*failure, deferred_self_reference, consumer_import_violations; gates:
-  duplication, abstraction_boundary, namespace_validator;
-  `\_utilities/*\_ast.py`e afins; codegen/_lazy_init_planner_collision.py);`re`(transformers/pattern, hardcoded_version);`tokenize` (`\_accessor_rewrite.py`).
+  `_utilities/{qualified_names,compatibility_alias_cst,private_import_cst,`
+  `class_nesting_cst,class_nesting_references}.py`, `transformers/mro_remover.py`,
+  `refactor/project_alias_migrator.py`) + rascunho `_lazy_init_import_layers.py`; `ast`
+  **37–39** (contagem fechada pela varredura dirigida da C-ex term; transformers:
+  pydantic*modernizer, typing_unifier, compatibility_alias, open_encoding,
+  dataclass_modelizer, \_rewrite, smells/*; detectors: silent*failure,
+  deferred_self_reference, consumer_import_violations; gates: duplication,
+  abstraction_boundary, namespace_validator; \_utilities/*\_ast.py e afins;
+  codegen/\_lazy_init_planner_collision.py); re (transformers/pattern,
+  hardcoded_version); tokenize (\_accessor_rewrite.py).
 - **Cobaia ai-hub** (`dev`, WIP ~15 arquivos de outros agentes): 6 bases locais em
   `ai_hub/_models/base.py` → 482 refs / 66 arquivos (docstring declara o workaround); 37
   dataclasses mapeadas (6 → `m.FrozenModel`, 30 skips catalogados); 3 accessors soltos
@@ -303,7 +307,9 @@ dos tipos — não é o default.
   (flext-infra) são de outros atores — adotar; aborto `atomic source changed` já
   observado no ai-hub → escritores serializados.
 
-## Arquitetura-alvo (verbos: `mod` modernize · `ast` engine ast-grep · `gen` gerador por templates)
+## Arquitetura-alvo (verbos: `mod` modernize · `ast` engine ast-grep · `gen` gerador por
+
+templates)
 
 ```
 make mod [dry-run=scan] / flext-infra refactor mod  ← ÚNICO verbo de modernize
@@ -409,9 +415,13 @@ sobrevive.
   REMOVIDO no mesmo ciclo (o runtime prova o comportamento); nada pela metade dentro do
   ciclo.
 
-## Ciclos (ordenados; P0 primeiro; streams paralelos onde marcado; cada um verde integral)
+## Ciclos (ordenados; P0 primeiro; streams paralelos onde marcado; cada um verde
 
-### P0 — Governança viva, worktrees/PR e coordenação (imediata; autoridade total concedida pelo operador)
+integral)
+
+### P0 — Governança viva, worktrees/PR e coordenação (imediata; autoridade total
+
+concedida pelo operador)
 
 0. **Autoridade (operador)**: o dono deste programa puxa para si QUALQUER
    bead/lane/rota/trabalho paralelo que caiba no escopo (accessor-migrate,
@@ -574,7 +584,9 @@ na mesma wave; ordem: read-only → mutadores)
   `ban-tokenize-rewrite` + remoção de módulos mortos + `libcst` fora das deps se órfã;
   prova zero-resíduo (`rg` dirigido vazio em código de reescrita).
 
-### Cn+1 — Conhecimento vivo (no MESMO ciclo de cada wave; reconciliação final do declarado em P0)
+### Cn+1 — Conhecimento vivo (no MESMO ciclo de cada wave; reconciliação final do
+
+declarado em P0)
 
 ADR-014 emendado (lei dos 3 instrumentos + interpretação rope-mediated + ledger de
 extermínio com beads) + **ADR-017 novo** ("Parametrized rule surfaces & single modernize
@@ -587,21 +599,26 @@ Board ALL por incremento pousado com evidência; memória persistida.
 
 ## Validação (por ciclo, inegociável)
 
-| Comando (cwd)                          | Aceite                                                                                                                              |
-| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| flext-infra `make check` / `make test` | exit 0; ruff/pyrefly/pyright/mypy zero no escopo                                                                                    |
-| flext-infra `make gen` ×2              | 2º = 0 efeitos (lazy-init plan)                                                                                                     |
-| flext-infra `make mod` ×2              | 2ª = sem findings (resíduo zero)                                                                                                    |
-| flext-core `make check` / `make test`  | exit 0; baseline 2683/0 mantido; claw smoke                                                                                         |
-| ai-hub `make gen` ×2 + `make mod` ×2   | 1ª com efeitos; 2ª sem                                                                                                              |
-| ai-hub `pytest --collect-only -q`      | exit 0 (anti-ciclo)                                                                                                                 |
-| ai-hub `make check` / `make test`      | exit 0                                                                                                                              |
-| testes novos                           | comportamento por interfaces públicas; ordem/params do SSOT (P0); sem mocks/patch                                                   |
-| conformidade de testes (por ciclo)     | testes do escopo que violem a regra-raiz 10 (privados, mocks, hardcode) REMOVIDOS; runtime provado por smoke/execução real primeiro |
-| lane (por ciclo)                       | worktree dedicada; merge `--no-ff` da integração executado; nenhum rebase/force-push em branch compartilhada                        |
-| `rg` dirigido pós-wave                 | zero import re/ast/libcst/tokenize em código de REESCRITA                                                                           |
-| layout pós-C1                          | `config/rules/{mod,ast,rope}/` existem e são lidos pela engine; `src/flext_infra/codemod/{rules,utils,tests}` removido              |
-| descoberta pós-C1 (Option C)           | plan de rules resolvido a partir de raiz estrangeira (tmp project c/ sgconfig local) e em wheel construído (force-include presente) |
+- flext-infra `make check` / `make test`: exit 0; ruff/pyrefly/pyright/mypy zero no
+  escopo.
+- flext-infra `make gen` ×2: 2º = 0 efeitos (lazy-init plan).
+- flext-infra `make mod` ×2: 2ª = sem findings (resíduo zero).
+- flext-core `make check` / `make test`: exit 0; baseline 2683/0 mantido; claw smoke.
+- ai-hub `make gen` ×2 + `make mod` ×2: 1ª com efeitos; 2ª sem.
+- ai-hub `pytest --collect-only -q`: exit 0 (anti-ciclo).
+- ai-hub `make check` / `make test`: exit 0.
+- Testes novos: comportamento por interfaces públicas; ordem/params do SSOT (P0); sem
+  mocks/patch.
+- Conformidade de testes (por ciclo): testes do escopo que violem a regra-raiz 10
+  (privados, mocks, hardcode) REMOVIDOS; runtime provado por smoke/execução real
+  primeiro.
+- Lane (por ciclo): worktree dedicada; merge `--no-ff` da integração executado; nenhum
+  rebase/force-push em branch compartilhada.
+- `rg` dirigido pós-wave: zero import re/ast/libcst/tokenize em código de REESCRITA.
+- Layout pós-C1: `config/rules/{mod,ast,rope}/` existem e são lidos pela engine;
+  `src/flext_infra/codemod/{rules,utils,tests}` removido.
+- Descoberta pós-C1 (Option C): plan de rules resolvido a partir de raiz estrangeira
+  (tmp project c/ sgconfig local) e em wheel construído (force-include presente).
 
 - Runtime proof para mudanças de comportamento (smoke `r[str].ok/from_result`, presets,
   claw), nunca só teste. Commit escopado por ciclo; push fast-forward.

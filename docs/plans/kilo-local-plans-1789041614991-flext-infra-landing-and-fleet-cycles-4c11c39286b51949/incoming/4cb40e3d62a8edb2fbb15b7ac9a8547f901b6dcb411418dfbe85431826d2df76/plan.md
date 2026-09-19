@@ -1,4 +1,6 @@
-# SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
+# SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md
+
+(Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
 
 # Plano — Fechamento do ciclo flext-infra + propagação da frota + consolidação de testes
 

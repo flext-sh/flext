@@ -62,7 +62,9 @@ Ordem: `codegen.py` (piloto) → `rope_analysis.py` → `test_codegen_conform.py
 
 - **Gate:** barra §3.0 completa → **flext-cpzjo.3 CLOSED**
 
-### SR7+ — F3 (crg nos tips) → F4 (ondas do piloto + P4 tipagem root) → F5 (universal + tags + épico)
+### SR7+ — F3 (crg nos tips) → F4 (ondas do piloto + P4 tipagem root) → F5 (universal +
+
+tags + épico)
 
 ## Regras fixas (sem exceção)
 

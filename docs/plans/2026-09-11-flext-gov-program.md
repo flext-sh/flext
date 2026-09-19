@@ -265,7 +265,8 @@ não explorava os escopos do `mod` nem o grafo de reviews.
    `install`/`daemon` (hooks de watch), `doctor`. Registry multi-repo JÁ contém
    `flext/flext-core`; grafo ausente (doctor: critical) — primeira ação = `build`.
 3. **Ciclo canonizado** (documentado em skill+command novos em `~/.agents`):
-   `gen → mod (escopado) → fix → fmt → check → test → crg evidence → commit escopado → FF push → PR → --no-ff integr. → gates no SHA → crg update no tip`.
+   `gen → mod (escopado) → fix → fmt → check → test → crg evidence → commit escopado →`
+   `FF push → PR → --no-ff integr. → gates no SHA → crg update no tip`.
 
 ### Piloto de homologação (proposta de objetivo produtivo)
 

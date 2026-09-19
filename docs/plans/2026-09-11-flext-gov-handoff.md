@@ -2,19 +2,19 @@
 
 <!-- TOC START -->
 
-- [1. Identity of this program (what you are resuming)](#1-identity-of-this-program-what-you-are-resuming)
+- [1. Program identity (resume point)](#1-program-identity-resume-point)
 - [2. Authority resolution (strict order)](#2-authority-resolution-strict-order)
-- [3. Non-negotiables learned THIS session (a "must-not-repeat" list)](#3-non-negotiables-learned-this-session-a-must-not-repeat-list)
-- [4. HOW to rebuild the TODO list from the real world](#4-how-to-rebuild-the-todo-list-from-the-real-world)
-- [5. Current work trees / branches / pins (2026-09-11 EOD)](#5-current-work-trees-branches-pins-2026-09-11-eod)
-- [6. Bead status snapshot (source bd list at EOD)](#6-bead-status-snapshot-source-bd-list-at-eod)
-- [7. Pending approvals (ask the operator, THEN proceed)](#7-pending-approvals-ask-the-operator-then-proceed)
-- [8. Canonical execution cycle (per slice, no ad-hoc)](#8-canonical-execution-cycle-per-slice-no-ad-hoc)
+- [3. Non-negotiables (must-not-repeat)](#3-non-negotiables-must-not-repeat)
+- [4. Rebuilding the TODO list](#4-rebuilding-the-todo-list)
+- [5. Worktrees and pins (2026-09-11 EOD)](#5-worktrees-and-pins-2026-09-11-eod)
+- [6. Bead status snapshot (EOD)](#6-bead-status-snapshot-eod)
+- [7. Pending approvals (ask first)](#7-pending-approvals-ask-first)
+- [8. Canonical execution cycle](#8-canonical-execution-cycle)
 - [9. Workstreams depth (who owns what next)](#9-workstreams-depth-who-owns-what-next)
 - [10. Docs & ADRs you must read (order)](#10-docs-adrs-you-must-read-order)
-- [11. If you hit a new violation that isn't covered yet](#11-if-you-hit-a-new-violation-that-isnt-covered-yet)
-- [12. Reconciliação docs vs campo (auditoria 2026-09-11 final)](#12-reconciliacao-docs-vs-campo-auditoria-2026-09-11-final)
-- [13. Decreto de continuidade (OBRIGATÓRIO antes de qualquer efeito)](#13-decreto-de-continuidade-obrigatorio-antes-de-qualquer-efeito)
+- [11. New violations not covered yet](#11-new-violations-not-covered-yet)
+- [12. Docs vs campo (2026-09-11)](#12-docs-vs-campo-2026-09-11)
+- [13. Decreto de continuidade](#13-decreto-de-continuidade)
 
 <!-- TOC END -->
 
@@ -25,7 +25,7 @@
 > mirror) → authority chain below. Wrote-and-Stop: read this fully before ANY mutation;
 > operator approval is REQUIRED at gate (see § Pending approvals).
 
-## 1. Identity of this program (what you are resuming)
+## 1. Program identity (resume point)
 
 - **Program**: `flext-gov` (epic bead `flext-ssnc7`) — governance rules + gates so
   consumers reuse canonical facades and duplication is gate-detected. Falls under
@@ -53,7 +53,7 @@ Hard refs for the fleet law themselves:
   `atomic-primitives-core-u`, `mod-checkpoint-includes-venv`,
   `flext-program-automation-cycle`.
 
-## 3. Non-negotiables learned THIS session (a "must-not-repeat" list)
+## 3. Non-negotiables (must-not-repeat)
 
 1. **Beads status reality**: `bd list` / `bd show` IS the SSOT of status; the plan's
    TODO table mirrors it (never the other way). It shows in_progress/open/closed, never
@@ -77,7 +77,7 @@ Hard refs for the fleet law themselves:
 7. **crg = tool CLI only** (`code-review-graph`, ai-hub host-tools), never a code
    dependency; rule `ban-ai-hub-crg-library-boundary.yml`.
 
-## 4. HOW to rebuild the TODO list from the real world
+## 4. Rebuilding the TODO list
 
 ```bash
 bd prime                                              # session contract
@@ -90,7 +90,7 @@ text past reality — adjust the BEAD/describe or the STATUS, not the plan narra
 hide drift. If the TODO table disagrees with bd, correct the pieces (or the actual bd
 state) to converge BEFORE faking.
 
-## 5. Current work trees / branches / pins (2026-09-11 EOD)
+## 5. Worktrees and pins (2026-09-11 EOD)
 
 | Repo             | Path                           | Branch                           | SKA chain                                                                                                                                   |
 | ---------------- | ------------------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -105,7 +105,7 @@ state) to converge BEFORE faking.
 - Live concurrent session still working on infra (template/CI churn). Do not collide in
   0.12.0-dev landing; merge hunk-a-hunk.
 
-## 6. Bead status snapshot (source `bd list` at EOD)
+## 6. Bead status snapshot (EOD)
 
 epic `flext-ssnc7` ○ ├ `.1` F1 in_progress (reopened for premature close; detector v2 in
 place) │ └ `.1.1` open (validation twin synthetic RED→GREEN; starts after .1 lands) ├
@@ -119,7 +119,7 @@ open └ `.8` F-AGE in_progress — AWAITING OPERATOR APPROVAL (proposal section
 Closed this session: none yet (kept honest — F1 close was reverted on self-audit; no
 push from any lane yet).
 
-## 7. Pending approvals (ask the operator, THEN proceed)
+## 7. Pending approvals (ask first)
 
 - **A1**: begin P0 (authorizing `push → PR → --no-ff` merges from all 3 lanes into their
   `0.12.0-dev` integration branches, respecting concurrent 0.12.0-dev churn absorb
@@ -130,7 +130,7 @@ push from any lane yet).
 
 Each approval must be reconfirmed (do not extrapolate "already approved").
 
-## 8. Canonical execution cycle (per slice, no ad-hoc)
+## 8. Canonical execution cycle
 
 ```bash
 export UV_PROJECT_ENVIRONMENT=$PWD/.venv VIRTUAL_ENV=$PWD/.venv
@@ -154,9 +154,10 @@ code-review-graph build | update --brief | doctor | detect-changes | dead-code |
   `_read_project_config` (single owner via base gate/u.Infra), ENFORCE-100, twin planted
   RED (.2.1).
 - F3 gates: make check markdown gate on the SUPER lane once docs land.
-- F4: fsync + O*NOFOLLOW + EINTR loop on atomic primitives; unify with
-  `u.Cli.atomic_write*\*`(single owner, net-negative); budget telemetry (measure time/memory per gate run); project_new emits`[tool.flext.project]`
-  keys via scaffold.
+- F4: fsync + O_NOFOLLOW + EINTR loop on atomic primitives; unify on the
+  u.Cli.atomic_write\* primitives as the single owner (net-negative); add budget
+  telemetry (measure time/memory per gate run); make project_new emit the
+  [tool.flext.project] table keys via scaffold.
 - F6/F7: block on post-P0; workflow gates + docs bijection (three file docs).
 
 ## 10. Docs & ADRs you must read (order)
@@ -168,14 +169,14 @@ code-review-graph build | update --brief | doctor | detect-changes | dead-code |
 5. `docs/GOVERNANCE.md` (router: owners, gate registry, anti-hardcode)
 6. `~/.agents/rules/flext/*` (registry ownership, hermeticity, etc.)
 
-## 11. If you hit a new violation that isn't covered yet
+## 11. New violations not covered yet
 
 STOP, ask one precise question. Never "improve" mid-flight. Never feign success. Always
 `bd update <bead> --notes` with the exact command that fired the divergence (4 evidences
 for closure require git history on the integration lane, command/cwd/exit, decisive
 output, and code state).
 
-## 12. Reconciliação docs vs campo (auditoria 2026-09-11 final)
+## 12. Docs vs campo (2026-09-11)
 
 Confrontado código real contra docs/ADRs/skills ANTES de autorizar pouso:
 
@@ -197,7 +198,7 @@ Confrontado código real contra docs/ADRs/skills ANTES de autorizar pouso:
 - [LAW] F5 só abre depois de F1+F4 pousados com gates verdes; e só após `warn→hard`
   pilot verde.
 
-## 13. Decreto de continuidade (OBRIGATÓRIO antes de qualquer efeito)
+## 13. Decreto de continuidade
 
 - Reabrir o `docs/plans/2026-09-11-flext-gov-program.md` TODO e confirmar que `bd list`
   e SKAs ainda casam depois de sincronizar (nunca pular).

@@ -328,8 +328,9 @@ code-review-graph status --repo src --json # confirmar frescor
   / `FlextInfraUtilitiesRopeStructure`).
 - Remover `import ast`, `ast.parse`, `ast.walk`, `get_ast()` dos caminhos semânticos
   (LAW-2). Verificar com
-  `grep -rnE "import ast|ast\.parse|get_ast|walk_ast_nodes" src/flext_infra/detectors/ src/flext_infra/transformers/ src/flext_infra/refactor/`
-  → zero ocorrências em código semântico.
+  `grep -rnE "import ast|ast\.parse|get_ast|walk_ast_nodes" src/flext_infra/detectors/`
+  `src/flext_infra/transformers/ src/flext_infra/refactor/` → zero ocorrências em código
+  semântico.
 
 #### 0.5 Remoção de cruft verificado (safe-delete + yagni)
 
@@ -350,8 +351,9 @@ Para cada candidato da tabela de cruft (após re-despacho da exploração):
   workspace governado (exceto NEEDS ADJUDICATION documentados)
 - `rg -rn "scope-nav\|scope " -- src/ .agents/ .claude/ .kilo/ config/ docs/` → zero
   hits
-- `grep -rnE "import ast|ast\.parse|get_ast|walk_ast_nodes" src/flext_infra/detectors/ src/flext_infra/transformers/ src/flext_infra/refactor/`
-  → zero (apenas em testes/fixtures se aplicável)
+- `grep -rnE "import ast|ast\.parse|get_ast|walk_ast_nodes" src/flext_infra/detectors/`
+  `src/flext_infra/transformers/ src/flext_infra/refactor/` → zero (apenas em
+  testes/fixtures se aplicável)
 - Todos oversized modules alvo ≤200 LOC, net-negative LOC total
 - `make check` + `make test` green em `flext-infra`; `make gen` idempotente
 - Beads reconciliados: cada remoção/adjudicação com bead própria ou nota no bead

@@ -101,11 +101,11 @@ não rastreado) e seu `.venv` tem `flext_infra` instalado **editable** apontando
 `~/flext/flext-infra/src` (`_editable_impl_flext_infra.pth`) — o mesmo no venv raiz do
 workspace. O pin remoto em `pyproject.toml`/`uv.lock` é inerte em runtime. Comando
 canônico da cobaia: `cd ~/ai-hub && make gen` (=
-`ai-hub/.venv/bin/python -m flext_infra codegen conform --root ~/ai-hub --scope self --mode apply`),
-que executa a árvore flext-infra LOCAL não-commitada. Não existe verbo `PROJECT=` na
-raiz do workspace para gen de membro único. Rodar com árvore quieta e escritores
-serializados; adotar o WIP dirty por fix-forward (nunca reset); `gen` ×2 (1ª: efeitos
-init+alinhamento; 2ª: 0), `mod` ×2, `pytest --collect-only -q` exit 0 (prova
+`ai-hub/.venv/bin/python -m flext_infra codegen conform --root ~/ai-hub --scope self`
+`--mode apply`), que executa a árvore flext-infra LOCAL não-commitada. Não existe verbo
+`PROJECT=` na raiz do workspace para gen de membro único. Rodar com árvore quieta e
+escritores serializados; adotar o WIP dirty por fix-forward (nunca reset); `gen` ×2 (1ª:
+efeitos init+alinhamento; 2ª: 0), `mod` ×2, `pytest --collect-only -q` exit 0 (prova
 anti-ciclo), smoke de runtime (ai_hub.AiHub, c/m/p/t/u, services),
 `make check`/`make test`; defeitos de módulo expostos (D5 do plano original) corrigidos
 na causa, nunca na engine.
@@ -128,8 +128,8 @@ fachada-raiz intocada, aninhado intocado, gerado skip, ordem lida do SSOT (nunca
 congelada — P0).
 
 **T3 — Reescrita rope** (D1): métodos em `FlextInfraUtilitiesRopeImports`
-(`align_module_imports(rope_project, resource, *, order, source_module, project_package, apply)`);
-splices TC idempotentes ×2; testes snapshot de formas.
+(`align_module_imports(rope_project, resource, *, order, source_module, project_package,`
+`apply)`); splices TC idempotentes ×2; testes snapshot de formas.
 
 **T4 — Integração mod + gen** (D2/D3): fase `import-alignment` em `semantic_apply.py`
 com convergência zero-resíduo + callback; toggle `mod.phases.import-alignment` em

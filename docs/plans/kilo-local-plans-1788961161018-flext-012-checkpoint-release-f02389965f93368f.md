@@ -24,10 +24,10 @@ The latest operator instruction supersedes all earlier acceptance text:
 - **`rules/class-nesting-mappings.yml` is prohibited.** Structural discovery via the
   canonical SSOT generator only. Manual YAML must be exterminated.
 - **Strict facade layering.** settings → config → c → t → p → m → u → base.py →
-  services/_.py → api.py → cli.py; reverse imports are `TYPE_CHECKING`-only; Pydantic-2
-  in/out;
-  `t._/p.\*`typing only;`Any`, `object`, `Optional`, dict contracts, `Optional[X]`, `dict`/`TypedDict`contracts are banned; CA/DI via`p`
-  protocols at the one composition root.
+  services/\_.py → api.py → cli.py; reverse imports are `TYPE_CHECKING`-only; Pydantic-2
+  in/out; `t.*`/`p.*` typing only; `Any`, `object`, `Optional`, dict contracts,
+  `Optional[X]`, `dict`/`TypedDict` contracts are banned; CA/DI via `p` protocols at the
+  one composition root.
 
 These directives invalidate the prior "accepted debt" text in `docs/releases/ latest.md`
 and ADRs. That contradiction is now a P0 doc-owner repair.
@@ -303,15 +303,16 @@ cycles. The 1427 findings are pre-existing debt surfaced by the newly-activated 
 
 Census (measured, check-report + full gate log):
 
-| Gate           | Count                                                                                                     | Disposition                                             |
-| -------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| namespace      | 1388 (NS-STRUCT-001=309, -002=170, CONTRACT-001=160, -003=117, -004=77, ...)                              | ACCEPTED-RESIDUAL backlog → post-release program (0.20) |
-| runtime-census | 292 usages (1 gate fail)                                                                                  | ACCEPTED-RESIDUAL backlog                               |
-| duplication    | 24 (clone codemod yml rules)                                                                              | FIX NOW (delete clones, extend one owner)               |
-| silent-failure | 6 (broad except / sentinel returns)                                                                       | FIX NOW                                                 |
-| loc-cap        | 5 (config.py 3679, conform.py 2879, rope_analysis.py 1709, test_codegen_conform.py 1474, codegen.py 1124) | backlog 0.20 (SUPREME LAW split, bounded)               |
-| mypy           | 1 (unreachable, qualified_names.py:52)                                                                    | FIX NOW                                                 |
-| lint           | 7 (ISC004 x5 auto-fixed, PT011 x1 fixed)                                                                  | FIXED in working tree                                   |
+- namespace: 1388 (NS-STRUCT-001=309, -002=170, CONTRACT-001=160, -003=117, -004=77,
+  ...) — ACCEPTED-RESIDUAL backlog → post-release program (0.20).
+- runtime-census: 292 usages (1 gate fail) — ACCEPTED-RESIDUAL backlog.
+- duplication: 24 (clone codemod yml rules) — FIX NOW (delete clones, extend one owner).
+- silent-failure: 6 (broad except / sentinel returns) — FIX NOW.
+- loc-cap: 5 (config.py 3679, conform.py 2879, rope_analysis.py 1709,
+  test_codegen_conform.py 1474, codegen.py 1124) — backlog 0.20 (SUPREME LAW split,
+  bounded).
+- mypy: 1 (unreachable, qualified_names.py:52) — FIX NOW.
+- lint: 7 (ISC004 x5 auto-fixed, PT011 x1 fixed) — FIXED in working tree.
 
 A1 (now): fix mypy 1 + silent-failure 6 + duplication 24 (~31 items, mechanical). A2
 (backlog 0.20): namespace 1388 + runtime-census 292 + loc-cap 5, recorded in owning

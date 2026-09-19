@@ -1,4 +1,6 @@
-# Unificação da engine de modernização via rope + extermínio de helpers/setters (piloto ai-hub)
+# Unificação da engine de modernização via rope + extermínio de helpers/setters (piloto
+
+ai-hub)
 
 ## Missão (contrato do operador)
 

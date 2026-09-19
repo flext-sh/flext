@@ -237,9 +237,14 @@ pós-pouso do ator no agents.
 
 ```bash
 cd ~/flext && git fetch origin 0.12.0-dev
-env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json 2> /dev/null | jq -r '.[].id' | head                        # == never inherit DB
-find . -name "*.bak" -not -path "*-worktrees/*" -not -path "*/.venv/*" -not -path "*/.git/*" -not -path "*/dist/*" | wc -l # 0
-# Onda seguinte: flext-2h0un (fixed-point) → flext-9wwed (budget) → flext-gxgqp (gate) → docs PR (A2/A5)
+# == never inherit DB
+env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json 2> /dev/null \
+  | jq -r '.[].id' | head
+# == 0
+find . -name "*.bak" -not -path "*-worktrees/*" -not -path "*/.venv/*" \
+  -not -path "*/.git/*" -not -path "*/dist/*" | wc -l
+# Onda seguinte: flext-2h0un (fixed-point) → flext-9wwed (budget)
+#   → flext-gxgqp (gate) → docs PR (A2/A5)
 ```
 
 _Plano vivente — atualizar a cada material-step. Próxima revisão: após `flext-2h0un` ou
@@ -247,7 +252,9 @@ pouso do ator, o que vier primeiro._
 
 ---
 
-## 9. Delta Sweep-2 (12:30–12:40 UTC, sessão principal — consolidado SEM duplicar a revisão v2 acima)
+## 9. Delta Sweep-2 (12:30–12:40 UTC, sessão principal — consolidado SEM duplicar a
+
+revisão v2 acima)
 
 ### 9.1 Consolidação de beads entre lanes (lei: um dono por assunto)
 

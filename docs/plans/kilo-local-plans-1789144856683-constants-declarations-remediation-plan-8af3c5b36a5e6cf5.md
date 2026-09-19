@@ -1,4 +1,6 @@
-# Constants Declarations Remediation Plan — settings→config→c chain, total bead absorption, fleet-wide idempotence
+# Constants Declarations Remediation Plan — settings→config→c chain, total bead
+
+absorption, fleet-wide idempotence
 
 Execution flow: **0** governance bootstrap (rules, census, bead absorption, epic) →
 **1** dedicated worktree → **2** flext-core (settings/config first, then constants
@@ -133,7 +135,8 @@ bd list --json # every non-closed bead: id, title, type, priority, status, assig
 bd ready --json
 git worktree list
 git submodule status   # expect 31 members per config/workspace.yaml (SSOT topology)
-git status --porcelain # root baseline (~40 entries at 2026-09-11 snapshot — must be adjudicated before landing)
+git status --porcelain # root baseline (~40 entries at 2026-09-11 snapshot — must be
+adjudicated before landing)
 ```
 
 Known snapshot facts (2026-08-31 `bd count`: total 2745 = open 405, in_progress 3,
@@ -155,22 +158,44 @@ beads are left untouched.
 **Theme absorption candidates (from 2026-09-11 research; final set = live query ∩
 theme):**
 
-| Bead                                                                 | Snapshot state                                                                                                        | Transported need → plan section                                                                                                                                  |
-| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `flext-gv3oe`                                                        | open bug p1 — namespace gate hardcodes nested facade name `Infra` (false positives fleet-wide)                        | validator fix → §2.1 step 1                                                                                                                                      |
-| `flext-ywu2d`                                                        | open epic p1 — fleet hardening: namespace/loc-cap gate slices, class-nesting-mappings extermination, slow-test budget | namespace/loc-cap slices + registry extermination → §2.1 detectors + §2.0.2 rules; slow-test budget → re-file standalone if still valid, else reject with reason |
-| `flext-2wjm.*`                                                       | open children of ywu2d — class-nesting-mappings work                                                                  | supersede with ywu2d (live-discovery rule R8 replaces the list registry)                                                                                         |
-| `flext-9avbt`                                                        | open feature p1 — autogenerate `constants/typings/protocols/models/utilities.py` from `_<modulo>/*.py` subclasses     | facet-root generation from live family discovery feeds the `make gen` idempotence gate → §5.4 codegen owner                                                      |
-| `flext-oja4.2`                                                       | open task p2 — map flext-core/flext-cli reuse for c/t/p/m/u consolidation                                             | consolidation happens via ownership adjudication → §2.0.1; transport reusable analysis as linked evidence, close                                                 |
-| `flext-q7hjp`                                                        | **in_progress (claimed)** — discover installed dependency public facades for private-import cutover                   | absorb per total authority: preserve actor evidence, private-import fixer dependency → §2.1 fixers; close after transport                                        |
-| `flext-ssnc7.8`, `flext-faqbn`, `flext-5s0rj`, `flext-4wrdx`-lineage | recent in_progress/open churn in logs (states unverified)                                                             | classify by live theme match; absorb if theme, leave if not                                                                                                      |
+| Bead | Snapshot state
+
+             | Transported need → plan section
+                                                                                       |
+
+## | -------------------------------------------------------------------- |
+
+## |
+
+| | `flext-gv3oe` | open bug p1 — namespace gate hardcodes nested facade name `Infra`
+(false positives fleet-wide)  
+ | validator fix → §2.1 step 1
+
+| | `flext-ywu2d` | open epic p1 — fleet hardening: namespace/loc-cap gate slices,
+class-nesting-mappings extermination, slow-test budget | namespace/loc-cap slices +
+registry extermination → §2.1 detectors + §2.0.2 rules; slow-test budget → re-file
+standalone if still valid, else reject with reason | | `flext-2wjm.*` | open children of
+ywu2d — class-nesting-mappings work | supersede with ywu2d (live-discovery rule R8
+replaces the list registry) | | `flext-9avbt` | open feature p1 — autogenerate
+`constants/typings/protocols/models/utilities.py` from `_<modulo>/*.py` subclasses |
+facet-root generation from live family discovery feeds the `make gen` idempotence gate →
+§5.4 codegen owner | | `flext-oja4.2` | open task p2 — map flext-core/flext-cli reuse
+for c/t/p/m/u consolidation | consolidation happens via ownership adjudication → §2.0.1;
+transport reusable analysis as linked evidence, close | | `flext-q7hjp` | **in_progress
+(claimed)** — discover installed dependency public facades for private-import cutover |
+absorb per total authority: preserve actor evidence, private-import fixer dependency →
+§2.1 fixers; close after transport | | `flext-ssnc7.8`, `flext-faqbn`, `flext-5s0rj`,
+`flext-4wrdx`-lineage | recent in_progress/open churn in logs (states unverified) |
+classify by live theme match; absorb if theme, leave if not |
 
 Disposition commands (after each critique is recorded in the epic description):
 
 ```bash
 bd update --json < id > --claim # take ownership of claimed/abandoned lanes first
-bd close "absorbed by flext-constants-remediation <epic-id> §<section>: <transported need>" --json < id > --reason
-bd dep add < child-id > blocks < absorbed-id > --json # only when execution order truly depends on it
+bd close "absorbed by flext-constants-remediation <epic-id> §<section>: <transported
+need>" --json < id > --reason
+bd dep add < child-id > blocks < absorbed-id > --json # only when execution order truly
+depends on it
 ```
 
 No bead closes without its need written into a plan section or explicitly rejected with
@@ -180,9 +205,15 @@ parent (precedent: `flext-012-release-min` fold into `flext-1wjg1`).
 ### 0.4 Epic and child beads
 
 ```bash
-bd create "Epic: constants declarations remediation + settings->config->c chain conformance" \
-  --description="Absorb and finish the constants/settings/config/namespace theme per plan .kilo/plans/1789144856683-constants-declarations-remediation-plan.md. Chain: settings→config→c→t→p→m→u→base→services→api→cli. Absorbs ALL theme beads (open/claimed/blocked/deferred) per operator authority. Exclusions: third-party forks, gas-city." \
-  --acceptance="Plan §6 all green: chain purity, zero duplication, R1–R14 compliance, make check/mod/test/gen idempotent fleet-wide, zero manual edits." \
+bd create "Epic: constants declarations remediation + settings->config->c chain
+conformance" \
+  --description="Absorb and finish the constants/settings/config/namespace theme per
+  plan .kilo/plans/1789144856683-constants-declarations-remediation-plan.md. Chain: \
+  settings→config→c→t→p→m→u→base→services→api→cli. Absorbs ALL theme beads \
+  (open/claimed/blocked/deferred) per operator authority. Exclusions: third-party \
+  forks, gas-city." \
+  --acceptance="Plan §6 all green: chain purity, zero duplication, R1–R14 compliance,
+  make check/mod/test/gen idempotent fleet-wide, zero manual edits." \
   -t epic -p 1 --json
 ```
 
@@ -199,12 +230,19 @@ verbatim):
 
 Chain declared once in `NAMESPACE_LAYER_ORDER`; allowed runtime imports:
 
-| Layer                        | May import at runtime                                                                                                                                                   |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `_settings.py`/`settings.py` | stdlib + pydantic(-settings) only (flext-core); + declaration facades t/m/u for other members (carve-out)                                                               |
-| `_config.py`/`config.py`     | settings surface + `._settings` owner + t/m/u (never c/p/operational)                                                                                                   |
-| `_constants/*` (c)           | settings + config singletons; t TYPE_CHECKING-only; never m/u runtime                                                                                                   |
-| t                            | c, config, settings · p: TYPE_CHECKING-only t/m · m: c, t + config/settings, p TYPE_CHECKING · u: all below · base/services/api/cli: chain below, services inject via p |
+| Layer | May import at runtime
+
+                       |
+
+## | ---------------------------- |
+
+| | `_settings.py`/`settings.py` | stdlib + pydantic(-settings) only (flext-core); +
+declaration facades t/m/u for other members (carve-out)  
+ | | `_config.py`/`config.py` | settings surface + `._settings` owner + t/m/u (never
+c/p/operational) | | `_constants/*` (c) | settings + config singletons; t
+TYPE_CHECKING-only; never m/u runtime | | t | c, config, settings · p:
+TYPE_CHECKING-only t/m · m: c, t + config/settings, p TYPE_CHECKING · u: all below ·
+base/services/api/cli: chain below, services inject via p |
 
 Proofs required: config→settings lawful and real (`_config.py` imports `app_env_prefix`,
 `platform_config_root`); c→settings/config forward (never flagged reverse);
@@ -239,7 +277,9 @@ warnings/skips/empty; first exception escapes with raw traceback.
 
 ## 2. flext-core — settings/config chain first, then constants shape
 
-### 2.0 Chain work-stream (runs BEFORE constants shape; c composes on top of settings/config)
+### 2.0 Chain work-stream (runs BEFORE constants shape; c composes on top of
+
+settings/config)
 
 **2.0.1 Owner adjudication (deletion-first, ADR-005 §5)** — rope-driven cutovers:
 
@@ -249,9 +289,10 @@ warnings/skips/empty; first exception escapes with raw traceback.
    settings owner module).
 2. `ENV_PREFIX` ↔ `app_env_prefix()`: settings owns the derived policy; `c` keeps only
    a true protocol invariant, if any survives critique.
-3. `_constants/config.py` CONFIG\__ defaults: classify via the adjudication table —
-   loader-protocol invariants stay in `c` only if no
-   `config/_.yaml`row can vary them; configurable ones move to config + typed`\_config.py`fields, loader reads`config.\*`.
+3. `_constants/config.py` CONFIG\_\_ defaults: classify via the adjudication table —
+   loader-protocol invariants stay in `c` only if no `config/*.yaml` row can vary them;
+   configurable ones move to config + typed `_config.py` fields, loader reads
+   `config.*`.
 4. `DEFAULT_APP_NAME`, `DEFAULT_TIMEZONE`: env-overridable candidates → settings fields;
    `c` copies deleted, consumers rewired. Zero old+new coexistence per cut.
 
@@ -478,15 +519,30 @@ PYTHONPATH="$SCRATCH/val-<member>/src" <worktree-venv>/bin/python -m pytest <sco
 
 ## 10. Execution status (live register)
 
-| Stage                                     | Status                              | Bead                                                   | Publication                                                                                   | Validation summary                                                                                                                                                                            |
-| ----------------------------------------- | ----------------------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase 0 governance                        | **DONE**                            | `flext-s9bxq` + children                               | n/a (bd state)                                                                                | Census: 3199 beads (283 open/33 in_prog/11 def); **36 theme beads absorbed** with ledger; snapshot corrections (2wjm=SonarQube not absorbed)                                                  |
-| Phase 1 worktree                          | **DONE**                            | epic notes                                             | n/a                                                                                           | `~/flext-wt-constants` @ `constants-remediation-0.12`; setup 31/31; gen idempotent (state-hash stable across 3 runs); 35-path drift = pre-existing codegen staleness (b3xmn family, external) |
-| ADR-012 ghosts                            | **DONE**                            | `flext-z0zkq` CLOSED                                   | core#453→`cb96e05f3`; root#223→`0e855c5f7`; both ancestors of origin/0.12.0-dev               | At tip: 0 ghost refs (consumption-law, ADR-014, README records resolution; ADR-013 zero refs); markdown gate OK                                                                               |
-| S2.0.1 cutover 1: ENV_FILE single owner   | **LANDED** (stage of `flext-9sinf`) | `flext-9sinf` (open, stage recorded)                   | core#454→`2f5c55a`; tests#96→`38154d0`; root#224→`5c22f8d92`; gitlinks verified at origin tip | Isolated detached validation @ merged SHAs: **2659 passed**, goldens 6 passed, runtime surface assertions ALL PASS (owner-only surface), ruff clean, fleet sweep zero old-API consumers       |
-| Fleet unblock: flext-tests Mapping repair | **LANDED**                          | `flext-dddl6` (transport q7hjp.1; open for full cycle) | tests#96→`38154d0`                                                                            | Member test collection restored fleet-wide; core suite collects+passes with it                                                                                                                |
-| `flext-9sinf` remaining                   | IN PROGRESS                         | `flext-9sinf`                                          | —                                                                                             | CONFIG\_\* classification (2.0.1), validators as YAML data (2.0.2), rewire fixer (2.0.3), broader P0 tests (2.0.4), phase gate (2.0.5)                                                        |
-| S2.1 shape, cli/tests cycles, fleet       | PENDING                             | `flext-4305f`…`flext-jelf1`                            | —                                                                                             | blocked-by chain intact                                                                                                                                                                       |
+- **Phase 0 governance** — DONE; beads `flext-s9bxq` + children; publication n/a (bd
+  state); Census: 3199 beads (283 open/33 in_prog/11 def); **36 theme beads absorbed**
+  with ledger; snapshot corrections (2wjm=SonarQube not absorbed).
+- **Phase 1 worktree** — DONE; epic notes; publication n/a; `~/flext-wt-constants` @
+  `constants-remediation-0.12`; setup 31/31; gen idempotent (state-hash stable across 3
+  runs); 35-path drift = pre-existing codegen staleness (b3xmn family, external).
+- **ADR-012 ghosts** — DONE; `flext-z0zkq` CLOSED; publication core#453→`cb96e05f3`,
+  root#223→`0e855c5f7`, both ancestors of origin/0.12.0-dev; At tip: 0 ghost refs
+  (consumption-law, ADR-014, README records resolution; ADR-013 zero refs); markdown
+  gate OK.
+- **S2.0.1 cutover 1: ENV_FILE single owner** — LANDED (stage of `flext-9sinf`);
+  `flext-9sinf` (open, stage recorded); publication core#454→`2f5c55a`,
+  tests#96→`38154d0`, root#224→`5c22f8d92`, gitlinks verified at origin tip; Isolated
+  detached validation @ merged SHAs: **2659 passed**, goldens 6 passed, runtime surface
+  assertions ALL PASS (owner-only surface), ruff clean, fleet sweep zero old-API
+  consumers.
+- **Fleet unblock: flext-tests Mapping repair** — LANDED; `flext-dddl6` (transport
+  q7hjp.1; open for full cycle); publication tests#96→`38154d0`; Member test collection
+  restored fleet-wide; core suite collects+passes with it.
+- **`flext-9sinf` remaining** — IN PROGRESS; `flext-9sinf`; CONFIG\_\_ classification
+  (2.0.1), validators as YAML data (2.0.2), rewire fixer (2.0.3), broader P0 tests
+  (2.0.4), phase gate (2.0.5).
+- **S2.1 shape, cli/tests cycles, fleet** — PENDING; `flext-4305f`…`flext-jelf1`;
+  blocked-by chain intact.
 
 **Environment notes (measured)**: base `ci` red at members = `uv.lock --locked` setup
 failure (toolchain lane, pre-existing, identical signature on base runs — merge-guard is

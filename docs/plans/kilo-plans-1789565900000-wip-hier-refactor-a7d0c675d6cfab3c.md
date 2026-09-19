@@ -47,21 +47,39 @@ operador) — sem subcomandos; `--help` detalhado por flag. Tudo sob `~/`.
 
 ```text
 ~/wip-hier/
-├── bin/wip-hier            # entrypoint: parse de flags, loader de módulos, main() + epílogo tee/PIPESTATUS (verbatim)
+├── bin/wip-hier            # entrypoint: parse de flags, loader de módulos, main() +
+epílogo tee/PIPESTATUS (verbatim)
 ├── lib/
-│   ├── 00-config.sh        # constantes readonly (MAKE_VERBS, MAKE_TIMEOUT, LOSS_BARRIER_LINES, NET_*), env exports (GIT_TERMINAL_PROMPT...), LOGDIR, die/have, globais mutáveis documentadas (DO, APPLY, RETIRE, INCLUDE_FOREIGN, ROOT, KIND, ROWFILE, INTEG...)
-│   ├── 10-git.sh           # do_git/show_cmd/git_mutates, nfetch/npush/ngh, abs_git_dir/abs_common_dir, tree_kind, current_head/named_branch/current_sha, ref_exists, is_dirty, ahead_count, sync_cell, bind_upstream, switch_to
-│   ├── 20-topology.sh      # resolução do root (loop superproject), gitmodules_paths, collect_subs, worktree_bound_branch, unique_local_branch_at, branch_bound_elsewhere, sanitize_branch_name, detached_worktree_branch, locate_root_branch, integration_branch, has_envrc
+│   ├── 00-config.sh        # constantes readonly (MAKE_VERBS, MAKE_TIMEOUT,
+LOSS_BARRIER_LINES, NET_*), env exports (GIT_TERMINAL_PROMPT...), LOGDIR, die/have,
+globais mutáveis documentadas (DO, APPLY, RETIRE, INCLUDE_FOREIGN, ROOT, KIND, ROWFILE,
+INTEG...)
+│   ├── 10-git.sh           # do_git/show_cmd/git_mutates, nfetch/npush/ngh,
+abs_git_dir/abs_common_dir, tree_kind, current_head/named_branch/current_sha,
+ref_exists, is_dirty, ahead_count, sync_cell, bind_upstream, switch_to
+│   ├── 20-topology.sh      # resolução do root (loop superproject), gitmodules_paths,
+collect_subs, worktree_bound_branch, unique_local_branch_at, branch_bound_elsewhere,
+sanitize_branch_name, detached_worktree_branch, locate_root_branch, integration_branch,
+has_envrc
 │   ├── 30-github.sh        # github_origin_repo, open_pr_number, open_pr_for_head
-│   ├── 40-safety.sh        # warn_alternates, has_unmerged, conflict_marker, generated_file, real_wip_files (+barreira de perda), worktree_locked, worktree_pinned, protected_branch, spent_ref
-│   ├── 50-capture.sh       # commit_summary/commit_details, push_head (retry fetch+merge --no-ff), resolve_gitlink_conflicts, handle_conflict, sweep_repo
-│   ├── 60-retire.sh        # RETIRED map usage, retire_worktrees/retire_branches/retire_prs/retire_repo
+│   ├── 40-safety.sh        # warn_alternates, has_unmerged, conflict_marker,
+generated_file, real_wip_files (+barreira de perda), worktree_locked, worktree_pinned,
+protected_branch, spent_ref
+│   ├── 50-capture.sh       # commit_summary/commit_details, push_head (retry
+fetch+merge --no-ff), resolve_gitlink_conflicts, handle_conflict, sweep_repo
+│   ├── 60-retire.sh        # RETIRED map usage,
+retire_worktrees/retire_branches/retire_prs/retire_repo
 │   ├── 70-gates.sh         # run_gates (+ os 3 guards de posse, verbatim)
-│   └── 80-report.sh        # emit_row, sorted_rows, report, print_origin_map, _skip_user_dir/_scan_root/scan_git_dirs/discover_same_origin/family_rows (foreign scan)
-│   └── 85-fixture.sh       # NEW: família sintética para --apply (todo o plumbing git do fixture; não carregada pelo sweep)
-├── bin/wip-hier-check      # NEW: orquestrador declarativo dos gates §6 (passos/matrizes/asserts como dados; consome as libs como sondas)
-├── .baseline/wip-hier-v1.sh  # cópia imutável do monólito original (referência de paridade)
-├── .baseline/wip-hier-v1-fixed.sh  # baseline + fix L39 (referência de paridade dry-run; o baseline original crasha — SC2296/bad substitution)
+│   └── 80-report.sh        # emit_row, sorted_rows, report, print_origin_map,
+_skip_user_dir/_scan_root/scan_git_dirs/discover_same_origin/family_rows (foreign scan)
+│   └── 85-fixture.sh       # NEW: família sintética para --apply (todo o plumbing git
+do fixture; não carregada pelo sweep)
+├── bin/wip-hier-check      # NEW: orquestrador declarativo dos gates §6
+(passos/matrizes/asserts como dados; consome as libs como sondas)
+├── .baseline/wip-hier-v1.sh  # cópia imutável do monólito original (referência de
+paridade)
+├── .baseline/wip-hier-v1-fixed.sh  # baseline + fix L39 (referência de paridade
+dry-run; o baseline original crasha — SC2296/bad substitution)
 └── README.md               # uso (help por flag), mapa de módulos, checklist de paridade
 ```
 
@@ -113,8 +131,8 @@ usage: wip-hier [flags]
    `bash --norc -c 'source ...; declare -F'` se viável) e o novo — conjuntos idênticos
    (± helpers do parse se inevitável, listados no README).
 5. Substituir `~/wip-hier.sh` pelo shim (§2).
-6. `git -C ~/wip-hier init && git add -A && git commit -m "wip-hier: decompose monolith into lib modules (parity-refactor)"`
-   (versionar; provenance).
+6. `git -C ~/wip-hier init && git add -A && git commit -m "wip-hier: decompose monolith`
+   `into lib modules (parity-refactor)"` (versionar; provenance).
 7. Atualizar Kilo allowlist (permissões): adicionar `~/wip-hier/bin/wip-hier *` (manter
    `~/wip-hier.sh *` se existir).
 

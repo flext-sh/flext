@@ -1,4 +1,6 @@
-# Plano Unificado de Retomada — Épico bd → Absorção Total → Remote-ização → Execução (sweep × `flext-ssnc7` × ai-hub × agents)
+# Plano Unificado de Retomada — Épico bd → Absorção Total → Remote-ização → Execução
+
+(sweep × `flext-ssnc7` × ai-hub × agents)
 
 > **Decretos do operador (vigentes)**: · 13:21Z — F0 assume como MEU absolutamente tudo
 > de ai-hub e agents (beads, TODOs, insumos md, workspaces, worktrees, PRs, branches
@@ -78,10 +80,13 @@
 ### 2.2 Template de criação — nada menos do que `bd lint` exige
 
 ```bash
-env -u BEADS_DOLT_SERVER_DATABASE bd create "<título>" -t epic | feature | task | bug -p \
+env -u BEADS_DOLT_SERVER_DATABASE bd create "<título>" -t epic | feature | task | bug -p
+\
   "<contexto + escopo + fontes (caminhos/SHAs) + proibições aplicáveis>" \
-  --design "<abordagem: passos das seções F* deste plano + leis de pouso/evidência + barra §3.0>" \
-  --acceptance "<critérios medíveis: propagação (merge-base por repo), gates 100% green zero warning no SHA integrado, runtime real, beads fechadas, bd lint zero>" \
+  --design "<abordagem: passos das seções F* deste plano + leis de pouso/evidência +
+  barra §3.0>" \
+  --acceptance "<critérios medíveis: propagação (merge-base por repo), gates 100% green
+  zero warning no SHA integrado, runtime real, beads fechadas, bd lint zero>" \
   --parent < 0-2 > --description < id-do-epico > \
   --validate                              # cria só com descrição completa
 env -u BEADS_DOLT_SERVER_DATABASE bd lint # ZERO issues antes de sair da F0
@@ -120,7 +125,9 @@ novo ou ação destrutiva fora do escopo.
 
 ## 3. Fases
 
-### 3.0 Barra de fechamento comum — UMA fase só termina (bead CLOSED) com os 5 itens, no blast radius dela
+### 3.0 Barra de fechamento comum — UMA fase só termina (bead CLOSED) com os 5 itens, no
+
+blast radius dela
 
 1. **Propagação concluída**: para cada projeto/subprojeto tocado — SHA pousado `--no-ff`
    na integração + `git fetch` +
@@ -256,7 +263,8 @@ critical + `status` limpo; runtime = grafos vivos no workspace real usados por
 ### 3.5 F4 — Piloto unificado (gates de registro A3 + §12a)
 
 Lane `hotfix/conformance-sweep-p` de `origin/0.12.0-dev` recém-fetchada. Ciclo:
-`crg update → impact → tests_for → make mod (escopado) → make fmt → make gen ×2 byte-idêntico (pré-push guard) → make check/test → commit escopado`.
+`crg update → impact → tests_for → make mod (escopado) → make fmt → make gen ×2`
+`byte-idêntico (pré-push guard) → make check/test → commit escopado`.
 
 | Ordem | Onda                          | Conteúdo                                                                                                                                                     | Bead(s)                     | Aceite                                                      |
 | ----- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- | ----------------------------------------------------------- |

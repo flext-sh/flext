@@ -11,7 +11,8 @@
 ## Current Reality
 
 - Tracker runtime is degraded. Dolt server probe failed:
-  - `2026/09/10 10:30:18 ERROR native_store_unavailable gate=identity_match reason="database project_id could not be confirmed" scope=~/gc`
+  - `2026/09/10 10:30:18 ERROR native_store_unavailable gate=identity_match`
+    `reason="database project_id could not be confirmed" scope=~/gc`
   - `bd ping` / `bd graph check` failed with
     `dolt circuit breaker is open: server appears down` at 127.0.0.1:14499.
   - `gc status --json` reports the city as `running:true`, `suspended:true`,
@@ -52,7 +53,8 @@
   - Prior work plus rules live in `.beads/artifacts/recon-20260910/` and prior plan refs
     (see `.kilo/plans/1788987519000-checkpoint-refactor-plan.md`).
   - The reconciliation script is read-only-safe:
-    `~/agents/skills/tool/beads-organization/scripts/reconcile-inventory.sh --limit 20 --integration origin/0.12.0-dev --dry-run`.
+    `~/agents/skills/tool/beads-organization/scripts/reconcile-inventory.sh --limit 20`
+    `--integration origin/0.12.0-dev --dry-run`.
   - Coordinator does not close or merge code; subagents analyze and report.
 
 ## Next Move

@@ -67,10 +67,14 @@ no SHA → prova de runtime.
 
 ```bash
 cd ~/flext && git fetch origin 0.12.0-dev
-git rev-parse origin/0.12.0-dev                                                                                            # comparar com §2
-find . -name "*.bak" -not -path "*-worktrees/*" -not -path "*/.venv/*" -not -path "*/.git/*" -not -path "*/dist/*" | wc -l # == 0
-env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open                                                                    # reconciliar §4 vs §5 do plano
-grep -rn "persist_apply_backup" flext-infra/src/ | wc -l                                                                   # == 0
+git rev-parse origin/0.12.0-dev
+                                  # comparar com §2
+find . -name "*.bak" -not -path "*-worktrees/*" -not -path "*/.venv/*" -not -path
+"*/.git/*" -not -path "*/dist/*" | wc -l # == 0
+env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open
+                                  # reconciliar §4 vs §5 do plano
+grep -rn "persist_apply_backup" flext-infra/src/ | wc -l
+                                  # == 0
 ```
 
 Divergência → investigar proveniência, consertar no dono, conservar trabalho dirty.

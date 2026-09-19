@@ -1,4 +1,6 @@
-# Modernize Pydantic via Rope: presets canônicos, CLI unificada e extermínio de engines re/ast/libcst
+# Modernize Pydantic via Rope: presets canônicos, CLI unificada e extermínio de engines
+
+re/ast/libcst
 
 ## Missão
 
@@ -77,7 +79,9 @@ flext-core + rules YAML flext-infra), nunca conserto pontual.
    (`ban-raw-ast-parser`, `ban-libcst-import`, `ban-re-parse` como regras ast-grep +
    beartype) e apagar engines mortas.
 
-## Plano de execução (ondas fechadas — cada uma termina ruff + pyrefly + coleta pytest 100% verdes)
+## Plano de execução (ondas fechadas — cada uma termina ruff + pyrefly + coleta pytest
+
+100% verdes)
 
 ### Onda 0 — Coordenação e baseline (paralela, agora)
 
@@ -106,7 +110,8 @@ flext-core + rules YAML flext-infra), nunca conserto pontual.
    fronteira de ownership documentada).
 2. `PREDICATE_BINDINGS["consumer_config_dict"]` (enforcement_part_01) + linha
    BEARTYPE_ROWS ENFORCE-080 +
-   `ENFORCEMENT_FIX_ACTIONS["ENFORCE-080"] = {kind: "codemod", target: "rewire-consumer-preset", params: {sg_rules: [...], sed: {...}}, safe: true}`.
+   `ENFORCEMENT_FIX_ACTIONS["ENFORCE-080"] = {kind: "codemod", target:`
+   `"rewire-consumer-preset", params: {sg_rules: [...], sed: {...}}, safe: true}`.
 3. Testes: violação detectada em classe consumidora (fora do owner), owner isento.
 
 ### Onda 3 — Regras parametrizadas + CLI única (flext-infra) — agente C + main
@@ -135,7 +140,9 @@ flext-core + rules YAML flext-infra), nunca conserto pontual.
 4. Commit escopado por projeto; beads atualizados com evidência (comando, exit code,
    contagens).
 
-### Onda 5 — Extermínio das engines re/ast/libcst — ondas W1–W4 (streams paralelos, 1 bead cada)
+### Onda 5 — Extermínio das engines re/ast/libcst — ondas W1–W4 (streams paralelos, 1
+
+bead cada)
 
 - W1 transformers (pydantic_modernizer, typing_unifier, compatibility_alias,
   open_encoding, pattern, dataclass_modelizer, \_rewrite, mro_remover(cst),

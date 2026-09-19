@@ -61,8 +61,9 @@
 ### W-A (imediato, <5min) — Adotar tip nos paths redundantes
 
 1. `git fetch` + confirmar tip `c3f574807`.
-2. `git checkout -- src/flext_infra/codegen/_conform/ src/flext_infra/codegen/conform.py src/flext_infra/codegen/__init__.py`
-   (adotar versão pousada pelo ator; minhas cópias são supersets redundantes).
+2. `git checkout -- src/flext_infra/codegen/_conform/ src/flext_infra/codegen/conform.py`
+   `src/flext_infra/codegen/__init__.py` (adotar versão pousada pelo ator; minhas cópias
+   são supersets redundantes).
 3. Verificar `git status` limpo exceto `_config` + `_models`.
 
 ### W-B — Exemption SLF001 no SSOT (se evidência pedir)

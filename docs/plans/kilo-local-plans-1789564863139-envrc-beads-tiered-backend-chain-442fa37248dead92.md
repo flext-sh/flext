@@ -1,4 +1,6 @@
-# Plano — `.envrc` gerado: cadeia de backends beads (gascity → bd local → nenhum) + direnv automático
+# Plano — `.envrc` gerado: cadeia de backends beads (gascity → bd local → nenhum) +
+
+direnv automático
 
 ## 0. Causa raiz (análise do ciclo completo)
 

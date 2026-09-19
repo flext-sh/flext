@@ -83,8 +83,9 @@ artesanais. Sem aumento de erro de lint; testes 100% verdes.
 **Novos dados (CONSTANTS-FIRST, tudo row-driven):**
 
 - `EnforcementSmellTag(StrEnum)` — 8 membros
-  `smell_function_parameters, smell_function_complexity, smell_file_complexity, smell_return_statements, smell_nested_control_flow, smell_boolean_logic, smell_similar_code, smell_identical_code`
-  (part_01).
+  `smell_function_parameters, smell_function_complexity, smell_file_complexity,`
+  `smell_return_statements, smell_nested_control_flow, smell_boolean_logic,`
+  `smell_similar_code, smell_identical_code` (part_01).
 - `ENFORCEMENT_SMELL_THRESHOLDS: MappingProxyType[EnforcementSmellTag,int]` = {params:5,
   returns:5, nesting:4, function_complexity:14, file_complexity:49} — semântica
   documentada `violação quando observado > max` (reproduz qlty ≥15/≥50). +
@@ -177,7 +178,8 @@ CODE_SMELL (warning sempre carrega ENFORCE-NNN + anchor + Fix).
   - cwd = workspace root (config SSOT em `<workspace>/.qlty/`; projetos são submodules)
     — novo hook template `_check_cwd()` em `base_gate.py` (+7 LOC, default project_dir,
     zero mudança nos 10 gates existentes); comando
-    `[QLTY_BINARY, "smells", "--all", "sarif", "--include-tests", "--no-snippets", "--quiet", "--no-upgrade-check", <project_dir.name>]`.
+    `[QLTY_BINARY, "smells", "--all", "sarif", "--include-tests", "--no-snippets",`
+    `"--quiet", "--no-upgrade-check", <project_dir.name>]`.
   - `_issues_from_sarif` classmethod PURO (testável com fixture literal):
     `u.Cli.json_parse` → `runs[0].results[]`; `ruleId "qlty:<type>"` → `Issue.code`; uri
     prefix-stripped; mensagem enriquecida =
@@ -207,10 +209,12 @@ CODE_SMELL (warning sempre carrega ENFORCE-NNN + anchor + Fix).
 ### C. Cleanup (pressão net-LOC + higiene)
 
 Arquivar (mv, nunca rm — política global) para `.reports/archive/qlty-legacy/`: raiz
-`parse_smells.py, qlty_results.json, smells.json, repo_smells.sarif, prompts_smells.sarif, flext_ldif_constants_smells.sarif`;
-flext-core
-`parse_smells.py.bak, smells.json.bak, smells.sarif.bak, smells_output.txt.bak, qlty_out.txt.bak, qlty_output.json.bak, qlty_output.txt.bak, qlty_results.sarif.bak, parse_sarif.py.bak.bak`;
-flext-cli `qlty_smells.txt.bak`. O gate substitui `parse_smells.py`.
+`parse_smells.py, qlty_results.json, smells.json, repo_smells.sarif,`
+`prompts_smells.sarif, flext_ldif_constants_smells.sarif`; flext-core
+`parse_smells.py.bak, smells.json.bak, smells.sarif.bak, smells_output.txt.bak,`
+`qlty_out.txt.bak, qlty_output.json.bak, qlty_output.txt.bak, qlty_results.sarif.bak,`
+`parse_sarif.py.bak.bak`; flext-cli `qlty_smells.txt.bak`. O gate substitui
+`parse_smells.py`.
 
 ### D. Beads (correções futuras + governança)
 

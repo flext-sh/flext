@@ -50,7 +50,7 @@ class TestsFlextRootModels(m):
             branch: Annotated[str, u.Field(description="Current branch name.")]
             commit_sha: Annotated[str, u.Field(description="Current commit SHA.")]
 
-    class Tests(_ModuleModels, _SyncModels):
+    class TestsFlextRoot(_ModuleModels, _SyncModels):
         """Test infrastructure model definitions."""
 
 

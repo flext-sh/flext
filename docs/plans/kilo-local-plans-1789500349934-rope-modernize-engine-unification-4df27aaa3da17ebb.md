@@ -1,4 +1,6 @@
-# Rope Modernize Engine — Migração Unificada + Extermínio ast/re/libcst + Saída do Motor Estático de flext-core
+# Rope Modernize Engine — Migração Unificada + Extermínio ast/re/libcst + Saída do Motor
+
+Estático de flext-core
 
 ## Contexto e regras raiz
 

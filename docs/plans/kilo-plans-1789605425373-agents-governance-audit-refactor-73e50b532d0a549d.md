@@ -63,7 +63,8 @@ Three different precedence hierarchies:
 - `AGENTS.md` line 17: `USER REQUEST > BEADS > ADRs > SKILLs > DOCS > default`
 - `VALIDATE_ON_CHANGE.md` line 107: `regra do operador > beads > ADRs > skills > docs`
 - `rules/coordination/operator-precedence.md` lines 20-21:
-  `operator request > orchestration contract > canonical tracker > ADRs > skills > docs > defaults`
+  `operator request > orchestration contract > canonical tracker > ADRs > skills > docs`
+  `> defaults`
 
 **Resolution**: `rules/coordination/operator-precedence.md` is the dedicated authority.
 AGENTS.md and VALIDATE_ON_CHANGE.md shall cite it instead of restating.
@@ -206,7 +207,9 @@ By category:
 - [Communication](rules/communication/) — caveman style
 ```
 
-### 5. No changes to: `config/governance.json`, `config/workspace.yaml`, `config/skills.json`, `config/evals.json`
+### 5. No changes to: `config/governance.json`, `config/workspace.yaml`
+
+`config/skills.json`, `config/evals.json`
 
 These are owner manifests. They reference rule IDs that remain valid. No stale
 project-specific facts to remove.
@@ -259,7 +262,8 @@ The refactoring only touches root governance architecture: `AGENTS.md`,
 6. **File size**: Final `AGENTS.md` ~80 lines (prelude 37 + essential brief + links)
 7. **Config manifests**: Verify `config/governance.json` bootstrap rules still resolve
    to existing files:
-   `rtk python -c "import json; d=json.load(open('config/governance.json')); [print(x) for x in d['delivery']['guarantees']]"`
+   `rtk python -c "import json; d=json.load(open('config/governance.json')); [print(x)`
+   `for x in d['delivery']['guarantees']]"`
 8. **Rule README**: Verify `rules/README.md` index covers all `rules/*/*.md` files
 9. **Cross-link validation**: Verify all `rules/*/*.md` "See also" and "Compose with"
    references resolve to existing files

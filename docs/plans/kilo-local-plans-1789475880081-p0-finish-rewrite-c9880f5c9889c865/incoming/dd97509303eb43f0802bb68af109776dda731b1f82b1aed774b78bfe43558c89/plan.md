@@ -46,11 +46,11 @@ publicar).**
 ### Onda A — Adotar e estabilizar o working tree (só o meu escopo)
 
 1. Commitar os reparos não-commitados do flext-infra como UM commit de adoção
-   (`fix(codegen): complete _conform split adoption — fields, MRO order, part-qualified calls, container import`):
-   `bootstrap.py` (fields graft), `base.py` (MRO: parts antes de `s[...]`), `render.py`
-   (`_managed_gitlinks` staticmethod + owner-qualified), `beads.py` (runtime container
-   import), mais qualquer `parent.parent` de profundidade errada que o `grep` apontar em
-   `_conform/`.
+   (`fix(codegen): complete _conform split adoption — fields, MRO order, part-qualified`
+   `calls, container import`): `bootstrap.py` (fields graft), `base.py` (MRO: parts
+   antes de `s[...]`), `render.py` (`_managed_gitlinks` staticmethod + owner-qualified),
+   `beads.py` (runtime container import), mais qualquer `parent.parent` de profundidade
+   errada que o `grep` apontar em `_conform/`.
 2. dbt-oracle: NÃO adotar agora (zona viva do peer) — apenas garantir que a remoção do
    `services/base.py` duplicado permanece (já pousada) e registrar no bead.
 3. Projeções de marcador (pyproject 1-arquivo) em api/auth/core: commitar em lote

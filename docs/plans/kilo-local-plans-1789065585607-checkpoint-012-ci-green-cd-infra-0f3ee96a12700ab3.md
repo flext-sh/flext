@@ -1,4 +1,6 @@
-# SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
+# SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md
+
+(Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
 
 # Checkpoint 0.12.0 — Integrar PRs com CI verde + teste cd-infra (windows/macos/linux)
 

@@ -19,12 +19,15 @@ never-deduce-research-first.
   repo (flext-fkfmu; lease blocking=False hoje; corrida 2x provada); input-CAS →
   limpo/loud, máx 3 ciclos → adopt tip.
 - **F2** engine: W1 facades split (FEITO via adoção), W2 primitivas
-  refactor/+rope\__(LazyInitPlan contrato), W3 loop transacional único (snapshot
+  refactor/+rope\_\_(LazyInitPlan contrato), W3 loop transacional único (snapshot
   input-CAS → 1 projeto rope/repo → publicação em lote → recibo findings+timings;
   reverse-apply diff vazio obrigatório), W4 três níveis (gen EMITE / fix CORRIGE / check
-  REPORTA; nunca silenciar), W5 rules-as-data
-  (`config/codegen.yaml`+`rules/_.yaml`), W6 gate cosmos-docgen ×2 ANTES da frota, W7 agents_governance. Taxonomia: GEN-W001 sem `**all**`, W002 self-import absoluto (fix relativiza; overlay flext-core exceção declarada; lazy isento), W003 fora do layout, W004 formato/header, W005 ciclo SCC, GEN-E001 stale `**all**`; colisão de irmãos = erro. Render purity: `render
-  = f(SSOT, templates, PINS)`.
+  REPORTA; nunca silenciar), W5 rules-as-data (`config/codegen.yaml` + `rules/*.yaml`),
+  W6 gate cosmos-docgen ×2 ANTES da frota, W7 `agents_governance`. Taxonomia: GEN-W001
+  sem `**all**`, W002 self-import absoluto (fix relativiza; overlay flext-core exceção
+  declarada; lazy isento), W003 fora do layout,
+  `W004 formato/header, W005 ciclo SCC, GEN-E001 stale `**all**`; colisão de irmãos =`
+  `erro. Render purity: `render = f(SSOT, templates, PINS)`.
 - **F3** frota: re-projeção 32/32, sweeps (stub/fallback/silenciamento ~27 membros;
   clusters 4–6/agent; raiz em `r.Fail`/`e.*`; sem noqa), `require-future-annotations`
   x21 pendente (flext-c4k44), centralização c/t/p/m/u (solid/ssot/dry), `make test`

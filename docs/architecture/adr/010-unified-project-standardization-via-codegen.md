@@ -1,4 +1,6 @@
-# ADR-010 — Unified project standardization (Make, scripts, tests, structure) via flext-infra codegen and flext-tests
+# ADR-010 — Unified project standardization (Make, scripts, tests, structure) via
+
+flext-infra codegen and flext-tests
 
 <!-- TOC START -->
 

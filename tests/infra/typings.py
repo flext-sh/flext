@@ -16,7 +16,7 @@ from flext_infra import t
 class TestsFlextRootTypes(t):
     """Infrastructure test typings facade — extends flext_infra typings."""
 
-    class Tests:
+    class TestsFlextRoot:
         """Test infrastructure type definitions."""
 
         type Command = t.StrSequence

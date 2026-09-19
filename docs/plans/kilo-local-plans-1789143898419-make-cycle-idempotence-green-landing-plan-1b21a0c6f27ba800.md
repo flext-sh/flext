@@ -43,8 +43,8 @@ branch de integração `0.12.0-dev` (submódulos + superprojeto).
    incluir `_result/*`, `result.py`, `_protocols/result.py`, `_typings/base.py`. Gates
    antes do commit: ruff + mypy + pyrefly + pytest focado em result.
 2. `flext-infra`: commit escopado
-   `fix(release): render build constraints from SSOT; typed archive boundary; exact result families`
-   — incluir `release/*`, `codegen/conform.py`, `config/codegen.yaml`,
+   `fix(release): render build constraints from SSOT; typed archive boundary; exact`
+   `result families` — incluir `release/*`, `codegen/conform.py`, `config/codegen.yaml`,
    `_constants/base.py`, `_models/config.py`, tests (utilities_release,
    policy_fixture_root_tests, test_release_dag, protocol_tests, utilities_git).
 3. Superprojeto: commit escopado

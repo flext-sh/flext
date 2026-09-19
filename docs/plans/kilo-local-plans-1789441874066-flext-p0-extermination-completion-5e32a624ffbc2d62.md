@@ -1,4 +1,6 @@
-# P0 — Extermínio de stubs/fallback/silenciamento + Conclusão da estabilização 0.12.0 (plano otimizado com finish line)
+# P0 — Extermínio de stubs/fallback/silenciamento + Conclusão da estabilização 0.12.0
+
+(plano otimizado com finish line)
 
 ## Objetivo e ponto de finalização (HARD STOP)
 
@@ -68,7 +70,9 @@ nos tips dos projetos afetados**. A sessão termina quando:
 | Singleton FlextSettings                    | **Épico dedicado criado**                                                                                         | ADR-016 + `docs/plans/2026-09-15-flext-settings-config-ssot-epic.md` + bead `flext-7pa7o`; P0 NÃO edita `_settings.py`; oracle-wms suite 11/12 seeds verde (seed 8 = maquinaria do épico)                                                                                                                                                                                                                                    |
 | Pendências de teste                        | tap-wms (agente rodando), target-wms wiring (agente rodando), flext-infra suite timeout (-15/-9, receipt handoff) | —                                                                                                                                                                                                                                                                                                                                                                                                                            |
 
-## Execução P0 — ondas ordenadas (cada onda: worktree → fazer → validar → merge --no-ff no tip → push → bump superprojeto → bead comment)
+## Execução P0 — ondas ordenadas (cada onda: worktree → fazer → validar → merge --no-ff
+
+no tip → push → bump superprojeto → bead comment)
 
 ### Onda 1 — Convergência de gates no tip (sem novas features)
 

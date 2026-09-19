@@ -1,6 +1,10 @@
-# SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
+# SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md
 
-# Checkpoint 0.12.0 — consolidação final: land residual + CI verde + cd-infra + fechamento de ciclos
+(Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
+
+# Checkpoint 0.12.0 — consolidação final: land residual + CI verde + cd-infra +
+
+fechamento de ciclos
 
 Rev4 (consolida rev3 + sessões "Finalização release 0.12.0" e "Fixing make setup") ·
 Bead-mãe: `flext-yirgp` · Integração: `origin/0.12.0-dev`

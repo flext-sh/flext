@@ -62,7 +62,8 @@
 
 ```
 snapshot (input-CAS, authenticated)
- → plan EVERYTHING (pyproject, templates, mise, lazy-init, docs) — ONE rope project per repo
+ → plan EVERYTHING (pyproject, templates, mise, lazy-init, docs) — ONE rope project per
+ repo
  → publish in one transactional batch (Journal CAS: full authenticated file state)
  → single receipt (findings + timings)
 ```

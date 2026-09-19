@@ -1,4 +1,6 @@
-# ADR-009 — Ecosystem coordination and reusable-library evaluation across internal and external projects
+# ADR-009 — Ecosystem coordination and reusable-library evaluation across internal and
+
+external projects
 
 <!-- TOC START -->
 

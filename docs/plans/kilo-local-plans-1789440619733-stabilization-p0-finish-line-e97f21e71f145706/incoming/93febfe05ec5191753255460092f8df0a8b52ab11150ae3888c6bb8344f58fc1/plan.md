@@ -1,4 +1,6 @@
-# P0 Stabilization Finish Line — gates verdes, extermínio de stub/fallback/silenciamento, publicação nos tips
+# P0 Stabilization Finish Line — gates verdes, extermínio de
+
+stub/fallback/silenciamento, publicação nos tips
 
 ## Contexto (evidência desta sessão, 2026-09-15)
 

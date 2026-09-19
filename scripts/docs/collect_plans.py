@@ -7,7 +7,7 @@ from pathlib import Path
 from flext_infra import FlextInfraCli
 
 
-class FlextWorkspacePlanCollection:
+class FlextRootWorkspacePlanCollection:
     """Associate this checkout with its versioned collection configuration."""
 
     @staticmethod
@@ -25,4 +25,4 @@ class FlextWorkspacePlanCollection:
 
 
 if __name__ == "__main__":
-    raise SystemExit(FlextWorkspacePlanCollection.main())
+    raise SystemExit(FlextRootWorkspacePlanCollection.main())

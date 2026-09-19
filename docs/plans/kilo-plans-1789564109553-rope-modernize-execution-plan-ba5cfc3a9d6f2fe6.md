@@ -52,9 +52,12 @@ na integração, fecha PRs sem nada a oferecer à base.
 analisado):**
 
 ```bash
-~/wip-hier.sh                     # 1) DISCOVERY: tabela completa (tree, branch, sha, dirty, ahead, PR, behind) — SEMPRE primeiro
-~/wip-hier.sh --apply             # 2) CAPTURE: preserve-commit + align + push lanes (+merge --no-ff automático em push rejeitado)
-~/wip-hier.sh --apply --no-retire #    variante: quando preservar branches/PRs candidatos ainda não absorvidos
+~/wip-hier.sh                     # 1) DISCOVERY: tabela completa (tree, branch, sha,
+dirty, ahead, PR, behind) — SEMPRE primeiro
+~/wip-hier.sh --apply             # 2) CAPTURE: preserve-commit + align + push lanes
+(+merge --no-ff automático em push rejeitado)
+~/wip-hier.sh --apply --no-retire #    variante: quando preservar branches/PRs
+candidatos ainda não absorvidos
 ```
 
 **Regras de uso:**
@@ -74,8 +77,12 @@ analisado):**
 ## 2. PR DA LANE NO GITHUB — abrir NO COMEÇO, manter vivo
 
 1. **R0.0 (primeiro ato da execução):** abrir/verificar PRs da lane como registro vivo:
-   - `gh pr create -R flext-sh/flext --base 0.12.0-dev --head feature/rope-modernize -t "rope-modernize: unified rope engine (one writer per destination, mod semantic phase-0)" -F pr-body.md`
-   - `gh pr create -R flext-sh/flext-infra --base 0.12.0-dev --head feature/rope-modernize -t "infra: rope modernize engine + lazy-init one-writer fix" -F pr-body-infra.md`
+   - `gh pr create -R flext-sh/flext --base 0.12.0-dev --head feature/rope-modernize -t`
+     `"rope-modernize: unified rope engine (one writer per destination, mod semantic`
+     `phase-0)" -F pr-body.md`
+   - `gh pr create -R flext-sh/flext-infra --base 0.12.0-dev --head`
+     `feature/rope-modernize -t "infra: rope modernize engine + lazy-init one-writer`
+     `fix" -F pr-body-infra.md`
    - Se já existir PR aberto para a lane: `gh pr edit` no body (nunca duplicar).
 2. **Toda onda pousada** = commit+push + `gh pr edit <n> --body` anexando evidência
    numérica (test-ids F/E, exit codes, SHAs). O body do PR é o diário da lane.
@@ -142,7 +149,8 @@ analisado):**
 
 ```text
 discovery (wip-hier dry-run) → há dirty/behind/nova lane?
-  sim  → absorb candidatos (merge --no-ff, lei §3) → wip-hier --apply → gen ×2 → push → PR edit (evidência)
+  sim  → absorb candidatos (merge --no-ff, lei §3) → wip-hier --apply → gen ×2 → push →
+  PR edit (evidência)
   não  → prosseguir a onda
 ```
 

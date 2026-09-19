@@ -97,10 +97,14 @@ Regen: `env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json`
 
 ```bash
 cd ~/flext
-env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json | jq -r '.[] | "\(.priority)\t\(.id)\t\(.title)"' | sort -n
-# 1. mapear cada bead → item do todo (flext-3cabz→A1, 9wwed→B1/B2, gxgqp→gate backup, cpkk→A3-locking-actor, f73ii→lock, vo335→A0.3)
-# 2. completar com o plan-index: docs/plans/2026-09-11-flext-conformance-sweep.md §4 (A0-A5) + §11 (piloto A6)
-# 3. marcar in_progress o piloto (crg update + trapézio 11.1 nas 9 reds ci_matrix + make_environment B1/B2)
+env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json | jq -r '.[] |
+"\(.priority)\t\(.id)\t\(.title)"' | sort -n
+# 1. mapear cada bead → item do todo (flext-3cabz→A1, 9wwed→B1/B2, gxgqp→gate backup,
+cpkk→A3-locking-actor, f73ii→lock, vo335→A0.3)
+# 2. completar com o plan-index: docs/plans/2026-09-11-flext-conformance-sweep.md §4
+(A0-A5) + §11 (piloto A6)
+# 3. marcar in_progress o piloto (crg update + trapézio 11.1 nas 9 reds ci_matrix +
+make_environment B1/B2)
 # 4. adição: capsule-budget resolução pendente ver §9.2 + seção 12 do plano
 ```
 
@@ -177,7 +181,9 @@ tarefa de reconciliação local; propagationpreserved: nada foi normalizado.
 | DR2 | Plano §10 apresentava o loop crg como invenção                                              | esclarecido: **ADR-010 item 3 já sanciona a rota ai-hub CRG/LSP** como evidência sem pré-requisito de host — o ciclo §11 é ADR-conformant                                                                                |
 | DR3 | Framing "pré-existente fora de escopo" (meu delta verde) usado para Reds estruturais        | rule `production-readiness` proíbe: defeito no blast radius é adotado ("combined state is the deliverable") — Reds do ator só são ACEITÁVEIS como beads abertas com promoção bloqueada, nunca como "fora do meu mirante" |
 
-### 9.3 Regras que precisam ser CODIFICADAS para o piloto de produção com propagação completa (cadeia de fechamento)
+### 9.3 Regras que precisam ser CODIFICADAS para o piloto de produção com propagação
+
+completa (cadeia de fechamento)
 
 Ordem ADR-010-conforme (cada gate fecha até o próximo abrir):
 

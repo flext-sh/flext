@@ -24,7 +24,8 @@
 
 1. Runtime e Make são autoridade; CRG/testes orientam, não aprovam.
 2. Gas City Beads é o único tracker; planos/adendos são handoff/proveniência.
-3. `setup → gen x2 → mod x2 → gen x2 se mod mudou owner → fix x2 → fmt x2 → check → test → build`.
+3. `setup → gen x2 → mod x2 → gen x2 se mod mudou owner → fix x2 → fmt x2 → check → test`
+   `→ build`.
 4. Centralizar `c/t/p/m/u/config/settings` antes de decompor god modules.
 5. Facade alvo: `_<module>/`, classes coesas, `base.py` MRO, facade pública fina,
    `__init__.py` gerado, sem `_part`/shim/dual path.

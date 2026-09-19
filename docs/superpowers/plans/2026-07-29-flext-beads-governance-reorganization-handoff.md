@@ -51,7 +51,8 @@ mutations belong to implementation Beads created or linked by this reorganizatio
 
 Canonical epic theme:
 
-`FLEXT — Generated, self-contained conformity for workspaces, standalone projects, and external references`
+`FLEXT — Generated, self-contained conformity for workspaces, standalone projects, and`
+`external references`
 
 The root program must remain in the FLEXT ledger. `flext-infra` owns generic FLEXT build
 and delivery behavior: Make, conform, generated project roots, Mise, direnv, `.envrc`,

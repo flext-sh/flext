@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 class TestsFlextRootProtocols(p):
     """Infrastructure test protocols facade — extends flext_infra protocols."""
 
-    class Tests:
+    class TestsFlextRoot:
         """Test infrastructure protocol definitions."""
 
         @runtime_checkable
@@ -33,7 +33,7 @@ class TestsFlextRootProtocols(p):
             """Protocol for module specifications."""
 
             name: str | None
-            loader: TestsFlextRootProtocols.Tests.SpecLoader | None
+            loader: TestsFlextRootProtocols.TestsFlextRoot.SpecLoader | None
 
         @runtime_checkable
         class ModuleResolver(Protocol):

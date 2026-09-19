@@ -56,7 +56,8 @@ separado).
 
 - `import_layer_order: VariadicTuple[NonEmptyStr]` — vocabulário ordenado declarado em
   `flext-infra/config/codegen.yaml`
-  (`tooling.lazy-init.import-layer-order: [settings, config, c, t, p, m, u, base, services, api, cli]`);
+  (`tooling.lazy-init.import-layer-order: [settings, config, c, t, p, m, u, base,`
+  `services, api, cli]`);
 - `reverse_import_mode: Literal["type_checking"]`,
   `forward_import_form: Literal["relative_dot"]`. Classificador de rank (helper novo,
   planner mixin ou `u.Infra`): mapeia caminho de módulo → rank — `settings/_settings`
