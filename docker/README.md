@@ -326,15 +326,18 @@ from flext_tests import postgres_container
 
 ```bash
 # Check for prohibited duplicate files
-find ~/flext -name "docker-compose.yml" -o -name "docker-compose.*.yml" | grep -v "~/flext/docker/"
+find ~/flext -name "docker-compose.yml" -o -name "docker-compose.*.yml" \
+  | grep -v "~/flext/docker/"
 # Should return nothing
 
 # Check for prohibited local Dockerfiles
-find ~/flext -name "Dockerfile*" -type f | grep -v "~/flext/docker/images/" | grep -v ".bak"
+find ~/flext -name "Dockerfile*" -type f \
+  | grep -v "~/flext/docker/images/" | grep -v ".bak"
 # Should return nothing
 
 # Check for prohibited local fixtures
-find ~/flext -name "docker_fixtures.py" | grep -v "flext-core/src/flext_tests/fixtures/" | grep -v ".bak"
+find ~/flext -name "docker_fixtures.py" \
+  | grep -v "flext-core/src/flext_tests/fixtures/" | grep -v ".bak"
 # Should return nothing
 ```
 
