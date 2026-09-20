@@ -93,10 +93,12 @@ codegraph blast-radius on `connection_profile` ):
 Adopt the **Thin Domain Driver** contract for every `flext-(dbt|tap|target)-<domain>`
 project. Three layers, each with one owner:
 
-<<<<<<< Updated upstream | Layer | Owner | Responsibility | |
--------------------------------------------------------------------------- |
------------------------------------------ |
---------------------------------------------------------------------------------------------------------------------
+| <<<<<<< Updated upstream                  | Layer | Owner | Responsibility |     |
+| ----------------------------------------- | ----- | ----- | -------------- | --- |
+| ----------------------------------------- |
+
+---
+
 | | **Integration interfaces** (dbt/tap/target/singer machinery in FLEXT form) |
 `flext-meltano` | the 3 consumer bases + `c/t/p/m/u` for meltano; 100% domain-agnostic
 (never references oracle/ldap/…) | | **Action library** (real connection + execution) |
@@ -107,7 +109,9 @@ hook; reuses `c/t/p/m/u` from BOTH flext-meltano and the action library; declare
 connection settings/models of its own | ======= | Layer | Owner | Responsibility | |
 -------------------------------------------------------------------------- |
 ----------------------------------------- |
---------------------------------------------------------------------------------------------------------------------
+
+---
+
 | | **Integration interfaces** (dbt/tap/target/singer machinery in FLEXT form) |
 `flext-meltano` | the 3 consumer bases + `c/t/p/m/u` for meltano; 100% domain-agnostic
 (never references oracle/ldap/…) | | **Action library** (real connection + execution) |
