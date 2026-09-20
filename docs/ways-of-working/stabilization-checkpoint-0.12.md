@@ -9,13 +9,21 @@
 
 <!-- TOC END -->
 
-> **Status (2026-09-17):** a estabilidade global deste checkpoint ainda não foi
-> comprovada. O ciclo abaixo é o contrato de validação, não um recibo verde.
-> `flext-itpd1.3` coordena a recuperação sob `flext-itpd1`; os workstreams irmãos
-> `flext-itpd1.2` (documentação) e `flext-itpd1.4` (maquinaria Make) mantêm seus
-> escopos. Beads detém o estado vivo; este documento mantém o contrato versionado.
-> Planos locais são contexto de sessão: sua utilização aprovada não autoriza cópia ou
-> publicação, nem seleção automática pelo nome mais recente.
+> **Status (2026-09-20):** `make gen` atinge ponto fixo verde na frota (32/32;
+> fixes pousados: 31 manifestos de identidade `config/workspace.yaml`, render
+> bare-deps no root workspace, journal recovery #780, exports lazy `d/e/h/r/x`
+> restaurados na raiz do flext-infra). A estabilidade global ainda não está
+> comprovada: restam a campanha namespace (~2600 achados NS-STRUCT/NS-IMPORT —
+> rota decidida: regras ast-grep para as classes mecânicas em
+> `flext-infra/codemod/rules/` + ondas manuais por repo para as estruturais),
+> runtime-census 1/repo (ENFORCE-079 + `extra="forbid"`), e os findings do
+> código novo no flext-infra. `flext-uno8m` detém o mapa por repo;
+> `flext-itpd1.3` coordena a recuperação sob `flext-itpd1`; os workstreams
+> irmãos `flext-itpd1.2` (documentação) e `flext-itpd1.4` (maquinaria Make)
+> mantêm seus escopos. Beads detém o estado vivo; este documento mantém o
+> contrato versionado. Planos locais são contexto de sessão: sua utilização
+> aprovada não autoriza cópia ou publicação, nem seleção automática pelo nome
+> mais recente.
 
 ## (a) Ciclo canônico
 
