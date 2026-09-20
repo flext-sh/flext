@@ -95,7 +95,7 @@ project. Three layers, each with one owner:
 
 | <<<<<<< Updated upstream                  | Layer | Owner | Responsibility |     |
 | ----------------------------------------- | ----- | ----- | -------------- | --- |
-| ----------------------------------------- |
+| ----------------------------------------- |       |       |                |     |
 
 ---
 
@@ -106,8 +106,10 @@ project. Three layers, each with one owner:
 runtime API (`FlextDbOracleApi`), `p.<Domain>.Connection`, type/Singer maps | | **Thin
 driver** | `flext-(dbt\|tap\|target)-{domain}` | implements ONLY the base's one abstract
 hook; reuses `c/t/p/m/u` from BOTH flext-meltano and the action library; declares no
+
 connection settings/models of its own | ======= | Layer | Owner | Responsibility | |
--------------------------------------------------------------------------- |
+-------------------------------------------------------------------------- | | | | | |
+
 ----------------------------------------- |
 
 ---

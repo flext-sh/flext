@@ -76,3 +76,24 @@ SHAs integrados e publicados.
 
 `APPLY`, `uv.lock`, `mise.lock`, banco local de beads — leitura/geração também, não só
 gitignore.
+
+## (e) Checkpoint 2026-09-20 — motor, cli floor e frota (flext-v4fmn)
+
+Estado verificado pós-ciclo do agente dedicado (evidência: bead `flext-v4fmn`,
+`flext-1tcsp`):
+
+- **Motor codegen**: conform execute compõe `FlextInfraCodegenConformPlan` +
+  roles mixin; `misc.py` adia o import de `execute` para `TYPE_CHECKING`
+  (quebra do ciclo execute→plan→misc→execute); cleanup do estado `.state`
+  tolera residentes persistentes (lock do lease + receipts do lazy-init);
+  import direto de `FlextInfraConfigModels` em `workspace.py`.
+- **cli**: floor `click>=8.3.3,<8.4` restaurado (cap do meltano; fontes:
+  codegen SSOT + projeção + `constraint-dependencies` da raiz quando
+  aplicável).
+- **Frota**: 27 membros com renders convergidos e pousados; `setup`/`gen`
+  fixpoint/`fix`/`fmt` verdes em toda a frota; payload do flext-tests aceita
+  `GenericAlias`/`UnionType`/`TypeAliasType` como átomos textuais.
+- **Pendente (rastreado)**: onda estrutural namespace/census (regras ast-grep
+  via `make mod`, pós-integração — bead `flext-1tcsp`); daemon fantasma do
+  ai-hub (`aihub-yr5ft`); split do services package do ai-hub
+  (`aihub-30jaq`).
