@@ -291,7 +291,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   BeadsEndpointSpec, 416-471 endpoint/ types/dolt/export/backup/flush + validador);
   `_protocols/base.py` (123-133, 235); `codegen/conform.py` (493, 609 rotas beads;
   619-705
-  `_conform_workspace_beads_routes`/`_beads_route_state`/`_is_dry_run_config_backup`;
+  `conform_workspace_beads_routes`/`_beads_route_state`/`_is_dry_run_config_backup`;
   809, 2027-2061, 2096); `workspace/detector.py` (33 `_composed_beads_identity_error`,
   261-276 ledger, 289, 462, 552, 587-592, 639); `workspace/environment_beads.py` +
   `environment.py:60,71` + `services/cli_routes_workspace.py:11` + `api.py:11` + lazy
@@ -319,7 +319,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   `BeadsProjectSpec.version/custom_issue_types` + validador;
   `BeadsWorkspaceEnvironmentSpec`; `workspace/environment_beads.py` mixin de sync +
   `.envrc.beads-workspace.j2` + rota CLI; `direnv allow` Python duplicado removido (dono
-  único = recipe de setup); `_conform_workspace_beads_routes`/`_beads_route_state`/
+  único = recipe de setup); `conform_workspace_beads_routes`/`_beads_route_state`/
   `_is_dry_run_config_backup` (`conform.py:621-714`) e checagens de symlink/rota
   `detector.py:33-66,461-560`; `.github/scripts/check-beads-policy.sh.j2` + entradas
   managed/template (sem invocador). Templates: `beads-config.yaml.j2` só `issue_prefix`;
