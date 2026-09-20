@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 from flext_infra import p
+from flext_tests import FlextTestsProtocols
 
 if TYPE_CHECKING:
     from importlib.machinery import ModuleSpec
@@ -19,8 +20,8 @@ if TYPE_CHECKING:
 class TestsFlextRootProtocols(p):
     """Infrastructure test protocols facade — extends flext_infra protocols."""
 
-    class TestsFlextRoot:
-        """Test infrastructure protocol definitions."""
+    class _RootWorkspaceProtocols:
+        """Root workspace test-infrastructure protocol definitions."""
 
         @runtime_checkable
         class SpecLoader(Protocol):
@@ -55,6 +56,9 @@ class TestsFlextRootProtocols(p):
 
             def get_branch(self) -> str: ...
             def get_remote_url(self) -> str: ...
+
+    class TestsFlextRoot(FlextTestsProtocols.Tests, _RootWorkspaceProtocols):
+        """Test protocols composing shared test + workspace protocol namespaces."""
 
 
 __all__: list[str] = ["TestsFlextRootProtocols"]

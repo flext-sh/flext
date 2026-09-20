@@ -77,10 +77,17 @@ Done means all of the following:
 - Changed files are clean and scoped.
 - Nothing reaches `0.12.0-dev` except through the lane's own reviewed PR: one bead ->
   one branch -> PR against `0.12.0-dev` -> green native gates -> PR Sheriff gate
+<<<<<<< Updated upstream
   (`pr_triage.py gate <owner/repo> <pr> --base 0.12.0-dev --head <oid>` in
   `~/.agents/skills/tool/pr-sheriff/scripts/`) -> independent review or
   operator-authorized administrative merge -> merge commit -> post-merge runtime
   proof -> bead evidence -> branch cleanup.
+=======
+  -> independent review or operator-authorized administrative merge -> merge commit ->
+  post-merge runtime proof -> bead evidence -> branch cleanup. The gate command is
+  `~/.agents/skills/tool/pr-sheriff/scripts/pr_triage.py gate <owner/repo> <pr>
+  --base 0.12.0-dev --head <oid>`.
+>>>>>>> Stashed changes
 
 ## 6. Coordination protocol
 
