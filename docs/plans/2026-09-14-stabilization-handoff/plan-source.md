@@ -470,14 +470,15 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 - Parede de imports diagnosticada e corrigida: gitlinks da lane apontavam heads gravados
   atrasados; todos os membros absorvidos para os HEADS VIVOS (commit `bbb51101d6`).
   Regra registrada: roll de gitlink grava o HEAD vivo do membro, nunca o último gravado.
-- flext-infra reparado na lane (commits `d252a6e15`, `bd48b419d`, `22c841903`): aliases de
-  `_defaults` no nível de módulo, cutover Settings→Config completado em `_config/root.py`,
-  ghosts de census removidos do init, imports de testes (F821) e o drop de `result` no rule0.
+- flext-infra reparado na lane (commits `d252a6e15`, `bd48b419d`, `22c841903`): aliases
+  de `_defaults` no nível de módulo, cutover Settings→Config completado em
+  `_config/root.py`, ghosts de census removidos do init, imports de testes (F821) e o
+  drop de `result` no rule0.
 - `make mod` desbloqueado e avançando; estados medidos: setup 0, deps 0 (uv.lock de raiz
   gerado), fmt 0, ruff e pyrefly verdes na enumeração por membro.
-- Restante (grind em andamento): cluster pyright `inconsistent-inheritance` na hierarquia
-  `deps_tool_config`, `bad-dunder-all` de `TestsRule4Annotations`, type-mismatch em
-  `tests/utilities_release.py:44` (artifact × release BuildConstraintSpec) — depois
-  `check`/`tests` completos e announce `[coord] verify`.
+- Restante (grind em andamento): cluster pyright `inconsistent-inheritance` na
+  hierarquia `deps_tool_config`, `bad-dunder-all` de `TestsRule4Annotations`,
+  type-mismatch em `tests/utilities_release.py:44` (artifact × release
+  BuildConstraintSpec) — depois `check`/`tests` completos e announce `[coord] verify`.
 - Beads assumidos (ordem do operador): `flext-itpd1.4.3`, `flext-9xsim`, `flext-1tcsp`,
   `flext-w3qcn` — claim + evidência no store do super.
