@@ -91,6 +91,28 @@ installed/editable venv surface. A local venv (branch tips) and a pinned CI chec
 
 ---
 
+## R1b — MRO OO Facade Composition (Namespace-Matched Access)
+
+**Rule**: A package facade composes the **upstream facade** (inheriting its namespaces
+through the MRO) and adds **only its own namespaces**. Consumers access each namespace
+by its owning package: `m.Api.*` for api-owned models, `m.Web.*` for web-owned models
+resolved through the inheritance chain.
+
+**Forbidden**: composing a sibling/upstream namespace as a base of your own namespace
+(it leaks foreign members across domains — e.g. `class Api(..., m.Web)` puts web models
+under `m.Api.*`), and referencing an upstream namespace by a renamed alias (the
+`Web`→`Api` rename of a facade orphaned every `m.Web.*` consumer while nothing
+referenced the new name).
+
+**Runtime proof** (flext-api `3c004ef0`, flext-web `dced660`/`4bc984c`):
+`flext_api.m.Api` carries no web members; `flext_api.m.Web` resolves the web namespace
+through the chain; `flext_web.m.Web.FastAPIAppConfig` resolves.
+
+**Canonical source**: this law (R1a/R1b); ADR-015; skill `flext-law` ("Architecture and
+imports").
+
+---
+
 ## R2 — No Duplication (Structural Scan)
 
 **Rule**: Every clone detected by the duplication gate (jscpd + semantic classifier)
@@ -261,3 +283,4 @@ never carry-over.
 | ------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 0.12.0  | 2026-09-11 | Initial ratification (ADR-015)                                                                                                                                             |
 | 0.12.1  | 2026-09-18 | Add R1a lazy-init re-export derivation rule (ALIAS_NAMES, inherited operational letters, local-`__all__` override, directory-only module exports, flext-b3xmn determinism) |
+| 0.12.2  | 2026-09-19 | Add R1b MRO OO facade composition rule (namespace-matched access; upstream composes, own namespaces only) — verified in flext-api 3c004ef0 / flext-web 4bc984c             |
