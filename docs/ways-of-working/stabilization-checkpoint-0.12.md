@@ -9,21 +9,19 @@
 
 <!-- TOC END -->
 
-> **Status (2026-09-20):** `make gen` atinge ponto fixo verde na frota (32/32;
-> fixes pousados: 31 manifestos de identidade `config/workspace.yaml`, render
-> bare-deps no root workspace, journal recovery #780, exports lazy `d/e/h/r/x`
-> restaurados na raiz do flext-infra). A estabilidade global ainda não está
-> comprovada: restam a campanha namespace (~2600 achados NS-STRUCT/NS-IMPORT —
-> rota decidida: regras ast-grep para as classes mecânicas em
-> `flext-infra/codemod/rules/` + ondas manuais por repo para as estruturais),
-> runtime-census 1/repo (ENFORCE-079 + `extra="forbid"`), e os findings do
-> código novo no flext-infra. `flext-uno8m` detém o mapa por repo;
-> `flext-itpd1.3` coordena a recuperação sob `flext-itpd1`; os workstreams
-> irmãos `flext-itpd1.2` (documentação) e `flext-itpd1.4` (maquinaria Make)
-> mantêm seus escopos. Beads detém o estado vivo; este documento mantém o
-> contrato versionado. Planos locais são contexto de sessão: sua utilização
-> aprovada não autoriza cópia ou publicação, nem seleção automática pelo nome
-> mais recente.
+> **Status (2026-09-20):** `make gen` atinge ponto fixo verde na frota (32/32; fixes
+> pousados: 31 manifestos de identidade `config/workspace.yaml`, render bare-deps no
+> root workspace, journal recovery #780, exports lazy `d/e/h/r/x` restaurados na raiz do
+> flext-infra). A estabilidade global ainda não está comprovada: restam a campanha
+> namespace (~2600 achados NS-STRUCT/NS-IMPORT — rota decidida: regras ast-grep para as
+> classes mecânicas em `flext-infra/codemod/rules/` + ondas manuais por repo para as
+> estruturais), runtime-census 1/repo (ENFORCE-079 + `extra="forbid"`), e os findings do
+> código novo no flext-infra. `flext-uno8m` detém o mapa por repo; `flext-itpd1.3`
+> coordena a recuperação sob `flext-itpd1`; os workstreams irmãos `flext-itpd1.2`
+> (documentação) e `flext-itpd1.4` (maquinaria Make) mantêm seus escopos. Beads detém o
+> estado vivo; este documento mantém o contrato versionado. Planos locais são contexto
+> de sessão: sua utilização aprovada não autoriza cópia ou publicação, nem seleção
+> automática pelo nome mais recente.
 
 ## (a) Ciclo canônico
 
@@ -82,18 +80,16 @@ gitignore.
 Estado verificado pós-ciclo do agente dedicado (evidência: bead `flext-v4fmn`,
 `flext-1tcsp`):
 
-- **Motor codegen**: conform execute compõe `FlextInfraCodegenConformPlan` +
-  roles mixin; `misc.py` adia o import de `execute` para `TYPE_CHECKING`
-  (quebra do ciclo execute→plan→misc→execute); cleanup do estado `.state`
-  tolera residentes persistentes (lock do lease + receipts do lazy-init);
-  import direto de `FlextInfraConfigModels` em `workspace.py`.
-- **cli**: floor `click>=8.3.3,<8.4` restaurado (cap do meltano; fontes:
-  codegen SSOT + projeção + `constraint-dependencies` da raiz quando
-  aplicável).
+- **Motor codegen**: conform execute compõe `FlextInfraCodegenConformPlan` + roles
+  mixin; `misc.py` adia o import de `execute` para `TYPE_CHECKING` (quebra do ciclo
+  execute→plan→misc→execute); cleanup do estado `.state` tolera residentes persistentes
+  (lock do lease + receipts do lazy-init); import direto de `FlextInfraConfigModels` em
+  `workspace.py`.
+- **cli**: floor `click>=8.3.3,<8.4` restaurado (cap do meltano; fontes: codegen SSOT +
+  projeção + `constraint-dependencies` da raiz quando aplicável).
 - **Frota**: 27 membros com renders convergidos e pousados; `setup`/`gen`
   fixpoint/`fix`/`fmt` verdes em toda a frota; payload do flext-tests aceita
   `GenericAlias`/`UnionType`/`TypeAliasType` como átomos textuais.
-- **Pendente (rastreado)**: onda estrutural namespace/census (regras ast-grep
-  via `make mod`, pós-integração — bead `flext-1tcsp`); daemon fantasma do
-  ai-hub (`aihub-yr5ft`); split do services package do ai-hub
-  (`aihub-30jaq`).
+- **Pendente (rastreado)**: onda estrutural namespace/census (regras ast-grep via
+  `make mod`, pós-integração — bead `flext-1tcsp`); daemon fantasma do ai-hub
+  (`aihub-yr5ft`); split do services package do ai-hub (`aihub-30jaq`).
