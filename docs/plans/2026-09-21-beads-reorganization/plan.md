@@ -135,6 +135,20 @@ read title+body
   - **Owner overlap**: a concurrent lane is migrating the same `Final`→`ClassVar`
     deprecation repo-by-repo (e.g. `flext-ldap 31444783`); this session completed
     flext-meltano to unblock the shared test collector.
+- **Runtime/latent-defect lane (session 0.12-stabilize)**:
+  - `flext-liyb1` **CLOSED** (flext-meltano@`e632e803`) — `target_service_base.cli_main`
+    discarded `command_args` and returned 0 unconditionally. Now dispatches the real
+    Singer stream via `u.Meltano.process_stdin(self)` and implements
+    `SingerTargetHandler` (`handle_schema`→`fetch_or_create_sink`,
+    `handle_record`→`process_record`, `handle_state`→`flush`), non-zero on failure —
+    symmetric with the tap/dbt bases.
+  - **flext-infra@`719b10021`** — `_models/gates.py` imported the removed `mp` facade
+    (ImportError broke every consumer reaching flext_infra models, e.g. the whole
+    flext-meltano collection) and referenced the sibling nested `SccFile` from a nested
+    class body (ruff F821). Routed fields through `m`, lifted `SccFile` to module level,
+    made the two boolean test params keyword-only. `make fix` 5/5 green.
+  - **Latent blocker observed**: member `.venv` lost `flext_infra` (a concurrent lane's
+    setup); validated gates through the root venv without reinstalling manually.
 - **Waves lane (reval260921, session f1d47a5f, ledger
   `.beads/artifacts/reval260921/ledger.csv`)** — analysis waves C1 (55) / C2 (134) / D
   (38) / A (33) complete item-by-item (4-source, verdicts in `verdicts/*.json`); B1
