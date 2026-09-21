@@ -482,3 +482,11 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   BuildConstraintSpec) — depois `check`/`tests` completos e announce `[coord] verify`.
 - Beads assumidos (ordem do operador): `flext-itpd1.4.3`, `flext-9xsim`, `flext-1tcsp`,
   `flext-w3qcn` — claim + evidência no store do super.
+
+### Propagação 2026-09-20c
+
+- flext-infra: 6 commits de conserto pushados em ff no branch de lane (até `3aab6ac6f`) —
+  pronto para o runner pousar em `0.12.0-dev` (`[coord] landed flext-infra` anunciado).
+- Raiz da lane: commits locais (`bbb51101d6`, `b44af1a75f`, fix-pass) aguardando o
+  coordenador indicar o pouso (a origin deletou a branch).
+- Restante: codemod 5 + duplication 17 (roteado) + tests por membro.
