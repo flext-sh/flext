@@ -53,6 +53,9 @@ candidate; acceptance never proves fleet stability.
 - [ADR-017: Parametrized Rule Surfaces and the Single Modernize CLI](017-parametrized-rule-surfaces-single-modernize-cli.md)
   — **ACCEPTED TARGET** (`make mod` wired; `flext-infra/config/rules/mod/` exists;
   distribution/migration acceptance remains unproved)
+- [ADR-018: Generator Declarations Law](018-generator-declarations.md) — **ACCEPTED**
+  (operator law 2026-09-20; rule owner `~/agents/rules/flext/generator-declarations.md`;
+  phased under `flext-0in0k`)
 
 > **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance

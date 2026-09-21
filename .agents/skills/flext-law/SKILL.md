@@ -123,6 +123,16 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   contract. Never add a replacement toggle or a guard for retired inputs. Agents never
   add `WHAT=` or `PROJECT=` to setup, generation, repair, formatting, checking, or
   testing.
+- Generators emit only what is declared (ADR-018, rule
+  `~/agents/rules/flext/generator-declarations.md`): a facade letter belongs to the
+  module that declares it in its explicit `__all__`; an `__init__.py` propagates and
+  never declares; internal tiers (`tests/`, `examples/`, `scripts/`, any root folder
+  with Python) are detected, inherit by class MRO and declare their own letter; `src/`
+  is public, the rest internal. No filename→letter table, closed folder list,
+  advisory-gate list, single-file guard or validator bypass exists; a derivation
+  replaces each, and the permission that tolerated a hack dies in the same commit.
+  Every module is one nested class with nothing loose; the existing rules for that are
+  `error`. Exceptions exist only by explicit operator authorization, one bead each.
 - Structural rewires run through `make mod`. Its canonical FLEXT engine composes
   `ast-grep` rewrites, Rope semantic refactors, and real `pyright-langserver`
   diagnostics before the fixed point is accepted. Repetitive manual call-site editing is

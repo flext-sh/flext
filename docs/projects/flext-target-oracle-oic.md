@@ -64,7 +64,7 @@ make -C flext-target-oracle-oic test
 ```text
 src/flext_target_oracle_oic/
 ├── api.py                # FlextTargetOracleOicService(FlextMeltanoTargetServiceBase)
-├── target.py             # FlextTargetOracleOic(FlextMeltanoTargetAbstractions)
+├── target.py             # FlextTargetOracleOicBaseSink + per-stream OIC sinks (m.Meltano.SingerSinkBase)
 ├── cli.py                # FlextTargetOracleOicCli + main entry point
 ├── _settings.py          # FlextTargetOracleOicSettings + settings singleton
 ├── config/               # Execution parametrization (YAML)
