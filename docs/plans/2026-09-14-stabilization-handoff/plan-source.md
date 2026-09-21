@@ -464,3 +464,81 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   fixo.
 - CI `0.12.0-dev` verde nos 32 heads; `--is-ancestor` = 0; gitlinks ≡ `.gitmodules`;
   nenhum `uv.lock` em membros; CodeQL abertos = 0.
+
+## Status 2026-09-20 (contribuição ZCode — ordem do operador: estabilizar esta lane)
+
+- Parede de imports diagnosticada e corrigida: gitlinks da lane apontavam heads gravados
+  atrasados; todos os membros absorvidos para os HEADS VIVOS (commit `bbb51101d6`).
+  Regra registrada: roll de gitlink grava o HEAD vivo do membro, nunca o último gravado.
+- flext-infra reparado na lane (commits `d252a6e15`, `bd48b419d`, `22c841903`): aliases
+  de `_defaults` no nível de módulo, cutover Settings→Config completado em
+  `_config/root.py`, ghosts de census removidos do init, imports de testes (F821) e o
+  drop de `result` no rule0.
+- `make mod` desbloqueado e avançando; estados medidos: setup 0, deps 0 (uv.lock de raiz
+  gerado), fmt 0, ruff e pyrefly verdes na enumeração por membro.
+- Restante (grind em andamento): cluster pyright `inconsistent-inheritance` na
+  hierarquia `deps_tool_config`, `bad-dunder-all` de `TestsRule4Annotations`,
+  type-mismatch em `tests/utilities_release.py:44` (artifact × release
+  BuildConstraintSpec) — depois `check`/`tests` completos e announce `[coord] verify`.
+- Beads assumidos (ordem do operador): `flext-itpd1.4.3`, `flext-9xsim`, `flext-1tcsp`,
+  `flext-w3qcn` — claim + evidência no store do super.
+
+### Propagação 2026-09-20c
+
+- flext-infra: 6 commits de conserto pushados em ff no branch de lane (até `3aab6ac6f`)
+  — pronto para o runner pousar em `0.12.0-dev` (`[coord] landed flext-infra`
+  anunciado).
+- Raiz da lane: commits locais (`bbb51101d6`, `b44af1a75f`, fix-pass) aguardando o
+  coordenador indicar o pouso (a origin deletou a branch).
+- Restante: codemod 5 + duplication 17 (roteado) + tests por membro.
+
+### Passada lane [A] 2026-09-21 (aprovada pelo operador: worktree primeiro, merges depois)
+
+- Baseline limpo: 3 READMEs com resíduo prettier do épico markdown commitados nos
+  membros (flext-cli `55af0268`, flext-ldif `d56c2018`, flext-tap-oracle-wms `4f3c937`)
+  - gitlinks avançados na raiz da lane (`ef57a57d0`: infra `3aab6ac6f` + os três).
+- Probe wave-2 OK: `FlextSettings` e `FlextInfraCodegenConform` importáveis no venv.
+- Lifecycle completo na worktree: `make setup` exit 0 (rumdl 0.2.75), `make deps` exit
+  0, `make gen` ×3 com ponto fixo PROVADO (pass 3 no-op por fingerprint de diff),
+  `make fix` 32/32 exit 0, `make fmt` 32/32 exit 0, `make check` = 14 findings.
+- Triagem dos 14: 1× MD034 (meu épico) CORRIGIDO e convergido (rumdl+prettier verdes;
+  resolução do conflito prettier↔MD034 em link definition quebrada = URL relativa); 12×
+  duplication `_conform` = rota do executor-único (evidência em flext-y3qpq.2.6); 1×
+  runtime-census 1050 = bloco namespace (evidência em flext-0in0k).
+- `make test` em execução no fechamento desta seção; land da lane via push de branch
+  (upstream `wip/stabilize-0.12-root-20260919` foi deletado na origin — recriar) + PR
+  para `0.12.0-dev`. Announce gc-mail `gc-wisp-4vyc7s`.
+
+### Estado final para retomada — 2026-09-21 (sessão finalizada)
+
+**Onde está tudo (comandos e saídas para revalidar):**
+
+- flext-infra (membro, branch `wip/stabilize-0.12-flext-infra-20260919`, até
+  `7ff88fd43`): namespace/mod verdes; dedup executado (existing_plan: 3 famílias de
+  clone deletadas — métodos MRO-shadowed); `make fix`/`fmt` 0. `make test`: 2602 passed
+  / 156 failed — causa raiz única: strictness de dependência interna × scratch
+  pyprojects dos testes (mesma família do #827); VEREDITO DE DESIGN pendente do dono
+  (mail gc-wisp-5l3zf4: pins @baseline vs helper injetor).
+- Raiz da lane (commits locais `bbb51101d6`, `b44af1a75f`, fix-pass): origin deletou a
+  branch — coordenador decide o pouso (mail gc-wisp-7xuudj).
+- Blocker fleet-wide: `flext-cli@0.12.0-dev` quebrado na origem (facade pydantic
+  intercepta u.Cli; todo CI fresco vermelho no gen — diagnóstico + fix de 1 classe no
+  mail gc-wisp-qdc29a). ai-hub #831 parado nisso.
+- Beads: 10 assumidos (6 cosmos + 4 flext) com evidência; Dolt do ai-hub PROJECT
+  IDENTITY MISMATCH (cidade).
+- Census 1428 (rota: regras ast-grep pós-integração — decisão do operador flext/claude).
+
+### `make test` 2026-09-21 — diagnóstico e fix de causa comum
+
+- Primeira passada: 12/32 pass, 20 exit=2. Causa comum dominante: o payload de
+  flext-tests rejeitava leaves que a wave-2 tornou públicos (TypeError: Unsupported
+  native payload leaf) — modelos pydantic fora da árvore `m.BaseModel`,
+  `typing.Annotated`, function/module/code/ModuleSpec/Match, dict_keys.
+- Fix canônico landed em flext-tests (`3b9828f`, bead `flext-sbrbf`): braço de modelos
+  via protocolo estrutural `p.Model`, atoms textuais para constructs de typing e
+  machinery, KeysView/ValuesView como sequência. Prova imediata: flext-grpc 350 passed
+  (era exit=2).
+- Falhas remanescentes por dono: instâncias arbitrárias não-pydantic (decisão de
+  contrato em flext-sbrbf), flext-infra 157 (gc-wisp-5l3zf4), oracle-wms constraint de
+  password (dono do membro), flext-tests docker 41+17.
+- Announce gc-mail: `gc-wisp-sqw4ql`.
