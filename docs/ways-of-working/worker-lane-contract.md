@@ -23,14 +23,16 @@ the canonical authorities first; this file only adds lane discipline.
 
 - Project law and routed skills: [`AGENTS.md`][agents-md]
 - Governance router: [`GOVERNANCE.md`][governance-md]
-- Local skills: [`flext-law`][flext-law]
+- Local skills:
+  [`flext-law`](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md)
 - Universal skills: `~/.agents/skills/project-wide/shell/make-check/SKILL.md`,
   `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`
 - Config/settings SSOT: [ADR-005][adr-005]
 
 [agents-md]: https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md
 [governance-md]: ../GOVERNANCE.md
-[flext-law]: ../../.agents/skills/flext-law/SKILL.md
+[flext-law]:
+  https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md
 [adr-005]: ../architecture/adr/005-config-settings-constants-templates-schemas-ssot.md
 
 ## 1. One lane, one bead, one worktree
@@ -74,11 +76,15 @@ Done means all of the following:
 - No new lint, type, or test failures are injected.
 - Changed files are clean and scoped.
 - Nothing reaches `0.12.0-dev` except through the lane's own reviewed PR: one bead ->
-  one branch -> PR against `0.12.0-dev` -> green native gates -> PR Sheriff gate
-  (`pr_triage.py gate <owner/repo> <pr> --base 0.12.0-dev --head <oid>` in
-  `~/.agents/skills/tool/pr-sheriff/scripts/`) -> independent review or
+  one branch -> PR against `0.12.0-dev` -> green native gates -> PR Sheriff gate <<<<<<<
+  Updated upstream (`pr_triage.py gate <owner/repo> <pr> --base 0.12.0-dev --head <oid>`
+  in `~/.agents/skills/tool/pr-sheriff/scripts/`) -> independent review or
   operator-authorized administrative merge -> merge commit -> post-merge runtime proof
-  -> bead evidence -> branch cleanup.
+  -> bead evidence -> branch cleanup. ======= -> independent review or
+  operator-authorized administrative merge -> merge commit -> post-merge runtime proof
+  -> bead evidence -> branch cleanup. The gate command is
+  `~/.agents/skills/tool/pr-sheriff/scripts/pr_triage.py gate <owner/repo> <pr>   --base 0.12.0-dev --head <oid>`.
+  > > > > > > > Stashed changes
 
 ## 6. Coordination protocol
 
