@@ -9,16 +9,17 @@
 
 <!-- TOC END -->
 
-- **Status:** ACCEPTED — operator law 2026-09-20; implementation phased under `flext-0in0k`
+- **Status:** ACCEPTED — operator law 2026-09-20; implementation phased under
+  `flext-0in0k`
 - **Date:** 2026-09-20
 - **Target line:** FLEXT `0.12.0-dev`, forward baseline `0.13.0`
-- **Scope:** every FLEXT generator, detector and fix (`make gen`, `make mod`, `make fix`,
-  the namespace validator and its gates) and every consumer of them: the `flext`
-  workspace and its 31 members, ai-hub, cosmos-main and its apps, cosmos-docgen, invest
-  and their FLEXT subprojects.
-- **Complements:** ADR-010 (standardization via codegen), ADR-014 (family shape + codemod
-  rules), ADR-017 (parametrized rule surfaces). Supersedes every filename→letter table,
-  closed folder list and advisory-gate list those ADRs tolerated.
+- **Scope:** every FLEXT generator, detector and fix (`make gen`, `make mod`,
+  `make fix`, the namespace validator and its gates) and every consumer of them: the
+  `flext` workspace and its 31 members, ai-hub, cosmos-main and its apps, cosmos-docgen,
+  invest and their FLEXT subprojects.
+- **Complements:** ADR-010 (standardization via codegen), ADR-014 (family shape +
+  codemod rules), ADR-017 (parametrized rule surfaces). Supersedes every filename→letter
+  table, closed folder list and advisory-gate list those ADRs tolerated.
 - **Rule owner:** `~/agents/rules/flext/generator-declarations.md` (projected to every
   provider). This ADR records the decision; the rule file is the binding text.
 - **Tracking:** epic `flext-0in0k` (20 phased beads, each carrying the full rule text);
@@ -69,19 +70,19 @@ The fourteen points of `generator-declarations.md` are law. In one line each:
 
 Order of execution (operator): law → extermination of lists, manual declarations and
 their permissions → generator/detector/fix repair → census by the validator → automatic
-correction (`make mod`) → consumers → strict compliance → close. One bead per phase; work
-in worktrees on the freshly fetched integration tip; never a rollback; never a manual
-mass fix.
+correction (`make mod`) → consumers → strict compliance → close. One bead per phase;
+work in worktrees on the freshly fetched integration tip; never a rollback; never a
+manual mass fix.
 
 ## Consequences
 
 - `flext-infra` loses every table and list named in Context; the replacement is one
-  derivation each (`u.Infra.discover_python_dirs`, the module `__all__`, the class
-  base, the folder on disk). Their permissions (exclusions, bypasses, advisory lists)
-  leave in the same commits.
+  derivation each (`u.Infra.discover_python_dirs`, the module `__all__`, the class base,
+  the folder on disk). Their permissions (exclusions, bypasses, advisory lists) leave in
+  the same commits.
 - Every consumer regenerates; the diff is the inventory of hacks it carried. Two
-  flext-infra forks (`flext-sh@0.12.0-dev`, `datacosmos-br@baseline-20260919`)
-  converge to one line.
+  flext-infra forks (`flext-sh@0.12.0-dev`, `datacosmos-br@baseline-20260919`) converge
+  to one line.
 - The namespace validator reports one-nested-class, no-alias and nothing-loose
   violations as `error`; the fix derives letter ⇄ base and writes the declaration.
 - Measured populations at decision time: 42 internal facades without the letter in
@@ -95,7 +96,7 @@ mass fix.
   commit of the epic — before the commit is pushed.
 - `make mod` twice is idempotent; the validator's counts above reach 0.
 - `make check` and `make test` green in 32/32 and in every consumer; no new exclusion.
-- Logical LOC measured by the canonical verb before the first commit and after the
-  last; the delta is recorded on `flext-0in0k`.
+- Logical LOC measured by the canonical verb before the first commit and after the last;
+  the delta is recorded on `flext-0in0k`.
 - `bd lint --json` clean for every bead of the epic; each closes with SHA, command and
   exit code.
