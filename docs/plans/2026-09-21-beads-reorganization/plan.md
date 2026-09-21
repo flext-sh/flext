@@ -59,7 +59,17 @@ read title+body
 
 ## Progress log
 
-- (this file is appended per batch; each bead gets its verdict + evidence inline in bd)
+- **B3 partial (P0 standalone, session zcode-lane-A, tip b577892348)** — Makefile/runtime probes:
+  - `flext-5fxu6.4.27` **runtime probe**: root `make status` exit=0 (functional);
+    member-level promoted-verb repro pending — owner flext-infra.
+  - `flext-yjjim` **CONFIRMED LIVE** — generated Makefile has NO FILE test selector
+    (grep `test-file|TEST_FILE` = 0) and no explicit full-suite verb beyond `test:`.
+  - `flext-5fxu6.4.14` **CLOSED** (batch 2) — duplicated fmt comment = 0 occurrences.
+  - `flext-5fxu6.4.13` **CONFIRMED LIVE** — generated `.jscpd.json` ignores `.claude/**`,
+    no worktree pattern; root-cause in generator config (flext-infra).
+  - `flext-5fxu6.4.12` **LIVE** — `fix-enforcement` advertised in `make help`;
+    orchestrator-rejection probe owned by infra lane.
+  - Hygiene note: an accidental `peek` note landed in flext-49quw NOTES (ignore).
 - **B3 partial (P0 bugs, session 0.12-stabilize, tip c6d1bdf0e4)** — deep-validated
   against live code + runtime:
   - `flext-bdmdg` **CLOSED** — `conform.py` reduced to 16-line facade; symbol
@@ -89,3 +99,18 @@ read title+body
     branch switching would disrupt the concurrent lanes using the shared workspace root.
   - **Census**: 296 open (137 bug / 113 task / 24 epic / 20 feature / 1 chore / 1 rig);
     graph 0 cycles; `find-duplicates` pairs are `0in0k.*` sibling-title false positives.
+- **Waves lane (reval260921, session f1d47a5f, ledger `.beads/artifacts/reval260921/ledger.csv`)**
+  — analysis waves C1 (55) / C2 (134) / D (38) / A (33) complete item-by-item
+  (4-source, verdicts in `verdicts/*.json`); B1 running, B2 queued (rate-limit
+  serialisation). **6 batches applied, ~77 mutations, graph clean after each**:
+  claims released (co1th SUPERSEDED→cu85s; 4 stale → open), ancestry-proven DONE
+  closures (czzns, v1xzd, tqhe9), 28 canonical reparents total (features+tasks;
+  journal-trio adjudicated: expose→harvest precedes any delete, ADR required),
+  cpzjo cutover (7 children mapped child-by-child → SUPERSEDED→1wjg1), d421
+  SUPERSEDED→wkii, crossrefs (mbowt, ro6mj, ywet, m7xk7, 4as1t), 38p39 relink
+  (arms 60s/120s unlanded). Orphans 6→4; flext-xtzkz retirement ledger →itpd1
+  (stale, feeds B6). **jbfz** = next epic closure candidate (16/16 children
+  closed, Snyk #292 merged) — held for clean re-scan (4th source). flext-web
+  6560c1d committed conflict markers healed via canonical gen + runtime proof
+  (a9a56f5/f2f51ef). Integration: guarded ladder (SELECTED_PROJECTS, infra WIP
+  guard, transient retry) cycling the verbs on the new base; #257 MERGED noted.
