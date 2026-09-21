@@ -10,12 +10,19 @@ from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
     from flext import c, d, e, h, m, p, r, s, t, u, x
-__all__: tuple[str, ...] = ("c", "d", "e", "h", "m", "p", "r", "s", "t", "u", "x")
+
+    from .dependabot_merge import FlextRootDependabotMerge
+__all__: tuple[str, ...] = (
+    "FlextRootDependabotMerge", "c", "d", "e",
+    "h", "m", "p", "r",
+    "s", "t", "u", "x",
+)
 
 _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
-            "flext": ("c", "d", "e", "h", "m", "p", "r", "s", "t", "u", "x")
+            ".dependabot_merge": ("FlextRootDependabotMerge",),
+            "flext": ("c", "d", "e", "h", "m", "p", "r", "s", "t", "u", "x"),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
