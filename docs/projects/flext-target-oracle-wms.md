@@ -66,13 +66,8 @@ src/flext_target_oracle_wms/
 ├── api.py                # FlextTargetOracleWmsService(FlextMeltanoTargetServiceBase)
 ├── cli.py                # FlextTargetOracleWmsCli + main entry point
 ├── _utilities/
-<<<<<<< Updated upstream
-│   ├── client.py         # FlextTargetOracleWmsUtilitiesClient (catalog, streams)
-│   ├── helpers.py        # FlextTargetOracleWmsUtilitiesHelpers (WMSTableManager, ...)
-=======
-│   ├── client.py         # FlextTargetOracleWmsUtilitiesClient (CatalogManager, StreamProcessor)
+│   ├── client.py         # FlextTargetOracleWmsUtilitiesClient (catalog, stream, target)
 │   ├── helpers.py        # FlextTargetOracleWmsUtilitiesHelpers (WMSTableManager, transformers)
->>>>>>> Stashed changes
 │   └── service_runtime.py  # FlextTargetOracleWmsServiceRuntime — WMS target + sink creation
 ├── _settings.py          # FlextTargetOracleWmsSettings + settings singleton
 ├── config/               # Execution parametrization (YAML)
