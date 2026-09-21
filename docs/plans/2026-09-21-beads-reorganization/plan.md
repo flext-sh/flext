@@ -1,29 +1,30 @@
 # Beads Reorganization & Cleanup Campaign — 2026-09-21
 
 > Status: ACTIVE. Method: iterative, item-by-item, evidence-first. Precision over speed.
-> Operator mandate: audit + restructure Beads/Epics/Tasks/Bugs/Hotfixes for architectural
-> integrity and protocol alignment. Never hand-edit projections.
+> Operator mandate: audit + restructure Beads/Epics/Tasks/Bugs/Hotfixes for
+> architectural integrity and protocol alignment. Never hand-edit projections.
 
 ## Inventory snapshot (2026-09-21, bd list --status open)
 
 - Total 306: 144 bug, 114 task, 26 epic, 20 feature, 1 chore, 1 rig
 - Priorities: P0=31, P1=191, P2=74, P3=10
-- Context: PR #257 MERGED (squash 6621995118); base 0.12.0-dev advanced (census wave 681cd25df4)
+- Context: PR #257 MERGED (squash 6621995118); base 0.12.0-dev advanced (census wave
+  681cd25df4)
 
 ## Per-entity protocol (every bead passes through all 5 checks)
 
-1. **Claim management** — obsolete/incorrect claims removed (`bd update --claim` hygiene,
-   reassign to the correct lane if claimed by a dead session).
+1. **Claim management** — obsolete/incorrect claims removed (`bd update --claim`
+   hygiene, reassign to the correct lane if claimed by a dead session).
 2. **Traceability** — relevant PRs and remote branches linked in the body/comments
    (`bd update <id> --append-notes` or `bd comment`).
-3. **Hierarchical alignment** — tasks/bugs parented to the correct epic
-   (`bd dep` discover-from/parent edges audited); misfiled entities reparented.
+3. **Hierarchical alignment** — tasks/bugs parented to the correct epic (`bd dep`
+   discover-from/parent edges audited); misfiled entities reparented.
 4. **Fix protocol compliance** — bugfix/hotfix work sits OUTSIDE the epic hierarchy
-   where protocol requires (standalone bug beads with `discovered-from` links, never
-   as epic children that gate epic closure).
-5. **Pruning** — entity deleted ONLY if 100% superseded AND no longer contributes to
-   the integration branches of active projects. Close (not delete) when historical
-   value exists; delete only for pure noise/duplicates.
+   where protocol requires (standalone bug beads with `discovered-from` links, never as
+   epic children that gate epic closure).
+5. **Pruning** — entity deleted ONLY if 100% superseded AND no longer contributes to the
+   integration branches of active projects. Close (not delete) when historical value
+   exists; delete only for pure noise/duplicates.
 
 ## Classification decision tree (per bead)
 
@@ -53,9 +54,25 @@ read title+body
 
 - `make gen` fixed point; `make fix`/`fmt` 32/32; `make check` findings triaged with
   owners; `make test` per-member debts documented with owner beads.
-- jscpd dedup is tracked under the duplication owner route (flext-y3qpq.2.6 / S17) —
-  not run ad-hoc against projections.
+- jscpd dedup is tracked under the duplication owner route (flext-y3qpq.2.6 / S17) — not
+  run ad-hoc against projections.
 
 ## Progress log
 
 - (this file is appended per batch; each bead gets its verdict + evidence inline in bd)
+- **B3 partial (P0 bugs, session 0.12-stabilize, tip c6d1bdf0e4)** — deep-validated
+  against live code + runtime:
+  - `flext-bdmdg` **CLOSED** — `conform.py` reduced to 16-line facade; symbol
+    `ReleasePolicyRenderSpec` has 0 references; consumer uses `m.Infra.ReleasePolicySpec`
+    (runtime import OK).
+  - `flext-5fxu6.4.32` **CLOSED** — `u.Infra.docs_github_repos/repo_lookup/parse_github_doc_url`
+    all present (runtime `hasattr` True).
+  - `flext-72b72` **CLOSED** — `codegen.yaml:1169` quotes `"click>=8.3.3,<8.4"`; full-doc
+    YAML scan finds 0 loose `<8.4`; `flext-cli/pyproject.toml:18` correct.
+  - `flext-mphw1` **fix landed, OPEN** — `ci.yml.j2:72-73` + `submodule_setup_recipe.j2:24`;
+    blocked only on CI-green acceptance.
+  - `flext-5fxu6.4.27` **LIVE** — builtin `status:` (root Makefile:644) shadows a declared
+    promoted `status`; `_promoted/registry.py validate()` lacks builtin-collision check.
+    Owner: flext-infra (`_promoted/registry.py` + `Makefile.j2`).
+  - `flext-0in0k.8` **LIVE** — `TEST_RUNTIME_ALIAS_TARGETS`/`ALIAS_NAMES` still hardcoded and
+    used as decision inputs (`_lazy_init_planner_collision.py:60`, `_codegen_generation_paths.py:52-53`).
