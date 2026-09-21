@@ -76,3 +76,16 @@ read title+body
     Owner: flext-infra (`_promoted/registry.py` + `Makefile.j2`).
   - `flext-0in0k.8` **LIVE** — `TEST_RUNTIME_ALIAS_TARGETS`/`ALIAS_NAMES` still hardcoded and
     used as decision inputs (`_lazy_init_planner_collision.py:60`, `_codegen_generation_paths.py:52-53`).
+- **B3/B5 partial (session 0.12-stabilize, tip c358cd4658)** — 6 beads CLOSED with
+  evidence (runtime-first):
+  - `flext-bdmdg`, `flext-5fxu6.4.32`, `flext-72b72` (see B3 partial above).
+  - `flext-44he4` — `flext-cli/pyproject.toml:18` now `click>=8.3.3,<8.4` (was `>=8.4.2`).
+  - `flext-5s0rj` — 0 trailing whitespace in generated `.github/workflows/*.yml`.
+  - `flext-5ra33` — `FlextInfraCodegenPipeline.execute()` present (runtime `hasattr` True).
+  - **Hierarchy clean**: 0 bugs with a parent (concurrent lane reparented the 24 to root).
+  - **PR audit (flext-5anhp)**: `#261`/`#259` 100% superseded (gitlinks only / config
+    already in integration); `#258`/`#260`/`#262` carry unique content (markdownlint
+    `ignorePaths`, rope lane, ADR-018 integration-state paragraph). Convergence blocked:
+    branch switching would disrupt the concurrent lanes using the shared workspace root.
+  - **Census**: 296 open (137 bug / 113 task / 24 epic / 20 feature / 1 chore / 1 rig);
+    graph 0 cycles; `find-duplicates` pairs are `0in0k.*` sibling-title false positives.
