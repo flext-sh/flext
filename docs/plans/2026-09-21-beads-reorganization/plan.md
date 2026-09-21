@@ -99,6 +99,23 @@ read title+body
     branch switching would disrupt the concurrent lanes using the shared workspace root.
   - **Census**: 296 open (137 bug / 113 task / 24 epic / 20 feature / 1 chore / 1 rig);
     graph 0 cycles; `find-duplicates` pairs are `0in0k.*` sibling-title false positives.
+- **Security lane (session 0.12-stabilize, tip 57c94b57db)** — operator priority:
+  - `flext-tqh48` **CLOSED** (flext-web@d41a289) — hardcoded credential check, `nonexistent`
+    sentinel and fabricated `f"token_<user>"` removed; auth now validates against the
+    settings SSOT (`FLEXT_WEB_WEB__AUTH_USERNAME/AUTH_PASSWORD`) with
+    `secrets.compare_digest` and `secrets.token_urlsafe(32)`, failing loud when
+    unconfigured. `secret_key` committed literal removed (env-only, fail loud in
+    `create_flask_app`). 155 tests pass; make fix 5/5; security gate 0 errors.
+  - **CodeQL alert #6 CLOSED** (root 57c94b57db) — `py/incomplete-url-substring-sanitization`
+    in `scripts/workspace/dependabot_merge.py`: `repo_slug_from_origin` accepted
+    `github.com/` at any position. New `slug_from_remote_url` parses with `urlparse`,
+    requiring hostname `github.com`/`www.github.com` and scheme `{https,ssh,git}`; scp
+    `git@github.com:` keeps its explicit prefix. Regression test
+    `tests/unit/dependabot_merge_slug_tests.py` (3 forged-host vectors) passes. Alert #6
+    was the only OPEN CodeQL alert (5/2/1 already fixed).
+  - **Pending recommendations (owner flext-infra)**: enable CodeQL on the 31 members
+    ("no analysis found"); reconcile the p57t semgrep family (`~/semgrep-violations`
+    ledger absent; local `p/security-audit`/`p/default` runs 0 findings).
 - **Waves lane (reval260921, session f1d47a5f, ledger `.beads/artifacts/reval260921/ledger.csv`)**
   — analysis waves C1 (55) / C2 (134) / D (38) / A (33) complete item-by-item
   (4-source, verdicts in `verdicts/*.json`); B1 running, B2 queued (rate-limit
