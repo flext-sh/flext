@@ -116,6 +116,17 @@ read title+body
   - **Pending recommendations (owner flext-infra)**: enable CodeQL on the 31 members
     ("no analysis found"); reconcile the p57t semgrep family (`~/semgrep-violations`
     ledger absent; local `p/security-audit`/`p/default` runs 0 findings).
+- **Code-quality lane (session 0.12-stabilize)**:
+  - `flext-meltano@44df5a27` — pydantic 2.13 deprecation escalated to error by the
+    fleet warnings filter (`Final[X]` with default in a pydantic namespace-holder)
+    broke every downstream suite collection; converted `settings`/`base`/`enums`
+    constants to `ClassVar`. flext-dbt-oracle-wms collection recovered.
+  - `flext-dbt-oracle-wms@0b67363` — renamed forbidden accessor
+    `get_entity_data` → `fetch_entity_data` (AGENTS.md §3.1) across protocol,
+    caller and test double; runtime-census 0 errors; 26 tests pass.
+  - **Owner overlap**: a concurrent lane is migrating the same `Final`→`ClassVar`
+    deprecation repo-by-repo (e.g. `flext-ldap 31444783`); this session completed
+    flext-meltano to unblock the shared test collector.
 - **Waves lane (reval260921, session f1d47a5f, ledger `.beads/artifacts/reval260921/ledger.csv`)**
   — analysis waves C1 (55) / C2 (134) / D (38) / A (33) complete item-by-item
   (4-source, verdicts in `verdicts/*.json`); B1 running, B2 queued (rate-limit
