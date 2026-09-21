@@ -527,3 +527,18 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 - Beads: 10 assumidos (6 cosmos + 4 flext) com evidência; Dolt do ai-hub PROJECT IDENTITY
   MISMATCH (cidade).
 - Census 1428 (rota: regras ast-grep pós-integração — decisão do operador flext/claude).
+
+### `make test` 2026-09-21 — diagnóstico e fix de causa comum
+
+- Primeira passada: 12/32 pass, 20 exit=2. Causa comum dominante: o payload de
+  flext-tests rejeitava leaves que a wave-2 tornou públicos (TypeError: Unsupported
+  native payload leaf) — modelos pydantic fora da árvore `m.BaseModel`,
+  `typing.Annotated`, function/module/code/ModuleSpec/Match, dict_keys.
+- Fix canônico landed em flext-tests (`3b9828f`, bead `flext-sbrbf`): braço de
+  modelos via protocolo estrutural `p.Model`, atoms textuais para constructs de
+  typing e machinery, KeysView/ValuesView como sequência. Prova imediata:
+  flext-grpc 350 passed (era exit=2).
+- Falhas remanescentes por dono: instâncias arbitrárias não-pydantic (decisão de
+  contrato em flext-sbrbf), flext-infra 157 (gc-wisp-5l3zf4), oracle-wms
+  constraint de password (dono do membro), flext-tests docker 41+17.
+- Announce gc-mail: `gc-wisp-sqw4ql`.
