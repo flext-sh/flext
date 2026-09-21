@@ -496,15 +496,15 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 
 - Baseline limpo: 3 READMEs com resíduo prettier do épico markdown commitados nos
   membros (flext-cli `55af0268`, flext-ldif `d56c2018`, flext-tap-oracle-wms `4f3c937`)
-  + gitlinks avançados na raiz da lane (`ef57a57d0`: infra `3aab6ac6f` + os três).
+  - gitlinks avançados na raiz da lane (`ef57a57d0`: infra `3aab6ac6f` + os três).
 - Probe wave-2 OK: `FlextSettings` e `FlextInfraCodegenConform` importáveis no venv.
 - Lifecycle completo na worktree: `make setup` exit 0 (rumdl 0.2.75), `make deps` exit
   0, `make gen` ×3 com ponto fixo PROVADO (pass 3 no-op por fingerprint de diff),
   `make fix` 32/32 exit 0, `make fmt` 32/32 exit 0, `make check` = 14 findings.
 - Triagem dos 14: 1× MD034 (meu épico) CORRIGIDO e convergido (rumdl+prettier verdes;
-  resolução do conflito prettier↔MD034 em link definition quebrada = URL relativa);
-  12× duplication `_conform` = rota do executor-único (evidência em flext-y3qpq.2.6);
-  1× runtime-census 1050 = bloco namespace (evidência em flext-0in0k).
+  resolução do conflito prettier↔MD034 em link definition quebrada = URL relativa); 12×
+  duplication `_conform` = rota do executor-único (evidência em flext-y3qpq.2.6); 1×
+  runtime-census 1050 = bloco namespace (evidência em flext-0in0k).
 - `make test` em execução no fechamento desta seção; land da lane via push de branch
   (upstream `wip/stabilize-0.12-root-20260919` foi deletado na origin — recriar) + PR
   para `0.12.0-dev`. Announce gc-mail `gc-wisp-4vyc7s`.
@@ -513,19 +513,19 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 
 **Onde está tudo (comandos e saídas para revalidar):**
 
-- flext-infra (membro, branch `wip/stabilize-0.12-flext-infra-20260919`, até `7ff88fd43`):
-  namespace/mod verdes; dedup executado (existing_plan: 3 famílias de clone deletadas —
-  métodos MRO-shadowed); `make fix`/`fmt` 0. `make test`: 2602 passed / 156 failed — causa
-  raiz única: strictness de dependência interna × scratch pyprojects dos testes (mesma
-  família do #827); VEREDITO DE DESIGN pendente do dono (mail gc-wisp-5l3zf4: pins
-  @baseline vs helper injetor).
+- flext-infra (membro, branch `wip/stabilize-0.12-flext-infra-20260919`, até
+  `7ff88fd43`): namespace/mod verdes; dedup executado (existing_plan: 3 famílias de
+  clone deletadas — métodos MRO-shadowed); `make fix`/`fmt` 0. `make test`: 2602 passed
+  / 156 failed — causa raiz única: strictness de dependência interna × scratch
+  pyprojects dos testes (mesma família do #827); VEREDITO DE DESIGN pendente do dono
+  (mail gc-wisp-5l3zf4: pins @baseline vs helper injetor).
 - Raiz da lane (commits locais `bbb51101d6`, `b44af1a75f`, fix-pass): origin deletou a
   branch — coordenador decide o pouso (mail gc-wisp-7xuudj).
-- Blocker fleet-wide: `flext-cli@0.12.0-dev` quebrado na origem (facade pydantic intercepta
-  u.Cli; todo CI fresco vermelho no gen — diagnóstico + fix de 1 classe no mail
-  gc-wisp-qdc29a). ai-hub #831 parado nisso.
-- Beads: 10 assumidos (6 cosmos + 4 flext) com evidência; Dolt do ai-hub PROJECT IDENTITY
-  MISMATCH (cidade).
+- Blocker fleet-wide: `flext-cli@0.12.0-dev` quebrado na origem (facade pydantic
+  intercepta u.Cli; todo CI fresco vermelho no gen — diagnóstico + fix de 1 classe no
+  mail gc-wisp-qdc29a). ai-hub #831 parado nisso.
+- Beads: 10 assumidos (6 cosmos + 4 flext) com evidência; Dolt do ai-hub PROJECT
+  IDENTITY MISMATCH (cidade).
 - Census 1428 (rota: regras ast-grep pós-integração — decisão do operador flext/claude).
 
 ### `make test` 2026-09-21 — diagnóstico e fix de causa comum
@@ -534,11 +534,11 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   flext-tests rejeitava leaves que a wave-2 tornou públicos (TypeError: Unsupported
   native payload leaf) — modelos pydantic fora da árvore `m.BaseModel`,
   `typing.Annotated`, function/module/code/ModuleSpec/Match, dict_keys.
-- Fix canônico landed em flext-tests (`3b9828f`, bead `flext-sbrbf`): braço de
-  modelos via protocolo estrutural `p.Model`, atoms textuais para constructs de
-  typing e machinery, KeysView/ValuesView como sequência. Prova imediata:
-  flext-grpc 350 passed (era exit=2).
+- Fix canônico landed em flext-tests (`3b9828f`, bead `flext-sbrbf`): braço de modelos
+  via protocolo estrutural `p.Model`, atoms textuais para constructs de typing e
+  machinery, KeysView/ValuesView como sequência. Prova imediata: flext-grpc 350 passed
+  (era exit=2).
 - Falhas remanescentes por dono: instâncias arbitrárias não-pydantic (decisão de
-  contrato em flext-sbrbf), flext-infra 157 (gc-wisp-5l3zf4), oracle-wms
-  constraint de password (dono do membro), flext-tests docker 41+17.
+  contrato em flext-sbrbf), flext-infra 157 (gc-wisp-5l3zf4), oracle-wms constraint de
+  password (dono do membro), flext-tests docker 41+17.
 - Announce gc-mail: `gc-wisp-sqw4ql`.
