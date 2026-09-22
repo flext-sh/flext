@@ -236,4 +236,43 @@ Appended below as increments land (command, cwd, exit code, decisive output).
   the declared API intent, exactly the allowance the rule message prescribes.
   Verified in the clone: `import flext_plugin` resolves and the field annotation
   is `MutableJsonMapping`. Transported, gen-7.
+- gen-7 (exit 2): `flext_quality` entrypoint failed — the pyproject script
+  targeted `flext_quality.services.cli`, a module that no longer exists
+  (`services/` holds only `py.typed`); the real CLI facade
+  `flext_quality.cli:main` (with `main` in `__all__`) exists. Cure at source
+  (flext-quality `d864c292`): script → the canonical owner. Transported, gen-8.
+- Fleet-wide entrypoint probe (read-only, real `EntryPoint.load` semantics, in
+  the clone's venv) after gen-7: separated stale venv metadata (cured in
+  source, refreshed by the next sync) from two REAL source defects:
+  `flext-tap-oracle-oic`/`tap-oracle-oic` targeting `tap:TapOracleOic.cli`
+  (class does not exist; real owner `cli.py:main`) and the tap-ldif
+  `-legacy` alias targeting `tap:main` (attribute never declared). Cures at
+  source: tap-oracle-oic scripts → `flext_tap_oracle_oic.cli:main`;
+  tap-ldif's `-legacy` alias REMOVED (no-compat law — no dual old+new paths).
+- gen-8 (void run: the tap cures were merged into the clone while gen-8 was
+  mid-flight — lesson recorded: never mutate the validation clone while its
+  gen runs, same drain-wait discipline as the delivery worktree): probe then
+  failed at `flext_tap_ldap` — `PydanticDeprecatedSince211` on `CONFIG_DIR`
+  (a `Final`-annotated attribute with a default in the plain scalar-constants
+  mixin composed INTO the frozen pydantic config singleton), fatal under the
+  fresh-import probe's `-W error`. Cure at source (flext-tap-ldap `7704f8d`):
+  `CONFIG_DIR: Final[str]` → `CONFIG_DIR: ClassVar[str]` in the mixin — same
+  "stays out of the model's fields and vars()" contract, no deprecated
+  collection. Fleet-wide `-W error` import+exports probe then showed ALL 30
+  other members green; only tap-ldap needed the cure.
+- gen-9 (exit 2): tap-ldap passed; next failure `flext_tap_ldif` —
+  `cannot import name 'FlextTapLdifModelsEntry' from 'flext_tap_ldif._models'`.
+  Root cause: the `_models` part modules imported the own-package root `m`
+  alias, whose owner (`models.py`) eagerly imports these same parts — a genuine
+  import cycle (part → root m → .models → eager ._models → re-entrant
+  `__getattr__`). Cure at source (flext-tap-ldif `e5416b9`): the four part
+  modules resolve `m` through the upstream `flext_meltano` facade (all used
+  members are upstream pydantic/core names) while `c`/`t` stay on the own root
+  (no cycle) — the same idiom the healthy flext-ldif parts use via `flext_cli`.
+- **gen-10: GREEN — `✅ project conformance complete`, exit 0.** The full
+  transactional cycle in the clone passed: 32/32 conforms, lazy-init fixed
+  point, docs receipt, and the fresh-import guard (entrypoints + publications +
+  origin checks) all green. The generator works in the validation clone on the
+  complete project structure. Idempotence proof: gen-11 (second run) —
+  evidence below.
 
