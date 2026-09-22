@@ -1,5 +1,19 @@
 # ai-hub / flext — Gate Convergence & Extermination Plan (P0 → P2)
 
+<!-- TOC START -->
+
+- [Estado atual (evidência da sessão)](#estado-atual-evidencia-da-sessao)
+- [Invariantes (toda tarefa)](#invariantes-toda-tarefa)
+- [P0 — Estabilizar e pousar ai-hub (check verde + push)](#p0-estabilizar-e-pousar-ai-hub-check-verde-push)
+- [P1 — Extermínio e otimização (novos commits no tip)](#p1-exterminio-e-otimizacao-novos-commits-no-tip)
+- [P2 — Propagação fleet (workspace flext)](#p2-propagacao-fleet-workspace-flext)
+- [Tooling (mandato)](#tooling-mandato)
+- [Validação (por onda)](#validacao-por-onda)
+- [Questões abertas](#questoes-abertas)
+- [Condições de parada](#condicoes-de-parada)
+
+<!-- TOC END -->
+
 Execução sempre sobre o **tip** (`origin/<integration-branch>`), **fix-forward/adopt**
 para qualquer trabalho paralelo, **bd via direnv**, testes validando
 **comportamento+runtime** (nunca o "como"). Remoção total de stubs, fallbacks e

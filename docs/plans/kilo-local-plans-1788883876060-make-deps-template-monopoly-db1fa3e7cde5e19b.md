@@ -1,5 +1,21 @@
 # Remaining: gen green, FilePlan cutover, one bypass per SHA
 
+<!-- TOC START -->
+
+- [Done (do not redo)](#done-do-not-redo)
+- [Not done (this plan)](#not-done-this-plan)
+- [Operator locks (unchanged)](#operator-locks-unchanged)
+- [SHA order (gen green after each)](#sha-order-gen-green-after-each)
+  - [A — Unblock make gen (required before 3)](#a-unblock-make-gen-required-before-3)
+  - [B — SHA 3: three codegen writers → FilePlan](#b-sha-3-three-codegen-writers-fileplan)
+  - [C — SHA 4+: one remaining bypass per SHA](#c-sha-4-one-remaining-bypass-per-sha)
+  - [D — Hardcodes still in the table](#d-hardcodes-still-in-the-table)
+- [Validation](#validation)
+- [Landing](#landing)
+- [Exclusions](#exclusions)
+
+<!-- TOC END -->
+
 Landed on `origin/0.12.0-dev` (not done): flext-infra `4a3003b95`, flext gitlink
 `bfca036f4`.
 

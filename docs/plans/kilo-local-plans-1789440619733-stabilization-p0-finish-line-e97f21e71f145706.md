@@ -1,5 +1,21 @@
 # P0 Stabilization Finish Line — gates verdes, extermínio de
 
+<!-- TOC START -->
+
+- [Contexto (evidência desta sessão, 2026-09-15)](#contexto-evidencia-desta-sessao-2026-09-15)
+- [Escopo P0 (com ponto de finalização DEFINIDO)](#escopo-p0-com-ponto-de-finalizacao-definido)
+  - [Onda 0 — Landar o trabalho validado (primeiro incremento)](#onda-0-landar-o-trabalho-validado-primeiro-incremento)
+  - [Onda 1 — Ladder verde (check triage por fatia)](#onda-1-ladder-verde-check-triage-por-fatia)
+  - [Onda 2 — Extermínio stub/fallback/silenciamento](#onda-2-exterminio-stubfallbacksilenciamento)
+  - [Onda 3 — Revalidação de testes (runtime manda)](#onda-3-revalidacao-de-testes-runtime-manda)
+  - [Onda 4 — Fechamento e publicação](#onda-4-fechamento-e-publicacao)
+- [P1 (pós-P0, enfileirado em beads — NÃO nesta sessão)](#p1-pos-p0-enfileirado-em-beads-nao-nesta-sessao)
+- [Regras de execução (bind para o agente implementador)](#regras-de-execucao-bind-para-o-agente-implementador)
+- [Riscos / atenuações](#riscos-atenuacoes)
+- [Validação final (aceite)](#validacao-final-aceite)
+
+<!-- TOC END -->
+
 stub/fallback/silenciamento, publicação nos tips
 
 ## Contexto (evidência desta sessão, 2026-09-15)

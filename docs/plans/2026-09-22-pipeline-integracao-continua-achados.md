@@ -1,5 +1,29 @@
 # Achados da auditoria — Concluir o pipeline com integração contínua e prova real
 
+<!-- TOC START -->
+
+- [A. Estado real da integração](#a-estado-real-da-integracao)
+  - [A.1 Workspaces existentes (nenhum clone criado)](#a1-workspaces-existentes-nenhum-clone-criado)
+  - [A.2 Os 17 membros sem a revisão de entrada — verificado, exatamente 17](#a2-os-17-membros-sem-a-revisao-de-entrada-verificado-exatamente-17)
+  - [A.3 Publicação (main workspace x recovery)](#a3-publicacao-main-workspace-x-recovery)
+  - [A.4 WIP montado no merge da raiz (recuperação)](#a4-wip-montado-no-merge-da-raiz-recuperacao)
+- [B. Contrato .venv — falha exata localizada](#b-contrato-venv-falha-exata-localizada)
+  - [B.1 A falha membro-como-standalone](#b1-a-falha-membro-como-standalone)
+  - [B.2 Symlink de venv é tolerado (contrário ao contrato de rejeição)](#b2-symlink-de-venv-e-tolerado-contrario-ao-contrato-de-rejeicao)
+  - [B.3 Sanitização de ambiente herdado — já existe, lacuna confirmada](#b3-sanitizacao-de-ambiente-herdado-ja-existe-lacuna-confirmada)
+  - [B.4 Atualização de Python](#b4-atualizacao-de-python)
+  - [B.5 Consumidores e documentação](#b5-consumidores-e-documentacao)
+- [C. make mod e orçamento de suíte](#c-make-mod-e-orcamento-de-suite)
+- [D. Pipeline AI Hub (ccs / CLIProxy / systemd)](#d-pipeline-ai-hub-ccs-cliproxy-systemd)
+  - [D.1 Workspaces](#d1-workspaces)
+  - [D.2 Mapa de componentes (arquivo:linha)](#d2-mapa-de-componentes-arquivolinha)
+  - [D.3 CI AI Hub — divergência confirmada](#d3-ci-ai-hub-divergencia-confirmada)
+  - [D.4 Épico e evidências](#d4-epico-e-evidencias)
+- [E. Beads relevantes inventariados (leitura)](#e-beads-relevantes-inventariados-leitura)
+- [F. Lacunas de evidência (a fechar na execução)](#f-lacunas-de-evidencia-a-fechar-na-execucao)
+
+<!-- TOC END -->
+
 Data: 2026-09-22 · Modo: somente-leitura (3 explorações + leitura inline) · Branch:
 `0.12.0-dev` Plano associado:
 `docs/plans/2026-09-22-pipeline-integracao-continua-plano.md` Escopo: recuperação de

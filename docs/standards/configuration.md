@@ -4,6 +4,8 @@
 
 - [Ownership](#ownership)
 - [Config-owned facts](#config-owned-facts)
+- [Runtime access](#runtime-access)
+- [Generated surfaces](#generated-surfaces)
 - [Validation](#validation)
 
 <!-- TOC END -->
@@ -44,7 +46,7 @@ for ownership and boundary contracts.
 Consumers use the package-root singletons only:
 
 ```python
-from flext_core import config, settings
+
 ```
 
 Access owned values as `settings.<Namespace>.*` and `config.<Namespace>.*`; the

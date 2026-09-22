@@ -14,7 +14,8 @@
   - [8.1 Final worker lane](#81-final-worker-lane)
   - [8.2 Updated worker lane before merge](#82-updated-worker-lane-before-merge)
   - [8.3 Original target after integration](#83-original-target-after-integration)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 Every light worker owns exactly one bead in one branch and one dedicated worktree. Read
 the canonical authorities first; this file only adds lane discipline.

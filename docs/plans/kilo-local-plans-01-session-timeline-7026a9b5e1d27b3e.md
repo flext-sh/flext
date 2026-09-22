@@ -1,5 +1,13 @@
 # Session Timeline and Handoff Classification
 
+<!-- TOC START -->
+
+- [Provider identity](#provider-identity)
+- [Native Claude 0fed44fb milestones](#native-claude-0fed44fb-milestones)
+- [Kilo session milestones relevant to flext-infra](#kilo-session-milestones-relevant-to-flext-infra)
+
+<!-- TOC END -->
+
 ## Provider identity
 
 The phrase “Claude session” had been used for several imported/Kilo sessions. Native

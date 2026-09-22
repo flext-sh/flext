@@ -1,5 +1,29 @@
 # Flext-Infra Stabilization, Modernization, and Runtime Closure Plan
 
+<!-- TOC START -->
+
+- [Outcome](#outcome)
+- [Critical Review of the Previous Plan](#critical-review-of-the-previous-plan)
+- [Current Evidence and Authorities](#current-evidence-and-authorities)
+  - [Coordinated position at 2026-09-16 23:33Z](#coordinated-position-at-2026-09-16-2333z)
+- [Execution Rules](#execution-rules)
+- [Ordered Implementation Plan](#ordered-implementation-plan)
+  - [1. Rehydrate and Adjudicate the Work](#1-rehydrate-and-adjudicate-the-work)
+  - [2. Establish a Fresh Runtime Baseline](#2-establish-a-fresh-runtime-baseline)
+  - [3. Repair Conform, ProjectNew, and Lazy-Init Fixed-Point Behavior](#3-repair-conform-projectnew-and-lazy-init-fixed-point-behavior)
+  - [4. Centralize c/t/p/m/u, Config, and Settings Before Moving Code](#4-centralize-ctpmu-config-and-settings-before-moving-code)
+  - [5. Replace the Conform God Module With the Canonical MRO Facade](#5-replace-the-conform-god-module-with-the-canonical-mro-facade)
+  - [6. Make Duplication and Structural Modernization Product Gates](#6-make-duplication-and-structural-modernization-product-gates)
+  - [7. Exterminate Invalid Tests at Public Runtime Boundaries](#7-exterminate-invalid-tests-at-public-runtime-boundaries)
+  - [8. Validate a Real Standalone Consumer](#8-validate-a-real-standalone-consumer)
+  - [9. Full Native Gates and Incremental Landing](#9-full-native-gates-and-incremental-landing)
+  - [10. Propagate and Close the Integration Boundary](#10-propagate-and-close-the-integration-boundary)
+- [Failure and Recovery Rules](#failure-and-recovery-rules)
+- [Acceptance Checklist](#acceptance-checklist)
+- [Explicit Non-Goals](#explicit-non-goals)
+
+<!-- TOC END -->
+
 ## Outcome
 
 Deliver `flext-infra` from the latest `0.12.0-dev` integration tip as the single

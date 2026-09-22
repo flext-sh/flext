@@ -18,7 +18,7 @@
 - [6. Referências rápidas (arquivos de verdade)](#6-referencias-rapidas-arquivos-de-verdade)
 - [7. Codificação durável (~/agents — para o padrão se repetir certo)](#7-codificacao-duravel-agents-para-o-padrao-se-repetir-certo)
 - [8. Retomada rápida (nova sessão)](#8-retomada-rapida-nova-sessao)
-- [9. Delta Sweep-2 (12:30–12:40 UTC, sessão principal — consolidado SEM duplicar a revisão v2 acima)](#9-delta-sweep-2-12301240-utc-sessao-principal-consolidado-sem-duplicar-a-revisao-v2-acima)
+- [9. Delta Sweep-2 (12:30–12:40 UTC, sessão principal — consolidado SEM duplicar a](#9-delta-sweep-2-12301240-utc-sessao-principal-consolidado-sem-duplicar-a)
   - [9.1 Consolidação de beads entre lanes (lei: um dono por assunto)](#91-consolidacao-de-beads-entre-lanes-lei-um-dono-por-assunto)
   - [9.2 Skills/rules/commands em ~/agents — DRAFT pousado, LANE-EXTERNO](#92-skillsrulescommands-em-agents-draft-pousado-lane-externo)
   - [9.3 Estado do tip desta linha](#93-estado-do-tip-desta-linha)

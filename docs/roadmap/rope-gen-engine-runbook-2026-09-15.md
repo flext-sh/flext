@@ -7,7 +7,7 @@
 - [3. Findings flow (one detector, one consumer)](#3-findings-flow-one-detector-one-consumer)
 - [4. Transaction loop per repository](#4-transaction-loop-per-repository)
 - [5. Resume procedure (new session)](#5-resume-procedure-new-session)
-- [6. Resume context (2026-09-15, proven)](#6-resume-context-2026-09-15-proven)
+- [5b. Historical resume context (2026-09-15, proven — preserved as evidence)](#5b-historical-resume-context-2026-09-15-proven-preserved-as-evidence)
 
 <!-- TOC END -->
 

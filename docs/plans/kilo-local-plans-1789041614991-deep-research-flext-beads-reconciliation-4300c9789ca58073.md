@@ -1,5 +1,21 @@
 # Deep Research — Beads Reconciliation Retry
 
+<!-- TOC START -->
+
+- [Objective](#objective)
+- [Current Reality](#current-reality)
+- [Important Details](#important-details)
+- [Next Move](#next-move)
+  - [1) Recover runtime (coordinator, single first action)](#1-recover-runtime-coordinator-single-first-action)
+  - [2) Re-baseline fresh Beads state (coordinator)](#2-re-baseline-fresh-beads-state-coordinator)
+  - [3) Spawn bounded subagent waves (read-only)](#3-spawn-bounded-subagent-waves-read-only)
+  - [4) Coordinator mutation batches (max 20 operations)](#4-coordinator-mutation-batches-max-20-operations)
+  - [5) Closure / hierarchy / dependency policy](#5-closure-hierarchy-dependency-policy)
+  - [6) Validation protocol](#6-validation-protocol)
+- [Relevant Files](#relevant-files)
+
+<!-- TOC END -->
+
 ## Objective
 
 - Make the next Beads reconciliation cycle reproducible, bounded, and evidence-first.

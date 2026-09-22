@@ -1,5 +1,11 @@
 # Contribution Adoption Matrix
 
+<!-- TOC START -->
+
+- [Acceptance states](#acceptance-states)
+
+<!-- TOC END -->
+
 | Contribution                                                                         | Evidence                                                                         | Decision                                   | Required proof/action                                                                                                                                                  |
 | ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Native Claude `ai-hub wip` program                                                   | Native session + `~/.claude/plans/wip-automation/`                               | **Adjacent / separate**                    | Track in ai-hub/Gas City; flext-infra consumes it only after its own canary/landing proof.                                                                             |

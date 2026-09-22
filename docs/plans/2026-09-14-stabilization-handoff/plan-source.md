@@ -21,6 +21,11 @@
   - [S7 — Superprojeto e docs](#s7-superprojeto-e-docs)
   - [S8 — Testes e pouso](#s8-testes-e-pouso)
 - [Verificação final](#verificacao-final)
+- [Status 2026-09-20 (contribuição ZCode — ordem do operador: estabilizar esta lane)](#status-2026-09-20-contribuicao-zcode-ordem-do-operador-estabilizar-esta-lane)
+  - [Propagação 2026-09-20c](#propagacao-2026-09-20c)
+  - [Passada lane \[A\] 2026-09-21 (aprovada pelo operador: worktree primeiro, merges depois)](#passada-lane-a-2026-09-21-aprovada-pelo-operador-worktree-primeiro-merges-depois)
+  - [Estado final para retomada — 2026-09-21 (sessão finalizada)](#estado-final-para-retomada-2026-09-21-sessao-finalizada)
+  - [make test 2026-09-21 — diagnóstico e fix de causa comum](#make-test-2026-09-21-diagnostico-e-fix-de-causa-comum)
 
 <!-- TOC END -->
 

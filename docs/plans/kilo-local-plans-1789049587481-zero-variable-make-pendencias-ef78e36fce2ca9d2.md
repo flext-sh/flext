@@ -1,5 +1,22 @@
 # SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md
 
+<!-- TOC START -->
+
+- [Estado atual (evidência)](#estado-atual-evidencia)
+- [Tarefas (fatias pequenas, cada uma validada antes da próxima)](#tarefas-fatias-pequenas-cada-uma-validada-antes-da-proxima)
+  - [T0 — Preflight e congelamento](#t0-preflight-e-congelamento)
+  - [T1 — Limpeza de junk commitado (flext-api e frota)](#t1-limpeza-de-junk-commitado-flext-api-e-frota)
+  - [T2 — Adjudicação da lane rope órfã (flext-infra)](#t2-adjudicacao-da-lane-rope-orfa-flext-infra)
+  - [T3 — Gates vermelhos do flext-infra (namespace 1385 / loc-cap 5)](#t3-gates-vermelhos-do-flext-infra-namespace-1385-loc-cap-5)
+  - [T4 — Testes lentos de setup falhando no HEAD base](#t4-testes-lentos-de-setup-falhando-no-head-base)
+  - [T5 — Regras canônicas em ~/agents](#t5-regras-canonicas-em-agents)
+  - [T6 — Pouso final na integração](#t6-pouso-final-na-integracao)
+- [Ord fix dependencies](#ord-fix-dependencies)
+- [Riscos](#riscos)
+- [Fora de escopo](#fora-de-escopo)
+
+<!-- TOC END -->
+
 (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
 
 # Plano — Zerar as pendências do ciclo Make 0.12.0-dev e pousar na integração sem erros

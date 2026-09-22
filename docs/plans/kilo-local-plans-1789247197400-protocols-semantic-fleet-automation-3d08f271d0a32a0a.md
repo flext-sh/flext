@@ -1,5 +1,32 @@
 # Automacao de protocols e rewiring da topologia governada
 
+<!-- TOC START -->
+
+- [Objetivo e limite](#objetivo-e-limite)
+- [Historico recuperado](#historico-recuperado)
+- [Mapa estrutural do flext-infra (inventário 0.12.0-dev)](#mapa-estrutural-do-flext-infra-inventario-0120-dev)
+  - [Hubs de acoplamento (maior fan-in)](#hubs-de-acoplamento-maior-fan-in)
+  - [Módulos oversized (top 10, >200 LOC)](#modulos-oversized-top-10-200-loc)
+  - [Facade hygiene](#facade-hygiene)
+- [Capacidades do code-review-graph (ferramenta exclusiva de grafo)](#capacidades-do-code-review-graph-ferramenta-exclusiva-de-grafo)
+- [Donos atuais inspecionados (atualizado com inventário)](#donos-atuais-inspecionados-atualizado-com-inventario)
+- [Contrato de substituicao segura](#contrato-de-substituicao-segura)
+- [Fluxo unico](#fluxo-unico)
+- [Regras e cobertura](#regras-e-cobertura)
+- [Achados de cruft e duplicação (pendentes — re-despachar exploração focada)](#achados-de-cruft-e-duplicacao-pendentes-re-despachar-exploracao-focada)
+- [Sequencia de implementacao](#sequencia-de-implementacao)
+  - [0. Mapeamento global, simplificação e exterminação de cruft da máquina flext-infra](#0-mapeamento-global-simplificacao-e-exterminacao-de-cruft-da-maquina-flext-infra)
+  - [1. Reconciliar e estabilizar os donos](#1-reconciliar-e-estabilizar-os-donos)
+  - [2. Consolidar fatos semanticos e a matriz de seguranca](#2-consolidar-fatos-semanticos-e-a-matriz-de-seguranca)
+  - [3. Geracao real de protocols](#3-geracao-real-de-protocols)
+  - [4. Rewiring no make mod](#4-rewiring-no-make-mod)
+  - [5. Seguranca e escala](#5-seguranca-e-escala)
+  - [6. Propagacao governada e fechamento](#6-propagacao-governada-e-fechamento)
+- [Matriz de validacao obrigatoria](#matriz-de-validacao-obrigatoria)
+- [Criterio final](#criterio-final)
+
+<!-- TOC END -->
+
 ## Objetivo e limite
 
 Recuperar e completar a iniciativa de protocols derivados de models usando o flext-infra

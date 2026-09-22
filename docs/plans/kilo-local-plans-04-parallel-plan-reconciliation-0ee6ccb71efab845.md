@@ -1,5 +1,14 @@
 # Reconciliação dos planos paralelos
 
+<!-- TOC START -->
+
+- [Planos considerados](#planos-considerados)
+- [Decisões reaproveitadas](#decisoes-reaproveitadas)
+- [Material não incorporado](#material-nao-incorporado)
+- [Próximos adendos](#proximos-adendos)
+
+<!-- TOC END -->
+
 ## Planos considerados
 
 - `../../1789582508056-flext-infra-runtime-modernization.md` — autoridade principal.

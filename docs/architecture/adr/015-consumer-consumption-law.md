@@ -6,6 +6,7 @@
 - [Context](#context)
 - [Decision](#decision)
   - [R1 — Facade-Only Import Grammar](#r1-facade-only-import-grammar)
+  - [R1a — Lazy-Init Re-Export Derivation](#r1a-lazy-init-re-export-derivation)
   - [R2 — No Duplication (Structural Scan)](#r2-no-duplication-structural-scan)
   - [R3 — Layer Law (Declaration vs Behavior)](#r3-layer-law-declaration-vs-behavior)
   - [R4 — Gates as Products](#r4-gates-as-products)

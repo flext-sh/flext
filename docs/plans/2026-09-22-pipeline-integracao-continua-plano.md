@@ -1,5 +1,15 @@
 # Plano — Concluir o pipeline com integração contínua e prova real
 
+<!-- TOC START -->
+
+- [Constraints globais](#constraints-globais)
+- [Passo 0 — Registro e trackers](#passo-0-registro-e-trackers)
+- [Fase 1 — Incremento 1: ambiente e integração utilizáveis](#fase-1-incremento-1-ambiente-e-integracao-utilizaveis)
+- [Fase 2 — Incrementos funcionais (cada um: integração, publicação pelo dono, prova antes do seguinte)](#fase-2-incrementos-funcionais-cada-um-integracao-publicacao-pelo-dono-prova-antes-do-seguinte)
+- [Fase 3 — Prova final e encerramento](#fase-3-prova-final-e-encerramento)
+
+<!-- TOC END -->
+
 > **Para agentes executores:** execute tarefa a tarefa; etapas usam checkbox. Achados
 > completos da auditoria que fundamentam este plano:
 > `docs/plans/2026-09-22-pipeline-integracao-continua-achados.md`.
@@ -91,15 +101,15 @@ agir.
      excluído por marcador.
 
 **1C. Reparos adotados + ciclo nativo** (re-escopo operador 2026-09-22: "não é objetivo
-resolver os problemas de make check gerados por flext-infra, eles precisam ficar warning sem
-bloquear o ci"):
+resolver os problemas de make check gerados por flext-infra, eles precisam ficar warning
+sem bloquear o ci"):
 
 - [ ] 1. Validar classificação config/fachadas no Core, composição MRO no infra,
      fixtures (`flext-tests`) e regras estruturais — contra donos e ADRs, não por verde.
-- [ ] 2. **Fazer os findings de check gerados pelo flext-infra virarem warning sem bloquear
-     CI** (dono: superfície de gates do check/CI em flext-infra + projeção ci.yml via gen) —
-     em vez de resolver os ~192 achados. Registrar a contagem no bead `flext-12uxl` como
-     contexto do re-escopo, não como obrigação de zerar.
+- [ ] 2. **Fazer os findings de check gerados pelo flext-infra virarem warning sem
+     bloquear CI** (dono: superfície de gates do check/CI em flext-infra + projeção
+     ci.yml via gen) — em vez de resolver os ~192 achados. Registrar a contagem no bead
+     `flext-12uxl` como contexto do re-escopo, não como obrigação de zerar.
 - [ ] 3. Revisar o conjunto de regras ANTES de `make mod` (catálogo completo sem
      seletor), preservar checkpoint, rodar sem escritores concorrentes; efeitos
      inválidos corrigidos no dono; nunca excluir regra/teste para verde.

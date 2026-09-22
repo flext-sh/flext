@@ -1,5 +1,17 @@
 # Rope Modernize Engine — Exterminate ast/libcst/re, One CLI, ai_hub Pilot
 
+<!-- TOC START -->
+
+- [Objective](#objective)
+- [Ground truth (verified this session)](#ground-truth-verified-this-session)
+- [Root rules (non-negotiable)](#root-rules-non-negotiable)
+- [Phase 1 — this cycle (integral, lands green)](#phase-1-this-cycle-integral-lands-green)
+- [Phase 2+ — filed as beads, executed in later cycles (each integral)](#phase-2-filed-as-beads-executed-in-later-cycles-each-integral)
+- [Risks](#risks)
+- [Out of scope (explicit)](#out-of-scope-explicit)
+
+<!-- TOC END -->
+
 ## Objective
 
 Re-platform the FLEXT modernization stack onto **rope + parameterized YAML rules +

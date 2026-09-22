@@ -2,7 +2,9 @@
 
 <!-- TOC START -->
 
-- No sections found
+- [Current documents](#current-documents)
+- [Operational authority (2026-09-17)](#operational-authority-2026-09-17)
+- [Runtime status](#runtime-status)
 
 <!-- TOC END -->
 

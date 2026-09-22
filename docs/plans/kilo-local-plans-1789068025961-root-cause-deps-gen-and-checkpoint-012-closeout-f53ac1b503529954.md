@@ -1,5 +1,21 @@
 # SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md
 
+<!-- TOC START -->
+
+- [Objetivo](#objetivo)
+- [Estado atual (evidência desta sessão)](#estado-atual-evidencia-desta-sessao)
+- [Fases](#fases)
+  - [Fase 0 — Recuperar WIP e reconciliar flext-infra (pré-requisito, fix-forward)](#fase-0-recuperar-wip-e-reconciliar-flext-infra-pre-requisito-fix-forward)
+  - [Fase 1 — Deps na causa raiz: gen do root projetando todos os pyprojects](#fase-1-deps-na-causa-raiz-gen-do-root-projetando-todos-os-pyprojects)
+  - [Fase 2 — CI verde no flext-infra e PR #668](#fase-2-ci-verde-no-flext-infra-e-pr-668)
+  - [Fase 3 — Recuperar "manual switch" do ci-matrix pelo dono (template flext-infra)](#fase-3-recuperar-manual-switch-do-ci-matrix-pelo-dono-template-flext-infra)
+  - [Fase 4 — Teste cd-infra (switch manual)](#fase-4-teste-cd-infra-switch-manual)
+  - [Fase 5 — Ciclo canônico final e fechamento](#fase-5-ciclo-canonico-final-e-fechamento)
+- [Riscos / contramedidas](#riscos-contramedidas)
+- [Critério de Done](#criterio-de-done)
+
+<!-- TOC END -->
+
 (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
 
 # Corrigir deps (structlog/click) na causa raiz via gerador + fechar checkpoint 0.12.0

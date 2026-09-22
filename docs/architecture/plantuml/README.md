@@ -38,7 +38,8 @@
   - [Creating New Diagrams](#creating-new-diagrams)
   - [Updating Existing Diagrams](#updating-existing-diagrams)
   - [Review Process](#review-process)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 ## Table of Contents
 

@@ -1,5 +1,16 @@
 # Unificação da engine de modernização via rope + extermínio de helpers/setters (piloto
 
+<!-- TOC START -->
+
+- [Missão (contrato do operador)](#missao-contrato-do-operador)
+- [Estado atual (evidência coletada)](#estado-atual-evidencia-coletada)
+- [Decisões (regra raiz por item)](#decisoes-regra-raiz-por-item)
+- [Tarefas ordenadas (batches completos e independentes)](#tarefas-ordenadas-batches-completos-e-independentes)
+- [Riscos e mitigação](#riscos-e-mitigacao)
+- [Validated done (critério final)](#validated-done-criterio-final)
+
+<!-- TOC END -->
+
 ai-hub)
 
 ## Missão (contrato do operador)
