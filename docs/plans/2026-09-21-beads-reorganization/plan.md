@@ -152,17 +152,31 @@ read title+body
 - **Fleet-green execution (session 0.12-stabilize, 2026-09-22)** — implementing
   `.kilo/plans/fleet-green-and-beads-closure.md`:
   - **W4 `Final`→`ClassVar`: VERIFIED COMPLETE.** Imported `models`/`constants` with
-    `PydanticDeprecatedSince211` escalated to error across all 32 repos → **32/32 CLEAN**
-    (no deprecation). Remaining `Final[` occurrences are nested-class attributes pydantic
-    does not process as fields; no action needed.
+    `PydanticDeprecatedSince211` escalated to error across all 32 repos → **32/32
+    CLEAN** (no deprecation). Remaining `Final[` occurrences are nested-class attributes
+    pydantic does not process as fields; no action needed.
   - **W3 runtime-census inventory measured** (gate isolated, per repo): ~1000 findings.
     Dominant codes: ENFORCE-047/049 (facade base/MRO), 066 (compat aliases), 079
-    (constants outside `_constants`), 067 (module class cap), 042 (Config→FlextSettings),
-    069 (nested depth), 046, 068, 070. Zero-finding repos: flext-api, flext-dbt-oracle-wms,
-    flext-plugin.
+    (constants outside `_constants`), 067 (module class cap), 042
+    (Config→FlextSettings), 069 (nested depth), 046, 068, 070. Zero-finding repos:
+    flext-api, flext-dbt-oracle-wms, flext-plugin.
   - **ENFORCE-042 fixed and PUSHED** (canonical `(FlextSettings, <upstream>Config)` MRO,
     matching flext-api): `flext-dbt-oracle@45f9350`, `flext-grpc@cf5ce3c`,
     `flext-dbt-ldap@881d4b2` — each `runtime-census` went 1→0 and `make fix` 5/5 green.
+  - **flext-meltano@deb6a138 runtime-census 0** (was 4): `FlextMeltanoConfig` MRO,
+    `singer_tap.py` split into `singer_tap.py` + `tap_source_mixin.py` (ENFORCE-067),
+    sqlalchemy import outside its owner removed (ENFORCE-070).
+  - **flext-core unblocked**: the WIP left runtime `from flext_core import t` imports in
+    `__version__.py`, `constants.py` and `_constants/**` that created an import cycle
+    (`_typings.base → _constants → flext_core.lazy → _lazy_parts → _typings.lazy → _typings.base`)
+    and an unresolved pydantic `t` annotation in `_enforcement_data`. Deferred them to
+    `TYPE_CHECKING` (annotations are lazy) and made the pydantic-facing `t` a runtime
+    import; flext_core imports cleanly again.
+  - **MRO cascade completed**: adding `FlextSettings` to `FlextMeltanoConfig` made the
+    12 leaf `(<X>Config(FlextSettings, FlextMeltanoConfig))` classes inconsistent, so
+    the leaves now inherit it via `FlextMeltanoConfig` — all pushed.
+  - **Verified 0 findings**: flext-meltano, flext-dbt-oracle, flext-grpc,
+    flext-target-oracle-wms. Remaining: flext-dbt-ldap (ENFORCE-069 nested depth).
 - **Waves lane (reval260921, session f1d47a5f, ledger
   `.beads/artifacts/reval260921/ledger.csv`)** — analysis waves C1 (55) / C2 (134) / D
   (38) / A (33) complete item-by-item (4-source, verdicts in `verdicts/*.json`); B1
@@ -192,61 +206,66 @@ read title+body
     S8482-dominant; same generator wave resolves.
   - Replicable method: anonymous SonarCloud API + local semgrep p/default + Mimosa
     sealed.
-- **Security lane (waves session, evening 2026-09-21)** — Semgrep epic
-  `flext-p57t` CLOSED: 33/33 children. Last three repos remediated via
-  MERGED PRs #487 (core), #793 (infra), #116 (dbt-ldif): dependabot cooldown
-  landed through the SSOT knob (`dependabot_cooldown_days` in codegen.yaml),
-  third-party `dbt_packages/` excluded via `.semgrepignore`, per-finding
-  triages documented. Generator fix for the flext-meltano wheel collision
-  merged (#794, `flext-fgy4x` closed with A/B runtime proof: uv sync +
-  wheel build). NEW beads: `flext-c2kp3` (journal lease timeout recurrence
-  under multi-agent load — executor wait/backoff needed), `flext-fgy4x`
-  (closed). NEXT: `2wjm` SonarCloud (11 active children, SonarCloud RED at
-  tips), `jbfz` re-scan (platform scans run on PRs only — needs a sweep PR
-  or Snyk platform check).
+- **Security lane (waves session, evening 2026-09-21)** — Semgrep epic `flext-p57t`
+  CLOSED: 33/33 children. Last three repos remediated via MERGED PRs #487 (core), #793
+  (infra), #116 (dbt-ldif): dependabot cooldown landed through the SSOT knob
+  (`dependabot_cooldown_days` in codegen.yaml), third-party `dbt_packages/` excluded via
+  `.semgrepignore`, per-finding triages documented. Generator fix for the flext-meltano
+  wheel collision merged (#794, `flext-fgy4x` closed with A/B runtime proof: uv sync +
+  wheel build). NEW beads: `flext-c2kp3` (journal lease timeout recurrence under
+  multi-agent load — executor wait/backoff needed), `flext-fgy4x` (closed). NEXT: `2wjm`
+  SonarCloud (11 active children, SonarCloud RED at tips), `jbfz` re-scan (platform
+  scans run on PRs only — needs a sweep PR or Snyk platform check).
 
 ## Continuation 2026-09-22 (implementation agent)
 
-- **R0 inventory.** Live `bd list --status open --flat --limit 0 --json` = 291 open; CSV at
-  `scratch/kilo/wip-beads-open-20260922.csv`. `bd doctor --check=validate` OK; `bd graph
-  check` clean; `bd orphans` only `flext-pwmej` (slice commit, kept open); pollution gate 4
-  false positives (`flext-ss5r9`, `flext-38p39`, `flext-olwmz`, `flext-6qrb`).
-- **R1 B2.** 14 KEEP bugs got `reval260921` + evidence notes; ALREADY-CLOSED/DONE already
-  closed; 128 SKIP remain lead-owned.
+- **R0 inventory.** Live `bd list --status open --flat --limit 0 --json` = 291 open; CSV
+  at `scratch/kilo/wip-beads-open-20260922.csv`. `bd doctor --check=validate` OK;
+  `bd graph check` clean; `bd orphans` only `flext-pwmej` (slice commit, kept open);
+  pollution gate 4 false positives (`flext-ss5r9`, `flext-38p39`, `flext-olwmz`,
+  `flext-6qrb`).
+- **R1 B2.** 14 KEEP bugs got `reval260921` + evidence notes; ALREADY-CLOSED/DONE
+  already closed; 128 SKIP remain lead-owned.
 - **R2 hierarchy.** 0 bugs under epics (open/in_progress/blocked). 5 parentless
   tasks/features reparented: `flext-zxdl5`→`flext-ssnc7`, `flext-yj3s0`→`flext-itpd1`,
-  `flext-sbrbf`→`flext-y3qpq.3`, `flext-z7u1g`→`flext-itpd1`, `flext-mvaxv`→`flext-ssnc7`;
-  `relates-to` edges to `flext-itpd1.2` and `flext-y3qpq.2.6`.
+  `flext-sbrbf`→`flext-y3qpq.3`, `flext-z7u1g`→`flext-itpd1`,
+  `flext-mvaxv`→`flext-ssnc7`; `relates-to` edges to `flext-itpd1.2` and
+  `flext-y3qpq.2.6`.
 - **R3 partial (`0in0k`).** Validated at flext-infra 0.12.0-dev: `flext-0in0k.9` PRs
   `#784`/`#785` MERGED with 31/31 runtime import proof (kept in_progress pending the
   `flext-0in0k.8` blocks edge); `.26` PR `#784` merged but runtime-census green still
   unproven; `.8`, `.5`, `.6`, `.7` still LIVE (symbols present at tip) — notes added.
-- **R5 security.** `flext-c2kp3` CLOSED: flext-infra `origin/0.12.0-dev`
-  `2107ed73e` (lease waits up to 1800s with 1s poll, fails loud on deadline; 3 lease tests
-  pass; make fix 5/5). Live SonarCloud API reachable via `rtk curl`; the local
+- **R5 security.** `flext-c2kp3` CLOSED: flext-infra `origin/0.12.0-dev` `2107ed73e`
+  (lease waits up to 1800s with 1s poll, fails loud on deadline; 3 lease tests pass;
+  make fix 5/5). Live SonarCloud API reachable via `rtk curl`; the local
   `~/sonarqube-violations` dump is absent, so `flext-2wjm` triage must use the API.
-- **R5 SonarCloud live classification.** Live API totals for the 11 open `flext-2wjm` children
-  (2026-09-22): tap-oracle-wms 6, plugin 15, oracle-wms 17, oracle-oic 13, dbt-oracle-wms 7,
-  target-ldif 5, tap-oracle 7, tap-ldif 5, dbt-oracle 6, observability 14, ldap 12. Dominant
-  rules `githubactions:S8482`, `python:S108`, `python:S3776`, `plsql:S1192`, `docker:S7018`.
-  Notes recorded on every child; S8482 remediation belongs to the generator owner.
-- **R3 additional.** `flext-ldgbb`, `flext-5fxu6.4.24`, `flext-5fxu6.4.25`, `flext-ujjrk` are
-  LIVE at the flext-infra tip (missing test/gate/rule), each with an rg-evidence note.
-- **R8 root-PR triage (containment proof).** `#261` `audit/pr-supersession` = 5 gitlinks only,
-  every SHA contained in `origin/0.12.0-dev`; `config/plan-collection.yaml` already disabled
-  → 100% superseded, retire. `#259` `validate/flext-itpd1-3-producer` = config identical to
-  integration and flext-infra gitlink `c2ca5a128` contained → 100% superseded, retire. `#258`
-  `repair/make-check-20250919` = unique `.markdownlint.json`/`.markdownlintignore`,
-  `pyproject.toml` (+3), generated docs → needs no-ff integration. `#260` `feature/rope-modernize`
-  = unique rope commits + plan-collection source → hunk-by-hunk no-ff integration. `#262`
-  `worktree-generator-law-p0` = unique ADR-018 integration-state paragraph, stabilization
-  checkpoint docs, catalog/worker-lane docs → no-ff doc integration. Evidence in `flext-whndf`.
-  **Blocker:** this session cannot run `git merge`/`checkout`/`worktree` or `gh pr
-  close/merge/comment`; retirement and merges need an agent with those permissions or the operator.
+- **R5 SonarCloud live classification.** Live API totals for the 11 open `flext-2wjm`
+  children (2026-09-22): tap-oracle-wms 6, plugin 15, oracle-wms 17, oracle-oic 13,
+  dbt-oracle-wms 7, target-ldif 5, tap-oracle 7, tap-ldif 5, dbt-oracle 6, observability
+  14, ldap 12. Dominant rules `githubactions:S8482`, `python:S108`, `python:S3776`,
+  `plsql:S1192`, `docker:S7018`. Notes recorded on every child; S8482 remediation
+  belongs to the generator owner.
+- **R3 additional.** `flext-ldgbb`, `flext-5fxu6.4.24`, `flext-5fxu6.4.25`,
+  `flext-ujjrk` are LIVE at the flext-infra tip (missing test/gate/rule), each with an
+  rg-evidence note.
+- **R8 root-PR triage (containment proof).** `#261` `audit/pr-supersession` = 5 gitlinks
+  only, every SHA contained in `origin/0.12.0-dev`; `config/plan-collection.yaml`
+  already disabled → 100% superseded, retire. `#259` `validate/flext-itpd1-3-producer` =
+  config identical to integration and flext-infra gitlink `c2ca5a128` contained → 100%
+  superseded, retire. `#258` `repair/make-check-20250919` = unique
+  `.markdownlint.json`/`.markdownlintignore`, `pyproject.toml` (+3), generated docs →
+  needs no-ff integration. `#260` `feature/rope-modernize` = unique rope commits +
+  plan-collection source → hunk-by-hunk no-ff integration. `#262`
+  `worktree-generator-law-p0` = unique ADR-018 integration-state paragraph,
+  stabilization checkpoint docs, catalog/worker-lane docs → no-ff doc integration.
+  Evidence in `flext-whndf`. **Blocker:** this session cannot run
+  `git merge`/`checkout`/`worktree` or `gh pr close/merge/comment`; retirement and
+  merges need an agent with those permissions or the operator.
 - **New defect filed.** `flext-ownfp` (bug, `bugfix`): the first `bd` write rewrote the
-  generated `.beads/config.yaml`, adding `issue-prefix`, a `dolt:` block and `dolt.mode: server`.
-  Owner: flext-infra templates + `config/beads.yaml` identity; regenerate via `make gen`, never
-  hand-edit. Evidence: `git diff .beads/config.yaml`.
+  generated `.beads/config.yaml`, adding `issue-prefix`, a `dolt:` block and
+  `dolt.mode: server`. Owner: flext-infra templates + `config/beads.yaml` identity;
+  regenerate via `make gen`, never hand-edit. Evidence: `git diff .beads/config.yaml`.
 - **Next.** R3 continues on `flext-y3qpq.*`/`flext-5fxu6.4`; R5 `flext-2wjm` live
-  classification (SonarCloud API reachable via `rtk curl`; local `~/sonarqube-violations`
-  dump absent); R8 execution once merge/PR permissions are available.
+  classification (SonarCloud API reachable via `rtk curl`; local
+  `~/sonarqube-violations` dump absent); R8 execution once merge/PR permissions are
+  available.
