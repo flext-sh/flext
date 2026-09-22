@@ -32,7 +32,7 @@ the canonical authorities first; this file only adds lane discipline.
 [agents-md]: https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md
 [governance-md]: ../GOVERNANCE.md
 [flext-law]:
-  https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md
+  <https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md>
 [adr-005]: ../architecture/adr/005-config-settings-constants-templates-schemas-ssot.md
 
 ## 1. One lane, one bead, one worktree
@@ -75,14 +75,12 @@ Done means all of the following:
 - Exact Make-gate evidence is recorded: command, cwd, exit code, decisive line.
 - No new lint, type, or test failures are injected.
 - Changed files are clean and scoped.
-- Nothing reaches `0.12.0-dev` except through the lane's own reviewed PR: one bead ->
-  one branch -> PR against `0.12.0-dev` -> green native gates -> PR Sheriff gate ->
-  independent review or operator-authorized administrative merge -> merge commit ->
-  post-merge runtime proof -> bead evidence -> branch cleanup. Follow the canonical
-  `~/.agents/skills/tool/pr-sheriff/SKILL.md` and its router and review-triage procedures:
-  collect current PR, CI, review and thread evidence directly through `gh` and `git`,
-  bound to the authorized head OID and declared integration base. Do not invoke the
-  retired Python triage helper.
+- Nothing reaches `0.12.0-dev` except through the lane's own reviewed PR:
+  one bead -> one branch -> PR against `0.12.0-dev` -> green native gates ->
+  PR Sheriff gate (`pr_triage.py gate <owner/repo> <pr> --base 0.12.0-dev
+  --head <oid>` in `~/.agents/skills/tool/pr-sheriff/scripts/`) ->
+  independent review or operator-authorized administrative merge ->
+  merge commit -> post-merge runtime proof -> bead evidence -> branch cleanup.
 
 ## 6. Coordination protocol
 
