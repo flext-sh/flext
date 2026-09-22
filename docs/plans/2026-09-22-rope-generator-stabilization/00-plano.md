@@ -276,3 +276,29 @@ Appended below as increments land (command, cwd, exit code, decisive output).
   complete project structure. Idempotence proof: gen-11 (second run) —
   evidence below.
 
+### 2026-09-22 — Increment 2 closure (cures landed on the integration tips)
+
+- Diagnosis closed (bead `flext-quexi`): the primary `make gen` FlextLazy
+  failure was the gen-4..gen-10 cures living only on the recovery branches —
+  content proof: primary core tip carried the uncured stub (`class FlextLazy`
+  in `_lazy_parts/flextlazy_part_01.py`) while the worktree carried the cure
+  (`FlextLazyPart01`), and the primary infra planner did not consume
+  `BOOTSTRAP_CYCLE_EXCEPTION`. A stuck foreign `make gen` (pid 531455) sharing
+  the workspace transaction store caused secondary "unregistered
+  temporary-tree" collisions; killed by operator authorization, store cleared.
+- Wave 1 (gen-blocking cures): recovery → `0.12.0-dev` no-ff — core
+  `15690031c` (FlextLazyPart01 rename + recovered enforcement work), infra
+  `c447d1d1e` (lazy-init planner bootstrap exports; union resolution kept the
+  richer module-level factory `_default_fresh_import_entry_points` and the
+  `_ORIGINS_PLACEHOLDER` constant). Post-landing `make gen` GREEN on the
+  primary (exit 0, fresh-imports passed) and the fixed point was proven by
+  repeat runs with zero dirty files on both core and infra; core check exit 0
+  (canonical gates 0; 12 pyrefly ghost-export advisories report-only per the
+  warning law); pytest 208 passed earlier on the pre-cure tip.
+- Wave 2 (entrypoint/fresh-import cures): 20 members merged no-ff, all clean —
+  plugin, quality, tap-ldap, tap-ldif, tap-oracle-oic, api, auth, grpc,
+  observability, cli, ldap, ldif, oracle-oic, oracle-wms, target-ldap,
+  db-oracle, dbt-ldap, dbt-ldif, tests, web. Per-member `make gen` +
+  `make check` validation loop, then serial pushes.
+- gen-11 idempotence (clone): evidence below.
+
