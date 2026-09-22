@@ -163,6 +163,20 @@ read title+body
   - **ENFORCE-042 fixed and PUSHED** (canonical `(FlextSettings, <upstream>Config)` MRO,
     matching flext-api): `flext-dbt-oracle@45f9350`, `flext-grpc@cf5ce3c`,
     `flext-dbt-ldap@881d4b2` — each `runtime-census` went 1→0 and `make fix` 5/5 green.
+  - **flext-meltano@deb6a138 runtime-census 0** (was 4): `FlextMeltanoConfig` MRO,
+    `singer_tap.py` split into `singer_tap.py` + `tap_source_mixin.py` (ENFORCE-067),
+    sqlalchemy import outside its owner removed (ENFORCE-070).
+  - **flext-core unblocked**: the WIP left runtime `from flext_core import t` imports in
+    `__version__.py`, `constants.py` and `_constants/**` that created an import cycle
+    (`_typings.base → _constants → flext_core.lazy → _lazy_parts → _typings.lazy →
+    _typings.base`) and an unresolved pydantic `t` annotation in `_enforcement_data`.
+    Deferred them to `TYPE_CHECKING` (annotations are lazy) and made the pydantic-facing
+    `t` a runtime import; flext_core imports cleanly again.
+  - **MRO cascade completed**: adding `FlextSettings` to `FlextMeltanoConfig` made the
+    12 leaf `(<X>Config(FlextSettings, FlextMeltanoConfig))` classes inconsistent, so the
+    leaves now inherit it via `FlextMeltanoConfig` — all pushed.
+  - **Verified 0 findings**: flext-meltano, flext-dbt-oracle, flext-grpc,
+    flext-target-oracle-wms. Remaining: flext-dbt-ldap (ENFORCE-069 nested depth).
 - **Waves lane (reval260921, session f1d47a5f, ledger
   `.beads/artifacts/reval260921/ledger.csv`)** — analysis waves C1 (55) / C2 (134) / D
   (38) / A (33) complete item-by-item (4-source, verdicts in `verdicts/*.json`); B1
