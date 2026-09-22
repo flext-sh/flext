@@ -9,30 +9,13 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_tests import (
-        FlextTestsConstants,
-        FlextTestsConstants as c,
-        d,
-        e,
-        h,
-        m,
-        p,
-        s,
-        t,
-        td,
-        tf,
-        tk,
-        tm,
-        tv,
-        u,
-        x,
-    )
+    from flext_tests import FlextTestsConstants, d, e, h, s, td, tf, tk, tm, tv, u, x
 
-    from .constants import TestsFlextRootConstants
-    from .models import TestsFlextRootModels
-    from .protocols import TestsFlextRootProtocols
+    from .constants import TestsFlextRootConstants, TestsFlextRootConstants as c
+    from .models import TestsFlextRootModels, TestsFlextRootModels as m
+    from .protocols import TestsFlextRootProtocols, TestsFlextRootProtocols as p
     from .result import TestsFlextRootResult, r
-    from .typings import TestsFlextRootTypes
+    from .typings import TestsFlextRootTypes, TestsFlextRootTypes as t
 __all__: tuple[str, ...] = (
     "FlextTestsConstants", "TestsFlextRootConstants", "TestsFlextRootModels", "TestsFlextRootProtocols",
     "TestsFlextRootResult", "TestsFlextRootTypes", "c", "d",
@@ -45,14 +28,24 @@ __all__: tuple[str, ...] = (
 _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
-            ".constants": ("TestsFlextRootConstants",),
-            ".models": ("TestsFlextRootModels",),
-            ".protocols": ("TestsFlextRootProtocols",),
+            ".constants": ("TestsFlextRootConstants", "c"),
+            ".models": ("TestsFlextRootModels", "m"),
+            ".protocols": ("TestsFlextRootProtocols", "p"),
             ".result": ("TestsFlextRootResult", "r"),
-            ".typings": ("TestsFlextRootTypes",),
+            ".typings": ("TestsFlextRootTypes", "t"),
             "flext_tests": (
-                "FlextTestsConstants", "c", "d", "e", "h", "m", "p", "s", "t", "td",
-                "tf", "tk", "tm", "tv", "u", "x",
+                "FlextTestsConstants",
+                "d",
+                "e",
+                "h",
+                "s",
+                "td",
+                "tf",
+                "tk",
+                "tm",
+                "tv",
+                "u",
+                "x",
             ),
         }),
         alias_groups=MappingProxyType({}),
