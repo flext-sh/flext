@@ -195,4 +195,23 @@ Appended below as increments land (command, cwd, exit code, decisive output).
 - Transported to the validation clone: per-member `lane` remote + fetch + no-ff
   merge (`merge: transport stabilized cli entrypoint cures from the delivery
   lane`), 15/15 OK. `make gen` re-run evidence appended below.
+- gen-3 (exit 1): entrypoints fixed, all 32 conforms OK; new loud failure at
+  `lazy-init public export ownership is ambiguous: 2 collision(s)` — my new
+  `cli.py:main` collided with pre-existing `main` owners in flext-oracle-oic
+  (`main.py`) and flext-target-ldap (`target.py`). Single-owner cure: removed
+  those two `cli.py` files and pointed the pyproject scripts at the existing
+  owners (`flext_oracle_oic.main:main`, `flext_target_ldap.target:main`;
+  precedent `target-ldif-legacy = flext_target_ldif.tap:main`). Transported,
+  gen-4.
+- gen-4 (exit 1): fresh-import advanced to `flext_core` and failed with
+  `module 'flext_core._lazy_parts' has no attribute 'FlextLazy'`. Root cause:
+  `_lazy_parts/flextlazy_part_01.py` declared a stub class named `FlextLazy`
+  (also in its `__all__`) while `flextlazy_part_02.py` declares the real
+  composed `FlextLazy` importing the stub ALIASED as `FlextLazyPart01` — the
+  alias-instead-of-hoist anti-pattern (ADR-014). The strict/total init composer
+  saw the sibling `FlextLazy` collision and rendered an EMPTY
+  `_lazy_parts/__init__` export surface. Cure at source (flext-core commit
+  `4224e3371`): part_01 class renamed to `FlextLazyPart01` (family part name),
+  its `__all__` updated, part_02 imports it without the alias. Transported,
+  gen-5.
 
