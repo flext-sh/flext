@@ -209,6 +209,15 @@ known_first_party = [
 ]
 pep621_dev_dependency_groups = ["dev"]
 
+<<<<<<< HEAD
+=======
+[tool.flext.docs]
+package_name = "flext"
+
+[tool.flext.namespace]
+scan_dirs = ["src"]
+
+>>>>>>> refs/recovery/pr258/head
 [tool.hatch.metadata]
 allow-direct-references = true
 
