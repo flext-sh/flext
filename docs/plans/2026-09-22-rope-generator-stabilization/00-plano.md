@@ -302,3 +302,88 @@ Appended below as increments land (command, cwd, exit code, decisive output).
   `make check` validation loop, then serial pushes.
 - gen-11 idempotence (clone): evidence below.
 
+### 2026-09-22 — Session 3: Increment 2 closure evidence, mod cures, checkpoint
+
+- **WIP adoption (Increment 1 residue)**: flext-core pending render adopted as
+  `76c59a26e` (20 files: enforcement bindings consolidated to the `.enforcement`
+  owner, facade `__all__` pruned to declared re-exports per ADR-018, scripts and
+  tests lazy maps widened, generated-docs ignores, pytest timeout raises);
+  plan-log evidence committed `f31afe30e7`; the 13 moved gitlinks recorded as
+  `16bd43928f`. Worktree fully clean at members afterwards.
+- **Delivery-worktree `make gen` (gen-1): GREEN** — exit 0, `✅ project
+  conformance complete`, all stages including `verify-fresh-imports`
+  (/tmp/worktree-gen-1.log). Together with the clone's gen-10/gen-12 this closes
+  the planner↔probe parity defect: bead flext-fvc6d CLOSED on this runtime
+  evidence (cure `ff6266057` active in both environments).
+- **Clone idempotence (gen-11 redo, gen-12): GREEN no-op** — `Lazy-init plan: 0
+  effects` (gen-10 planned 111), exit 0, `✅ project conformance complete`
+  (/tmp/clone-gen-12.log). The killed gen-11 proof is delivered.
+- **`make mod` findings cured at source**: root `src/flext/settings.py`
+  `from pydantic import ConfigDict` → `ClassVar[m.SettingsConfigDict]` via the
+  `flext_core` models facade (`b4042b4290`); three root script subpackages
+  (`scripts/{docs,hooks,workspace}`) received explicit `__init__.py` markers —
+  the 3 ruff INP001 findings that failed every `make fix` run at the workspace
+  root (`7905cb3ad2`).
+- **Rope snapshot inventory guard cured** (infra `b41bbd2a7`): governed
+  project-root entry modules (e.g. member-root `conftest.py`, deliberately in
+  the ast-grep scope per `ast_grep_scan_targets`) now join the closed snapshot
+  inventory from disk; invented or outside-root paths still fail fast.
+  Regression `tests/unit/test_infra_rope_snapshot.py` — both tests PASSED in
+  the full infra suite run (/tmp/infra-test-1.log:1175-1176).
+- **`make mod` next defect layer (OPEN, blocks the mod semantic phase)**: rope
+  1.14.0 patchedast raises `MismatchedTokenError` on MULTILINE
+  `Annotated[T, call()]` parameter annotations with defaults. Minimal repro
+  proven; 5 governed files affected (first: flext-cli/tests/utilities.py:82).
+  Filed as **bead flext-4frn5** (P1, owner flext-infra `_utilities/_rope/`
+  patch home). rope 1.14.0 is the latest release — no upstream bump cure.
+- **Member environments**: 31/31 per-member `make setup` exit 0 in the delivery
+  worktree (chunked serial; /tmp/worktree-member-setups.log) — unblocks the
+  fix/fmt/check/test/build member fan-out that previously failed on missing
+  interpreters. The clone still needs its own member setups.
+- **Fixed-point renders adopted fleet-wide**: root `00b2f80948` (52 files:
+  ignores, Makefile, pyproject, api-reference and projects docs, root inits) +
+  `chore(gen): adopt the conformance fixed-point render` on all 30 non-core
+  members (tracked-only, e.g. flext-api `164bdf67`, flext-infra `126852d26`).
+- **flext-infra suite in this worktree** (fresh member venv, cold testmon):
+  pre-absorb 205 failed / 2692 passed / 34 errors (/tmp/infra-test-1.log);
+  origin tip (23 commits: gen-fixed-point planner repairs, warning posture)
+  absorbed no-ff into the lane branch (clean, 57 files); post-absorb rerun
+  evidence below.
+- **Clone `make fix` findings**: same 3 INP001 (checkpoint-old root scripts —
+  cured at source in the delivery lane; transport pending) + member fan-out
+  missing interpreters (clone member setups pending). Clone `make fmt` root
+  stage green; member fan-out blocked the same way.
+
+### 2026-09-22 — Session 4: integration-tip landing of the cures (primary checkouts)
+
+- **Wave 1 (gen-blocking cures → `0.12.0-dev`, no-ff)**: core `15690031c`
+  (FlextLazyPart01 rename + recovered enforcement work), infra `c447d1d1e`
+  (planner bootstrap exports; union resolution kept the richer module-level
+  factory `_default_fresh_import_entry_points` + `_ORIGINS_PLACEHOLDER`).
+  Post-landing primary `make gen` GREEN and the fixed point proven (repeat
+  runs, zero dirty on both); core check exit 0 (canonical 0; pyrefly
+  ghost-export advisories report-only per the warning law). Root cause of the
+  earlier primary failure = cures unlanded (bead `flext-quexi`, closed);
+  secondary factor was a stuck foreign `make gen` (pid 531455) sharing the
+  workspace transaction store — killed by operator authorization, store
+  cleared.
+- **Wave 2 (entrypoint/fresh-import cures → `0.12.0-dev`, no-ff)**: 20
+  members merged clean (plugin, quality, tap-ldap, tap-ldif, tap-oracle-oic,
+  api, auth, grpc, observability, cli, ldap, ldif, oracle-oic, oracle-wms,
+  target-ldap, db-oracle, dbt-ldap, dbt-ldif, tests, web). Per-member `make
+  gen` all exit 0; autofix pass committed and pushed per member. flext-cli
+  needed `make setup` (stale site-packages flext_core lacked the new export
+  map) before its fresh-import went green. flext-plugin mypy arg-type trio
+  cured at source (mutable dict materialized for `Registry.plugins`; test
+  dependency literals → tuples per the declared contract) — plugin check exit
+  0.
+- **Clone fixed point completed**: gen-11..gen-14 all exit 0; after committing
+  the submodule-internal convergence, gen-14 finished with zero dirty files.
+- **Known residual**: ~42 canonical mypy findings across 12 wave-2 members
+  (facade-Any / no-any-return family + a few arg-types) — advisory per the
+  warning law; census filed in the companion bead.
+- **Checkpoint**: superproject `0.12.0-dev` @ `64889954f3` pushed, all 31
+  gitlinks verified consistent against origin member tips; member tips at
+  their post-cure/autofix state (core `312a20857`, infra `95267b110`, cli
+  `b9762551`, plugin `9d615d495`, among the Session 3 list).
+
