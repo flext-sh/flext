@@ -24,6 +24,7 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Annotated
+from urllib.parse import urlparse
 
 from flext_cli import m, p, t, u
 from flext_core import e
@@ -89,12 +90,28 @@ class FlextRootDependabotMerge:
         result = cls._run_cmd(["git", "-C", str(path), "remote", "get-url", "origin"])
         if result.failure or result.value.exit_code != 0:
             return None
-        url = result.value.stdout.strip()
-        if url.startswith("git@github.com:"):
-            return url.replace("git@github.com:", "").replace(".git", "")
-        if "github.com/" in url:
-            return url.split("github.com/", 1)[1].replace(".git", "")
-        return None
+        return cls.slug_from_remote_url(result.value.stdout.strip())
+
+    @staticmethod
+    def slug_from_remote_url(url: str) -> str | None:
+        """Resolve owner/repo from a remote URL, accepting only real GitHub hosts.
+
+        A substring test is unsafe: ``https://evil.com/?github.com/o/r`` embeds
+        the trusted marker at an arbitrary position and would yield an
+        attacker-chosen slug. The host is parsed and must name github.com
+        exactly, so a forged host can never produce a slug.
+        """
+        scp_prefix = "git@github.com:"
+        if url.startswith(scp_prefix):
+            slug = url.removeprefix(scp_prefix).removesuffix(".git").strip("/")
+            return slug or None
+        parsed = urlparse(url)
+        if parsed.scheme not in {"https", "ssh", "git"}:
+            return None
+        if parsed.hostname not in {"github.com", "www.github.com"}:
+            return None
+        slug = parsed.path.strip("/").removesuffix(".git")
+        return slug or None
 
     @staticmethod
     def _pr_row(value: t.JsonValue) -> t.JsonMapping:
