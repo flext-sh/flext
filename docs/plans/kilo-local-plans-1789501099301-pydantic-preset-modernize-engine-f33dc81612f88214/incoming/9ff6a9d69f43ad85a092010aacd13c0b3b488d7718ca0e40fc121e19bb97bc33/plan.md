@@ -68,11 +68,12 @@ flext-core + rules YAML flext-infra), nunca conserto pontual.
    novo: `rewire-consumer-preset-bases.yml` (bases + model_config → preset) + sed para
    as 482 refs de nomes locais → nomes de presets. Parâmetros (mapa assinatura→preset)
    em **`flext-infra/config/rules/preset-rewire.yaml`** (novo SSOT parametrizado).
-4. **CLI única**: estender `FixEnforcementCommand` com `components: tuple[str, ...]`
-   (toggle: `beartype|astgrep|sed|rope|gates`) + novo adapter **`CodemodFixerAdapter`**
-   (kind `codemod`) que roda o batch ast-grep/sed existente no mesmo loop rope (projeto
-   rope aberto uma vez, callback por arquivo, um relatório). `make mod` e `fix`
-   continuam como verbos públicos da MESMA CLI. Dry-run = `apply=False` (já suportado).
+4. **CLI única**: estender `FixEnforcementCommand` com
+   `components: t.VariadicTuple[str]` (toggle: `beartype|astgrep|sed|rope|gates`) + novo
+   adapter **`CodemodFixerAdapter`** (kind `codemod`) que roda o batch ast-grep/sed
+   existente no mesmo loop rope (projeto rope aberto uma vez, callback por arquivo, um
+   relatório). `make mod` e `fix` continuam como verbos públicos da MESMA CLI. Dry-run =
+   `apply=False` (já suportado).
 5. **Extermínio por ondas** (cada onda = 1 bead + ciclo 100% verde), ordem: (W1)
    transformers de mutação raw-ast/libcst; (W2) detectors `_utilities/*_ast.py`,
    `*_cst.py`; (W3) gates raw-ast → ast-grep/rope/beartype; (W4) banir reimports

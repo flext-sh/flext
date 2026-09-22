@@ -6,9 +6,12 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import override
+from typing import TYPE_CHECKING, override
 
 from flext_core import p, r, s
+
+if TYPE_CHECKING:
+    from . import t
 
 
 class FlextRoot(s[bool]):
@@ -26,4 +29,4 @@ api: FlextRoot = FlextRoot.fetch_global()
 flext: FlextRoot = FlextRoot.fetch_global()
 """Root package canonical alias resolved from the global container."""
 
-__all__: tuple[str, ...] = ("FlextRoot", "api", "flext")
+__all__: t.VariadicTuple[str] = ("FlextRoot", "api", "flext")

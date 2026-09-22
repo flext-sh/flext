@@ -6,7 +6,12 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from flext_core import FlextSettings
+
+if TYPE_CHECKING:
+    from . import t
 
 
 class FlextRootSettings(FlextSettings):
@@ -20,4 +25,4 @@ class FlextRootSettings(FlextSettings):
 
 settings = FlextRootSettings
 
-__all__: tuple[str, ...] = ("FlextRootSettings", "settings")
+__all__: t.VariadicTuple[str] = ("FlextRootSettings", "settings")
