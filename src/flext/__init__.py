@@ -9,19 +9,21 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_core import d, e, h, r, x
+    from pydantic_core import from_json, to_json, to_jsonable_python
+
+    from flext_core import core, d, e, h, lazy_attribute, r, x
 
     from . import services
     from .api import FlextRoot, api, flext
-    from .base import FlextRootServiceBase, FlextRootServiceBase as s
+    from .base import FlextRootServiceBase, s
     from .cli import FlextRootCli, main
     from .config import FlextRootConfig, config
-    from .constants import FlextRootConstants, FlextRootConstants as c
-    from .models import FlextRootModels, FlextRootModels as m
-    from .protocols import FlextRootProtocols, FlextRootProtocols as p
-    from .settings import FlextRootSettings, settings
-    from .typings import FlextRootTypes, FlextRootTypes as t
-    from .utilities import FlextRootUtilities, FlextRootUtilities as u
+    from .constants import FlextRootConstants, c
+    from .models import FlextRootModels, m
+    from .protocols import FlextRootProtocols, p
+    from .settings import FlextRootSettings, FlextRootSettings as settings
+    from .typings import FlextRootTypes, t
+    from .utilities import FlextRootUtilities, u
 __all__: tuple[str, ...] = (
     "FlextRoot",
     "FlextRootCli",
@@ -36,10 +38,13 @@ __all__: tuple[str, ...] = (
     "api",
     "c",
     "config",
+    "core",
     "d",
     "e",
     "flext",
+    "from_json",
     "h",
+    "lazy_attribute",
     "m",
     "main",
     "p",
@@ -48,6 +53,8 @@ __all__: tuple[str, ...] = (
     "services",
     "settings",
     "t",
+    "to_json",
+    "to_jsonable_python",
     "u",
     "x",
 )
@@ -66,7 +73,8 @@ _LAZY_IMPORTS = MappingProxyType(
             ".settings": ("FlextRootSettings", "settings"),
             ".typings": ("FlextRootTypes", "t"),
             ".utilities": ("FlextRootUtilities", "u"),
-            "flext_core": ("d", "e", "h", "r", "x"),
+            "flext_core": ("core", "d", "e", "h", "lazy_attribute", "r", "x"),
+            "pydantic_core": ("from_json", "to_json", "to_jsonable_python"),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
