@@ -71,7 +71,7 @@ src/flext_target_oracle_wms/
 │   ├── helpers.py  # FlextTargetOracleWmsUtilitiesHelpers
 │   │   # (WMSTableManager, WMSDataTransformer, etc.)
 │   └── service_runtime.py  # FlextTargetOracleWmsServiceRuntime — WMS target + sink creation
-├── _settings.py  # FlextTargetOracleWmsSettings + settings singleton
+├── _settings.py          # FlextTargetOracleWmsSettings + settings singleton
 ├── config/               # Execution parametrization (YAML)
 ├── constants.py          # c facade
 ├── models.py             # m facade
