@@ -8,9 +8,14 @@
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-::: flext_meltano
+<<<<<<< HEAD ::: flext_meltano
 
     options:
       show_root_heading: true
       show_root_full_path: false
       show_source: false
+
+======= ::: flext_meltano options: show_root_heading: true show_root_full_path: false
+show_source: false
+
+> > > > > > > refs/recovery/pr258/head

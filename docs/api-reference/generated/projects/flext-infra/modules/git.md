@@ -8,9 +8,14 @@
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-::: flext_infra.git
+<<<<<<< HEAD ::: flext_infra.git
 
     options:
       show_root_heading: true
       show_root_full_path: false
       show_source: false
+
+======= ::: flext_infra.git options: show_root_heading: true show_root_full_path: false
+show_source: false
+
+> > > > > > > refs/recovery/pr258/head

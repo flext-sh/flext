@@ -96,6 +96,11 @@ adopting all WIP.
 
 ## Cross-cutting rules
 
+- **Operator law (2026-09-22, mid-execution):** never fight the generator, formatters
+  or auto-fixers — their output is canonical code; accept it. If they surface problems,
+  fix the ROOT CAUSE instead of arguing with them. Findings produced by flext-infra
+  gates (`make check`) are not hand-fix targets: they must remain WARNINGS that do not
+  block CI; only automatic fixes apply.
 - Commands always through the active workspace root; never bare
   `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`; mypy never uncapped.
 - No rebase/force-push/reset/checkout-restore/stash-clean discards; explicit-path
@@ -165,4 +170,29 @@ Appended below as increments land (command, cwd, exit code, decisive output).
   (log `/tmp/clone-setup.log`, session run 2026-09-22). Scratch/mise state mirrors the
   clone path (`.../rope-generator-validation-20260922/scratch/...`) — no shared mutable
   state with the delivery worktree.
+
+### 2026-09-22 — Increment 2.3 (isolation + fresh-import gate; entrypoint cure)
+
+- First `make gen` in the clone failed at the manifest-origin precondition (clone
+  `origin` was the local worktree path). Fixed by `git remote set-url origin
+  https://github.com/flext-sh/flext.git` + `git remote add lane <delivery worktree>`
+  (members already pointed at GitHub; transport flows through `lane` fetch + no-ff).
+- Second `make gen` (exit 1) reached `stage=verify-fresh-imports` and failed loud,
+  exactly as designed, at the first broken entrypoint:
+  `flext_api: console_scripts/flext-api=flext_api.cli:main` →
+  `AttributeError: module 'flext_api.cli' has no attribute 'main'`. Fleet survey
+  found 15 members whose declared console scripts did not resolve: missing `cli.py`
+  (db-oracle, dbt-ldap, dbt-ldif, ldap, oracle-oic, oracle-wms, target-ldap, cli),
+  facade/empty `cli.py` without `main` (api, auth, grpc, observability, plugin,
+  ldif), and stale hand-edited pyproject targets (auth `cli_new:cli` module that
+  does not exist; tap-oracle `tap:cli` attribute that does not exist).
+- Cure at source, delivery worktree, one explicit-path commit per member
+  (`fix(cli): restore the declared console-script entrypoint`): minimal canonical
+  `main` following the healthy fleet idioms (dbt-oracle no-commands shape;
+  tap-oracle bridges both singer names to the real `tap.run_cli`); auth restored
+  the single canonical `flext_auth.cli:main` (dropping the broken `cli_new`
+  primary and the legacy duplicate).
+- Transported to the validation clone: per-member `lane` remote + fetch + no-ff
+  merge (`merge: transport stabilized cli entrypoint cures from the delivery
+  lane`), 15/15 OK. `make gen` re-run evidence appended below.
 
