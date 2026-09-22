@@ -8,14 +8,14 @@
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-<<<<<<< HEAD
-::: flext_oracle_oic
+<<<<<<< HEAD ::: flext_oracle_oic
 
     options:
       show_root_heading: true
       show_root_full_path: false
       show_source: false
-=======
-::: flext_oracle_oic options: show_root_heading: true show_root_full_path: false
+
+======= ::: flext_oracle_oic options: show_root_heading: true show_root_full_path: false
 show_source: false
->>>>>>> refs/recovery/pr258/head
+
+> > > > > > > refs/recovery/pr258/head

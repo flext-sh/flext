@@ -96,42 +96,36 @@ Estado verificado pós-ciclo do agente dedicado (evidência: bead `flext-v4fmn`,
 
 ## (f) Checkpoint 2026-09-21 — extermínio do budget SSOT, auditoria do tracker e campanha de integração
 
-Estado verificado na sessão de 2026-09-21 (evidência: epic `flext-49quw`,
-artefatos `.beads/artifacts/reval260921/`, ledger CSV):
+Estado verificado na sessão de 2026-09-21 (evidência: epic `flext-49quw`, artefatos
+`.beads/artifacts/reval260921/`, ledger CSV):
 
-- **Zumbi do budget SSOT exterminado**: o merge `2d2a5b8ba` havia ressuscitado o
-  bloco `budget:` do `config/codegen.yaml` que o cutover `265346e77` havia morto
+- **Zumbi do budget SSOT exterminado**: o merge `2d2a5b8ba` havia ressuscitado o bloco
+  `budget:` do `config/codegen.yaml` que o cutover `265346e77` havia morto
   (modelo+YAML+template). Remoção pousada via `5bb83e45c`; modelo segue sem
-  `CodegenGateBudgetSpec` no tip `34765a1ee` — NÃO ressuscitar sem ordem
-  explícita do operador (lei universal; a mensagem de `5bb83e45c` declara
-  intenção contrária e permanece rejeitada).
-- **Shim `_models/codegen.py` restaurado**: a migração para o pacote
-  `_codegen/` estava completa (shim de 7 linhas reexportando
-  `FlextInfraCodegen`); o monolito pré-migração (`FlextInfraModelsCodegen`,
-  36 classes duplicadas) voltou pela mesma merge e foi devolvido ao
-  estado-fim da migração.
-- **Guardas de stems não-importáveis**: `02_api_usage.py` (tem `__all__`)
-  provou falsa a suposição "numbered script publishes nothing";
-  `isidentifier()` nos dois pontos de injeção do lazy-init planner
-  (`_lazy_init_planner_aliases.py`, `_lazy_init_planner_exports.py`),
-  pousado em `34765a1ee`. Gen do flext-web verde.
-- **Auditoria do tracker (`reval260921`)**: baseline 3.470 entidades / 473
-  ativas; gates de abertura: graph limpo, 0 duplicatas (scan unbounded),
-  6 órfãos de branch, 3 deps cross-tracker. Lote 1: 4 claims estagnados
-  → open, `flext-co1th` SUPERSEDED por `flext-cu85s`. Lote 2 (F3):
-  `flext-czzns` e `flext-v1xzd` DONE com ancestralidade provada; relinks
-  yirgp/cyplp/pwmej; `flext-38p39` em hold (prova de arms pendente).
-  Órfãos 6→4. Ondas de análise read-only: C1 completa; A/B1/B2 refazer
-  (rate limit); C2/D em curso.
-- **Higiene Dolt**: branch `list` (criada acidentalmente por agente) dropada
-  com prova de hash idêntico ao `main`. Topologia documentada pelo operador:
-  branch de integração `0.12.0-dev` é a linha real; `main` do DB é
-  propagação futura de produção.
-- **Campanha de integração**: 15 PRs abertos mapeados via compare API —
-  apenas root `#257` é pure-ahead com conteúdo vivo (21 patches únicos,
-  prova de cherry 0 na base); CI falha no "gen fixed point" por árvore
-  pós-gen suja → requer commit de convergência antes do merge no-ff.
-  Demais 14 divergidos (atrás 5–180 commits); residue-PRs de hoje
-  (#786/#787/#182) são de lanes ativas. Ladder protegido
-  (fix→fmt→gen→check→test) com `SELECTED_PROJECTS` e guarda anti-colisão
-  na flext-infra em execução.
+  `CodegenGateBudgetSpec` no tip `34765a1ee` — NÃO ressuscitar sem ordem explícita do
+  operador (lei universal; a mensagem de `5bb83e45c` declara intenção contrária e
+  permanece rejeitada).
+- **Shim `_models/codegen.py` restaurado**: a migração para o pacote `_codegen/` estava
+  completa (shim de 7 linhas reexportando `FlextInfraCodegen`); o monolito pré-migração
+  (`FlextInfraModelsCodegen`, 36 classes duplicadas) voltou pela mesma merge e foi
+  devolvido ao estado-fim da migração.
+- **Guardas de stems não-importáveis**: `02_api_usage.py` (tem `__all__`) provou falsa a
+  suposição "numbered script publishes nothing"; `isidentifier()` nos dois pontos de
+  injeção do lazy-init planner (`_lazy_init_planner_aliases.py`,
+  `_lazy_init_planner_exports.py`), pousado em `34765a1ee`. Gen do flext-web verde.
+- **Auditoria do tracker (`reval260921`)**: baseline 3.470 entidades / 473 ativas; gates
+  de abertura: graph limpo, 0 duplicatas (scan unbounded), 6 órfãos de branch, 3 deps
+  cross-tracker. Lote 1: 4 claims estagnados → open, `flext-co1th` SUPERSEDED por
+  `flext-cu85s`. Lote 2 (F3): `flext-czzns` e `flext-v1xzd` DONE com ancestralidade
+  provada; relinks yirgp/cyplp/pwmej; `flext-38p39` em hold (prova de arms pendente).
+  Órfãos 6→4. Ondas de análise read-only: C1 completa; A/B1/B2 refazer (rate limit);
+  C2/D em curso.
+- **Higiene Dolt**: branch `list` (criada acidentalmente por agente) dropada com prova
+  de hash idêntico ao `main`. Topologia documentada pelo operador: branch de integração
+  `0.12.0-dev` é a linha real; `main` do DB é propagação futura de produção.
+- **Campanha de integração**: 15 PRs abertos mapeados via compare API — apenas root
+  `#257` é pure-ahead com conteúdo vivo (21 patches únicos, prova de cherry 0 na base);
+  CI falha no "gen fixed point" por árvore pós-gen suja → requer commit de convergência
+  antes do merge no-ff. Demais 14 divergidos (atrás 5–180 commits); residue-PRs de hoje
+  (#786/#787/#182) são de lanes ativas. Ladder protegido (fix→fmt→gen→check→test) com
+  `SELECTED_PROJECTS` e guarda anti-colisão na flext-infra em execução.
