@@ -116,3 +116,53 @@ Appended below as increments land (command, cwd, exit code, decisive output).
 ### 2026-09-22 — Step 0
 
 - Plan and findings markdowns recorded in this directory (this commit's scoped paths).
+
+### 2026-09-22 — Increment 1 (stabilization, executed with the parallel coordinator lane)
+
+- Fresh-import transactional verification: already wired in the worktree flext-infra at
+  plan time — `validate/fresh_import.py` (fresh subprocesses, `EntryPoint.load`, origin
+  checks, full stdout/stderr), invoked by
+  `codegen/_conform/execute.py::_validate_managed_fixed_point` (stage
+  `verify-fresh-imports`, publications from the LazyInitPhase analysis) inside
+  `codegen_transaction.py::commit_locked` (validator runs before journal commit, with
+  `_recover_failure` rollback available). The unused `Annotated` residue in
+  `codegen/lazy_init.py` no longer exists. Fleet-gate run of the regression remains
+  part of the canonical cycle (Increment 1.5, coordinator lane).
+- Text conflict `docs/ways-of-working/worker-lane-contract.md` resolved as a union
+  (theirs reformat + ours canonical-skill paragraph + ours link style); staged.
+- Member merges concluded on `recovery/rope-automation-20260921` (16 by this session:
+  tap-ldap `745cc8d`, tap-ldif `e36c963`, tap-oracle `535c301`, target-ldap `58d0e69`,
+  target-oracle `62e6de2`, target-oracle-oic `61e4f13`, dbt-oracle `af96c7d`,
+  dbt-ldap `a774e7e`, dbt-ldif `af22124`, ldap `abfd1e62`, oracle-oic `f4f58b7`,
+  dbt-oracle-wms `f7add87`, web `eee34a6`, auth `980ca79b`, plugin `f0197d8`,
+  quality `2e5c8e4e`; conflict-marker resolutions in plugin/quality `__init__.py`
+  took the ours shape consistent with each file's own `__all__`/`_LAZY_IMPORTS`;
+  tests and core converged with the parallel lane: tests `2eb1ffa`/`fcb5977`,
+  core `890fdb653` + WIP adoption commit `99fb2032a` — 17 files, +261/−163).
+- Superproject absorb concluded by the coordinator lane as `115fe8d8cb` (includes this
+  session's staged doc resolution, CSV rename engine, custom.mk, plan docs, gitlinks)
+  plus alignment commit `8dfe0ddb0e`. All 31 members hold no `MERGE_HEAD` and carry the
+  origin gitlink of `1e59a9d493` as ancestor.
+- Reproducible checkpoint: superproject `8dfe0ddb0e`
+  (`chore(submodules): update gitlinks after alignment merge 20260922`) with its 31
+  recorded gitlinks; member branch tips keep advancing with the coordinator lane's
+  cycle (origin tip observed moving to `1511f1e873` during this work — the treadmill
+  continues; the checkpoint stays the clone basis and is refreshed by no-ff merges).
+
+### 2026-09-22 — Increment 2.1 (validation clone)
+
+- `git clone --no-hardlinks /home/marlonsc/flext-worktrees/rope-recovery-20260921
+  /home/marlonsc/flext-worktrees/rope-generator-validation-20260922` → HEAD
+  `8dfe0ddb0e`, clean.
+- Per member `git submodule update --init --reference
+  /home/marlonsc/flext/.git/modules/<member>` → 31/31 OK, 0 dirty;
+  `git submodule status` SHAs == `git ls-tree HEAD` gitlinks (diff empty).
+- `make setup` started in the clone with `UV_PROJECT_ENVIRONMENT` and `VIRTUAL_ENV`
+  pinned to the clone's `.venv` (evidence appended after completion).
+- `make setup` completed exit 0: CPython 3.13.11, `.venv` created in the clone,
+  286 packages resolved, every member built editable from
+  `file:///home/marlonsc/flext-worktrees/rope-generator-validation-20260922/<member>`
+  (log `/tmp/clone-setup.log`, session run 2026-09-22). Scratch/mise state mirrors the
+  clone path (`.../rope-generator-validation-20260922/scratch/...`) — no shared mutable
+  state with the delivery worktree.
+
