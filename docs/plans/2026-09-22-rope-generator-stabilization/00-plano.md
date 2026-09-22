@@ -208,10 +208,32 @@ Appended below as increments land (command, cwd, exit code, decisive output).
   `_lazy_parts/flextlazy_part_01.py` declared a stub class named `FlextLazy`
   (also in its `__all__`) while `flextlazy_part_02.py` declares the real
   composed `FlextLazy` importing the stub ALIASED as `FlextLazyPart01` — the
-  alias-instead-of-hoist anti-pattern (ADR-014). The strict/total init composer
-  saw the sibling `FlextLazy` collision and rendered an EMPTY
-  `_lazy_parts/__init__` export surface. Cure at source (flext-core commit
-  `4224e3371`): part_01 class renamed to `FlextLazyPart01` (family part name),
-  its `__all__` updated, part_02 imports it without the alias. Transported,
-  gen-5.
+  alias-instead-of-hoist anti-pattern (ADR-014). Cure at source (flext-core
+  commit `4224e3371`): part_01 class renamed to `FlextLazyPart01` (family part
+  name), its `__all__` updated, part_02 imports it without the alias.
+  Transported, gen-5.
+- gen-5 (exit 1): same probe failure persisted — the part rename was necessary
+  hygiene but not the root cause. Real root cause found in the ENGINE: the
+  renderer renders `flext_core._lazy_parts`/`._typings` as side-effect-free
+  static inits (documented bootstrap-cycle exception, operator init law
+  2026-09-16, `c.Infra.BOOTSTRAP_CYCLE_EXCEPTION_SEGMENTS`), but the lazy-init
+  PLANNER still published the parts' `__all__` union as those packages'
+  export contract — the fresh-import probe then demanded names the static
+  init never publishes. Cure at the engine owner (flext-infra commit
+  `ff6266057`): `build_plan` carries `exports=()` for the bootstrap-exception
+  packages (same constants the renderer consumes — one SSOT), keeping the
+  discovered lazy map so parent resolution and `dir_exports` are unchanged.
+  Transported, gen-6.
+- gen-6 (exit 2): `flext_core` fresh-import PASSED (engine cure effective, 32/32
+  conforms); next loud failure at `flext_plugin` — the fleet's own MRO enforcement
+  (`FlextConstantsEnforcement.FlextMroViolation`, HARD rule
+  `no_raw_collections_field_default`) raised at class-definition time:
+  `FlextPluginModelsPlugin.Entity.metadata` used `Field(default_factory=dict)`
+  against the read-only `t.JsonMapping` contract. Cure at source (flext-plugin
+  commit `13ba259`): the four extensible-metadata fields (`Entity.metadata`,
+  discovery `metadata`, `additional metadata`, `Registry.plugins`) now declare
+  the explicit mutable contract `t.MutableJsonMapping` — in-place mutation is
+  the declared API intent, exactly the allowance the rule message prescribes.
+  Verified in the clone: `import flext_plugin` resolves and the field annotation
+  is `MutableJsonMapping`. Transported, gen-7.
 
