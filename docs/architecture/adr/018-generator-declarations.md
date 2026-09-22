@@ -85,6 +85,14 @@ manual mass fix.
   to one line.
 - The namespace validator reports one-nested-class, no-alias and nothing-loose
   violations as `error`; the fix derives letter ⇄ base and writes the declaration.
+- Integration state found on 2026-09-21, adopted forward (never reverted): member tips had
+  already received `chore(gen): converge fleet projections` commits ahead of the superproject
+  gitlinks (C1 landed before B1); installed standalone those tips fail at import
+  (`flext_cli/services/auth.py` imports the `s` letter from the package root while the package
+  is importing — a violation of the import law, fixed at its source, never in the lazy loader);
+  the superproject tip declared a flext-infra gitlink (`90feb4a76`) that had never been
+  published, carried to the integration branch by the rule PR. The consequence for the plan:
+  B1 (letter ⇄ base derivation) precedes every further member regeneration.
 - Measured populations at decision time: 42 internal facades without the letter in
   `__all__` (10 repos, 0 in `src/`), 5 letters bound to non-extending classes, 4 dead
   example classes, 36 numbered scripts inside packages (12 repos), 8 public + 18 private
