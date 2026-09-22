@@ -9,8 +9,6 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from pydantic_core import from_json, to_json, to_jsonable_python
-
     from flext import api, c, config, flext, m, main, p, s, settings, t, u
     from flext_core import (
         core,
@@ -26,6 +24,8 @@ if TYPE_CHECKING:
 
     from ._constants import FlextRootExamplesConstants
     from ._models import FlextRootExamplesModels, ValidationRules
+
+
 __all__: tuple[str, ...] = (
     "FlextRootExamplesConstants",
     "FlextRootExamplesModels",
@@ -37,7 +37,6 @@ __all__: tuple[str, ...] = (
     "d",
     "e",
     "flext",
-    "from_json",
     "h",
     "lazy",
     "lazy_attribute",
@@ -49,8 +48,6 @@ __all__: tuple[str, ...] = (
     "s",
     "settings",
     "t",
-    "to_json",
-    "to_jsonable_python",
     "u",
     "x",
 )
@@ -84,7 +81,6 @@ _LAZY_IMPORTS = MappingProxyType(
                 "r",
                 "x",
             ),
-            "pydantic_core": ("from_json", "to_json", "to_jsonable_python"),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
