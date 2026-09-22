@@ -9,25 +9,33 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_tests import c, d, e, h, m, p, r, s, t, td, tf, tk, tm, tv, u, x
+    from flext import api, c, config, flext, m, main, p, s, settings, t, u
+    from pydantic_core import from_json, to_json, to_jsonable_python
+
+    from flext_core import core, d, e, h, lazy_attribute, r, x
 
     from . import infra, unit
 __all__: tuple[str, ...] = (
+    "api",
     "c",
+    "config",
+    "core",
     "d",
     "e",
+    "flext",
+    "from_json",
     "h",
     "infra",
+    "lazy_attribute",
     "m",
+    "main",
     "p",
     "r",
     "s",
+    "settings",
     "t",
-    "td",
-    "tf",
-    "tk",
-    "tm",
-    "tv",
+    "to_json",
+    "to_jsonable_python",
     "u",
     "unit",
     "x",
@@ -38,24 +46,21 @@ _LAZY_IMPORTS = MappingProxyType(
         MappingProxyType({
             ".infra": ("infra",),
             ".unit": ("unit",),
-            "flext_tests": (
+            "flext": (
+                "api",
                 "c",
-                "d",
-                "e",
-                "h",
+                "config",
+                "flext",
                 "m",
+                "main",
                 "p",
-                "r",
                 "s",
+                "settings",
                 "t",
-                "td",
-                "tf",
-                "tk",
-                "tm",
-                "tv",
                 "u",
-                "x",
             ),
+            "flext_core": ("core", "d", "e", "h", "lazy_attribute", "r", "x"),
+            "pydantic_core": ("from_json", "to_json", "to_jsonable_python"),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,

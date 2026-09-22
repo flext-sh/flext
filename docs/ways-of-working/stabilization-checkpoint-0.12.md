@@ -57,6 +57,28 @@ SHAs integrados e publicados.
 
 ## (c) Integração
 
+**Prioridade máxima: a branch de trabalho acompanha a integração atual.** Cada
+incremento precisa entregar comportamento funcional e manter verdes a raiz, os 31
+membros e o ambiente compartilhado. Preservar WIP significa adotar e corrigir seus
+defeitos; nenhuma falha é aceita como preexistente ou escondida por exclusões.
+
+Antes de iniciar um incremento e antes de publicá-lo, atualizar as referências
+remotas e absorver `origin/0.12.0-dev` por merge `--no-ff`, resolvendo cada conflito
+com revisão das funcionalidades de ambos os lados. Mudança na base invalida os
+recibos afetados. Não acumular funcionalidades em uma branch distante da integração.
+
+O coordenador executa obrigatoriamente a integração de cada incremento: implementação
+completa, gates locais da frota, runtime real, CI do candidato exato, merge e prova
+pós-merge. Só começa o incremento seguinte depois dessa composição estar verde.
+Uma autorização administrativa substitui apenas a aprovação independente; mantém
+todos os gates. Enquanto o runtime do tracker estiver suspenso, não criar outro
+tracker nem declarar encerramento de fase.
+
+Para mudanças entre repositórios, ordenar os commits pelo contrato entre produtores
+e consumidores e validar cada composição intermediária antes de pousá-la. Não contar
+com merges simultâneos. Publicar os commits dos membros antes dos gitlinks da raiz;
+comprovar a composição final também no SHA integrado publicado.
+
 1. Workers entregam reparos delimitados e evidências; não fazem merge nem fecham Beads.
    O coordenador mantém dependências, decisões de integração e a janela serializada de
    geração, ambiente e gates.

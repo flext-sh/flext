@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from pydantic import ConfigDict
+
 from flext_core import FlextSettings
 
 if TYPE_CHECKING:
@@ -17,10 +19,7 @@ if TYPE_CHECKING:
 class FlextRootSettings(FlextSettings):
     """Workspace root settings — extends flext-core settings with FLEXT_ROOT_ prefix."""
 
-    class Config:
-        """Pydantic config for root settings."""
-
-        env_prefix = "FLEXT_ROOT_"
+    model_config = ConfigDict(env_prefix="FLEXT_ROOT_")
 
 
 settings = FlextRootSettings
