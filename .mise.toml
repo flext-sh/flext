@@ -46,6 +46,7 @@ node = "latest"
 "github:microsoft/waza" = "latest"
 go = "latest"
 make = "latest"
+claude = "latest"
 [tools."github:qltysh/qlty"]
 version = "0.642.0"
 github_attestations = false
