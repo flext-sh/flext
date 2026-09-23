@@ -1,5 +1,16 @@
 # Alinhamento de imports rope-native (substitui a fase libcst do plano lazy-init)
 
+<!-- TOC START -->
+
+- [1. Diretriz do operador (2026-09-15, lei vigente)](#1-diretriz-do-operador-2026-09-15-lei-vigente)
+- [2. Evidência do estado atual (reidratada, fix-forward)](#2-evidencia-do-estado-atual-reidratada-fix-forward)
+- [3. Decisões de design](#3-decisoes-de-design)
+- [4. Tarefas (ordenadas, cada uma verde ao fim do ciclo)](#4-tarefas-ordenadas-cada-uma-verde-ao-fim-do-ciclo)
+- [5. Contrato de validação](#5-contrato-de-validacao)
+- [6. Riscos e bordas](#6-riscos-e-bordas)
+
+<!-- TOC END -->
+
 ## 1. Diretriz do operador (2026-09-15, lei vigente)
 
 1. Exterminar engines baseadas em `re`, `ast` e `libcst` — superfícies canônicas:

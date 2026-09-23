@@ -1,5 +1,37 @@
 # rev6 — revalidação completa + inventário + orquestração por subagentes
 
+<!-- TOC START -->
+
+- [Modelo de orquestração (lei desta execução)](#modelo-de-orquestracao-lei-desta-execucao)
+- [Inventário vivo (verificado nesta sessão; revalidar no início da execução)](#inventario-vivo-verificado-nesta-sessao-revalidar-no-inicio-da-execucao)
+  - [Worktrees](#worktrees)
+  - [Subprojetos (31) — pós roll-up 20:58](#subprojetos-31-pos-roll-up-2058)
+  - [Branches (root)](#branches-root)
+  - [PRs](#prs)
+  - [Beads do ciclo (+ bloqueios)](#beads-do-ciclo-bloqueios)
+  - [Locks/leases](#locksleases)
+- [Fases de execução (ordenadas; executor = coordenador + subagentes)](#fases-de-execucao-ordenadas-executor-coordenador-subagentes)
+  - [R0 — Revalidação de abertura (subagente explore, ~2min)](#r0-revalidacao-de-abertura-subagente-explore-2min)
+  - [R1 — flext-cli + flext-tests: integração non-FF (coordenador)](#r1-flext-cli-flext-tests-integracao-non-ff-coordenador)
+  - [R2 — flext-infra: convergência com a lane (coordenador)](#r2-flext-infra-convergencia-com-a-lane-coordenador)
+  - [R3 — Root: land final do ciclo (coordenador)](#r3-root-land-final-do-ciclo-coordenador)
+  - [R4 — CI verde (subagentes monitoram, coordenador decide)](#r4-ci-verde-subagentes-monitoram-coordenador-decide)
+  - [R5 — PR #668 (coordenador)](#r5-pr-668-coordenador)
+  - [R6 — ci-matrix em TODOS os 32 (coordenador + subagente de regen)](#r6-ci-matrix-em-todos-os-32-coordenador-subagente-de-regen)
+  - [R7 — dispatch manual 3 OSes (coordenador)](#r7-dispatch-manual-3-oses-coordenador)
+  - [R8 — Fechamento de ciclos (coordenador)](#r8-fechamento-de-ciclos-coordenador)
+  - [R9 — Track de endurecimento (subagentes por slice, multi-sessão)](#r9-track-de-endurecimento-subagentes-por-slice-multi-sessao)
+- [Execução — estado capturado (21:35, rev6.1)](#execucao-estado-capturado-2135-rev61)
+- [Execução — resultado final da sessão (23:5x, rev6.2)](#execucao-resultado-final-da-sessao-235x-rev62)
+- [STATUS BOARD — todas as tarefas (rev6.3, 00:2x de 11/09)](#status-board-todas-as-tarefas-rev63-002x-de-1109)
+- [Próximos passos imediatos](#proximos-passos-imediatos)
+- [LANES DE EXECUÇÃO (rev6.4, 01:5x de 11/09)](#lanes-de-execucao-rev64-015x-de-1109)
+- [Regras fixas (inalteradas do rev5)](#regras-fixas-inalteradas-do-rev5)
+- [Done (rev6)](#done-rev6)
+- [Fora de escopo (rev6)](#fora-de-escopo-rev6)
+
+<!-- TOC END -->
+
 Suppress: substitui o corpo rev5 deste arquivo. O rev5 consolidou 8 planos; o rev6
 adiciona o inventário vivo completo (worktrees/branches/PRs/beads/bloqueios) e o modelo
 de orquestração exigido pelo operador.

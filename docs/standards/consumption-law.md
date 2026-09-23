@@ -3,7 +3,8 @@
 <!-- TOC START -->
 
 - [R1 — Facade-Only Import Grammar (Consumer Legality)](#r1-facade-only-import-grammar-consumer-legality)
-- [R1a — Lazy-Init Re-Export Derivation (how `pkg.__all__` is built)](#r1a-lazy-init-re-export-derivation-how-pkg__all__-is-built)
+  - [R1a — Lazy-Init Re-Export Derivation (how pkg.**all** is built)](#r1a-lazy-init-re-export-derivation-how-pkg__all__-is-built)
+- [R1b — MRO OO Facade Composition (Namespace-Matched Access)](#r1b-mro-oo-facade-composition-namespace-matched-access)
 - [R2 — No Duplication (Structural Scan)](#r2-no-duplication-structural-scan)
 - [R3 — Layer Law (Declaration vs Behavior)](#r3-layer-law-declaration-vs-behavior)
 - [R4 — Gates as Products (Budget + Primitives)](#r4-gates-as-products-budget-primitives)
@@ -32,7 +33,7 @@
 
 **Rule**: A consumer import is **legal** iff it matches:
 
-```python notest
+```{.python .notest}
 from <flext-package> import <symbol>
 ```
 

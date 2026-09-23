@@ -1,5 +1,23 @@
 # Plano — Estabilização flext → Deploy 0.12.0 (semver)
 
+<!-- TOC START -->
+
+- [Decisões pré-resolvidas (sem reabrir)](#decisoes-pre-resolvidas-sem-reabrir)
+- [Âncoras (file:line, já verificadas)](#ancoras-fileline-ja-verificadas)
+- [Passos (executar nesta ordem; checkpoint após cada slice verde)](#passos-executar-nesta-ordem-checkpoint-apos-cada-slice-verde)
+  - [1. Absorver drift e fechar ciclo por membro (lane 0.12.0-dev)](#1-absorver-drift-e-fechar-ciclo-por-membro-lane-0120-dev)
+  - [2. Carve-out NS-IMPORT = decisão A (dono flext-infra)](#2-carve-out-ns-import-decisao-a-dono-flext-infra)
+  - [3. Estabilizar flext-api (47 violações; fechar flext-482u9)](#3-estabilizar-flext-api-47-violacoes-fechar-flext-482u9)
+  - [4. Regras em fila na frota (uma por vez, com automação)](#4-regras-em-fila-na-frota-uma-por-vez-com-automacao)
+  - [5. Gates full fleet](#5-gates-full-fleet)
+  - [6. PR landing + integração](#6-pr-landing-integracao)
+  - [7. Deploy semver 0.12.0](#7-deploy-semver-0120)
+- [Validação (todo slice)](#validacao-todo-slice)
+- [Guardrails (erros que custaram tempo — handoff §6)](#guardrails-erros-que-custaram-tempo-handoff-6)
+- [Fora de escopo](#fora-de-escopo)
+
+<!-- TOC END -->
+
 > Criado: 2026-09-09. Fontes: handoff
 > `1788987519000-handoff-refaze-checkpoint-012-stabilizacao.md` (SSOT de entrada),
 > estratégia v2 `1788975180492-execution-strategy-skills-automation.md`, status

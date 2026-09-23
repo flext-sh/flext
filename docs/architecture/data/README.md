@@ -50,7 +50,8 @@
   - [Creating New Data Models](#creating-new-data-models)
   - [Updating Data Architecture](#updating-data-architecture)
   - [Review Process](#review-process)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 ## Table of Contents
 

@@ -1,5 +1,38 @@
 # Constants Declarations Remediation Plan — settings→config→c chain, total bead
 
+<!-- TOC START -->
+
+- [0. Governance bootstrap](#0-governance-bootstrap)
+  - [0.1 Authority load (read, in order, before any bead action)](#01-authority-load-read-in-order-before-any-bead-action)
+  - [0.2 Rules of engagement (every task in every phase is gated against ALL of these)](#02-rules-of-engagement-every-task-in-every-phase-is-gated-against-all-of-these)
+  - [0.3 Live census + total bead absorption (first mutation is bd-only, zero source)](#03-live-census-total-bead-absorption-first-mutation-is-bd-only-zero-source)
+- [| -------------------------------------------------------------------- |](#-)
+- [|](#_1)
+  - [0.4 Epic and child beads](#04-epic-and-child-beads)
+  - [0.5 Dependency-chain law (enforced artifact)](#05-dependency-chain-law-enforced-artifact)
+- [| ---------------------------- |](#-_1)
+  - [0.6 Evidence discipline](#06-evidence-discipline)
+- [1. Dedicated worktree (mandatory, every agent)](#1-dedicated-worktree-mandatory-every-agent)
+- [2. flext-core — settings/config chain first, then constants shape](#2-flext-core-settingsconfig-chain-first-then-constants-shape)
+  - [2.0 Chain work-stream (runs BEFORE constants shape; c composes on top of](#20-chain-work-stream-runs-before-constants-shape-c-composes-on-top-of)
+  - [2.1 Constants shape remediation (flext-core)](#21-constants-shape-remediation-flext-core)
+- [3. flext-cli — same cycle (starts after both flext-core beads close)](#3-flext-cli-same-cycle-starts-after-both-flext-core-beads-close)
+- [4. flext-tests — same cycle (starts after cli bead closes)](#4-flext-tests-same-cycle-starts-after-cli-bead-closes)
+- [5. flext-infra + fleet — complete automation (starts after tests bead closes)](#5-flext-infra-fleet-complete-automation-starts-after-tests-bead-closes)
+- [6. Completion criteria](#6-completion-criteria)
+- [7. Rollback / stop condition](#7-rollback-stop-condition)
+- [8. Out of scope](#8-out-of-scope)
+- [9. Per-stage completion contract (HARD — operator law 2026-09-11)](#9-per-stage-completion-contract-hard-operator-law-2026-09-11)
+  - [9.1 Fix-forward absorption law (always applies)](#91-fix-forward-absorption-law-always-applies)
+  - [9.2 Validation methodology (canon for every stage report)](#92-validation-methodology-canon-for-every-stage-report)
+- [10. Execution status (live register)](#10-execution-status-live-register)
+- [11. Resumption plan (2026-09-11 21:37) — from mid-execution of flext-gufl8](#11-resumption-plan-2026-09-11-2137-from-mid-execution-of-flext-gufl8)
+  - [11.0 State snapshot (measured)](#110-state-snapshot-measured)
+  - [11.1 Ordered resumption tasks](#111-ordered-resumption-tasks)
+  - [11.2 Risks / coordination](#112-risks-coordination)
+
+<!-- TOC END -->
+
 absorption, fleet-wide idempotence
 
 Execution flow: **0** governance bootstrap (rules, census, bead absorption, epic) →

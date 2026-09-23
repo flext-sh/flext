@@ -1,5 +1,19 @@
 # Plano: Ciclo make 100% verde + gen/fix/fmt idempotentes + pouso em 0.12.0-dev
 
+<!-- TOC START -->
+
+- [Objetivo](#objetivo)
+- [Estado real (evidência desta sessão)](#estado-real-evidencia-desta-sessao)
+- [Fase 0 — Absorver o WIP (fix-forward, um commit escopado por repo)](#fase-0-absorver-o-wip-fix-forward-um-commit-escopado-por-repo)
+- [Fase 1 — Purgar resíduo banido em TODOS os checkouts](#fase-1-purgar-residuo-banido-em-todos-os-checkouts)
+- [Fase 2 — Idempotência real de gen/fix/fmt (núcleo do pedido)](#fase-2-idempotencia-real-de-genfixfmt-nucleo-do-pedido)
+- [Fase 3 — Portas vermelhas restantes, uma a uma](#fase-3-portas-vermelhas-restantes-uma-a-uma)
+- [Fase 4 — Ciclo completo verde](#fase-4-ciclo-completo-verde)
+- [Fase 5 — Pouso em 0.12.0-dev (integração)](#fase-5-pouso-em-0120-dev-integracao)
+- [Riscos / notas](#riscos-notas)
+
+<!-- TOC END -->
+
 ## Objetivo
 
 Levar `make setup → gen → fix → fmt → check → test` a 100% verde em todos os projetos e

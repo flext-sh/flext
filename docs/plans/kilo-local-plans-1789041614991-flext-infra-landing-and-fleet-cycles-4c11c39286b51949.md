@@ -1,5 +1,16 @@
 # SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md
 
+<!-- TOC START -->
+
+- [Estado atual (evidência)](#estado-atual-evidencia)
+- [Fase A — Fechar os vermelhos e aterrissar flext-infra](#fase-a-fechar-os-vermelhos-e-aterrissar-flext-infra)
+- [Fase B — Raiz do flext-tvenh (modernizer × contratos)](#fase-b-raiz-do-flext-tvenh-modernizer-contratos)
+- [Fase C — Propagação da frota e aterrissagem no superprojeto](#fase-c-propagacao-da-frota-e-aterrissagem-no-superprojeto)
+- [Fase D — Consolidação de testes (plano original, slice seguinte)](#fase-d-consolidacao-de-testes-plano-original-slice-seguinte)
+- [Regras transversais](#regras-transversais)
+
+<!-- TOC END -->
+
 (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
 
 # Plano — Fechamento do ciclo flext-infra + propagação da frota + consolidação de testes

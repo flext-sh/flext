@@ -1,5 +1,17 @@
 # Beads Reorganization & Cleanup Campaign — 2026-09-21
 
+<!-- TOC START -->
+
+- [Inventory snapshot (2026-09-21, bd list --status open)](#inventory-snapshot-2026-09-21-bd-list-status-open)
+- [Per-entity protocol (every bead passes through all 5 checks)](#per-entity-protocol-every-bead-passes-through-all-5-checks)
+- [Classification decision tree (per bead)](#classification-decision-tree-per-bead)
+- [Execution batches](#execution-batches)
+- [Validation surfaces (runtime-first)](#validation-surfaces-runtime-first)
+- [Progress log](#progress-log)
+- [Continuation 2026-09-22 (implementation agent)](#continuation-2026-09-22-implementation-agent)
+
+<!-- TOC END -->
+
 > Status: ACTIVE. Method: iterative, item-by-item, evidence-first. Precision over speed.
 > Operator mandate: audit + restructure Beads/Epics/Tasks/Bugs/Hotfixes for
 > architectural integrity and protocol alignment. Never hand-edit projections.

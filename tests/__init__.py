@@ -10,10 +10,11 @@ from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
     from flext import api, c, config, flext, m, main, p, s, settings, t, u
-
     from flext_core import core, d, e, h, lazy_attribute, r, x
 
     from . import infra, unit
+
+
 __all__: tuple[str, ...] = (
     "api",
     "c",

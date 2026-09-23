@@ -1,5 +1,15 @@
 # Gates, Beads, and Resolved Conflicts
 
+<!-- TOC START -->
+
+- [Gate evidence ledger](#gate-evidence-ledger)
+- [Gas City conflict resolution](#gas-city-conflict-resolution)
+- [Tracker owner reconciliation](#tracker-owner-reconciliation)
+- [Conflict decisions](#conflict-decisions)
+- [Immediate next slice](#immediate-next-slice)
+
+<!-- TOC END -->
+
 ## Gate evidence ledger
 
 | Evidence                       | Tree/time                     | Result                                                                                                | Planning consequence                                                              |

@@ -1,5 +1,19 @@
 # Plano de Retomada — Conclusão da Retomada Unificada (épico flext-cpzjo)
 
+<!-- TOC START -->
+
+- [Onde estamos (reavaliação com evidência)](#onde-estamos-reavaliacao-com-evidencia)
+- [Sessões de retomada (ordem de destravamento)](#sessoes-de-retomada-ordem-de-destravamento)
+  - [SR1 — P1: gen determinístico runner×rig (dona a destravar TUDO)](#sr1-p1-gen-deterministico-runnerrig-dona-a-destravar-tudo)
+  - [SR2 — P3 B404 + fecho do check infra](#sr2-p3-b404-fecho-do-check-infra)
+  - [SR3-SR5 — P2 loc-cap ×5 (split estrutural via make mod)](#sr3-sr5-p2-loc-cap-5-split-estrutural-via-make-mod)
+  - [SR6 — P5 cascata + runtime + FECHO F2](#sr6-p5-cascata-runtime-fecho-f2)
+  - [SR7+ — F3 (crg nos tips) → F4 (ondas do piloto + P4 tipagem root) → F5 (universal +](#sr7-f3-crg-nos-tips-f4-ondas-do-piloto-p4-tipagem-root-f5-universal)
+- [Regras fixas (sem exceção)](#regras-fixas-sem-excecao)
+- [Próxima ação imediata (SR1.1)](#proxima-acao-imediata-sr11)
+
+<!-- TOC END -->
+
 > Retomada do plano `1789132212795-retomada-unificada-sweep-gov-ssnc7.md` aos 21:37Z de
 > 2026-09-11. Complementar à proposta `1789162000000-proposta-f2-100-green.md`
 > (causas-raiz provadas).

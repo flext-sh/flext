@@ -1,5 +1,18 @@
 # SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md
 
+<!-- TOC START -->
+
+- [Contexto (estado real, evidenciado hoje 2026-09-10)](#contexto-estado-real-evidenciado-hoje-2026-09-10)
+- [Problema a resolver (bloqueia CI verde)](#problema-a-resolver-bloqueia-ci-verde)
+- [Plano (ordem de execução)](#plano-ordem-de-execucao)
+  - [Fase 1 — Reprodução e root cause do failure de CI (bloqueio #1)](#fase-1-reproducao-e-root-cause-do-failure-de-ci-bloqueio-1)
+  - [Fase 2 — Fechamento do ciclo de pendências](#fase-2-fechamento-do-ciclo-de-pendencias)
+  - [Fase 3 — Regras em ~/agents/ (fonte canônica) + fechamento](#fase-3-regras-em-agents-fonte-canonica-fechamento)
+- [Critérios de validação (real, sem erros)](#criterios-de-validacao-real-sem-erros)
+- [Riscos / surrounding](#riscos-surrounding)
+
+<!-- TOC END -->
+
 (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
 
 # Plan: checkpoint-0.12.0 closeout — CI verde (mise artifact mode) + p0 fichadas

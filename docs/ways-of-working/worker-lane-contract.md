@@ -14,7 +14,8 @@
   - [8.1 Final worker lane](#81-final-worker-lane)
   - [8.2 Updated worker lane before merge](#82-updated-worker-lane-before-merge)
   - [8.3 Original target after integration](#83-original-target-after-integration)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 Every light worker owns exactly one bead in one branch and one dedicated worktree. Read
 the canonical authorities first; this file only adds lane discipline.
@@ -32,7 +33,7 @@ the canonical authorities first; this file only adds lane discipline.
 [agents-md]: https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md
 [governance-md]: ../GOVERNANCE.md
 [flext-law]:
-  https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md
+  <https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md>
 [adr-005]: ../architecture/adr/005-config-settings-constants-templates-schemas-ssot.md
 
 ## 1. One lane, one bead, one worktree

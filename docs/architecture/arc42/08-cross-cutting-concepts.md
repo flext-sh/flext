@@ -52,7 +52,7 @@ Pyright, and Mypy all run in CI.
 
 One access form, workspace-wide:
 
-```python notest
+```{.python .notest}
 from <namespace> import config, settings
 
 config.<Project>.<domain>    # validated, frozen, namespaced

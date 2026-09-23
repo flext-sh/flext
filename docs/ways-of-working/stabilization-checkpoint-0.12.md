@@ -6,6 +6,8 @@
 - [(b) Contrato beads central](#b-contrato-beads-central)
 - [(c) Integração](#c-integracao)
 - [(d) Extermínios vigentes](#d-exterminios-vigentes)
+- [(e) Checkpoint 2026-09-20 — motor, cli floor e frota (flext-v4fmn)](#e-checkpoint-2026-09-20-motor-cli-floor-e-frota-flext-v4fmn)
+- [(f) Checkpoint 2026-09-21 — extermínio do budget SSOT, auditoria do tracker e campanha de integração](#f-checkpoint-2026-09-21-exterminio-do-budget-ssot-auditoria-do-tracker-e-campanha-de-integracao)
 
 <!-- TOC END -->
 
@@ -62,21 +64,21 @@ incremento precisa entregar comportamento funcional e manter verdes a raiz, os 3
 membros e o ambiente compartilhado. Preservar WIP significa adotar e corrigir seus
 defeitos; nenhuma falha é aceita como preexistente ou escondida por exclusões.
 
-Antes de iniciar um incremento e antes de publicá-lo, atualizar as referências
-remotas e absorver `origin/0.12.0-dev` por merge `--no-ff`, resolvendo cada conflito
-com revisão das funcionalidades de ambos os lados. Mudança na base invalida os
-recibos afetados. Não acumular funcionalidades em uma branch distante da integração.
+Antes de iniciar um incremento e antes de publicá-lo, atualizar as referências remotas e
+absorver `origin/0.12.0-dev` por merge `--no-ff`, resolvendo cada conflito com revisão
+das funcionalidades de ambos os lados. Mudança na base invalida os recibos afetados. Não
+acumular funcionalidades em uma branch distante da integração.
 
 O coordenador executa obrigatoriamente a integração de cada incremento: implementação
 completa, gates locais da frota, runtime real, CI do candidato exato, merge e prova
-pós-merge. Só começa o incremento seguinte depois dessa composição estar verde.
-Uma autorização administrativa substitui apenas a aprovação independente; mantém
-todos os gates. Enquanto o runtime do tracker estiver suspenso, não criar outro
-tracker nem declarar encerramento de fase.
+pós-merge. Só começa o incremento seguinte depois dessa composição estar verde. Uma
+autorização administrativa substitui apenas a aprovação independente; mantém todos os
+gates. Enquanto o runtime do tracker estiver suspenso, não criar outro tracker nem
+declarar encerramento de fase.
 
-Para mudanças entre repositórios, ordenar os commits pelo contrato entre produtores
-e consumidores e validar cada composição intermediária antes de pousá-la. Não contar
-com merges simultâneos. Publicar os commits dos membros antes dos gitlinks da raiz;
+Para mudanças entre repositórios, ordenar os commits pelo contrato entre produtores e
+consumidores e validar cada composição intermediária antes de pousá-la. Não contar com
+merges simultâneos. Publicar os commits dos membros antes dos gitlinks da raiz;
 comprovar a composição final também no SHA integrado publicado.
 
 1. Workers entregam reparos delimitados e evidências; não fazem merge nem fecham Beads.

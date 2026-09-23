@@ -1,5 +1,20 @@
 # Plan — Stabilize worktree, clone for generator validation, evolve generators
 
+<!-- TOC START -->
+
+- [Step 0 — Record the plan markdowns (first action after approval)](#step-0-record-the-plan-markdowns-first-action-after-approval)
+- [Increment 1 — Stabilize the current worktree (full WIP adoption)](#increment-1-stabilize-the-current-worktree-full-wip-adoption)
+- [Increment 2 — Clone as the generator test bed](#increment-2-clone-as-the-generator-test-bed)
+- [Increment 3 — Evolve templates and refactoring (dependency-closed batches)](#increment-3-evolve-templates-and-refactoring-dependency-closed-batches)
+- [Cross-cutting rules](#cross-cutting-rules)
+- [Execution log](#execution-log)
+  - [2026-09-22 — Step 0](#2026-09-22-step-0)
+  - [2026-09-22 — Increment 1 (stabilization, executed with the parallel coordinator lane)](#2026-09-22-increment-1-stabilization-executed-with-the-parallel-coordinator-lane)
+  - [2026-09-22 — Increment 2.1 (validation clone)](#2026-09-22-increment-21-validation-clone)
+  - [2026-09-22 — Increment 2.3 (isolation + fresh-import gate; entrypoint cure)](#2026-09-22-increment-23-isolation-fresh-import-gate-entrypoint-cure)
+
+<!-- TOC END -->
+
 Date: 2026-09-22. Approved by the operator in this session. Top priority: short,
 functional increments close to `origin/0.12.0-dev`; each increment is integrated only
 after green validation plus proof on the integrated SHA. No increment starts while the
@@ -13,104 +28,95 @@ repository law.
 
 ## Increment 1 — Stabilize the current worktree (full WIP adoption)
 
-Work in `/home/marlonsc/flext-worktrees/rope-recovery-20260921`, preserving and
-adopting all WIP.
+Work in `/home/marlonsc/flext-worktrees/rope-recovery-20260921`, preserving and adopting
+all WIP.
 
 1.1 Re-read the live state (never assume the handoff is current); review and stage
-    resolutions hunk by hunk for the regenerated-but-unstaged files and the text
-    conflict (`docs/ways-of-working/worker-lane-contract.md`). No blanket ours/theirs;
-    no `git add -A`.
-1.2 Implement the transactional fresh-process verification in the existing owner
-    (`codegen/_conform/execute.py::_validate_managed_fixed_point`,
-    `codegen_transaction.py::commit_locked`, `validate/fresh_import.py`): typed
-    expected publication carried from LazyInitPlan; public contracts resolved in a
-    fresh process; real declared entrypoints (`module:attribute`) loaded without
-    executing main or re-invoking generation; imported origins proven to belong to
-    this worktree; fail-fast with full causal stdout/stderr while rollback is still
-    possible; real consumers checked, not only planned names. Run the regression
-    `tests/unit/codegen/lazy_init_alias_inheritance_tests.py` through the canonical
-    gate; fix the known unused `Annotated` residue in `codegen/lazy_init.py`; prove
-    fresh-process bootstrap (the `r` alias from `flext_cli` resolves).
-1.3 Conclude the merges of the 17 members holding `MERGE_HEAD` (no-ff, hunk by hunk;
-    for the four whose MERGE_HEAD diverges from the superproject "theirs" gitlink —
-    flext-auth, flext-oracle-oic, flext-plugin, flext-target-ldap — reconcile against
-    the live published tip); flext-tests last, carefully (37 unmerged / 78 dirty).
-    Checkpoint per member with explicit-path commits.
-1.4 Conclude the superproject merge: resolve the 31 gitlinks to the stabilized member
-    tips plus the doc; record a reproducible checkpoint (member SHAs + gitlinks +
-    superproject SHA) in this file.
-1.5 Gates: full canonical cycle from the root (`make setup gen mod gen gen fix fmt
-    check test build`) plus applicable docs/link and public-runtime validation; prove
-    repeated `make gen`, `make fix`, `make fmt` are no-op exit-0 on the unchanged
-    candidate. Fix every failure at its owner, including pre-existing ones.
-1.6 Only then: publish members first (fast-forward pushes), then the superproject
-    gitlinks, per the recorded authorizations (known PRs: flext #263, flext-infra
-    #798, flext-cli #184, flext-dbt-oracle #107, flext-dbt-oracle-wms #107,
-    flext-tests #121, flext-web #99). Green exact-head CI; re-prove the integrated
-    SHA.
+resolutions hunk by hunk for the regenerated-but-unstaged files and the text conflict
+(`docs/ways-of-working/worker-lane-contract.md`). No blanket ours/theirs; no
+`git add -A`. 1.2 Implement the transactional fresh-process verification in the existing
+owner (`codegen/_conform/execute.py::_validate_managed_fixed_point`,
+`codegen_transaction.py::commit_locked`, `validate/fresh_import.py`): typed expected
+publication carried from LazyInitPlan; public contracts resolved in a fresh process;
+real declared entrypoints (`module:attribute`) loaded without executing main or
+re-invoking generation; imported origins proven to belong to this worktree; fail-fast
+with full causal stdout/stderr while rollback is still possible; real consumers checked,
+not only planned names. Run the regression
+`tests/unit/codegen/lazy_init_alias_inheritance_tests.py` through the canonical gate;
+fix the known unused `Annotated` residue in `codegen/lazy_init.py`; prove fresh-process
+bootstrap (the `r` alias from `flext_cli` resolves). 1.3 Conclude the merges of the 17
+members holding `MERGE_HEAD` (no-ff, hunk by hunk; for the four whose MERGE_HEAD
+diverges from the superproject "theirs" gitlink — flext-auth, flext-oracle-oic,
+flext-plugin, flext-target-ldap — reconcile against the live published tip); flext-tests
+last, carefully (37 unmerged / 78 dirty). Checkpoint per member with explicit-path
+commits. 1.4 Conclude the superproject merge: resolve the 31 gitlinks to the stabilized
+member tips plus the doc; record a reproducible checkpoint (member SHAs + gitlinks +
+superproject SHA) in this file. 1.5 Gates: full canonical cycle from the root
+(`make setup gen mod gen gen fix fmt     check test build`) plus applicable docs/link
+and public-runtime validation; prove repeated `make gen`, `make fix`, `make fmt` are
+no-op exit-0 on the unchanged candidate. Fix every failure at its owner, including
+pre-existing ones. 1.6 Only then: publish members first (fast-forward pushes), then the
+superproject gitlinks, per the recorded authorizations (known PRs: flext #263,
+flext-infra #798, flext-cli #184, flext-dbt-oracle #107, flext-dbt-oracle-wms #107,
+flext-tests #121, flext-web #99). Green exact-head CI; re-prove the integrated SHA.
 
 ## Increment 2 — Clone as the generator test bed
 
 2.1 `git clone --no-hardlinks` the stabilized worktree to
-    `/home/marlonsc/flext-worktrees/rope-generator-validation-20260922` (if it already
-    exists, inspect and preserve before using); per member
-    `git submodule update --init --reference /home/marlonsc/flext/.git/modules/<member>`
-    so local-only member commits resolve; verify `git submodule status` matches the
-    checkpoint.
-2.2 `make setup` in the clone with `UV_PROJECT_ENVIRONMENT` and `VIRTUAL_ENV` pinned
-    to the clone's `.venv` on every command; own venv and caches; no shared mutable
-    state with the worktree or the main checkout.
-2.3 Prove isolation: imports, editable dependencies and tools resolve the CLONE's
-    files (canonical fresh-import validation; never accidentally the original
-    worktree).
-2.4 Use the clone for real migrations, regeneration, failure drills and idempotency
-    over the full project structure. Transport each candidate as identified commits;
-    commit test alterations and evidence before updating the clone; never keep a
-    divergent implementation in it.
+`/home/marlonsc/flext-worktrees/rope-generator-validation-20260922` (if it already
+exists, inspect and preserve before using); per member
+`git submodule update --init --reference /home/marlonsc/flext/.git/modules/<member>` so
+local-only member commits resolve; verify `git submodule status` matches the checkpoint.
+2.2 `make setup` in the clone with `UV_PROJECT_ENVIRONMENT` and `VIRTUAL_ENV` pinned to
+the clone's `.venv` on every command; own venv and caches; no shared mutable state with
+the worktree or the main checkout. 2.3 Prove isolation: imports, editable dependencies
+and tools resolve the CLONE's files (canonical fresh-import validation; never
+accidentally the original worktree). 2.4 Use the clone for real migrations,
+regeneration, failure drills and idempotency over the full project structure. Transport
+each candidate as identified commits; commit test alterations and evidence before
+updating the clone; never keep a divergent implementation in it.
 
 ## Increment 3 — Evolve templates and refactoring (dependency-closed batches)
 
 3a. One real family complete: absorb existing facet bodies into separate internal
-    sources; public modules become complete projections without editable duplication.
-    Templates control the generation mark, docstrings, future import, imports, public
-    composition, aliases, singletons and the trailing `__all__`. Names, bases,
-    dependencies and exports derive from the SSOT and dependency contracts (ADR-018:
-    derive, never list; ADR-014 §3b: gen is the only writer, pure render,
-    transactional publication reused). Incompatible modules are fixed at the source —
-    the generator is never loosened, no suppressions, no old paths preserved. Public
-    behavior, singleton identity and entrypoints preserved; consumers updated in the
-    same increment. Validate in the clone: absorption, behavior preservation, imports,
-    exports, MRO, entrypoints, homonyms, collisions, legitimate SSOT changes; drill
-    publication failures and concurrent changes proving transactional diagnosis and
-    recovery without work loss; canonical cycle from the root in the clone AND
-    revalidation of the SAME candidate in the delivery worktree; absorb integration,
-    publish members before gitlinks; green CI; proof on the integrated SHA.
-3b. Global configuration-vs-settings separation: eliminate incorrect inheritances and
-    workaround methods per ADR-016 (singleton lifecycle owned by classmethods; alias
-    identity = classmethod identity; pollution-free derived copies); consumers updated
-    in the same increment; same validation ritual.
-3c. Remaining facets and interfaces (`base.py`, `cli.py`, `api.py`, remaining
-    families) in closed batches. `make mod` division: sed (CSV lists) for unambiguous
-    textual renames; Rope for movements, symbol identity, references, inheritance,
-    collisions and structural corrections.
+sources; public modules become complete projections without editable duplication.
+Templates control the generation mark, docstrings, future import, imports, public
+composition, aliases, singletons and the trailing `__all__`. Names, bases, dependencies
+and exports derive from the SSOT and dependency contracts (ADR-018: derive, never list;
+ADR-014 §3b: gen is the only writer, pure render, transactional publication reused).
+Incompatible modules are fixed at the source — the generator is never loosened, no
+suppressions, no old paths preserved. Public behavior, singleton identity and
+entrypoints preserved; consumers updated in the same increment. Validate in the clone:
+absorption, behavior preservation, imports, exports, MRO, entrypoints, homonyms,
+collisions, legitimate SSOT changes; drill publication failures and concurrent changes
+proving transactional diagnosis and recovery without work loss; canonical cycle from the
+root in the clone AND revalidation of the SAME candidate in the delivery worktree;
+absorb integration, publish members before gitlinks; green CI; proof on the integrated
+SHA. 3b. Global configuration-vs-settings separation: eliminate incorrect inheritances
+and workaround methods per ADR-016 (singleton lifecycle owned by classmethods; alias
+identity = classmethod identity; pollution-free derived copies); consumers updated in
+the same increment; same validation ritual. 3c. Remaining facets and interfaces
+(`base.py`, `cli.py`, `api.py`, remaining families) in closed batches. `make mod`
+division: sed (CSV lists) for unambiguous textual renames; Rope for movements, symbol
+identity, references, inheritance, collisions and structural corrections.
 
 ## Cross-cutting rules
 
-- **Operator law (2026-09-22, mid-execution):** never fight the generator, formatters
-  or auto-fixers — their output is canonical code; accept it. If they surface problems,
-  fix the ROOT CAUSE instead of arguing with them. Findings produced by flext-infra
-  gates (`make check`) are not hand-fix targets: they must remain WARNINGS that do not
-  block CI; only automatic fixes apply.
+- **Operator law (2026-09-22, mid-execution):** never fight the generator, formatters or
+  auto-fixers — their output is canonical code; accept it. If they surface problems, fix
+  the ROOT CAUSE instead of arguing with them. Findings produced by flext-infra gates
+  (`make check`) are not hand-fix targets: they must remain WARNINGS that do not block
+  CI; only automatic fixes apply.
 - Commands always through the active workspace root; never bare
   `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`; mypy never uncapped.
 - No rebase/force-push/reset/checkout-restore/stash-clean discards; explicit-path
   commits; fix-forward adoption of concurrent WIP.
 - Never hand-edit generated files (cure = `make gen`); no `# type: ignore`/`# noqa`
   without documented justification; no compat surface, shims or dual paths.
-- Record per increment: commands, directories, exit codes, decisive results (this
-  file and the commits).
-- Final delivery requires: generators working in BOTH the worktree and the clone,
-  full coverage of the planned modules (`_settings.py`, `_config.py`, `constants.py`,
+- Record per increment: commands, directories, exit codes, decisive results (this file
+  and the commits).
+- Final delivery requires: generators working in BOTH the worktree and the clone, full
+  coverage of the planned modules (`_settings.py`, `_config.py`, `constants.py`,
   `typings.py`, `protocols.py`, `models.py`, `utilities.py`, `base.py`, `cli.py`,
   `api.py`), whole integration green, no discarded WIP, no hidden failures.
 
@@ -131,41 +137,41 @@ Appended below as increments land (command, cwd, exit code, decisive output).
   `verify-fresh-imports`, publications from the LazyInitPhase analysis) inside
   `codegen_transaction.py::commit_locked` (validator runs before journal commit, with
   `_recover_failure` rollback available). The unused `Annotated` residue in
-  `codegen/lazy_init.py` no longer exists. Fleet-gate run of the regression remains
-  part of the canonical cycle (Increment 1.5, coordinator lane).
+  `codegen/lazy_init.py` no longer exists. Fleet-gate run of the regression remains part
+  of the canonical cycle (Increment 1.5, coordinator lane).
 - Text conflict `docs/ways-of-working/worker-lane-contract.md` resolved as a union
   (theirs reformat + ours canonical-skill paragraph + ours link style); staged.
 - Member merges concluded on `recovery/rope-automation-20260921` (16 by this session:
   tap-ldap `745cc8d`, tap-ldif `e36c963`, tap-oracle `535c301`, target-ldap `58d0e69`,
-  target-oracle `62e6de2`, target-oracle-oic `61e4f13`, dbt-oracle `af96c7d`,
-  dbt-ldap `a774e7e`, dbt-ldif `af22124`, ldap `abfd1e62`, oracle-oic `f4f58b7`,
-  dbt-oracle-wms `f7add87`, web `eee34a6`, auth `980ca79b`, plugin `f0197d8`,
-  quality `2e5c8e4e`; conflict-marker resolutions in plugin/quality `__init__.py`
-  took the ours shape consistent with each file's own `__all__`/`_LAZY_IMPORTS`;
-  tests and core converged with the parallel lane: tests `2eb1ffa`/`fcb5977`,
-  core `890fdb653` + WIP adoption commit `99fb2032a` — 17 files, +261/−163).
+  target-oracle `62e6de2`, target-oracle-oic `61e4f13`, dbt-oracle `af96c7d`, dbt-ldap
+  `a774e7e`, dbt-ldif `af22124`, ldap `abfd1e62`, oracle-oic `f4f58b7`, dbt-oracle-wms
+  `f7add87`, web `eee34a6`, auth `980ca79b`, plugin `f0197d8`, quality `2e5c8e4e`;
+  conflict-marker resolutions in plugin/quality `__init__.py` took the ours shape
+  consistent with each file's own `__all__`/`_LAZY_IMPORTS`; tests and core converged
+  with the parallel lane: tests `2eb1ffa`/`fcb5977`, core `890fdb653` + WIP adoption
+  commit `99fb2032a` — 17 files, +261/−163).
 - Superproject absorb concluded by the coordinator lane as `115fe8d8cb` (includes this
   session's staged doc resolution, CSV rename engine, custom.mk, plan docs, gitlinks)
   plus alignment commit `8dfe0ddb0e`. All 31 members hold no `MERGE_HEAD` and carry the
   origin gitlink of `1e59a9d493` as ancestor.
 - Reproducible checkpoint: superproject `8dfe0ddb0e`
   (`chore(submodules): update gitlinks after alignment merge 20260922`) with its 31
-  recorded gitlinks; member branch tips keep advancing with the coordinator lane's
-  cycle (origin tip observed moving to `1511f1e873` during this work — the treadmill
+  recorded gitlinks; member branch tips keep advancing with the coordinator lane's cycle
+  (origin tip observed moving to `1511f1e873` during this work — the treadmill
   continues; the checkpoint stays the clone basis and is refreshed by no-ff merges).
 
 ### 2026-09-22 — Increment 2.1 (validation clone)
 
-- `git clone --no-hardlinks /home/marlonsc/flext-worktrees/rope-recovery-20260921
-  /home/marlonsc/flext-worktrees/rope-generator-validation-20260922` → HEAD
-  `8dfe0ddb0e`, clean.
-- Per member `git submodule update --init --reference
-  /home/marlonsc/flext/.git/modules/<member>` → 31/31 OK, 0 dirty;
-  `git submodule status` SHAs == `git ls-tree HEAD` gitlinks (diff empty).
+- `git clone --no-hardlinks /home/marlonsc/flext-worktrees/rope-recovery-20260921 /home/marlonsc/flext-worktrees/rope-generator-validation-20260922`
+  → HEAD `8dfe0ddb0e`, clean.
+- Per member
+  `git submodule update --init --reference /home/marlonsc/flext/.git/modules/<member>` →
+  31/31 OK, 0 dirty; `git submodule status` SHAs == `git ls-tree HEAD` gitlinks (diff
+  empty).
 - `make setup` started in the clone with `UV_PROJECT_ENVIRONMENT` and `VIRTUAL_ENV`
   pinned to the clone's `.venv` (evidence appended after completion).
-- `make setup` completed exit 0: CPython 3.13.11, `.venv` created in the clone,
-  286 packages resolved, every member built editable from
+- `make setup` completed exit 0: CPython 3.13.11, `.venv` created in the clone, 286
+  packages resolved, every member built editable from
   `file:///home/marlonsc/flext-worktrees/rope-generator-validation-20260922/<member>`
   (log `/tmp/clone-setup.log`, session run 2026-09-22). Scratch/mise state mirrors the
   clone path (`.../rope-generator-validation-20260922/scratch/...`) — no shared mutable
@@ -174,216 +180,204 @@ Appended below as increments land (command, cwd, exit code, decisive output).
 ### 2026-09-22 — Increment 2.3 (isolation + fresh-import gate; entrypoint cure)
 
 - First `make gen` in the clone failed at the manifest-origin precondition (clone
-  `origin` was the local worktree path). Fixed by `git remote set-url origin
-  https://github.com/flext-sh/flext.git` + `git remote add lane <delivery worktree>`
-  (members already pointed at GitHub; transport flows through `lane` fetch + no-ff).
+  `origin` was the local worktree path). Fixed by
+  `git remote set-url origin https://github.com/flext-sh/flext.git` +
+  `git remote add lane <delivery worktree>` (members already pointed at GitHub;
+  transport flows through `lane` fetch + no-ff).
 - Second `make gen` (exit 1) reached `stage=verify-fresh-imports` and failed loud,
   exactly as designed, at the first broken entrypoint:
   `flext_api: console_scripts/flext-api=flext_api.cli:main` →
-  `AttributeError: module 'flext_api.cli' has no attribute 'main'`. Fleet survey
-  found 15 members whose declared console scripts did not resolve: missing `cli.py`
+  `AttributeError: module 'flext_api.cli' has no attribute 'main'`. Fleet survey found
+  15 members whose declared console scripts did not resolve: missing `cli.py`
   (db-oracle, dbt-ldap, dbt-ldif, ldap, oracle-oic, oracle-wms, target-ldap, cli),
-  facade/empty `cli.py` without `main` (api, auth, grpc, observability, plugin,
-  ldif), and stale hand-edited pyproject targets (auth `cli_new:cli` module that
-  does not exist; tap-oracle `tap:cli` attribute that does not exist).
+  facade/empty `cli.py` without `main` (api, auth, grpc, observability, plugin, ldif),
+  and stale hand-edited pyproject targets (auth `cli_new:cli` module that does not
+  exist; tap-oracle `tap:cli` attribute that does not exist).
 - Cure at source, delivery worktree, one explicit-path commit per member
-  (`fix(cli): restore the declared console-script entrypoint`): minimal canonical
-  `main` following the healthy fleet idioms (dbt-oracle no-commands shape;
-  tap-oracle bridges both singer names to the real `tap.run_cli`); auth restored
-  the single canonical `flext_auth.cli:main` (dropping the broken `cli_new`
-  primary and the legacy duplicate).
-- Transported to the validation clone: per-member `lane` remote + fetch + no-ff
-  merge (`merge: transport stabilized cli entrypoint cures from the delivery
-  lane`), 15/15 OK. `make gen` re-run evidence appended below.
+  (`fix(cli): restore the declared console-script entrypoint`): minimal canonical `main`
+  following the healthy fleet idioms (dbt-oracle no-commands shape; tap-oracle bridges
+  both singer names to the real `tap.run_cli`); auth restored the single canonical
+  `flext_auth.cli:main` (dropping the broken `cli_new` primary and the legacy
+  duplicate).
+- Transported to the validation clone: per-member `lane` remote + fetch + no-ff merge
+  (`merge: transport stabilized cli entrypoint cures from the delivery lane`), 15/15 OK.
+  `make gen` re-run evidence appended below.
 - gen-3 (exit 1): entrypoints fixed, all 32 conforms OK; new loud failure at
   `lazy-init public export ownership is ambiguous: 2 collision(s)` — my new
-  `cli.py:main` collided with pre-existing `main` owners in flext-oracle-oic
-  (`main.py`) and flext-target-ldap (`target.py`). Single-owner cure: removed
-  those two `cli.py` files and pointed the pyproject scripts at the existing
-  owners (`flext_oracle_oic.main:main`, `flext_target_ldap.target:main`;
-  precedent `target-ldif-legacy = flext_target_ldif.tap:main`). Transported,
-  gen-4.
+  `cli.py:main` collided with pre-existing `main` owners in flext-oracle-oic (`main.py`)
+  and flext-target-ldap (`target.py`). Single-owner cure: removed those two `cli.py`
+  files and pointed the pyproject scripts at the existing owners
+  (`flext_oracle_oic.main:main`, `flext_target_ldap.target:main`; precedent
+  `target-ldif-legacy = flext_target_ldif.tap:main`). Transported, gen-4.
 - gen-4 (exit 1): fresh-import advanced to `flext_core` and failed with
   `module 'flext_core._lazy_parts' has no attribute 'FlextLazy'`. Root cause:
-  `_lazy_parts/flextlazy_part_01.py` declared a stub class named `FlextLazy`
-  (also in its `__all__`) while `flextlazy_part_02.py` declares the real
-  composed `FlextLazy` importing the stub ALIASED as `FlextLazyPart01` — the
-  alias-instead-of-hoist anti-pattern (ADR-014). Cure at source (flext-core
-  commit `4224e3371`): part_01 class renamed to `FlextLazyPart01` (family part
-  name), its `__all__` updated, part_02 imports it without the alias.
-  Transported, gen-5.
-- gen-5 (exit 1): same probe failure persisted — the part rename was necessary
-  hygiene but not the root cause. Real root cause found in the ENGINE: the
-  renderer renders `flext_core._lazy_parts`/`._typings` as side-effect-free
-  static inits (documented bootstrap-cycle exception, operator init law
-  2026-09-16, `c.Infra.BOOTSTRAP_CYCLE_EXCEPTION_SEGMENTS`), but the lazy-init
-  PLANNER still published the parts' `__all__` union as those packages'
-  export contract — the fresh-import probe then demanded names the static
-  init never publishes. Cure at the engine owner (flext-infra commit
-  `ff6266057`): `build_plan` carries `exports=()` for the bootstrap-exception
-  packages (same constants the renderer consumes — one SSOT), keeping the
-  discovered lazy map so parent resolution and `dir_exports` are unchanged.
+  `_lazy_parts/flextlazy_part_01.py` declared a stub class named `FlextLazy` (also in
+  its `__all__`) while `flextlazy_part_02.py` declares the real composed `FlextLazy`
+  importing the stub ALIASED as `FlextLazyPart01` — the alias-instead-of-hoist
+  anti-pattern (ADR-014). Cure at source (flext-core commit `4224e3371`): part_01 class
+  renamed to `FlextLazyPart01` (family part name), its `__all__` updated, part_02
+  imports it without the alias. Transported, gen-5.
+- gen-5 (exit 1): same probe failure persisted — the part rename was necessary hygiene
+  but not the root cause. Real root cause found in the ENGINE: the renderer renders
+  `flext_core._lazy_parts`/`._typings` as side-effect-free static inits (documented
+  bootstrap-cycle exception, operator init law 2026-09-16,
+  `c.Infra.BOOTSTRAP_CYCLE_EXCEPTION_SEGMENTS`), but the lazy-init PLANNER still
+  published the parts' `__all__` union as those packages' export contract — the
+  fresh-import probe then demanded names the static init never publishes. Cure at the
+  engine owner (flext-infra commit `ff6266057`): `build_plan` carries `exports=()` for
+  the bootstrap-exception packages (same constants the renderer consumes — one SSOT),
+  keeping the discovered lazy map so parent resolution and `dir_exports` are unchanged.
   Transported, gen-6.
 - gen-6 (exit 2): `flext_core` fresh-import PASSED (engine cure effective, 32/32
   conforms); next loud failure at `flext_plugin` — the fleet's own MRO enforcement
   (`FlextConstantsEnforcement.FlextMroViolation`, HARD rule
   `no_raw_collections_field_default`) raised at class-definition time:
-  `FlextPluginModelsPlugin.Entity.metadata` used `Field(default_factory=dict)`
-  against the read-only `t.JsonMapping` contract. Cure at source (flext-plugin
-  commit `13ba259`): the four extensible-metadata fields (`Entity.metadata`,
-  discovery `metadata`, `additional metadata`, `Registry.plugins`) now declare
-  the explicit mutable contract `t.MutableJsonMapping` — in-place mutation is
-  the declared API intent, exactly the allowance the rule message prescribes.
-  Verified in the clone: `import flext_plugin` resolves and the field annotation
-  is `MutableJsonMapping`. Transported, gen-7.
-- gen-7 (exit 2): `flext_quality` entrypoint failed — the pyproject script
-  targeted `flext_quality.services.cli`, a module that no longer exists
-  (`services/` holds only `py.typed`); the real CLI facade
-  `flext_quality.cli:main` (with `main` in `__all__`) exists. Cure at source
-  (flext-quality `d864c292`): script → the canonical owner. Transported, gen-8.
-- Fleet-wide entrypoint probe (read-only, real `EntryPoint.load` semantics, in
-  the clone's venv) after gen-7: separated stale venv metadata (cured in
-  source, refreshed by the next sync) from two REAL source defects:
-  `flext-tap-oracle-oic`/`tap-oracle-oic` targeting `tap:TapOracleOic.cli`
-  (class does not exist; real owner `cli.py:main`) and the tap-ldif
-  `-legacy` alias targeting `tap:main` (attribute never declared). Cures at
-  source: tap-oracle-oic scripts → `flext_tap_oracle_oic.cli:main`;
-  tap-ldif's `-legacy` alias REMOVED (no-compat law — no dual old+new paths).
-- gen-8 (void run: the tap cures were merged into the clone while gen-8 was
-  mid-flight — lesson recorded: never mutate the validation clone while its
-  gen runs, same drain-wait discipline as the delivery worktree): probe then
-  failed at `flext_tap_ldap` — `PydanticDeprecatedSince211` on `CONFIG_DIR`
-  (a `Final`-annotated attribute with a default in the plain scalar-constants
-  mixin composed INTO the frozen pydantic config singleton), fatal under the
-  fresh-import probe's `-W error`. Cure at source (flext-tap-ldap `7704f8d`):
-  `CONFIG_DIR: Final[str]` → `CONFIG_DIR: ClassVar[str]` in the mixin — same
-  "stays out of the model's fields and vars()" contract, no deprecated
-  collection. Fleet-wide `-W error` import+exports probe then showed ALL 30
-  other members green; only tap-ldap needed the cure.
+  `FlextPluginModelsPlugin.Entity.metadata` used `Field(default_factory=dict)` against
+  the read-only `t.JsonMapping` contract. Cure at source (flext-plugin commit
+  `13ba259`): the four extensible-metadata fields (`Entity.metadata`, discovery
+  `metadata`, `additional metadata`, `Registry.plugins`) now declare the explicit
+  mutable contract `t.MutableJsonMapping` — in-place mutation is the declared API
+  intent, exactly the allowance the rule message prescribes. Verified in the clone:
+  `import flext_plugin` resolves and the field annotation is `MutableJsonMapping`.
+  Transported, gen-7.
+- gen-7 (exit 2): `flext_quality` entrypoint failed — the pyproject script targeted
+  `flext_quality.services.cli`, a module that no longer exists (`services/` holds only
+  `py.typed`); the real CLI facade `flext_quality.cli:main` (with `main` in `__all__`)
+  exists. Cure at source (flext-quality `d864c292`): script → the canonical owner.
+  Transported, gen-8.
+- Fleet-wide entrypoint probe (read-only, real `EntryPoint.load` semantics, in the
+  clone's venv) after gen-7: separated stale venv metadata (cured in source, refreshed
+  by the next sync) from two REAL source defects:
+  `flext-tap-oracle-oic`/`tap-oracle-oic` targeting `tap:TapOracleOic.cli` (class does
+  not exist; real owner `cli.py:main`) and the tap-ldif `-legacy` alias targeting
+  `tap:main` (attribute never declared). Cures at source: tap-oracle-oic scripts →
+  `flext_tap_oracle_oic.cli:main`; tap-ldif's `-legacy` alias REMOVED (no-compat law —
+  no dual old+new paths).
+- gen-8 (void run: the tap cures were merged into the clone while gen-8 was mid-flight —
+  lesson recorded: never mutate the validation clone while its gen runs, same drain-wait
+  discipline as the delivery worktree): probe then failed at `flext_tap_ldap` —
+  `PydanticDeprecatedSince211` on `CONFIG_DIR` (a `Final`-annotated attribute with a
+  default in the plain scalar-constants mixin composed INTO the frozen pydantic config
+  singleton), fatal under the fresh-import probe's `-W error`. Cure at source
+  (flext-tap-ldap `7704f8d`): `CONFIG_DIR: Final[str]` → `CONFIG_DIR: ClassVar[str]` in
+  the mixin — same "stays out of the model's fields and vars()" contract, no deprecated
+  collection. Fleet-wide `-W error` import+exports probe then showed ALL 30 other
+  members green; only tap-ldap needed the cure.
 - gen-9 (exit 2): tap-ldap passed; next failure `flext_tap_ldif` —
-  `cannot import name 'FlextTapLdifModelsEntry' from 'flext_tap_ldif._models'`.
-  Root cause: the `_models` part modules imported the own-package root `m`
-  alias, whose owner (`models.py`) eagerly imports these same parts — a genuine
-  import cycle (part → root m → .models → eager ._models → re-entrant
-  `__getattr__`). Cure at source (flext-tap-ldif `e5416b9`): the four part
-  modules resolve `m` through the upstream `flext_meltano` facade (all used
-  members are upstream pydantic/core names) while `c`/`t` stay on the own root
-  (no cycle) — the same idiom the healthy flext-ldif parts use via `flext_cli`.
-- **gen-10: GREEN — `✅ project conformance complete`, exit 0.** The full
-  transactional cycle in the clone passed: 32/32 conforms, lazy-init fixed
-  point, docs receipt, and the fresh-import guard (entrypoints + publications +
-  origin checks) all green. The generator works in the validation clone on the
-  complete project structure. Idempotence proof: gen-11 (second run) —
-  evidence below.
+  `cannot import name 'FlextTapLdifModelsEntry' from 'flext_tap_ldif._models'`. Root
+  cause: the `_models` part modules imported the own-package root `m` alias, whose owner
+  (`models.py`) eagerly imports these same parts — a genuine import cycle (part → root m
+  → .models → eager .\_models → re-entrant `__getattr__`). Cure at source
+  (flext-tap-ldif `e5416b9`): the four part modules resolve `m` through the upstream
+  `flext_meltano` facade (all used members are upstream pydantic/core names) while
+  `c`/`t` stay on the own root (no cycle) — the same idiom the healthy flext-ldif parts
+  use via `flext_cli`.
+- **gen-10: GREEN — `✅ project conformance complete`, exit 0.** The full transactional
+  cycle in the clone passed: 32/32 conforms, lazy-init fixed point, docs receipt, and
+  the fresh-import guard (entrypoints + publications + origin checks) all green. The
+  generator works in the validation clone on the complete project structure. Idempotence
+  proof: gen-11 (second run) — evidence below.
 
 ### 2026-09-22 — Increment 2 closure (cures landed on the integration tips)
 
-- Diagnosis closed (bead `flext-quexi`): the primary `make gen` FlextLazy
-  failure was the gen-4..gen-10 cures living only on the recovery branches —
-  content proof: primary core tip carried the uncured stub (`class FlextLazy`
-  in `_lazy_parts/flextlazy_part_01.py`) while the worktree carried the cure
+- Diagnosis closed (bead `flext-quexi`): the primary `make gen` FlextLazy failure was
+  the gen-4..gen-10 cures living only on the recovery branches — content proof: primary
+  core tip carried the uncured stub (`class FlextLazy` in
+  `_lazy_parts/flextlazy_part_01.py`) while the worktree carried the cure
   (`FlextLazyPart01`), and the primary infra planner did not consume
-  `BOOTSTRAP_CYCLE_EXCEPTION`. A stuck foreign `make gen` (pid 531455) sharing
-  the workspace transaction store caused secondary "unregistered
-  temporary-tree" collisions; killed by operator authorization, store cleared.
-- Wave 1 (gen-blocking cures): recovery → `0.12.0-dev` no-ff — core
-  `15690031c` (FlextLazyPart01 rename + recovered enforcement work), infra
-  `c447d1d1e` (lazy-init planner bootstrap exports; union resolution kept the
-  richer module-level factory `_default_fresh_import_entry_points` and the
-  `_ORIGINS_PLACEHOLDER` constant). Post-landing `make gen` GREEN on the
-  primary (exit 0, fresh-imports passed) and the fixed point was proven by
-  repeat runs with zero dirty files on both core and infra; core check exit 0
-  (canonical gates 0; 12 pyrefly ghost-export advisories report-only per the
-  warning law); pytest 208 passed earlier on the pre-cure tip.
-- Wave 2 (entrypoint/fresh-import cures): 20 members merged no-ff, all clean —
-  plugin, quality, tap-ldap, tap-ldif, tap-oracle-oic, api, auth, grpc,
-  observability, cli, ldap, ldif, oracle-oic, oracle-wms, target-ldap,
-  db-oracle, dbt-ldap, dbt-ldif, tests, web. Per-member `make gen` +
-  `make check` validation loop, then serial pushes.
+  `BOOTSTRAP_CYCLE_EXCEPTION`. A stuck foreign `make gen` (pid 531455) sharing the
+  workspace transaction store caused secondary "unregistered temporary-tree" collisions;
+  killed by operator authorization, store cleared.
+- Wave 1 (gen-blocking cures): recovery → `0.12.0-dev` no-ff — core `15690031c`
+  (FlextLazyPart01 rename + recovered enforcement work), infra `c447d1d1e` (lazy-init
+  planner bootstrap exports; union resolution kept the richer module-level factory
+  `_default_fresh_import_entry_points` and the `_ORIGINS_PLACEHOLDER` constant).
+  Post-landing `make gen` GREEN on the primary (exit 0, fresh-imports passed) and the
+  fixed point was proven by repeat runs with zero dirty files on both core and infra;
+  core check exit 0 (canonical gates 0; 12 pyrefly ghost-export advisories report-only
+  per the warning law); pytest 208 passed earlier on the pre-cure tip.
+- Wave 2 (entrypoint/fresh-import cures): 20 members merged no-ff, all clean — plugin,
+  quality, tap-ldap, tap-ldif, tap-oracle-oic, api, auth, grpc, observability, cli,
+  ldap, ldif, oracle-oic, oracle-wms, target-ldap, db-oracle, dbt-ldap, dbt-ldif, tests,
+  web. Per-member `make gen` + `make check` validation loop, then serial pushes.
 - gen-11 idempotence (clone): evidence below.
 
 ### 2026-09-22 — Session 3: Increment 2 closure evidence, mod cures, checkpoint
 
 - **WIP adoption (Increment 1 residue)**: flext-core pending render adopted as
-  `76c59a26e` (20 files: enforcement bindings consolidated to the `.enforcement`
-  owner, facade `__all__` pruned to declared re-exports per ADR-018, scripts and
-  tests lazy maps widened, generated-docs ignores, pytest timeout raises);
-  plan-log evidence committed `f31afe30e7`; the 13 moved gitlinks recorded as
-  `16bd43928f`. Worktree fully clean at members afterwards.
-- **Delivery-worktree `make gen` (gen-1): GREEN** — exit 0, `✅ project
-  conformance complete`, all stages including `verify-fresh-imports`
-  (/tmp/worktree-gen-1.log). Together with the clone's gen-10/gen-12 this closes
-  the planner↔probe parity defect: bead flext-fvc6d CLOSED on this runtime
-  evidence (cure `ff6266057` active in both environments).
-- **Clone idempotence (gen-11 redo, gen-12): GREEN no-op** — `Lazy-init plan: 0
-  effects` (gen-10 planned 111), exit 0, `✅ project conformance complete`
+  `76c59a26e` (20 files: enforcement bindings consolidated to the `.enforcement` owner,
+  facade `__all__` pruned to declared re-exports per ADR-018, scripts and tests lazy
+  maps widened, generated-docs ignores, pytest timeout raises); plan-log evidence
+  committed `f31afe30e7`; the 13 moved gitlinks recorded as `16bd43928f`. Worktree fully
+  clean at members afterwards.
+- **Delivery-worktree `make gen` (gen-1): GREEN** — exit 0,
+  `✅ project conformance complete`, all stages including `verify-fresh-imports`
+  (/tmp/worktree-gen-1.log). Together with the clone's gen-10/gen-12 this closes the
+  planner↔probe parity defect: bead flext-fvc6d CLOSED on this runtime evidence (cure
+  `ff6266057` active in both environments).
+- **Clone idempotence (gen-11 redo, gen-12): GREEN no-op** — `Lazy-init plan: 0 effects`
+  (gen-10 planned 111), exit 0, `✅ project conformance complete`
   (/tmp/clone-gen-12.log). The killed gen-11 proof is delivered.
 - **`make mod` findings cured at source**: root `src/flext/settings.py`
   `from pydantic import ConfigDict` → `ClassVar[m.SettingsConfigDict]` via the
   `flext_core` models facade (`b4042b4290`); three root script subpackages
-  (`scripts/{docs,hooks,workspace}`) received explicit `__init__.py` markers —
-  the 3 ruff INP001 findings that failed every `make fix` run at the workspace
-  root (`7905cb3ad2`).
-- **Rope snapshot inventory guard cured** (infra `b41bbd2a7`): governed
-  project-root entry modules (e.g. member-root `conftest.py`, deliberately in
-  the ast-grep scope per `ast_grep_scan_targets`) now join the closed snapshot
-  inventory from disk; invented or outside-root paths still fail fast.
-  Regression `tests/unit/test_infra_rope_snapshot.py` — both tests PASSED in
-  the full infra suite run (/tmp/infra-test-1.log:1175-1176).
-- **`make mod` next defect layer (OPEN, blocks the mod semantic phase)**: rope
-  1.14.0 patchedast raises `MismatchedTokenError` on MULTILINE
-  `Annotated[T, call()]` parameter annotations with defaults. Minimal repro
-  proven; 5 governed files affected (first: flext-cli/tests/utilities.py:82).
-  Filed as **bead flext-4frn5** (P1, owner flext-infra `_utilities/_rope/`
-  patch home). rope 1.14.0 is the latest release — no upstream bump cure.
-- **Member environments**: 31/31 per-member `make setup` exit 0 in the delivery
-  worktree (chunked serial; /tmp/worktree-member-setups.log) — unblocks the
+  (`scripts/{docs,hooks,workspace}`) received explicit `__init__.py` markers — the 3
+  ruff INP001 findings that failed every `make fix` run at the workspace root
+  (`7905cb3ad2`).
+- **Rope snapshot inventory guard cured** (infra `b41bbd2a7`): governed project-root
+  entry modules (e.g. member-root `conftest.py`, deliberately in the ast-grep scope per
+  `ast_grep_scan_targets`) now join the closed snapshot inventory from disk; invented or
+  outside-root paths still fail fast. Regression
+  `tests/unit/test_infra_rope_snapshot.py` — both tests PASSED in the full infra suite
+  run (/tmp/infra-test-1.log:1175-1176).
+- **`make mod` next defect layer (OPEN, blocks the mod semantic phase)**: rope 1.14.0
+  patchedast raises `MismatchedTokenError` on MULTILINE `Annotated[T, call()]` parameter
+  annotations with defaults. Minimal repro proven; 5 governed files affected (first:
+  flext-cli/tests/utilities.py:82). Filed as **bead flext-4frn5** (P1, owner flext-infra
+  `_utilities/_rope/` patch home). rope 1.14.0 is the latest release — no upstream bump
+  cure.
+- **Member environments**: 31/31 per-member `make setup` exit 0 in the delivery worktree
+  (chunked serial; /tmp/worktree-member-setups.log) — unblocks the
   fix/fmt/check/test/build member fan-out that previously failed on missing
   interpreters. The clone still needs its own member setups.
-- **Fixed-point renders adopted fleet-wide**: root `00b2f80948` (52 files:
-  ignores, Makefile, pyproject, api-reference and projects docs, root inits) +
-  `chore(gen): adopt the conformance fixed-point render` on all 30 non-core
-  members (tracked-only, e.g. flext-api `164bdf67`, flext-infra `126852d26`).
-- **flext-infra suite in this worktree** (fresh member venv, cold testmon):
-  pre-absorb 205 failed / 2692 passed / 34 errors (/tmp/infra-test-1.log);
-  origin tip (23 commits: gen-fixed-point planner repairs, warning posture)
-  absorbed no-ff into the lane branch (clean, 57 files); post-absorb rerun
-  evidence below.
-- **Clone `make fix` findings**: same 3 INP001 (checkpoint-old root scripts —
-  cured at source in the delivery lane; transport pending) + member fan-out
-  missing interpreters (clone member setups pending). Clone `make fmt` root
-  stage green; member fan-out blocked the same way.
+- **Fixed-point renders adopted fleet-wide**: root `00b2f80948` (52 files: ignores,
+  Makefile, pyproject, api-reference and projects docs, root inits) +
+  `chore(gen): adopt the conformance fixed-point render` on all 30 non-core members
+  (tracked-only, e.g. flext-api `164bdf67`, flext-infra `126852d26`).
+- **flext-infra suite in this worktree** (fresh member venv, cold testmon): pre-absorb
+  205 failed / 2692 passed / 34 errors (/tmp/infra-test-1.log); origin tip (23 commits:
+  gen-fixed-point planner repairs, warning posture) absorbed no-ff into the lane branch
+  (clean, 57 files); post-absorb rerun evidence below.
+- **Clone `make fix` findings**: same 3 INP001 (checkpoint-old root scripts — cured at
+  source in the delivery lane; transport pending) + member fan-out missing interpreters
+  (clone member setups pending). Clone `make fmt` root stage green; member fan-out
+  blocked the same way.
 
 ### 2026-09-22 — Session 4: integration-tip landing of the cures (primary checkouts)
 
 - **Wave 1 (gen-blocking cures → `0.12.0-dev`, no-ff)**: core `15690031c`
-  (FlextLazyPart01 rename + recovered enforcement work), infra `c447d1d1e`
-  (planner bootstrap exports; union resolution kept the richer module-level
-  factory `_default_fresh_import_entry_points` + `_ORIGINS_PLACEHOLDER`).
-  Post-landing primary `make gen` GREEN and the fixed point proven (repeat
-  runs, zero dirty on both); core check exit 0 (canonical 0; pyrefly
-  ghost-export advisories report-only per the warning law). Root cause of the
-  earlier primary failure = cures unlanded (bead `flext-quexi`, closed);
-  secondary factor was a stuck foreign `make gen` (pid 531455) sharing the
-  workspace transaction store — killed by operator authorization, store
-  cleared.
-- **Wave 2 (entrypoint/fresh-import cures → `0.12.0-dev`, no-ff)**: 20
-  members merged clean (plugin, quality, tap-ldap, tap-ldif, tap-oracle-oic,
-  api, auth, grpc, observability, cli, ldap, ldif, oracle-oic, oracle-wms,
-  target-ldap, db-oracle, dbt-ldap, dbt-ldif, tests, web). Per-member `make
-  gen` all exit 0; autofix pass committed and pushed per member. flext-cli
-  needed `make setup` (stale site-packages flext_core lacked the new export
-  map) before its fresh-import went green. flext-plugin mypy arg-type trio
-  cured at source (mutable dict materialized for `Registry.plugins`; test
-  dependency literals → tuples per the declared contract) — plugin check exit
-  0.
-- **Clone fixed point completed**: gen-11..gen-14 all exit 0; after committing
-  the submodule-internal convergence, gen-14 finished with zero dirty files.
-- **Known residual**: ~42 canonical mypy findings across 12 wave-2 members
-  (facade-Any / no-any-return family + a few arg-types) — advisory per the
-  warning law; census filed in the companion bead.
-- **Checkpoint**: superproject `0.12.0-dev` @ `64889954f3` pushed, all 31
-  gitlinks verified consistent against origin member tips; member tips at
-  their post-cure/autofix state (core `312a20857`, infra `95267b110`, cli
-  `b9762551`, plugin `9d615d495`, among the Session 3 list).
-
+  (FlextLazyPart01 rename + recovered enforcement work), infra `c447d1d1e` (planner
+  bootstrap exports; union resolution kept the richer module-level factory
+  `_default_fresh_import_entry_points` + `_ORIGINS_PLACEHOLDER`). Post-landing primary
+  `make gen` GREEN and the fixed point proven (repeat runs, zero dirty on both); core
+  check exit 0 (canonical 0; pyrefly ghost-export advisories report-only per the warning
+  law). Root cause of the earlier primary failure = cures unlanded (bead `flext-quexi`,
+  closed); secondary factor was a stuck foreign `make gen` (pid 531455) sharing the
+  workspace transaction store — killed by operator authorization, store cleared.
+- **Wave 2 (entrypoint/fresh-import cures → `0.12.0-dev`, no-ff)**: 20 members merged
+  clean (plugin, quality, tap-ldap, tap-ldif, tap-oracle-oic, api, auth, grpc,
+  observability, cli, ldap, ldif, oracle-oic, oracle-wms, target-ldap, db-oracle,
+  dbt-ldap, dbt-ldif, tests, web). Per-member `make gen` all exit 0; autofix pass
+  committed and pushed per member. flext-cli needed `make setup` (stale site-packages
+  flext_core lacked the new export map) before its fresh-import went green. flext-plugin
+  mypy arg-type trio cured at source (mutable dict materialized for `Registry.plugins`;
+  test dependency literals → tuples per the declared contract) — plugin check exit 0.
+- **Clone fixed point completed**: gen-11..gen-14 all exit 0; after committing the
+  submodule-internal convergence, gen-14 finished with zero dirty files.
+- **Known residual**: ~42 canonical mypy findings across 12 wave-2 members (facade-Any /
+  no-any-return family + a few arg-types) — advisory per the warning law; census filed
+  in the companion bead.
+- **Checkpoint**: superproject `0.12.0-dev` @ `64889954f3` pushed, all 31 gitlinks
+  verified consistent against origin member tips; member tips at their post-cure/autofix
+  state (core `312a20857`, infra `95267b110`, cli `b9762551`, plugin `9d615d495`, among
+  the Session 3 list).

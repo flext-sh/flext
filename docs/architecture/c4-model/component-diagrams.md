@@ -19,7 +19,8 @@
   - [Runtime Components](#runtime-components)
   - [Python Components (FLEXT Services)](#python-components-flext-services)
   - [Common Patterns](#common-patterns)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 

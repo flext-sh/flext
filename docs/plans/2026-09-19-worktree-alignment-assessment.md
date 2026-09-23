@@ -1,5 +1,16 @@
 # Worktree alignment assessment — flext × ai-hub
 
+<!-- TOC START -->
+
+- [1. Capacidade atual do flext (o que funciona)](#1-capacidade-atual-do-flext-o-que-funciona)
+- [2. Contrato ai-hub (para onde alinhar)](#2-contrato-ai-hub-para-onde-alinhar)
+- [3. Desalinhamentos flext × ai-hub](#3-desalinhamentos-flext-ai-hub)
+- [4. Estágio por plano recuperado](#4-estagio-por-plano-recuperado)
+- [5. Todos restantes (por dono)](#5-todos-restantes-por-dono)
+- [6. Decisão recomendada](#6-decisao-recomendada)
+
+<!-- TOC END -->
+
 Data: 2026-09-19 · Autor: agente dedicado flext (épico flext-8j4v5) Escopo: reavaliação
 profunda da funcionalidade de worktrees, alinhamento com o WIP do ai-hub (descoberta +
 manutenção), estágio e todos restantes.

@@ -22,6 +22,8 @@ if TYPE_CHECKING:
     from .settings import FlextRootSettings, FlextRootSettings as settings
     from .typings import FlextRootTypes, t
     from .utilities import FlextRootUtilities, u
+
+
 __all__: tuple[str, ...] = (
     "FlextRoot",
     "FlextRootCli",

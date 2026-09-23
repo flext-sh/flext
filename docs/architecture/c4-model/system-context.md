@@ -20,7 +20,8 @@
   - [Data Storage](#data-storage)
   - [Integration Protocols](#integration-protocols)
   - [Monitoring and Observability](#monitoring-and-observability)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 ## Table of Contents
 

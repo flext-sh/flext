@@ -1,5 +1,31 @@
 # Plano de recuperação e modernização runtime-first do `flext-infra`
 
+<!-- TOC START -->
+
+- [Objetivo](#objetivo)
+- [Atualização de posição — 2026-09-16 23:30Z](#atualizacao-de-posicao-2026-09-16-2330z)
+  - [Progresso aceito](#progresso-aceito)
+  - [Estado atual não verde](#estado-atual-nao-verde)
+  - [Status das fases](#status-das-fases)
+- [Modelo de orquestração e aceite](#modelo-de-orquestracao-e-aceite)
+- [Autocrítica e correção de rumo](#autocritica-e-correcao-de-rumo)
+- [Autoridades e invariantes](#autoridades-e-invariantes)
+- [Estado técnico confirmado para iniciar](#estado-tecnico-confirmado-para-iniciar)
+- [Sequência de execução](#sequencia-de-execucao)
+  - [0. Convergir autoridade, documentação, skills, comandos e projeções](#0-convergir-autoridade-documentacao-skills-comandos-e-projecoes)
+  - [1. Preflight, adoção e Beads](#1-preflight-adocao-e-beads)
+  - [2. Recuperar a funcionalidade do ciclo de geração](#2-recuperar-a-funcionalidade-do-ciclo-de-geracao)
+  - [3. Fechar o ciclo canônico antes de refatorar arquitetura](#3-fechar-o-ciclo-canonico-antes-de-refatorar-arquitetura)
+  - [4. Centralizar SSOT e c/t/p/m/u antes dos splits](#4-centralizar-ssot-e-ctpmu-antes-dos-splits)
+  - [5. Aplicar facade MRO estrita](#5-aplicar-facade-mro-estrita)
+  - [6. Revalidar e limpar testes pela realidade](#6-revalidar-e-limpar-testes-pela-realidade)
+  - [7. Propagar pela frota em fatias pequenas](#7-propagar-pela-frota-em-fatias-pequenas)
+  - [8. Fechamento](#8-fechamento)
+- [Uso obrigatório de ferramentas](#uso-obrigatorio-de-ferramentas)
+- [Stop conditions](#stop-conditions)
+
+<!-- TOC END -->
+
 ## Objetivo
 
 Restabelecer o `flext-infra` como ferramenta utilizável a partir da tip da branch de

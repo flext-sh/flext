@@ -1,5 +1,17 @@
 # Proposta — Resolver os bloqueios do F2 até o 100% green (retomada unificada, épico flext-cpzjo)
 
+<!-- TOC START -->
+
+- [P1 — Gen-check vermelho por deriva ambiente-dependente (runner × rig)](#p1-gen-check-vermelho-por-deriva-ambiente-dependente-runner-rig)
+- [P2 — loc-cap ×5 (bloqueia TODO pousso; dívida pré-existente ao tip)](#p2-loc-cap-5-bloqueia-todo-pousso-divida-pre-existente-ao-tip)
+- [P3 — B404 (\_mypy_supervisor importa subprocess)](#p3-b404-_mypy_supervisor-importa-subprocess)
+- [P4 — Dívida de tipagem do umbrella root (224 erros medidos)](#p4-divida-de-tipagem-do-umbrella-root-224-erros-medidos)
+- [P5 — Cascata per-membro automatizada (31 membros × bump de pino + projeções)](#p5-cascata-per-membro-automatizada-31-membros-bump-de-pino-projecoes)
+- [P6 — Concorrência de atores no workspace compartilhado](#p6-concorrencia-de-atores-no-workspace-compartilhado)
+- [Ordem de execução (custo crescente, destravando o máximo primeiro)](#ordem-de-execucao-custo-crescente-destravando-o-maximo-primeiro)
+
+<!-- TOC END -->
+
 > Base: evidência coletada em primeira mão na sessão de 2026-09-11 (logs, SHAs, PRs
 > #688/#689/#225, runs de CI 34620098915/34635120157/34648317277). Cada item tem
 > causa-raiz provada, não hipótese.

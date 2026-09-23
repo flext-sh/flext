@@ -1,5 +1,23 @@
 # Estabilização 0.12.0 — recuperação, centralização beads, documentação e automação
 
+<!-- TOC START -->
+
+- [Missão (operador, 2026-09-15)](#missao-operador-2026-09-15)
+- [Estado recuperado (evidência)](#estado-recuperado-evidencia)
+  - [Sessão Kilo (ses_f5e00094bffeC88CFrf3lIdv3n, 2026-09-14/15)](#sessao-kilo-ses_f5e00094bffec88cfrf3lidv3n-2026-09-1415)
+  - [Handoff vigente do flext-infra (docs/roadmap/namespace-automation-handoff-2026-09-14.md)](#handoff-vigente-do-flext-infra-docsroadmapnamespace-automation-handoff-2026-09-14md)
+  - [Sessão Codex (2026-09-14/15 — extraída)](#sessao-codex-2026-09-1415-extraida)
+  - [Repositório (censo 2026-09-15)](#repositorio-censo-2026-09-15)
+  - [Gas City / beads centralizado](#gas-city-beads-centralizado)
+- [Plano](#plano)
+  - [Fase R — Recuperação (concluída ao fechar este documento)](#fase-r-recuperacao-concluida-ao-fechar-este-documento)
+  - [Fase P — Replanejamento e melhorias (docs/automação/skills)](#fase-p-replanejamento-e-melhorias-docsautomacaoskills)
+  - [Fase I — Implementação da estabilização](#fase-i-implementacao-da-estabilizacao)
+  - [Critérios de parada](#criterios-de-parada)
+- [Regra de execução](#regra-de-execucao)
+
+<!-- TOC END -->
+
 ## Missão (operador, 2026-09-15)
 
 Recuperar as últimas sessões (Kilo + Codex), alinhar com o beads centralizado do Gas

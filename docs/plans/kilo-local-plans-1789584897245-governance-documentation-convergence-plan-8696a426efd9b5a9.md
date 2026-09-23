@@ -1,5 +1,28 @@
 # FLEXT Governance and Documentation Convergence Plan
 
+<!-- TOC START -->
+
+- [Outcome](#outcome)
+- [Lessons Incorporated](#lessons-incorporated)
+  - [Planning baseline — 2026-09-17](#planning-baseline-2026-09-17)
+- [Authority and Ownership Map](#authority-and-ownership-map)
+- [Coordination Contract](#coordination-contract)
+- [Ordered Plan](#ordered-plan)
+  - [Phase 0 — Elect the Cursor and Freeze Duplicate Work](#phase-0-elect-the-cursor-and-freeze-duplicate-work)
+  - [Phase 1 — Build the Source/Projection Inventory](#phase-1-build-the-sourceprojection-inventory)
+  - [Phase 2 — Land the Provider-Neutral Governance Bundle](#phase-2-land-the-provider-neutral-governance-bundle)
+  - [Phase 3 — Repair and Land the AI Hub Projector](#phase-3-repair-and-land-the-ai-hub-projector)
+  - [Phase 4 — Reconcile FLEXT Maintained Sources](#phase-4-reconcile-flext-maintained-sources)
+  - [Phase 5 — Repair Documentation Generators and Publication Authorization](#phase-5-repair-documentation-generators-and-publication-authorization)
+  - [Phase 6 — Regenerate the Fleet in an Exclusive Window](#phase-6-regenerate-the-fleet-in-an-exclusive-window)
+  - [Phase 7 — Reconcile Beads and Durable Memory](#phase-7-reconcile-beads-and-durable-memory)
+  - [Phase 8 — Validate, Review, Land, and Re-Prove](#phase-8-validate-review-land-and-re-prove)
+- [Failure and Recovery Rules](#failure-and-recovery-rules)
+- [Acceptance Checklist](#acceptance-checklist)
+- [Explicit Non-Goals](#explicit-non-goals)
+
+<!-- TOC END -->
+
 ## Outcome
 
 Converge the current FLEXT governance and documentation corpus without turning session

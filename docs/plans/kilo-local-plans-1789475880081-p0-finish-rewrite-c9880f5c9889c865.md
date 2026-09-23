@@ -1,5 +1,22 @@
 # P0-FINISH — Autocrítica e reescrita do plano de encerramento 0.12.0 (2026-09-15T17:50Z)
 
+<!-- TOC START -->
+
+- [0. Autocrítica pesada (o que fiz de errado e a lição operacional)](#0-autocritica-pesada-o-que-fiz-de-errado-e-a-licao-operacional)
+- [1. Estado de verdade hoje (evidência da sessão)](#1-estado-de-verdade-hoje-evidencia-da-sessao)
+- [2. Ondas de execução (ordem de dependência estrita; cada onda fecha com commit+push+bead)](#2-ondas-de-execucao-ordem-de-dependencia-estrita-cada-onda-fecha-com-commitpushbead)
+  - [Onda A — Adotar e estabilizar o working tree (só o meu escopo)](#onda-a-adotar-e-estabilizar-o-working-tree-so-o-meu-escopo)
+  - [Onda B — gen ×2 (a pedra angular; agora sem WIP quebrado no caminho)](#onda-b-gen-2-a-pedra-angular-agora-sem-wip-quebrado-no-caminho)
+  - [Onda C — Engine make mod (a automação pedida; ANTES de qualquer reparo manual novo)](#onda-c-engine-make-mod-a-automacao-pedida-antes-de-qualquer-reparo-manual-novo)
+  - [Onda D — Gates e tests (obedecer o que os verbos geram)](#onda-d-gates-e-tests-obedecer-o-que-os-verbos-geram)
+  - [Onda E — Centralização c,t,p,m,u (gen-gated, agora desbloqueado)](#onda-e-centralizacao-ctpmu-gen-gated-agora-desbloqueado)
+  - [Onda F — Fechamento e publicação](#onda-f-fechamento-e-publicacao)
+- [3. Regras inegociáveis (reafirmadas)](#3-regras-inegociaveis-reafirmadas)
+- [4. Fora de escopo deste plano](#4-fora-de-escopo-deste-plano)
+- [5. Aceite final (checklist duro)](#5-aceite-final-checklist-duro)
+
+<!-- TOC END -->
+
 ## 0. Autocrítica pesada (o que fiz de errado e a lição operacional)
 
 1. **Whack-a-mole manual onde a engine mandava**: reparei ~7 defeitos de extração de
