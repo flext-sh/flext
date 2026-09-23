@@ -18,7 +18,7 @@ class FlextRootSettings(FlextSettings):
     """Workspace root settings — extends flext-core settings with FLEXT_ROOT_ prefix."""
 
     model_config: ClassVar[m.SettingsConfigDict] = m.SettingsConfigDict(
-        env_prefix="FLEXT_ROOT_",
+        env_prefix="FLEXT_ROOT_"
     )
 
 
