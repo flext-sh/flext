@@ -61,6 +61,7 @@ dev = [
   "actionlint-py>=1.7.12.24",
   "bandit>=1.9.4",
   "deptry",
+  "editables>=0.6",
   "flext-tests",
   "hypothesis",
   "mkdocs",
