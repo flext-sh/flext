@@ -5,9 +5,9 @@
 - [1. Layer roles](#1-layer-roles)
 - [2. Service](#2-service)
 - [3. Ports (S1)](#3-ports-s1)
-- [4. Composition root (`api.py`)](#4-composition-root-apipy)
+- [4. Composition root (api.py)](#4-composition-root-apipy)
 - [5. Operations are the API (S3)](#5-operations-are-the-api-s3)
-- [6. Derived CLI (`cli.py`, S5)](#6-derived-cli-clipy-s5)
+- [6. Derived CLI (cli.py, S5)](#6-derived-cli-clipy-s5)
 - [7. Settings, config and the runtime hook](#7-settings-config-and-the-runtime-hook)
 - [8. Failure semantics](#8-failure-semantics)
 - [9. Forbidden forms](#9-forbidden-forms)
@@ -15,24 +15,25 @@
 
 <!-- TOC END -->
 
-This is the pattern the whole fleet follows. It feeds `flext-core/docs/guides/service-patterns.md`
-(S1–S3, S5) and ADR-019. The slice that makes each piece available is in parentheses.
+This is the pattern the whole fleet follows. It feeds
+`flext-core/docs/guides/service-patterns.md` (S1–S3, S5) and ADR-019. The slice that
+makes each piece available is in parentheses.
 
 ## 1. Layer roles
 
 Sources: flext-law `:31-50,100-102`, `internal-clean-architecture` `:15-19`, ADR-010
 `:104-105`.
 
-| Layer | File or folder | Role | May import |
-|---|---|---|---|
-| External input | `_settings.py`, `settings` singleton | Environment and CLI knobs | stdlib, Pydantic (through the core), upstream base |
-| Business facts | `_config.py`, `config/*.yaml`, `config` singleton | Validated rules | Same |
-| Declarations | `c → t → p → m → u` | Data, types, contracts, models, helpers | The lower layer; reverse imports only under `TYPE_CHECKING` |
-| Project base | `base.py` | `class Flext<X>ServiceBase(s[...])`, `s = …`, runtime hook | Declarations |
-| Use cases | `services/` | One service per use case | Declarations and `p` ports at runtime; never an adapter, executable, global or other service |
-| Adapters | A package folder outside `services/` (for example `adapters/`) | Implement ports | Declarations and the owner's third-party libraries (tier-whitelist) |
-| Composition root | `api.py` | **Only** place that builds adapters and port-bearing services | Everything above |
-| Transport | `cli.py` | Translates input and propagates the first failure | `api.py` and `flext-cli` |
+| Layer            | File or folder                                                 | Role                                                          | May import                                                                                   |
+| ---------------- | -------------------------------------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| External input   | `_settings.py`, `settings` singleton                           | Environment and CLI knobs                                     | stdlib, Pydantic (through the core), upstream base                                           |
+| Business facts   | `_config.py`, `config/*.yaml`, `config` singleton              | Validated rules                                               | Same                                                                                         |
+| Declarations     | `c → t → p → m → u`                                            | Data, types, contracts, models, helpers                       | The lower layer; reverse imports only under `TYPE_CHECKING`                                  |
+| Project base     | `base.py`                                                      | `class Flext<X>ServiceBase(s[...])`, `s = …`, runtime hook    | Declarations                                                                                 |
+| Use cases        | `services/`                                                    | One service per use case                                      | Declarations and `p` ports at runtime; never an adapter, executable, global or other service |
+| Adapters         | A package folder outside `services/` (for example `adapters/`) | Implement ports                                               | Declarations and the owner's third-party libraries (tier-whitelist)                          |
+| Composition root | `api.py`                                                       | **Only** place that builds adapters and port-bearing services | Everything above                                                                             |
+| Transport        | `cli.py`                                                       | Translates input and propagates the first failure             | `api.py` and `flext-cli`                                                                     |
 
 Existence rule (D1 = A, S7): `api.py` exists only when the project composes services;
 `cli.py` only with a console script **and** operations. The kernel has neither, nor
@@ -78,13 +79,14 @@ class FlextLdapProtocolsConnection:
 - A port is a `@runtime_checkable` Protocol extending `p.Base` with the minimal consumed
   capability, published as `p.<Ns>.<Name>`. Its type is a **plain Protocol class**; a
   subscripted generic or a TypeVar is rejected when the service class is created.
-- Field form: `name: t.Port[p.<Ns>.<Port>] = m.Field(exclude=True, description="…")`, with
-  `t.Port[P] = Annotated[P, SkipJsonSchema()]`. Pydantic validates by `isinstance` on
-  construction and on assignment. `exclude=True` stays on the field.
-- Forbidden on a port: `SkipValidation`, `InstanceOf[concrete class]`, a `None`
-  default, a `default_factory` that builds infrastructure, a concrete type.
-- Runtime seeds are the only typed absence: `runtime_settings: t.Port[p.Settings | None]`
-  and `initial_context: t.Port[p.Context | None]` (never `t.Port[p.X] | None`, which
+- Field form: `name: t.Port[p.<Ns>.<Port>] = m.Field(exclude=True, description="…")`,
+  with `t.Port[P] = Annotated[P, SkipJsonSchema()]`. Pydantic validates by `isinstance`
+  on construction and on assignment. `exclude=True` stays on the field.
+- Forbidden on a port: `SkipValidation`, `InstanceOf[concrete class]`, a `None` default,
+  a `default_factory` that builds infrastructure, a concrete type.
+- Runtime seeds are the only typed absence:
+  `runtime_settings: t.Port[p.Settings | None]` and
+  `initial_context: t.Port[p.Context | None]` (never `t.Port[p.X] | None`, which
   publishes `{"type": "null"}`). Every runtime-only field of `x`, including
   `settings_type`, is out of the JSON Schema.
 
@@ -95,6 +97,7 @@ Pure DI (default):
 ```python
 class FlextLdap(FlextLdapSearch, FlextLdapModify):
     """LDAP facade: the composed service."""
+
 
 ldap: FlextLdap = FlextLdap(connection=FlextLdapConnection(settings=settings.Ldap))
 ```
@@ -107,30 +110,31 @@ ldap: FlextLdap = FlextLdap(connection=FlextLdapConnection(settings=settings.Lda
   never call it.
 - Protocol keys and `compose` (S2b, conditional):
   `container.bind(p.Ldap.Connection, adapter)` then `FlextLdap.compose(container)`, only
-  if the signature type-checks cleanly under mypy (`type-abstract`), pyright and pyrefly;
-  otherwise D3 goes to the operator and the fleet keeps pure DI. `compose` fills only
-  required `t.Port` fields; two ports of one Protocol need an explicit argument.
+  if the signature type-checks cleanly under mypy (`type-abstract`), pyright and
+  pyrefly; otherwise D3 goes to the operator and the fleet keeps pure DI. `compose`
+  fills only required `t.Port` fields; two ports of one Protocol need an explicit
+  argument.
 - `fetch_global()` stays for port-free services; a port-bearing service's
   `fetch_global()` raises `ValidationError`, which is the correct, tested behavior.
 
 ## 5. Operations are the API (S3)
 
 - **Which methods:** plain functions (per `inspect.getattr_static`), public, declared in
-  MRO classes below `FlextService`. Excluded: every name in `dir(FlextService)` even when
-  overridden (`execute`, `track`, `model_*`, …), properties, computed fields,
+  MRO classes below `FlextService`. Excluded: every name in `dir(FlextService)` even
+  when overridden (`execute`, `track`, `model_*`, …), properties, computed fields,
   classmethods, staticmethods, Pydantic validators and serializers.
-- **Shape:** `def name(self) -> p.Result[X]` or `def name(self, request: M) -> p.Result[X]`
-  with `M` a Pydantic model subclass; a one-line docstring; not async, not generic; no
-  `*args`/`**kwargs`, keyword-only parameters or defaults. The return type is left to the
-  static checkers.
+- **Shape:** `def name(self) -> p.Result[X]` or
+  `def name(self, request: M) -> p.Result[X]` with `M` a Pydantic model subclass; a
+  one-line docstring; not async, not generic; no `*args`/`**kwargs`, keyword-only
+  parameters or defaults. The return type is left to the static checkers.
 - **Discovery:** `u.service_operations(ServiceType)` is **lazy** (called by the CLI and
   tools, never at class creation) and returns frozen `m.ServiceOperation` values (name,
   summary, request model or `None`). Annotation resolution without `eval`: read
   `inspect.get_annotations(func)` unevaluated, require a dotted name, resolve its first
-  part in `func.__globals__` and the rest by `getattr`, require a Pydantic model subclass.
-  It raises `TypeError` naming the operation, annotation, module and fix on a wrong
-  shape, a missing docstring, an unresolvable name, a sibling-class name collision, or a
-  service with zero operations.
+  part in `func.__globals__` and the rest by `getattr`, require a Pydantic model
+  subclass. It raises `TypeError` naming the operation, annotation, module and fix on a
+  wrong shape, a missing docstring, an unresolvable name, a sibling-class name
+  collision, or a service with zero operations.
 
 ## 6. Derived CLI (`cli.py`, S5)
 
@@ -180,7 +184,8 @@ exit_code = cli.finalize_result(cli.execute_app(app, prog_name="flext-ldap"))
 
 1. `SkipValidation` on a dependency, including `Annotated[..., t.SkipValidation]`.
 2. `getattr(x, "member", default)` on a typed member; attribute-name probes.
-3. Hand-rolled singletons (`fetch_instance`, `fetch_global_instance`, local `_instance`).
+3. Hand-rolled singletons (`fetch_instance`, `fetch_global_instance`, local
+   `_instance`).
 4. `settings or X.fetch_global()`; `__init__` redeclared to inject settings.
 5. A service calling another service's `fetch_global()`; infrastructure built inside a
    service, including `PrivateAttr(default_factory=…)`.

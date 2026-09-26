@@ -222,7 +222,7 @@ class FlextRootDependabotMerge:
                 operation="gh pr close",
                 reason=result.error or "unknown error",
             )
-        return bool(result.value.exit_code == 0)
+        return result.value.exit_code == 0
 
     @classmethod
     def merge_pr(

@@ -21,8 +21,8 @@
 
 1. Authority order: newest operator request, orchestration contract, Beads, ADRs,
    skills, docs, defaults.
-2. D-ASK: on doubt or conflict, stop and ask one precise question; a conflict between two
-   operator orders is presented side by side with numbers.
+2. D-ASK: on doubt or conflict, stop and ask one precise question; a conflict between
+   two operator orders is presented side by side with numbers.
 3. Settled decisions are not reopened: D1 = A (2026-09-25; D2 and D3 are asked only when
    their slice arrives), decision 4 of the ai-hub plan v3, D-CAP (module cap 1000),
    D-SET (`config.<Ns>`/`settings.<Ns>`), D-CI, D-VENV, admin merge authorized when the
@@ -76,12 +76,12 @@
 
 ## 5. Commands and environment
 
-1. Only root Make verbs of the lane (`setup`, `gen`, `mod`, `fix`, `fmt`, `check`, `test`,
-   `build`, `docs`, and the lock verb that the lane's `make help` declares). Never raw
-   `pytest`, `ruff`, `pyrefly`, `mypy` or `uv`.
+1. Only root Make verbs of the lane (`setup`, `gen`, `mod`, `fix`, `fmt`, `check`,
+   `test`, `build`, `docs`, and the lock verb that the lane's `make help` declares).
+   Never raw `pytest`, `ruff`, `pyrefly`, `mypy` or `uv`.
 2. Every lane verb runs as `env -u VIRTUAL_ENV -u UV_PROJECT_ENVIRONMENT make <verb>`.
-3. Shell guard: one command per call, at most one `&&` and one `|`, no `;`, no
-   `$(...)`, no `cd` into another checkout (`git -C`, `env -C`).
+3. Shell guard: one command per call, at most one `&&` and one `|`, no `;`, no `$(...)`,
+   no `cd` into another checkout (`git -C`, `env -C`).
 4. Long output goes to `~/tmp/v8/<slice>/<name>.log`; long commands run as background
    tasks whose completion evidence is read before dependent work.
 5. mypy runs only with the project memory cap.
@@ -101,17 +101,18 @@
    exact head; every review thread resolved.
 6. Merge commit (`gh pr merge --merge`, `--admin` authorized with the touched gates
    green); never squash or rebase.
-7. Divergence: `git merge --no-ff origin/0.12.0-dev` into the lane, resolve hunk by hunk,
-   revalidate.
+7. Divergence: `git merge --no-ff origin/0.12.0-dev` into the lane, resolve hunk by
+   hunk, revalidate.
 8. After merge: fetch, prove on the merged SHA, and retire the lane only after
    `git merge-base --is-ancestor` against a fresh fetch.
 
 ## 7. Codemods and generated files
 
-1. A repeated pattern becomes a rule in `flext-infra/src/flext_infra/codemod/rules/<id>.yml`
-   with a fixture `codemod/tests/<id>-test.yml`, a snapshot, and `ast-grep test` in the
-   same commit (R10); reuse the catalog first; prefer the most general rule that still
-   constrains its receiver.
+1. A repeated pattern becomes a rule in
+   `flext-infra/src/flext_infra/codemod/rules/<id>.yml` with a fixture
+   `codemod/tests/<id>-test.yml`, a snapshot, and `ast-grep test` in the same commit
+   (R10); reuse the catalog first; prefer the most general rule that still constrains
+   its receiver.
 2. Manual edits only for unique cases, with the reason recorded.
 3. A checkpoint commit before any `make mod`; scoped commits after it.
 4. "generated findings require canonical generator repair" means the generator is the
@@ -132,16 +133,17 @@
    before mutations.
 2. Claim before effects; update at every slice boundary.
 3. A newly observed red gets a bead (or a comment on its owner) in the same turn.
-4. Closure with four-source evidence (registered state, git, measured reality, integrated
-   code); reasons DONE, SUPERSEDED or OBSOLETE.
+4. Closure with four-source evidence (registered state, git, measured reality,
+   integrated code); reasons DONE, SUPERSEDED or OBSOLETE.
 5. Inventories that support a conclusion use `--limit 0`.
 
 ## 10. Concurrency
 
 1. Foreign work is input: adopt and fix forward; never discard.
-2. Do not touch the files of lane `flext-edcqq` (beartype and enforcement in the
-   core); if it is still idle when S9 starts, ask whether to adopt it.
-3. Before S7, cross-check open `flext-infra` PRs (#865, #861, #858) and active worktrees.
+2. Do not touch the files of lane `flext-edcqq` (beartype and enforcement in the core);
+   if it is still idle when S9 starts, ask whether to adopt it.
+3. Before S7, cross-check open `flext-infra` PRs (#865, #861, #858) and active
+   worktrees.
 4. One slice at a time per repository; slices in different repositories may run in
    parallel when independent.
 5. Abandonment is never presumed.
@@ -157,16 +159,16 @@ per repository; never `0.20.0-dev`, dolt, `dev` or `main`; content conflicts are
 
 ## 12. New V8 laws
 
-| Law | Content |
-|---|---|
+| Law | Content                                                                                                                                              |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | R12 | A service dependency is `t.Port[p.X]` with `exclude=True` and a plain Protocol class; runtime seeds `t.Port[p.X \| None]` are the only typed absence |
-| R13 | Only `api.py` builds adapters and port-bearing services (pure DI, or `compose` if S2b passes); building an adapter performs no I/O |
-| R14 | A public service method is an operation shaped as in `03-contract.md` §5; discovery is lazy, never at class creation |
-| R15 | A member CLI comes from `service_routes(Class, provide=…)`; `--help` builds no adapter; Singer connectors keep ADR-006 |
-| R16 | A service reads no global `settings`/`config` |
-| R17 | Consumers first: a base contract contracts only after each consumer declared what it uses |
-| R18 | No skeleton facade and no no-op `main()`; a layer file exists only with real content (D1 = A) |
-| R19 | Every base slice proves its affected consumers before merge, in the fleet validation workspace |
-| R20 | Every `r.fail` carries its source exception; every `unwrap` chains the cause |
-| R21 | A base expansion never forces a fleet sweep as a side effect; new contracts enter through structural Protocols or together with the fleet codemod |
-| R22 | Never build an object that must be validated through `model_copy(update=)` |
+| R13 | Only `api.py` builds adapters and port-bearing services (pure DI, or `compose` if S2b passes); building an adapter performs no I/O                   |
+| R14 | A public service method is an operation shaped as in `03-contract.md` §5; discovery is lazy, never at class creation                                 |
+| R15 | A member CLI comes from `service_routes(Class, provide=…)`; `--help` builds no adapter; Singer connectors keep ADR-006                               |
+| R16 | A service reads no global `settings`/`config`                                                                                                        |
+| R17 | Consumers first: a base contract contracts only after each consumer declared what it uses                                                            |
+| R18 | No skeleton facade and no no-op `main()`; a layer file exists only with real content (D1 = A)                                                        |
+| R19 | Every base slice proves its affected consumers before merge, in the fleet validation workspace                                                       |
+| R20 | Every `r.fail` carries its source exception; every `unwrap` chains the cause                                                                         |
+| R21 | A base expansion never forces a fleet sweep as a side effect; new contracts enter through structural Protocols or together with the fleet codemod    |
+| R22 | Never build an object that must be validated through `model_copy(update=)`                                                                           |
