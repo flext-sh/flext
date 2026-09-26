@@ -33,7 +33,7 @@ the canonical authorities first; this file only adds lane discipline.
 [agents-md]: https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md
 [governance-md]: ../GOVERNANCE.md
 [flext-law]:
-  https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md
+  <https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md>
 [adr-005]: ../architecture/adr/005-config-settings-constants-templates-schemas-ssot.md
 
 ## 1. One lane, one bead, one worktree

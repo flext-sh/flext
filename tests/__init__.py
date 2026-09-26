@@ -9,7 +9,8 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext import c, d, e, h, m, p, r, s, settings, t, u, x
+    from flext import c, m, p, s, settings, t, u
+    from flext_core import d, e, h, r, x
 
     from . import infra, unit
 
@@ -36,20 +37,8 @@ _LAZY_IMPORTS = MappingProxyType(
         MappingProxyType({
             ".infra": ("infra",),
             ".unit": ("unit",),
-            "flext": (
-                "c",
-                "d",
-                "e",
-                "h",
-                "m",
-                "p",
-                "r",
-                "s",
-                "settings",
-                "t",
-                "u",
-                "x",
-            ),
+            "flext": ("c", "m", "p", "s", "settings", "t", "u"),
+            "flext_core": ("d", "e", "h", "r", "x"),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
