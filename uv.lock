@@ -6070,10 +6070,10 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.13.5" },
     { name = "pydantic-settings", specifier = ">=2.14.2,<2.15" },
     { name = "pyyaml", specifier = ">=6.0.3" },
-    { name = "starlette", specifier = ">=1.6.0" },
+    { name = "starlette", specifier = ">=1.7.0" },
     { name = "structlog", specifier = ">=25.5.0,<27" },
     { name = "typing-extensions", specifier = ">=4.16.0" },
-    { name = "uvicorn", specifier = ">=0.53.0" },
+    { name = "uvicorn", specifier = ">=0.54.0" },
     { name = "werkzeug", specifier = ">=3.1.8" },
 ]
 

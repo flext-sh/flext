@@ -24,6 +24,8 @@ repository:
   editable: false
   read_only: false
 project:
+  # Workspace members resolve through the local overlay; no Git revision overrides.
+  dependency_revisions: {}
   package_name: "flext"
   class_stem: "Flext"
   namespace: "Flext"
