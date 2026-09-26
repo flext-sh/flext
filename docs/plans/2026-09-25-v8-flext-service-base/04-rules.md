@@ -14,6 +14,7 @@
 - [10. Concurrency](#10-concurrency)
 - [11. V7 laws R1–R11](#11-v7-laws-r1r11)
 - [12. New V8 laws](#12-new-v8-laws)
+- [13. Operator laws of 2026-09-26](#13-operator-laws-of-2026-09-26)
 
 <!-- TOC END -->
 
@@ -177,3 +178,14 @@ dolt, `dev` or `main`; content conflicts are asked.
 | R20 | Every `r.fail` carries its source exception; every `unwrap` chains the cause                                                                         |
 | R21 | A base expansion never forces a fleet sweep as a side effect; new contracts enter through structural Protocols or together with the fleet codemod    |
 | R22 | Never build an object that must be validated through `model_copy(update=)`                                                                           |
+
+## 13. Operator laws of 2026-09-26
+
+| Law | Content |
+| --- | ------- |
+| R23 | A candidate reaches a PR only after the local pre-push gate is green on the committed head: the same verbs CI runs (`make gen` with a clean tree, `make audit`, `make check`) plus `make test`, each time-boxed. CI confirms; it never discovers. A later commit or merge needs a new green run |
+| R24 | Tests have a zero baseline of permission to do anything wrong: no mocks, patches, fakes, private access, tautologies, hardcoded owner values, skips or xfails; the `ban-test-*` rules report zero findings for every test added or touched. A test that cannot be written cleanly means the production API is wrong |
+| R25 | Every execution carries a timeout (`setup`/`upg`/`check`/`test` 600 s; `gen`/`fix`/`fmt` 300 s); expiry is red and is never retried with a larger limit. Slowness is a defect fixed at its owner after profiling, never waited out |
+| R26 | One source of truth per fact. A second derivation of the same fact (a file-existence check beside a typed role, a member list beside the declared one) is removed in the same change, never kept beside the owner |
+| R27 | No helper whose job is to create a Pydantic model. Records are built by the model itself (`M(...)`, `M.model_validate(...)` at the boundary); a parameter never accepts "value or prebuilt record" (`M \| raw`) sorted out by `isinstance`; the caller is fixed to send the one declared type |
+| R28 | Validation lives in the model and is Pydantic-2 native first: `Annotated` constraints, `Field` constraints, strict types, computed fields; field validators stay thin and delegate any real logic to `u`. Models carry no complex helpers; utilities own behavior |
