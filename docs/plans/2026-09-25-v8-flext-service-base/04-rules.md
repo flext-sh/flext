@@ -193,3 +193,4 @@ dolt, `dev` or `main`; content conflicts are asked.
 | R30 | A model is declared once. Lower namespaces never redeclare it: they reuse it as is, or extend it by inheritance or composition, keeping the upstream model's contract |
 | R31 | SOLID guides every change: duplicated logic is removed, a method in the wrong place moves to its owner, and callers use the owner instead of rewriting it locally |
 | R32 | Closed value sets are `StrEnum` members in `c`, used directly as the typed value (and as the `Literal` source where a literal type is needed); no bare string literal repeats a constant, no parallel literal alias, no patch around a wrong type |
+| R33 | Short landing cadence: every stable, locally green increment is committed, pushed, reviewed by CI and merged `--no-ff` promptly; lanes merge the current integration tip before each push, and consumers are brought to the new tips in the same cycle. Long-lived lanes and batched landings are defects |
