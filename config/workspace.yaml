@@ -42,6 +42,8 @@ project:
   documentation: "https://docs.flext.sh"
   repository_root_rel: "."
   year: 2026
+  # Members resolve from this workspace, never from pinned provider revisions.
+  dependency_revisions: {}
 # NOTE (multi-agent, mro-wkii.17 / agent: codex): the typed manifest context is
 # the sole topology owner; every declared member/exclusion round-trips here.
 members:
