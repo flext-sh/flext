@@ -1,5 +1,15 @@
 # Handoff — Estabilização mypy/CI + ciclo de integração da frota (2026-09-23)
 
+<!-- TOC START -->
+
+- [1. Missão (diretrizes do operador, mais recente vence)](#1-missao-diretrizes-do-operador-mais-recente-vence)
+- [2. Causas raiz encontradas e estado das correções](#2-causas-raiz-encontradas-e-estado-das-correcoes)
+- [3. Estado atual no momento do handoff (capturado)](#3-estado-atual-no-momento-do-handoff-capturado)
+- [4. Passo a passo de execução (nova sessão)](#4-passo-a-passo-de-execucao-nova-sessao)
+- [5. Armadilhas duras (aprendidas nesta sessão)](#5-armadilhas-duras-aprendidas-nesta-sessao)
+
+<!-- TOC END -->
+
 > Documento de continuidade. Esta sessão encerrou no meio do **gen14** (morto por
 > disputa de lane); a nova sessão deve retomar do **Estado atual** abaixo e seguir o
 > **Passo a passo** na ordem. Não re-fazer o que já está pousado.
