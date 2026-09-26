@@ -23,9 +23,10 @@
    skills, docs, defaults.
 2. D-ASK: on doubt or conflict, stop and ask one precise question; a conflict between
    two operator orders is presented side by side with numbers.
-3. Settled decisions are not reopened: D1 = A (2026-09-25; D2 and D3 are asked only when
-   their slice arrives), decision 4 of the ai-hub plan v3, D-CAP (module cap 1000),
-   D-SET (`config.<Ns>`/`settings.<Ns>`), D-CI, D-VENV, admin merge authorized when the
+3. Settled decisions are not reopened: D1 = A (2026-09-25); D3 = pure DI, definitive, no
+   S2b (2026-09-26); D2 is asked when infra adoption starts; decision 4 of the ai-hub
+   plan v3; module limit 200 logical lines (2026-09-26, supersedes D-CAP 1000); D-SET
+   (`config.<Ns>`/`settings.<Ns>`), D-CI, D-VENV, admin merge authorized when the
    touched gates are green.
 4. An exception to a rule exists only with explicit operator authorization recorded on a
    bead.
@@ -54,7 +55,8 @@
    external data enters through `model_validate`/`model_validate_json`.
 5. Strict typing: no `Any`/`object`; `T | None`; `t.*` aliases and `p.*` protocols;
    PEP 695.
-6. `flext-core` enriches existing modules before creating new ones; module cap 1000.
+6. `flext-core` enriches existing modules before creating new ones; every module stays
+   within 200 logical lines, with net-negative LOC on refactors.
 7. Fewer public APIs: extend a method with a keyword parameter before adding a method;
    monomorphic returns.
 8. Generated files change only through `make gen`.
@@ -76,9 +78,10 @@
 
 ## 5. Commands and environment
 
-1. Only root Make verbs of the lane (`setup`, `gen`, `mod`, `fix`, `fmt`, `check`,
-   `test`, `build`, `docs`, and the lock verb that the lane's `make help` declares).
-   Never raw `pytest`, `ruff`, `pyrefly`, `mypy` or `uv`.
+1. Only selector-free root Make verbs of the lane (`setup`, `upg`, `gen`, `mod`, `fix`,
+   `fmt`, `check`, `test`, `build`, `docs`). No Make selector, file filter,
+   environment-dispatched sub-operation or raw `pytest`, `ruff`, `pyrefly`, `mypy` or
+   `uv`; a missing operation is a missing verb, repaired at the Make/codegen owner.
 2. Every lane verb runs as `env -u VIRTUAL_ENV -u UV_PROJECT_ENVIRONMENT make <verb>`.
 3. Shell guard: one command per call, at most one `&&` and one `|`, no `;`, no `$(...)`,
    no `cd` into another checkout (`git -C`, `env -C`).
@@ -92,7 +95,8 @@
 
 1. One worktree per slice, `~/flext-work/v8-<slice>/<repo>`, on a branch from a freshly
    fetched `origin/0.12.0-dev`; never implement in the primary checkout.
-2. Stage explicit paths only; partition owned versus foreign changes before committing.
+2. Stage explicit paths only; partition this slice's changes from concurrent work before
+   committing.
 3. Forbidden: `reset`, `stash`, `rebase`, `checkout --`, `restore`, `clean`,
    `push --force`.
 4. English commit messages with the session's `Co-Authored-By` trailer; `[WIP]`
@@ -139,7 +143,7 @@
 
 ## 10. Concurrency
 
-1. Foreign work is input: adopt and fix forward; never discard.
+1. Concurrent work is input: adopt and fix forward; never discard.
 2. Do not touch the files of lane `flext-edcqq` (beartype and enforcement in the core);
    if it is still idle when S9 starts, ask whether to adopt it.
 3. Before S7, cross-check open `flext-infra` PRs (#865, #861, #858) and active
@@ -152,17 +156,18 @@
 
 R1 (`check && push` in one shell), R2 (single pass per file), R4 (inspect every non-zero
 exit), R6 (gate = local check with `CI=Y` plus a runtime probe), R7 (consumers
-revalidated per slice, reinforced by R19), R8 (suite reds triaged at the end — only for
-reds foreign to the slice), R9 (check PRs and origin before implementing), R10 (codemod
-rule lands with `ast-grep test`), R11 (mechanical cures are never manual), plus: serial
-per repository; never `0.20.0-dev`, dolt, `dev` or `main`; content conflicts are asked.
+revalidated per slice, reinforced by R19), R8 (superseded 2026-09-26: a red has no
+"foreign" category; every red in the blast radius is fixed at its owner), R9 (check PRs
+and origin before implementing), R10 (codemod rule lands with `ast-grep test`), R11
+(mechanical cures are never manual), plus: serial per repository; never `0.20.0-dev`,
+dolt, `dev` or `main`; content conflicts are asked.
 
 ## 12. New V8 laws
 
 | Law | Content                                                                                                                                              |
 | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | R12 | A service dependency is `t.Port[p.X]` with `exclude=True` and a plain Protocol class; runtime seeds `t.Port[p.X \| None]` are the only typed absence |
-| R13 | Only `api.py` builds adapters and port-bearing services (pure DI, or `compose` if S2b passes); building an adapter performs no I/O                   |
+| R13 | Only `api.py` builds adapters and port-bearing services, by constructor (pure DI, definitive); building an adapter performs no I/O                   |
 | R14 | A public service method is an operation shaped as in `03-contract.md` §5; discovery is lazy, never at class creation                                 |
 | R15 | A member CLI comes from `service_routes(Class, provide=…)`; `--help` builds no adapter; Singer connectors keep ADR-006                               |
 | R16 | A service reads no global `settings`/`config`                                                                                                        |

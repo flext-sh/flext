@@ -11,7 +11,9 @@
 
 <!-- TOC END -->
 
-- **Status:** approved by the operator on 2026-09-25; execution started with S0.
+- **Status:** approved by the operator on 2026-09-25; amended 2026-09-26 (pure DI
+  definitive with no S2b, 200-line module limit, selector-free root Make, no "foreign"
+  red). S0 is PR `flext#274`; S1 is merged (`flext-core` #499, `d65ba487f`).
 - **Supersedes:** operator plan V7 (2026-09-25).
 - **Decision record:**
   [ADR-019](../../architecture/adr/019-service-contract-ports-operations.md).
@@ -60,7 +62,7 @@ project uses, without leaving any project broken.
 | --- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | D1  | The kernel has no `api.py`/`cli.py`/`base.py` and no console script; NS-LAYOUT derives when a facade is required | **Decided: A** (operator, 2026-09-25)                                              |
 | D2  | `flext-infra` routes that use the service class itself as the request model                                      | Not blocking this wave; asked when infra adoption starts (recommendation: migrate) |
-| D3  | Protocol-keyed container and `compose` (decision 4 of the ai-hub plan v3)                                        | Asked only if the S2b typing spike fails (mypy `type-abstract`)                    |
+| D3  | Protocol-keyed container and `compose` (decision 4 of the ai-hub plan v3)                                        | **Decided 2026-09-26: pure DI, definitive; no S2b** (operator)                     |
 
 ## Adversarial review corrections
 
@@ -99,9 +101,8 @@ project uses, without leaving any project broken.
 | Phase | Slice | Repo                     | Delivery                                                                                                              | Bead             |
 | ----- | ----- | ------------------------ | --------------------------------------------------------------------------------------------------------------------- | ---------------- |
 | F0    | S0    | all                      | Plan and ADR versioned, fleet validation workspace, beads                                                             | `flext-4jtcb.8`  |
-| F1    | S1    | flext-core               | `t.Port`, validated runtime seeds, protocol-typed hook, dead options removed, validated construction, `unwrap` cause  | `flext-4jtcb.1`  |
+| F1    | S1    | flext-core               | **Merged #499 `d65ba487f`:** `t.Port`, validated runtime seeds, protocol-typed hook, validated construction, cause    | `flext-4jtcb.1`  |
 | F1    | S2    | flext-core               | Truthful container: bookkeeping, reserved names, duplicate/empty fail, dead bridge removed                            | `flext-4jtcb.2`  |
-| F1    | S2b   | flext-core               | Protocol-keyed container and `compose`, gated by a typing spike (else D3)                                             | `flext-4jtcb.9`  |
 | F1    | S3    | flext-core               | Lazy typed operation contract                                                                                         | `flext-4jtcb.3`  |
 | F1    | S4    | core + 7 members         | Truthful `p.Service`, consumers first                                                                                 | `flext-4jtcb.10` |
 | F2    | S5    | flext-cli                | Lazy `service_routes`, empty model, result rendering, fail-loud params, dedupe                                        | `flext-4jtcb.4`  |

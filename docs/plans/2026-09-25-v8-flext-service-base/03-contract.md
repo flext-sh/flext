@@ -108,12 +108,9 @@ ldap: FlextLdap = FlextLdap(connection=FlextLdapConnection(settings=settings.Lda
 - Truthful container (S2): the `FlextContainer` stays the registry of the core runtime;
   empty, duplicate and reserved names fail through one write path; services and adapters
   never call it.
-- Protocol keys and `compose` (S2b, conditional):
-  `container.bind(p.Ldap.Connection, adapter)` then `FlextLdap.compose(container)`, only
-  if the signature type-checks cleanly under mypy (`type-abstract`), pyright and
-  pyrefly; otherwise D3 goes to the operator and the fleet keeps pure DI. `compose`
-  fills only required `t.Port` fields; two ports of one Protocol need an explicit
-  argument.
+- Pure DI is definitive (operator ruling 2026-09-26): there is no Protocol-keyed
+  container and no `compose(container)`; the constructor call in `api.py` is the only
+  composition path.
 - `fetch_global()` stays for port-free services; a port-bearing service's
   `fetch_global()` raises `ValidationError`, which is the correct, tested behavior.
 

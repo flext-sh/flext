@@ -8,7 +8,6 @@
 - [F1 — Contract core (flext-core)](#f1-contract-core-flext-core)
   - [S1 — Ports, validated runtime seeds, typed hook, preserved cause](#s1-ports-validated-runtime-seeds-typed-hook-preserved-cause)
   - [S2 — Truthful container](#s2-truthful-container)
-  - [S2b — Protocol keys and compose (conditional)](#s2b-protocol-keys-and-compose-conditional)
   - [S3 — Lazy operation contract](#s3-lazy-operation-contract)
   - [S4 — Truthful p.Service (consumers first)](#s4-truthful-pservice-consumers-first)
 - [F2 — Fleet tooling](#f2-fleet-tooling)
@@ -24,19 +23,23 @@
 
 ```text
 F0 (S0)
- └─ F1 flext-core (serial): S1 → S2 → S2b* → S3 → S4 (core + 7 members, consumers first)
+ └─ F1 flext-core (serial merges): S1 → S2 → S3 → S4 (core + 7 members, consumers first)
      ├─ F2 tooling:          S6 flext-tests (after S1 merged)
      │                       S5 flext-cli   (after S3 merged)
      │                       S7 flext-infra (after S5 merged)
      │                          → then the core deletes its fake facades (D1)
      └─ F3 flext-core (serial): S8 → S9 (after S4)
 F4 (S10) superproject: last
-* S2b runs only if its typing spike passes; otherwise D3 goes to the operator.
 ```
 
-Slices in different repositories may run in parallel when independent; `flext-core` is
-always serial. Beads: S0 `flext-4jtcb.8`, S1 `.1`, S2 `.2`, S2b `.9`, S3 `.3`, S4 `.10`,
-S5 `.4`, S6 `.5`, S7 `.6`, S8 `.7`, S9 `.11`, S10 `.12`.
+Slices in different repositories may run in parallel when independent. `flext-core`
+merges are serial; two core slices with disjoint files (S2 container, S3 operations) may
+be built in parallel from the same integration tip, each as its own small PR. Beads: S0
+`flext-4jtcb.8`, S1 `.1`, S2 `.2`, S3 `.3`, S4 `.10`, S5 `.4`, S6 `.5`, S7 `.6`, S8
+`.7`, S9 `.11`, S10 `.12`; `.9` (the former S2b) is superseded by the pure-DI ruling.
+
+State on 2026-09-26: S0 is PR `flext#274`; S1 is merged (`flext-core` #499, merge
+`d65ba487f`); the `flext-core` integration tip is `8de52fa6b` (#504).
 
 ## Common steps of every slice
 
@@ -48,14 +51,15 @@ S5 `.4`, S6 `.5`, S7 `.6`, S8 `.7`, S9 `.11`, S10 `.12`.
 | E4  | Implement at the owner | File by file; repeated patterns become codemod rules (R10/R11), with a checkpoint commit before `make mod`                                                                                                                                  | Diff per file                 |
 | E5  | Tests                  | Behavioral, through public facades: happy path, failure path, must-not-trigger                                                                                                                                                              | Test names                    |
 | E6  | Docs                   | Docstrings and guides in the same commit                                                                                                                                                                                                    | Doc files                     |
-| E7  | Gates                  | `make gen` ×2 (fixed point), `make fix`, `make fmt`, `make check`, `make test` (slice tests selected)                                                                                                                                       | Exit of every verb            |
+| E7  | Gates                  | Selector-free root verbs only: `make gen` ×2 (fixed point), `make fix`, `make fmt`, `make check`, `make test`; each module within 200 logical lines                                                                                         | Exit of every verb            |
 | E8  | Non-breakage           | Code-review graph `status`/`update` then `impact` on changed symbols; in the fleet validation workspace, point the member at the lane commit, `make setup`, then the root `make check` and `make test`, compared with the recorded baseline | Consumer table with exits     |
 | E9  | Landing                | Commit by paths; `make check && git push -u origin <branch>`; PR; CI on the head; threads resolved; merge commit; proof on the merged SHA                                                                                                   | PR, merge SHA, CI, proof      |
 | E10 | Retire                 | Fetch and `git merge-base --is-ancestor`; delete the remote branch, the worktree and the local branch; close the bead with four sources                                                                                                     | Ancestry output, close        |
 
 Extra proofs for slices that delete code: LOC delta, and zero uses outside the owner for
-every deleted symbol (graph plus fleet search). A foreign red gate is recorded on the PR
-and the bead with its owning bead; it is never narrowed or suppressed.
+every deleted symbol (graph plus fleet search). A red has no "foreign" category: every
+red in the slice's blast radius is fixed at its owner (its own small PR when it lives in
+another repository) before the slice lands; it is never narrowed, skipped or suppressed.
 
 ## F0 — Preparation (S0)
 
@@ -83,7 +87,8 @@ and the bead with its owning bead; it is never narrowed or suppressed.
 
 ### S1 — Ports, validated runtime seeds, typed hook, preserved cause
 
-Lane `~/flext-work/v8-s1-ports/flext-core`, branch `feat/v8-s1-service-ports`.
+**Merged:** `flext-core` #499, merge `d65ba487f` (2026-09-25). Lane
+`~/flext-work/v8-s1-ports/flext-core`, branch `feat/v8-s1-service-ports`.
 
 E3 before: `Svc(runtime_settings=<non-Settings object>)` is accepted;
 `Svc.model_json_schema()` fails; `r[int].fail("x", exception=ValueError("y")).unwrap()`
@@ -136,16 +141,6 @@ non-callable in the scan raises. Delete the string-only dependency_injector brid
 Tests include the `scope()` LOGGER regression. Docs: `dependency-injection-advanced.md`,
 `service-patterns.md`. Consumers: the core suite, auth, observability, target-ldap,
 plugin.
-
-### S2b — Protocol keys and `compose` (conditional)
-
-Spike without a PR: candidate `bind(Port, impl)` / `resolve(Port)` signatures through
-`make check` at real call sites (mypy `type-abstract`, pyright, pyrefly). If all three
-accept without suppression: one keying scheme across `bind`, `resolve`, `has`, `names`,
-`drop`, `dispatcher`; internal names become protocol keys;
-`FlextService.compose(container)` fills required `t.Port` fields only; two ports of one
-Protocol need an explicit argument; tests and docs. Otherwise record the evidence and
-ask D3 (recommendation: pure DI only).
 
 ### S3 — Lazy operation contract
 
@@ -222,7 +217,13 @@ graph-driven consumer revalidation; one commit per owner.
   `:473-485`, `:374-381`, `:120-129`; `mapper_access_part_02.py:81-82` and
   `mapper.py:98`; `_utilities/model.py:69-71`; `flexthandlers_part_07.py:130-138`;
   `context_state.py:38-46,126-134`, `context_lifecycle.py:97-138`,
-  `context_crud.py:103-107`; `_utilities/project_metadata.py:55-62`.
+  `context_crud.py:103-107`; `_utilities/project_metadata.py:55-62`. Also the
+  `make mod` detection findings measured on 2026-09-26: `ban-silent-except-swallow` at
+  `_exceptions/helpers.py:43`, `_exceptions/_base_parts/flextexceptionsbase_part_02.py:96`,
+  `_enforcement_collect_parts/enforcement_collect_part_01.py:49`, `dispatcher.py:118`;
+  `ban-ambient-environ-read` at `_config.py:235`; `ban-pass-through-wrapper` at
+  `_beartype/_helpers_parts/helpers_part_01.py:155` and
+  `tests/unit/test_utilities_pydantic_coverage_100.py:122`.
 - **S9 batch B:** `dispatcher.py:58-80`, `:117-120`; `checker_part_02.py:84-93`;
   `parser_coerce.py:99-107`, `conversion.py:88-108`; `parser_targets_part_02.py:45-63`;
   `logging_config_part_01.py:140-146`; `_decorators/_railway.py:143-185`, `:46-53`.

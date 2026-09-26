@@ -34,9 +34,8 @@ practical path: what to use, in which order, with which tool.
    | --------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------ |
    | `c/t/p/m/u` and `r/e/x/h/d/s`, `FlextService`, `FlextContainer`, `settings`/`config`                      | flext-core  | Today                                      |
    | Protocol-typed field validated by `isinstance`                                                            | Any service | Today (service JSON Schema fails until S1) |
-   | `t.Port[P]`, validated runtime seeds, hook read through `p.RuntimeBootstrapProvider`, `unwrap` with cause | flext-core  | After S1                                   |
+   | `t.Port[P]`, validated runtime seeds, hook read through `p.RuntimeBootstrapProvider`, `unwrap` with cause | flext-core  | Today (S1, #499)                           |
    | Truthful container (duplicate and empty names fail, reserved names)                                       | flext-core  | After S2                                   |
-   | Protocol-keyed container and `FlextService.compose(container)`                                            | flext-core  | After S2b, only if its typing spike passes |
    | `u.service_operations(Service)`, `m.ServiceOperation`                                                     | flext-core  | After S3                                   |
    | Truthful `p.Service`                                                                                      | flext-core  | After S4                                   |
    | Declarative routes `m.Cli.ResultCommandRoute`, `register_result_routes`                                   | flext-cli   | Today                                      |
@@ -48,8 +47,10 @@ practical path: what to use, in which order, with which tool.
    `origin/<integration>`, then
    `env -u VIRTUAL_ENV -u UV_PROJECT_ENVIRONMENT make setup`. Never in the primary
    checkout.
-4. **Read the lane's `make help`:** it lists the verbs that apply there (`setup`, `gen`,
-   `mod`, `fix`, `fmt`, `check`, `test`, `build`, `docs`, and the lock verb).
+4. **Read the lane's `make help`:** it lists the selector-free root verbs that apply
+   there (`setup`, `upg`, `gen`, `mod`, `fix`, `fmt`, `check`, `test`, `build`, `docs`);
+   they are the only execution and evidence surface. Modules stay within 200 logical
+   lines, and every red in your blast radius is yours to fix at its owner.
 
 ## 1. What each library gives you
 
@@ -148,8 +149,8 @@ src/<package>/
    (tier-whitelist); receive settings through the constructor; no I/O at construction.
 6. **Root (`api.py`):** `class Flext<X>(<services>)` as the MRO facade and
    `<alias> = Flext<X>(port=Adapter(settings=settings.<Ns>))` (pure DI); a shared
-   adapter is a variable passed to several constructors; `container.bind` plus `compose`
-   only exist if S2b passes.
+   adapter is a variable passed to several constructors. Pure DI is the only composition
+   path: there is no `compose`, and services never resolve ports from the container.
 7. **CLI (`cli.py`, template `cli.py.j2`: a `Flext<X>Cli` class plus `main()`):** today
    a tuple of `m.Cli.ResultCommandRoute` with `cli.register_result_routes(app, routes)`;
    after S5 `cli.register_result_routes(app, cli.service_routes(Flext<X>, provide=…))`
