@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar
+from typing import TYPE_CHECKING
 
 import flext_core
 
@@ -16,8 +16,6 @@ if TYPE_CHECKING:
 
 class FlextRootConfig(flext_core.FlextConfig):
     """Workspace root configuration — extends flext-core config."""
-
-    CONFIG_DIR: ClassVar[str] = "config"
 
 
 config: FlextRootConfig = FlextRootConfig.fetch_global()
