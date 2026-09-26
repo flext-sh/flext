@@ -170,3 +170,7 @@ per repository; never `0.20.0-dev`, dolt, `dev` or `main`; content conflicts are
 | R20 | Every `r.fail` carries its source exception; every `unwrap` chains the cause |
 | R21 | A base expansion never forces a fleet sweep as a side effect; new contracts enter through structural Protocols or together with the fleet codemod |
 | R22 | Never build an object that must be validated through `model_copy(update=)` |
+| R23 | Every pydantic model-creation helper is exterminated: models are declared as classes over the `m.*` presets, reused by inheritance and composition AS IS, and never synthesized by functions, `create_model`, or dict-shaped factories. Model repetition in lower namespaces is a defect — a lower namespace imports the upper namespace's model |
+| R24 | Every manipulation, transfer, use, transformation, and return flows through models and their Protocols (CA/DI): request/response are `m.*` models, boundaries are `p.*` Protocols, adapters implement them, and every caller the change touches is adjusted in the same cut (SOLID: no duplicated methods, no methods in the wrong owner) |
+| R25 | String literals and constants are `StrEnum` members on the `c.*` constants facade, used directly — no scattered string literals, no ad-hoc constant repairs |
+| R26 | Land cadence: record, PR, and `merge --no-ff` against the fresh tip at short cadence (~15 minutes of work per landing); every push is preceded by local validation (root Make gates green, zero-error baseline); every execution has a timeout and slowness is a defect to root-cause |
