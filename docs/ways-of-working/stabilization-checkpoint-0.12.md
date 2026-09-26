@@ -118,7 +118,7 @@ Estado verificado pós-ciclo do agente dedicado (evidência: bead `flext-v4fmn`,
   `make mod`, pós-integração — bead `flext-1tcsp`); daemon fantasma do ai-hub
   (`aihub-yr5ft`); split do services package do ai-hub (`aihub-30jaq`).
 
-## (f) Checkpoint 2026-09-21 — extermínio do budget SSOT, auditoria do tracker e campanha de integração
+## (f) Checkpoint 2026-09-21 — budget SSOT, auditoria do tracker, integração
 
 Estado verificado na sessão de 2026-09-21 (evidência: epic `flext-49quw`, artefatos
 `.beads/artifacts/reval260921/`, ledger CSV):

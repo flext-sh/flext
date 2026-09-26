@@ -54,10 +54,13 @@ Critério: HEAD do branch recovery **não contém** o gitlink stage-3 registrado
 exato; `flext-auth` e `flext-plugin` mesclam um commit de consolidação diferente (mesma
 pendência):
 
-`auth, dbt-ldap, dbt-ldif, dbt-oracle, dbt-oracle-wms, ldap, oracle-oic, plugin, quality, tap-ldap, tap-ldif, tap-oracle, target-ldap, target-oracle, target-oracle-oic, tests, web`
+`auth`, `dbt-ldap`, `dbt-ldif`, `dbt-oracle`, `dbt-oracle-wms`, `ldap`, `oracle-oic`,
+`plugin`, `quality`, `tap-ldap`, `tap-ldif`, `tap-oracle`, `target-ldap`,
+`target-oracle`, `target-oracle-oic`, `tests`, `web`.
 
-Já contêm a revisão (sem merge aberto):
-`api, cli, core, db-oracle, grpc, infra, ldif, meltano, observability, oracle-wms, tap-oracle-oic, tap-oracle-wms, target-ldif, target-oracle-wms`.
+Já contêm a revisão (sem merge aberto): `api`, `cli`, `core`, `db-oracle`, `grpc`,
+`infra`, `ldif`, `meltano`, `observability`, `oracle-wms`, `tap-oracle-oic`,
+`tap-oracle-wms`, `target-ldif`, `target-oracle-wms`.
 
 ### A.3 Publicação (main workspace x recovery)
 
