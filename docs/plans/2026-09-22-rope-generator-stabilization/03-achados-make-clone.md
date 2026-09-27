@@ -58,8 +58,13 @@ section, and the handoff note.
      (destination verified non-existent at plan time; if it appears, inspect and
      preserve its content before use).
   2. Per member:
-     `git submodule update --init --reference /home/marlonsc/flext/.git/modules/<member> <member-path>`
-     — alternates supply the objects for every locally-recovered SHA; the GitHub URL
+
+     ```bash
+     git submodule update --init \
+       --reference /home/marlonsc/flext/.git/modules/<member> <member-path>
+     ```
+
+     Alternates supply the objects for every locally-recovered SHA; the GitHub URL
      only serves what alternates lack. The member object stores are shared through
      `/home/marlonsc/flext/.git/modules/<name>` (worktree-linked gitdirs reuse the same
      objects), so all checkout SHAs resolve locally.
