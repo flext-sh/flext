@@ -3,31 +3,35 @@
 from __future__ import annotations
 
 from examples import FlextRootExamplesConstants as c
-from examples import FlextRootExamplesModels as em
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
+from flext_ldif import c as ldif_c
+from flext_ldif import ldif, m as ldif_m
 
 
 def main() -> int:
     """Run every published example and report observable work."""
-    acl = FlextRootAclProcessingExample(max_workers=1)
-    acl_result = acl.process_acls_with_pipeline(
-        raw_entries=(
-            em.AclSource(
-                dn="cn=sample,dc=example,dc=com",
-                attributes={"olcAccess": "to * by users read write search"},
-            ),
-            em.AclSource(
-                dn="ou=users,dc=example,dc=com",
-                attributes={"aci": "allow (read,search,compare)"},
-            ),
-        ),
-        strict_mode=True,
-        parallel=False,
+    client = ldif()
+    ldif_content = (
+        "dn: cn=sample,dc=example,dc=com\n"
+        "objectClass: person\n"
+        "cn: sample\n"
+        "sn: Example\n"
+        'aci: (target="ldap:///cn=sample,dc=example,dc=com")'
+        '(targetattr="*")(version 3.0; acl "Allow read"; '
+        'allow (read) userdn="ldap:///anyone";)\n'
+    )
+    entries = client.parse_ldif(ldif_content).unwrap().entries
+    if not entries:
+        raise RuntimeError("LDIF parser produced no entries")
+    acl_result = FlextRootAclProcessingExample(service=client).process_acls_with_pipeline(
+        entry=entries[0],
+        server_type=ldif_c.Ldif.ServerTypes.OUD,
+        required_permissions=ldif_m.Ldif.AclPermissions(read=True),
     ).unwrap()
-    if not acl_result.acls or acl_result.total_acls != len(acl_result.acls):
-        raise RuntimeError("ACL example produced no consistent ACL result")
+    if not acl_result.granted or acl_result.matched_acl is None:
+        raise RuntimeError("LDIF ACL example did not grant the declared permission")
 
     advanced = FlextRootAdvancedProcessingExample.FlextLdifProcessingPipeline(
         items=({"id": "sample", "name": "Example", "value": "data"},),
@@ -41,7 +45,7 @@ def main() -> int:
     if not complete.content:
         raise RuntimeError("complete workflow produced no content")
 
-    print(f"ACLs={acl_result.total_acls} advanced=ok complete=ok")
+    print("ACL=granted advanced=ok complete=ok")
     return 0
 
 
