@@ -515,10 +515,10 @@ class FlextRootCompleteWorkflowExample:
         return result
 
     @staticmethod
-    def run_example() -> None:
-        """Run the complete workflow example."""
+    def run_example() -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
+        """Run the complete workflow and expose its observable result."""
         sample_data: t.SequenceOf[CompleteWorkflowProcessingDict] = (
-            FlextRootCompleteWorkflowExample.create_sample_workflow_data(50)
+            FlextRootCompleteWorkflowExample.create_sample_workflow_data(4)
         )
         workflow_settings: t.ScalarMapping = {
             "workflow_id": "comprehensive_workflow",
@@ -526,7 +526,8 @@ class FlextRootCompleteWorkflowExample:
             "max_workers": 4,
             "strict_mode": False,
         }
-        orchestrator = FlextRootCompleteWorkflowExample.WorkflowOrchestrator()
-        orchestrator.data = sample_data
-        orchestrator.workflow_settings = workflow_settings
-        orchestrator.execute()
+        orchestrator = FlextRootCompleteWorkflowExample.WorkflowOrchestrator(
+            data=sample_data,
+            workflow_settings=workflow_settings,
+        )
+        return orchestrator.execute()

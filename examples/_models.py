@@ -14,7 +14,9 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import ClassVar
 
-from examples import m, u
+from pydantic import Field
+
+from examples import m
 from examples._constants import FlextRootExamplesConstants as c
 
 
@@ -25,10 +27,10 @@ class ValidationRules(m.BaseModel):
     for validating ACL entries across different server types.
     """
 
-    required_permissions: tuple[c.Permission, ...] = u.Field(
+    required_permissions: tuple[c.Permission, ...] = Field(
         description="List of permissions that must be present in valid ACL entries"
     )
-    forbidden_combinations: tuple[tuple[c.Permission, ...], ...] = u.Field(
+    forbidden_combinations: tuple[tuple[c.Permission, ...], ...] = Field(
         description="Permission combinations that are not allowed together"
     )
 
