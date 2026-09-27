@@ -11,12 +11,11 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from typing import ClassVar
 
 from pydantic import Field
 
-from examples import m
+from examples import m, t
 from examples._constants import FlextRootExamplesConstants as c
 
 
@@ -41,7 +40,7 @@ class AclSource(m.BaseModel):
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
         dn: str
-        attributes: Mapping[str, str | tuple[str, ...]]
+        attributes: t.MappingKV[str, str | tuple[str, ...]]
 
 class AclContext(m.BaseModel):
         """Extraction metadata for one ACL."""

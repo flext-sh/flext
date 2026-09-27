@@ -11,7 +11,7 @@ from examples import p, t
 from examples._models import AclContext, AclEntry, AclRun, AclSource, AclValidation
 from examples._models import ValidationRules
 from examples.acl_validation import FlextRootAclValidator
-from flext_core import m, r
+from flext_core import r
 
 
 class FlextRootAclProcessingExample:
@@ -29,16 +29,13 @@ class FlextRootAclProcessingExample:
     def process_acls_with_pipeline(
         self,
         *,
-        raw_entries: t.SequenceOf[t.JsonMapping],
+        raw_entries: t.SequenceOf[AclSource],
         strict_mode: bool = True,
         parallel: bool = True,
     ) -> p.Result[AclRun]:
-        """Validate input once, then run extraction and validation on models."""
+        """Run extraction and validation on already validated source models."""
         started = time.monotonic()
-        try:
-            sources = tuple(AclSource.model_validate(entry) for entry in raw_entries)
-        except m.ValidationError as exc:
-            return r[AclRun].fail(str(exc), exception=exc)
+        sources = tuple(raw_entries)
         detected: list[tuple[AclSource, c.ServerType]] = []
         for source in sources:
             server = self._detect_server(source)
@@ -89,8 +86,8 @@ class FlextRootAclProcessingExample:
 
     @staticmethod
     def _detect_server(source: AclSource) -> p.Result[c.ServerType]:
-        for server, signatures in c.SERVER_SIGNATURES.items():
-            if any(signature in source.attributes for signature in signatures):
+        for server, attributes in c.SERVER_ACL_ATTRIBUTES.items():
+            if any(attribute in source.attributes for attribute in attributes):
                 return r[c.ServerType].ok(server)
         return r[c.ServerType].fail("Unable to detect server type from entry attributes")
 
@@ -127,21 +124,3 @@ class FlextRootAclProcessingExample:
                     server_type=server,
                 ))
         return tuple(result)
-
-    @staticmethod
-    def create_sample_acl_entries() -> t.SequenceOf[t.JsonMapping]:
-        """Provide representative directory entries for the example."""
-        return (
-            {
-                "dn": "cn=sample,dc=example,dc=com",
-                "attributes": {"olcAccess": "to * by users read write search"},
-            },
-            {
-                "dn": "ou=users,dc=example,dc=com",
-                "attributes": {"aci": "allow (read,search,compare)"},
-            },
-            {
-                "dn": "cn=settings,dc=example,dc=com",
-                "attributes": {"orclACI": "access by manager read write"},
-            },
-        )

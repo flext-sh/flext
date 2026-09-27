@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from examples import FlextRootExamplesConstants as c
+from examples import FlextRootExamplesModels as em
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
@@ -12,7 +13,16 @@ def main() -> int:
     """Run every published example and report observable work."""
     acl = FlextRootAclProcessingExample(max_workers=1)
     acl_result = acl.process_acls_with_pipeline(
-        raw_entries=acl.create_sample_acl_entries(),
+        raw_entries=(
+            em.AclSource(
+                dn="cn=sample,dc=example,dc=com",
+                attributes={"olcAccess": "to * by users read write search"},
+            ),
+            em.AclSource(
+                dn="ou=users,dc=example,dc=com",
+                attributes={"aci": "allow (read,search,compare)"},
+            ),
+        ),
         strict_mode=True,
         parallel=False,
     ).unwrap()

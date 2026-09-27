@@ -36,13 +36,6 @@ class FlextRootExamplesConstants:
         APACHE_DS = "apache_ds"
         UNKNOWN = "unknown"
 
-    SERVER_SIGNATURES: ClassVar[Mapping[ServerType, tuple[str, ...]]] = MappingProxyType({
-        ServerType.OPENLDAP: ("olcAccess", "olcACL"),
-        ServerType.ORACLE_OID: ("orclACI", "orclACL"),
-        ServerType.ORACLE_UNIFIED_DIRECTORY: ("ds-cfg-global-aci", "aci"),
-        ServerType.ACTIVE_DIRECTORY: ("ntSecurityDescriptor",),
-        ServerType.APACHE_DS: ("accessControlSubentry",),
-    })
     SERVER_ACL_ATTRIBUTES: ClassVar[Mapping[ServerType, tuple[str, ...]]] = MappingProxyType({
         ServerType.OPENLDAP: ("olcAccess", "olcACL"),
         ServerType.ORACLE_OID: ("orclACI", "orclACL"),
