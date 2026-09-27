@@ -24,7 +24,7 @@ repository:
   editable: false
   read_only: false
 project:
-  # Workspace members resolve through the local overlay; no Git revision overrides.
+  # Integration-line sources are derived from this manifest; no per-package overrides.
   dependency_revisions: {}
   package_name: "flext"
   class_stem: "Flext"
@@ -44,8 +44,6 @@ project:
   documentation: "https://docs.flext.sh"
   repository_root_rel: "."
   year: 2026
-  # Members resolve from this workspace, never from pinned provider revisions.
-  dependency_revisions: {}
 # NOTE (multi-agent, mro-wkii.17 / agent: codex): the typed manifest context is
 # the sole topology owner; every declared member/exclusion round-trips here.
 members:
