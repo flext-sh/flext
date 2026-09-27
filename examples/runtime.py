@@ -33,6 +33,28 @@ def main() -> int:
     if not acl_result.granted or acl_result.matched_acl is None:
         raise RuntimeError("LDIF ACL example did not grant the declared permission")
 
+    oid_attributes = client.acl(
+        ldif_c.Ldif.ServerTypes.OID
+    ).unwrap().resolve_acl_attributes()
+    first_attribute, last_attribute = oid_attributes[0], oid_attributes[-1]
+    if first_attribute.lower() == last_attribute.lower():
+        raise RuntimeError("OID server declared fewer than two ACL attributes")
+    oid_acl = "access to entry by * (browse)"
+    oid_entry = ldif_m.Ldif.Entry(
+        dn=ldif_m.Ldif.DN(value="cn=sample,dc=example,dc=com"),
+        attributes=ldif_m.Ldif.Attributes(
+            attributes={
+                first_attribute: [oid_acl],
+                last_attribute: [oid_acl],
+            }
+        ),
+    )
+    oid_response = client.extract_acls_from_entry(
+        oid_entry, ldif_c.Ldif.ServerTypes.OID
+    ).unwrap()
+    if len(oid_response.acls) != 2:
+        raise RuntimeError("OID ACL example lost a declared attribute")
+
     advanced = FlextRootAdvancedProcessingExample.FlextLdifProcessingPipeline(
         items=({"id": "sample", "name": "Example", "value": "data"},),
         stages=(c.Stage.VALIDATE, c.Stage.PROCESS, c.Stage.ANALYZE),
@@ -45,7 +67,7 @@ def main() -> int:
     if not complete.content:
         raise RuntimeError("complete workflow produced no content")
 
-    print("ACL=granted advanced=ok complete=ok")
+    print("ACL=granted OID=2 advanced=ok complete=ok")
     return 0
 
 
