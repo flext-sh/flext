@@ -13,9 +13,11 @@ if TYPE_CHECKING:
 
     from ._constants import FlextRootExamplesConstants
     from ._models import FlextRootExamplesModels, ValidationRules
+    from .acl_validation import FlextRootAclValidator
 
 
 __all__: tuple[str, ...] = (
+    "FlextRootAclValidator",
     "FlextRootExamplesConstants",
     "FlextRootExamplesModels",
     "ValidationRules",
@@ -32,6 +34,7 @@ _LAZY_IMPORTS = MappingProxyType(
         MappingProxyType({
             "._constants": ("FlextRootExamplesConstants",),
             "._models": ("FlextRootExamplesModels", "ValidationRules"),
+            ".acl_validation": ("FlextRootAclValidator",),
             "flext": ("c", "m", "p", "settings", "t", "u"),
         }),
         alias_groups=MappingProxyType({}),
