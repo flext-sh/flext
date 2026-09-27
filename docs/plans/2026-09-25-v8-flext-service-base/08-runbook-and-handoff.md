@@ -10,11 +10,11 @@ commit needs runtime proof.
 
 | Repo | Integration (`0.12.0-dev`) | Note |
 |---|---|---|
-| flext (superproject) | PR #274 open, head `docs/v8-service-base-plan` | Carries the V8 plan, ADR-019 (Proposed), the member pin wave, and the adoption of the primary wip `73cb90ea7a` (merge `f5da32acf0`). Gen is fixed-point in 2 runs. |
-| flext-core | `8de52fa6` (#504, `u.process` fail-loud) | The superproject still pins `4a43d674`. |
-| flext-infra | `a4898b561` (#892) | #883 (`make propagate`), #887/#889 (slow tier), #888/#881 (renames as a rule), #890 (post-#881 green), #891. The superproject still pins `74249c4bd`. |
+| flext (superproject) | PR #274 MERGED 2026-09-27T08:06Z (`01d498c575`) | Carries the V8 plan, ADR-019 (Proposed), the member pin wave, and the adoption of the primary wip `73cb90ea7a` (merge `f5da32acf0`). Gen is fixed-point in 2 runs. |
+| flext-core | `8de52fa6` (#504, `u.process` fail-loud) | State 2026-09-27: the superproject pins `fe7e363d62`; the member tip is `3efdfd9ba6`. |
+| flext-infra | `a4898b561` (#892) | #883 (`make propagate`), #887/#889 (slow tier), #888/#881 (renames as a rule), #890 (post-#881 green), #891. State 2026-09-27: the superproject pins `f4f4968ae1`; the member tip is `c7fcf77af2` (red, repair lane `flext-bxo4y`). |
 | flext-target-oracle-wms | `f3bff92` (#115) | Records the 2 primary local commits (`f724cee`, `2ef8e9f`); the tree matches `58a3726`. |
-| flext-web | PR #105 open, BLOCKED | The wave PR left behind; verify (item 3.4). |
+| flext-web | PR #105 MERGED 2026-09-26T15:47Z (`a71b92b26e`) | The wave PR left behind; verify (item 3.4). |
 
 Fleet validation worktree: `~/flext-work/v8-fleet/flext`, branch `v8/fleet-validation`,
 published on `docs/v8-service-base-plan`.
