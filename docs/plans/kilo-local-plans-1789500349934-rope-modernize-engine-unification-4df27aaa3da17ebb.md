@@ -1,5 +1,23 @@
 # Rope Modernize Engine — Migração Unificada + Extermínio ast/re/libcst + Saída do Motor
 
+<!-- TOC START -->
+
+- [Contexto e regras raiz](#contexto-e-regras-raiz)
+- [Arquitetura-alvo (UM loop, UM CLI)](#arquitetura-alvo-um-loop-um-cli)
+- [Workstreams (ordem de execução)](#workstreams-ordem-de-execucao)
+  - [W1 — Migrar motor estático de flext-core → flext-infra (EXTERMINAR de flext-core)](#w1-migrar-motor-estatico-de-flext-core-flext-infra-exterminar-de-flext-core)
+  - [W2 — dataclass → m.FrozenModel como fase rope (exterminar meu transformer ast/re)](#w2-dataclass-mfrozenmodel-como-fase-rope-exterminar-meu-transformer-astre)
+  - [W3 — Extermínio dos demais transformadores ast/re/libcst](#w3-exterminio-dos-demais-transformadores-astrelibcst)
+  - [W4 — CLI único com toggles](#w4-cli-unico-com-toggles)
+  - [W5 — Rollout cobaia + gates por ciclo](#w5-rollout-cobaia-gates-por-ciclo)
+  - [W6 — Conhecimento (mesma entrega, não depois)](#w6-conhecimento-mesma-entrega-nao-depois)
+- [Validação (por ciclo, obrigatória)](#validacao-por-ciclo-obrigatoria)
+- [Riscos](#riscos)
+- [Suposições explícitas](#suposicoes-explicitas)
+- [Fora de escopo](#fora-de-escopo)
+
+<!-- TOC END -->
+
 Estático de flext-core
 
 ## Contexto e regras raiz

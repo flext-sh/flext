@@ -25,7 +25,8 @@
 - [Examples of Conforming Scripts](#examples-of-conforming-scripts)
   - [Validator (python — skill-based)](#validator-python-skill-based)
   - [Validator (python — standalone)](#validator-python-standalone)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 > This is the canonical gate-contract document. Workspace validation uses the root
 > dispatcher (`make check`); script-specific CLI examples remain explicit where no

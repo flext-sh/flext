@@ -14,7 +14,8 @@
   - [8.1 Final worker lane](#81-final-worker-lane)
   - [8.2 Updated worker lane before merge](#82-updated-worker-lane-before-merge)
   - [8.3 Original target after integration](#83-original-target-after-integration)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 Every light worker owns exactly one bead in one branch and one dedicated worktree. Read
 the canonical authorities first; this file only adds lane discipline.
@@ -31,8 +32,6 @@ the canonical authorities first; this file only adds lane discipline.
 
 [agents-md]: https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md
 [governance-md]: ../GOVERNANCE.md
-[flext-law]:
-  https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md
 [adr-005]: ../architecture/adr/005-config-settings-constants-templates-schemas-ssot.md
 
 ## 1. One lane, one bead, one worktree
@@ -76,15 +75,11 @@ Done means all of the following:
 - No new lint, type, or test failures are injected.
 - Changed files are clean and scoped.
 - Nothing reaches `0.12.0-dev` except through the lane's own reviewed PR: one bead ->
-  one branch -> PR against `0.12.0-dev` -> green native gates -> PR Sheriff gate <<<<<<<
-  Updated upstream (`pr_triage.py gate <owner/repo> <pr> --base 0.12.0-dev --head <oid>`
-  in `~/.agents/skills/tool/pr-sheriff/scripts/`) -> independent review or
+  one branch -> PR against `0.12.0-dev` -> green native gates -> PR Sheriff gate
+  (`pr_triage.py gate <owner/repo> <pr> --base 0.12.0-dev --head <oid>` in
+  `~/.agents/skills/tool/pr-sheriff/scripts/`) -> independent review or
   operator-authorized administrative merge -> merge commit -> post-merge runtime proof
-  -> bead evidence -> branch cleanup. ======= -> independent review or
-  operator-authorized administrative merge -> merge commit -> post-merge runtime proof
-  -> bead evidence -> branch cleanup. The gate command is
-  `~/.agents/skills/tool/pr-sheriff/scripts/pr_triage.py gate <owner/repo> <pr>   --base 0.12.0-dev --head <oid>`.
-  > > > > > > > Stashed changes
+  -> bead evidence -> branch cleanup.
 
 ## 6. Coordination protocol
 

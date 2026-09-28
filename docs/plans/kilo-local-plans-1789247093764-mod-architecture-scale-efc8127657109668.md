@@ -1,5 +1,24 @@
 # Plano: refatoracao arquitetural em escala pelo make mod (com simplificacao)
 
+<!-- TOC START -->
+
+- [Objetivo e decisoes aprovadas](#objetivo-e-decisoes-aprovadas)
+- [Fatos verificados (auditoria de codigo, leitura direta)](#fatos-verificados-auditoria-de-codigo-leitura-direta)
+- [Contratos arquiteturais (inalterados)](#contratos-arquiteturais-inalterados)
+- [Unidades de trabalho (re-sequenciadas pela auditoria)](#unidades-de-trabalho-re-sequenciadas-pela-auditoria)
+  - [T1. Escopo unico e protecao de gerados](#t1-escopo-unico-e-protecao-de-gerados)
+  - [T2. Planejamento e evidencia confiaveis](#t2-planejamento-e-evidencia-confiaveis)
+  - [T3. Transformer lexical e os tres transforms novos](#t3-transformer-lexical-e-os-tres-transforms-novos)
+  - [T4. Piloto flext-dbt-oracle-wms](#t4-piloto-flext-dbt-oracle-wms)
+  - [T5. Escala e propagacao](#t5-escala-e-propagacao)
+  - [T6. Inventario transversal consolidado (verificado)](#t6-inventario-transversal-consolidado-verificado)
+- [Matriz minima de verificacao (estendida)](#matriz-minima-de-verificacao-estendida)
+- [Protocolo operacional (proposta, NAO comportamento atual)](#protocolo-operacional-proposta-nao-comportamento-atual)
+- [Organizacao e fechamento](#organizacao-e-fechamento)
+- [Pendencias e limites](#pendencias-e-limites)
+
+<!-- TOC END -->
+
 ## Objetivo e decisoes aprovadas
 
 Evoluir a automacao existente em flext-infra para detectar desvios arquiteturais,

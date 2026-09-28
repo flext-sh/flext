@@ -1,5 +1,27 @@
 # Plano Aprofundado — Idempotência do `make gen/fix/fmt` e Cadeia SSOT → Publicação → Integração
 
+<!-- TOC START -->
+
+- [1. O sintoma central (o "treadmill")](#1-o-sintoma-central-o-treadmill)
+- [2. Causas-raiz provadas (mapa entrada→efeito)](#2-causas-raiz-provadas-mapa-entradaefeito)
+  - [CR1 — Render lê o AMBIENTE, não só o SSOT (a causa-mãe)](#cr1-render-le-o-ambiente-nao-so-o-ssot-a-causa-mae)
+  - [CR2 — Estado transacional keyado errado](#cr2-estado-transacional-keyado-errado)
+  - [CR3 — Semânticas de escrita não-canônicas](#cr3-semanticas-de-escrita-nao-canonicas)
+  - [CR4 — Verbos mutadores sem escopo de proveniência](#cr4-verbos-mutadores-sem-escopo-de-proveniencia)
+  - [CR5 — Ausência de superfície canônica de CHEGADA multi-repo](#cr5-ausencia-de-superficie-canonica-de-chegada-multi-repo)
+- [3. Programa de Idempotência (workstreams com dono e gate)](#3-programa-de-idempotencia-workstreams-com-dono-e-gate)
+  - [WS-A — Pureza de entrada (mata CR1; destrava TUDO)](#ws-a-pureza-de-entrada-mata-cr1-destrava-tudo)
+  - [WS-B — Pureza de estado (mata CR2)](#ws-b-pureza-de-estado-mata-cr2)
+  - [WS-C — Pureza de escrita (mata CR3)](#ws-c-pureza-de-escrita-mata-cr3)
+  - [WS-D — Verbos com escopo (mata CR4)](#ws-d-verbos-com-escopo-mata-cr4)
+  - [WS-E — Superfície canônica de chegada (mata CR5)](#ws-e-superficie-canonica-de-chegada-mata-cr5)
+- [4. Cadeia alvo (depois do programa)](#4-cadeia-alvo-depois-do-programa)
+- [5. Ordem de execução e sessões](#5-ordem-de-execucao-e-sessoes)
+- [6. Decisões que peço ao operador](#6-decisoes-que-peco-ao-operador)
+- [✅ APROVAÇÃO REGISTRADA — 21:44Z de 2026-09-11](#aprovacao-registrada-2144z-de-2026-09-11)
+
+<!-- TOC END -->
+
 > Aprofamento do plano de retomada (`1789162100000`) aos 21:41Z. Cada causa abaixo foi
 > VIVIDA e provada nesta sessão (SHAs, logs de CI, diffs) — não é levantamento teórico.
 

@@ -1,5 +1,24 @@
 # Modernize Pydantic via Rope: presets canônicos, CLI unificada e extermínio de engines
 
+<!-- TOC START -->
+
+- [Missão](#missao)
+- [Estado verificado (evidência)](#estado-verificado-evidencia)
+- [Decisões tomadas](#decisoes-tomadas)
+- [Plano de execução (ondas fechadas — cada uma termina ruff + pyrefly + coleta pytest](#plano-de-execucao-ondas-fechadas-cada-uma-termina-ruff-pyrefly-coleta-pytest)
+  - [Onda 0 — Coordenação e baseline (paralela, agora)](#onda-0-coordenacao-e-baseline-paralela-agora)
+  - [Onda 1 — Presets no dono (flext-core) — main](#onda-1-presets-no-dono-flext-core-main)
+  - [Onda 2 — Regra runtime + catálogo — main](#onda-2-regra-runtime-catalogo-main)
+  - [Onda 3 — Regras parametrizadas + CLI única (flext-infra) — agente C + main](#onda-3-regras-parametrizadas-cli-unica-flext-infra-agente-c-main)
+  - [Onda 4 — Cobaia ai-hub (projeto-nível) — main + agente B](#onda-4-cobaia-ai-hub-projeto-nivel-main-agente-b)
+  - [Onda 5 — Extermínio das engines re/ast/libcst — ondas W1–W4 (streams paralelos, 1](#onda-5-exterminio-das-engines-reastlibcst-ondas-w1w4-streams-paralelos-1)
+  - [Onda 6 — Conhecimento e fechamento](#onda-6-conhecimento-e-fechamento)
+- [Validação (por ciclo, inegociável)](#validacao-por-ciclo-inegociavel)
+- [Riscos e mitigations](#riscos-e-mitigations)
+- [Fora de escopo (explícito)](#fora-de-escopo-explicito)
+
+<!-- TOC END -->
+
 re/ast/libcst
 
 ## Missão
@@ -68,11 +87,12 @@ flext-core + rules YAML flext-infra), nunca conserto pontual.
    novo: `rewire-consumer-preset-bases.yml` (bases + model_config → preset) + sed para
    as 482 refs de nomes locais → nomes de presets. Parâmetros (mapa assinatura→preset)
    em **`flext-infra/config/rules/preset-rewire.yaml`** (novo SSOT parametrizado).
-4. **CLI única**: estender `FixEnforcementCommand` com `components: tuple[str, ...]`
-   (toggle: `beartype|astgrep|sed|rope|gates`) + novo adapter **`CodemodFixerAdapter`**
-   (kind `codemod`) que roda o batch ast-grep/sed existente no mesmo loop rope (projeto
-   rope aberto uma vez, callback por arquivo, um relatório). `make mod` e `fix`
-   continuam como verbos públicos da MESMA CLI. Dry-run = `apply=False` (já suportado).
+4. **CLI única**: estender `FixEnforcementCommand` com
+   `components: t.VariadicTuple[str]` (toggle: `beartype|astgrep|sed|rope|gates`) + novo
+   adapter **`CodemodFixerAdapter`** (kind `codemod`) que roda o batch ast-grep/sed
+   existente no mesmo loop rope (projeto rope aberto uma vez, callback por arquivo, um
+   relatório). `make mod` e `fix` continuam como verbos públicos da MESMA CLI. Dry-run =
+   `apply=False` (já suportado).
 5. **Extermínio por ondas** (cada onda = 1 bead + ciclo 100% verde), ordem: (W1)
    transformers de mutação raw-ast/libcst; (W2) detectors `_utilities/*_ast.py`,
    `*_cst.py`; (W3) gates raw-ast → ast-grep/rope/beartype; (W4) banir reimports

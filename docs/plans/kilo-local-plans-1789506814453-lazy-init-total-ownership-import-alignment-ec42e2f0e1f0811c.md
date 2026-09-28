@@ -1,5 +1,19 @@
 # Lazy-init: posse total de `__init__.py` + realinhamento canônico de imports
 
+<!-- TOC START -->
+
+- [1. Directiva do operador (lei, 2026-09-15)](#1-directiva-do-operador-lei-2026-09-15)
+- [2. Evidência do estado atual](#2-evidencia-do-estado-atual)
+- [3. Decisões de design](#3-decisoes-de-design)
+- [4. Regras especiais existentes (análise pedida) — e como a mudança as respeita](#4-regras-especiais-existentes-analise-pedida-e-como-a-mudanca-as-respeita)
+- [5. Tarefas (ordenadas)](#5-tarefas-ordenadas)
+- [6. Contrato de validação](#6-contrato-de-validacao)
+- [7. Riscos e bordas](#7-riscos-e-bordas)
+- [8. Fora de escopo](#8-fora-de-escopo)
+- [Apêndice A — 41 inits manuais em ai-hub (2026-09-15)](#apendice-a-41-inits-manuais-em-ai-hub-2026-09-15)
+
+<!-- TOC END -->
+
 ## 1. Directiva do operador (lei, 2026-09-15)
 
 1. Nenhuma exceção de `__init__.py` manual foi autorizada — exterminar para sempre.

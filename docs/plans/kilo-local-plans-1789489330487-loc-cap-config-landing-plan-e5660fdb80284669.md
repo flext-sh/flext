@@ -1,5 +1,24 @@
 # LOC-Cap: pouso do split `_config` e fechamento do tema (reescrita v3, 2026-09-15T17:55Z)
 
+<!-- TOC START -->
+
+- [0. Autocrítica pesada — atualizada com os fatos mais novos](#0-autocritica-pesada-atualizada-com-os-fatos-mais-novos)
+- [1. Estado de verdade (verificado NESTA sessão, 17:51–17:55Z)](#1-estado-de-verdade-verificado-nesta-sessao-17511755z)
+- [2. Mapa de propriedade (3 planos vivos, zero sobreposição)](#2-mapa-de-propriedade-3-planos-vivos-zero-sobreposicao)
+- [3. Invariantes (inalteradas + reforçadas)](#3-invariantes-inalteradas-reforcadas)
+- [4. Ondas (pequenas, gateadas, dimensionadas PARA ESTA sessão)](#4-ondas-pequenas-gateadas-dimensionadas-para-esta-sessao)
+  - [W1 — Adotar tip nos 6 paths stale (<3 min)](#w1-adotar-tip-nos-6-paths-stale-3-min)
+  - [W2 — Coordenação + quiescência (<5 min)](#w2-coordenacao-quiescencia-5-min)
+  - [W3 — Pouso do split \_config (a onda central)](#w3-pouso-do-split-_config-a-onda-central)
+  - [W4 — Decisão de lint SÓ com evidência fresca (dentro de W3.4)](#w4-decisao-de-lint-so-com-evidencia-fresca-dentro-de-w34)
+  - [W5 — Testes do escopo tocado](#w5-testes-do-escopo-tocado)
+  - [W6 — Fecho do tema](#w6-fecho-do-tema)
+- [5. Fora de escopo (explícito, com dono)](#5-fora-de-escopo-explicito-com-dono)
+- [6. Validação / Done desta sessão (checklist duro)](#6-validacao-done-desta-sessao-checklist-duro)
+- [7. Riscos](#7-riscos)
+
+<!-- TOC END -->
+
 ## 0. Autocrítica pesada — atualizada com os fatos mais novos
 
 Autocrítica da sessão (já registrada em `1789476032590`) mantida e AMPLIADA com o que a

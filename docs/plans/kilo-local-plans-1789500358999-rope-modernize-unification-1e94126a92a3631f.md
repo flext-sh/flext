@@ -1,5 +1,38 @@
 # Rope Modernize — Programa Mestre Unificado · EXECUÇÃO (P0 → C1–C9 → W → Cn+1)
 
+<!-- TOC START -->
+
+- [AUTO-CRÍTICA E PROTOCOLO CORRIGIDO (2026-09-16T02:30Z — obrigatório em todo ciclo)](#auto-critica-e-protocolo-corrigido-2026-09-16t0230z-obrigatorio-em-todo-ciclo)
+- [AUTO-CRÍTICA 2 (2026-09-16T13:02Z — rodada api.py/flext-j64nz)](#auto-critica-2-2026-09-16t1302z-rodada-apipyflext-j64nz)
+- [ESTADO REAL VERIFICADO (evidência 2026-09-16T02:15–02:30Z)](#estado-real-verificado-evidencia-2026-09-16t02150230z)
+- [ORDEM DE EXECUÇÃO CORRIGIDA (serial, um passo por vez, evidência por passo)](#ordem-de-execucao-corrigida-serial-um-passo-por-vez-evidencia-por-passo)
+- [UNIFICAÇÃO — plano 1789489334832-rope-gen-engine-strict-init (v4) + pendentes](#unificacao-plano-1789489334832-rope-gen-engine-strict-init-v4-pendentes)
+- [Missão](#missao)
+- [Regras-raiz](#regras-raiz)
+- [Interpretação rope-mediated (CONFIRMADA por evidência)](#interpretacao-rope-mediated-confirmada-por-evidencia)
+- [Estado verificado (evidência consolidada)](#estado-verificado-evidencia-consolidada)
+- [Arquitetura-alvo (verbos: mod modernize · ast engine ast-grep · gen gerador por](#arquitetura-alvo-verbos-mod-modernize-ast-engine-ast-grep-gen-gerador-por)
+- [Decisões (regra raiz por item; conflitos de origem resolvidos)](#decisoes-regra-raiz-por-item-conflitos-de-origem-resolvidos)
+- [Ciclos (ordenados; P0 primeiro; streams paralelos onde marcado; cada um verde integral)](#ciclos-ordenados-p0-primeiro-streams-paralelos-onde-marcado-cada-um-verde-integral)
+  - [P0 — Governança viva, worktrees/PR e coordenação (imediata; autoridade total](#p0-governanca-viva-worktreespr-e-coordenacao-imediata-autoridade-total)
+  - [C1 — Árvore config/rules/ + engine ast + descoberta + guardas (flext-infra)](#c1-arvore-configrules-engine-ast-descoberta-guardas-flext-infra)
+  - [C2 — Import-alignment rope-native (stream A; spec D3, tarefas T0–T5 do plano](#c2-import-alignment-rope-native-stream-a-spec-d3-tarefas-t0t5-do-plano)
+  - [C3 — Presets no dono (flext-core; stream main)](#c3-presets-no-dono-flext-core-stream-main)
+  - [C4 — Regra runtime + catálogo (stream main)](#c4-regra-runtime-catalogo-stream-main)
+  - [C5 — Parâmetros em config/rules + componente enforcement no mod (stream C)](#c5-parametros-em-configrules-componente-enforcement-no-mod-stream-c)
+  - [C6 — Contract-drift checker (stream main)](#c6-contract-drift-checker-stream-main)
+  - [C7 — Accessors (stream B)](#c7-accessors-stream-b)
+  - [C8 — dataclass-modelizer rope phase (stream B)](#c8-dataclass-modelizer-rope-phase-stream-b)
+  - [C9 — Cobaia ai-hub (main + B; escritores SERIALIZADOS)](#c9-cobaia-ai-hub-main-b-escritores-serializados)
+  - [C10..n — Extermínio restante (waves W, 1 bead cada, arquivo morto DELETADO](#c10n-exterminio-restante-waves-w-1-bead-cada-arquivo-morto-deletado)
+  - [Cn+1 — Conhecimento vivo (no MESMO ciclo de cada wave; reconciliação final do](#cn1-conhecimento-vivo-no-mesmo-ciclo-de-cada-wave-reconciliacao-final-do)
+- [Validação (por ciclo, inegociável)](#validacao-por-ciclo-inegociavel)
+- [Riscos e mitigações](#riscos-e-mitigacoes)
+- [Decisões fechadas pelo operador](#decisoes-fechadas-pelo-operador)
+- [Fora de escopo (explícito)](#fora-de-escopo-explicito)
+
+<!-- TOC END -->
+
 > **Status: EM EXECUÇÃO** desde 2026-09-15T22:45Z. Ordem executada do começo; **ponto de
 > controle ao fim de cada fase** = evidência de gate (comando, exit, contagens) +
 > checkpoint no board + commit escopado na lane. Base de trabalho: worktree COMPLETA do

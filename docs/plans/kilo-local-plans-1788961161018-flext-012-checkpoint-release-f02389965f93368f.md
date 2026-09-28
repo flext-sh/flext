@@ -1,5 +1,33 @@
 # FLEXT 0.12.0 Checkpoint — Publication and Fleet Integration
 
+<!-- TOC START -->
+
+- [Operator Directive Supersedence](#operator-directive-supersedence)
+- [Objective and Acceptance Authority](#objective-and-acceptance-authority)
+- [Authority Resolution (checked first, every session)](#authority-resolution-checked-first-every-session)
+- [Execution Sequence](#execution-sequence)
+  - [Phase 0 — Reconcile worktree identity and publish infra tip](#phase-0-reconcile-worktree-identity-and-publish-infra-tip)
+  - [Phase 1 — Land open integration PRs (no-ff, newest-wins)](#phase-1-land-open-integration-prs-no-ff-newest-wins)
+  - [Phase 2 — Close the local release lane](#phase-2-close-the-local-release-lane)
+  - [Phase 3 — Version, accept artifacts, publish, verify](#phase-3-version-accept-artifacts-publish-verify)
+- [Non-Negotiables (closure gate)](#non-negotiables-closure-gate)
+- [Session Handoff (for a new session)](#session-handoff-for-a-new-session)
+- [action. State it precisely; then continue to full completion](#action-state-it-precisely-then-continue-to-full-completion)
+- [Session Continuation (2026-09-09 18:40 UTC) — Progress and Next Steps](#session-continuation-2026-09-09-1840-utc-progress-and-next-steps)
+  - [Completed this session](#completed-this-session)
+  - [Remaining (execution order)](#remaining-execution-order)
+  - [Key constants (unchanged)](#key-constants-unchanged)
+- [LEAN STRATEGY (2026-09-09 18:44 UTC) — "Caminho Crítico do Release"](#lean-strategy-2026-09-09-1844-utc-caminho-critico-do-release)
+  - [Fase A — Infra verde (destrava tudo)](#fase-a-infra-verde-destrava-tudo)
+  - [Fase B — UM regen de frota substitui 30 lanes](#fase-b-um-regen-de-frota-substitui-30-lanes)
+  - [Fase C — Versionar, publicar, aceitar](#fase-c-versionar-publicar-aceitar)
+  - [Fase D — Backlog re-parentado (tracker mostra só o caminho crítico)](#fase-d-backlog-re-parentado-tracker-mostra-so-o-caminho-critico)
+  - [Fase E — Varredura reval250909 continua (pós-release)](#fase-e-varredura-reval250909-continua-pos-release)
+  - [Ganhos de eficiência](#ganhos-de-eficiencia)
+  - [Fase A — REVISED (2026-09-09 18:50 UTC): cycle-green, not violation-zero](#fase-a-revised-2026-09-09-1850-utc-cycle-green-not-violation-zero)
+
+<!-- TOC END -->
+
 Status: approved by the operator; full cycle active. Beads owns live execution state and
 evidence. Live progress against Beads:
 `.kilo/plans/1788961161018-flext-012-checkpoint-status.md` (updated at every

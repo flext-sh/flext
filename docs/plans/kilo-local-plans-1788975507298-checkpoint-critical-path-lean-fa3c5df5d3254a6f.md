@@ -1,5 +1,22 @@
 # Lean Critical-Path Plan — Checkpoint 0.12.0 (cycle-green)
 
+<!-- TOC START -->
+
+- [Context (verified this session)](#context-verified-this-session)
+- [Strategy: cycle-green first, debt re-parented, one fleet regen](#strategy-cycle-green-first-debt-re-parented-one-fleet-regen)
+  - [Fase A0 — Record dispositions (docs + beads, do first)](#fase-a0-record-dispositions-docs-beads-do-first)
+  - [Fase A1 — Cycle-breakers now (~31 mechanical items)](#fase-a1-cycle-breakers-now-31-mechanical-items)
+  - [Fase A2 — Accepted-residual → backlog (NOT release blockers)](#fase-a2-accepted-residual-backlog-not-release-blockers)
+  - [Fase B — ONE fleet regen replaces the 30 lanes](#fase-b-one-fleet-regen-replaces-the-30-lanes)
+  - [Fase C — Version, publish, accept](#fase-c-version-publish-accept)
+  - [Fase D — Tracker shows only the critical path](#fase-d-tracker-shows-only-the-critical-path)
+- [Efficiency levers (learnings encoded)](#efficiency-levers-learnings-encoded)
+- [Validation](#validation)
+- [Execution notes](#execution-notes)
+- [Out of scope (explicit)](#out-of-scope-explicit)
+
+<!-- TOC END -->
+
 > Created 2026-09-09 18:50 UTC from live session learnings. Supersedes the
 > "violation-zero" reading of Phase A. Grounded in saved acceptance
 > `closeout.checkpoint_0_12_0`: residual violations are accepted at 0.12.0 provided

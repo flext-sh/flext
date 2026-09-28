@@ -1,5 +1,11 @@
 # Índice de adendos — runtime modernization
 
+<!-- TOC START -->
+
+- No sections found
+
+<!-- TOC END -->
+
 Autoridade principal: `../../1789582508056-flext-infra-runtime-modernization.md`. Estes
 adendos preservam contexto e proveniência; não substituem o plano nem os Beads Gas City.
 

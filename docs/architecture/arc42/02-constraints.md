@@ -21,7 +21,8 @@
 - [2.5 Compliance Constraints](#25-compliance-constraints)
   - [2.5.1 Data Governance](#251-data-governance)
   - [2.5.2 Security Compliance](#252-security-compliance)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 

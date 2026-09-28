@@ -1,5 +1,23 @@
 # Handoff — Nova Sessão (projeto flext)
 
+<!-- TOC START -->
+
+- [1. Documentos de leitura obrigatória (nesta ordem)](#1-documentos-de-leitura-obrigatoria-nesta-ordem)
+- [2. Estado real verificado (leitura read-only, 17:25 UTC)](#2-estado-real-verificado-leitura-read-only-1725-utc)
+- [3. Diretriz operacional vigente (supersedência)](#3-diretriz-operacional-vigente-supersedencia)
+- [4. Sequência de retomada (exatamente nesta ordem)](#4-sequencia-de-retomada-exatamente-nesta-ordem)
+  - [Fase 0 — Publicar o gerador infra PRIMEIRO](#fase-0-publicar-o-gerador-infra-primeiro)
+  - [Fase 1 — Integrar tudo na branch de integração](#fase-1-integrar-tudo-na-branch-de-integracao)
+  - [Fase 2 — Fechar a lane de release local](#fase-2-fechar-a-lane-de-release-local)
+  - [Fase 3 — Versionamento, aceite, publicação e verificação](#fase-3-versionamento-aceite-publicacao-e-verificacao)
+  - [Fase 4 — Varredura paralela de reorganização de Beads (ativa)](#fase-4-varredura-paralela-de-reorganizacao-de-beads-ativa)
+- [5. Regras de ambiente (não repetir erros)](#5-regras-de-ambiente-nao-repetir-erros)
+- [6. Constantes-chave](#6-constantes-chave)
+- [7. Regras de parada](#7-regras-de-parada)
+- [8. Primeira ação na nova sessão](#8-primeira-acao-na-nova-sessao)
+
+<!-- TOC END -->
+
 > Data: 2026-09-09 17:36 UTC. Projeto: `~/flext`. Este é o handoff consolidado para
 > retomar o trabalho em nova sessão, exclusivamente sobre este projeto. Os documentos de
 > referência e o estado real já estão atualizados com a diretriz operacional mais

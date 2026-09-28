@@ -1,5 +1,16 @@
 # SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md
 
+<!-- TOC START -->
+
+- [Goal](#goal)
+- [Starting state (verified 2026-09-10)](#starting-state-verified-2026-09-10)
+- [Tasks (ordered)](#tasks-ordered)
+- [Rules applied](#rules-applied)
+- [Validation](#validation)
+- [Out of scope](#out-of-scope)
+
+<!-- TOC END -->
+
 (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
 
 # Plan: Batch-2 bead revalidation (238 open beads → final aligned state)

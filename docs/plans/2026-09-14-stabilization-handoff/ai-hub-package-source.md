@@ -6,7 +6,7 @@
 - [1. Sintoma medido](#1-sintoma-medido)
 - [2. Causas (arquivo:linha)](#2-causas-arquivolinha)
 - [3. Mudança (um dono, sem daemon)](#3-mudanca-um-dono-sem-daemon)
-- [3b. Defeito adicional encontrado: projeções de governança commitadas com marcadores de conflito](#3b-defeito-adicional-encontrado-projecoes-de-governanca-commitadas-com-marcadores-de-conflito)
+- [3b. Defeito adicional encontrado: projeções de governança commitadas com marcadores](#3b-defeito-adicional-encontrado-projecoes-de-governanca-commitadas-com-marcadores)
 - [3c. Fronteira flext ↔ ai-hub decidida pelo operador (14/09, atualização)](#3c-fronteira-flext-ai-hub-decidida-pelo-operador-1409-atualizacao)
 - [4. Aceite (prova em runtime real)](#4-aceite-prova-em-runtime-real)
 

@@ -13,27 +13,6 @@ class FlextRootExamplesConstants:
     """Examples constants facade — access via FlextRootExamplesConstants.*."""
 
     @unique
-    class Permission(StrEnum):
-        """Permission enumeration used across ACL examples."""
-
-        READ = "read"
-        WRITE = "write"
-        DELETE = "delete"
-        SEARCH = "search"
-        UNKNOWN = "unknown"
-
-    @unique
-    class ServerType(StrEnum):
-        """Server type enumeration used across directory-service examples."""
-
-        OPENLDAP = "openldap"
-        ORACLE_OID = "oracle_oid"
-        ORACLE_UNIFIED_DIRECTORY = "oracle_unified_directory"
-        ACTIVE_DIRECTORY = "active_directory"
-        APACHE_DS = "apache_ds"
-        UNKNOWN = "unknown"
-
-    @unique
     class Stage(StrEnum):
         """Processing stage enumeration used across pipeline examples."""
 

@@ -1,5 +1,13 @@
 # Adjudicação de lanes e conflitos
 
+<!-- TOC START -->
+
+- [Decisões](#decisoes)
+- [Conflitos que o coordenador resolve antes de delegar](#conflitos-que-o-coordenador-resolve-antes-de-delegar)
+- [Política de adoção](#politica-de-adocao)
+
+<!-- TOC END -->
+
 ## Decisões
 
 | Lane/artefato                              | Decisão                      | Motivo                                                                         |

@@ -14,7 +14,8 @@
 - [Status 2026-09-11 (execução corrente)](#status-2026-09-11-execucao-corrente)
   - [Adendo 2026-09-11 (cadeia de runtime do daemon, mapeada com evidência)](#adendo-2026-09-11-cadeia-de-runtime-do-daemon-mapeada-com-evidencia)
   - [Adendo 2 — mudanças por projeto (2026-09-11) + worktree dedicada](#adendo-2-mudancas-por-projeto-2026-09-11-worktree-dedicada)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 > Aprovado pelo operador (sim, tudo + campanha de dívida incluída). Executor:
 > orquestrador + esquadrão de subagentes. Lei: `~/agents/AGENTS.md` + `flext-law` +

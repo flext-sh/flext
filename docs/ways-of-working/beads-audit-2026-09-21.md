@@ -1,5 +1,14 @@
 # Beads Audit & Reorganization — 0.12 Conformance Campaign
 
+<!-- TOC START -->
+
+- [Estado de execução (2026-09-21)](#estado-de-execucao-2026-09-21)
+- [Inventário por família (bd list 2026-09-21, open beads)](#inventario-por-familia-bd-list-2026-09-21-open-beads)
+- [Protocolo por item (execução)](#protocolo-por-item-execucao)
+- [Fila de execução da auditoria (ordem)](#fila-de-execucao-da-auditoria-ordem)
+
+<!-- TOC END -->
+
 > **Contrato (operador, 2026-09-21):** auditoria item a item de TODAS as beads abertas —
 > obsoleta, redundante, reassinar, atualizar estruturalmente ou concluir. Claims
 > obsoletos removidos; PRs/branches ligados às beads; tarefas e bugs alinhados aos epics

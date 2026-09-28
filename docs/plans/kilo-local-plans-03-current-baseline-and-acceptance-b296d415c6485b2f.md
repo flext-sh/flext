@@ -1,5 +1,13 @@
 # Baseline reconciliado e contrato de aceite
 
+<!-- TOC START -->
+
+- [Verdade atual](#verdade-atual)
+- [Primeiro pacote de delegação](#primeiro-pacote-de-delegacao)
+- [Matriz de aceite de resultado de worker](#matriz-de-aceite-de-resultado-de-worker)
+
+<!-- TOC END -->
+
 ## Verdade atual
 
 - Não há baseline global verde aceito.

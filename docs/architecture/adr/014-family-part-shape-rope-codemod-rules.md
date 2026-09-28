@@ -1,5 +1,10 @@
 # ADR-014 — Family Part Shape Law and Rope-Driven Codemod Rules
 
+> **Amended by ADR-018** (generator declarations): its filename-to-letter tables,
+> closed folder lists and advisory-gate lists are superseded; see
+> [ADR-018](018-generator-declarations.md).
+
+
 <!-- TOC START -->
 
 - [Context](#context)
@@ -83,8 +88,12 @@ workspace timestamped `.bak` artifacts).
 Structural shape rules for the Rope engine are planned as declarative YAML files (one
 file per rule), mirroring the ast-grep rule file style of the ADR-010 cascade. Current
 rule fixtures live under `src/flext_infra/codemod/rules/`,
-`src/flext_infra/codemod/tests/`, and `src/flext_infra/codemod/utils/`; the planned
-`flext-infra/config/rules/rope/` surface (ADR-017) is not yet materialized:
+`src/flext_infra/codemod/tests/`, and `src/flext_infra/codemod/utils/`; the
+`flext-infra/config/rules/rope/` surface (ADR-017) now exists on the integration tip
+(`README.md`, `flatten-family-namespace-wrapper.yaml`). Operator ruling D-ENF
+(2026-09-24) makes `flext-infra/config/rules/` the single home of static
+enforcement rules; the rules still under `src/flext_infra/codemod/rules/` are a
+pending migration tracked by `flext-itpd1.3.10.9`, not a second home:
 
 ```yaml
 id: hoist-family-orphan-class

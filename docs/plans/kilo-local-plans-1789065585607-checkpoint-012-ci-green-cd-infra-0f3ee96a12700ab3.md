@@ -1,5 +1,21 @@
 # SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md
 
+<!-- TOC START -->
+
+- [Causa raiz confirmada (evidência de execução)](#causa-raiz-confirmada-evidencia-de-execucao)
+- [Já executado (não repetir)](#ja-executado-nao-repetir)
+- [Fases restantes](#fases-restantes)
+  - [Fase A — Provar ciclo local verde](#fase-a-provar-ciclo-local-verde)
+  - [Fase B — Commit scoped + push + CI verde](#fase-b-commit-scoped-push-ci-verde)
+  - [Fase C — Fechar PR #668](#fase-c-fechar-pr-668)
+  - [Fase D — Restaurar chamada manual (switch) do ci-matrix pelo dono](#fase-d-restaurar-chamada-manual-switch-do-ci-matrix-pelo-dono)
+  - [Fase E — Teste cd-infra (dispatch manual nos 3 OSes)](#fase-e-teste-cd-infra-dispatch-manual-nos-3-oses)
+- [Riscos](#riscos)
+- [Done](#done)
+- [Fora de escopo](#fora-de-escopo)
+
+<!-- TOC END -->
+
 (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
 
 # Checkpoint 0.12.0 — Integrar PRs com CI verde + teste cd-infra (windows/macos/linux)

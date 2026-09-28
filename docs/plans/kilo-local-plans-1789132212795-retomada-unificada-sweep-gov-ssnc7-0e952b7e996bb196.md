@@ -1,5 +1,30 @@
 # Plano Unificado de Retomada — Épico bd → Absorção Total → Remote-ização → Execução
 
+<!-- TOC START -->
+
+- [0. Autoridade e fontes](#0-autoridade-e-fontes)
+- [1. Estado medido (fatos verificados nesta sessão de planejamento)](#1-estado-medido-fatos-verificados-nesta-sessao-de-planejamento)
+- [2. Estrutura de execução no bd (entregável da F0)](#2-estrutura-de-execucao-no-bd-entregavel-da-f0)
+  - [2.1 Épico + bead por fase](#21-epico-bead-por-fase)
+  - [2.2 Template de criação — nada menos do que bd lint exige](#22-template-de-criacao-nada-menos-do-que-bd-lint-exige)
+  - [2.3 Correlação total das beads absorvidas (regra anti-bloqueio)](#23-correlacao-total-das-beads-absorvidas-regra-anti-bloqueio)
+  - [2.4 Gates de registro (ex-A1/A2/A3)](#24-gates-de-registro-ex-a1a2a3)
+- [3. Fases](#3-fases)
+  - [3.0 Barra de fechamento comum — UMA fase só termina (bead CLOSED) com os 5 itens, no](#30-barra-de-fechamento-comum-uma-fase-so-termina-bead-closed-com-os-5-itens-no)
+  - [3.1 F0 — Absorção total + estrutura bd](#31-f0-absorcao-total-estrutura-bd)
+  - [3.2 F1 — Remote-ização + limpeza do host + rigs + worktrees dedicadas](#32-f1-remote-izacao-limpeza-do-host-rigs-worktrees-dedicadas)
+  - [3.3 F2 — Pre-code + fila única de pousos (gate de registro A1)](#33-f2-pre-code-fila-unica-de-pousos-gate-de-registro-a1)
+  - [3.4 F3 — Grafo crg (gate de registro A2)](#34-f3-grafo-crg-gate-de-registro-a2)
+  - [3.5 F4 — Piloto unificado (gates de registro A3 + §12a)](#35-f4-piloto-unificado-gates-de-registro-a3-12a)
+  - [3.6 F5 — Fechamento total: propagação universal + épico](#36-f5-fechamento-total-propagacao-universal-epico)
+- [4. Fronteiras de sessão (lotes realistas)](#4-fronteiras-de-sessao-lotes-realistas)
+- [5. Riscos e contramedidas](#5-riscos-e-contramedidas)
+- [6. Proibições duráveis](#6-proibicoes-duraveis)
+- [7. Pedidos ao operador](#7-pedidos-ao-operador)
+- [8. Validação do plano](#8-validacao-do-plano)
+
+<!-- TOC END -->
+
 (sweep × `flext-ssnc7` × ai-hub × agents)
 
 > **Decretos do operador (vigentes)**: · 13:21Z — F0 assume como MEU absolutamente tudo

@@ -1,5 +1,16 @@
 # Flext 0.12.0 Checkpoint — Status Against Beads
 
+<!-- TOC START -->
+
+- [Published Tips (remote-proof this turn)](#published-tips-remote-proof-this-turn)
+- [Recovery Recorded (incident + fix)](#recovery-recorded-incident-fix)
+- [Gate State](#gate-state)
+- [PRs](#prs)
+- [Immediate TODO (next turn)](#immediate-todo-next-turn)
+- [Environment Warnings (do not repeat)](#environment-warnings-do-not-repeat)
+
+<!-- TOC END -->
+
 > Parent execution status artifact. Beads own semantic state. This is a read/progress
 > view, not a second tracker. Updated: 2026-09-09 18:55 UTC (checkpoint turn — operator
 > asked for a stable WIP close, published tips, and a progress stop).

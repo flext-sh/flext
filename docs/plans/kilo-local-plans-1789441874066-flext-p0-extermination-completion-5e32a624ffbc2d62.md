@@ -1,5 +1,21 @@
 # P0 — Extermínio de stubs/fallback/silenciamento + Conclusão da estabilização 0.12.0
 
+<!-- TOC START -->
+
+- [Objetivo e ponto de finalização (HARD STOP)](#objetivo-e-ponto-de-finalizacao-hard-stop)
+- [Lei de execução (consolidada das diretivas do operador)](#lei-de-execucao-consolidada-das-diretivas-do-operador)
+- [Estado atual (evidência desta sessão — atualizado 2026-09-15T16:1xZ)](#estado-atual-evidencia-desta-sessao-atualizado-2026-09-15t161xz)
+- [Execução P0 — ondas ordenadas (cada onda: worktree → fazer → validar → merge --no-ff](#execucao-p0-ondas-ordenadas-cada-onda-worktree-fazer-validar-merge-no-ff)
+  - [Onda 1 — Convergência de gates no tip (sem novas features)](#onda-1-convergencia-de-gates-no-tip-sem-novas-features)
+  - [Onda 2 — Varredura de stubs/fallback/silenciamento (a pedido novo do operador)](#onda-2-varredura-de-stubsfallbacksilenciamento-a-pedido-novo-do-operador)
+  - [Onda 3 — Revalidação de tests pendente (wms-family + infra)](#onda-3-revalidacao-de-tests-pendente-wms-family-infra)
+  - [Onda 4 — Conclusão de PRs/branches/worktrees + publicação final](#onda-4-conclusao-de-prsbranchesworktrees-publicacao-final)
+  - [Onda 5 — Plano P1 (orientação otimizada, escrito nesta sessão)](#onda-5-plano-p1-orientacao-otimizada-escrito-nesta-sessao)
+- [Riscos e mitigação](#riscos-e-mitigacao)
+- [Validação final (checklist de publicação)](#validacao-final-checklist-de-publicacao)
+
+<!-- TOC END -->
+
 (plano otimizado com finish line)
 
 ## Objetivo e ponto de finalização (HARD STOP)

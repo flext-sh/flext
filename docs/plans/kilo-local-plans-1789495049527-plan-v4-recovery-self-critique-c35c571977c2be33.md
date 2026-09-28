@@ -1,5 +1,22 @@
 # Plano de Recuperação v3.2 — DOSSIÊ COMPLETO + EXECUÇÃO (2026-09-16T02:2xZ)
 
+<!-- TOC START -->
+
+- [0. PLANO DE REGISTRO (v4) — ondas originais (conteúdo completo)](#0-plano-de-registro-v4-ondas-originais-conteudo-completo)
+- [1. ESTADO VERIFICADO (evidência da sessão)](#1-estado-verificado-evidencia-da-sessao)
+  - [1.1 Tips/commits (todos pushed exceto onde notado)](#11-tipscommits-todos-pushed-exceto-onde-notado)
+  - [1.2 Causa raiz PROVADA — init vazio underscore (file:line)](#12-causa-raiz-provada-init-vazio-underscore-fileline)
+  - [1.3 Motor/gen — estado e leis](#13-motorgen-estado-e-leis)
+  - [1.4 Qualidade — números do último check (flext-infra)](#14-qualidade-numeros-do-ultimo-check-flext-infra)
+  - [1.5 Lanes/PRs/worktrees (censo 18:03Z + updates)](#15-lanesprsworktrees-censo-1803z-updates)
+  - [1.6 Beads (store: direnv exec ~/flext gc bd)](#16-beads-store-direnv-exec-flext-gc-bd)
+  - [1.7 Ferramentas/automação (usar SEMPRE)](#17-ferramentasautomacao-usar-sempre)
+- [2. AUTOCRÍTICA PESADA (v3)](#2-autocritica-pesada-v3)
+- [3. EXECUÇÃO — grãos com ciclo completo (branch dedicada → wip push →](#3-execucao-graos-com-ciclo-completo-branch-dedicada-wip-push)
+- [4. Anti-recorrência](#4-anti-recorrencia)
+
+<!-- TOC END -->
+
 Fonte única de execução. Tudo abaixo é conhecimento VERIFICADO desta sessão
 (comando/exit/SHA/caminho). Lei vigente em `~/.agents/rules/` (10 arquivos):
 validate-on-change · wip-persistence (worktree/branch dedicada) · full-landing-cycle ·

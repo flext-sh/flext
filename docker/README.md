@@ -337,7 +337,7 @@ find ~/flext -name "Dockerfile*" -type f \
 
 # Check for prohibited local fixtures
 find ~/flext -name "docker_fixtures.py" \
-  | grep -v "flext-core/src/flext_tests/fixtures/" | grep -v ".bak"
+  | grep -v "flext-tests/src/flext_tests/_fixtures/" | grep -v ".bak"
 # Should return nothing
 ```
 

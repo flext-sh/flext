@@ -61,9 +61,7 @@ class FlextRootCheckChangedProjects:
             ],
             cwd=cls.REPOSITORY_ROOT,
         )
-        if outcome.failure:
-            return 1
-        command: p.Cli.CommandOutput = outcome.value
+        command: p.Cli.CommandOutput = outcome.unwrap()
         return command.exit_code
 
     @classmethod

@@ -27,7 +27,8 @@
   - [Frameworks and Libraries](#frameworks-and-libraries)
   - [Data Storage](#data-storage)
   - [Integration Protocols](#integration-protocols)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 ## Table of Contents
 

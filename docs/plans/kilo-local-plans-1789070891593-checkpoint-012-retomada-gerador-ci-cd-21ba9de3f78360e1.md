@@ -1,5 +1,22 @@
 # SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md
 
+<!-- TOC START -->
+
+- [Estado real (verificado agora — não repetir diagnóstico)](#estado-real-verificado-agora-nao-repetir-diagnostico)
+- [Fases (código-mode, em todo mutável, verbo canônico root/member)](#fases-codigo-mode-em-todo-mutavel-verbo-canonico-rootmember)
+  - [F1 — flext-infra: fechar a lane do gerador](#f1-flext-infra-fechar-a-lane-do-gerador)
+  - [F2 — Root: fixed-point + gates locais](#f2-root-fixed-point-gates-locais)
+  - [F3 — Land membros + superproject (slices ~8)](#f3-land-membros-superproject-slices-8)
+  - [F4 — CI verde no tip (bloqueador central)](#f4-ci-verde-no-tip-bloqueador-central)
+  - [F5 — Ciclos PR/branch/worktree](#f5-ciclos-prbranchworktree)
+  - [F6 — cd-infra: dispatch manual nos 3 OSes](#f6-cd-infra-dispatch-manual-nos-3-oses)
+  - [F7 — Beads + regras (fechamento contínuo)](#f7-beads-regras-fechamento-continuo)
+- [Done](#done)
+- [Fora de escopo](#fora-de-escopo)
+- [Riscos](#riscos)
+
+<!-- TOC END -->
+
 (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
 
 # Checkpoint 0.12.0 — consolidação final: land residual + CI verde + cd-infra +

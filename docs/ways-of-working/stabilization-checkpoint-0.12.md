@@ -1,29 +1,30 @@
-# Runbook de estabilização — checkpoint 0.12.0
+# Stabilization runbook — checkpoint 0.12.0
 
 <!-- TOC START -->
 
-- [(a) Ciclo canônico](#a-ciclo-canonico)
-- [(b) Contrato beads central](#b-contrato-beads-central)
-- [(c) Integração](#c-integracao)
-- [(d) Extermínios vigentes](#d-exterminios-vigentes)
+- [(a) Canonical cycle](#a-canonical-cycle)
+- [(b) Central Beads contract](#b-central-beads-contract)
+- [(c) Integration](#c-integration)
+- [(d) Active exterminations](#d-active-exterminations)
+- [(e) Checkpoint 2026-09-20 — engine, cli floor and fleet (flext-v4fmn)](#e-checkpoint-2026-09-20-engine-cli-floor-and-fleet-flext-v4fmn)
+- [(f) Checkpoint 2026-09-21 — SSOT budget extermination, tracker audit, integration campaign](#f-checkpoint-2026-09-21-ssot-budget-extermination-tracker-audit-integration-campaign)
 
 <!-- TOC END -->
 
-> **Status (2026-09-20):** `make gen` atinge ponto fixo verde na frota (32/32; fixes
-> pousados: 31 manifestos de identidade `config/workspace.yaml`, render bare-deps no
-> root workspace, journal recovery #780, exports lazy `d/e/h/r/x` restaurados na raiz do
-> flext-infra). A estabilidade global ainda não está comprovada: restam a campanha
-> namespace (~2600 achados NS-STRUCT/NS-IMPORT — rota decidida: regras ast-grep para as
-> classes mecânicas em `flext-infra/codemod/rules/` + ondas manuais por repo para as
-> estruturais), runtime-census 1/repo (ENFORCE-079 + `extra="forbid"`), e os findings do
-> código novo no flext-infra. `flext-uno8m` detém o mapa por repo; `flext-itpd1.3`
-> coordena a recuperação sob `flext-itpd1`; os workstreams irmãos `flext-itpd1.2`
-> (documentação) e `flext-itpd1.4` (maquinaria Make) mantêm seus escopos. Beads detém o
-> estado vivo; este documento mantém o contrato versionado. Planos locais são contexto
-> de sessão: sua utilização aprovada não autoriza cópia ou publicação, nem seleção
-> automática pelo nome mais recente.
+> **Status (2026-09-20):** `make gen` reaches a green fixed point across the fleet
+> (32/32; landed fixes: 31 `config/workspace.yaml` identity manifests, bare-deps render
+> in the root workspace, journal recovery #780, lazy `d/e/h/r/x` exports restored in the
+> flext-infra root). Global stability is not proven yet: the namespace campaign remains
+> (~2600 NS-STRUCT/NS-IMPORT findings — chosen route: ast-grep rules for the mechanical
+> classes in `flext-infra/codemod/rules/` + manual waves per repo for the structural
+> ones), runtime-census 1/repo (ENFORCE-079 + `extra="forbid"`), and findings in new
+> flext-infra code. `flext-uno8m` holds the per-repo map; `flext-itpd1.3` coordinates
+> recovery under `flext-itpd1`; sibling workstreams `flext-itpd1.2` (documentation) and
+> `flext-itpd1.4` (Make machinery) keep their scopes. Beads holds live state; this
+> document maintains the versioned contract. Local plans are session context: approved
+> use does not authorize copying or publishing them, nor selection by newest filename.
 
-## (a) Ciclo canônico
+## (a) Canonical cycle
 
 ```bash
 make setup
@@ -38,100 +39,117 @@ make test
 make build
 ```
 
-Uma falha → corrigir o dono do verbo; sem inflar timeout; sem remover testmon. Executar
-os verbos sem seletores na raiz ativa do workspace. Completar com o runtime público
-aplicável e a validação nativa de documentação e links. Comprovar que repetições de
-`make gen`, `make fix` e `make fmt` não alteram o candidato e terminam com exit zero;
-alterações posteriores invalidam os recibos afetados. Warnings e findings residuais
-impedem o fechamento. Não iniciar outro ciclo até comprovar a frota inteira verde nos
-SHAs integrados e publicados.
+One failure → fix the verb owner; no timeout inflation; no testmon removal. Run the
+verbs without selectors at the active workspace root. Complete with the applicable
+public runtime and the native documentation/link validation. Prove that repeated
+`make gen`, `make fix`, and `make fmt` leave the candidate unchanged and exit zero;
+later mutations invalidate the affected receipts. Residual warnings and findings block
+closure. Do not start another cycle before proving the whole fleet green on the
+integrated and published SHAs.
 
-## (b) Contrato beads central
+## (b) Central Beads contract
 
-- `bd` roda via `direnv exec <repo> gc bd ...`
-- A ativação vem do `.envrc`/`.envrc.local` gerado (AGENTS_GAS_CITY_ROOT + porta da
-  publicação da cidade + banco da metadata do rig)
-- Reparo de identidade: `gc rig set-endpoint flext --inherit`
-- Nunca inicializar banco embedded/porta manual (fonte:
+- `bd` runs through `direnv exec <repo> gc bd ...`
+- Activation comes from the generated `.envrc`/`.envrc.local` (AGENTS_GAS_CITY_ROOT +
+  the city publication port + the rig metadata database)
+- Identity repair: `gc rig set-endpoint flext --inherit`
+- Never initialize an embedded database/manual port (source:
   `flext-infra/docs/guides/execution-context.md`)
 
-## (c) Integração
+## (c) Integration
 
-1. Workers entregam reparos delimitados e evidências; não fazem merge nem fecham Beads.
-   O coordenador mantém dependências, decisões de integração e a janela serializada de
-   geração, ambiente e gates.
-2. Preservar o WIP e revisar commits escopados (paths explícitos, nunca `git add -A`);
-   integrar por `merge --no-ff` na branch de integração verificada, esperada
-   `0.12.0-dev`, com revisão e CI aplicáveis.
-3. Publicar membros antes de atualizar os gitlinks da raiz. Push fast-forward;
-   divergência exige absorção por merge e revalidação, nunca rebase ou force-push.
-4. Revalidar gates, convergência de geração e runtime no SHA integrado publicado; um
-   checkpoint ou teste local não comprova a estabilidade da frota.
-5. O coordenador registra no Bead comando, cwd, exit, saída decisiva, SHAs e recibos de
-   revisão/CI/runtime; fecha apenas obrigações comprovadamente entregues.
+**Top priority: the working branch tracks current integration.** Every increment must
+deliver working behavior and keep the root, the 31 members, and the shared environment
+green. Preserving WIP means adopting it and fixing its defects; no failure is accepted
+as pre-existing or hidden behind exclusions.
 
-## (d) Extermínios vigentes
+Before starting an increment and before publishing it, refresh the remote references
+and absorb `origin/0.12.0-dev` through a `--no-ff` merge, resolving each conflict with
+review of both sides' features. A base change invalidates the affected receipts. Do not
+accumulate features on a branch far from integration.
 
-`APPLY`, `uv.lock`, `mise.lock`, banco local de beads — leitura/geração também, não só
-gitignore.
+The coordinator mandatorily performs the integration of every increment: complete
+implementation, local fleet gates, real runtime, CI on the exact candidate, merge, and
+post-merge proof. The next increment only starts after that composition is green. An
+administrative authorization replaces only the independent approval; it keeps every
+gate. While the tracker runtime is suspended, do not create another tracker and do not
+declare phase closure.
 
-## (e) Checkpoint 2026-09-20 — motor, cli floor e frota (flext-v4fmn)
+For cross-repository changes, order the commits by the producer/consumer contract and
+validate every intermediate composition before landing it. Do not rely on simultaneous
+merges. Publish member commits before the root gitlinks; prove the final composition on
+the published integrated SHA as well.
 
-Estado verificado pós-ciclo do agente dedicado (evidência: bead `flext-v4fmn`,
+1. Workers deliver bounded repairs and evidence; they do not merge or close Beads.
+   The coordinator maintains dependencies, integration decisions, and the serialized
+   window of generation, environment, and gates.
+2. Preserve WIP and review scoped commits (explicit paths, never `git add -A`);
+   integrate through `merge --no-ff` into the verified integration branch, expected
+   `0.12.0-dev`, with the applicable review and CI.
+3. Publish members before updating the root gitlinks. Push fast-forward; divergence
+   requires absorption through merge and revalidation, never rebase or force-push.
+4. Revalidate gates, generation convergence, and runtime on the published integrated
+   SHA; a local checkpoint or test does not prove fleet stability.
+5. The coordinator records in the Bead the command, cwd, exit, decisive output, SHAs,
+   and review/CI/runtime receipts; it closes only obligations with delivered proof.
+
+## (d) Active exterminations
+
+`APPLY`, `uv.lock`, `mise.lock`, local beads database — reading/generation too, not
+just gitignore.
+
+## (e) Checkpoint 2026-09-20 — engine, cli floor and fleet (flext-v4fmn)
+
+State verified after the dedicated agent cycle (evidence: bead `flext-v4fmn`,
 `flext-1tcsp`):
 
-- **Motor codegen**: conform execute compõe `FlextInfraCodegenConformPlan` + roles
-  mixin; `misc.py` adia o import de `execute` para `TYPE_CHECKING` (quebra do ciclo
-  execute→plan→misc→execute); cleanup do estado `.state` tolera residentes persistentes
-  (lock do lease + receipts do lazy-init); import direto de `FlextInfraConfigModels` em
+- **Codegen engine**: conform execute composes `FlextInfraCodegenConformPlan` + roles
+  mixin; `misc.py` defers the `execute` import to `TYPE_CHECKING` (breaking the
+  execute→plan→misc→execute cycle); `.state` cleanup tolerates persistent residents
+  (lease lock + lazy-init receipts); direct `FlextInfraConfigModels` import in
   `workspace.py`.
-- **cli**: floor `click>=8.3.3,<8.4` restaurado (cap do meltano; fontes: codegen SSOT +
-  projeção + `constraint-dependencies` da raiz quando aplicável).
-- **Frota**: 27 membros com renders convergidos e pousados; `setup`/`gen`
-  fixpoint/`fix`/`fmt` verdes em toda a frota; payload do flext-tests aceita
-  `GenericAlias`/`UnionType`/`TypeAliasType` como átomos textuais.
-- **Pendente (rastreado)**: onda estrutural namespace/census (regras ast-grep via
-  `make mod`, pós-integração — bead `flext-1tcsp`); daemon fantasma do ai-hub
-  (`aihub-yr5ft`); split do services package do ai-hub (`aihub-30jaq`).
+- **cli**: floor `click>=8.3.3,<8.4` restored (meltano cap; sources: codegen SSOT +
+  projection + root `constraint-dependencies` where applicable).
+- **Fleet**: 27 members with converged and landed renders; `setup`/`gen`
+  fixed-point/`fix`/`fmt` green across the fleet; the flext-tests payload accepts
+  `GenericAlias`/`UnionType`/`TypeAliasType` as textual atoms.
+- **Pending (tracked)**: namespace/census structural wave (ast-grep rules through
+  `make mod`, post-integration — bead `flext-1tcsp`); ai-hub ghost daemon
+  (`aihub-yr5ft`); ai-hub services package split (`aihub-30jaq`).
 
-## (f) Checkpoint 2026-09-21 — extermínio do budget SSOT, auditoria do tracker e campanha de integração
+## (f) Checkpoint 2026-09-21 — SSOT budget extermination, tracker audit, integration campaign
 
-Estado verificado na sessão de 2026-09-21 (evidência: epic `flext-49quw`,
-artefatos `.beads/artifacts/reval260921/`, ledger CSV):
+State verified in the 2026-09-21 session (evidence: epic `flext-49quw`, artifacts
+`.beads/artifacts/reval260921/`, CSV ledger):
 
-- **Zumbi do budget SSOT exterminado**: o merge `2d2a5b8ba` havia ressuscitado o
-  bloco `budget:` do `config/codegen.yaml` que o cutover `265346e77` havia morto
-  (modelo+YAML+template). Remoção pousada via `5bb83e45c`; modelo segue sem
-  `CodegenGateBudgetSpec` no tip `34765a1ee` — NÃO ressuscitar sem ordem
-  explícita do operador (lei universal; a mensagem de `5bb83e45c` declara
-  intenção contrária e permanece rejeitada).
-- **Shim `_models/codegen.py` restaurado**: a migração para o pacote
-  `_codegen/` estava completa (shim de 7 linhas reexportando
-  `FlextInfraCodegen`); o monolito pré-migração (`FlextInfraModelsCodegen`,
-  36 classes duplicadas) voltou pela mesma merge e foi devolvido ao
-  estado-fim da migração.
-- **Guardas de stems não-importáveis**: `02_api_usage.py` (tem `__all__`)
-  provou falsa a suposição "numbered script publishes nothing";
-  `isidentifier()` nos dois pontos de injeção do lazy-init planner
-  (`_lazy_init_planner_aliases.py`, `_lazy_init_planner_exports.py`),
-  pousado em `34765a1ee`. Gen do flext-web verde.
-- **Auditoria do tracker (`reval260921`)**: baseline 3.470 entidades / 473
-  ativas; gates de abertura: graph limpo, 0 duplicatas (scan unbounded),
-  6 órfãos de branch, 3 deps cross-tracker. Lote 1: 4 claims estagnados
-  → open, `flext-co1th` SUPERSEDED por `flext-cu85s`. Lote 2 (F3):
-  `flext-czzns` e `flext-v1xzd` DONE com ancestralidade provada; relinks
-  yirgp/cyplp/pwmej; `flext-38p39` em hold (prova de arms pendente).
-  Órfãos 6→4. Ondas de análise read-only: C1 completa; A/B1/B2 refazer
-  (rate limit); C2/D em curso.
-- **Higiene Dolt**: branch `list` (criada acidentalmente por agente) dropada
-  com prova de hash idêntico ao `main`. Topologia documentada pelo operador:
-  branch de integração `0.12.0-dev` é a linha real; `main` do DB é
-  propagação futura de produção.
-- **Campanha de integração**: 15 PRs abertos mapeados via compare API —
-  apenas root `#257` é pure-ahead com conteúdo vivo (21 patches únicos,
-  prova de cherry 0 na base); CI falha no "gen fixed point" por árvore
-  pós-gen suja → requer commit de convergência antes do merge no-ff.
-  Demais 14 divergidos (atrás 5–180 commits); residue-PRs de hoje
-  (#786/#787/#182) são de lanes ativas. Ladder protegido
-  (fix→fmt→gen→check→test) com `SELECTED_PROJECTS` e guarda anti-colisão
-  na flext-infra em execução.
+- **SSOT budget zombie exterminated**: merge `2d2a5b8ba` had resurrected the
+  `budget:` block of `config/codegen.yaml` that cutover `265346e77` had killed
+  (model+YAML+template). Removal landed through `5bb83e45c`; the model remains without
+  `CodegenGateBudgetSpec` at tip `34765a1ee` — do NOT resurrect it without an explicit
+  operator order (universal law; the `5bb83e45c` message declares the opposite intent
+  and stays rejected).
+- **`_models/codegen.py` shim restored**: the migration to the `_codegen/` package was
+  complete (7-line shim re-exporting `FlextInfraCodegen`); the pre-migration monolith
+  (`FlextInfraModelsCodegen`, 36 duplicated classes) came back through the same merge
+  and was returned to the migration's end state.
+- **Non-importable stems guards**: `02_api_usage.py` (has `__all__`) disproved the
+  "numbered script publishes nothing" assumption; `isidentifier()` at the two lazy-init
+  planner injection points (`_lazy_init_planner_aliases.py`,
+  `_lazy_init_planner_exports.py`), landed in `34765a1ee`. flext-web gen green.
+- **Tracker audit (`reval260921`)**: baseline 3,470 entities / 473 active; opening
+  gates: clean graph, 0 duplicates (unbounded scan), 6 branch orphans, 3 cross-tracker
+  deps. Batch 1: 4 stagnant claims → open, `flext-co1th` SUPERSEDED by `flext-cu85s`.
+  Batch 2 (F3): `flext-czzns` and `flext-v1xzd` DONE with proven ancestry; relinks
+  yirgp/cyplp/pwmej; `flext-38p39` on hold (arms proof pending). Orphans 6→4.
+  Read-only analysis waves: C1 complete; A/B1/B2 redo (rate limit); C2/D in progress.
+- **Dolt hygiene**: branch `list` (accidentally created by an agent) dropped with
+  hash proof identical to `main`. Topology documented by the operator: integration
+  branch `0.12.0-dev` is the real line; the DB `main` is future production
+  propagation.
+- **Integration campaign**: 15 open PRs mapped through the compare API — only root
+  `#257` is pure-ahead with live content (21 unique patches, cherry proof 0 on base);
+  CI fails the "gen fixed point" on a dirty post-gen tree → requires a convergence
+  commit before the no-ff merge. The other 14 are diverged (behind 5–180 commits);
+  today's residue-PRs (#786/#787/#182) belong to active lanes. Protected ladder
+  (fix→fmt→gen→check→test) with `SELECTED_PROJECTS` and an anti-collision guard
+  running on flext-infra.

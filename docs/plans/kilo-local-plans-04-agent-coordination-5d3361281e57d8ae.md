@@ -1,5 +1,14 @@
 # Agent Coordination Record
 
+<!-- TOC START -->
+
+- [Agent Manager lanes contacted](#agent-manager-lanes-contacted)
+- [Parallel Kilo coordinators reused](#parallel-kilo-coordinators-reused)
+- [Delegated audits and quality acceptance](#delegated-audits-and-quality-acceptance)
+- [Coordination boundary for implementation](#coordination-boundary-for-implementation)
+
+<!-- TOC END -->
+
 ## Agent Manager lanes contacted
 
 | Lane/session                                          | Observed state                                                              | Cooperation result                                                      | Plan use                                                                                           |

@@ -6,13 +6,18 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import m
+from typing import TYPE_CHECKING
+
+import flext_core
 
 from ._models.base import FlextRootModelsBase
 from ._models.config import FlextRootModelsConfig
 
+if TYPE_CHECKING:
+    from . import t
 
-class FlextRootModels(m):
+
+class FlextRootModels(flext_core.m):
     """Workspace root models facade — access via m.Root.*."""
 
     class Root(FlextRootModelsBase, FlextRootModelsConfig):
@@ -21,4 +26,4 @@ class FlextRootModels(m):
 
 m = FlextRootModels
 
-__all__: tuple[str, ...] = ("FlextRootModels", "m")
+__all__: t.VariadicTuple[str] = ("FlextRootModels", "m")

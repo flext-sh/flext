@@ -21,23 +21,13 @@ from typing import Annotated, ClassVar
 from examples import FlextRootExamplesConstants, m, p, t, u
 from flext_core import r
 
-type DataValue = t.JsonValue
 type ItemDict = t.JsonMapping
-type StageOperation = Callable[[t.JsonMapping], r[PipelineStageData]]
 
 
 class _Constants:
     """Internal constants for advanced processing example."""
 
     MAX_VALUE_LENGTH: int = 100
-
-
-class _DataValueMap:
-    """Factory for new data value maps."""
-
-    @staticmethod
-    def new() -> t.JsonMapping:
-        return {}
 
 
 class _JsonMappingOrNone:
@@ -83,14 +73,6 @@ class _StringSequence:
         return tuple(strings)
 
 
-class _ScalarDict:
-    """Factory for new scalar dicts."""
-
-    @staticmethod
-    def new() -> t.MutableJsonMapping:
-        return {}
-
-
 class PipelinePayload(m.BaseModel):
     """Pipeline payload container."""
 
@@ -98,7 +80,7 @@ class PipelinePayload(m.BaseModel):
         arbitrary_types_allowed=True, extra="allow"
     )
 
-    values: t.JsonMapping = u.Field(default_factory=_DataValueMap.new)
+    values: t.JsonMapping = u.Field(default_factory=dict)
 
 
 class PipelineStageData(PipelinePayload):
@@ -115,43 +97,6 @@ class FlextRootAdvancedProcessingExample:
     """Advanced processing example demonstrating FLEXT parallel capabilities."""
 
     Stage = FlextRootExamplesConstants.Stage
-
-    def __init__(self, *, max_workers: int = 8, batch_size: int = 200) -> None:
-        """Initialize the advanced processing pipeline."""
-        self._max_workers = max_workers
-        self._batch_size = batch_size
-
-    def execute_integrated_pipeline(
-        self,
-        *,
-        items: t.SequenceOf[t.JsonMapping],
-        _processing_func: t.StrSequence,
-        _validation_func: t.StrSequence,
-        _analysis_func: t.StrSequence,
-        _use_parallel: bool = True,
-    ) -> p.Result[t.JsonMapping]:
-        """Execute the integrated pipeline."""
-        _ = _processing_func, _validation_func, _analysis_func
-        return r[t.JsonMapping].ok({"items_processed": len(items)})
-
-    class ProcessingResult(m.BaseModel):
-        """Result of processing operation with metrics."""
-
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True
-        )
-
-        operation_id: str = u.Field(description="Unique operation identifier")
-        items_processed: int = u.Field(description="Total items processed")
-        items_succeeded: int = u.Field(description="Items that succeeded")
-        items_failed: int = u.Field(description="Items that failed")
-        processing_time: float = u.Field(description="Time taken for processing")
-        errors: t.StrSequence = u.Field(
-            default_factory=tuple, description="List of errors encountered"
-        )
-        metadata: t.JsonMapping = u.Field(
-            default_factory=_ScalarDict.new, description="Operation metadata"
-        )
 
     class ValidationResult(m.BaseModel):
         """Result of validation operation."""
@@ -178,6 +123,7 @@ class FlextRootAdvancedProcessingExample:
         auto_execute: bool = True
         items: t.SequenceOf[ItemDict]
         stages: t.StrSequence
+        max_workers: int = 4
 
         def execute(self) -> p.Result[PipelineStageData]:
             """Execute processing pipeline using declarative stages."""
@@ -197,9 +143,9 @@ class FlextRootAdvancedProcessingExample:
                     operations.append(stage_func)
                 else:
                     return r[PipelineStageData].fail(f"Unknown stage: {stage}")
-            current_data: t.JsonMapping = t.json_mapping_adapter().validate_python({
-                "items": self.items
-            })
+            current_data: t.JsonMapping = t.json_mapping_adapter().validate_python(
+                self.model_dump(mode="json", include={"items"})
+            )
             for operation in operations:
                 result = operation(current_data)
                 if result.failure:
@@ -273,14 +219,13 @@ class FlextRootAdvancedProcessingExample:
 
             def process_single_item(item: ItemDict) -> ItemDict:
                 """Process a single item."""
-                time.sleep(0.01)
                 result: t.MutableJsonMapping = {**item}
                 result["processed"] = True
                 result["processing_timestamp"] = time.time()
                 return result
 
             processed_items: MutableSequence[ItemDict] = []
-            with ThreadPoolExecutor(max_workers=4) as executor:
+            with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
                 future_to_item = {
                     executor.submit(process_single_item, item): item
                     for item in items_to_process
@@ -318,13 +263,7 @@ class FlextRootAdvancedProcessingExample:
             result_data: t.JsonMapping = t.json_mapping_adapter().validate_python({
                 **data,
                 "validation_results": [
-                    {
-                        "item_id": validation.item_id,
-                        "valid": validation.valid,
-                        "violations": tuple(validation.violations),
-                        "warnings": tuple(validation.warnings),
-                        "validation_time": validation.validation_time,
-                    }
+                    validation.model_dump(mode="json")
                     for validation in validation_results
                 ],
                 "valid_count": sum(1 for r in validation_results if r.valid),

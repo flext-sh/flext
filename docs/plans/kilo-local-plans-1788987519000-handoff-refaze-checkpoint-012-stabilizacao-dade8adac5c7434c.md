@@ -1,5 +1,22 @@
 # Handoff — Refazendo o Planejamento de Estabilização Checkpoint 0.12.0 (Nova Sessão)
 
+<!-- TOC START -->
+
+- [1. Análise de arquitetura (o que aprendemos)](#1-analise-de-arquitetura-o-que-aprendemos)
+  - [1.1 Stack de authory (ordem obrigatória)](#11-stack-de-authory-ordem-obrigatoria)
+  - [1.2 Camadas FLEXT (comprovadas em código)](#12-camadas-flext-comprovadas-em-codigo)
+  - [1.3 CONTRADIÇÃO CRÍTICA EXPOSTA (achado principal desta sessão)](#13-contradicao-critica-exposta-achado-principal-desta-sessao)
+  - [1.4 Segunda regra a fechar por automação](#14-segunda-regra-a-fechar-por-automacao)
+  - [1.5 Estado do check flext-infra](#15-estado-do-check-flext-infra)
+- [2. Estado atual (evidência)](#2-estado-atual-evidencia)
+  - [Padrão de drift nos 32 submodules (clasificado)](#padrao-de-drift-nos-32-submodules-clasificado)
+- [3. Violations remanescentes de namespace em flext-api (pós-correção settings)](#3-violations-remanescentes-de-namespace-em-flext-api-pos-correcao-settings)
+- [4. Cadência eedas a revisar criticamente (instrução permanente do operador)](#4-cadencia-eedas-a-revisar-criticamente-instrucao-permanente-do-operador)
+- [5. TODO imediato da nova sessão (re-planejamento)](#5-todo-imediato-da-nova-sessao-re-planejamento)
+- [6. Guardrails (erros que custaram tempo nesta sessão)](#6-guardrails-erros-que-custaram-tempo-nesta-sessao)
+
+<!-- TOC END -->
+
 > Criado: 2026-09-09 21:00 UTC. Motivo: encerramento da sessão anterior após descoberta
 > de contradição arquitetural na lei de namespace + drift massivo de 32 submodules. Este
 > documento é a fonte de verdade de entrada para a NOVA sessão de planejamento. Plano v2

@@ -6,7 +6,6 @@
 - [Utilities Architecture](#utilities-architecture)
   - [Inheritance Hierarchy](#inheritance-hierarchy)
   - [Import Pattern (MANDATORY)](#import-pattern-mandatory)
-- [# ✅ CORRECT - Use short alias from flext_core import u # Access centralized utilities result = u.to_str("value") result = u.get(data, "key") matches = u.find_callable(predicates, value) # ❌ FORBIDDEN - Direct internal imports](#correct-use-short-alias-from-flext_core-import-u-access-centralized-utilities-result-uto_strvalue-result-ugetdata-key-matches-ufind_callablepredicates-value-forbidden-direct-internal-imports)
 - [Centralized Utilities in flext-core](#centralized-utilities-in-flext-core)
   - [Core Classes (20+ utility classes)](#core-classes-20-utility-classes)
   - [New Methods (Added December 28, 2025)](#new-methods-added-december-28-2025)

@@ -11,6 +11,8 @@ from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 if TYPE_CHECKING:
     from .base import FlextRootUtilitiesBase
     from .config import FlextRootUtilitiesConfig
+
+
 __all__: tuple[str, ...] = ("FlextRootUtilitiesBase", "FlextRootUtilitiesConfig")
 
 _LAZY_IMPORTS = MappingProxyType(

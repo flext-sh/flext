@@ -12,7 +12,8 @@
 - [Verification of this report](#verification-of-this-report)
 - [Addendum — settings \*\_dir audit (Bead mro-377y.6, read-only)](#addendum-settings-_dir-audit-bead-mro-377y6-read-only)
   - [Phase 2/3 input for mro-377y.6](#phase-23-input-for-mro-377y6)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 Owner: ADR-010 · Bead `mro-377y.1` · Target line `0.20.0-dev`. This is a read-only drift
 report. No source was modified to produce it.

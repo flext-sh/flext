@@ -1,5 +1,14 @@
 # Plano — `.envrc` gerado: cadeia de backends beads (gascity → bd local → nenhum) +
 
+<!-- TOC START -->
+
+- [0. Causa raiz (análise do ciclo completo)](#0-causa-raiz-analise-do-ciclo-completo)
+- [1. Tarefas (flext-infra)](#1-tarefas-flext-infra)
+- [2. Validação](#2-validacao)
+- [3. Fora de escopo](#3-fora-de-escopo)
+
+<!-- TOC END -->
+
 direnv automático
 
 ## 0. Causa raiz (análise do ciclo completo)

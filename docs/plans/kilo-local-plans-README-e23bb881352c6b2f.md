@@ -1,5 +1,12 @@
 # Flext-Infra Continuation — Coordination Addenda
 
+<!-- TOC START -->
+
+- [Evidence policy](#evidence-policy)
+- [Cooperative plan sources](#cooperative-plan-sources)
+
+<!-- TOC END -->
+
 These addenda reconcile stopped Claude sessions, parallel Kilo lanes, Gas City Beads,
 plans, Git evidence, and gate reports for the main plan:
 

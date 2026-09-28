@@ -1,5 +1,19 @@
 # Fleet Check-Green Finish — continuação da estabilização 0.12.0 (nova sessão)
 
+<!-- TOC START -->
+
+- [Contexto evidenciado (2026-09-15, sessão anterior)](#contexto-evidenciado-2026-09-15-sessao-anterior)
+- [Leis vinculantes do operador (resumo operacional)](#leis-vinculantes-do-operador-resumo-operacional)
+- [Onda A — Reassimilar e landar o que está em voo (primeiro incremento)](#onda-a-reassimilar-e-landar-o-que-esta-em-voo-primeiro-incremento)
+- [Onda B — Completar o ladder por repo (fila de fatias)](#onda-b-completar-o-ladder-por-repo-fila-de-fatias)
+- [Onda C — Absorção de lanes soltas (trees limpas)](#onda-c-absorcao-de-lanes-soltas-trees-limpas)
+- [Onda D — Revalidação de testes (runtime manda)](#onda-d-revalidacao-de-testes-runtime-manda)
+- [Onda E — Fechamento](#onda-e-fechamento)
+- [Riscos / mitigações](#riscos-mitigacoes)
+- [Validação final (aceite)](#validacao-final-aceite)
+
+<!-- TOC END -->
+
 ## Contexto evidenciado (2026-09-15, sessão anterior)
 
 LANDED e pushed em `origin/0.12.0-dev` (tips):

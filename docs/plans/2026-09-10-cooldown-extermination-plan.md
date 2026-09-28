@@ -1,3 +1,6 @@
+> **HISTORICAL — superseded.** Owner bead `flext-fphyv` closed on 2026-09-21
+> ('Superseded/achieved'). This plan is dated evidence, not live authority.
+
 # Plano 2026-09-10 — Extermínio do supply-chain cooldown + fix do scaffold fixed-point
 
 <!-- TOC START -->

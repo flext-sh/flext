@@ -1,5 +1,21 @@
 # SUPERSEDED by rev5 — .kilo/plans/1789070856000-checkpoint-012-resume-ci-green.md
 
+<!-- TOC START -->
+
+- [Estado atual (evidência)](#estado-atual-evidencia)
+- [Fase A — Aplicar vereditos já coletados (4 lotes de 20)](#fase-a-aplicar-vereditos-ja-coletados-4-lotes-de-20)
+- [Fase B — Re-auditar ciclo 060 e cobrir população restante](#fase-b-re-auditar-ciclo-060-e-cobrir-populacao-restante)
+- [Fase C — Padronização de labels/bugs (sweep final)](#fase-c-padronizacao-de-labelsbugs-sweep-final)
+- [Fase D — Claims e deferred](#fase-d-claims-e-deferred)
+- [Fase E — Sincronização GitHub (de tempo em tempo, aqui e a cada onda)](#fase-e-sincronizacao-github-de-tempo-em-tempo-aqui-e-a-cada-onda)
+- [Fase F — Landing ~/agents (governança contínua)](#fase-f-landing-agents-governanca-continua)
+- [Fase G — Commits fracos (contínuo)](#fase-g-commits-fracos-continuo)
+- [Fase H — Fechamento](#fase-h-fechamento)
+- [Riscos](#riscos)
+- [Validação](#validacao)
+
+<!-- TOC END -->
+
 (Checkpoint 0.12.0 rev5 unified). Do not execute; items absorbed there
 
 # Plano: Continuação da Reconciliação de Beads + Sincronização GitHub

@@ -1,5 +1,22 @@
 # Plano Unificado v4 — Engine Rope-Gen + LOC-Cap + Fechamento 0.12.0
 
+<!-- TOC START -->
+
+- [0. Lições operacionais (consolidadas, obrigatórias)](#0-licoes-operacionais-consolidadas-obrigatorias)
+- [1. Estado de verdade (2026-09-15 17:55Z, verificado)](#1-estado-de-verdade-2026-09-15-1755z-verificado)
+- [2. Decisões (herdadas dos 4 planos, inalteradas na substância)](#2-decisoes-herdadas-dos-4-planos-inalteradas-na-substancia)
+- [3. Fases unificadas (ordem de dependência estrita; cada onda fecha com commit+push+bead)](#3-fases-unificadas-ordem-de-dependencia-estrita-cada-onda-fecha-com-commitpushbead)
+  - [F0 — Estabilizar + pousar \_config (lane loc-cap; primeira porque limpa o tree para](#f0-estabilizar-pousar-_config-lane-loc-cap-primeira-porque-limpa-o-tree-para)
+  - [F1 — gen×2 + fix idempotentes no workspace (p0 Onda A/B residual)](#f1-gen2-fix-idempotentes-no-workspace-p0-onda-ab-residual)
+  - [F2 — Engine rope-gen (subsume p0 Onda C; portões explícitos)](#f2-engine-rope-gen-subsume-p0-onda-c-portoes-explicitos)
+  - [F3 — Frota: re-projeção + sweeps + centralização (rope-gen W8 + p0 Ondas D/E)](#f3-frota-re-projecao-sweeps-centralizacao-rope-gen-w8-p0-ondas-de)
+  - [F4 — Fechamento 0.12.0 (p0 Onda F)](#f4-fechamento-0120-p0-onda-f)
+- [4. Validação / aceite final (checklist duro, unificado)](#4-validacao-aceite-final-checklist-duro-unificado)
+- [5. Riscos / mitigações](#5-riscos-mitigacoes)
+- [6. Fora de escopo (explícito)](#6-fora-de-escopo-explicito)
+
+<!-- TOC END -->
+
 Unificação de 4 planos: `1789489334832-rope-gen-engine-strict-init` (v3, engine),
 `1789475880081-p0-finish-rewrite` (p0-finish),
 `1789476032590-facade-loc-cap-convergence` (superseded) e

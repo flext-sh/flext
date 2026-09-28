@@ -10,11 +10,13 @@ from mcp.client.sse import sse_client
 from mcp.client.stdio import stdio_client
 from mcp.client.streamable_http import streamablehttp_client
 
+from . import t
+
 _RESULT_ARITY_REQUEST = 2
 _RESULT_ARITY_FULL = 3
 
 
-def _result_pair(result: tuple[object, ...]) -> tuple[object, object]:
+def _result_pair(result: t.VariadicTuple[object]) -> tuple[object, object]:
     """Split a context-manager result into its read/write pair.
 
     Versioned clients expose an extra trailing element; keep only the pair.

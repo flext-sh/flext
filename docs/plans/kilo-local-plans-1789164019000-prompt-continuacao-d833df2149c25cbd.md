@@ -1,5 +1,14 @@
 # Prompt de continuação — WS-A validação e fechamento (plano 1789162200000)
 
+<!-- TOC START -->
+
+- [Contexto](#contexto)
+- [Críticas a resolver antes de declarar WS-A done](#criticas-a-resolver-antes-de-declarar-ws-a-done)
+- [Sequência de execução](#sequencia-de-execucao)
+- [Critérios de parada](#criterios-de-parada)
+
+<!-- TOC END -->
+
 ## Contexto
 
 - Lei aprovada: `render = f(SSOT, templates, PINS)`; qualquer entrada de ambiente no

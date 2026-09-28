@@ -1,5 +1,18 @@
 # 0.12.0 Checkpoint — Strategy v2: Skills & Automation-Accelerated Landing
 
+<!-- TOC START -->
+
+- [Goal](#goal)
+- [Learnings → Strategy Shifts (evidence from this session)](#learnings-strategy-shifts-evidence-from-this-session)
+- [Automation Map](#automation-map)
+- [Execution Sequence (gate slices, checkpoint after each green slice)](#execution-sequence-gate-slices-checkpoint-after-each-green-slice)
+- [Doc & Tracking Updates (this plan authorizes; execute in implementation)](#doc-tracking-updates-this-plan-authorizes-execute-in-implementation)
+- [Risks & Guards](#risks-guards)
+- [Validation](#validation)
+- [Decisions](#decisions)
+
+<!-- TOC END -->
+
 Created: 2026-09-09 18:50 UTC. Supersedes the execution detail in
 `1788961161018-flext-012-checkpoint-release.md` (operator directives there remain law).
 Live state: `1788961161018-flext-012-checkpoint-status.md`.

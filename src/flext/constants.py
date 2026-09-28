@@ -6,13 +6,18 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import c
+from typing import TYPE_CHECKING
+
+import flext_core
 
 from ._constants.base import FlextRootConstantsBase
 from ._constants.config import FlextRootConstantsConfig
 
+if TYPE_CHECKING:
+    from . import t
 
-class FlextRootConstants(c):
+
+class FlextRootConstants(flext_core.c):
     """Workspace root constants facade — access via c.Root.*."""
 
     class Root(FlextRootConstantsBase, FlextRootConstantsConfig):
@@ -21,4 +26,4 @@ class FlextRootConstants(c):
 
 c = FlextRootConstants
 
-__all__: tuple[str, ...] = ("FlextRootConstants", "c")
+__all__: t.VariadicTuple[str] = ("FlextRootConstants", "c")

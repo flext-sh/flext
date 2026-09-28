@@ -56,11 +56,13 @@ candidate; acceptance never proves fleet stability.
 - [ADR-018: Generator Declarations Law](018-generator-declarations.md) — **ACCEPTED**
   (operator law 2026-09-20; rule owner `~/agents/rules/flext/generator-declarations.md`;
   phased under `flext-0in0k`)
+- [ADR-019: Service Contract — Protocol Ports, Explicit Composition Root, Typed Operations](019-service-contract-ports-operations.md)
+  — **PROPOSED** (operator-approved plan V8, 2026-09-25; phased under `flext-4jtcb`)
 
 > **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance
 > (ADR-007 here). That remote catalog was not revalidated in this reconciliation; the
-> collision warning remains. This local catalog has no ADR-011/012 files. ADR-016
+> collision warning remains. This local catalog has no ADR-011, ADR-012 or ADR-013 files (none ever existed in this repository's history). ADR-016
 > indexes the proposed settings/config singleton contract; ADR-005 (§1–§2) and the
 > `_settings.py`/`_config.py` owner docstrings define the canonical pattern on this
 > line. The historical citation correction remains attributed to `flext-z0zkq`

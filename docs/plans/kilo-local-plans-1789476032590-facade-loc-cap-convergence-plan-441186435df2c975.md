@@ -1,5 +1,23 @@
 # Facade LOC-Cap Convergence — Plano Reescrito (2026-09-15 17:50)
 
+<!-- TOC START -->
+
+- [Autocrítica pesada (evidência desta sessão)](#autocritica-pesada-evidencia-desta-sessao)
+- [Estado real do tip (verificado, 17:48)](#estado-real-do-tip-verificado-1748)
+- [Invariantes (inalteradas)](#invariantes-inalteradas)
+- [Ondas (reescritas, pequenas, cada uma gateada)](#ondas-reescritas-pequenas-cada-uma-gateada)
+  - [W-A (imediato, <5min) — Adotar tip nos paths redundantes](#w-a-imediato-5min-adotar-tip-nos-paths-redundantes)
+  - [W-B — Exemption SLF001 no SSOT (se evidência pedir)](#w-b-exemption-slf001-no-ssot-se-evidencia-pedir)
+  - [W-C — Land do split \_config (a onda restante do tema)](#w-c-land-do-split-_config-a-onda-restante-do-tema)
+  - [W-D — Gates completos + testes do escopo tocado](#w-d-gates-completos-testes-do-escopo-tocado)
+  - [W-E — Testes comportamentais (W3 original, lane livre)](#w-e-testes-comportamentais-w3-original-lane-livre)
+  - [W-F — Reuso c/t/p/m/u + jscpd (W4 original)](#w-f-reuso-ctpmu-jscpd-w4-original)
+  - [W-G — Fecho de lanes/worktrees soltas (W6 original)](#w-g-fecho-de-lanesworktrees-soltas-w6-original)
+- [Riscos](#riscos)
+- [Definição de Done desta sessão](#definicao-de-done-desta-sessao)
+
+<!-- TOC END -->
+
 ## Autocrítica pesada (evidência desta sessão)
 
 1. **Reinvenção do recipe provado.** O plano original já tinha um emitter AST provado

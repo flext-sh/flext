@@ -1,5 +1,17 @@
 # Linha do tempo e evidência das sessões
 
+<!-- TOC START -->
+
+- [Níveis de confiança](#niveis-de-confianca)
+- [Sessões materiais](#sessoes-materiais)
+  - [ses_f548f8812ffeOFfaCAu1ljkpzX — Rope Modernize](#ses_f548f8812ffeoffacau1ljkpzx-rope-modernize)
+  - [ses_f546ea5abffeYwMopQDVnLmr7Q — Ruff/codemod repair](#ses_f546ea5abffeywmopqdvnlmr7q-ruffcodemod-repair)
+  - [ses_f54737acbffeOYABZ0aD8MbIFx — envrc/direnv/Gas City](#ses_f54737acbffeoyabz0ad8mbifx-envrcdirenvgas-city)
+  - [ses_f6447c724ffetl3kDF4OggpKOf — aeolian-sodalite/tests](#ses_f6447c724ffetl3kdf4oggpkof-aeolian-sodalitetests)
+  - [Auditorias 23:04–23:23](#auditorias-23042323)
+
+<!-- TOC END -->
+
 ## Níveis de confiança
 
 - **A:** SHA/comando/exit/runtime explícitos e estado corroborado.
