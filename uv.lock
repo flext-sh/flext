@@ -1058,7 +1058,7 @@ dependencies = [
 [[package]]
 name = "flext-auth"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-auth.git?rev=0.12.0-dev#0cf42f241fc77b04f412bcb1598a2b303846fa45" }
+source = { git = "https://github.com/flext-sh/flext-auth.git?rev=0.12.0-dev#9e172be7836a2dff3ec504cb06860b39bb023148" }
 dependencies = [
     { name = "annotated-types" },
     { name = "bcrypt" },
@@ -1078,7 +1078,7 @@ dependencies = [
 [[package]]
 name = "flext-cli"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev#0a655e68ec672205a0c51172ba6b7e4e88b4369b" }
+source = { git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev#540107526bec219d2814a482aa738f6378e3e2a4" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1104,7 +1104,7 @@ dependencies = [
 [[package]]
 name = "flext-core"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev#3efdfd9ba6f02ea8d3c28acb6990b9b790f193e7" }
+source = { git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev#27991972ef15bb9ef889700dbfd49b5176253c22" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1237,7 +1237,7 @@ dependencies = [
 [[package]]
 name = "flext-infra"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#d6da9986236a5a4c7ed714d37b0fcad9c56bf060" }
+source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#109e4fc2705d0c3e45b74f053563852a65c55026" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1447,7 +1447,7 @@ dependencies = [
 [[package]]
 name = "flext-tap-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tap-ldif.git?rev=0.12.0-dev#a15bdbf0c5d824d7e288ffbf49771c2fcb7aa8cd" }
+source = { git = "https://github.com/flext-sh/flext-tap-ldif.git?rev=0.12.0-dev#eb7178b88307b921aa8ff634dec3f4f35ed98287" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1623,7 +1623,7 @@ dependencies = [
 [[package]]
 name = "flext-tests"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev#8fe2fc59dbf9fbccf8efb9481114874fbb6cc6e9" }
+source = { git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev#b3fc31238d3e8e6b727a55c0c70b43dd070ea8da" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1643,7 +1643,7 @@ dependencies = [
 [[package]]
 name = "flext-web"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-web.git?rev=0.12.0-dev#cdc790f8dd3660642375cab43cc6bb1d575f7ea2" }
+source = { git = "https://github.com/flext-sh/flext-web.git?rev=0.12.0-dev#2a24cf327ba760fc97d6912178597fcab4c4ed38" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -3021,11 +3021,11 @@ wheels = [
 
 [[package]]
 name = "pyjwt"
-version = "2.15.0"
+version = "2.15.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/02/a5/5197bfd06417837ac079921c66fa6393f1dea3557272a263cebfef69e432/pyjwt-2.15.0.tar.gz", hash = "sha256:b11c5f9791d7bf51c2b39a81ed669f6b2dbbd669df2942f6c60167e9e3d1abe4", size = 120513, upload-time = "2026-09-23T16:56:00.689Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/43/ea/5194e52748b0da83d71e082d75496eaec6e58f419f5e184786ded517e6a9/pyjwt-2.15.1.tar.gz", hash = "sha256:4f259e80cdfb6b3fc18a7de51fd1ef9ec79652f25019bae68975ca2468a34df8", size = 121252, upload-time = "2026-09-28T18:40:42.598Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e8/55/40e45bf052ee8ee12a4dfd785519660f8effa7b065442b91646ec6828619/pyjwt-2.15.0-py3-none-any.whl", hash = "sha256:7a3742debf6b879e912dbb9819ceec1594be812452b78c5f2e2dfc56564954f8", size = 33680, upload-time = "2026-09-23T16:55:59.241Z" },
+    { url = "https://files.pythonhosted.org/packages/50/ca/44de4e75f8aadc457f0634be3b542815078ded46dca30efb960edeecad6e/pyjwt-2.15.1-py3-none-any.whl", hash = "sha256:42d59d631f7768a1028a64c7ff581a9bf7519804daf91fc5b6c56e30eec5e193", size = 33860, upload-time = "2026-09-28T18:40:41.429Z" },
 ]
 
 [package.optional-dependencies]
