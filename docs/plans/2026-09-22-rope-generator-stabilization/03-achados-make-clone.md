@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-22). PR/bead/branch states cited below may have changed; verify against
+> the live tracker (`bd` / `gh`) before relying on anything here.
+
 # Findings — Make surface, environment and clone mechanics
 
 <!-- TOC START -->

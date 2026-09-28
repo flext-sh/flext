@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-11). PR/bead/branch states cited below may have changed; verify against
+> the live tracker (`bd` / `gh`) before relying on anything here.
+
 # Plano 2026-09-11 — FLEXT Conformance Sweep — REVISÃO v2 (aprofundada, visão de produção)
 
 <!-- TOC START -->

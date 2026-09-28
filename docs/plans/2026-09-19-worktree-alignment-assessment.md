@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-19). PR/bead/branch states cited below may have changed; verify against
+> the live tracker (`bd` / `gh`) before relying on anything here.
+
 # Worktree alignment assessment — flext × ai-hub
 
 <!-- TOC START -->

@@ -1,4 +1,10 @@
-# FLEXT 0.12.0 — handoff de estabilização em andamento
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-14; superseded by later stabilization cycles). PR/bead/branch states
+> cited below may have changed; verify against the live tracker (`bd` / `gh`)
+> before relying on anything here. Notably, PR #240 cited as open in these
+> documents was MERGED on 2026-09-15 (`gh pr view 240`: 2026-09-15T05:28:53Z).
+
+# FLEXT 0.12.0 — handoff de estabilização (registro histórico de 2026-09-14)
 
 <!-- TOC START -->
 

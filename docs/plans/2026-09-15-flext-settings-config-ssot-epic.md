@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-15). PR/bead/branch states cited below may have changed; verify against
+> the live tracker (`bd` / `gh`) before relying on anything here.
+
 # Épico — FlextSettings/FlextConfig: contrato de singleton, desempenho e SSOT dos clientes
 
 <!-- TOC START -->
