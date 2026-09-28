@@ -62,7 +62,7 @@ candidate; acceptance never proves fleet stability.
 > **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance
 > (ADR-007 here). That remote catalog was not revalidated in this reconciliation; the
-> collision warning remains. This local catalog has no ADR-011/012 files. ADR-016
+> collision warning remains. This local catalog has no ADR-011, ADR-012 or ADR-013 files (none ever existed in this repository's history). ADR-016
 > indexes the proposed settings/config singleton contract; ADR-005 (§1–§2) and the
 > `_settings.py`/`_config.py` owner docstrings define the canonical pattern on this
 > line. The historical citation correction remains attributed to `flext-z0zkq`

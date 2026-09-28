@@ -1,6 +1,8 @@
-# ADR-010 — Unified project standardization (Make, scripts, tests, structure) via
+# ADR-010 — Unified project standardization (Make, scripts, tests, structure) via flext-infra codegen and flext-tests
 
-flext-infra codegen and flext-tests
+> **Amended by ADR-018** (generator declarations): its filename-to-letter tables,
+> closed folder lists and advisory-gate lists are superseded; see
+> [ADR-018](018-generator-declarations.md).
 
 <!-- TOC START -->
 

@@ -13,7 +13,7 @@
 
 - **Status:** approved by the operator on 2026-09-25; amended 2026-09-26 (pure DI
   definitive with no S2b, 200-line module limit, selector-free root Make, no "foreign"
-  red). S0 is PR `flext#274`; S1 is merged (`flext-core` #499, `d65ba487f`).
+  red). S0's PR `flext#274` MERGED 2026-09-27T08:06Z (`01d498c575`); S1 is merged (`flext-core` #499, `d65ba487f`).
 - **Supersedes:** operator plan V7 (2026-09-25).
 - **Decision record:**
   [ADR-019](../../architecture/adr/019-service-contract-ports-operations.md).
