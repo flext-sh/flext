@@ -12,6 +12,9 @@
   - [2026-09-22 — Increment 1 (stabilization, executed with the parallel coordinator lane)](#2026-09-22-increment-1-stabilization-executed-with-the-parallel-coordinator-lane)
   - [2026-09-22 — Increment 2.1 (validation clone)](#2026-09-22-increment-21-validation-clone)
   - [2026-09-22 — Increment 2.3 (isolation + fresh-import gate; entrypoint cure)](#2026-09-22-increment-23-isolation-fresh-import-gate-entrypoint-cure)
+  - [2026-09-22 — Increment 2 closure (cures landed on the integration tips)](#2026-09-22-increment-2-closure-cures-landed-on-the-integration-tips)
+  - [2026-09-22 — Session 3: Increment 2 closure evidence, mod cures, checkpoint](#2026-09-22-session-3-increment-2-closure-evidence-mod-cures-checkpoint)
+  - [2026-09-22 — Session 4: integration-tip landing of the cures (primary checkouts)](#2026-09-22-session-4-integration-tip-landing-of-the-cures-primary-checkouts)
 
 <!-- TOC END -->
 

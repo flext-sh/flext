@@ -33,8 +33,8 @@ Run tests only through the dispatcher at the workspace root:
 make test
 ```
 
-`make test` owns incremental impact selection and the persistent external Testmon
-database. Its collection inventory uses the same marker scope as execution. The runner
+`make test` owns incremental impact selection and the project's persistent Testmon
+database, whose location the flext-infra generated configuration owns. Its collection inventory uses the same marker scope as execution. The runner
 accounts for every selected and deselected test; it never infers selection from console
 output. Never clear or bypass the database, or invoke the underlying runner directly.
 

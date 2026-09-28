@@ -61,10 +61,8 @@ class FlextRootCheckChangedProjects:
             ],
             cwd=cls.REPOSITORY_ROOT,
         )
-        if outcome.failure:
-            return 1
-        command: p.Cli.CommandOutput = outcome.value
-        return int(command.exit_code)
+        command: p.Cli.CommandOutput = outcome.unwrap()
+        return command.exit_code
 
     @classmethod
     def _relative_to_workspace(cls, raw: str) -> Path:

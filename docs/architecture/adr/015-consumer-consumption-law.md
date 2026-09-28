@@ -87,8 +87,9 @@ How the generated root `__init__.py` builds `pkg.__all__` (see
 - Reverse imports `TYPE_CHECKING`-only; `c` never imports `m` at runtime
 - One class per module, ≤200 LOC, Pydantic-2-way only
 
-Runtime alias inspection refinement — **proposal under `flext-edcqq`, awaiting
-native validation and the coordinated runtime-census consumer cutover**:
+Runtime alias inspection refinement (`flext-edcqq`). **State at 0.12.0-dev (2026-09-27):**
+the flext-core side exists (`DeferredInspection`/`DeferredAlias` on the integration
+tip); the flext-infra runtime-census consumer cutover is still pending:
 
 - PEP 695 aliases retain Python's lazy evaluation. Before forcing `__value__`,
   the core inspector matches the runtime alias identity to one module-bound

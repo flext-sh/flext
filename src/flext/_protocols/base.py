@@ -6,6 +6,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from typing import Protocol
 
-class FlextRootProtocolsBase:
+
+class FlextRootProtocolsBase(Protocol):
     """Base protocols for flext-workspace."""

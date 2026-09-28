@@ -1,0 +1,222 @@
+# 04 — Rules that apply at every step
+
+<!-- TOC START -->
+
+- [0. Engineering principles (blocking)](#0-engineering-principles-blocking)
+- [1. Authority and decisions](#1-authority-and-decisions)
+- [2. Execution](#2-execution)
+- [3. FLEXT code](#3-flext-code)
+- [4. Tests](#4-tests)
+- [5. Commands and environment](#5-commands-and-environment)
+- [6. Git and landing](#6-git-and-landing)
+- [7. Codemods and generated files](#7-codemods-and-generated-files)
+- [8. Documentation](#8-documentation)
+- [9. Tracker](#9-tracker)
+- [10. Concurrency](#10-concurrency)
+- [11. V7 laws R1–R11](#11-v7-laws-r1r11)
+- [12. New V8 laws](#12-new-v8-laws)
+- [13. Operator laws of 2026-09-26](#13-operator-laws-of-2026-09-26)
+
+<!-- TOC END -->
+
+## 0. Engineering principles (blocking)
+
+Every slice, review and landing is judged against these five principles first.
+A change that violates one is red, whatever its gates say; the numbered laws
+below are how each principle is applied, never exceptions to it.
+
+| Principle | What it demands | Blocking check before push | Laws |
+| --------- | --------------- | -------------------------- | ---- |
+| SOLID | Each capability lives in its one correct owner (single responsibility); behavior extends by inheritance or composition of the owner, never by a rewrite beside it; contracts are narrow `p.*` protocols; callers depend on the protocol, not the concrete class | No method in the wrong layer (service behavior in `u`, behavior in declaration layers); no delegator, wrapper or local re-implementation of an owner's method; every moved method has all its callers rewired | §3.3, R14, R29, R31 |
+| SSOT | One writable owner per fact: config/settings for values, one `StrEnum` in `c` for each closed vocabulary, one model per concept, one rule text per law | Zero second derivation of the same fact (hardcoded list, parallel literal, duplicate model, duplicate rule numbering); generated surfaces change only through `make gen` | §3.8–3.9, R26, R30, R32 |
+| YAGNI | Only what a current consumer uses exists | Code, properties, helpers, fallbacks and stubs without a consumer are deleted in the same change, with their tests and docs; no skeleton facade, no-op `main()` or always-failing placeholder method | R18, R27 |
+| CA | Dependencies point inward along `c → t → p → m → u` and `api → services → adapters`; data crosses layers only as `m.*` models typed by `p.*` protocols | No loose `dict`/tuple/`object`/`bool` payload across a boundary; no reverse import outside `TYPE_CHECKING`; no model-construction helper; validation lives in the model (Pydantic-2 native) | §3.1, R27, R28, R29 |
+| DI | Services receive their collaborators as `t.Port[p.X]` ports built only by `api.py`; they never read global settings or construct adapters | No service-side construction of adapters, no global `settings`/`config` read inside a service, no `getattr`/`hasattr` capability probing in place of a declared protocol | R12, R13, R16 |
+
+Numbering is single-sourced here: R1–R33 in §11–§13 are the only law numbers;
+any other copy of this plan (for example an operator's local projection)
+mirrors this numbering and never introduces its own.
+
+## 1. Authority and decisions
+
+1. Authority order: newest operator request, orchestration contract, Beads, ADRs,
+   skills, docs, defaults.
+2. D-ASK: on doubt or conflict, stop and ask one precise question; a conflict between
+   two operator orders is presented side by side with numbers.
+3. Settled decisions are not reopened: D1 = A (2026-09-25); D3 = pure DI, definitive, no
+   S2b (2026-09-26); D2 is asked when infra adoption starts; decision 4 of the ai-hub
+   plan v3; module limit 200 logical lines (2026-09-26, supersedes D-CAP 1000); D-SET
+   (`config.<Ns>`/`settings.<Ns>`), D-CI, D-VENV, admin merge authorized when the
+   touched gates are green.
+4. An exception to a rule exists only with explicit operator authorization recorded on a
+   bead.
+
+## 2. Execution
+
+1. Truth: a done/green/resolved claim carries command, cwd, exit code and decisive
+   output.
+2. Fail loud: the first failure propagates with traceback and cause; no fallback, retry,
+   normalization or partial execution.
+3. Preflight before effects; atomic effects; causal subprocess failures (no `|| true`).
+4. Zero residue: rewire consumers and delete the superseded code, test, doc, config and
+   alias in the same change.
+5. Red is red: warnings, skips, empty output, zero collection, missing tools and
+   normalized failures are red.
+
+## 3. FLEXT code
+
+1. Facade chain `c → t → p → m → u`; reverse imports only under `TYPE_CHECKING`.
+2. One top-level class per module with its facade letter in its own `__all__`; nothing
+   loose (ADR-018).
+3. Declaration layers are data only; behavior lives in `u`, `base.py`, `services/`,
+   `api.py`, `cli.py`.
+4. Pydantic 2 only through `m/t/p/u/r/e`; every model extends an `m.*` preset; no
+   `model_rebuild`; no `SkipValidation` without the owner's written justification;
+   external data enters through `model_validate`/`model_validate_json`.
+5. Strict typing: no `Any`/`object`; `T | None`; `t.*` aliases and `p.*` protocols;
+   PEP 695.
+6. `flext-core` enriches existing modules before creating new ones; every module stays
+   within 200 logical lines, with net-negative LOC on refactors.
+7. Fewer public APIs: extend a method with a keyword parameter before adding a method;
+   monomorphic returns.
+8. Generated files change only through `make gen`.
+9. One writable owner per fact; no hardcoded list duplicating a derivable source.
+10. Semantic validations and fixes run in one Rope cycle per project or workspace: the
+    owner opens and indexes once, hands resource, module, AST, metadata and the change
+    capability to typed callbacks, and publishes the changes atomically in that cycle; no
+    re-reading outside the callback, no Rope cycle per gate or file, no parallel AST.
+
+## 4. Tests
+
+1. Public facades and observable behavior only; no mocks, patches, monkeypatching,
+   fakes, private access or implementation-shape assertions.
+2. Test adapters are real: `tmp_path` file systems, real processes, containerized
+   services through `flext_tests/docker.py`.
+3. `tm` matchers and `u.Tests.assert_*`; one `TestsFlext*` class per module; typed
+   fixtures; the unified conftest.
+4. No frozen config/settings values; expectations come from the typed SSOT or from the
+   fixture input.
+5. Every cured site gets a failure-path test (both must-trigger and must-not-trigger).
+6. `make test` always runs testmon and must select the slice's tests; zero execution
+   proves nothing.
+7. Budget: at most 10 s per test, 60 s only for a materially justified slow case, and
+   120 s for the complete suite. Exceeding it stops the run and is an isolation, fixture,
+   architecture or owner defect; the ceiling is never raised.
+
+## 5. Commands and environment
+
+1. Only selector-free root Make verbs of the lane (`setup`, `upg`, `gen`, `mod`, `fix`,
+   `fmt`, `check`, `test`, `build`, `docs`). No Make selector, file filter,
+   environment-dispatched sub-operation or raw `pytest`, `ruff`, `pyrefly`, `mypy` or
+   `uv`; a missing operation is a missing verb, repaired at the Make/codegen owner.
+2. Every lane verb runs as `env -u VIRTUAL_ENV -u UV_PROJECT_ENVIRONMENT make <verb>`.
+3. Shell guard: one command per call, at most one `&&` and one `|`, no `;`, no `$(...)`,
+   no `cd` into another checkout (`git -C`, `env -C`).
+4. Long output goes to `~/tmp/v8/<slice>/<name>.log`; long commands run as background
+   tasks whose completion evidence is read before dependent work.
+5. mypy runs only with the project memory cap.
+6. Diagnosis uses the canonical verb or the code-review graph (with a fresh `status`),
+   never a grep over a generated projection.
+
+## 6. Git and landing
+
+1. One worktree per slice, `~/flext-work/v8-<slice>/<repo>`, on a branch from a freshly
+   fetched `origin/0.12.0-dev`; never implement in the primary checkout.
+2. Stage explicit paths only; partition this slice's changes from concurrent work before
+   committing.
+3. Forbidden: `reset`, `stash`, `rebase`, `checkout --`, `restore`, `clean`,
+   `push --force`.
+4. English commit messages with the session's `Co-Authored-By` trailer; `[WIP]`
+   checkpoints are published; a `[WIP]` commit never heads a merge.
+5. `make check && git push -u origin <branch>` (R1); PR against `0.12.0-dev`; CI on the
+   exact head; every review thread resolved.
+6. Merge commit (`gh pr merge --merge`, `--admin` authorized with the touched gates
+   green); never squash or rebase.
+7. Divergence: `git merge --no-ff origin/0.12.0-dev` into the lane, resolve hunk by
+   hunk, revalidate.
+8. After merge: fetch, prove on the merged SHA, and retire the lane only after
+   `git merge-base --is-ancestor` against a fresh fetch.
+
+## 7. Codemods and generated files
+
+1. A repeated pattern becomes a rule in
+   `flext-infra/src/flext_infra/codemod/rules/<id>.yml` with a fixture
+   `codemod/tests/<id>-test.yml`, a snapshot, and `ast-grep test` in the same commit
+   (R10); reuse the catalog first; prefer the most general rule that still constrains
+   its receiver.
+2. Manual edits only for unique cases, with the reason recorded.
+3. A checkpoint commit before any `make mod`; scoped commits after it.
+4. "generated findings require canonical generator repair" means the generator is the
+   target.
+5. `make gen` twice reaches a fixed point.
+
+## 8. Documentation
+
+1. Docs, docstrings and examples change in the same commit as the behavior.
+2. Generated guides (`using-flext-*.md`) are fixed at their root source
+   (`flext/docs/guides/`).
+3. Versioned artifacts are written in English.
+4. ADR-019 records the decision; `service-patterns.md` records the how.
+
+## 9. Tracker
+
+1. Beads through `direnv exec /home/marlonsc/flext bd …`; check `bd context --json`
+   before mutations.
+2. Claim before effects; update at every slice boundary.
+3. A newly observed red gets a bead (or a comment on its owner) in the same turn.
+4. Closure with four-source evidence (registered state, git, measured reality,
+   integrated code); reasons DONE, SUPERSEDED or OBSOLETE.
+5. Inventories that support a conclusion use `--limit 0`.
+
+## 10. Concurrency
+
+1. Concurrent work is input: adopt and fix forward; never discard.
+2. Do not touch the files of lane `flext-edcqq` (beartype and enforcement in the core);
+   if it is still idle when S9 starts, ask whether to adopt it.
+3. Before S7, cross-check open `flext-infra` PRs (#865, #861, #858) and active
+   worktrees.
+4. One slice at a time per repository; slices in different repositories may run in
+   parallel when independent.
+5. Abandonment is never presumed.
+
+## 11. V7 laws R1–R11
+
+R1 (`check && push` in one shell), R2 (single pass per file), R4 (inspect every non-zero
+exit), R6 (gate = local check with `CI=Y` plus a runtime probe), R7 (consumers
+revalidated per slice, reinforced by R19), R8 (superseded 2026-09-26: a red has no
+"foreign" category; every red in the blast radius is fixed at its owner), R9 (check PRs
+and origin before implementing), R10 (codemod rule lands with `ast-grep test`), R11
+(mechanical cures are never manual), plus: serial per repository; never `0.20.0-dev`,
+dolt, `dev` or `main`; content conflicts are asked.
+
+## 12. New V8 laws
+
+| Law | Content                                                                                                                                              |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R12 | A service dependency is `t.Port[p.X]` with `exclude=True` and a plain Protocol class; runtime seeds `t.Port[p.X \| None]` are the only typed absence |
+| R13 | Only `api.py` builds adapters and port-bearing services, by constructor (pure DI, definitive); building an adapter performs no I/O                   |
+| R14 | A public service method is an operation shaped as in `03-contract.md` §5; discovery is lazy, never at class creation                                 |
+| R15 | A member CLI comes from `service_routes(Class, provide=…)`; `--help` builds no adapter; Singer connectors keep ADR-006                               |
+| R16 | A service reads no global `settings`/`config`                                                                                                        |
+| R17 | Consumers first: a base contract contracts only after each consumer declared what it uses                                                            |
+| R18 | No skeleton facade and no no-op `main()`; a layer file exists only with real content (D1 = A)                                                        |
+| R19 | Every base slice proves its affected consumers before merge, in the fleet validation workspace                                                       |
+| R20 | Every `r.fail` carries its source exception; every `unwrap` chains the cause                                                                         |
+| R21 | A base expansion never forces a fleet sweep as a side effect; new contracts enter through structural Protocols or together with the fleet codemod    |
+| R22 | Never build an object that must be validated through `model_copy(update=)`                                                                           |
+
+## 13. Operator laws of 2026-09-26
+
+| Law | Content |
+| --- | ------- |
+| R23 | A candidate reaches a PR only after the local pre-push gate is green on the committed head: the same verbs CI runs (`make gen` with a clean tree, `make audit`, `make check`) plus `make test`, each time-boxed. CI confirms; it never discovers. A later commit or merge needs a new green run |
+| R24 | Tests have a zero baseline of permission to do anything wrong: no mocks, patches, fakes, private access, tautologies, hardcoded owner values, skips or xfails; the `ban-test-*` rules report zero findings for every test added or touched. A test that cannot be written cleanly means the production API is wrong |
+| R25 | Every execution carries a timeout: tests within the §4.7 budget; gate verbs (`setup`, `upg`, `gen`, `fix`, `fmt`, `check`) at most 300 s each. Expiry is red and is never retried with a larger limit. Slowness is a defect fixed at its owner after profiling, never waited out |
+| R26 | One source of truth per fact. A second derivation of the same fact (a file-existence check beside a typed role, a member list beside the declared one) is removed in the same change, never kept beside the owner |
+| R27 | No helper whose job is to create a Pydantic model. Records are built by the model itself (`M(...)`, `M.model_validate(...)` at the boundary); a parameter never accepts "value or prebuilt record" (`M \| raw`) sorted out by `isinstance`; the caller is fixed to send the one declared type |
+| R28 | Validation lives in the model and is Pydantic-2 native first: `Annotated` constraints, `Field` constraints, strict types, computed fields; field validators stay thin and delegate any real logic to `u`. Models carry no complex helpers; utilities own behavior |
+| R29 | Data is handled, transferred, transformed and returned as models typed by their protocols (`m.*` values, `p.*` contracts), following CA and DI, even when every caller and callee must be adjusted; no loose dicts, tuples or `object` payloads crossing a boundary |
+| R30 | A model is declared once. Lower namespaces never redeclare it: they reuse it as is, or extend it by inheritance or composition, keeping the upstream model's contract |
+| R31 | SOLID guides every change: duplicated logic is removed, a method in the wrong place moves to its owner, and callers use the owner instead of rewriting it locally |
+| R32 | Closed value sets are `StrEnum` members in `c`, used directly as the typed value (and as the `Literal` source where a literal type is needed); no bare string literal repeats a constant, no parallel literal alias, no patch around a wrong type |
+| R33 | Short landing cadence, about every 15 minutes: stabilize, commit, push, CI-confirm and merge `--no-ff` each locally green increment; every open lane merges the current integration tip with `--no-ff` on the same cadence so it never drifts, and consumers move to the new tips in the same cycle. Long-lived lanes and batched landings are defects |
