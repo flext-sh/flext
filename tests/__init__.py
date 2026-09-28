@@ -9,36 +9,19 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext import c, m, p, s, settings, t, u
-    from flext_core import d, e, h, r, x
+    from flext import c, m, p, settings, t, u
 
     from . import infra, unit
 
 
-__all__: tuple[str, ...] = (
-    "c",
-    "d",
-    "e",
-    "h",
-    "infra",
-    "m",
-    "p",
-    "r",
-    "s",
-    "settings",
-    "t",
-    "u",
-    "unit",
-    "x",
-)
+__all__: tuple[str, ...] = ("c", "infra", "m", "p", "settings", "t", "u", "unit")
 
 _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
             ".infra": ("infra",),
             ".unit": ("unit",),
-            "flext": ("c", "m", "p", "s", "settings", "t", "u"),
-            "flext_core": ("d", "e", "h", "r", "x"),
+            "flext": ("c", "m", "p", "settings", "t", "u"),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,

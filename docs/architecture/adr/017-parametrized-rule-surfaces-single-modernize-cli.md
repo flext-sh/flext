@@ -1,5 +1,10 @@
 # ADR-017 — Parametrized Rule Surfaces and the Single Modernize CLI
 
+> **Amended by ADR-018** (generator declarations): its filename-to-letter tables,
+> closed folder lists and advisory-gate lists are superseded; see
+> [ADR-018](018-generator-declarations.md).
+
+
 <!-- TOC START -->
 
 - [Context](#context)

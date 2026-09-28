@@ -45,27 +45,17 @@ Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 ### 1. ACL Processing Example (`acl_processing_example.py`)
 
-### Advanced ACL Processing with Railway Pattern
+### ACL Processing through flext-ldif
 
-Demonstrates comprehensive Access Control List (ACL) processing capabilities:
-
-- **Parallel Batch Processing**: Using `ThreadPoolExecutor` for concurrent ACL
-  operations.
-- **Intelligent Server Auto-detection**: Automatic detection of LDAP server types
-  (OpenLDAP, Oracle OID, Oracle Unified Directory, Active Directory, Apache DS).
-- **Integrated ACL Validation**: Complex context-based validation with custom rules per
-  server type.
-- **Railway Pattern**: Failure-resistant pipeline that follows functional error handling
-  principles.
-- **Performance Analytics**: Comprehensive metrics and throughput analysis.
+The example injects the public LDIF client and composes its ACL extraction and
+permission evaluation operations. `flext-ldif` owns the LDAP entry, ACL,
+permission, server and result contracts.
 
 **Key Features:**
 
-- Server-specific ACL attribute detection
-- Parallel batch processing with settingsurable worker threads
-- Complex validation rules with forbidden permission combinations
-- Railway pattern for robust error handling
-- Performance monitoring and analytics
+- Constructor-injected LDIF client
+- Native LDIF entry and ACL models
+- Native `Result` failure propagation
 
 ### 2. Advanced Processing Example (`advanced_processing_example.py`)
 
@@ -164,43 +154,40 @@ pip install flext-core flext-ldif flext-api
 ### Basic ACL Processing
 
 ```python
-from examples import FlextRootAclProcessingExample, u
+from examples.acl_processing_example import FlextRootAclProcessingExample
+from flext_ldif import c, ldif, m
 
-# Create pipeline with 8 worker threads
-pipeline = FlextRootAclProcessingExample(max_workers=8)
-
-# Sample LDAP entries with ACL attributes
-ldap_entries = [{"dn": "cn=test,dc=example,dc=com", "attributes": {"aci": "(test)"}}]
-
-# Process ACL entries
-result = pipeline.process_acls_with_pipeline(
-    raw_entries=ldap_entries, server_context={"strict_mode": True}, parallel=True
+client = ldif()
+content = (
+    "dn: cn=test,dc=example,dc=com\n"
+    "objectClass: person\n"
+    "cn: test\n"
+    "sn: Example\n"
+    'aci: (target="ldap:///cn=test,dc=example,dc=com")'
+    '(targetattr="*")(version 3.0; acl "Allow read"; '
+    'allow (read) userdn="ldap:///anyone";)\n'
 )
-
-if result.success:
-    summary = result.unwrap()
-    print(f"Processed {len(ldap_entries)} ACLs")
+entry = client.parse_ldif(content).unwrap().entries[0]
+result = FlextRootAclProcessingExample(service=client).process_acls_with_pipeline(
+    entry=entry,
+    server_type=c.Ldif.ServerTypes.OUD,
+    required_permissions=m.Ldif.AclPermissions(read=True),
+)
+print(result.unwrap().granted)
 ```
 
 ### Advanced Processing Pipeline
 
 ```python
-from examples import FlextRootAdvancedProcessingExample
+from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 
-# Create integrated pipeline
-pipeline = FlextRootAdvancedProcessingExample(max_workers=8, batch_size=200)
-
-# Sample data items
-data_items = [{"id": f"item_{i}"} for i in range(10)]
-
-# Execute complete pipeline
-result = pipeline.execute_integrated_pipeline(
-    items=data_items,
-    processing_func="default_processing",
-    validation_func="default_validation",
-    analysis_func="default_analysis",
-    use_parallel=True,
+# Build the real validation, processing, and analysis stages
+pipeline = FlextRootAdvancedProcessingExample.FlextLdifProcessingPipeline(
+    items=[{"id": "item_1", "name": "Sample", "value": "Data"}],
+    stages=("validate", "process", "analyze"),
+    max_workers=4,
 )
+result = pipeline.execute()
 ```
 
 ### Complete Workflow

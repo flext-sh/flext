@@ -38,7 +38,7 @@ be built in parallel from the same integration tip, each as its own small PR. Be
 `flext-4jtcb.8`, S1 `.1`, S2 `.2`, S3 `.3`, S4 `.10`, S5 `.4`, S6 `.5`, S7 `.6`, S8
 `.7`, S9 `.11`, S10 `.12`; `.9` (the former S2b) is superseded by the pure-DI ruling.
 
-State on 2026-09-26: S0 is PR `flext#274`; S1 is merged (`flext-core` #499, merge
+State on 2026-09-26: S0's PR `flext#274` MERGED 2026-09-27T08:06Z (`01d498c575`); S1 is merged (`flext-core` #499, merge
 `d65ba487f`); the `flext-core` integration tip is `8de52fa6b` (#504).
 
 ## Common steps of every slice

@@ -366,7 +366,7 @@ connectors. Every package follows one canonical Clean-Architecture shape built o
 flext/ # superproject: workspace manager + governance + docs ├── src/flext/ #
 flext-workspace CLI (thin orchestrator over flext-cli) — AUTO-GENERATED facets ├──
 config/ # workspace.yaml topology SSOT (codegen/conform input; never overwrite) ├──
-docs/architecture/adr/ # ADR-001..017 — architectural decisions (see below) ├──
+docs/architecture/adr/ # ADR-001..019 (011-013 absent) — architectural decisions (see below) ├──
 Makefile + *.mk # root verb dispatcher (all work runs from here) ├── flext-core/ #
 foundation: c/t/p/m/u + r/e/x/h/d/s facades (every pkg depends on it) ├── flext-infra/ #
 build automation, codegen, enforcement (tooling; not a runtime dep) ├── flext-tests/ #
@@ -413,7 +413,7 @@ never copies or replaces either parent.
 | Foundation facades / result / DI | `flext-core/src/flext_core/`       | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base                                                                                                                                 |
 | Build/codegen/enforcement        | `flext-infra/src/flext_infra/`     | drives standard Make generation, conform, and lint rules                                                                                                                      |
 | Test fixtures & builders         | `flext-tests/src/flext_tests/`     | public test facades and typed fixtures; unified `conftest.py` pattern                                                                                                         |
-| Architectural decisions          | `docs/architecture/adr/`           | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization), ADR-014 (family shape + rope codemod), ADR-017 (parametrized rule surfaces + modernize CLI) |
+| Architectural decisions          | `docs/architecture/adr/`           | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization), ADR-014 (family shape + rope codemod), ADR-017 (parametrized rule surfaces + modernize CLI), ADR-018 (generator declarations), ADR-019 (service ports, PROPOSED) |
 | Workspace topology               | `config/workspace.yaml`            | member list, codegen input (hand-written SSOT)                                                                                                                                |
 | A Singer connector               | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006)                                                                                                                              |
 
@@ -495,7 +495,7 @@ CLI + pytest plugin, **never imported at runtime**.
   gen`). Never hand-edit; change the codegen source in`flext-infra`and run`make gen`.
 - **Root `pyproject.toml`** is a codegen projection from `flext-infra` templates +
   `flext-infra/config/codegen.yaml` (with `tooling.yaml` for tool configuration and
-  policy); `make deps` recalculates floors, then `make gen` projects them. The
+  policy); `make upg` resolves the newest releases and writes the locks, then `make gen` projects them. The
   `[MANAGED]` directive comments in templates are consumed and stripped during
   projection by the inject-comments phase; they are not retained in output. Never
   hand-edit the projection.
