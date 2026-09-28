@@ -24,6 +24,7 @@ dependencies = [
   "flext-cli",
   "flext-core",
   "flext-infra",
+  "flext-ldif",
   "flext-tests",
   "importlib-resources>=7.1.0",
   "packaging>=26.3",
