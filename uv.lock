@@ -776,11 +776,11 @@ server = [
 
 [[package]]
 name = "filelock"
-version = "4.0.5"
+version = "4.0.6"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/95/31/fbad823d8dfc56e2ff694db0319959382bdb01f2fe40c382e34c6f672392/filelock-4.0.5.tar.gz", hash = "sha256:2b155f098c4f285fb41954a22c616c4e8a0635b78c184338ba3023c1c91a4b4d", size = 247758, upload-time = "2026-09-28T05:07:19.736Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2b/2d/5cb7a5ac017031e96a63173f3d57a8a5162ce36f9ff461e62bc6da4d88ab/filelock-4.0.6.tar.gz", hash = "sha256:323fab3b2fb22d889b29fa83774f60029addddb4b6a1bcfa1e73066eabffb5f2", size = 248237, upload-time = "2026-09-28T22:16:16.257Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/62/34/d90d7e7ef972900e09f45b9c0661376dd03e77fece26ee83ec93b7719bae/filelock-4.0.5-py3-none-any.whl", hash = "sha256:be9166068623636cedcad7b2ef735b04e5fb4344d978e09fd6fbd6ede06f14f0", size = 108976, upload-time = "2026-09-28T05:07:18.341Z" },
+    { url = "https://files.pythonhosted.org/packages/a9/3b/b74ae9db2f78f1354278731372ae89870626be7b86cbb46b8d707acd1a98/filelock-4.0.6-py3-none-any.whl", hash = "sha256:9b139fb93b2ac5807f7feaf63aa4546fbd74074a2d3f554c040f40a4694d7b9f", size = 109077, upload-time = "2026-09-28T22:16:14.731Z" },
 ]
 
 [[package]]
@@ -1038,7 +1038,7 @@ workspace = [
 [[package]]
 name = "flext-api"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-api.git?rev=0.12.0-dev#df73a0894bfb0be7831d3be07269a0fe6443c8da" }
+source = { git = "https://github.com/flext-sh/flext-api.git?rev=0.12.0-dev#e0a5c1ca403cc25da0d0d5fdc68ae5bb390f085f" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1058,7 +1058,7 @@ dependencies = [
 [[package]]
 name = "flext-auth"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-auth.git?rev=0.12.0-dev#9e172be7836a2dff3ec504cb06860b39bb023148" }
+source = { git = "https://github.com/flext-sh/flext-auth.git?rev=0.12.0-dev#41a8641ba19b9447a5e92e6de8e83d35b08c3549" }
 dependencies = [
     { name = "annotated-types" },
     { name = "bcrypt" },
@@ -1078,7 +1078,7 @@ dependencies = [
 [[package]]
 name = "flext-cli"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev#540107526bec219d2814a482aa738f6378e3e2a4" }
+source = { git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev#af58617d419ab345b4564f57aba0483fa9d09618" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1104,7 +1104,7 @@ dependencies = [
 [[package]]
 name = "flext-core"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev#27991972ef15bb9ef889700dbfd49b5176253c22" }
+source = { git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev#879a1c5b8b7d8aff2300e689c9e0de6d9d32ade5" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1120,7 +1120,7 @@ dependencies = [
 [[package]]
 name = "flext-db-oracle"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-db-oracle.git?rev=0.12.0-dev#371794cf9812eab1d7f42dc2e0ac7f353aa60c22" }
+source = { git = "https://github.com/flext-sh/flext-db-oracle.git?rev=0.12.0-dev#9ed26f8e7063722d4e87c4be47e23bf0dd156ced" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1140,7 +1140,7 @@ dependencies = [
 [[package]]
 name = "flext-dbt-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-dbt-ldap.git?rev=0.12.0-dev#2df4a8a9b7a7fae4929dfcff8f8658eeb02017d1" }
+source = { git = "https://github.com/flext-sh/flext-dbt-ldap.git?rev=0.12.0-dev#a7cd0f7755c2fa4ec6634f9e8e4892146c8037cc" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1161,7 +1161,7 @@ dependencies = [
 [[package]]
 name = "flext-dbt-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-dbt-ldif.git?rev=0.12.0-dev#86cae5ce6b0856c1a7adec3dca0c6b6f775bbec4" }
+source = { git = "https://github.com/flext-sh/flext-dbt-ldif.git?rev=0.12.0-dev#45e8f0d836c65bea1fca2730a117047513670ef0" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1180,7 +1180,7 @@ dependencies = [
 [[package]]
 name = "flext-dbt-oracle"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-dbt-oracle.git?rev=0.12.0-dev#51bae7196ab93690b842c178f523fdda4ab59846" }
+source = { git = "https://github.com/flext-sh/flext-dbt-oracle.git?rev=0.12.0-dev#95cb3bc944f2108d7692dddf78c34b84694b6f78" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1199,7 +1199,7 @@ dependencies = [
 [[package]]
 name = "flext-dbt-oracle-wms"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?rev=0.12.0-dev#2257b3648bae11c8191726b687348de74dae9cb3" }
+source = { git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?rev=0.12.0-dev#b71239a3288a2abf40fe628bb1826ec1c5db009d" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1218,7 +1218,7 @@ dependencies = [
 [[package]]
 name = "flext-grpc"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-grpc.git?rev=0.12.0-dev#bcbfa78edce90457fdd9ec6697cc56f113ccf279" }
+source = { git = "https://github.com/flext-sh/flext-grpc.git?rev=0.12.0-dev#30f2b0eca60ce3f147120ff0ce6dd25aeeb270fa" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1237,7 +1237,7 @@ dependencies = [
 [[package]]
 name = "flext-infra"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#109e4fc2705d0c3e45b74f053563852a65c55026" }
+source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#f7e5153c89d199456b8aa584c84c2160c22a6ab7" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1262,7 +1262,7 @@ dependencies = [
 [[package]]
 name = "flext-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev#584acccd7b9bff5ac89615318626261f17a32fd9" }
+source = { git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev#5063a3194774188fd70a17780eacd05288859cfe" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1281,7 +1281,7 @@ dependencies = [
 [[package]]
 name = "flext-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev#aa1166dc6417c8af8c227bb753313cfd31e3e46c" }
+source = { git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev#0ba1dab29e557065185bd4e7dcc48edcc388f3fd" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1299,7 +1299,7 @@ dependencies = [
 [[package]]
 name = "flext-meltano"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-meltano.git?rev=0.12.0-dev#9e6c88fd0b8fe1f79a4139525935b388082f79ab" }
+source = { git = "https://github.com/flext-sh/flext-meltano.git?rev=0.12.0-dev#f0aa30fec0f728652809e66daeb3885910361eac" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1322,7 +1322,7 @@ dependencies = [
 [[package]]
 name = "flext-observability"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-observability.git?rev=0.12.0-dev#307e30a1b018bc80325d397b343a2f8e26cf1f91" }
+source = { git = "https://github.com/flext-sh/flext-observability.git?rev=0.12.0-dev#f3f2352aeb65876bc5515f3bf51ee55156d98c9c" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1343,7 +1343,7 @@ dependencies = [
 [[package]]
 name = "flext-oracle-oic"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-oracle-oic.git?rev=0.12.0-dev#f7e8882471aeb8c68d05eb0a793e4967cef16141" }
+source = { git = "https://github.com/flext-sh/flext-oracle-oic.git?rev=0.12.0-dev#e3e50f201b3d03092582749cdc081022dcbacadb" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1363,7 +1363,7 @@ dependencies = [
 [[package]]
 name = "flext-oracle-wms"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-oracle-wms.git?rev=0.12.0-dev#1eed025021e4002c195c01953ffe725dcb512333" }
+source = { git = "https://github.com/flext-sh/flext-oracle-wms.git?rev=0.12.0-dev#c847c46de0fb03667797e1e13ee23812e5ac3fdc" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1382,7 +1382,7 @@ dependencies = [
 [[package]]
 name = "flext-plugin"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-plugin.git?rev=0.12.0-dev#1502e58b8b4f862f9c79d3b6a36ecd1c632c4e50" }
+source = { git = "https://github.com/flext-sh/flext-plugin.git?rev=0.12.0-dev#f9ee27b7baa200aa1d18cdb3a3e21f9ca9a038ba" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1400,7 +1400,7 @@ dependencies = [
 [[package]]
 name = "flext-quality"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-quality.git?rev=0.12.0-dev#fb9c9a352aa74f3a39d0492d70346cab035be31d" }
+source = { git = "https://github.com/flext-sh/flext-quality.git?rev=0.12.0-dev#8838e4d50eae114a984b4fd444daea3564304fba" }
 dependencies = [
     { name = "aiohttp" },
     { name = "annotated-types" },
@@ -1428,7 +1428,7 @@ dependencies = [
 [[package]]
 name = "flext-tap-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tap-ldap.git?rev=0.12.0-dev#85b1559282a65a892a5cd04c607462cb8d2e3ea7" }
+source = { git = "https://github.com/flext-sh/flext-tap-ldap.git?rev=0.12.0-dev#fd3d252d835c07c392b2d05e9bdb05bd366d522b" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1447,7 +1447,7 @@ dependencies = [
 [[package]]
 name = "flext-tap-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tap-ldif.git?rev=0.12.0-dev#eb7178b88307b921aa8ff634dec3f4f35ed98287" }
+source = { git = "https://github.com/flext-sh/flext-tap-ldif.git?rev=0.12.0-dev#c52f174685c2c63969c55429f0b221b9d13f9c1f" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1466,7 +1466,7 @@ dependencies = [
 [[package]]
 name = "flext-tap-oracle"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tap-oracle.git?rev=0.12.0-dev#a47c49a775755951773a1bff2dd721cebe40477b" }
+source = { git = "https://github.com/flext-sh/flext-tap-oracle.git?rev=0.12.0-dev#b4d1a861d7978e6ef1aee9e8da2e83fa27d19d8a" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1485,7 +1485,7 @@ dependencies = [
 [[package]]
 name = "flext-tap-oracle-oic"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tap-oracle-oic.git?rev=0.12.0-dev#b8685adaff9cbf255f69a0081a56568e47fd7e74" }
+source = { git = "https://github.com/flext-sh/flext-tap-oracle-oic.git?rev=0.12.0-dev#12d7b14a5ef8ca08fc7f71c8fcd99b565defcdd1" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1505,7 +1505,7 @@ dependencies = [
 [[package]]
 name = "flext-tap-oracle-wms"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tap-oracle-wms.git?rev=0.12.0-dev#589d109378716b3b21797e7babf424b30d91cad8" }
+source = { git = "https://github.com/flext-sh/flext-tap-oracle-wms.git?rev=0.12.0-dev#9395e726af54e3551a1d23d3b87486ab62519e6e" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1525,7 +1525,7 @@ dependencies = [
 [[package]]
 name = "flext-target-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-target-ldap.git?rev=0.12.0-dev#4dc71ab17a88ed4bc45fc55f850ec07f4247bade" }
+source = { git = "https://github.com/flext-sh/flext-target-ldap.git?rev=0.12.0-dev#73a03553ffe777aeefb0fe1e414cba411491404a" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1544,7 +1544,7 @@ dependencies = [
 [[package]]
 name = "flext-target-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-target-ldif.git?rev=0.12.0-dev#c8352d3fb2cdddbc09e5d4f564a374a29204766a" }
+source = { git = "https://github.com/flext-sh/flext-target-ldif.git?rev=0.12.0-dev#c346c85ed30e2df4aeb1c51b7e8639b5a409f0ed" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1563,7 +1563,7 @@ dependencies = [
 [[package]]
 name = "flext-target-oracle"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-target-oracle.git?rev=0.12.0-dev#278362f88bfc1b014763359389342493d374b597" }
+source = { git = "https://github.com/flext-sh/flext-target-oracle.git?rev=0.12.0-dev#c115298ca5733e275e6f374af60f7f017d8ced3c" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1583,7 +1583,7 @@ dependencies = [
 [[package]]
 name = "flext-target-oracle-oic"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-target-oracle-oic.git?rev=0.12.0-dev#02f5a551ea52661634e33d94d4044f59cd1b025a" }
+source = { git = "https://github.com/flext-sh/flext-target-oracle-oic.git?rev=0.12.0-dev#1fe387d34da8590f1bcb04fc802881a0c3b79b9c" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1603,7 +1603,7 @@ dependencies = [
 [[package]]
 name = "flext-target-oracle-wms"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-target-oracle-wms.git?rev=0.12.0-dev#be9b86ea9e03c4d13fb6a9a4643f017e25554ccd" }
+source = { git = "https://github.com/flext-sh/flext-target-oracle-wms.git?rev=0.12.0-dev#0e1e8d87dc02ba929021b9063e51fb72dab3861d" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1623,7 +1623,7 @@ dependencies = [
 [[package]]
 name = "flext-tests"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev#b3fc31238d3e8e6b727a55c0c70b43dd070ea8da" }
+source = { git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev#a827ce49e853dbeb03878680e35def7e345ae69e" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1643,7 +1643,7 @@ dependencies = [
 [[package]]
 name = "flext-web"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-web.git?rev=0.12.0-dev#2a24cf327ba760fc97d6912178597fcab4c4ed38" }
+source = { git = "https://github.com/flext-sh/flext-web.git?rev=0.12.0-dev#c65e41f4a86f4dc8f8f4c09c162046d78f108532" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -3057,18 +3057,18 @@ wheels = [
 
 [[package]]
 name = "pyrefly"
-version = "1.3.1"
+version = "1.3.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/4c/7e/082cc1b392318bacfbc087732524f3e089e9e7fe45b7645c4649b6f1f1e9/pyrefly-1.3.1.tar.gz", hash = "sha256:b774f1dfac82867fc16fe2175d80a630e2a72a6835d5b7e492568d6bfb6b05e7", size = 6679145, upload-time = "2026-09-15T05:09:34.49Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4d/78/b6ec12acb586606618c71ebe1008af59e1ca50e667895f1946fa7b656619/pyrefly-1.3.2.tar.gz", hash = "sha256:30a68ff5429a1546ec08a2d913dfe442c9553a2940d274de18833d8eda939b5e", size = 6679591, upload-time = "2026-09-28T22:10:06.292Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6b/bc/f09b5bd7eed796349bd93627aa2c3086df7ed0a114dafc3d2b2841599ee7/pyrefly-1.3.1-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:0a2a7dfed824fb066aa8a7c8d856c152b98e998fb84b954d5f892fb9834c0bd1", size = 15090117, upload-time = "2026-09-15T05:08:58.477Z" },
-    { url = "https://files.pythonhosted.org/packages/78/24/a31e7de8e0f310c9f0753826d0df8b6a8ff86793941a6bd88ba24b735633/pyrefly-1.3.1-py3-none-macosx_11_0_arm64.whl", hash = "sha256:37a1a1fb41e7190fe3964a877875dd809d6ee2887809e2c3d6e5f25a69805bfd", size = 14430773, upload-time = "2026-09-15T05:09:01.67Z" },
-    { url = "https://files.pythonhosted.org/packages/75/e1/022352beb186f36d6213a95a975c42676ee418ff5e730629378d25564c5e/pyrefly-1.3.1-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:45b7650bc651a5a784701f2fb4f579da9a421c4d1b5fd91f9048f4529e46093c", size = 14877762, upload-time = "2026-09-15T05:09:04.767Z" },
-    { url = "https://files.pythonhosted.org/packages/19/2c/d62a1b445aad1fd46375b83393b8a67da53883aeeba73d269ce71b3e8fd1/pyrefly-1.3.1-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ad57f38bc73679c14a5f62995a2bd3bc43649b7270c858487e2eab78a6f95362", size = 16118225, upload-time = "2026-09-15T05:09:07.828Z" },
-    { url = "https://files.pythonhosted.org/packages/32/67/3c3fa8a13e3ce8d8322ffb3627255a41a52261f17793e1a24e9214f10857/pyrefly-1.3.1-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:3506b1252e9f5d755d0693c5a46d46b85579d36534f6e22a41eb8e098d0dde90", size = 16051197, upload-time = "2026-09-15T05:09:10.81Z" },
-    { url = "https://files.pythonhosted.org/packages/19/d1/84f81b9e32288b5d11c75e006f67e0f6b78b85da575673bd1a21524c8172/pyrefly-1.3.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:39d5a17c1ad655e5f93a6e8e0be90b8db28c6015fe07d6ed4e054891c9e14ef8", size = 15440062, upload-time = "2026-09-15T05:09:14.641Z" },
-    { url = "https://files.pythonhosted.org/packages/46/3c/2aa0c5ad6a2957a728bb38cfab70d1e9cafad21b0b1c1d92df74a3cf22bd/pyrefly-1.3.1-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:c61e9dcf888beb81ca0e0c60ea4442640fdcf2f1f65bfe3d9f5d89b85516eb03", size = 14898534, upload-time = "2026-09-15T05:09:17.823Z" },
-    { url = "https://files.pythonhosted.org/packages/03/5d/2974f249fb2e285f966485719d977c5a2248cc4866403af94d935775ff15/pyrefly-1.3.1-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:a78eed1c53f37807f0e2997be8edbe833b91eb9915f2cb553a1bdcd599e7105c", size = 15477758, upload-time = "2026-09-15T05:09:20.964Z" },
+    { url = "https://files.pythonhosted.org/packages/24/01/144a78839822abad55628881bcb45f8173e6d8b87976897c9105884b5a6b/pyrefly-1.3.2-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:626dbaee16ae1169a10a4ba3293583b5ab0320102f35efaad9e03457a2fc646c", size = 15088488, upload-time = "2026-09-28T22:09:40.743Z" },
+    { url = "https://files.pythonhosted.org/packages/23/aa/599756bd42e6533ee9261ebd288f846ab453b00debaef2b4789893967809/pyrefly-1.3.2-py3-none-macosx_11_0_arm64.whl", hash = "sha256:2d5fc704dbf0e990dc4f15cb1ead64f1a325ae27383a50c76cfcaf0387f926bb", size = 14429996, upload-time = "2026-09-28T22:09:43.316Z" },
+    { url = "https://files.pythonhosted.org/packages/90/0c/4b0678889136b1514ecd25cec11974d5bfdaeaaf9f5fe8a766ca45ec4ab5/pyrefly-1.3.2-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:89dbe8a33e735fa96023c33ce5dfd81af9b0bdd2ee771e8d69b2ebffc7e0fbc7", size = 14871810, upload-time = "2026-09-28T22:09:45.42Z" },
+    { url = "https://files.pythonhosted.org/packages/a6/4e/a96236391c6bb0d8b50af85e0ea6c0c56206f739931ac3031f9e000325ee/pyrefly-1.3.2-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:3ec0c31715d48bff279f548b85a93b5bc43d2c7bd1492a8cd703a9185cb089e5", size = 16113462, upload-time = "2026-09-28T22:09:47.619Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/c3/d4d0966aa7008ebd8481a6d05aa53202ad40c9597705eeee87ba6e0e2025/pyrefly-1.3.2-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:3b3de468bed691e40dc6271284c8dcc05e649d7ed45280ef3d07332741efe34c", size = 16043341, upload-time = "2026-09-28T22:09:50.083Z" },
+    { url = "https://files.pythonhosted.org/packages/4f/d1/52d9ea1b7048c7316d9ff7594c170b1c06d37547a75d140c8deea7b9ddfd/pyrefly-1.3.2-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:cb94365fe5f854cb4fe82f600c4e2453160d328610b12981004851ee0b6e8aeb", size = 15437183, upload-time = "2026-09-28T22:09:52.56Z" },
+    { url = "https://files.pythonhosted.org/packages/08/ec/24f83e4a397fa9d5c416bb4d378ee1bb18fe48bdd5698fe541636f5352f3/pyrefly-1.3.2-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:4f730d2e515ac25827fc68f343a7aa02b1072e0062df6a430346a4ffdfb5db2f", size = 14892976, upload-time = "2026-09-28T22:09:54.916Z" },
+    { url = "https://files.pythonhosted.org/packages/29/c7/a473f8e9ec31ba0682ebe44f4e51167a22a4cbdc8bfd87365b9aca23be20/pyrefly-1.3.2-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:60f440e1626bd5cc4a41ee90cecba80796ed01ebd6c15d9f933efb8d07ffe2b8", size = 15469689, upload-time = "2026-09-28T22:09:57.541Z" },
 ]
 
 [[package]]
