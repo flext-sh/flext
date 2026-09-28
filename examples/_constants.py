@@ -12,7 +12,9 @@ from enum import StrEnum, unique
 class FlextRootExamplesConstants:
     """Examples constants facade — access via FlextRootExamplesConstants.*."""
 
-    @unique
+    MIN_OID_ACL_ATTRIBUTES: int = 2
+    EXPECTED_OID_ACL_COUNT: int = 2
+
     class Stage(StrEnum):
         """Processing stage enumeration used across pipeline examples."""
 
@@ -28,6 +30,17 @@ class FlextRootExamplesConstants:
         PROCESSING = "processing"
         ANALYSIS = "analysis"
         AGGREGATION = "aggregation"
+
+    @unique
+    class ErrorMessages(StrEnum):
+        """Runtime error message constants for example execution."""
+
+        LDIF_NO_ENTRIES = "LDIF parser produced no entries"
+        ACL_PERMISSION_NOT_GRANTED = "LDIF ACL example did not grant the declared permission"
+        OID_INSUFFICIENT_ATTRIBUTES = "OID server declared fewer than two ACL attributes"
+        OID_ACL_ATTRIBUTE_LOST = "OID ACL example lost a declared attribute"
+        ADVANCED_NO_ANALYSIS = "advanced example produced no analysis"
+        COMPLETE_NO_CONTENT = "complete workflow produced no content"
 
 
 __all__: list[str] = ["FlextRootExamplesConstants"]
