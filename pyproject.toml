@@ -21,11 +21,11 @@ dependencies = [
   "annotated-types>=0.8.0",
   "beartype>=0.22.9",
   "dependency-injector>=4.49.1",
-  "flext-cli",
-  "flext-core",
-  "flext-infra",
-  "flext-ldif",
-  "flext-tests",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "importlib-resources>=7.1.0",
   "packaging>=26.3",
   "pydantic>=2.13.5",
@@ -62,13 +62,15 @@ Homepage = "https://github.com/flext-sh/flext"
 Repository = "https://github.com/flext-sh/flext"
 
 [dependency-groups]
-codegen = ["flext-infra"]
+codegen = [
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+]
 dev = [
   "actionlint-py>=1.7.12.24",
   "bandit>=1.9.4",
   "deptry",
   "editables>=0.6",
-  "flext-tests",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "hypothesis",
   "mkdocs",
   "mkdocs-autorefs",
@@ -82,6 +84,7 @@ dev = [
   "mkdocstrings>=1.0.6",
   "mkdocstrings-python>=2.0.8",
   "mypy>=2.3.1",
+  "platformdirs>=4.12.0",
   "pymdown-extensions",
   "pyrefly>=1.2.0",
   "pyright>=1.1.411",
@@ -121,39 +124,6 @@ dev = [
   "types-toml>=0.10.8.20260518",
   "vulture>=2.16",
   "yamlfix>=1.19.1",
-]
-workspace = [
-  "flext-api",
-  "flext-auth",
-  "flext-cli",
-  "flext-core",
-  "flext-db-oracle",
-  "flext-dbt-ldap",
-  "flext-dbt-ldif",
-  "flext-dbt-oracle",
-  "flext-dbt-oracle-wms",
-  "flext-grpc",
-  "flext-infra",
-  "flext-ldap",
-  "flext-ldif",
-  "flext-meltano",
-  "flext-observability",
-  "flext-oracle-oic",
-  "flext-oracle-wms",
-  "flext-plugin",
-  "flext-quality",
-  "flext-tap-ldap",
-  "flext-tap-ldif",
-  "flext-tap-oracle",
-  "flext-tap-oracle-oic",
-  "flext-tap-oracle-wms",
-  "flext-target-ldap",
-  "flext-target-ldif",
-  "flext-target-oracle",
-  "flext-target-oracle-oic",
-  "flext-target-oracle-wms",
-  "flext-tests",
-  "flext-web",
 ]
 
 [tool.codespell]
@@ -716,134 +686,6 @@ dependencies = ["flext-tests"]
 
 [tool.uv.exclude-dependencies.package]
 name = "flext-infra"
-
-[tool.uv.workspace]
-members = [
-  "flext-api",
-  "flext-auth",
-  "flext-cli",
-  "flext-core",
-  "flext-db-oracle",
-  "flext-dbt-ldap",
-  "flext-dbt-ldif",
-  "flext-dbt-oracle",
-  "flext-dbt-oracle-wms",
-  "flext-grpc",
-  "flext-infra",
-  "flext-ldap",
-  "flext-ldif",
-  "flext-meltano",
-  "flext-observability",
-  "flext-oracle-oic",
-  "flext-oracle-wms",
-  "flext-plugin",
-  "flext-quality",
-  "flext-tap-ldap",
-  "flext-tap-ldif",
-  "flext-tap-oracle",
-  "flext-tap-oracle-oic",
-  "flext-tap-oracle-wms",
-  "flext-target-ldap",
-  "flext-target-ldif",
-  "flext-target-oracle",
-  "flext-target-oracle-oic",
-  "flext-target-oracle-wms",
-  "flext-tests",
-  "flext-web",
-]
-
-[tool.uv.sources.flext-api]
-workspace = true
-
-[tool.uv.sources.flext-auth]
-workspace = true
-
-[tool.uv.sources.flext-cli]
-workspace = true
-
-[tool.uv.sources.flext-core]
-workspace = true
-
-[tool.uv.sources.flext-db-oracle]
-workspace = true
-
-[tool.uv.sources.flext-dbt-ldap]
-workspace = true
-
-[tool.uv.sources.flext-dbt-ldif]
-workspace = true
-
-[tool.uv.sources.flext-dbt-oracle]
-workspace = true
-
-[tool.uv.sources.flext-dbt-oracle-wms]
-workspace = true
-
-[tool.uv.sources.flext-grpc]
-workspace = true
-
-[tool.uv.sources.flext-infra]
-workspace = true
-
-[tool.uv.sources.flext-ldap]
-workspace = true
-
-[tool.uv.sources.flext-ldif]
-workspace = true
-
-[tool.uv.sources.flext-meltano]
-workspace = true
-
-[tool.uv.sources.flext-observability]
-workspace = true
-
-[tool.uv.sources.flext-oracle-oic]
-workspace = true
-
-[tool.uv.sources.flext-oracle-wms]
-workspace = true
-
-[tool.uv.sources.flext-plugin]
-workspace = true
-
-[tool.uv.sources.flext-quality]
-workspace = true
-
-[tool.uv.sources.flext-tap-ldap]
-workspace = true
-
-[tool.uv.sources.flext-tap-ldif]
-workspace = true
-
-[tool.uv.sources.flext-tap-oracle]
-workspace = true
-
-[tool.uv.sources.flext-tap-oracle-oic]
-workspace = true
-
-[tool.uv.sources.flext-tap-oracle-wms]
-workspace = true
-
-[tool.uv.sources.flext-target-ldap]
-workspace = true
-
-[tool.uv.sources.flext-target-ldif]
-workspace = true
-
-[tool.uv.sources.flext-target-oracle]
-workspace = true
-
-[tool.uv.sources.flext-target-oracle-oic]
-workspace = true
-
-[tool.uv.sources.flext-target-oracle-wms]
-workspace = true
-
-[tool.uv.sources.flext-tests]
-workspace = true
-
-[tool.uv.sources.flext-web]
-workspace = true
 
 [tool.flext.docs]
 package_name = "flext"
