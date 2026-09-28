@@ -12,9 +12,9 @@ from enum import StrEnum, unique
 class FlextRootExamplesConstants:
     """Examples constants facade — access via FlextRootExamplesConstants.*."""
 
-    MIN_OID_ACL_ATTRIBUTES: int = 2
     EXPECTED_OID_ACL_COUNT: int = 2
 
+    @unique
     class Stage(StrEnum):
         """Processing stage enumeration used across pipeline examples."""
 

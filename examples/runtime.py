@@ -2,15 +2,12 @@
 
 from __future__ import annotations
 
-import logging
-
 from examples import FlextRootExamplesConstants as c
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
+from flext_cli import cli
 from flext_ldif import c as ldif_c, ldif, m as ldif_m
-
-_LOGGER = logging.getLogger(__name__)
 
 
 def main() -> int:
@@ -70,7 +67,9 @@ def main() -> int:
     if not complete.content:
         raise RuntimeError(c.ErrorMessages.COMPLETE_NO_CONTENT)
 
-    _LOGGER.info("ACL=granted OID=2 advanced=ok complete=ok")
+    cli.print(
+        f"ACL=granted OID={len(oid_response.acls)} advanced=ok complete=ok"
+    )
     return 0
 
 
