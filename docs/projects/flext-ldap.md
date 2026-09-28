@@ -104,7 +104,7 @@ Use `FlextLdapEntryAdapter` to convert between `ldap3` entries and `flext-ldif` 
 
 - [Project README](https://github.com/flext-sh/flext-ldap/blob/0.12.0-dev/README.md)
   (auto-generated module map and operation flow)
-- [Workspace AGENTS.md](../../AGENTS.md) — layering and zero-tolerance rules
+- [Workspace AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md) — layering and zero-tolerance rules
 - `flext-ldap/docs/api-reference/` — generated API documentation
 - Related projects: `flext-core`, `flext-ldif`, `flext-auth` (LDAP auth provider)
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`

@@ -50,7 +50,7 @@ The root Make gates provide current quality evidence.
 ## Resources
 
 - [Project README](https://github.com/flext-sh/flext-oracle-wms/blob/0.12.0-dev/README.md)
-- Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
+- Workspace governance: [AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md), [GOVERNANCE.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/GOVERNANCE.md)
 - Related packages: `flext-core`, `flext-api`, `flext-db-oracle`, `flext-meltano`
 
 ## Support & issues

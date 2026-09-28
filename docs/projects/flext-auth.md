@@ -104,7 +104,7 @@ implement the provider mixin/protocol and are registered through `FlextAuthRegis
 
 - [Project README](https://github.com/flext-sh/flext-auth/blob/0.12.0-dev/README.md)
   (auto-generated module map and operation flow)
-- [Workspace AGENTS.md](../../AGENTS.md) — layering and zero-tolerance rules
+- [Workspace AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md) — layering and zero-tolerance rules
 - `flext-auth/docs/api-reference/` — generated API documentation
 - Related projects: `flext-core`, `flext-ldap` (LDAP provider backend), `flext-grpc`
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
