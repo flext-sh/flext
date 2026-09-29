@@ -524,7 +524,8 @@ CLI + pytest plugin, **never imported at runtime**.
 - **Multi-agent tree:** fix-forward only, never `git reset/checkout/restore/clean/stash`
   shared work; commit by explicit paths (never `git add -A`); coordinate via beads
   (`bd`).
-- **≤200 logical LOC per module**; net-negative LOC on refactors.
+- **Config-owned module size cap** (`flext-infra/config/codegen.yaml` → `loc_cap.max_lines`,
+  enforced by the `loc-cap` check gate); net-negative LOC on refactors.
 - Toolchain: `uv` + `.venv` only, always via `make`.
 
 <!-- AIHUB-WORKSPACE-PROVIDERS-BEGIN -->
