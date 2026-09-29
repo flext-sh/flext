@@ -98,7 +98,7 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldif/`:
 
 - [Project README](https://github.com/flext-sh/flext-dbt-ldif/blob/0.12.0-dev/README.md)
   (auto-generated module map and integration pointers)
-- [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law
+- [Workspace AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md) — FLEXT engineering law
 - Generated API overview: `flext-dbt-ldif/docs/api-reference/generated/overview.md`
 - Related projects: `flext-core`, `flext-ldif`, `flext-meltano`, `flext-tap-ldif`,
   `flext-target-ldif`, `flext-dbt-ldap`
