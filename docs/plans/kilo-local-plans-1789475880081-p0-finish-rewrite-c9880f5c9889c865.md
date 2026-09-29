@@ -23,9 +23,9 @@
    famílias (`def __all__`, import `mm` perdido, `..deps` vs `...deps` ×3, fields
    Pydantic dropados, MRO com base abstrata antes dos parts, classmethod qualificado na
    part, classe duplicada morta) UM A UM, manualmente — enquanto o operador pedia
-   explicitamente engine (`make mod`/ast-grep/rope/rules-as-data). **Nunca rodei
-   `make mod` na sessão.** → Onda 2 do novo plano automatiza essa classe de defeito na
-   engine ANTES de qualquer novo reparo manual.
+   explicitamente engine (`make mod`/ast-grep/rope/rules-as-data).
+   **Nunca rodei `make mod` na sessão.** → Onda 2 do novo plano automatiza essa classe
+   de defeito na engine ANTES de qualquer novo reparo manual.
 2. **Corrida com o peer antes de coordenar**: ~6 tentativas de gen colidindo
    (`atomic source changed`, `identity changed`, `unowned journal`) ao longo de 2h+
    antes de postar a nota de coordenação no `flext-fkfmu`. Coordenação era passo ZERO (o

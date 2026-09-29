@@ -128,14 +128,14 @@ tudo)
 5. **F2.W4** Resiliência (Decisão 5): teste obrigatório de falha injetada
    mid-publication (gen E fix) com diff vazio pós reverse-apply.
 6. **F2.W5** Três níveis + rules-as-data (Decisões 4/6/7): estágio check `gen-warnings`;
-   escopos src/tests/scripts/examples; **as regras de extração do p0 Onda C entram AQUI
-   como dados** (import container perdido em parts, profundidade relativa pós-move,
-   classmethod qualificado na part, fields dropados no split) — um detector, um
-   consumidor.
-7. **F2.W6** Cobaia cosmos-docgen — **PORTÃO: engine só toca a frota depois daqui ×2
-   verde**: engine via CLI em branch própria; W001 provado (warn, não falha); W002→fix;
-   receipt idempotente; `gen ×2` exit 0; runtime real (import + CLI); locks NÃO
-   convergem aqui.
+   escopos src/tests/scripts/examples;
+   **as regras de extração do p0 Onda C entram AQUI como dados** (import container
+   perdido em parts, profundidade relativa pós-move, classmethod qualificado na part,
+   fields dropados no split) — um detector, um consumidor.
+7. **F2.W6** Cobaia cosmos-docgen —
+   **PORTÃO: engine só toca a frota depois daqui ×2 verde**: engine via CLI em branch
+   própria; W001 provado (warn, não falha); W002→fix; receipt idempotente; `gen ×2` exit
+   0; runtime real (import + CLI); locks NÃO convergem aqui.
 8. **F2.W7** Convergência `agents/` (`agents_governance`): máximo automatizado; não
    automatizável → bead com evidência, nunca edição manual em massa.
 

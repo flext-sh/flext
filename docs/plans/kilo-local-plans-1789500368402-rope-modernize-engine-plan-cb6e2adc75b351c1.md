@@ -14,12 +14,12 @@
 
 ## Objective
 
-Re-platform the FLEXT modernization stack onto **rope + parameterized YAML rules +
-`make mod` (ast-grep/sed)** only. Exterminate every Python-side `ast`, `libcst`, and
-`re`-based engine in `flext-infra`. All adjustments run through **one CLI**
-(`flext-infra codegen conform`) with per-component toggles and dry-run. Pilot on
-`~/ai-hub`. Every cycle lands 100% green: ruff, pyrefly, pytest collection — nothing
-half-done. Keep beartype runtime in flext-core untouched.
+Re-platform the FLEXT modernization stack onto
+**rope + parameterized YAML rules + `make mod` (ast-grep/sed)** only. Exterminate every
+Python-side `ast`, `libcst`, and `re`-based engine in `flext-infra`. All adjustments run
+through **one CLI** (`flext-infra codegen conform`) with per-component toggles and
+dry-run. Pilot on `~/ai-hub`. Every cycle lands 100% green: ruff, pyrefly, pytest
+collection — nothing half-done. Keep beartype runtime in flext-core untouched.
 
 ## Ground truth (verified this session)
 
@@ -28,8 +28,8 @@ half-done. Keep beartype runtime in flext-core untouched.
 - Extermination inventory in `flext-infra/src/flext_infra`: **8 libcst files**
   (`codegen/_lazy_init_import_alignment.py`,
   `_utilities/{qualified_names,compatibility_alias_cst,private_import_cst,class_nesting_cst,class_nesting_references}.py`,
-  `transformers/mro_remover.py`, `refactor/project_alias_migrator.py`) + **37
-  `import ast` files** (transformers/, detectors/, fixers/, gates/, \_utilities/,
+  `transformers/mro_remover.py`, `refactor/project_alias_migrator.py`) +
+  **37 `import ast` files** (transformers/, detectors/, fixers/, gates/, \_utilities/,
   codegen/).
 - Rope foundation already exists: `_utilities/_rope/project.py`, `rope_structure.py`,
   `rope_imports.py`, `rope_source.py`, `fixers/rope_fixer.py`.

@@ -527,7 +527,6 @@ class FlextRootCompleteWorkflowExample:
             "strict_mode": False,
         }
         orchestrator = FlextRootCompleteWorkflowExample.WorkflowOrchestrator(
-            data=sample_data,
-            workflow_settings=workflow_settings,
+            data=sample_data, workflow_settings=workflow_settings
         )
         return orchestrator.execute()

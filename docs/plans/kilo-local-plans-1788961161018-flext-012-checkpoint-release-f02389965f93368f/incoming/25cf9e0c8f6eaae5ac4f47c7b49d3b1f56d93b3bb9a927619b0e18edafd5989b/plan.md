@@ -303,8 +303,8 @@ cycles. The 1427 findings are pre-existing debt surfaced by the newly-activated 
 
 Census (measured, check-report + full gate log):
 
-- namespace: 1388 (NS-STRUCT-001=309, -002=170, CONTRACT-001=160, -003=117, -004=77,
-  ...) — ACCEPTED-RESIDUAL backlog → post-release program (0.20).
+- namespace: 1388 (NS-STRUCT-001=309, -002=170, CONTRACT-001=160, -003=117,
+  -004=77, ...) — ACCEPTED-RESIDUAL backlog → post-release program (0.20).
 - runtime-census: 292 usages (1 gate fail) — ACCEPTED-RESIDUAL backlog.
 - duplication: 24 (clone codemod yml rules) — FIX NOW (delete clones, extend one owner).
 - silent-failure: 6 (broad except / sentinel returns) — FIX NOW.

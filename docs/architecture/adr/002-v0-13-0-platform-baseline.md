@@ -47,13 +47,13 @@ packages such as `flext-ldif` , `flext-auth` , `flext-api` , and `flext-cli` .
 We will adopt the `0.13.0` platform baseline defined in
 `docs/architecture/baseline-v0.13.0.md`.
 
-> **Current runtime vs. forward baseline.** The sections below describe the **v0.13.0
-> forward baseline** (planned), not the current `0.12.0-dev` runtime. Verified current
-> state in `flext-core` (`__init__.py`): `FlextDispatcher`, `FlextHandlers` (plural, not
-> `FlextHandler`), `FlextRegistry`, and `FlextMixins`/`x` are **all currently
-> exported**. `FlextCatalog` and `FlextLogger` **do not yet exist**. `x` is **not
-> removed** — it remains exported in the current line; only the forward baseline retires
-> it.
+> **Current runtime vs. forward baseline.** The sections below describe the
+> **v0.13.0 forward baseline** (planned), not the current `0.12.0-dev` runtime. Verified
+> current state in `flext-core` (`__init__.py`): `FlextDispatcher`, `FlextHandlers`
+> (plural, not `FlextHandler`), `FlextRegistry`, and `FlextMixins`/`x` are
+> **all currently exported**. `FlextCatalog` and `FlextLogger` **do not yet exist**. `x`
+> is **not removed** — it remains exported in the current line; only the forward
+> baseline retires it.
 
 ### Public Class Naming
 

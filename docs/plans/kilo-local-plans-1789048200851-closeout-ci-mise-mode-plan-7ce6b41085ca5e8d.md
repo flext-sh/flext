@@ -79,8 +79,8 @@ Diagnóstico já feito:
    `0.12.0-dev` verde.
 3. `flext-9pia0`, `flext-r8lsm`, `flext-bkpj6`: pertencem a lanes ativas — NÃO reclamar
    escopo; apenas registrar ponte (evidência no `flext-yirgp`).
-4. `flext-yirgp`: close com --force SE os 5 dependentes fechados; caso
-   contrário落地 status real documentado (integração landed, dependências ativas).
+4. `flext-yirgp`: close com --force SE os 5 dependentes fechados; caso contrário落地
+   status real documentado (integração landed, dependências ativas).
 
 ### Fase 3 — Regras em `~/agents/` (fonte canônica) + fechamento
 

@@ -5,6 +5,12 @@ updated_at: 2026-09-25T17:27:00Z
 
 # Beads reconciliation boundary
 
+<!-- TOC START -->
+
+- No sections found
+
+<!-- TOC END -->
+
 The active coordination item named by repository authority is `aihub-l42it`. Preserve
 its existing intent, relationships and evidence; do not create a replacement record.
 

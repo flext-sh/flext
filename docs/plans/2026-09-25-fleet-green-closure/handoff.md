@@ -5,6 +5,13 @@ updated_at: 2026-09-25T17:27:00Z
 
 # Resumption contract
 
+<!-- TOC START -->
+
+- [Read-only preflight](#read-only-preflight)
+- [Exact continuation](#exact-continuation)
+
+<!-- TOC END -->
+
 Start from files and live repositories, never from a prior session cursor. The active
 implementation checkout is:
 
