@@ -192,7 +192,7 @@ path; migration to rope-only is in progress and tracked by beads `mro-wkii.4`,
 ## References
 
 - [ADR-003 — Manifest-owned topology, root workspace, and autonomous Git libraries](./003-workspace-tooling-hub-distribution.md)
-- [ADR-004 — Generated Make and codegen SSOT owned by `flext-infra`](./004-generic-make-framework-in-flext-tests.md)
+- [ADR-004 — Generated Make and codegen SSOT owned by `flext-infra`](./004-generated-make-codegen-ssot-flext-infra.md)
 - [Migration plan](../config-ssot-migration-plan.md)
 - Enforcement hardening beads: `mro-wkii.4`, `mro-wkii.4.1`, `mro-wkii.4.8`; plan
   `flext-infra/.omo/plans/declarative-enforcement.md`.

@@ -1,14 +1,16 @@
 {
-  "scope": {
-    "exclude_roots": []
-  },
   "audit": {
-    "placeholder_terms": ["Coming Soon", "Documentation coming soon"],
-    "stale_symbols": ["FlextRegistry", "get_global()"],
-    "stale_symbol_exempt_paths": [
-      "architecture/baseline-v0.13.0.md",
-      "architecture/adr/002-v0-13-0-platform-baseline.md",
-      "guides/migration-to-v0.13.0.md"
+    "placeholder_terms": [
+      "TODO",
+      "FIXME",
+      "placeholder",
+      "Lorem"
+    ],
+    "forbidden_terms": [
+      "make sync",
+      "check_changed_projects",
+      "text_rules.yml",
+      "scripts/hooks"
     ]
   }
 }

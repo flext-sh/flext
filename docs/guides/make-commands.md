@@ -48,7 +48,7 @@ The consecutive generation passes prove the fixed point after structural rewrite
 Each verb executes its declared operation directly. No project, file, pattern, action,
 phase, fix, or changed-only selector may be attached to a standard verb.
 
-`make help` is the complete live inventory. Additional declared verbs such as `deps`,
+`make help` is the complete live inventory. Additional declared verbs such as `upg`,
 `docs`, `audit`, `status`, `waza`, `duplication`, and the release verbs retain their own
 single operation and are invoked only when their scope applies.
 

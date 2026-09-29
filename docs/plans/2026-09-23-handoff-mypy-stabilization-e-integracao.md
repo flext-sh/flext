@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-23). PR/bead/branch states cited below may have changed; verify against
+> the live tracker (`bd` / `gh`) before relying on anything here.
+
 # Handoff — Estabilização mypy/CI + ciclo de integração da frota (2026-09-23)
 
 <!-- TOC START -->

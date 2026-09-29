@@ -20,9 +20,12 @@
 - **Complements:** ADR-010 (standardization via codegen), ADR-014 (family shape +
   codemod rules), ADR-017 (parametrized rule surfaces). Supersedes every filename→letter
   table, closed folder list and advisory-gate list those ADRs tolerated.
-- **Rule owner:** `~/agents/rules/flext/generator-declarations.md` (projected to every
-  provider). This ADR records the decision; the rule file is the binding text.
-- **Tracking:** epic `flext-0in0k` (20 phased beads, each carrying the full rule text);
+- **Rule owner:** global governance rule `flext/generator-declarations` in the
+  `agents-governance` catalog (projected to every provider; referenced by governance
+  identity, never by a machine-local path). This ADR records the decision; the rule is
+  the binding text.
+- **Tracking:** epic `flext-0in0k` (a phased bead set, each carrying the full rule text;
+  live membership and counts on the epic, never frozen here);
   superseded `flext-exbwv`, `flext-crd1y`, `flext-b3xmn`, `flext-szjre`, `flext-fdoah`,
   `flext-s9bxq` (closed, linked); `flext-ssnc7` and `flext-mbowt` linked, kept open for
   their unrelated live children.
