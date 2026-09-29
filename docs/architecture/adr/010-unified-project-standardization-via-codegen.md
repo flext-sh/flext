@@ -1,4 +1,4 @@
-# ADR-010 — Unified project standardization (Make, scripts, tests, structure) via flext-infra codegen and flext-tests
+# ADR-010 — Unified project standardization via flext-infra codegen and flext-tests
 
 > **Amended by ADR-018** (generator declarations): its filename-to-letter tables, closed
 > folder lists and advisory-gate lists are superseded; see

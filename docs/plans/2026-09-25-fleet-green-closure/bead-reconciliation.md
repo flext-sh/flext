@@ -18,7 +18,8 @@ At handoff creation, both of these canonical reads failed with exit 1:
 
 ```bash
 direnv exec /home/marlonsc/flext gc bd show aihub-l42it --json
-direnv exec /home/marlonsc/flext gc bd --city /home/marlonsc/gc show aihub-l42it --rig aihub --json
+direnv exec /home/marlonsc/flext gc bd --city /home/marlonsc/gc \
+  show aihub-l42it --rig aihub --json
 ```
 
 The exact failure is `PROJECT IDENTITY MISMATCH`: local metadata identifies
