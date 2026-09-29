@@ -125,39 +125,6 @@ dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-workspace = [
-  "flext-api @ git+https://github.com/flext-sh/flext-api.git@0.12.0-dev",
-  "flext-auth @ git+https://github.com/flext-sh/flext-auth.git@0.12.0-dev",
-  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
-  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
-  "flext-db-oracle @ git+https://github.com/flext-sh/flext-db-oracle.git@0.12.0-dev",
-  "flext-dbt-ldap @ git+https://github.com/flext-sh/flext-dbt-ldap.git@0.12.0-dev",
-  "flext-dbt-ldif @ git+https://github.com/flext-sh/flext-dbt-ldif.git@0.12.0-dev",
-  "flext-dbt-oracle @ git+https://github.com/flext-sh/flext-dbt-oracle.git@0.12.0-dev",
-  "flext-dbt-oracle-wms @ git+https://github.com/flext-sh/flext-dbt-oracle-wms.git@0.12.0-dev",
-  "flext-grpc @ git+https://github.com/flext-sh/flext-grpc.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
-  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
-  "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
-  "flext-observability @ git+https://github.com/flext-sh/flext-observability.git@0.12.0-dev",
-  "flext-oracle-oic @ git+https://github.com/flext-sh/flext-oracle-oic.git@0.12.0-dev",
-  "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
-  "flext-plugin @ git+https://github.com/flext-sh/flext-plugin.git@0.12.0-dev",
-  "flext-quality @ git+https://github.com/flext-sh/flext-quality.git@0.12.0-dev",
-  "flext-tap-ldap @ git+https://github.com/flext-sh/flext-tap-ldap.git@0.12.0-dev",
-  "flext-tap-ldif @ git+https://github.com/flext-sh/flext-tap-ldif.git@0.12.0-dev",
-  "flext-tap-oracle @ git+https://github.com/flext-sh/flext-tap-oracle.git@0.12.0-dev",
-  "flext-tap-oracle-oic @ git+https://github.com/flext-sh/flext-tap-oracle-oic.git@0.12.0-dev",
-  "flext-tap-oracle-wms @ git+https://github.com/flext-sh/flext-tap-oracle-wms.git@0.12.0-dev",
-  "flext-target-ldap @ git+https://github.com/flext-sh/flext-target-ldap.git@0.12.0-dev",
-  "flext-target-ldif @ git+https://github.com/flext-sh/flext-target-ldif.git@0.12.0-dev",
-  "flext-target-oracle @ git+https://github.com/flext-sh/flext-target-oracle.git@0.12.0-dev",
-  "flext-target-oracle-oic @ git+https://github.com/flext-sh/flext-target-oracle-oic.git@0.12.0-dev",
-  "flext-target-oracle-wms @ git+https://github.com/flext-sh/flext-target-oracle-wms.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
-]
 
 [tool.codespell]
 check-filenames = true
@@ -182,40 +149,7 @@ omit = [
 ]
 
 [tool.deptry]
-known_first_party = [
-  "flext",
-  "flext_api",
-  "flext_auth",
-  "flext_cli",
-  "flext_core",
-  "flext_db_oracle",
-  "flext_dbt_ldap",
-  "flext_dbt_ldif",
-  "flext_dbt_oracle",
-  "flext_dbt_oracle_wms",
-  "flext_grpc",
-  "flext_infra",
-  "flext_ldap",
-  "flext_ldif",
-  "flext_meltano",
-  "flext_observability",
-  "flext_oracle_oic",
-  "flext_oracle_wms",
-  "flext_plugin",
-  "flext_quality",
-  "flext_tap_ldap",
-  "flext_tap_ldif",
-  "flext_tap_oracle",
-  "flext_tap_oracle_oic",
-  "flext_tap_oracle_wms",
-  "flext_target_ldap",
-  "flext_target_ldif",
-  "flext_target_oracle",
-  "flext_target_oracle_oic",
-  "flext_target_oracle_wms",
-  "flext_tests",
-  "flext_web",
-]
+known_first_party = ["flext", "flext_core"]
 pep621_dev_dependency_groups = ["dev"]
 
 [tool.hatch.metadata]
@@ -397,6 +331,37 @@ exclude = [
   ".git",
   ".reports",
   ".venv",
+  "flext-api",
+  "flext-auth",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-dbt-ldap",
+  "flext-dbt-ldif",
+  "flext-dbt-oracle",
+  "flext-dbt-oracle-wms",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-ldif",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tap-ldap",
+  "flext-tap-ldif",
+  "flext-tap-oracle",
+  "flext-tap-oracle-oic",
+  "flext-tap-oracle-wms",
+  "flext-target-ldap",
+  "flext-target-ldif",
+  "flext-target-oracle",
+  "flext-target-oracle-oic",
+  "flext-target-oracle-wms",
+  "flext-tests",
+  "flext-web",
   "vendor",
 ]
 include = ["tests"]
@@ -515,6 +480,37 @@ exclude = [
   "backup",
   "build",
   "dist",
+  "flext-api",
+  "flext-auth",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-dbt-ldap",
+  "flext-dbt-ldif",
+  "flext-dbt-oracle",
+  "flext-dbt-oracle-wms",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-ldif",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tap-ldap",
+  "flext-tap-ldif",
+  "flext-tap-oracle",
+  "flext-tap-oracle-oic",
+  "flext-tap-oracle-wms",
+  "flext-target-ldap",
+  "flext-target-ldif",
+  "flext-target-oracle",
+  "flext-target-oracle-oic",
+  "flext-target-oracle-wms",
+  "flext-tests",
+  "flext-web",
   "htmlcov",
   "temp-backup",
   "typings",
@@ -588,40 +584,7 @@ msg = "Use cli.create_app_with_common_params / cli.register_command from flext_c
 [tool.ruff.lint.isort]
 combine-as-imports = true
 force-single-line = false
-known-first-party = [
-  "flext",
-  "flext_api",
-  "flext_auth",
-  "flext_cli",
-  "flext_core",
-  "flext_db_oracle",
-  "flext_dbt_ldap",
-  "flext_dbt_ldif",
-  "flext_dbt_oracle",
-  "flext_dbt_oracle_wms",
-  "flext_grpc",
-  "flext_infra",
-  "flext_ldap",
-  "flext_ldif",
-  "flext_meltano",
-  "flext_observability",
-  "flext_oracle_oic",
-  "flext_oracle_wms",
-  "flext_plugin",
-  "flext_quality",
-  "flext_tap_ldap",
-  "flext_tap_ldif",
-  "flext_tap_oracle",
-  "flext_tap_oracle_oic",
-  "flext_tap_oracle_wms",
-  "flext_target_ldap",
-  "flext_target_ldif",
-  "flext_target_oracle",
-  "flext_target_oracle_oic",
-  "flext_target_oracle_wms",
-  "flext_tests",
-  "flext_web",
-]
+known-first-party = ["flext", "flext_core"]
 split-on-trailing-comma = false
 
 [tool.ruff.lint.per-file-ignores]
@@ -671,54 +634,6 @@ whitelines = 1
 link-mode = "copy"
 constraint-dependencies = ["structlog<26"]
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-infra"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-tests"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-core"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-infra"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-core"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-tests"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-core"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-cli"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-cli"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-infra"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-cli"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-core"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-cli"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-tests"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-tests"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-infra"
 
 [tool.flext.docs]
 package_name = "flext"
