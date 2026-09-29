@@ -24,7 +24,6 @@ repository:
   editable: false
   read_only: false
 project:
-  # Integration-line sources are derived from this manifest; no per-package overrides.
   runtime_dependency_overlay:
     - flext-ldif
   package_name: "flext"
