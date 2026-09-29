@@ -57,10 +57,6 @@ Project creation writes only the initial manifest and invokes `conform`. Existin
 new projects use the same models, schemas, context, renderer, and templates. There is no
 separate migration, bootstrap, workspace, or legacy rendering path.
 
-> **Note:** the file name retains the historical suffix `in-flext-tests`; the content
-> has been repointed — `flext-infra` owns the Make/codegen SSOT for the entire fleet
-> (root workspace + members + standalone), not only flext-tests.
-
 ### 2. The Makefile is a self-contained generated artifact
 
 One template layer emits the complete versioned Makefile for the `workspace` or
@@ -73,45 +69,14 @@ performs conformance explicitly; `check` is read-only and `apply` requires.
 > default (see root AGENTS.md operator law 2026-09-14). The `WHAT=` selector contract
 > described below is retired.
 
-The public surface is discovered from the live root `Makefile` with `make help`. At this
-revision it exposes these selector-free operational verbs:
+The public surface is discovered from the live root `Makefile` with `make help`; that
+inventory (and the per-verb responsibilities `_builtin-help` prints) is the single
+source of truth and is never frozen here or in guides — a frozen copy already drifted
+once (`deps` was replaced by `upg`, and `propagate`, `test-full` and
+`sonarcloud-sync` were added without this list noticing).
 
-```text
-setup deps build check test fmt fix fix-enforcement audit status docs
-clean release-plan release-version release-tag release-build publication
-gen initialize mod waza duplication
-```
-
-`help` only describes the surface. Every operation maps to exactly one public verb and
-one canonical handler. Public aliases, duplicate verbs, daemon targets, and alternative
-dispatch routes are invalid.
-
-The meanings are fixed (from the root `Makefile` `_builtin-help`):
-
-| Verb              | Responsibility                                                 |
-| ----------------- | -------------------------------------------------------------- |
-| `setup`           | provision the pinned toolchain and environment                 |
-| `deps`            | upgrade, lock, and conform every declared dependency           |
-| `build`           | build the project distribution artifacts                       |
-| `check`           | run static and policy gates                                    |
-| `test`            | execute real behavior tests through the testmon cache          |
-| `fmt`             | apply ruff format + lint autofix                               |
-| `fix`             | apply ruff check + all configured safe corrections             |
-| `fix-enforcement` | apply the safe fix actions declared by the enforcement catalog |
-| `audit`           | inspect ownership, dependency, and generated-state health      |
-| `status`          | report the resolved runtime and repository state               |
-| `docs`            | generate, repair, build, and validate documentation            |
-| `clean`           | remove every declared disposable artifact                      |
-| `release-plan`    | resolve the release decision through the public protocol       |
-| `release-version` | materialize the planned version                                |
-| `release-tag`     | tag the verified release commit                                |
-| `release-build`   | build the release receipt and artifacts                        |
-| `publication`     | publish only receipt-attested release artifacts                |
-| `gen`             | regenerate every managed projection atomically                 |
-| `initialize`      | materialize the declared package initializer graph             |
-| `mod`             | apply the declared structural codemods                         |
-| `waza`            | validate provider-neutral governance semantics with Waza       |
-| `duplication`     | run the canonical jscpd duplicate-code gate                    |
+Every operation maps to exactly one public verb and one canonical handler. Public
+aliases, duplicate verbs, daemon targets, and alternative dispatch routes are invalid.
 
 ### 3. `custom.mk` is a narrow private extension surface
 
@@ -120,7 +85,8 @@ custom-handler policy. Its schema rejects public targets, aliases, help or toolc
 ownership, setup logic, generated-target redefinition, and handlers whose verb is
 outside the canonical surface.
 
-The public surface is `help` plus the operational verbs above and accepts no `WHAT`
+The public surface is `help` plus the operational verbs declared by the root `Makefile`
+(`PUBLIC_VERBS`) and accepts no `WHAT`
 selector. The current template still contains internal `_custom_<verb>_<what>` dispatch
 residue; Bead `flext-5fxu6.4.22` owns its removal. That residue is not an accepted
 public contract.
@@ -150,8 +116,8 @@ project with the same manifest.
 - Parse and `help` validation cover every generated profile.
 - Schema tests reject public custom targets and handler collisions.
 - Conformance check performs no writes; apply is atomic and idempotent.
-- Public-surface discovery reports only `help` and the twenty-three operational verbs,
-  with one handler per verb.
+- Public-surface discovery reports only `help` and the operational verbs declared by
+  `PUBLIC_VERBS`, with one handler per verb.
 
 ## References
 
