@@ -21,10 +21,11 @@ dependencies = [
   "annotated-types>=0.8.0",
   "beartype>=0.22.9",
   "dependency-injector>=4.49.1",
-  "flext-cli",
-  "flext-core",
-  "flext-infra",
-  "flext-tests",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "importlib-resources>=7.1.0",
   "packaging>=26.3",
   "pydantic>=2.13.5",
@@ -61,13 +62,15 @@ Homepage = "https://github.com/flext-sh/flext"
 Repository = "https://github.com/flext-sh/flext"
 
 [dependency-groups]
-codegen = ["flext-infra"]
+codegen = [
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+]
 dev = [
   "actionlint-py>=1.7.12.24",
   "bandit>=1.9.4",
   "deptry",
   "editables>=0.6",
-  "flext-tests",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "hypothesis",
   "mkdocs",
   "mkdocs-autorefs",
@@ -81,6 +84,7 @@ dev = [
   "mkdocstrings>=1.0.6",
   "mkdocstrings-python>=2.0.8",
   "mypy>=2.3.1",
+  "platformdirs>=4.12.0",
   "pymdown-extensions",
   "pyrefly>=1.2.0",
   "pyright>=1.1.411",
@@ -122,37 +126,37 @@ dev = [
   "yamlfix>=1.19.1",
 ]
 workspace = [
-  "flext-api",
-  "flext-auth",
-  "flext-cli",
-  "flext-core",
-  "flext-db-oracle",
-  "flext-dbt-ldap",
-  "flext-dbt-ldif",
-  "flext-dbt-oracle",
-  "flext-dbt-oracle-wms",
-  "flext-grpc",
-  "flext-infra",
-  "flext-ldap",
-  "flext-ldif",
-  "flext-meltano",
-  "flext-observability",
-  "flext-oracle-oic",
-  "flext-oracle-wms",
-  "flext-plugin",
-  "flext-quality",
-  "flext-tap-ldap",
-  "flext-tap-ldif",
-  "flext-tap-oracle",
-  "flext-tap-oracle-oic",
-  "flext-tap-oracle-wms",
-  "flext-target-ldap",
-  "flext-target-ldif",
-  "flext-target-oracle",
-  "flext-target-oracle-oic",
-  "flext-target-oracle-wms",
-  "flext-tests",
-  "flext-web",
+  "flext-api @ git+https://github.com/flext-sh/flext-api.git@0.12.0-dev",
+  "flext-auth @ git+https://github.com/flext-sh/flext-auth.git@0.12.0-dev",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-db-oracle @ git+https://github.com/flext-sh/flext-db-oracle.git@0.12.0-dev",
+  "flext-dbt-ldap @ git+https://github.com/flext-sh/flext-dbt-ldap.git@0.12.0-dev",
+  "flext-dbt-ldif @ git+https://github.com/flext-sh/flext-dbt-ldif.git@0.12.0-dev",
+  "flext-dbt-oracle @ git+https://github.com/flext-sh/flext-dbt-oracle.git@0.12.0-dev",
+  "flext-dbt-oracle-wms @ git+https://github.com/flext-sh/flext-dbt-oracle-wms.git@0.12.0-dev",
+  "flext-grpc @ git+https://github.com/flext-sh/flext-grpc.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
+  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
+  "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
+  "flext-observability @ git+https://github.com/flext-sh/flext-observability.git@0.12.0-dev",
+  "flext-oracle-oic @ git+https://github.com/flext-sh/flext-oracle-oic.git@0.12.0-dev",
+  "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
+  "flext-plugin @ git+https://github.com/flext-sh/flext-plugin.git@0.12.0-dev",
+  "flext-quality @ git+https://github.com/flext-sh/flext-quality.git@0.12.0-dev",
+  "flext-tap-ldap @ git+https://github.com/flext-sh/flext-tap-ldap.git@0.12.0-dev",
+  "flext-tap-ldif @ git+https://github.com/flext-sh/flext-tap-ldif.git@0.12.0-dev",
+  "flext-tap-oracle @ git+https://github.com/flext-sh/flext-tap-oracle.git@0.12.0-dev",
+  "flext-tap-oracle-oic @ git+https://github.com/flext-sh/flext-tap-oracle-oic.git@0.12.0-dev",
+  "flext-tap-oracle-wms @ git+https://github.com/flext-sh/flext-tap-oracle-wms.git@0.12.0-dev",
+  "flext-target-ldap @ git+https://github.com/flext-sh/flext-target-ldap.git@0.12.0-dev",
+  "flext-target-ldif @ git+https://github.com/flext-sh/flext-target-ldif.git@0.12.0-dev",
+  "flext-target-oracle @ git+https://github.com/flext-sh/flext-target-oracle.git@0.12.0-dev",
+  "flext-target-oracle-oic @ git+https://github.com/flext-sh/flext-target-oracle-oic.git@0.12.0-dev",
+  "flext-target-oracle-wms @ git+https://github.com/flext-sh/flext-target-oracle-wms.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
 ]
 
 [tool.codespell]
@@ -715,134 +719,6 @@ dependencies = ["flext-tests"]
 
 [tool.uv.exclude-dependencies.package]
 name = "flext-infra"
-
-[tool.uv.workspace]
-members = [
-  "flext-api",
-  "flext-auth",
-  "flext-cli",
-  "flext-core",
-  "flext-db-oracle",
-  "flext-dbt-ldap",
-  "flext-dbt-ldif",
-  "flext-dbt-oracle",
-  "flext-dbt-oracle-wms",
-  "flext-grpc",
-  "flext-infra",
-  "flext-ldap",
-  "flext-ldif",
-  "flext-meltano",
-  "flext-observability",
-  "flext-oracle-oic",
-  "flext-oracle-wms",
-  "flext-plugin",
-  "flext-quality",
-  "flext-tap-ldap",
-  "flext-tap-ldif",
-  "flext-tap-oracle",
-  "flext-tap-oracle-oic",
-  "flext-tap-oracle-wms",
-  "flext-target-ldap",
-  "flext-target-ldif",
-  "flext-target-oracle",
-  "flext-target-oracle-oic",
-  "flext-target-oracle-wms",
-  "flext-tests",
-  "flext-web",
-]
-
-[tool.uv.sources.flext-api]
-workspace = true
-
-[tool.uv.sources.flext-auth]
-workspace = true
-
-[tool.uv.sources.flext-cli]
-workspace = true
-
-[tool.uv.sources.flext-core]
-workspace = true
-
-[tool.uv.sources.flext-db-oracle]
-workspace = true
-
-[tool.uv.sources.flext-dbt-ldap]
-workspace = true
-
-[tool.uv.sources.flext-dbt-ldif]
-workspace = true
-
-[tool.uv.sources.flext-dbt-oracle]
-workspace = true
-
-[tool.uv.sources.flext-dbt-oracle-wms]
-workspace = true
-
-[tool.uv.sources.flext-grpc]
-workspace = true
-
-[tool.uv.sources.flext-infra]
-workspace = true
-
-[tool.uv.sources.flext-ldap]
-workspace = true
-
-[tool.uv.sources.flext-ldif]
-workspace = true
-
-[tool.uv.sources.flext-meltano]
-workspace = true
-
-[tool.uv.sources.flext-observability]
-workspace = true
-
-[tool.uv.sources.flext-oracle-oic]
-workspace = true
-
-[tool.uv.sources.flext-oracle-wms]
-workspace = true
-
-[tool.uv.sources.flext-plugin]
-workspace = true
-
-[tool.uv.sources.flext-quality]
-workspace = true
-
-[tool.uv.sources.flext-tap-ldap]
-workspace = true
-
-[tool.uv.sources.flext-tap-ldif]
-workspace = true
-
-[tool.uv.sources.flext-tap-oracle]
-workspace = true
-
-[tool.uv.sources.flext-tap-oracle-oic]
-workspace = true
-
-[tool.uv.sources.flext-tap-oracle-wms]
-workspace = true
-
-[tool.uv.sources.flext-target-ldap]
-workspace = true
-
-[tool.uv.sources.flext-target-ldif]
-workspace = true
-
-[tool.uv.sources.flext-target-oracle]
-workspace = true
-
-[tool.uv.sources.flext-target-oracle-oic]
-workspace = true
-
-[tool.uv.sources.flext-target-oracle-wms]
-workspace = true
-
-[tool.uv.sources.flext-tests]
-workspace = true
-
-[tool.uv.sources.flext-web]
-workspace = true
 
 [tool.flext.docs]
 package_name = "flext"

@@ -363,17 +363,17 @@ connectors. Every package follows one canonical Clean-Architecture shape built o
 ## Structure
 
 ```text
-flext/ # superproject: workspace manager + governance + docs ├── src/flext/ #
-flext-workspace CLI (thin orchestrator over flext-cli) — AUTO-GENERATED facets ├──
-config/ # workspace.yaml topology SSOT (codegen/conform input; never overwrite) ├──
-docs/architecture/adr/ # ADR-001..019 (011-013 absent) — architectural decisions (see below) ├──
-Makefile + *.mk # root verb dispatcher (all work runs from here) ├── flext-core/ #
-foundation: c/t/p/m/u + r/e/x/h/d/s facades (every pkg depends on it) ├── flext-infra/ #
-build automation, codegen, enforcement (tooling; not a runtime dep) ├── flext-tests/ #
-shared test infra (tm/tv/tt fixtures)
-├── flext-cli|api|auth|web|grpc|observability|plugin|meltano/  # platform capabilities
-├── flext-ldap|ldif|db-oracle|oracle-wms|oracle-oic|quality/   # domain libraries
-└── flext-{tap,target,dbt}-*/ # Singer ecosystem: 5 taps, 5 targets, 4 dbt (built on flext-meltano)
+flext/                                                        # superproject: workspace manager + governance + docs
+├── src/flext/                                               # flext-workspace CLI (thin orchestrator over flext-cli) — AUTO-GENERATED facets
+├── config/                                                  # workspace.yaml topology SSOT (codegen/conform input; never overwrite)
+├── docs/architecture/adr/                                   # ADR-001..019 (011-013 absent) — architectural decisions (see below)
+├── Makefile + *.mk                                          # root verb dispatcher (all work runs from here)
+├── flext-core/                                              # foundation: c/t/p/m/u + r/e/x/h/d/s facades (every pkg depends on it)
+├── flext-infra/                                             # build automation, codegen, enforcement (tooling; not a runtime dep)
+├── flext-tests/                                             # shared test infra (tm/tv/tt fixtures)
+├── flext-cli|api|auth|web|grpc|observability|plugin|meltano/ # platform capabilities
+├── flext-ldap|ldif|db-oracle|oracle-wms|oracle-oic|quality/  # domain libraries
+└── flext-{tap,target,dbt}-*/                                # Singer ecosystem: 5 taps, 5 targets, 4 dbt (built on flext-meltano)
 ```
 
 Each submodule is an **independent git repo**. This root `AGENTS.md` is the canonical

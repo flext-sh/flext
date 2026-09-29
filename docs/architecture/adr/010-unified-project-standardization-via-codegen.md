@@ -268,7 +268,7 @@ Workspace-local Kilo plans are session context, not published authority.
 ## References
 
 - [ADR-003 — Manifest-owned topology, profiles](003-workspace-tooling-hub-distribution.md)
-- [ADR-004 — Generated Make and codegen SSOT](004-generic-make-framework-in-flext-tests.md)
+- [ADR-004 — Generated Make and codegen SSOT](004-generated-make-codegen-ssot-flext-infra.md)
 - [ADR-005 — Config/settings/constants/templates/schemas SSOT](005-config-settings-constants-templates-schemas-ssot.md)
 - [ADR-007 — Performance optimization of worktree transactions and mutating CLI commands](007-worktree-transaction-performance.md)
 - [ADR-008 — Neutral consumer boundaries](008-neutral-consumer-boundaries.md)

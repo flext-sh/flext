@@ -62,7 +62,7 @@ ADR-004 records its ownership contract without freezing a copied target count.
 Project-specific behavior is available only through validated private `custom.mk`
 handlers. See [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) for
 topology and environments and
-[ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) for
+[ADR-004](architecture/adr/004-generated-make-codegen-ssot-flext-infra.md) for
 Make/codegen ownership.
 
 Run the standard lifecycle from the active workspace root: `make setup` → `make gen` →

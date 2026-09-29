@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-11). PR/bead/branch states cited below may have changed; verify against
+> the live tracker (`bd` / `gh`) before relying on anything here.
+
 # Handoff — FLEXT Conformance Sweep (sessão 2026-09-11) — PROMPT DE RETOMADA
 
 <!-- TOC START -->
