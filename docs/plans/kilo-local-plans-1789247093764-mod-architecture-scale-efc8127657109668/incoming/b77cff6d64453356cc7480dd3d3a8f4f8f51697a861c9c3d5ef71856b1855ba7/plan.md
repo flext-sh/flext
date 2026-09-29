@@ -32,9 +32,9 @@ consolidator.py. Referencias arquivo:linha do checkout atual.
 2. VAZIO DE TRANSFORM: class_nesting_cst.py:39-111 so move ClassDef top-level para
    dentro de um owner. Nao existe: extracao de classe aninhada (hoist para fora),
    achatamento de wrapper com dados com rebinding X.Dbt.Y -> X.Y, nem remocao de alias
-   em arquivo handwritten (semantic_apply.py:65-70 filtra ban-compat-alias por file.name
-   == api.py). O piloto ADR-014 (flext-dbt-oracle-wms) exige exatamente esses tres
-   transforms; sem eles, ou o desvio fica invisivel (sem regra) ou o circuito falha
+   em arquivo handwritten (semantic_apply.py:65-70 filtra ban-compat-alias por
+   file.name == api.py). O piloto ADR-014 (flext-dbt-oracle-wms) exige exatamente esses
+   tres transforms; sem eles, ou o desvio fica invisivel (sem regra) ou o circuito falha
    "made no progress" sem causa (com regra detection-only).
 3. GERADOS EXPOSTOS: project_discovery.py:89-110 monta targets ast-grep como
    project/scan_dirs + project.glob("\*.py") sem exclusao AUTOGEN; o apply
@@ -222,7 +222,8 @@ quality gate, tabelas de \_constants sem leitor.
     namespace por projeto; refactor census = objetos Rope com kinds/duplicatas).
     Consolidacao ou manutencao decidida em T2 com evidencia de consumers (search-first);
     nao pre-decidida aqui.
-  - Mixins _census\_\_ (14 arquivos, consumer unico FlextInfraRefactorCensus) e parts
+  - Mixins
+    _census\_\_ (14 arquivos, consumer unico FlextInfraRefactorCensus) e parts
     *lazy_init*_: padrao canonico de part-splitting da lei de LOC; fora do escopo de
     remocao.
   - `consolidator.py` existe (verbo consolidate); referencia anterior do plano mantida.

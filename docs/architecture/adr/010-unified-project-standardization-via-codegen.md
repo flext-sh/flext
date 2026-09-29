@@ -1,7 +1,7 @@
 # ADR-010 — Unified project standardization (Make, scripts, tests, structure) via flext-infra codegen and flext-tests
 
-> **Amended by ADR-018** (generator declarations): its filename-to-letter tables,
-> closed folder lists and advisory-gate lists are superseded; see
+> **Amended by ADR-018** (generator declarations): its filename-to-letter tables, closed
+> folder lists and advisory-gate lists are superseded; see
 > [ADR-018](018-generator-declarations.md).
 
 <!-- TOC START -->
@@ -148,9 +148,9 @@ running app's namespace.
 - Normal settings fields keep the per-subclass namespaced pattern (each project reads
   its own `settings` singleton and its own namespaced sections).
 - The directory properties (`cache_dir`, `work_dir`, `data_dir`, `config_dir`,
-  `state_dir`, `runtime_dir`) are NOT per-subclass. They ALWAYS resolve from the **root
-  project namespace held by the settings root singleton** — a single shared source —
-  never from the `env_prefix` of the subclass that happens to access them. A
+  `state_dir`, `runtime_dir`) are NOT per-subclass. They ALWAYS resolve from the
+  **root project namespace held by the settings root singleton** — a single shared
+  source — never from the `env_prefix` of the subclass that happens to access them. A
   `flext-cli`/`flext-meltano`/`flext-core` call under application X therefore returns
   `~/.<root>/X/…`; a library MUST NEVER use its own name for the directory segment.
 

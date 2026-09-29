@@ -97,9 +97,10 @@ adjudicada) de todo o trabalho paralelo incompleto.
 
 ### Repositório (censo 2026-09-15)
 
-- Superprojetos e 31 submódulos em `0.12.0-dev`, exceto **flext-infra em
-  `fix/workspace-hygiene-0.12.0`** (lane não mesclada, commits: 712624c9d, 5eb47cd21,
-  4e3c01128 + WIP não commitado em conform.py/codegen.yaml/templates).
+- Superprojetos e 31 submódulos em `0.12.0-dev`, exceto
+  **flext-infra em `fix/workspace-hygiene-0.12.0`** (lane não mesclada, commits:
+  712624c9d, 5eb47cd21, 4e3c01128 + WIP não commitado em
+  conform.py/codegen.yaml/templates).
 - Todos os 32 repositórios com WIP sujo (projeções geradas + config beads + Makefile
   uv-owner rework + exemplos/tests hand-edits). Gitlinks dos 31 submódulos avançados vs.
   ponteiro do superprojeto.

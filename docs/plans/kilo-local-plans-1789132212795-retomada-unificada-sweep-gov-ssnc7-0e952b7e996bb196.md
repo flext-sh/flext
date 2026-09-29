@@ -32,25 +32,26 @@
 > locais/remotas, bloqueios) com atualização completa; F1 grava workspaces/worktrees do
 > projeto + subprojetos em branches remotas + PRs e REMOVE do host; rigs agents/ai-hub
 > ficam na posição da integração remota; cria worktree dedicada; fases seguintes
-> executam a cadeia. · 13:26Z — Resultado da F0 = este plano codificado como **ÉPICO no
-> bd**, com **uma bead por fase** ligada ao épico, todas com **todos os critérios que
-> `bd lint` exige**; e na própria F0, **correlacionar TODAS as beads abertas absorvidas
-> por este plano — inclusive deferred, claimed (in_progress) e blocked** — com caminho
-> de desbloqueio registrado; **autonomia total** para levar o plano até o fim sem nenhum
-> bloqueio ou desculpa. · 13:29Z — (i) o plano ADMITE que o **bd está sempre funcional
-> por linha de comando**: falha do bd = defeito reparado NO DONO no mesmo turno, nunca
-> bloqueio ou desculpa; (ii) o **gas-city NÃO pode ser reativado** — coordenação
-> exclusivamente via bd + git + PRs. · 13:54Z — **Nenhuma fase termina sem**: propagação
-> CONCLUÍDA para as branches de integração dos projetos/subprojetos do seu blast radius
-> (do épico: TODOS), tudo **100% green e aplicado em runtime real sem falhas ou
-> warning**, e **beads completamente fechadas**. · 13:56Z — Além disso, nenhuma fase
-> termina sem **toda a documentação atualizada** e **toda a parte projetada regerada**
-> pelo gerador dono (`make gen`, ×2 idempotente — projeções nunca hand-editadas). Itens
-> incorporados à barra §3.0 (agora 5 itens). · Autonomia 13:26Z **converte os gates
-> A1/A2/A3 em gates de REGISTRO** (decisão + evidência na bead da fase antes de
-> avançar). Só decisão NOVA, destrutiva e fora do escopo reabre pergunta ao operador.
-> Pergunta sobre `~/flext` dispensada — decisão registrada em F1.1. · 14:45Z —
-> **REESCOPO: o trabalho hands-on se resume a FLEXT.** F0.4-F0.6 (gravar/pousar
+> executam a cadeia. · 13:26Z — Resultado da F0 = este plano codificado como
+> **ÉPICO no bd**, com **uma bead por fase** ligada ao épico, todas com
+> **todos os critérios que `bd lint` exige**; e na própria F0,
+> **correlacionar TODAS as beads abertas absorvidas por este plano — inclusive deferred, claimed (in_progress) e blocked**
+> — com caminho de desbloqueio registrado; **autonomia total** para levar o plano até o
+> fim sem nenhum bloqueio ou desculpa. · 13:29Z — (i) o plano ADMITE que o
+> **bd está sempre funcional por linha de comando**: falha do bd = defeito reparado NO
+> DONO no mesmo turno, nunca bloqueio ou desculpa; (ii) o
+> **gas-city NÃO pode ser reativado** — coordenação exclusivamente via bd + git + PRs. ·
+> 13:54Z — **Nenhuma fase termina sem**: propagação CONCLUÍDA para as branches de
+> integração dos projetos/subprojetos do seu blast radius (do épico: TODOS), tudo
+> **100% green e aplicado em runtime real sem falhas ou warning**, e
+> **beads completamente fechadas**. · 13:56Z — Além disso, nenhuma fase termina sem
+> **toda a documentação atualizada** e **toda a parte projetada regerada** pelo gerador
+> dono (`make gen`, ×2 idempotente — projeções nunca hand-editadas). Itens incorporados
+> à barra §3.0 (agora 5 itens). · Autonomia 13:26Z
+> **converte os gates A1/A2/A3 em gates de REGISTRO** (decisão + evidência na bead da
+> fase antes de avançar). Só decisão NOVA, destrutiva e fora do escopo reabre pergunta
+> ao operador. Pergunta sobre `~/flext` dispensada — decisão registrada em F1.1. ·
+> 14:45Z — **REESCOPO: o trabalho hands-on se resume a FLEXT.** F0.4-F0.6 (gravar/pousar
 > ai-hub+agents, fix regra 17 na fonte ai-hub) NÃO executam nesta sessão — permanecem
 > como ROTAS registradas na correlação para os atores donos; edit feito em
 > `ai-hub/UNIVERSAL_CORE.md` foi revertido (tree limpa). F0 fecha com o entregável flext
@@ -134,8 +135,8 @@ env -u BEADS_DOLT_SERVER_DATABASE bd lint # ZERO issues antes de sair da F0
    executa + rota: `absorvida-em:F<n>`, `superseded-by:<fase>` (com evidência) ou
    `unblock:<ação concreta>`.
 3. Beads deferred/blocked SEM rota = violação de F0: recebem rota ou são
-   superseded/closed com evidência no mesmo turno. Meta: **zero beads órfãs, zero
-   bloqueios sem dono** no fim da F0.
+   superseded/closed com evidência no mesmo turno. Meta:
+   **zero beads órfãs, zero bloqueios sem dono** no fim da F0.
 4. Candidatas conhecidas (revalidar no censo): sweep
    `vo335/3cabz/2h0un/9wwed/gxgqp/cpkk/f73ii` + `5k9r7` (claimed) + família do ator
    `1wjg1/y3qpq.*/uuhc4/38p39/2wjm/ywet` (absorção pós-pouso) · gov `ssnc7` +
@@ -160,10 +161,10 @@ blast radius dela
    do umbrella re-rollados aos tips de integração (quando submódulo mudou); pins
    `uv.lock` consistentes; TODOs/planos vivos espelhados.
 2. **100% green, zero warning, no SHA INTEGRADO** (nunca local-green): `make gen` ×2
-   byte-idêntico + `make check` + `make test` = exit 0 com **zero falha, zero warning,
-   zero skip silencioso, saída decisiva** (lei: warning/saída vazia/tool ausente = RED;
-   nunca normalizado nem suprimido; teste que quebra com config legítima = defeito do
-   teste).
+   byte-idêntico + `make check` + `make test` = exit 0 com
+   **zero falha, zero warning, zero skip silencioso, saída decisiva** (lei:
+   warning/saída vazia/tool ausente = RED; nunca normalizado nem suprimido; teste que
+   quebra com config legítima = defeito do teste).
 3. **Runtime real provado**: efeito aplicado e OBSERVADO no runtime canônico do
    workspace real (não sandbox): regen real ×2, gates no ambiente vivo, consumo real
    onde aplicável (runtime precede estático; config editada só está "ativa" com prova de
@@ -173,8 +174,8 @@ blast radius dela
    planos vivos, TODOs, gates markdown — defasagem documental = defeito (bead), nunca
    work-around; (b) TODA superfície PROJETADA regerada pelo GERADOR dono (`make gen`) —
    blocos geridos (ex.: AI-HUB MANAGED UNIVERSAL CORE), api-reference, README, pyproject
-   `[MANAGED]`, templates — com ×2 byte-idêntico provado; **hand-edit de projeção é
-   proibido**: corrige-se a fonte + re-gera.
+   `[MANAGED]`, templates — com ×2 byte-idêntico provado;
+   **hand-edit de projeção é proibido**: corrige-se a fonte + re-gera.
 5. **Beads completamente fechadas**: bead da fase + TODAS as beads ativas do blast
    radius CLOSED com as 4 evidências (estado registrado, git history na integração,
    realidade medida, código integrado); descobertas novas viram bead COM ROTA para fase
@@ -323,10 +324,10 @@ independente + warn→hard aplicado ao vivo; beads
 4. **Varredura runtime real**: `make check/test` no ambiente vivo do umbrella e dos
    repos tocados — 100% green, zero warning, saída decisiva; consumidor (ai-hub)
    operando na tag nova.
-5. **Fechamento do épico (barra §3.0 em escala total)**: beads F0-F5 fechadas + **zero
-   correlacionadas abertas/deferred/blocked sem rota** nos três trackers + `bd lint`
-   zero + estado do host mantido (rigs + worktrees dedicadas) + TODOs/planos/docs dos
-   três mundos espelhando a realidade final.
+5. **Fechamento do épico (barra §3.0 em escala total)**: beads F0-F5 fechadas +
+   **zero correlacionadas abertas/deferred/blocked sem rota** nos três trackers +
+   `bd lint` zero + estado do host mantido (rigs + worktrees dedicadas) +
+   TODOs/planos/docs dos três mundos espelhando a realidade final.
 
 ## 4. Fronteiras de sessão (lotes realistas)
 

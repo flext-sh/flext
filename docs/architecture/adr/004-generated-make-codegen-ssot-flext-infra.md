@@ -72,8 +72,8 @@ performs conformance explicitly; `check` is read-only and `apply` requires.
 The public surface is discovered from the live root `Makefile` with `make help`; that
 inventory (and the per-verb responsibilities `_builtin-help` prints) is the single
 source of truth and is never frozen here or in guides — a frozen copy already drifted
-once (`deps` was replaced by `upg`, and `propagate`, `test-full` and
-`sonarcloud-sync` were added without this list noticing).
+once (`deps` was replaced by `upg`, and `propagate`, `test-full` and `sonarcloud-sync`
+were added without this list noticing).
 
 Every operation maps to exactly one public verb and one canonical handler. Public
 aliases, duplicate verbs, daemon targets, and alternative dispatch routes are invalid.
@@ -86,10 +86,9 @@ ownership, setup logic, generated-target redefinition, and handlers whose verb i
 outside the canonical surface.
 
 The public surface is `help` plus the operational verbs declared by the root `Makefile`
-(`PUBLIC_VERBS`) and accepts no `WHAT`
-selector. The current template still contains internal `_custom_<verb>_<what>` dispatch
-residue; Bead `flext-5fxu6.4.22` owns its removal. That residue is not an accepted
-public contract.
+(`PUBLIC_VERBS`) and accepts no `WHAT` selector. The current template still contains
+internal `_custom_<verb>_<what>` dispatch residue; Bead `flext-5fxu6.4.22` owns its
+removal. That residue is not an accepted public contract.
 
 ### 4. Conformance is deterministic and fail-closed
 

@@ -262,10 +262,10 @@ iniciar a Fase 0.5._
 **Verificação de referência obrigatória antes de declarar dead**: rg do símbolo no
 workspace completo (`~/flext` incluindo todos submodule src/tests/examples/scripts),
 considerar lazy-map (`__init__.py` `build_lazy_import_map` / `_LAZY_IMPORTS`), `__all__`
-exports, facade aliases (`c/t/p/m/u` composition), YAML/config references (rules/_.yml,
-config/_.yaml, sgconfig.yml), Makefile references. Classificar: **SAFE-DELETE
-CANDIDATE** / **NEEDS ADJUDICATION** / **ALIVE**. Se não provável unreferenced → NEEDS
-ADJUDICATION.
+exports, facade aliases (`c/t/p/m/u` composition), YAML/config references
+(rules/_.yml, config/_.yaml, sgconfig.yml), Makefile references. Classificar:
+**SAFE-DELETE CANDIDATE** / **NEEDS ADJUDICATION** / **ALIVE**. Se não provável
+unreferenced → NEEDS ADJUDICATION.
 
 ## Sequencia de implementacao
 

@@ -20,15 +20,15 @@
 
 ## Objetivo e ponto de finalização (HARD STOP)
 
-Concluir a estabilização do ciclo 0.12.0-dev pela causa raiz e **PUBLICAR a versão final
-nos tips dos projetos afetados**. A sessão termina quando:
+Concluir a estabilização do ciclo 0.12.0-dev pela causa raiz e
+**PUBLICAR a versão final nos tips dos projetos afetados**. A sessão termina quando:
 
 1. Todos os gates obrigatórios verdes ×2 consecutivos (idempotência) nos escopos
-   afetados: `make setup/gen/fix/fmt` exit 0; `make check` com Ruff/Mypy/Pyright/Pyrefly
-   = 0 erros (barra de aceite do operador registrada no handoff: gates custom podem
-   ficar vermelhos com evidência explícita); `make test` verde ou com receipt de timeout
-   de suíte documentado (defeito conhecido flext-infra, não bloqueia publicação —
-   handoff §"Última suíte concluída").
+   afetados: `make setup/gen/fix/fmt` exit 0; `make check` com
+   Ruff/Mypy/Pyright/Pyrefly = 0 erros (barra de aceite do operador registrada no
+   handoff: gates custom podem ficar vermelhos com evidência explícita); `make test`
+   verde ou com receipt de timeout de suíte documentado (defeito conhecido flext-infra,
+   não bloqueia publicação — handoff §"Última suíte concluída").
 2. Stubs, fallbacks, silenciamento de erros (`except: pass/return None` como lógica,
    `# type: ignore`/`# noqa` sem justificativa, defaults silenciosos,
    try/except-fallback) exterminados nos escopos varridos, comprovados pelos detectores
