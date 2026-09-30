@@ -1,6 +1,6 @@
 > **HISTORICAL — dated evidence, not live authority.** Point-in-time record
-> (2026-09-11). PR/bead/branch states cited below may have changed; verify against
-> the live tracker (`bd` / `gh`) before relying on anything here.
+> (2026-09-11). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
 
 # HANDOFF — flext-gov program session 2026-09-11 (reinicio completo)
 

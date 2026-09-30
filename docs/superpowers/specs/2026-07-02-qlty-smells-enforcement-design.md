@@ -26,10 +26,10 @@ boolean-logic 17). Hoje: zero integração qlty (só `parse_smells.py` ad-hoc na
 todas as regras ruff de complexidade globalmente ignoradas no SSoT (`tool_config.yml`),
 nenhuma métrica de função no flext-infra.
 
-Objetivo: cada tipo de smell vira violação de arquitetura FLEXT com **detecção
-totalmente automática** (flext-core enforcement runtime + flext-infra gate), **warnings
-não-supressíveis para TODOS os tipos, SEMPRE**, com solução FLEXT-law por tipo
-(MRO/OO/YAGNI/KISS/SOLID/CA/DI/PEP8/Py3.13/Pydantic2). Detecção via introspecção
+Objetivo: cada tipo de smell vira violação de arquitetura FLEXT com
+**detecção totalmente automática** (flext-core enforcement runtime + flext-infra gate),
+**warnings não-supressíveis para TODOS os tipos, SEMPRE**, com solução FLEXT-law por
+tipo (MRO/OO/YAGNI/KISS/SOLID/CA/DI/PEP8/Py3.13/Pydantic2). Detecção via introspecção
 beartype-style (runtime) + SARIF do scanner Rust qlty (gate) — zero walkers re/ast
 artesanais. Sem aumento de erro de lint; testes 100% verdes.
 
@@ -118,9 +118,10 @@ artesanais. Sem aumento de erro de lint; testes 100% verdes.
   `_models/_enforcement/_base.py:83-93`) +
   `EnforcementSmellSource(kind, smell, threshold)` (`_sources.py`) + braço na union
   (`_catalog.py:22-31`). NOVA part `flextconstantsenforcementcatalogrows_part_05.py`
-  (via make gen) com `SMELL_ROWS` 7 rows ENFORCE-068..074; **description/notes
-  construídos a partir de `ENFORCEMENT_RULES_TEXT[tag]`** (SSOT, sem duplicar texto).
-  ENFORCE-067 vai em `BEARTYPE_ROWS` (part_04, headroom OK) — mesmo batch do binding.
+  (via make gen) com `SMELL_ROWS` 7 rows ENFORCE-068..074;
+  **description/notes construídos a partir de `ENFORCEMENT_RULES_TEXT[tag]`** (SSOT, sem
+  duplicar texto). ENFORCE-067 vai em `BEARTYPE_ROWS` (part_04, headroom OK) — mesmo
+  batch do binding.
 - `build_canonical_catalog` (`enforcement_part_04.py`): comprehension `smell_specs`
   sobre `c.SMELL_ROWS`.
 
@@ -172,9 +173,9 @@ CODE_SMELL (warning sempre carrega ENFORCE-NNN + anchor + Fix).
 - **NOVO** `gates/smells.py` (~95 LOC, template loc_cap.py): `FlextInfraSmellsGate` —
   `gate_id="smells"`, `can_fix=False`.
   - Resolver binário explícito: `shutil.which("qlty")` + fallback
-    `Path.home()/".qlty/bin/qlty"` (constante). **Ausência = Issue visível severity
-    NOTE/ERROR, nunca false-green** (base_gate.\_run mascara spawn-failure como exit
-    1/stdout vazio — tratar).
+    `Path.home()/".qlty/bin/qlty"` (constante).
+    **Ausência = Issue visível severity NOTE/ERROR, nunca false-green** (base_gate.\_run
+    mascara spawn-failure como exit 1/stdout vazio — tratar).
   - cwd = workspace root (config SSOT em `<workspace>/.qlty/`; projetos são submodules)
     — novo hook template `_check_cwd()` em `base_gate.py` (+7 LOC, default project_dir,
     zero mudança nos 10 gates existentes); comando
@@ -185,8 +186,8 @@ CODE_SMELL (warning sempre carrega ENFORCE-NNN + anchor + Fix).
     prefix-stripped; mensagem enriquecida =
     `"{sarif_text} — {problem}. Fix: {fix} [ENFORCE-NNN §anchor]"` via
     `c.Infra.SMELLS_RULE_TAGS` (ruleId→tag) +
-    `from flext_core import c as c; c.ENFORCEMENT_RULES_TEXT[tag]` — **SSOT de textos =
-    flext-core, infra só mapeia** (drift test).
+    `from flext_core import c as c; c.ENFORCEMENT_RULES_TEXT[tag]` —
+    **SSOT de textos = flext-core, infra só mapeia** (drift test).
   - **"Todos, sempre":** após parse,
     `warnings.warn(issue.formatted, FlextSmellViolation, stacklevel=2)` por finding —
     warnings emitidos em TODA execução do gate, independente do modo.
@@ -198,10 +199,10 @@ CODE_SMELL (warning sempre carrega ENFORCE-NNN + anchor + Fix).
   (MappingProxyType 8 rows); row
   `SARIF_TOOL_INFO["smells"] = ("Qlty Smells", "https://docs.qlty.sh/analysis/smells")`.
 - Wiring: import + row em `GATE_CLASSES`; `make gen` p/ export maps; `base.mk` —
-  adicionar `smells` ao allowlist CHECK_GATES (L293-294), help (L226) **e ao default
-  gate string (L298)** — detecção automática em todo `make check`/CI desde já (exit 0 em
-  WARN). Relatórios por tipo grátis via `.reports/check/check-report.{md,sarif}`
-  (agrupamento por `issue.code` já existe).
+  adicionar `smells` ao allowlist CHECK_GATES (L293-294), help (L226)
+  **e ao default gate string (L298)** — detecção automática em todo `make check`/CI
+  desde já (exit 0 em WARN). Relatórios por tipo grátis via
+  `.reports/check/check-report.{md,sarif}` (agrupamento por `issue.code` já existe).
 - `.qlty/qlty.toml`: **SEM excludes de scaffolding** (todos, sempre — tudo reportado),
   sem override de thresholds (baseline 1386 = defaults). Raiz-causa do scaffolding = 1
   bead de centralização no codegen.

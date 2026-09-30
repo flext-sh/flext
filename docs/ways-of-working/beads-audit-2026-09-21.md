@@ -1,6 +1,6 @@
 > **HISTORICAL — dated evidence, not live authority.** Point-in-time record
-> (2026-09-21). PR/bead/branch states cited below may have changed; verify against
-> the live tracker (`bd` / `gh`) before relying on anything here.
+> (2026-09-21). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
 
 # Beads Audit & Reorganization — 0.12 Conformance Campaign
 
