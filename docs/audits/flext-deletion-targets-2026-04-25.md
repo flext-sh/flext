@@ -41,8 +41,8 @@ concrete violation lists:
 | 4   | `flext-target-oracle-wms/tests/integration/test_oracle.py` | `orjson`                                                   |
 | 5   | `flext-target-oracle-wms/tests/unit/test_workflow.py`      | `orjson`                                                   |
 
-**Phase 3 action** : route every banned-lib import through the appropriate `flext-core`
-facade ( `u.Yaml.*` , `u.Json.*` , `m.Settings` ). Per AGENTS.md §2.7
+**Phase 3 action** : route every banned-lib import through the appropriate
+`flext-core` facade ( `u.Yaml.*` , `u.Json.*` , `m.Settings` ). Per AGENTS.md §2.7
 abstraction-boundary law.
 
 Source: `/tmp/phase2-tier-whitelist-violations.txt`. Re-run via:
@@ -178,10 +178,10 @@ project / one module at a time) — which is the design intent.
 ## Section 3 — Service-responsibility duplicates
 
 **Deferred to Phase 4** ( `flext-infra Unified Execution Reorganization` ). Section 3
-requires the ownership-mapping audit in Task 4.1, which is BLOCKING on user confirmation
-per the plan. Capturing it here would prejudge ownership decisions across `flext-core` ,
-`flext-cli` , `flext-infra` , `flext-quality` , `flext-meltano` that the user must
-approve.
+requires the ownership-mapping audit in Task 4.1, which is BLOCKING on user
+confirmation per the plan. Capturing it here would prejudge ownership decisions across
+`flext-core` , `flext-cli` , `flext-infra` , `flext-quality` , `flext-meltano` that the
+user must approve.
 
 The Phase 4 audit produces the canonical "concern → owner / duplicate / action" table at
 `docs/architecture/unified-execution-audit.md` .
@@ -205,11 +205,12 @@ decomposition candidates — each entry is one refactor target:
 **Phase 3 action** : each entry is a self-contained decomposition. Per the user's strict
 reuse directive ( `feedback_strict_ssot_dry_yagni_rootmost.md` ), the decomposition MUST
 consume existing primitives ( `FlextInfraUtilitiesProtectedEdit` ,
-`FlextInfraRefactorSafetyManager` , `u.Infra.projects()` , `u.Infra.iter_matching_files`
-, etc.) rather than introducing new helpers. Where two methods share a sub-routine,
-extract the shared piece to flext-core or flext-infra `_utilities/` (most-root
-namespace) and consume it from both — eliminating the duplication that drives the high
-complexity.
+`FlextInfraRefactorSafetyManager` , `u.Infra.projects()` ,
+`u.Infra.iter_matching_files` , etc.) rather than introducing new helpers. Where two
+methods share a sub-routine, extract the shared piece to flext-core or flext-infra
+`_utilities/` (most-root namespace) and consume it from both — eliminating the
+duplication that drives the high complexity.
+and consume it from both — eliminating the duplication that drives the high complexity.
 
 ## Bugs surfaced during audit (informational)
 

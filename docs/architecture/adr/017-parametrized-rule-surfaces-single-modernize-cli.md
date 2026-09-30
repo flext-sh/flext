@@ -38,7 +38,7 @@ nor wheel discovery was validated by this reconciliation.
 ## Context
 
 Modernization policy was scattered: ast-grep rules inside the Python package
-(`src/flext_infra/codemod/`), sed-by-list rules in `text_rules.yml`, accessor renames in
+(`src/flext_infra/codemod/`), sed-by-list rules in the legacy text-rules YAML file, accessor renames in
 a flext-core catalog, and several Python rewrite engines (re/ast/libcst/tokenize) with
 embedded policy. Repo-root config trees are invisible to installed distributions and
 wheels, so external consumers cannot inherit fleet rules.
