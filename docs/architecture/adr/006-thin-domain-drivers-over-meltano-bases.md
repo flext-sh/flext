@@ -49,7 +49,11 @@ models, §3a JSON is Pydantic 2-way, §1.5 no duplicated declarations across pro
 
 ## Context
 
-The Singer/dbt integration projects ( `flext-(dbt|tap|target)-<domain>` ) are meant to be **thin domain drivers**: flext-meltano owns the reusable dbt/singer/tap/target machinery in FLEXT form, the domain **action library** (e.g. `flext-db-oracle` ) owns the connection/execution contract, and the integration project should declare _almost nothing_ — only the one domain hook its base asks for.
+The Singer/dbt integration projects ( `flext-(dbt|tap|target)-<domain>` ) are meant to
+be **thin domain drivers**: flext-meltano owns the reusable dbt/singer/tap/target
+machinery in FLEXT form, the domain **action library** (e.g. `flext-db-oracle` ) owns
+the connection/execution contract, and the integration project should declare _almost
+nothing_ — only the one domain hook its base asks for.
 
 The current pilot trio does the opposite. Verified 2026-07-10 (three explore passes +
 
