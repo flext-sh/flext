@@ -153,8 +153,9 @@ checkpoint (CI verde, PR #668, switch ci-matrix, dispatch cd-infra, fechamento).
 
 ## Critério de Done
 
-1. `make setup/gen/check/test` verde no root (full fleet) e no flext-infra — **projetado
-   pelo gerador**, zero hand-edit residual (diff `git status` limpo em pyprojects).
+1. `make setup/gen/check/test` verde no root (full fleet) e no flext-infra —
+   **projetado pelo gerador**, zero hand-edit residual (diff `git status` limpo em
+   pyprojects).
 2. Deps resolvidas pelo SSOT: structlog `>=25.5.0,<27` e click `>=8.3.3` derivados de
    `config/codegen.yaml`, com fixed-point de gen.
 3. PR #668 fechado (merged/absorvido) com CVI verde re-executado no SHA merged.

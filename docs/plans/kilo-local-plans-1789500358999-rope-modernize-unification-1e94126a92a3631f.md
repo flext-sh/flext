@@ -33,13 +33,13 @@
 
 <!-- TOC END -->
 
-> **Status: EM EXECUÇÃO** desde 2026-09-15T22:45Z. Ordem executada do começo; **ponto de
-> controle ao fim de cada fase** = evidência de gate (comando, exit, contagens) +
-> checkpoint no board + commit escopado na lane. Base de trabalho: worktree COMPLETA do
-> superprojeto `~/flext-worktrees/rope-modernize` > [feature/rope-modernize],
-> `make setup` após branch correto; TODOS os projetos em lanes `feature/rope-modernize`
-> (31/31) com `0.12.0-dev` local na tip da origin; sync SEMPRE por merge `--no-ff` por
-> projeto (nunca rebase/reset).
+> **Status: EM EXECUÇÃO** desde 2026-09-15T22:45Z. Ordem executada do começo;
+> **ponto de controle ao fim de cada fase** = evidência de gate (comando, exit,
+> contagens) + checkpoint no board + commit escopado na lane. Base de trabalho: worktree
+> COMPLETA do superprojeto `~/flext-worktrees/rope-modernize` >
+> [feature/rope-modernize], `make setup` após branch correto; TODOS os projetos em lanes
+> `feature/rope-modernize` (31/31) com `0.12.0-dev` local na tip da origin; sync SEMPRE
+> por merge `--no-ff` por projeto (nunca rebase/reset).
 
 ## AUTO-CRÍTICA E PROTOCOLO CORRIGIDO (2026-09-16T02:30Z — obrigatório em todo ciclo)
 
@@ -143,14 +143,14 @@ de dual-writer no journal é impossível por construção.
   épico).
 - **E6** Superproject: adotar 5 lanes (preserve-commit WIP → merge --no-ff)
   - configdict-owner; atualizar pins; push.
-- **E7** ~~Ciclo completo por repo (PR→0.12.0-dev)~~ **SUBSTITUÍDO pelo operador
-  (2026-09-16T12:20Z):** a tip `0.12.0-dev` passa a ser conduzida por OUTRO agente
-  (estabilização). Meu papel: **UNIFICADOR/ABSORVEDOR** — (a) unificar nesta lane TODAS
-  as PRs/branches/worktrees/WIPs pendentes e paralelas relativas a `~/flext/`; (b) puxar
-  CONTINUAMENTE a tip `0.12.0-dev` via `git merge --no-ff origin/0.12.0-dev` na minha
-  worktree dedicada a cada ciclo, adotando o trabalho do agente estabilizador
-  (fix-forward); (c) manter tudo verde e poussado na lane para que a integração aconteça
-  pelo agente de estabilização.
+- **E7** ~~Ciclo completo por repo (PR→0.12.0-dev)~~
+  **SUBSTITUÍDO pelo operador (2026-09-16T12:20Z):** a tip `0.12.0-dev` passa a ser
+  conduzida por OUTRO agente (estabilização). Meu papel: **UNIFICADOR/ABSORVEDOR** — (a)
+  unificar nesta lane TODAS as PRs/branches/worktrees/WIPs pendentes e paralelas
+  relativas a `~/flext/`; (b) puxar CONTINUAMENTE a tip `0.12.0-dev` via
+  `git merge --no-ff origin/0.12.0-dev` na minha worktree dedicada a cada ciclo,
+  adotando o trabalho do agente estabilizador (fix-forward); (c) manter tudo verde e
+  poussado na lane para que a integração aconteça pelo agente de estabilização.
 - **E8** Débito pyrefly (flext-1x66z: \_conform 44 já em correção pela adoção da taxa
   nova, safety 4 = resolução cross-package do stub — reavaliar pós-E4) + waves W
   restantes do programa.
@@ -159,15 +159,15 @@ de dual-writer no journal é impossível por construção.
 
 (2026-09-16T12:20Z)
 
-O plano v4 (engine rope-gen + LOC-cap + fechamento 0.12.0; supersede de 3) é **absorvido
-neste programa** como linha de execução paralela — decisões herdadas e válidas: render
-purity (`render = f(SSOT, templates, PINS)`), rope dentro do gen (um motor, dois modos),
-init strict/total (GEN-W001..W005, GEN-E001), resiliência transacional input-CAS,
-rules-as-data, cobaias (cosmos-docgen → agents/), landing via PR +
-`merge --admin --merge` (autorização operador registrada), exemption lint só escopada
-com OPERATOR-AUTHORIZED. Lições operacionais v4 (§0) incorporadas ao protocolo E (batch
-realista, commit incremental imediato, board+quiescência antes de gen, paths explícitos,
-gen é o ÚNICO escritor de projeções).
+O plano v4 (engine rope-gen + LOC-cap + fechamento 0.12.0; supersede de 3) é
+**absorvido neste programa** como linha de execução paralela — decisões herdadas e
+válidas: render purity (`render = f(SSOT, templates, PINS)`), rope dentro do gen (um
+motor, dois modos), init strict/total (GEN-W001..W005, GEN-E001), resiliência
+transacional input-CAS, rules-as-data, cobaias (cosmos-docgen → agents/), landing via
+PR + `merge --admin --merge` (autorização operador registrada), exemption lint só
+escopada com OPERATOR-AUTHORIZED. Lições operacionais v4 (§0) incorporadas ao protocolo
+E (batch realista, commit incremental imediato, board+quiescência antes de gen, paths
+explícitos, gen é o ÚNICO escritor de projeções).
 
 **Estado herdado do v4 (2026-09-15T17:55Z)** — reconciliar no E-ABS:
 
@@ -324,12 +324,11 @@ dos tipos — não é o default.
   `class_nesting_cst,class_nesting_references}.py`, `transformers/mro_remover.py`,
   `refactor/project_alias_migrator.py`) + rascunho `_lazy_init_import_layers.py`; `ast`
   **37–39** (contagem fechada pela varredura dirigida da C-ex term; transformers:
-  pydantic*modernizer, typing_unifier, compatibility_alias, open_encoding,
-  dataclass_modelizer, \_rewrite, smells/*; detectors: silent*failure,
-  deferred_self_reference, consumer_import_violations; gates: duplication,
-  abstraction_boundary, namespace_validator; \_utilities/*\_ast.py e afins;
-  codegen/\_lazy_init_planner_collision.py); re (transformers/pattern,
-  hardcoded_version); tokenize (\_accessor_rewrite.py).
+  pydantic*modernizer, typing_unifier, compatibility_alias, open_encoding, dataclass_modelizer, \_rewrite,
+  smells/*; detectors:
+  silent*failure, deferred_self_reference, consumer_import_violations; gates: duplication, abstraction_boundary, namespace_validator;
+  \_utilities/*\_ast.py e afins; codegen/\_lazy_init_planner_collision.py); re
+  (transformers/pattern, hardcoded_version); tokenize (\_accessor_rewrite.py).
 - **Cobaia ai-hub** (`dev`, WIP ~15 arquivos de outros agentes): 6 bases locais em
   `ai_hub/_models/base.py` → 482 refs / 66 arquivos (docstring declara o workaround); 37
   dataclasses mapeadas (6 → `m.FrozenModel`, 30 skips catalogados); 3 accessors soltos
@@ -394,14 +393,14 @@ sobrevive.
   `config/rules/ast/` (patterns `*.yml` + fixtures `tests/` migrados de
   `src/flext_infra/codemod/{rules,utils,tests}`; diretório antigo DELETADO após
   migração), `config/rules/rope/` (violation models, defaults por fase). Renames
-  específicos de projeto ficam no projeto (`ai-hub/ast-grep-rules/`). **Constraint de
-  empacotamento (evidência `codemod_rules.py`)**: providers de frota são descobertos via
-  `find_spec(...).submodule_search_locations` + `codemod/sgconfig.yml` NO pacote (linhas
-  216–222) e `ruleDirs` não pode escapar da raiz do provider (linhas 336–339). Repo-root
-  `config/rules/` fora do pacote é INVISÍVEL para alvos externos (ai-hub) e para wheels.
-  Composição correta (Option C): (a) `config/rules/` repo-root = SSOT; (b) pyproject
-  force-include mapeia `config/rules/` → dentro do wheel como dados da distribuição; (c)
-  `_provider_configs` passa a resolver o config do provider via
+  específicos de projeto ficam no projeto (`ai-hub/ast-grep-rules/`).
+  **Constraint de empacotamento (evidência `codemod_rules.py`)**: providers de frota são
+  descobertos via `find_spec(...).submodule_search_locations` + `codemod/sgconfig.yml`
+  NO pacote (linhas 216–222) e `ruleDirs` não pode escapar da raiz do provider (linhas
+  336–339). Repo-root `config/rules/` fora do pacote é INVISÍVEL para alvos externos
+  (ai-hub) e para wheels. Composição correta (Option C): (a) `config/rules/` repo-root =
+  SSOT; (b) pyproject force-include mapeia `config/rules/` → dentro do wheel como dados
+  da distribuição; (c) `_provider_configs` passa a resolver o config do provider via
   `Distribution.locate_file("config/rules/ast")` (editável resolve o checkout; wheel
   resolve o dado incluído) com jail de `ruleDirs` reancorado à raiz
   `config/rules/<engine>/` do provider; (d) teste de descoberta a partir de raiz
@@ -602,9 +601,9 @@ na mesma wave; ordem: read-only → mutadores)
   smells/boolean_logic, mro_remover (cst), project_alias_migrator (cst), qualified_names
   (cst) → ast-grep rule (mecânico) ou fase rope (semântico); `FlextInfraSourceRewriter`
   deletado quando órfão.
-- **W-detectors/utils**: `*_ast.py`, `*_cst.py`, private\*import\**, class*nesting\**,
-  silent*failure\**, deferred*self_reference\*\*, namespace, codegen_facades,
-  protected_edit_apply, rope_source, rope_imports (resíduo
+- **W-detectors/utils**: `*_ast.py`, `*_cst.py`,
+  private\*import\**, class*nesting\**, silent*failure\**, deferred*self_reference\*\*,
+  namespace, codegen_facades, protected_edit_apply, rope_source, rope_imports (resíduo
   `_referenced_runtime_aliases`), `codegen/_lazy_init_planner_collision.py`.
 - **W-gates**: duplication, abstraction_boundary, namespace_validator →
   ast-grep/rope/beartype mantendo assinatura no `make check`.

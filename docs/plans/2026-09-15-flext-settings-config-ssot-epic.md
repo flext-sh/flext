@@ -1,6 +1,6 @@
 > **HISTORICAL — dated evidence, not live authority.** Point-in-time record
-> (2026-09-15). PR/bead/branch states cited below may have changed; verify against
-> the live tracker (`bd` / `gh`) before relying on anything here.
+> (2026-09-15). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
 
 # Épico — FlextSettings/FlextConfig: contrato de singleton, desempenho e SSOT dos clientes
 
@@ -21,10 +21,10 @@ a partir deste documento (ver comentário em `flext-wjozx`).
 
 ## 1. Motivação e evidência viva
 
-`FlextSettings`/`FlextConfig` são fundações layer-0 **namespaced, herdadas e
-incrementalmente compostas** a cada uso de biblioteca, servidas como singleton em todos
-os módulos (incluindo as fachadas `c,t,p,m,u`). A sessão de 2026-09-15 provou um defeito
-estrutural nesse contrato:
+`FlextSettings`/`FlextConfig` são fundações layer-0
+**namespaced, herdadas e incrementalmente compostas** a cada uso de biblioteca, servidas
+como singleton em todos os módulos (incluindo as fachadas `c,t,p,m,u`). A sessão de
+2026-09-15 provou um defeito estrutural nesse contrato:
 
 - **Intercepção em `__new__`** (`flext-core/src/flext_core/_settings.py:226-238`): com o
   singleton existente, caminhos de alocação do pydantic recebem o objeto cacheado e o

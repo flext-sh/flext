@@ -28,7 +28,7 @@ INVENTÁRIO FRESCO (make check 15:01, ~4200 violações 32/32 FAIL):
 | silent-failure                                | ~12                                                          | except propaga; `r.Fail` só em boundary e/u                   |
 | duplication (jscpd gate)                      | 2 (flext-api async_client)                                   | extermiar clone, um owner                                     |
 | codemod require-future-annotations            | 21 (`_parts/__init__.py` docstring-only, maioria flext-core) | inserir future import pós-docstring                           |
-| DIRENV_CONTRACT `$HOME` vazio                 | 2+                                                           | owner: gate flext-infra (operador) — coordenar, NÃO contornar |
+| DIRENV_CONTRACT `${HOME}` vazio               | 2+                                                           | owner: gate flext-infra (operador) — coordenar, NÃO contornar |
 
 ESTADO DOS AGENTES AO ENCERRAR (worktrees dos membros, NÃO commitado):
 
@@ -50,9 +50,8 @@ ESTADO DOS AGENTES AO ENCERRAR (worktrees dos membros, NÃO commitado):
 3. Causa raiz sempre — inclusive warnings, cosméticos e pré-existentes.
 4. Facade pattern OBRIGATÓRIO: `modulo.py` = pasta `_[modulo]/` (base.py + outros _.py);
    base.py ABSORVE TUDO das classes internas (MRO completa); PROIBIDO
-   `_parts/`/`__part_NN.py`; facade = só `from ._[modulo] import
-   Classes`+ classe MRO vazia;`make gen`gera`**init**` (execução CENTRAL, nunca nos
-   subagentes).
+   `_parts/`/`__part_NN.py`; facade = só `from ._[modulo] import Classes`+ classe MRO
+   vazia;`make gen`gera`**init**` (execução CENTRAL, nunca nos subagentes).
 5. Anti-GOD-module: Single Class Nested flext por módulo; DRY/SOLID/YAGNI/SSOT em
    settings/config/c-t-p-m-u/base/services/api/cli; protocols `p.*` + Pydantic `m.*`
    para tudo; ultra-DRY via c/t/p/m/u (REDUZIR LOC; ≤200 LOC lógicos).

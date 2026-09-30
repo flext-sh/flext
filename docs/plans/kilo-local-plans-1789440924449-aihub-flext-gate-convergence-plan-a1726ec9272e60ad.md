@@ -40,7 +40,7 @@ silenciamento; reuso máximo de `c,t,p,m,u`; SOLID/DRY/YAGNI/SSOT/DI/CA/Pydantic
   `HttpxAsyncClient`/`HttpxResponse`/`HttpxRequestError` indefinidos — refactor em
   curso), `validation.py`, `tests/fixtures/hook_client_runtime.py` (removeu
   `import sys`, deixou usos — F821).
-- **flext-infra**: tip `57ca284c8` (fix $HOME direnv + conform import); WIP sujo
+- **flext-infra**: tip `57ca284c8` (fix ${HOME} direnv + conform import); WIP sujo
   persiste.
 - **hook_client.py (ADR-0018)**: arquivo stdlib-only é exceção declarada; gates sem a
   isenção: silent-failure ×4, boundary ×2 (`sys.exit`/`json`), NS-CONTRACT ×5 (anotações

@@ -37,17 +37,13 @@ models, §3a JSON is Pydantic 2-way, §1.5 no duplicated declarations across pro
 
 ## Context
 
-The Singer/dbt integration projects ( `flext-(dbt|tap|target)-<domain>` ) are meant to
-be **thin domain drivers**: flext-meltano owns the reusable dbt/singer/tap/target
-machinery in FLEXT form, the domain **action library** (e.g. `flext-db-oracle` ) owns
-the connection/execution contract, and the integration project should declare _almost
-nothing_ — only the one domain hook its base asks for.
+The Singer/dbt integration projects ( `flext-(dbt|tap|target)-<domain>` ) are meant to be **thin domain drivers**: flext-meltano owns the reusable dbt/singer/tap/target machinery in FLEXT form, the domain **action library** (e.g. `flext-db-oracle` ) owns the connection/execution contract, and the integration project should declare _almost nothing_ — only the one domain hook its base asks for.
 
 The current pilot trio does the opposite. Verified 2026-07-10 (three explore passes +
 codegraph blast-radius on `connection_profile` ):
 
-- **flext-meltano exposes exactly 3 consumer bases** (no separate "singer" base — singer
-  = tap + target), all subclassing `FlextMeltanoServiceBase(s[t.JsonMapping])`:
+- **flext-meltano exposes exactly 3 consumer bases** (no separate "singer" base —
+  singer = tap + target), all subclassing `FlextMeltanoServiceBase(s[t.JsonMapping])`:
   - `FlextMeltanoDbtServiceBase` — `services/consumer_bases/dbt_service_base.py:32`;
     abstract = `dbt_project_name` + `connection_profile` (`:61-69`); provides
     `run_models/run_tests/compile_models/generate_docs/load_manifest/fetch_models/cli_main`.
@@ -61,9 +57,9 @@ codegraph blast-radius on `connection_profile` ):
   Connection SSOT = `settings.DbOracle.*` (`_settings.py:33-93`), env prefix `ORACLE_`.
   Runtime I/O = `FlextDbOracleApi` / `db_oracle` (`api.py`). Connection lifecycle
   contract = `p.DbOracle.Connection` (`protocols.py:48`). Reusable maps
-  `c.DbOracle.SINGER_TYPE_MAP` + `c.DbOracle.ENV_MAPPING`. There is **no reusable
-  connection-config model** upstream — `m.DbOracle.ConnectionStatus` is runtime
-  _status_, not config.
+  `c.DbOracle.SINGER_TYPE_MAP` + `c.DbOracle.ENV_MAPPING`. There is
+  **no reusable connection-config model** upstream — `m.DbOracle.ConnectionStatus` is
+  runtime _status_, not config.
 
 ### The duplication / anti-patterns (verified, file:line)
 

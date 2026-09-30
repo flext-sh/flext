@@ -22,9 +22,9 @@ ai-hub)
 3. Manter: regras beartype em runtime do flext-core; `make mod` (ast-grep +
    sed-by-list); engine rope.
 4. **Exterminar**: engines de reescrita baseadas em `re`, `ast`, `libcst` e o motor
-   `tokenize` do `accessor-migrate` — regras migram para **rules-as-data
-   parametrizadas** (`src/flext_infra/rules/*.yaml` + rows em `config/*.yaml`; padrão já
-   usado em ai-hub `ast-grep-rules/`).
+   `tokenize` do `accessor-migrate` — regras migram para
+   **rules-as-data parametrizadas** (`src/flext_infra/rules/*.yaml` + rows em
+   `config/*.yaml`; padrão já usado em ai-hub `ast-grep-rules/`).
 5. Piloto: **ai-hub** (`~/ai-hub`), modo fix-forward adopt com agentes paralelos.
 6. Cada incremento termina 100% verde: ruff, pyrefly e coleta pytest do(s) projeto(s)
    tocado(s). Regra raiz identificada por item; se não compor, PARAR e perguntar.

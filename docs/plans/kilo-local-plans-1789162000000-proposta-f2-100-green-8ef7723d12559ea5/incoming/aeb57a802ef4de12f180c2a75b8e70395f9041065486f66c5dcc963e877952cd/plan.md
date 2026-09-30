@@ -70,10 +70,10 @@ estado em voo via PR de absorção com proveniência (padrão #225).
 2. **Render-absorb do PR #225** (1 ciclo, após P1) → CI verde → merge
 3. **P3 B404** (1 dia) → `check` do infra só resta loc-cap
 4. **P2 loc-cap ×5** (3-5 sessões, make mod) → CI 100% verde no infra
-5. **Merge #688 CI-verde** → **P5 cascata** (automatizada) → runtime provado → **F2
-   FECHADA**
-6. **F3 crg** → **P4 ondas de tipagem + F4 piloto** → **F5 propagação universal + tags +
-   épico**
+5. **Merge #688 CI-verde** → **P5 cascata** (automatizada) → runtime provado →
+   **F2 FECHADA**
+6. **F3 crg** → **P4 ondas de tipagem + F4 piloto** →
+   **F5 propagação universal + tags + épico**
 
 Nenhum merge sem CI verde legítimo (sem --admin). Cada item com bead própria, 4
 evidências, gates no SHA merged.

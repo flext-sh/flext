@@ -29,8 +29,8 @@
 - Superproject integration base pushed at `c424043b85`; 32 gitlinks synced; `make gen`
   fleet 32/32 conform (exit 0).
 - `make gen` on the tip: 1432 findings. Census (full gate log):
-  - namespace 1388 (NS-STRUCT-001=309, -002=170, CONTRACT-001=160, -003=117, -004=77,
-    ...; top files: rope_analysis.py 31, promoted/base.py 21, census.py 15) —
+  - namespace 1388 (NS-STRUCT-001=309, -002=170, CONTRACT-001=160, -003=117,
+    -004=77, ...; top files: rope_analysis.py 31, promoted/base.py 21, census.py 15) —
     pre-existing debt exposed by newly-activated gates (owner bead `flext-hkz4p`), NOT a
     regression.
   - runtime-census 292 usages — same class of pre-existing debt.

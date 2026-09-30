@@ -175,18 +175,19 @@ validação runtime → PR → merge --no-ff → gates no merged SHA → runtime
 `_init_template_name` (+`root_package == LAZY_BOOTSTRAP_ROOT_PACKAGE`); commitar
 templates spacing pendentes; estender `lazy_init_bootstrap_package_tests` com `_typings`
 não-bootstrap; probes (ai-hub `_typings` POPULADO; flext_core estático; `import ai_hub`
-OK); lint+tests verdes → PR → merge --no-ff → gates merged SHA → bead crd1y. **G2 FROTA
-INITS**: gen ×2 (2ª no-op) → ~18 `_typings` populados → commit escopado/repo → push →
-smoke import/runtime por membro → bead. **G3 TESTES**: ai-hub → flext → cosmos: triagem
-(real→dono; não-aderente→ REMOVER com registro) até verde; land imediato. **G4
-`..aihub`**: watcher 1s durante gen verde; sem reprodução → pergunta com dados. **G5
-LANES**: 742 reconciliar/merge, 741 reuso-merge, 244/245/246 merge, 225/226/231/235/242
-adopt-or-discard com evidência; worktrees/branches fechadas pós-merge; n8tk7 por lane.
-**G6 F1**: ×2 no-op provas; journal PIN-SHA/lock-repo (fkfmu) + teste de contenção;
-crash-vs-findings (bead+testes). **G7 F2 W3-W7**: receipt único; falha injetada
-reverse-apply vazio; cosmos-docgen ×2 portão; agents_governance. **G8 F3**: sweeps por
-findings (clusters 4–6 subagentes); check exit 0 + test verde por membro. **G9 F4**:
-gitlinks → PRs merged → CI → tag 0.12.0 (verde ×2) → beads fechadas → docs/ADRs/skills.
+OK); lint+tests verdes → PR → merge --no-ff → gates merged SHA → bead crd1y.
+**G2 FROTA INITS**: gen ×2 (2ª no-op) → ~18 `_typings` populados → commit escopado/repo
+→ push → smoke import/runtime por membro → bead. **G3 TESTES**: ai-hub → flext → cosmos:
+triagem (real→dono; não-aderente→ REMOVER com registro) até verde; land imediato.
+**G4 `..aihub`**: watcher 1s durante gen verde; sem reprodução → pergunta com dados.
+**G5 LANES**: 742 reconciliar/merge, 741 reuso-merge, 244/245/246 merge,
+225/226/231/235/242 adopt-or-discard com evidência; worktrees/branches fechadas
+pós-merge; n8tk7 por lane. **G6 F1**: ×2 no-op provas; journal PIN-SHA/lock-repo
+(fkfmu) + teste de contenção; crash-vs-findings (bead+testes). **G7 F2 W3-W7**: receipt
+único; falha injetada reverse-apply vazio; cosmos-docgen ×2 portão; agents_governance.
+**G8 F3**: sweeps por findings (clusters 4–6 subagentes); check exit 0 + test verde por
+membro. **G9 F4**: gitlinks → PRs merged → CI → tag 0.12.0 (verde ×2) → beads fechadas →
+docs/ADRs/skills.
 
 ## 4. Anti-recorrência
 

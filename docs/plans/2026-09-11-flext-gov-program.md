@@ -1,6 +1,6 @@
 > **HISTORICAL — dated evidence, not live authority.** Point-in-time record
-> (2026-09-11). PR/bead/branch states cited below may have changed; verify against
-> the live tracker (`bd` / `gh`) before relying on anything here.
+> (2026-09-11). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
 
 # PLANO — flext-gov: governance rules + gates (2026-09-11) — v2
 
@@ -48,8 +48,8 @@ por tópico: lei de consumo = `docs/standards/consumption-law.md`
 - ADR-015; routing = `docs/GOVERNANCE.md` (linhas, nunca texto duplicado); identidade de
   enforcement = catálogo `flext-core`; motor/gates = `flext-infra`. Fechamento de bead =
   4 evidências: (1) estado registrado, (2) git history na lane de integração, (3)
-  realidade medida (comando/cwd/exit/output), (4) código integrado. **Nenhum bead fecha
-  com WIP não pousado** — lição aplicada ao F1.
+  realidade medida (comando/cwd/exit/output), (4) código integrado.
+  **Nenhum bead fecha com WIP não pousado** — lição aplicada ao F1.
 
 ## Snapshot (_commits_ e estados, 2026-09-11 13:10)
 
@@ -98,7 +98,7 @@ conforme R6 — nada de produtivo passa da lane sem autorização explícita.
 
 Pins vivos (core lane `uv.lock`): flext-infra `rev=0.12.0-dev#bff59228`, flext-cli
 re-resolvido. **Nunca rodar `uv sync` sem
-`UV_PROJECT_ENVIRONMENT=$PWD/.venv VIRTUAL_ENV=$PWD/.venv`** (ver também
+`UV_PROJECT_ENVIRONMENT=${PWD}/.venv VIRTUAL_ENV=${PWD}/.venv`** (ver também
 `~/.agents/rules/flext/flext-venv-hermeticity.md` + `bd remember fleet-venv-hazard`).
 
 ## Lei anti-hardcode (vale TAMBÉM para tests)
@@ -197,8 +197,9 @@ escreve seção própria referenciando R6 com link, sem duplicar texto.
   `SARIF_TOOL_INFO` "budget" + entrada no registry (`workspace_check_gates.py`).
 - Primitivas atômicas `flext-core/src/flext_core/_utilities/files.py`, compostas em
   `utilities.py` (MRO flat); provadas runtime: O_APPEND (linha-atômica) + rename;
-  payload tipado `r[int]` — **lei descoberta: `FlextResult[None]` e payload None são
-  proibidos** (reject na base do Result).
+  payload tipado `r[int]` —
+  **lei descoberta: `FlextResult[None]` e payload None são proibidos** (reject na base
+  do Result).
 
 **Lacunas (produção)**:
 
@@ -294,8 +295,9 @@ não explorava os escopos do `mod` nem o grafo de reviews.
 
 Aprovar (a) execução das ondas com o ciclo canonizado acima (gen→mod→gates→ crg→pouso),
 (b) build/daemon do crg nos tips de integração, e (c) piloto P2 conforme descrito, com
-regime stop: **se P2 não prover RED→GREEN dentro do primeiro ciclo, mantenho warn e
-reporto** — nenhum rollout hard sem aprovação nova.
+regime stop:
+**se P2 não prover RED→GREEN dentro do primeiro ciclo, mantenho warn e reporto** —
+nenhum rollout hard sem aprovação nova.
 
 ## Riscos vivos
 

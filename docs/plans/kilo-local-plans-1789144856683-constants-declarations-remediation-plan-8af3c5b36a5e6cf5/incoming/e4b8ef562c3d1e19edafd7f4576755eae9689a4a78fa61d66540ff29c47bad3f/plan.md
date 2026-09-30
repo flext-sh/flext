@@ -287,8 +287,8 @@ settings/config)
    `_ENV_FILE_*` in `_settings.py`. Owner = `_settings.py` (chain bottom); delete
    `_constants` copies; rewire consumers via `settings.*` (layer-0 consumers import the
    settings owner module).
-2. `ENV_PREFIX` ↔ `app_env_prefix()`: settings owns the derived policy; `c` keeps only
-   a true protocol invariant, if any survives critique.
+2. `ENV_PREFIX` ↔ `app_env_prefix()`: settings owns the derived policy; `c` keeps only a
+   true protocol invariant, if any survives critique.
 3. `_constants/config.py` CONFIG\_\_ defaults: classify via the adjudication table —
    loader-protocol invariants stay in `c` only if no `config/*.yaml` row can vary them;
    configurable ones move to config + typed `_config.py` fields, loader reads
@@ -578,9 +578,9 @@ synced to `983a149b1` (budget-SSOT + strict-typing + lint-green landings absorbe
 - gitignore sections += `*.bak`, `config/build-constraints.txt`, `*aihub-prior*` (LAW1
   data).
 - Tests rewritten: `utilities_release.py` (renderer fixture + gitleaks-only template),
-  `policy_fixture_root_tests.py` (renderer contract, determinism, **projection-absence
-  guard**), `test_release_dag.py` (digests from SSOT helper; policy-snapshot-bytes
-  test).
+  `policy_fixture_root_tests.py` (renderer contract, determinism,
+  **projection-absence guard**), `test_release_dag.py` (digests from SSOT helper;
+  policy-snapshot-bytes test).
 - Lint fixes absorbed: budget test missing `import pytest`; public renames
   `resolve_gate_budgets`/`compose_project_artifact` (private-member-access in tests).
 - Verified green: ruff on touched trees; release+policy fixture tests 16 passed;

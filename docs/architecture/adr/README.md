@@ -26,8 +26,8 @@ candidate; acceptance never proves fleet stability.
 
 - [ADR-001: Railway-Oriented Programming with r[T]](001-railway-oriented-programming.md)
   — **CURRENT IMPLEMENTATION**
-- [ADR-002: v0.13.0 Platform Baseline](002-v0-13-0-platform-baseline.md) — **ACCEPTED
-  TARGET** (forward baseline `0.13.0`)
+- [ADR-002: v0.13.0 Platform Baseline](002-v0-13-0-platform-baseline.md) —
+  **ACCEPTED TARGET** (forward baseline `0.13.0`)
 - [ADR-003: Manifest-owned topology, root workspace, and autonomous Git libraries](003-workspace-tooling-hub-distribution.md)
   — **CURRENT IMPLEMENTATION**
 - [ADR-004: Generated Make and codegen SSOT owned by `flext-infra`](004-generated-make-codegen-ssot-flext-infra.md)
@@ -55,8 +55,8 @@ candidate; acceptance never proves fleet stability.
   distribution/migration acceptance remains unproved)
 - [ADR-018: Generator Declarations Law](018-generator-declarations.md) — **ACCEPTED**
   (operator law 2026-09-20; rule owner: global governance rule
-  `flext/generator-declarations` in the `agents-governance` catalog;
-  phased under `flext-0in0k`)
+  `flext/generator-declarations` in the `agents-governance` catalog; phased under
+  `flext-0in0k`)
 - [ADR-019: Service Contract — Protocol Ports, Explicit Composition Root, Typed Operations](019-service-contract-ports-operations.md)
   — **PROPOSED** (operator-approved plan V8, 2026-09-25; phased under `flext-4jtcb`)
 

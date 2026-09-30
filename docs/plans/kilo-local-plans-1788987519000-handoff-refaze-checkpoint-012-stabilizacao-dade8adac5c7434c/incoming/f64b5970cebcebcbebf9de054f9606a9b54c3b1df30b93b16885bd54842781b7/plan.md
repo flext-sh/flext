@@ -34,12 +34,12 @@ consumidor declara um namespace-model Pydantic aninhado em runtime (`m.BaseModel
 flext-ldif, flext-target-ldif, flext-api (frota:
 `grep -rln model_validator */src/*/_[sl]ettings*.py`). E o único caminho alternativo
 (import `pydantic` direto) é proibido para consumidores por `ENFORCE-070`
-(runtime-census: "owner flext-core"). **flext-core escapa só porque é o dono de
-pydantic** (`from pydantic import model_validator` em
-`flext-core/src/flext_core/_settings.py:36`). → Nenhum padrão consumidor ممکن fecha
-ambos. Ou a regra é alterada no dono (flext-infra), ou a arquitetura de settings dos 13+
-consumidores é reescrita. **Decisão pendente do operador** (falta gravíssima sem ordem
-explícita):
+(runtime-census: "owner flext-core").
+**flext-core escapa só porque é o dono de pydantic**
+(`from pydantic import model_validator` em `flext-core/src/flext_core/_settings.py:36`).
+→ Nenhum padrão consumidor ممکن fecha ambos. Ou a regra é alterada no dono
+(flext-infra), ou a arquitetura de settings dos 13+ consumidores é reescrita.
+**Decisão pendente do operador** (falta gravíssima sem ordem explícita):
 
 - **A) (recomendada)** Carve-out em `_reverse_import`: owner rank ≤ 1 (settings/config)
   permite runtime-import das facades de DECLARAÇÃO `m`/`u` (`t` continua
@@ -81,8 +81,8 @@ flext-h2ffh/flext-1wjg1.16.34/flext-ct0mo/flext-nnquz.
 (bead `flext-482u9`, completa até `p.` sem alias), `_settings.py` corrigido para o
 padrão canônico (`from flext_api import m, t, u` via fachada raiz + `t.MappingKV` +
 validador com `t.JsonValue`; runtime comprovado `settings.Api.timeout → 30.0`),
-`make fix` VERDE lá. Regra fundamental: **nunca `reset`/`checkout`/`clean`/`stash` de
-trabalho alheio — fix-forward apenas**.
+`make fix` VERDE lá. Regra fundamental:
+**nunca `reset`/`checkout`/`clean`/`stash` de trabalho alheio — fix-forward apenas**.
 
 ### Padrão de drift nos 32 submodules (clasificado)
 

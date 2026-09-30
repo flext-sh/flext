@@ -1,6 +1,6 @@
 > **HISTORICAL — dated evidence, not live authority.** Point-in-time record
-> (2026-09-11). PR/bead/branch states cited below may have changed; verify against
-> the live tracker (`bd` / `gh`) before relying on anything here.
+> (2026-09-11). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
 
 # HANDOFF — flext-gov program session 2026-09-11 (reinicio completo)
 
@@ -75,7 +75,7 @@ Hard refs for the fleet law themselves:
    before ast-grep batch apply") — after every mod cycle make a scoped-path commit and
    do NOT let the checkpoint count as the work commit.
 6. **Never uv sync from a fleet lane without the env guards**:
-   `UV_PROJECT_ENVIRONMENT=$PWD/.venv VIRTUAL_ENV=$PWD/.venv` (leaked from direnv,
+   `UV_PROJECT_ENVIRONMENT=${PWD}/.venv VIRTUAL_ENV=${PWD}/.venv` (leaked from direnv,
    poisoned primary venv once already — see memory `fleet-venv-hazard` and rule
    `flext-venv-hermeticity.md`).
 7. **crg = tool CLI only** (`code-review-graph`, ai-hub host-tools), never a code
@@ -137,7 +137,7 @@ Each approval must be reconfirmed (do not extrapolate "already approved").
 ## 8. Canonical execution cycle
 
 ```bash
-export UV_PROJECT_ENVIRONMENT=$PWD/.venv VIRTUAL_ENV=$PWD/.venv
+export UV_PROJECT_ENVIRONMENT=${PWD}/.venv VIRTUAL_ENV=${PWD}/.venv
 make gen   # config SSOT → projections
 make mod   # ast-grep scoped (--module/--namespace) + Ruff + Pyrefly + LSP
 make fix   # gate fixes
