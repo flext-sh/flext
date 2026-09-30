@@ -23,7 +23,7 @@ done
 echo "=== Applying Production OUD Configuration ==="
 
 # Create password file for dsconfig
-echo "${ADMIN_PASSWORD}" >/tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt
+echo "${ADMIN_PASSWORD}" >/tmp/oud_admin_pwd.txt
 
 # 1. Set single-structural-objectclass-behavior to accept
 echo "1/4 - Settingsuring single-structural-objectclass-behavior..."
@@ -31,7 +31,7 @@ echo "1/4 - Settingsuring single-structural-objectclass-behavior..."
 	--set single-structural-objectclass-behavior:accept \
 	-h localhost -p 4444 \
 	-D "${ADMIN_DN}" \
-	-j /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt \
+	-j /tmp/oud_admin_pwd.txt \
 	--no-prompt --trustAll || echo "Already configured"
 
 # 2. Disable compact encoding for userRoot workflow
@@ -41,7 +41,7 @@ echo "2/4 - Disabling compact encoding for userRoot workflow..."
 	--set compact-encoding:false \
 	-h localhost -p 4444 \
 	-D "${ADMIN_DN}" \
-	-j /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt \
+	-j /tmp/oud_admin_pwd.txt \
 	--no-prompt --trustAll || echo "Already configured"
 
 # 3. Disable schema checking for migration compatibility
@@ -50,7 +50,7 @@ echo "3/4 - Disabling schema checking..."
 	--set check-schema:false \
 	-h localhost -p 4444 \
 	-D "${ADMIN_DN}" \
-	-j /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt \
+	-j /tmp/oud_admin_pwd.txt \
 	--no-prompt --trustAll || echo "Already configured"
 
 # 4. Allow unauthenticated requests
@@ -59,11 +59,11 @@ echo "4/4 - Allowing unauthenticated requests..."
 	--set reject-unauthenticated-requests:false \
 	-h localhost -p 4444 \
 	-D "${ADMIN_DN}" \
-	-j /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt \
+	-j /tmp/oud_admin_pwd.txt \
 	--no-prompt --trustAll || echo "Already configured"
 
 # Clean up password file
-rm -f /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt
+rm -f /tmp/oud_admin_pwd.txt
 
 echo "=== OUD Configuration Complete ==="
 echo "Applied 4 production dsconfig settings:"
