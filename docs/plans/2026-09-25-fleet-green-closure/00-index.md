@@ -8,6 +8,12 @@ coordination_item: aihub-l42it
 
 # FLEXT fleet green closure handoff
 
+<!-- TOC START -->
+
+- No sections found
+
+<!-- TOC END -->
+
 This directory is the file-owned continuation authority for the active fleet closure. It
 records measured repository state and accepted operator decisions; it is not a
 conversation transcript or a second task tracker.

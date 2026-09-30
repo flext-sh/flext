@@ -20,9 +20,7 @@ class FlextRootAclProcessingExample:
         required_permissions: m.Ldif.AclPermissions,
     ) -> p.Result[m.Ldif.AclEvaluationResult]:
         """Extract and evaluate without rewriting either LDIF operation."""
-        return self._service.extract_acls_from_entry(
-            entry, server_type
-        ).flat_map(
+        return self._service.extract_acls_from_entry(entry, server_type).flat_map(
             lambda response: self._service.evaluate_acl_context(
                 response.acls, required_permissions
             )

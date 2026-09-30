@@ -63,18 +63,18 @@ Run the complete suite through its declared verb:
 make test-full
 ```
 
-The runner first completes the incremental operation, then executes the full suite
-using the same database and one monotonic deadline. The first failure stops the
-sequence. The full phase includes both configured `external-gate-markers` and
-`ci-excluded-markers` in every context. External tests retain their declared services,
-network access, and authentication requirements.
+The runner first completes the incremental operation, then executes the full suite using
+the same database and one monotonic deadline. The first failure stops the sequence. The
+full phase includes both configured `external-gate-markers` and `ci-excluded-markers` in
+every context. External tests retain their declared services, network access, and
+authentication requirements.
 
 Incremental execution excludes `tooling.tools.pytest.external-gate-markers`. CI and
 generated pre-commit hooks use the configured `make.ci.value` token and also exclude
 `ci-excluded-markers`, consistently in collection, execution, and coverage. The runner
 records these as `not_executed_external_gates` and `not_executed_ci_markers`; exclusions
-are not passed tests. Both fields are empty for the full phase. Marker policy belongs
-to the typed tooling configuration, not a separate command-line expression.
+are not passed tests. Both fields are empty for the full phase. Marker policy belongs to
+the typed tooling configuration, not a separate command-line expression.
 
 Each phase retains its mode, database, raw process outcome, collection manifest, and
 diagnostics. The latest receipt names the current attempt even when collection fails.
