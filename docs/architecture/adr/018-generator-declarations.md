@@ -25,10 +25,10 @@
   identity, never by a machine-local path). This ADR records the decision; the rule is
   the binding text.
 - **Tracking:** epic `flext-0in0k` (a phased bead set, each carrying the full rule text;
-  live membership and counts on the epic, never frozen here);
-  superseded `flext-exbwv`, `flext-crd1y`, `flext-b3xmn`, `flext-szjre`, `flext-fdoah`,
-  `flext-s9bxq` (closed, linked); `flext-ssnc7` and `flext-mbowt` linked, kept open for
-  their unrelated live children.
+  live membership and counts on the epic, never frozen here); superseded `flext-exbwv`,
+  `flext-crd1y`, `flext-b3xmn`, `flext-szjre`, `flext-fdoah`, `flext-s9bxq` (closed,
+  linked); `flext-ssnc7` and `flext-mbowt` linked, kept open for their unrelated live
+  children.
 
 ## Context
 

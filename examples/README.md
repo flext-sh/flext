@@ -48,8 +48,8 @@ Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 ### ACL Processing through flext-ldif
 
 The example injects the public LDIF client and composes its ACL extraction and
-permission evaluation operations. `flext-ldif` owns the LDAP entry, ACL,
-permission, server and result contracts.
+permission evaluation operations. `flext-ldif` owns the LDAP entry, ACL, permission,
+server and result contracts.
 
 **Key Features:**
 
