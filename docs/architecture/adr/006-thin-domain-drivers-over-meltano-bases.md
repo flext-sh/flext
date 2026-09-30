@@ -49,8 +49,6 @@ models, §3a JSON is Pydantic 2-way, §1.5 no duplicated declarations across pro
 
 ## Context
 
-<!-- rumdl 0.2.78 normalize mode cannot wrap prose with inline code spans; this paragraph is hand-wrapped at the 88-char limit. -->
-<!-- markdownlint-disable-next-line MD013 -->
 The Singer/dbt integration projects ( `flext-(dbt|tap|target)-<domain>` ) are meant to
 be **thin domain drivers**: flext-meltano owns the reusable dbt/singer/tap/target
 machinery in FLEXT form, the domain **action library** (e.g. `flext-db-oracle` ) owns
