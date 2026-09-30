@@ -3,21 +3,13 @@
 <!-- TOC START -->
 
 - [Status](#status)
-
 - [Context](#context)
-
   - [The duplication / anti-patterns (verified, file:line)](#the-duplication-anti-patterns-verified-fileline)
-
 - [Decision](#decision)
-
   - [Rules (inviolable for these projects)](#rules-inviolable-for-these-projects)
-
   - [Uniform connection seam](#uniform-connection-seam)
-
 - [Consequences](#consequences)
-
 - [Realized mechanism — Declarative tap (flext-tap-ldap pilot, 2026-07-17)](#realized-mechanism-declarative-tap-flext-tap-ldap-pilot-2026-07-17)
-
 - [Evidence](#evidence)
 
 <!-- TOC END -->
@@ -49,11 +41,11 @@ models, §3a JSON is Pydantic 2-way, §1.5 no duplicated declarations across pro
 
 ## Context
 
-The Singer/dbt integration projects (`flext-(dbt|tap|target)-<domain>`) are meant to be
-**thin domain drivers**: flext-meltano owns the reusable dbt/singer/tap/target machinery
-in FLEXT form, the domain **action library** (e.g. `flext-db-oracle` ) owns the
-connection/execution contract, and the integration project should declare
-_almost nothing_ — only the one domain hook its base asks for.
+The Singer/dbt integration projects ( `flext-(dbt|tap|target)-<domain>` ) are meant to be
+**thin domain drivers**: flext-meltano owns the reusable dbt/singer/tap/target machinery in
+FLEXT form, the domain **action library** (e.g. `flext-db-oracle` ) owns the
+connection/execution contract, and the integration project should declare _almost nothing_ —
+only the one domain hook its base asks for.
 
 The current pilot trio does the opposite. Verified 2026-07-10 (three explore passes +
 
@@ -197,8 +189,9 @@ the domain knowledge): add a minimal protocol `p.Meltano.DbtConnectionProfile` (
 
 returns its own `m.<Ns>.DbtConnectionProfile` model that adds the domain fields and
 
-structurally satisfies the protocol. tap/target keep their factory seams
-(`create_tap_instance` / `create_sink`).
+structurally satisfies the protocol. tap/target keep their factory seams (
+
+`create_tap_instance` / `create_sink` ).
 
 ## Consequences
 
