@@ -80,9 +80,9 @@ class TestsFlextRootExamplesRuntime:
 
             tm.that(strict.success, eq=True)
             tm.that(permissive.success, eq=True)
-            tm.that(strict.unwrap()["total_acls"], eq=1)
-            strict_violations = strict.unwrap()["total_violations"]
-            permissive_violations = permissive.unwrap()["total_violations"]
+            tm.that(strict.unwrap().total_acls, eq=1)
+            strict_violations = strict.unwrap().total_violations
+            permissive_violations = permissive.unwrap().total_violations
             if not isinstance(strict_violations, int) or not isinstance(
                 permissive_violations, int
             ):
