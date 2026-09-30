@@ -41,8 +41,6 @@ concrete violation lists:
 | 4   | `flext-target-oracle-wms/tests/integration/test_oracle.py` | `orjson`                                                   |
 | 5   | `flext-target-oracle-wms/tests/unit/test_workflow.py`      | `orjson`                                                   |
 
-<!-- rumdl 0.2.78 normalize mode cannot wrap prose with inline code spans; this paragraph is hand-wrapped at the 88-char limit. -->
-
 **Phase 3 action** : route every banned-lib import through the appropriate `flext-core`
 facade (`u.Yaml.*` , `u.Json.*` , `m.Settings`). Per AGENTS.md §2.7 abstraction-boundary
 law.
@@ -54,8 +52,6 @@ python -m flext_infra validate tier-whitelist --workspace ~/flext
 ```
 
 ### 1.2 — Silent-failure violations
-
-<!-- rumdl 0.2.78 normalize mode cannot wrap prose with inline code spans; this paragraph is hand-wrapped at the 88-char limit. -->
 
 116 violations. Three sub-kinds: `silent-failure-except` (exception branch returns
 sentinel), `silent-failure-guard` (`Result` failure branch swallowed),
@@ -202,8 +198,6 @@ decomposition candidates — each entry is one refactor target:
 | `_utilities/docs_api.py:206`       | `FlextInfraUtilitiesDocsApi.public_contract`                  | F      | Doc-generator branching                                     |
 | `codegen/fixer.py:96`              | `FlextInfraCodegenFixer._fix_project`                         | E      | Per-project transformation orchestrator                     |
 | `deps/detector_runtime.py:32`      | `FlextInfraDependencyDetectorRuntime.run`                     | F      | Detector dispatch tree                                      |
-
-<!-- rumdl 0.2.78 normalize mode cannot wrap prose with inline code spans; this paragraph is hand-wrapped at the 88-char limit. -->
 
 **Phase 3 action** : each entry is a self-contained decomposition. Per the user's strict
 reuse directive (`feedback_strict_ssot_dry_yagni_rootmost.md`), the decomposition MUST
