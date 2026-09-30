@@ -374,7 +374,9 @@ in-place APÓS o pouso das lanes deles — sem push sobre tree dirty alheio. Exp
 | (b) CRG + mod/gen-loop como caminho padrão do sweep                                                        | observável — já codificado na skill; confirmação consolida                |
 | (c) Skills `~/agents` atualizadas (corpo, sem arquivo novo)                                                | **liberado e executado** (`3dd920fa`)                                     |
 | (d) Commits de planos vivos direto na integração — formalizar exceção OU migrar a PR                       | **decisão pendente** (autocrítica A5)                                     |
-| (e) Débito repo agents: `make propagate` + `make check` após o pouso das ~14 SKILL.md em voo de outro ator | agendar pós-pouso deles                                                   |
+| (e) Débito repo agents: `make propagate` + `make check` após o pouso das SKILL.md em voo de outro ator | agendar pós-pouso deles                                                   |
 
+<!-- rumdl 0.2.78 normalize mode cannot wrap prose with inline code spans; this paragraph is hand-wrapped at the 88-char limit. -->
+<!-- markdownlint-disable-next-line MD013 -->
 _Se (a) aprovado: abrir lane, aplicar o ciclo §11.1 nas ondas P1->P3, reportar por beads +
 este plano vivente._

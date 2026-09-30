@@ -5,6 +5,15 @@ updated_at: 2026-09-25T17:27:00Z
 
 # Measured context and evidence
 
+<!-- TOC START -->
+
+- [flext-infra current slice](#flext-infra-current-slice)
+- [Latest valid local gates](#latest-valid-local-gates)
+- [Downstream lanes preserved](#downstream-lanes-preserved)
+- [Handoff package lane](#handoff-package-lane)
+
+<!-- TOC END -->
+
 ## `flext-infra` current slice
 
 The working tree contains the uncommitted test-convergence slice on top of published

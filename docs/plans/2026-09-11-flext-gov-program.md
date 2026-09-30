@@ -97,9 +97,10 @@ conforme R6 — nada de produtivo passa da lane sem autorização explícita.
 | super (lane)       | `feat/flext-gov-consumption-law` | `3ebf812055` / `b25d519d51` | F3 docs + ledger honesto                                                                                              |
 
 Pins vivos (core lane `uv.lock`): flext-infra `rev=0.12.0-dev#bff59228`, flext-cli
-re-resolvido. **Nunca rodar `uv sync` sem
-`UV_PROJECT_ENVIRONMENT=${PWD}/.venv VIRTUAL_ENV=${PWD}/.venv`** (ver também
-`~/.agents/rules/flext/flext-venv-hermeticity.md` + `bd remember fleet-venv-hazard`).
+re-resolvido.
+**Nunca rodar `uv sync` sem `UV_PROJECT_ENVIRONMENT=$PWD/.venv VIRTUAL_ENV=$PWD/.venv`**
+(ver também `~/.agents/rules/flext/flext-venv-hermeticity.md` +
+`bd remember fleet-venv-hazard`).
 
 ## Lei anti-hardcode (vale TAMBÉM para tests)
 

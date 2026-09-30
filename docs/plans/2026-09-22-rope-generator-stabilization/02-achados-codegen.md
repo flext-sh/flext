@@ -27,8 +27,9 @@ copy, `config/codegen.yaml`, template tree, representative member `flext-ldif`, 
   `codegen_transaction.py` (transactional publication, `commit_locked`),
   `lazy_init_planner.py` + `_lazy_init_planner_*.py` (aliases/cache/children/collision/
   exports/parents/public*root), `\_lazy_init_generation*.py`,
-`mise*artifacts.py`+`\_mise_artifacts/\*\*.py`(staging, publication, recovery, and
-verification of transactional artifact publication with rollback),`protocol*models.py`,
+  `mise*artifacts.py`+`\_mise_artifacts/\*\*.py`(staging, publication, recovery, and
+  verification
+of transactional artifact publication with rollback),`protocol*models.py`,
 `scaffolder.py`, `project_new.py`, `pipeline.py`, `layout*.py`, `fixer*.py`,
 `version_file.py`.
 - Templates: `flext-infra/src/flext_infra/templates/` — `project/base/**` (per-project

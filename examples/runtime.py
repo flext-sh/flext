@@ -6,6 +6,7 @@ from examples import FlextRootExamplesConstants as c
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
+from flext_cli import cli
 from flext_ldif import c as ldif_c, ldif, m as ldif_m
 
 
@@ -23,8 +24,7 @@ def main() -> int:
     )
     entries = client.parse_ldif(ldif_content).unwrap().entries
     if not entries:
-        msg = "LDIF parser produced no entries"
-        raise RuntimeError(msg)
+        raise RuntimeError(c.ErrorMessages.LDIF_NO_ENTRIES)
     acl_result = (
         FlextRootAclProcessingExample(service=client)
         .process_acls_with_pipeline(
@@ -73,6 +73,7 @@ def main() -> int:
     if not complete.content:
         raise RuntimeError(c.ErrorMessages.COMPLETE_NO_CONTENT)
 
+    cli.print(f"ACL=granted OID={len(oid_response.acls)} advanced=ok complete=ok")
     return 0
 
 
