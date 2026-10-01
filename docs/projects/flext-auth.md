@@ -42,17 +42,21 @@ make check
 ```
 
 ```python
+from getpass import getpass
+
 from flext_auth import FlextAuth
+
+password = getpass("Password: ")
 
 auth = FlextAuth.quick_start(create_admin_user=False)
 
 created = auth.register_user(
-    username="demo", email="demo@example.com", password="secure123"
+    username="demo", email="demo@example.com", password=password
 )
-assert created.is_success
+created.unwrap()
 
-session = auth.authenticate_user("demo", "secure123")
-assert session.is_success
+session = auth.authenticate_user("demo", password)
+session.unwrap()
 ```
 
 `FlextAuth.quick_start()` builds the facade with the built-in provider set;
