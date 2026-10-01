@@ -41,7 +41,7 @@ pip install flext-plugin
 ```
 
 ```python
-from flext_plugin import plugin
+from flext_plugin import plugin, u
 
 api = plugin()
 result = api.discover_plugins(["./plugins"])

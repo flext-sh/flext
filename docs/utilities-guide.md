@@ -338,10 +338,8 @@ class FlextUtilitiesConversion:
         try:
             result = ...  # process the value
             return r[str].ok(result)
-        except Exception as e:
+        except ValueError as e:
             return r[str].fail(f"Error: {e}")
-
-    # __all__: list[str] = ["FlextUtilitiesConversion"]  # Already exported
 ```
 
 ---
