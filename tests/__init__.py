@@ -15,13 +15,26 @@ from flext_core import build_lazy_import_map, install_lazy_exports
 if TYPE_CHECKING:
     from flext import c, m, p, settings, t, u
     from tests import infra, unit
+    from tests.base import TestsFlextRootServiceBase, s
 
 
-__all__: tuple[str, ...] = ("c", "infra", "m", "p", "settings", "t", "u", "unit")
+__all__: tuple[str, ...] = (
+    "TestsFlextRootServiceBase",
+    "c",
+    "infra",
+    "m",
+    "p",
+    "s",
+    "settings",
+    "t",
+    "u",
+    "unit",
+)
 
 _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
+            ".base": ("TestsFlextRootServiceBase", "s"),
             ".infra": ("infra",),
             ".unit": ("unit",),
             "flext": ("c", "m", "p", "settings", "t", "u"),

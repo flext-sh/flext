@@ -1,4 +1,8 @@
-"""Execute the published examples through their public runtime boundaries."""
+"""Execute the published examples through their public runtime boundaries.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -11,7 +15,19 @@ from flext_ldif import c as ldif_c, ldif, m as ldif_m
 
 
 def main() -> int:
-    """Run every published example and report observable work."""
+    """Run every published example and report observable work.
+
+    Returns:
+        The resulting ``int``.
+
+    Raises:
+        RuntimeError: If ``not entries``; or if ``not acl_result.granted or
+            acl_result.matched_acl is None``; or if ``first_attribute.lower() ==
+            last_attribute.lower()``; or if ``len(oid_response.acls) !=
+            c.EXPECTED_OID_ACL_COUNT``; or if ``not
+            advanced.data.values.get('analysis')``; or if ``not complete.content``.
+
+    """
     client = ldif()
     ldif_content = (
         "dn: cn=sample,dc=example,dc=com\n"
@@ -47,11 +63,12 @@ def main() -> int:
     oid_entry = ldif_m.Ldif.Entry(
         dn=ldif_m.Ldif.DN(value="cn=sample,dc=example,dc=com"),
         attributes=ldif_m.Ldif.Attributes(
-            attributes={first_attribute: [oid_acl], last_attribute: [oid_acl]}
+            attributes={first_attribute: [oid_acl], last_attribute: [oid_acl]},
         ),
     )
     oid_response = client.extract_acls_from_entry(
-        oid_entry, ldif_c.Ldif.ServerTypes.OID
+        oid_entry,
+        ldif_c.Ldif.ServerTypes.OID,
     ).unwrap()
     if len(oid_response.acls) != c.EXPECTED_OID_ACL_COUNT:
         raise RuntimeError(c.ErrorMessages.OID_ACL_ATTRIBUTE_LOST)
