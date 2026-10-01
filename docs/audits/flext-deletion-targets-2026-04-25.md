@@ -210,7 +210,6 @@ consume existing primitives ( `FlextInfraUtilitiesProtectedEdit` ,
 methods share a sub-routine, extract the shared piece to flext-core or flext-infra
 `_utilities/` (most-root namespace) and consume it from both — eliminating the
 duplication that drives the high complexity.
-and consume it from both — eliminating the duplication that drives the high complexity.
 
 ## Bugs surfaced during audit (informational)
 
