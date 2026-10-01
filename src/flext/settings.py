@@ -11,14 +11,14 @@ from typing import TYPE_CHECKING, ClassVar
 from flext_core import FlextSettings, m
 
 if TYPE_CHECKING:
-    from . import t
+    from flext import t
 
 
 class FlextRootSettings(FlextSettings):
     """Workspace root settings — extends flext-core settings with FLEXT_ROOT_ prefix."""
 
     model_config: ClassVar[m.SettingsConfigDict] = m.SettingsConfigDict(
-        env_prefix="FLEXT_ROOT_"
+        env_prefix="FLEXT_ROOT_",
     )
 
 

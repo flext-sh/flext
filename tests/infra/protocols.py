@@ -41,7 +41,11 @@ class TestsFlextRootProtocols(p):
             """Protocol for module resolution callables."""
 
             def __call__(
-                self, module_name: str, relative_path: str, *, anchor_file: Path
+                self,
+                module_name: str,
+                relative_path: str,
+                *,
+                anchor_file: Path,
             ) -> ModuleType: ...
 
         @runtime_checkable

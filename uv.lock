@@ -11,7 +11,7 @@ supported-markers = [
 ]
 
 [manifest]
-overrides = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=842ba365efe2d0cbdc0552169462ce895b6311b6" }]
+overrides = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=114ce3524656ac64a658faff4865a57b82313ade" }]
 excludes = [
     { package = { name = "flext-cli" }, dependencies = ["flext-core"] },
     { package = { name = "flext-core" }, dependencies = ["flext-cli"] },
@@ -940,7 +940,7 @@ requires-dist = [
     { name = "dependency-injector", specifier = ">=4.49.1" },
     { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev" },
     { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=842ba365efe2d0cbdc0552169462ce895b6311b6" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=114ce3524656ac64a658faff4865a57b82313ade" },
     { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev" },
     { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev" },
     { name = "importlib-resources", specifier = ">=7.1.0" },
@@ -953,7 +953,7 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-codegen = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=842ba365efe2d0cbdc0552169462ce895b6311b6" }]
+codegen = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=114ce3524656ac64a658faff4865a57b82313ade" }]
 dev = [
     { name = "actionlint-py", specifier = ">=1.7.12.24" },
     { name = "bandit", specifier = ">=1.9.4" },
@@ -1025,7 +1025,7 @@ workspace = [
     { name = "flext-dbt-oracle", git = "https://github.com/flext-sh/flext-dbt-oracle.git?rev=0.12.0-dev" },
     { name = "flext-dbt-oracle-wms", git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?rev=0.12.0-dev" },
     { name = "flext-grpc", git = "https://github.com/flext-sh/flext-grpc.git?rev=0.12.0-dev" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=842ba365efe2d0cbdc0552169462ce895b6311b6" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=114ce3524656ac64a658faff4865a57b82313ade" },
     { name = "flext-ldap", git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev" },
     { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev" },
     { name = "flext-meltano", git = "https://github.com/flext-sh/flext-meltano.git?rev=0.12.0-dev" },
@@ -1091,7 +1091,7 @@ dependencies = [
 [[package]]
 name = "flext-cli"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev#198b9af0918afc60d85e0e39be55a1e723002f95" }
+source = { git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev#173d2710f856320ac93fdd634adac50788d7b91b" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1117,7 +1117,7 @@ dependencies = [
 [[package]]
 name = "flext-core"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev#a73bbca2a33fc9b487db0d0f38ead99217cd2fc2" }
+source = { git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev#de397fe799a5aaca8b0568ea658d292e0f05c7ed" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1250,7 +1250,7 @@ dependencies = [
 [[package]]
 name = "flext-infra"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-infra.git?rev=842ba365efe2d0cbdc0552169462ce895b6311b6#842ba365efe2d0cbdc0552169462ce895b6311b6" }
+source = { git = "https://github.com/flext-sh/flext-infra.git?rev=114ce3524656ac64a658faff4865a57b82313ade#114ce3524656ac64a658faff4865a57b82313ade" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1294,7 +1294,7 @@ dependencies = [
 [[package]]
 name = "flext-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev#82b1fa368bf662f24b53737abf058db2a517e84b" }
+source = { git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev#f12dd7f01ad1819ed1344532e7669dcfba8e726a" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1312,7 +1312,7 @@ dependencies = [
 [[package]]
 name = "flext-meltano"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-meltano.git?rev=0.12.0-dev#33f0f42dfdaa27601e75ed0e94614dd25dcde5fb" }
+source = { git = "https://github.com/flext-sh/flext-meltano.git?rev=0.12.0-dev#fe3f2499ed98992d0fe46b4242a16d2678381493" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1335,7 +1335,7 @@ dependencies = [
 [[package]]
 name = "flext-observability"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-observability.git?rev=0.12.0-dev#4c28934c01c82b7707520b8c141467e2c27e5de7" }
+source = { git = "https://github.com/flext-sh/flext-observability.git?rev=0.12.0-dev#a530f2bbe3e1fa6633584d0336d62c266877de9c" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1413,7 +1413,7 @@ dependencies = [
 [[package]]
 name = "flext-quality"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-quality.git?rev=0.12.0-dev#c6f8b39974d266aa84edf745f2f6531c1c4b6659" }
+source = { git = "https://github.com/flext-sh/flext-quality.git?rev=0.12.0-dev#92d988110f77713c9624e821f3787bc1d1186024" }
 dependencies = [
     { name = "aiohttp" },
     { name = "annotated-types" },
@@ -1636,7 +1636,7 @@ dependencies = [
 [[package]]
 name = "flext-tests"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev#9a120f30f1992352e7b61c70d1998bc7913ca42c" }
+source = { git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev#72fd44914f28844a5a53af282343ade811b3a8fd" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -3502,7 +3502,7 @@ wheels = [
 [[package]]
 name = "rope"
 version = "1.14.0+dc.3"
-source = { git = "https://github.com/marlon-costa-dc/rope.git?rev=1.14.0%2Bdc.3#64134bf54db1c02ca19602f320d26e1a570e7786" }
+source = { git = "https://github.com/marlon-costa-dc/rope.git?rev=datacosmos#64134bf54db1c02ca19602f320d26e1a570e7786" }
 dependencies = [
     { name = "pytoolconfig", extra = ["global"] },
 ]
@@ -3795,11 +3795,11 @@ wheels = [
 
 [[package]]
 name = "structlog"
-version = "25.5.0"
+version = "26.1.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ef/52/9ba0f43b686e7f3ddfeaa78ac3af750292662284b3661e91ad5494f21dbc/structlog-25.5.0.tar.gz", hash = "sha256:098522a3bebed9153d4570c6d0288abf80a031dfdb2048d59a49e9dc2190fc98", size = 1460830, upload-time = "2025-10-27T08:28:23.028Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5e/89/b4a0bcfdf4f71a3dea31379f095929613d7e4528a0996bca6aa964cd0dca/structlog-26.1.0.tar.gz", hash = "sha256:f63a716cbd1b1291cf7661de7794b455acfa4c43c5bcf1630e6ad5ddc1adb3b7", size = 1459881, upload-time = "2026-06-06T07:33:39.348Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a8/45/a132b9074aa18e799b891b91ad72133c98d8042c70f6240e4c5f9dabee2f/structlog-25.5.0-py3-none-any.whl", hash = "sha256:a8453e9b9e636ec59bd9e79bbd4a72f025981b3ba0f5837aebf48f02f37a7f9f", size = 72510, upload-time = "2025-10-27T08:28:21.535Z" },
+    { url = "https://files.pythonhosted.org/packages/a9/18/489c97b834dfff9cf2fc2507cede4bcd4b11e67f84bc462acd1992496f86/structlog-26.1.0-py3-none-any.whl", hash = "sha256:e081a26d6c373e6d201eca24eede26d8ffab07f88f477822e679183428d3d91e", size = 73764, upload-time = "2026-06-06T07:33:38.046Z" },
 ]
 
 [[package]]
