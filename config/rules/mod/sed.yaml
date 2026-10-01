@@ -51,10 +51,10 @@ rules:
   - id: docs-auth-register-with-runtime-password
     description: Remove the hardcoded registration password from the public example.
     include: [docs/projects/flext-auth.md]
-    find: 'password="secure123"'
+    find: 'password="[^"\n]+"'
     replace: 'password=password'
   - id: docs-auth-authenticate-with-runtime-password
     description: Use the same prompted password for authentication.
     include: [docs/projects/flext-auth.md]
-    find: 'auth\.authenticate_user\("demo", "secure123"\)'
-    replace: 'auth.authenticate_user("demo", password)'
+    find: 'auth\.authenticate_user\(([^,\n]+), "[^"\n]+"\)'
+    replace: 'auth.authenticate_user(\1, password)'
