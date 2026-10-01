@@ -42,7 +42,8 @@ Import the aliases used by each example from the public `flext_cli` package root
 
 ## Settings
 
-Import the existing settings class; without overrides, `fetch_global()` returns its shared per-class singleton:
+Import the existing settings class; without overrides, `fetch_global()` returns
+its shared per-class singleton:
 
 ```python
 from flext_cli import FlextCliSettings
