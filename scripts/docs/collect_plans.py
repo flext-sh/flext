@@ -1,4 +1,8 @@
-"""Delegate workspace plan collection to the public Infra documentation CLI."""
+"""Delegate workspace plan collection to the public Infra documentation CLI.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -12,7 +16,12 @@ class FlextRootWorkspacePlanCollection:
 
     @staticmethod
     def main() -> int:
-        """Run the canonical collection action under the Make-owned runtime."""
+        """Run the canonical collection action under the Make-owned runtime.
+
+        Returns:
+            The resulting ``int``.
+
+        """
         root = Path(__file__).resolve().parents[2]
         return FlextInfraCli().main([
             "docs",
