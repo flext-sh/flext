@@ -78,8 +78,9 @@ rules:
     description: Replace the final literal credential argument in the authored registration example, preserving its keyword name.
     include: [docs/projects/flext-auth.md]
     find: >-
-      (auth\.register_user\(\s*username=[^,\n]+,\s*email=[^,\n]+,\s*)([A-Za-z_]\w*)=("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')(?=\s*\))
+      (auth\.register_user\(\s*username=[^,\n]+,\s*email=[^,\n]+,\s*)(?P<keyword>[A-Za-z_]\w*)=("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')(?=\s*\))
     replace: '\1\2=password'
+    capture_equals: {keyword: password}
   - id: docs-auth-authenticate-with-runtime-password
     description: Use the same prompted password for authentication.
     include: [docs/projects/flext-auth.md]
