@@ -26,7 +26,12 @@ class FlextRootCheckChangedProjects:
 
     @classmethod
     def _known_projects(cls) -> frozenset[str]:
-        """Return top-level directory names that look like FLEXT projects."""
+        """Return top-level directory names that look like FLEXT projects.
+
+        Returns:
+            Top-level directory names that look like FLEXT projects.
+
+        """
         return frozenset(
             entry.name
             for entry in cls.REPOSITORY_ROOT.iterdir()
@@ -35,7 +40,12 @@ class FlextRootCheckChangedProjects:
 
     @classmethod
     def main(cls, what: str, files: list[str]) -> int:
-        """Run the requested gate only for projects touched by the staged files."""
+        """Run the requested gate only for projects touched by the staged files.
+
+        Returns:
+            The resulting ``int``.
+
+        """
         known = cls._known_projects()
         projects = {
             rel.parts[0]
@@ -73,7 +83,15 @@ class FlextRootCheckChangedProjects:
 
     @classmethod
     def cli_entry(cls, argv: list[str] | None = None) -> int:
-        """CLI entry point."""
+        """CLI entry point.
+
+        Returns:
+            The resulting ``int``.
+
+        Raises:
+            SystemExit: If usage.
+
+        """
         args = list(sys.argv[1:] if argv is None else argv)
         if len(args) < cls.MIN_POSITIONAL_ARGS:
             msg = "usage: check_changed_projects.py <boundary|loc-cap> [file ...]"
