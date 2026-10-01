@@ -23,7 +23,16 @@ class TestsFlextRootReleasePackaging:
 
         @staticmethod
         def _section_of(payload: t.JsonMapping, *keys: str) -> t.JsonMapping:
-            """Narrow a nested config section through runtime type checks."""
+            """Narrow a nested config section through runtime type checks.
+
+            Returns:
+                The resulting ``t.JsonMapping``.
+
+            Raises:
+                TypeError: If expected final section to be a mapping; or if expected
+                    mapping at key.
+
+            """
             node: t.JsonValue = dict(payload)
             for key in keys:
                 if not isinstance(node, Mapping):
@@ -35,13 +44,15 @@ class TestsFlextRootReleasePackaging:
                 raise TypeError(msg)
             return node
 
-        def test_cli_config_is_available_from_installed_package(self) -> None:
+        @staticmethod
+        def test_cli_config_is_available_from_installed_package() -> None:
             """The CLI runtime owner must carry its declarative configuration."""
             config_file = files("flext_cli") / "config" / "cli.yaml"
 
             tm.that(config_file.is_file(), eq=True)
 
-        def test_workspace_console_scripts_are_registered(self) -> None:
+        @staticmethod
+        def test_workspace_console_scripts_are_registered() -> None:
             """The published package must expose its complete entry-point contract."""
             entry_points = importlib.metadata.entry_points(group="console_scripts")
             names = {entry_point.name for entry_point in entry_points}
@@ -50,7 +61,12 @@ class TestsFlextRootReleasePackaging:
                 tm.that(name in names, eq=True)
 
         def test_installed_version_matches_version_owner(self) -> None:
-            """Runtime metadata and the version SSOT must never diverge."""
+            """Runtime metadata and the version SSOT must never diverge.
+
+            Raises:
+                TypeError: If pyproject project.version must be a string.
+
+            """
             repository_root = Path(__file__).resolve().parents[2]
             loaded = u.config_load(repository_root / "pyproject.toml")
             tm.that(loaded.failure, eq=False)

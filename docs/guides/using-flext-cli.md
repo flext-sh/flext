@@ -49,7 +49,6 @@ its shared per-class singleton:
 from flext_cli import FlextCliSettings
 
 settings = FlextCliSettings.fetch_global()
-
 ```
 
 If you need a project-specific subclass, extend `FlextSettings` (or `FlextCliSettings`)
