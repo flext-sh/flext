@@ -86,3 +86,15 @@ rules:
     find: >-
       auth\.authenticate_user\(([^,\n]+), ("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')\)
     replace: 'auth.authenticate_user(\1, password)'
+  - id: docs-auth-registration-result
+    description: Surface the public registration failure instead of relying on an assertion.
+    include: [docs/projects/flext-auth.md]
+    find: '^assert created\.is_success$'
+    replace: 'created.unwrap()'
+    flags: [MULTILINE]
+  - id: docs-auth-session-result
+    description: Surface the public authentication failure instead of relying on an assertion.
+    include: [docs/projects/flext-auth.md]
+    find: '^assert session\.is_success$'
+    replace: 'session.unwrap()'
+    flags: [MULTILINE]
