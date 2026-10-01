@@ -1,0 +1,60 @@
+# Canonical documentation imports are changed through make mod.
+rules:
+  - id: docs-cli-settings-singleton-without-assert
+    description: Show the public settings usage without a test-only assertion.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^assert settings is FlextCliSettings\.fetch_global\(\)$'
+    replace: ''
+    flags: [MULTILINE]
+  - id: docs-cli-settings-singleton-contract
+    description: State the verified fetch_global contract beside the usage snippet.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^Import the existing settings class; do not redefine it:$'
+    replace: 'Import the existing settings class; without overrides, `fetch_global()` returns its shared per-class singleton:'
+    flags: [MULTILINE]
+  - id: docs-cli-model-command-result
+    description: Show the public handler result as an example value rather than a test assertion.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^assert greet_handler\(GreetInput\(name="Ada"\)\) == "Hello, Ada!"$'
+    replace: 'greeting = greet_handler(GreetInput(name="Ada"))  # "Hello, Ada!"'
+    flags: [MULTILINE]
+  - id: docs-public-facade-u-imports
+    description: Import the public utilities facade used by executable examples.
+    include:
+      - docs/projects/flext-api/README.md
+      - docs/projects/flext-ldap.md
+      - docs/projects/flext-ldif.md
+      - docs/projects/flext-observability.md
+      - docs/projects/flext-plugin.md
+      - docs/projects/flext-quality.md
+    find: '^from (flext_(?:api|ldap|ldif|observability|plugin|quality)) import (?![^\n]*\bu\b)([^\n]+)$'
+    replace: 'from \1 import \2, u'
+    flags: [MULTILINE]
+  - id: docs-auth-read-password-from-user
+    description: Obtain the quick-start credential at runtime instead of embedding it.
+    include: [docs/projects/flext-auth.md]
+    find: '(?<!from getpass import getpass\n\n)^from flext_auth import FlextAuth$'
+    replace: |-
+      from getpass import getpass
+
+      from flext_auth import FlextAuth
+    flags: [MULTILINE]
+  - id: docs-auth-bind-runtime-password
+    description: Reuse the prompted password across registration and authentication.
+    include: [docs/projects/flext-auth.md]
+    find: '(?<!password = getpass\("Password: "\)\n\n)^auth = FlextAuth\.quick_start\(create_admin_user=False\)$'
+    replace: |-
+      password = getpass("Password: ")
+
+      auth = FlextAuth.quick_start(create_admin_user=False)
+    flags: [MULTILINE]
+  - id: docs-auth-register-with-runtime-password
+    description: Remove the hardcoded registration password from the public example.
+    include: [docs/projects/flext-auth.md]
+    find: 'password="secure123"'
+    replace: 'password=password'
+  - id: docs-auth-authenticate-with-runtime-password
+    description: Use the same prompted password for authentication.
+    include: [docs/projects/flext-auth.md]
+    find: 'auth\.authenticate_user\("demo", "secure123"\)'
+    replace: 'auth.authenticate_user("demo", password)'
