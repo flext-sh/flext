@@ -18,6 +18,32 @@ rules:
     find: '^assert greet_handler\(GreetInput\(name="Ada"\)\) == "Hello, Ada!"$'
     replace: 'greeting = greet_handler(GreetInput(name="Ada"))  # "Hello, Ada!"'
     flags: [MULTILINE]
+  - id: docs-cli-test-import-matchers
+    description: Use public test matchers in the executable CLI test example.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^from flext_cli import FlextCliCli, m$'
+    replace: |-
+      from flext_cli import FlextCliCli, c, m
+      from flext_tests import tm
+    flags: [MULTILINE]
+  - id: docs-cli-test-invocation-success
+    description: Check invocation success through the shared public matcher.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^    assert invocation\.success$'
+    replace: '    tm.that(invocation.success, eq=True)'
+    flags: [MULTILINE]
+  - id: docs-cli-test-exit-code
+    description: Compare CLI success against its public constant.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^    assert invocation\.value\.exit_code == 0$'
+    replace: '    tm.that(invocation.value.exit_code, eq=c.Cli.EXIT_CODE_SUCCESS)'
+    flags: [MULTILINE]
+  - id: docs-cli-test-handler-result
+    description: Retain the handler result assertion through the shared public matcher.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^    assert greet_handler\(GreetInput\(name="Ada"\)\) == "Hello, Ada!"$'
+    replace: '    tm.that(greet_handler(GreetInput(name="Ada")), eq="Hello, Ada!")'
+    flags: [MULTILINE]
   - id: docs-public-facade-u-imports
     description: Import the public utilities facade used by executable examples.
     include:
