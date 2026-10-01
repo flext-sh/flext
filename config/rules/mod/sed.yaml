@@ -75,12 +75,14 @@ rules:
       auth = FlextAuth.quick_start(create_admin_user=False)
     flags: [MULTILINE]
   - id: docs-auth-register-with-runtime-password
-    description: Remove the hardcoded registration password from the public example.
+    description: Replace the final literal credential argument in the authored registration example, preserving its keyword name.
     include: [docs/projects/flext-auth.md]
-    find: 'password="[^"\n]+"'
-    replace: 'password=password'
+    find: >-
+      (auth\.register_user\(\s*username=[^,\n]+,\s*email=[^,\n]+,\s*)([A-Za-z_]\w*)=("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')(?=\s*\))
+    replace: '\1\2=password'
   - id: docs-auth-authenticate-with-runtime-password
     description: Use the same prompted password for authentication.
     include: [docs/projects/flext-auth.md]
-    find: 'auth\.authenticate_user\(([^,\n]+), "[^"\n]+"\)'
+    find: >-
+      auth\.authenticate_user\(([^,\n]+), ("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')\)
     replace: 'auth.authenticate_user(\1, password)'
