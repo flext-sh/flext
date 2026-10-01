@@ -1,4 +1,8 @@
-"""Observable execution contracts for the published workspace examples."""
+"""Observable execution contracts for the published workspace examples.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -19,10 +23,18 @@ class TestsFlextRootExamplesRuntime:
 
         @staticmethod
         def test_advanced_pipeline_executes_declared_stages() -> None:
-            """Validation, processing and analysis consume the provided item."""
+            """Validation, processing and analysis consume the provided item.
+
+            Raises:
+                TypeError: If processed_items must be a list; or if processed item must
+                    be a mapping; or if analysis must be a mapping.
+
+            """
             item = {"id": "item-1", "name": "Example", "value": "payload"}
             pipeline = FlextRootAdvancedProcessingExample.FlextLdifProcessingPipeline(
-                items=(item,), stages=("validate", "process", "analyze"), max_workers=1
+                items=(item,),
+                stages=("validate", "process", "analyze"),
+                max_workers=1,
             )
 
             result = pipeline.execute()
@@ -52,7 +64,8 @@ class TestsFlextRootExamplesRuntime:
         def test_advanced_pipeline_rejects_unknown_stage() -> None:
             """An undeclared stage fails before processing the data."""
             pipeline = FlextRootAdvancedProcessingExample.FlextLdifProcessingPipeline(
-                items=({"id": "item-1", "name": "Example"},), stages=("missing",)
+                items=({"id": "item-1", "name": "Example"},),
+                stages=("missing",),
             )
 
             result = pipeline.execute()
@@ -72,9 +85,9 @@ class TestsFlextRootExamplesRuntime:
                             (
                                 '(targetattr="*")(version 3.0; acl "test read"; '
                                 'allow (read) userdn="ldap:///anyone";)'
-                            )
-                        ]
-                    }
+                            ),
+                        ],
+                    },
                 }),
             )
 
@@ -96,7 +109,7 @@ class TestsFlextRootExamplesRuntime:
             entry = m.Ldif.Entry(
                 dn=m.Ldif.DN(value="cn=plain,dc=example"),
                 attributes=m.Ldif.Attributes.model_validate({
-                    "attributes": {"cn": ["plain"]}
+                    "attributes": {"cn": ["plain"]},
                 }),
             )
 
