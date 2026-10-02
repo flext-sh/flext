@@ -11,7 +11,6 @@ supported-markers = [
 ]
 
 [manifest]
-constraints = [{ name = "mypy", specifier = "<2.4" }]
 overrides = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=6ca674aeb96f1085e53fa7563e212efdff4e7987" }]
 excludes = [
     { package = { name = "flext-cli" }, dependencies = ["flext-core"] },
