@@ -21,14 +21,6 @@ from typing import Annotated, ClassVar
 from examples import FlextRootExamplesConstants, m, p, t, u
 from flext_core import r
 
-type ItemDict = t.JsonMapping
-
-
-class _Constants:
-    """Internal constants for advanced processing example."""
-
-    MAX_VALUE_LENGTH: int = 100
-
 
 class _JsonMappingOrNone:
     """Helper to extract JsonMapping from JsonValue."""
@@ -75,28 +67,6 @@ class _StringSequence:
         return tuple(strings)
 
 
-class PipelinePayload(m.BaseModel):
-    """Pipeline payload container."""
-
-    model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-        arbitrary_types_allowed=True,
-        extra="allow",
-    )
-
-    values: t.JsonMapping = u.Field(default_factory=dict)
-
-
-class PipelineStageData(PipelinePayload):
-    """Data container for pipeline stage processing."""
-
-    model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-        arbitrary_types_allowed=True,
-        extra="allow",
-    )
-
-    data: PipelinePayload = u.Field(default_factory=PipelinePayload)
-
-
 class FlextRootAdvancedProcessingExample:
     """Advanced processing example demonstrating FLEXT parallel capabilities."""
 
@@ -128,34 +98,34 @@ class FlextRootAdvancedProcessingExample:
         """Declarative processing pipeline with automatic parallel execution."""
 
         auto_execute: bool = True
-        items: t.SequenceOf[ItemDict]
+        items: t.SequenceOf[t.JsonMapping]
         stages: t.StrSequence
         max_workers: int = 4
 
-        def execute(self) -> p.Result[PipelineStageData]:
+        def execute(self) -> p.Result[m.Root.PipelineStageData]:
             """Execute processing pipeline using declarative stages.
 
             Returns:
-                The resulting ``p.Result[PipelineStageData]``.
+                The resulting ``p.Result[m.Root.PipelineStageData]``.
 
             """
             stage_functions: t.MappingKV[
                 str,
-                Callable[[t.JsonMapping], p.Result[PipelineStageData]],
+                Callable[[t.JsonMapping], p.Result[m.Root.PipelineStageData]],
             ] = {
                 "validate": self._validate_batch,
                 "process": self._process_parallel,
                 "analyze": self._analyze_results,
             }
             operations: MutableSequence[
-                Callable[[t.JsonMapping], p.Result[PipelineStageData]]
+                Callable[[t.JsonMapping], p.Result[m.Root.PipelineStageData]]
             ] = []
             for stage in self.stages:
                 stage_func = stage_functions.get(stage)
                 if stage_func:
                     operations.append(stage_func)
                 else:
-                    return r[PipelineStageData].fail(f"Unknown stage: {stage}")
+                    return r[m.Root.PipelineStageData].fail(f"Unknown stage: {stage}")
             current_data: t.JsonMapping = t.json_mapping_adapter().validate_python(
                 self.model_dump(mode="json", include={"items"}),
             )
@@ -164,15 +134,17 @@ class FlextRootAdvancedProcessingExample:
                 if result.failure:
                     return result
                 current_data = result.value.data.values
-            payload = PipelinePayload.model_validate({"values": current_data})
-            return r[PipelineStageData].ok(PipelineStageData(data=payload))
+            payload = m.Root.PipelinePayload.model_validate({"values": current_data})
+            return r[m.Root.PipelineStageData].ok(
+                m.Root.PipelineStageData(data=payload)
+            )
 
         @staticmethod
-        def _analyze_results(data: t.JsonMapping) -> p.Result[PipelineStageData]:
+        def _analyze_results(data: t.JsonMapping) -> p.Result[m.Root.PipelineStageData]:
             """Analyze processing results.
 
             Returns:
-                The resulting ``p.Result[PipelineStageData]``.
+                The resulting ``p.Result[m.Root.PipelineStageData]``.
 
             """
             processed_items = _JsonMappingSequence.extract(
@@ -183,7 +155,7 @@ class FlextRootAdvancedProcessingExample:
             )
             field_counts: MutableMapping[int, int] = {}
             complexity_scores: MutableSequence[float] = []
-            items_to_analyze: t.SequenceOf[ItemDict] = processed_items
+            items_to_analyze: t.SequenceOf[t.JsonMapping] = processed_items
             for item in items_to_analyze:
                 field_count = len(item)
                 field_counts[field_count] = field_counts.get(field_count, 0) + 1
@@ -226,26 +198,30 @@ class FlextRootAdvancedProcessingExample:
                 **data,
                 "analysis": analysis,
             })
-            payload = PipelinePayload.model_validate({"values": result_data})
-            return r[PipelineStageData].ok(PipelineStageData(data=payload))
+            payload = m.Root.PipelinePayload.model_validate({"values": result_data})
+            return r[m.Root.PipelineStageData].ok(
+                m.Root.PipelineStageData(data=payload)
+            )
 
-        def _process_parallel(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
+        def _process_parallel(
+            self, data: t.JsonMapping
+        ) -> p.Result[m.Root.PipelineStageData]:
             """Process items in parallel.
 
             Returns:
-                The resulting ``p.Result[PipelineStageData]``.
+                The resulting ``p.Result[m.Root.PipelineStageData]``.
 
             """
             items_to_process = _JsonMappingSequence.extract(data.get("items", []))
             if not items_to_process:
-                return r[PipelineStageData].fail("Invalid items data")
+                return r[m.Root.PipelineStageData].fail("Invalid items data")
             start_time = time.time()
 
-            def process_single_item(item: ItemDict) -> ItemDict:
+            def process_single_item(item: t.JsonMapping) -> t.JsonMapping:
                 """Process a single item.
 
                 Returns:
-                    The resulting ``ItemDict``.
+                    The resulting ``t.JsonMapping``.
 
                 """
                 result: t.MutableJsonMapping = {**item}
@@ -253,7 +229,7 @@ class FlextRootAdvancedProcessingExample:
                 result["processing_timestamp"] = time.time()
                 return result
 
-            processed_items: MutableSequence[ItemDict] = []
+            processed_items: MutableSequence[t.JsonMapping] = []
             with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
                 future_to_item = {
                     executor.submit(process_single_item, item): item
@@ -270,19 +246,23 @@ class FlextRootAdvancedProcessingExample:
                 if items_to_process
                 else 0,
             })
-            payload = PipelinePayload.model_validate({"values": result_data})
-            return r[PipelineStageData].ok(PipelineStageData(data=payload))
+            payload = m.Root.PipelinePayload.model_validate({"values": result_data})
+            return r[m.Root.PipelineStageData].ok(
+                m.Root.PipelineStageData(data=payload)
+            )
 
-        def _validate_batch(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
+        def _validate_batch(
+            self, data: t.JsonMapping
+        ) -> p.Result[m.Root.PipelineStageData]:
             """Validate batch of items.
 
             Returns:
-                The resulting ``p.Result[PipelineStageData]``.
+                The resulting ``p.Result[m.Root.PipelineStageData]``.
 
             """
             items_to_validate = _JsonMappingSequence.extract(data.get("items", []))
             if not items_to_validate:
-                return r[PipelineStageData].fail("Invalid items data")
+                return r[m.Root.PipelineStageData].fail("Invalid items data")
             validation_results: MutableSequence[
                 FlextRootAdvancedProcessingExample.ValidationResult
             ] = []
@@ -291,7 +271,7 @@ class FlextRootAdvancedProcessingExample:
                 if result.success:
                     validation_results.append(result.value)
                 else:
-                    return r[PipelineStageData].fail(
+                    return r[m.Root.PipelineStageData].fail(
                         f"Validation failed: {result.error}",
                     )
             result_data: t.JsonMapping = t.json_mapping_adapter().validate_python({
@@ -303,12 +283,14 @@ class FlextRootAdvancedProcessingExample:
                 "valid_count": sum(1 for r in validation_results if r.valid),
                 "invalid_count": sum(1 for r in validation_results if not r.valid),
             })
-            payload = PipelinePayload.model_validate({"values": result_data})
-            return r[PipelineStageData].ok(PipelineStageData(data=payload))
+            payload = m.Root.PipelinePayload.model_validate({"values": result_data})
+            return r[m.Root.PipelineStageData].ok(
+                m.Root.PipelineStageData(data=payload)
+            )
 
         @staticmethod
         def _validate_single_item(
-            item: ItemDict,
+            item: t.JsonMapping,
         ) -> p.Result[FlextRootAdvancedProcessingExample.ValidationResult]:
             """Validate a single item.
 
@@ -327,7 +309,9 @@ class FlextRootAdvancedProcessingExample:
             if not name or not isinstance(name, str):
                 violations.append("Missing or invalid name field")
             value = item.get("value", "")
-            if isinstance(value, str) and len(value) > _Constants.MAX_VALUE_LENGTH:
+            if isinstance(value, str) and len(value) > (
+                FlextRootExamplesConstants.MAX_VALUE_LENGTH
+            ):
                 warnings.append("Value field is very long")
             return r[FlextRootAdvancedProcessingExample.ValidationResult].ok(
                 FlextRootAdvancedProcessingExample.ValidationResult(
@@ -340,11 +324,11 @@ class FlextRootAdvancedProcessingExample:
             )
 
     @staticmethod
-    def create_sample_items(count: int = 100) -> t.SequenceOf[ItemDict]:
+    def create_sample_items(count: int = 100) -> t.SequenceOf[t.JsonMapping]:
         """Create sample items for testing.
 
         Returns:
-            The resulting ``t.SequenceOf[ItemDict]``.
+            The resulting ``t.SequenceOf[t.JsonMapping]``.
 
         """
         return [

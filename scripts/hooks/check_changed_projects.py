@@ -14,9 +14,12 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from flext import p
 from flext_cli import cli
+
+if TYPE_CHECKING:
+    from flext import p
 
 
 class FlextRootCheckChangedProjects:

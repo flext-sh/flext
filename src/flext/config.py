@@ -17,8 +17,18 @@ if TYPE_CHECKING:
 class FlextRootConfig(flext_core.FlextConfig):
     """Workspace root configuration — extends flext-core config."""
 
+    @classmethod
+    def published(cls) -> FlextRootConfig:
+        """Return the process-wide configuration singleton.
 
-config: FlextRootConfig = FlextRootConfig.fetch_global()
-"""Process-wide root configuration singleton."""
+        Returns:
+            The resulting ``FlextRootConfig``.
+
+        """
+        return cls.fetch_global()
+
+
+config = FlextRootConfig.published()
+"""The singleton alias the rule contract allows beside the facade class."""
 
 __all__: t.VariadicTuple[str] = ("FlextRootConfig", "config")

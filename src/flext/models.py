@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import flext_core
 import flext_infra
 from flext._models.base import FlextRootModelsBase
 from flext._models.config import FlextRootModelsConfig
