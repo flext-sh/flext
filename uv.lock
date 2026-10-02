@@ -11,7 +11,7 @@ supported-markers = [
 ]
 
 [manifest]
-overrides = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=e58fa50bf802a0902e15fb3c7f1fa206ad08d2cb" }]
+overrides = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=2b5212275e324c68578191b97bdf82f4b6af943c" }]
 excludes = [
     { package = { name = "flext-cli" }, dependencies = ["flext-core"] },
     { package = { name = "flext-core" }, dependencies = ["flext-cli"] },
@@ -940,7 +940,7 @@ requires-dist = [
     { name = "dependency-injector", specifier = ">=4.49.1" },
     { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev" },
     { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=e58fa50bf802a0902e15fb3c7f1fa206ad08d2cb" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=2b5212275e324c68578191b97bdf82f4b6af943c" },
     { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev" },
     { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev" },
     { name = "importlib-resources", specifier = ">=7.1.0" },
@@ -953,7 +953,7 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-codegen = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=e58fa50bf802a0902e15fb3c7f1fa206ad08d2cb" }]
+codegen = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=2b5212275e324c68578191b97bdf82f4b6af943c" }]
 dev = [
     { name = "actionlint-py", specifier = ">=1.7.12.24" },
     { name = "bandit", specifier = ">=1.9.4" },
@@ -1025,7 +1025,7 @@ workspace = [
     { name = "flext-dbt-oracle", git = "https://github.com/flext-sh/flext-dbt-oracle.git?rev=0.12.0-dev" },
     { name = "flext-dbt-oracle-wms", git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?rev=0.12.0-dev" },
     { name = "flext-grpc", git = "https://github.com/flext-sh/flext-grpc.git?rev=0.12.0-dev" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=e58fa50bf802a0902e15fb3c7f1fa206ad08d2cb" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=2b5212275e324c68578191b97bdf82f4b6af943c" },
     { name = "flext-ldap", git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev" },
     { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev" },
     { name = "flext-meltano", git = "https://github.com/flext-sh/flext-meltano.git?rev=0.12.0-dev" },
@@ -1117,7 +1117,7 @@ dependencies = [
 [[package]]
 name = "flext-core"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev#5e7a7cf9c790f1eca4dc78a222df0b47e0f81646" }
+source = { git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev#5b13cf7eef9d4bfe119cff56e72a49877cd4beb0" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1250,7 +1250,7 @@ dependencies = [
 [[package]]
 name = "flext-infra"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-infra.git?rev=e58fa50bf802a0902e15fb3c7f1fa206ad08d2cb#e58fa50bf802a0902e15fb3c7f1fa206ad08d2cb" }
+source = { git = "https://github.com/flext-sh/flext-infra.git?rev=2b5212275e324c68578191b97bdf82f4b6af943c#2b5212275e324c68578191b97bdf82f4b6af943c" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1275,7 +1275,7 @@ dependencies = [
 [[package]]
 name = "flext-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev#2e93f5cfa2d4ba27156748e0f7ea2c2a6a971258" }
+source = { git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev#7a149a5b1b3bf9fc62eaf2dd23560f6349764af8" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },

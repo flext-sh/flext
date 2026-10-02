@@ -13,8 +13,7 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext import c, config, m, p, settings, t, u
-
+    from flext import c, m, p, t, u
     from tests import infra, unit
     from tests.base import TestsFlextRootServiceBase, s
 
@@ -22,12 +21,10 @@ if TYPE_CHECKING:
 __all__: tuple[str, ...] = (
     "TestsFlextRootServiceBase",
     "c",
-    "config",
     "infra",
     "m",
     "p",
     "s",
-    "settings",
     "t",
     "u",
     "unit",
@@ -39,7 +36,7 @@ _LAZY_IMPORTS = MappingProxyType(
             ".base": ("TestsFlextRootServiceBase", "s"),
             ".infra": ("infra",),
             ".unit": ("unit",),
-            "flext": ("c", "config", "m", "p", "settings", "t", "u"),
+            "flext": ("c", "m", "p", "t", "u"),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,

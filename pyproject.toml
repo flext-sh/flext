@@ -23,7 +23,7 @@ dependencies = [
   "dependency-injector>=4.49.1",
   "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
   "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@e58fa50bf802a0902e15fb3c7f1fa206ad08d2cb",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@2b5212275e324c68578191b97bdf82f4b6af943c",
   "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
   "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "importlib-resources>=7.1.0",
@@ -63,7 +63,7 @@ Repository = "https://github.com/flext-sh/flext"
 
 [dependency-groups]
 codegen = [
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@e58fa50bf802a0902e15fb3c7f1fa206ad08d2cb",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@2b5212275e324c68578191b97bdf82f4b6af943c",
 ]
 dev = [
   "actionlint-py>=1.7.12.24",
@@ -136,7 +136,7 @@ workspace = [
   "flext-dbt-oracle @ git+https://github.com/flext-sh/flext-dbt-oracle.git@0.12.0-dev",
   "flext-dbt-oracle-wms @ git+https://github.com/flext-sh/flext-dbt-oracle-wms.git@0.12.0-dev",
   "flext-grpc @ git+https://github.com/flext-sh/flext-grpc.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@e58fa50bf802a0902e15fb3c7f1fa206ad08d2cb",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@2b5212275e324c68578191b97bdf82f4b6af943c",
   "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
   "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
   "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
@@ -565,7 +565,7 @@ whitelines = 1
 [tool.uv]
 link-mode = "copy"
 override-dependencies = [
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@e58fa50bf802a0902e15fb3c7f1fa206ad08d2cb",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@2b5212275e324c68578191b97bdf82f4b6af943c",
 ]
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 
