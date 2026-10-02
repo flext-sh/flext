@@ -41,7 +41,7 @@ def main() -> int:
     )
     entries = client.parse_ldif(ldif_content).unwrap().entries
     if not entries:
-        raise RuntimeError(c.ErrorMessages.LDIF_NO_ENTRIES)
+        raise RuntimeError(FlextRootExamplesConstants.ErrorMessages.LDIF_NO_ENTRIES)
     acl_result = (
         FlextRootAclProcessingExample(service=client)
         .process_acls_with_pipeline(
@@ -52,14 +52,18 @@ def main() -> int:
         .unwrap()
     )
     if not acl_result.granted or acl_result.matched_acl is None:
-        raise RuntimeError(c.ErrorMessages.ACL_PERMISSION_NOT_GRANTED)
+        raise RuntimeError(
+            FlextRootExamplesConstants.ErrorMessages.ACL_PERMISSION_NOT_GRANTED,
+        )
 
     oid_attributes = (
         client.acl(ldif_c.Ldif.ServerTypes.OID).unwrap().resolve_acl_attributes()
     )
     first_attribute, last_attribute = oid_attributes[0], oid_attributes[-1]
     if first_attribute.lower() == last_attribute.lower():
-        raise RuntimeError(c.ErrorMessages.OID_INSUFFICIENT_ATTRIBUTES)
+        raise RuntimeError(
+            FlextRootExamplesConstants.ErrorMessages.OID_INSUFFICIENT_ATTRIBUTES,
+        )
     oid_acl = "access to entry by * (browse)"
     oid_entry = ldif_m.Ldif.Entry(
         dn=ldif_m.Ldif.DN(value="cn=sample,dc=example,dc=com"),
@@ -72,24 +76,32 @@ def main() -> int:
         ldif_c.Ldif.ServerTypes.OID,
     ).unwrap()
     if len(oid_response.acls) != FlextRootExamplesConstants.EXPECTED_OID_ACL_COUNT:
-        raise RuntimeError(c.ErrorMessages.OID_ACL_ATTRIBUTE_LOST)
+        raise RuntimeError(
+            FlextRootExamplesConstants.ErrorMessages.OID_ACL_ATTRIBUTE_LOST,
+        )
 
     advanced = (
         FlextRootAdvancedProcessingExample
         .FlextLdifProcessingPipeline(
             items=({"id": "sample", "name": "Example", "value": "data"},),
-            stages=(c.Stage.VALIDATE, c.Stage.PROCESS, c.Stage.ANALYZE),
+            stages=(
+                FlextRootExamplesConstants.Stage.VALIDATE,
+                FlextRootExamplesConstants.Stage.PROCESS,
+                FlextRootExamplesConstants.Stage.ANALYZE,
+            ),
             max_workers=1,
         )
         .execute()
         .unwrap()
     )
     if not advanced.data.values.get("analysis"):
-        raise RuntimeError(c.ErrorMessages.ADVANCED_NO_ANALYSIS)
+        raise RuntimeError(
+            FlextRootExamplesConstants.ErrorMessages.ADVANCED_NO_ANALYSIS,
+        )
 
     complete = FlextRootCompleteWorkflowExample.run_example().unwrap()
     if not complete.content:
-        raise RuntimeError(c.ErrorMessages.COMPLETE_NO_CONTENT)
+        raise RuntimeError(FlextRootExamplesConstants.ErrorMessages.COMPLETE_NO_CONTENT)
 
     cli.print(f"ACL=granted OID={len(oid_response.acls)} advanced=ok complete=ok")
     return 0

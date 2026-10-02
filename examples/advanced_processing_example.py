@@ -102,12 +102,8 @@ class FlextRootAdvancedProcessingExample:
                 if result.failure:
                     return result
                 current_data = result.value["data"]["values"]
-            payload = FlextRootAdvancedProcessingExample.PipelinePayload.model_validate({
-                "values": current_data,
-            })
-            return r[t.JsonMapping].ok(
-                t.JsonMapping(data=payload),
-            )
+            payload = {"values": current_data}
+            return r[t.JsonMapping].ok({"data": payload})
 
         @staticmethod
         def _analyze_results(
@@ -182,12 +178,8 @@ class FlextRootAdvancedProcessingExample:
                 **data,
                 "analysis": analysis,
             })
-            payload = FlextRootAdvancedProcessingExample.PipelinePayload.model_validate({
-                "values": result_data,
-            })
-            return r[t.JsonMapping].ok(
-                t.JsonMapping(data=payload),
-            )
+            payload = {"values": result_data}
+            return r[t.JsonMapping].ok({"data": payload})
 
         def _process_parallel(
             self,
@@ -239,12 +231,8 @@ class FlextRootAdvancedProcessingExample:
                 if items_to_process
                 else 0,
             })
-            payload = FlextRootAdvancedProcessingExample.PipelinePayload.model_validate({
-                "values": result_data,
-            })
-            return r[t.JsonMapping].ok(
-                t.JsonMapping(data=payload),
-            )
+            payload = {"values": result_data}
+            return r[t.JsonMapping].ok({"data": payload})
 
         def _validate_batch(
             self,
@@ -285,12 +273,8 @@ class FlextRootAdvancedProcessingExample:
                 "valid_count": sum(1 for r in validation_results if r.valid),
                 "invalid_count": sum(1 for r in validation_results if not r.valid),
             })
-            payload = FlextRootAdvancedProcessingExample.PipelinePayload.model_validate({
-                "values": result_data,
-            })
-            return r[t.JsonMapping].ok(
-                t.JsonMapping(data=payload),
-            )
+            payload = {"values": result_data}
+            return r[t.JsonMapping].ok({"data": payload})
 
         @staticmethod
         def _validate_single_item(
