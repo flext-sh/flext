@@ -1,3 +1,5 @@
+# Copyright (c) 2026 FLEXT Team. All rights reserved.
+
 """Service base for flext-workspace tests."""
 
 from __future__ import annotations
