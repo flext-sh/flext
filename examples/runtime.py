@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from examples import FlextRootExamplesConstants as c
+from examples import FlextRootExamplesConstants
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
@@ -24,7 +24,7 @@ def main() -> int:
         RuntimeError: If ``not entries``; or if ``not acl_result.granted or
             acl_result.matched_acl is None``; or if ``first_attribute.lower() ==
             last_attribute.lower()``; or if ``len(oid_response.acls) !=
-            c.EXPECTED_OID_ACL_COUNT``; or if ``not
+            FlextRootExamplesConstants.EXPECTED_OID_ACL_COUNT``; or if ``not
             advanced.data.values.get('analysis')``; or if ``not complete.content``.
 
     """
@@ -70,7 +70,7 @@ def main() -> int:
         oid_entry,
         ldif_c.Ldif.ServerTypes.OID,
     ).unwrap()
-    if len(oid_response.acls) != c.EXPECTED_OID_ACL_COUNT:
+    if len(oid_response.acls) != FlextRootExamplesConstants.EXPECTED_OID_ACL_COUNT:
         raise RuntimeError(c.ErrorMessages.OID_ACL_ATTRIBUTE_LOST)
 
     advanced = (

@@ -23,7 +23,7 @@ dependencies = [
   "dependency-injector>=4.49.1",
   "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
   "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@38c7a7812144505fa431dadfa32eedb2c6bdbe91",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@2b5212275e324c68578191b97bdf82f4b6af943c",
   "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
   "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "importlib-resources>=7.1.0",
@@ -63,7 +63,7 @@ Repository = "https://github.com/flext-sh/flext"
 
 [dependency-groups]
 codegen = [
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@38c7a7812144505fa431dadfa32eedb2c6bdbe91",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@2b5212275e324c68578191b97bdf82f4b6af943c",
 ]
 dev = [
   "actionlint-py>=1.7.12.24",
@@ -136,7 +136,7 @@ workspace = [
   "flext-dbt-oracle @ git+https://github.com/flext-sh/flext-dbt-oracle.git@0.12.0-dev",
   "flext-dbt-oracle-wms @ git+https://github.com/flext-sh/flext-dbt-oracle-wms.git@0.12.0-dev",
   "flext-grpc @ git+https://github.com/flext-sh/flext-grpc.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@38c7a7812144505fa431dadfa32eedb2c6bdbe91",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@2b5212275e324c68578191b97bdf82f4b6af943c",
   "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
   "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
   "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
@@ -182,40 +182,7 @@ omit = [
 ]
 
 [tool.deptry]
-known_first_party = [
-  "flext",
-  "flext_api",
-  "flext_auth",
-  "flext_cli",
-  "flext_core",
-  "flext_db_oracle",
-  "flext_dbt_ldap",
-  "flext_dbt_ldif",
-  "flext_dbt_oracle",
-  "flext_dbt_oracle_wms",
-  "flext_grpc",
-  "flext_infra",
-  "flext_ldap",
-  "flext_ldif",
-  "flext_meltano",
-  "flext_observability",
-  "flext_oracle_oic",
-  "flext_oracle_wms",
-  "flext_plugin",
-  "flext_quality",
-  "flext_tap_ldap",
-  "flext_tap_ldif",
-  "flext_tap_oracle",
-  "flext_tap_oracle_oic",
-  "flext_tap_oracle_wms",
-  "flext_target_ldap",
-  "flext_target_ldif",
-  "flext_target_oracle",
-  "flext_target_oracle_oic",
-  "flext_target_oracle_wms",
-  "flext_tests",
-  "flext_web",
-]
+known_first_party = ["flext", "flext_core"]
 pep621_dev_dependency_groups = ["dev"]
 
 [tool.hatch.metadata]
@@ -503,40 +470,7 @@ msg = "Use cli.create_app_with_common_params / cli.register_command from flext_c
 [tool.ruff.lint.isort]
 combine-as-imports = true
 force-single-line = false
-known-first-party = [
-  "flext",
-  "flext_api",
-  "flext_auth",
-  "flext_cli",
-  "flext_core",
-  "flext_db_oracle",
-  "flext_dbt_ldap",
-  "flext_dbt_ldif",
-  "flext_dbt_oracle",
-  "flext_dbt_oracle_wms",
-  "flext_grpc",
-  "flext_infra",
-  "flext_ldap",
-  "flext_ldif",
-  "flext_meltano",
-  "flext_observability",
-  "flext_oracle_oic",
-  "flext_oracle_wms",
-  "flext_plugin",
-  "flext_quality",
-  "flext_tap_ldap",
-  "flext_tap_ldif",
-  "flext_tap_oracle",
-  "flext_tap_oracle_oic",
-  "flext_tap_oracle_wms",
-  "flext_target_ldap",
-  "flext_target_ldif",
-  "flext_target_oracle",
-  "flext_target_oracle_oic",
-  "flext_target_oracle_wms",
-  "flext_tests",
-  "flext_web",
-]
+known-first-party = ["flext", "flext_core"]
 split-on-trailing-comma = false
 
 [tool.ruff.lint.per-file-ignores]
@@ -600,6 +534,11 @@ split-on-trailing-comma = false
   "verbose-raise",
   "write-whole-file",
 ]
+"scripts/**/*.py" = [
+  "commented-out-code",
+  "line-too-long",
+  "typing-only-first-party-import",
+]
 "tests/**/*.py" = ["assert"]
 
 [tool.ruff.lint.pydocstyle]
@@ -626,7 +565,7 @@ whitelines = 1
 [tool.uv]
 link-mode = "copy"
 override-dependencies = [
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@38c7a7812144505fa431dadfa32eedb2c6bdbe91",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@2b5212275e324c68578191b97bdf82f4b6af943c",
 ]
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 
