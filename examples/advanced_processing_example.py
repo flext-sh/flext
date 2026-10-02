@@ -14,7 +14,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
+from collections.abc import Callable, MutableMapping, MutableSequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
@@ -29,50 +29,6 @@ class FlextRootAdvancedProcessingExample:
         """Internal constants for advanced processing example."""
 
         MAX_VALUE_LENGTH: int = 100
-
-    class _JsonMappingOrNone:
-        """Helper to extract JsonMapping from JsonValue."""
-
-        @staticmethod
-        def extract(value: t.JsonValue) -> t.JsonMapping | None:
-            if not isinstance(value, Mapping):
-                return None
-            return dict(value.items())
-
-    class _JsonMappingSequence:
-        """Helper to extract sequence of JsonMapping from JsonValue."""
-
-        @staticmethod
-        def extract(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
-            if not isinstance(value, Sequence) or isinstance(
-                value,
-                (str, bytes, bytearray),
-            ):
-                return ()
-            mappings: MutableSequence[t.JsonMapping] = []
-            for item in value:
-                mapping_item = _JsonMappingOrNone.extract(item)
-                if mapping_item is not None:
-                    mappings.append(mapping_item)
-            return tuple(mappings)
-
-    class _StringSequence:
-        """Helper to extract string sequence from JsonValue."""
-
-        @staticmethod
-        def extract(value: t.JsonValue) -> t.StrSequence:
-            if not isinstance(value, Sequence) or isinstance(
-                value,
-                (str, bytes, bytearray),
-            ):
-                return ()
-            strings: MutableSequence[str] = []
-            for item in value:
-                if isinstance(item, str):
-                    strings.append(item)
-            return tuple(strings)
-
-    Stage = FlextRootExamplesConstants.Stage
 
     class ValidationResult(m.BaseModel):
         """Result of validation operation."""
@@ -163,11 +119,15 @@ class FlextRootAdvancedProcessingExample:
                 The resulting ``p.Result[t.JsonMapping]``.
 
             """
-            processed_items = _JsonMappingSequence.extract(
-                data.get("processed_items", []),
+            processed_items = (
+                FlextRootExamplesConstants.JsonMappingSequenceHelper.extract(
+                    data.get("processed_items", []),
+                )
             )
-            validation_results = _JsonMappingSequence.extract(
-                data.get("validation_results", []),
+            validation_results = (
+                FlextRootExamplesConstants.JsonMappingSequenceHelper.extract(
+                    data.get("validation_results", []),
+                )
             )
             field_counts: MutableMapping[int, int] = {}
             complexity_scores: MutableSequence[float] = []
@@ -190,11 +150,19 @@ class FlextRootAdvancedProcessingExample:
                     if result_item.get("valid") is True
                 ),
                 "total_violations": sum(
-                    len(_StringSequence.extract(result_item.get("violations")))
+                    len(
+                        FlextRootExamplesConstants.StringSequenceHelper.extract(
+                            result_item.get("violations"),
+                        ),
+                    )
                     for result_item in validation_results
                 ),
                 "total_warnings": sum(
-                    len(_StringSequence.extract(result_item.get("warnings")))
+                    len(
+                        FlextRootExamplesConstants.StringSequenceHelper.extract(
+                            result_item.get("warnings"),
+                        ),
+                    )
                     for result_item in validation_results
                 ),
             }
@@ -222,7 +190,8 @@ class FlextRootAdvancedProcessingExample:
             )
 
         def _process_parallel(
-            self, data: t.JsonMapping,
+            self,
+            data: t.JsonMapping,
         ) -> p.Result[t.JsonMapping]:
             """Process items in parallel.
 
@@ -230,7 +199,11 @@ class FlextRootAdvancedProcessingExample:
                 The resulting ``p.Result[t.JsonMapping]``.
 
             """
-            items_to_process = _JsonMappingSequence.extract(data.get("items", []))
+            items_to_process = (
+                FlextRootExamplesConstants.JsonMappingSequenceHelper.extract(
+                    data.get("items", []),
+                )
+            )
             if not items_to_process:
                 return r[t.JsonMapping].fail(
                     "Invalid items data",
@@ -274,7 +247,8 @@ class FlextRootAdvancedProcessingExample:
             )
 
         def _validate_batch(
-            self, data: t.JsonMapping,
+            self,
+            data: t.JsonMapping,
         ) -> p.Result[t.JsonMapping]:
             """Validate batch of items.
 
@@ -282,7 +256,11 @@ class FlextRootAdvancedProcessingExample:
                 The resulting ``p.Result[t.JsonMapping]``.
 
             """
-            items_to_validate = _JsonMappingSequence.extract(data.get("items", []))
+            items_to_validate = (
+                FlextRootExamplesConstants.JsonMappingSequenceHelper.extract(
+                    data.get("items", []),
+                )
+            )
             if not items_to_validate:
                 return r[t.JsonMapping].fail(
                     "Invalid items data",
@@ -335,7 +313,11 @@ class FlextRootAdvancedProcessingExample:
             if not name or not isinstance(name, str):
                 violations.append("Missing or invalid name field")
             value = item.get("value", "")
-            if isinstance(value, str) and len(value) > _Constants.MAX_VALUE_LENGTH:
+            if (
+                isinstance(value, str)
+                and len(value)
+                > FlextRootAdvancedProcessingExample.Constants.MAX_VALUE_LENGTH
+            ):
                 warnings.append("Value field is very long")
             return r[FlextRootAdvancedProcessingExample.ValidationResult].ok(
                 FlextRootAdvancedProcessingExample.ValidationResult(
