@@ -27,6 +27,7 @@ declarative pilot: **flext-tap-ldap**, landed). Rollout to the remaining
 **Rollout status (verified 2026-09-17):**
 
 | Project               | Status                             | Evidence                                                                                                               |
+
 | Project               | Status                             | Evidence                                                                                                               |
 | --------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | `flext-tap-ldap`      | **Converted** (declarative driver) | Pilot realized 2026-07-17: src 3276 → 914 LOC (−72%)                                                                   |
@@ -141,6 +142,7 @@ Adopt the **Thin Domain Driver** contract for every `flext-(dbt|tap|target)-<dom
 project. Three layers, each with one owner:
 
 | Layer                                                                      | Owner                                     | Responsibility                                                                                                                                                     |
+
 | Layer                                                                      | Owner                                     | Responsibility                                                                                                                                                     |
 | -------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Integration interfaces** (dbt/tap/target/singer machinery in FLEXT form) | `flext-meltano`                           | the 3 consumer bases + `c/t/p/m/u` for meltano; 100% domain-agnostic (never references oracle/ldap/…)                                                              |
