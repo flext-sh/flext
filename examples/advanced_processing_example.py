@@ -22,11 +22,16 @@ from examples import FlextRootExamplesConstants, m, p, t, u
 from flext_core import r
 
 
-class _JsonMappingOrNone:
+class FlextRootJsonMappingOrNone:
     """Helper to extract JsonMapping from JsonValue."""
 
     @staticmethod
     def extract(value: t.JsonValue) -> t.JsonMapping | None:
+        """Provide ``extract``.
+
+        Returns:
+            The resulting ``t.JsonMapping | None``.
+        """
         if not isinstance(value, Mapping):
             return None
         return dict(value.items())
@@ -44,7 +49,7 @@ class _JsonMappingSequence:
             return ()
         mappings: MutableSequence[t.JsonMapping] = []
         for item in value:
-            mapping_item = _JsonMappingOrNone.extract(item)
+            mapping_item = FlextRootJsonMappingOrNone.extract(item)
             if mapping_item is not None:
                 mappings.append(mapping_item)
         return tuple(mappings)
@@ -136,7 +141,7 @@ class FlextRootAdvancedProcessingExample:
                 current_data = result.value.data.values
             payload = m.Root.PipelinePayload.model_validate({"values": current_data})
             return r[m.Root.PipelineStageData].ok(
-                m.Root.PipelineStageData(data=payload)
+                m.Root.PipelineStageData(data=payload),
             )
 
         @staticmethod
@@ -200,11 +205,11 @@ class FlextRootAdvancedProcessingExample:
             })
             payload = m.Root.PipelinePayload.model_validate({"values": result_data})
             return r[m.Root.PipelineStageData].ok(
-                m.Root.PipelineStageData(data=payload)
+                m.Root.PipelineStageData(data=payload),
             )
 
         def _process_parallel(
-            self, data: t.JsonMapping
+            self, data: t.JsonMapping,
         ) -> p.Result[m.Root.PipelineStageData]:
             """Process items in parallel.
 
@@ -248,11 +253,11 @@ class FlextRootAdvancedProcessingExample:
             })
             payload = m.Root.PipelinePayload.model_validate({"values": result_data})
             return r[m.Root.PipelineStageData].ok(
-                m.Root.PipelineStageData(data=payload)
+                m.Root.PipelineStageData(data=payload),
             )
 
         def _validate_batch(
-            self, data: t.JsonMapping
+            self, data: t.JsonMapping,
         ) -> p.Result[m.Root.PipelineStageData]:
             """Validate batch of items.
 
@@ -285,7 +290,7 @@ class FlextRootAdvancedProcessingExample:
             })
             payload = m.Root.PipelinePayload.model_validate({"values": result_data})
             return r[m.Root.PipelineStageData].ok(
-                m.Root.PipelineStageData(data=payload)
+                m.Root.PipelineStageData(data=payload),
             )
 
         @staticmethod

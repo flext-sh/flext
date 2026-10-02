@@ -28,7 +28,8 @@ class FlextRootConfig(flext_core.FlextConfig):
         return cls.fetch_global()
 
 
-config = FlextRootConfig.published()
-"""The singleton alias the rule contract allows beside the facade class."""
+config = FlextRootConfig
+"""The facade alias the rule contract allows beside the class; the
+process-wide singleton comes from ``FlextRootConfig.published()``."""
 
 __all__: t.VariadicTuple[str] = ("FlextRootConfig", "config")
