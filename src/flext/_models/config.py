@@ -38,6 +38,3 @@ class FlextRootModelsConfig:
         data: FlextRootModelsConfig.PipelinePayload = m.Field(
             description="Payload produced by the preceding pipeline stage.",
         )
-
-
-FlextRootModelsConfig.PipelineStageData.model_rebuild()
