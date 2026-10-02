@@ -63,7 +63,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          submodules: false
+          submodules: true
           fetch-depth: 0
       # Cross-repo private git dependencies: the workflow token is scoped to
       # this repository only, so it cannot clone siblings that turn private.
@@ -303,7 +303,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          submodules: false
+          submodules: true
       # Cross-repo private git dependencies: the workflow token is scoped to
       # this repository only, so it cannot clone siblings that turn private.
       # Every declared sibling is public today and resolves anonymously; the
