@@ -31,7 +31,7 @@ dependencies = [
   "pydantic>=2.13.5",
   "pydantic-settings>=2.15.0",
   "pyyaml>=6.0.3",
-  "structlog>=25.5.0",
+  "structlog>=26.1.0",
   "typing-extensions>=4.16.0",
 ]
 description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
@@ -545,6 +545,9 @@ split-on-trailing-comma = false
   "runtime-import-in-type-checking-block",
   "unused-import",
 ]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.tomlsort]
 all = true
