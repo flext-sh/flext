@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import flext_infra
+
 from flext._constants.base import FlextRootConstantsBase
 from flext._constants.config import FlextRootConstantsConfig
 

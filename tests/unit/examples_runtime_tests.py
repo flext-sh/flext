@@ -8,10 +8,9 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
+import flext_ldif
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
-
-import flext_ldif
 from flext_ldif import FlextLdif
 from flext_tests import tm
 
