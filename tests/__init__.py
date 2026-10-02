@@ -14,6 +14,7 @@ from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
     from flext import c, config, m, p, settings, t, u
+
     from tests import infra, unit
     from tests.base import TestsFlextRootServiceBase, s
 
