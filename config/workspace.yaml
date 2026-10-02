@@ -7,7 +7,7 @@ name: flext
 candidate_dependencies:
   - distribution: flext-infra
     url: https://github.com/flext-sh/flext-infra.git
-    commit: 6ca674aeb96f1085e53fa7563e212efdff4e7987
+    commit: e58fa50bf802a0902e15fb3c7f1fa206ad08d2cb
 # Why (green mandate, cosmos-3flk9 decision A): production sources are the
 # namespace validator's declared scope — tests host pytest conventions and
 # scripts/examples are thin command and documentation surfaces. Lint, type,
