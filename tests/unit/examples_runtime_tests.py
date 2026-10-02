@@ -10,7 +10,6 @@ from collections.abc import Mapping
 
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
-
 from flext_ldif import FlextLdif, c, m
 from flext_tests import tm
 

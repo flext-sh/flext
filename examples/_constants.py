@@ -6,7 +6,10 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Mapping, MutableSequence, Sequence
 from enum import StrEnum, unique
+
+from examples import t
 
 
 class FlextRootExamplesConstants:
@@ -48,3 +51,51 @@ class FlextRootExamplesConstants:
 
 
 __all__: list[str] = ["FlextRootExamplesConstants"]
+
+
+class JsonMappingOrNoneHelper:
+    """Helper to extract JsonMapping from JsonValue."""
+
+    @staticmethod
+    def extract(value: t.JsonValue) -> t.JsonMapping | None:
+        if not isinstance(value, Mapping):
+            return None
+        return dict(value.items())
+
+
+class JsonMappingSequenceHelper:
+    """Helper to extract sequence of JsonMapping from JsonValue."""
+
+    @staticmethod
+    def extract(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
+        if not isinstance(value, Sequence) or isinstance(
+            value,
+            (str, bytes, bytearray),
+        ):
+            return ()
+        mappings: MutableSequence[t.JsonMapping] = []
+        for item in value:
+            mapping_item = FlextRootExamplesConstants.JsonMappingOrNone.extract(item)
+            if mapping_item is not None:
+                mappings.append(mapping_item)
+        return tuple(mappings)
+
+
+class StringSequenceHelper:
+    """Helper to extract string sequence from JsonValue."""
+
+    @staticmethod
+    def extract(value: t.JsonValue) -> t.StrSequence:
+        if not isinstance(value, Sequence) or isinstance(
+            value,
+            (str, bytes, bytearray),
+        ):
+            return ()
+        strings: MutableSequence[str] = []
+        for item in value:
+            if isinstance(item, str):
+                strings.append(item)
+        return tuple(strings)
+
+
+Stage = FlextRootExamplesConstants.Stage
