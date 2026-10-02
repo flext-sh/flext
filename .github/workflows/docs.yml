@@ -101,7 +101,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          submodules: false
+          submodules: true
           fetch-depth: 0
 
       # Why: a cold runner re-downloaded every locked Mise tool
@@ -218,7 +218,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          submodules: false
+          submodules: true
           fetch-depth: 0
 
       # Why: same cold-download protection as the docs-quality job.
