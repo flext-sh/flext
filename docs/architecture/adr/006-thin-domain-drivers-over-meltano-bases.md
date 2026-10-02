@@ -26,7 +26,7 @@ declarative pilot: **flext-tap-ldap**, landed). Rollout to the remaining
 
 **Rollout status (verified 2026-09-17):**
 
-| Project               | Status                             | Evidence                                                                                                               |
+| Project | Status | Evidence |
 
 | Project               | Status                             | Evidence                                                                                                               |
 | --------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
@@ -141,7 +141,7 @@ Adopt the **Thin Domain Driver** contract for every `flext-(dbt|tap|target)-<dom
 
 project. Three layers, each with one owner:
 
-| Layer                                                                      | Owner                                     | Responsibility                                                                                                                                                     |
+| Layer | Owner | Responsibility |
 
 | Layer                                                                      | Owner                                     | Responsibility                                                                                                                                                     |
 | -------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
