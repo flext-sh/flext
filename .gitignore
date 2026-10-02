@@ -59,6 +59,7 @@ scripts/maintenance/
 !.python-version
 
 # mise native dependency graphs
+/.mise-lock-transaction.lock
 !/.mise/
 /.mise/*
 !/.mise/locks/
