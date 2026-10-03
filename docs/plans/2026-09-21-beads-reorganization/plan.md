@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-21). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
+
 # Beads Reorganization & Cleanup Campaign — 2026-09-21
 
 <!-- TOC START -->
@@ -164,9 +168,9 @@ read title+body
 - **Fleet-green execution (session 0.12-stabilize, 2026-09-22)** — implementing
   `.kilo/plans/fleet-green-and-beads-closure.md`:
   - **W4 `Final`→`ClassVar`: VERIFIED COMPLETE.** Imported `models`/`constants` with
-    `PydanticDeprecatedSince211` escalated to error across all 32 repos → **32/32
-    CLEAN** (no deprecation). Remaining `Final[` occurrences are nested-class attributes
-    pydantic does not process as fields; no action needed.
+    `PydanticDeprecatedSince211` escalated to error across all 32 repos →
+    **32/32 CLEAN** (no deprecation). Remaining `Final[` occurrences are nested-class
+    attributes pydantic does not process as fields; no action needed.
   - **W3 runtime-census inventory measured** (gate isolated, per repo): ~1000 findings.
     Dominant codes: ENFORCE-047/049 (facade base/MRO), 066 (compat aliases), 079
     (constants outside `_constants`), 067 (module class cap), 042
@@ -192,18 +196,18 @@ read title+body
 - **Waves lane (reval260921, session f1d47a5f, ledger
   `.beads/artifacts/reval260921/ledger.csv`)** — analysis waves C1 (55) / C2 (134) / D
   (38) / A (33) complete item-by-item (4-source, verdicts in `verdicts/*.json`); B1
-  running, B2 queued (rate-limit serialisation). **6 batches applied, ~77 mutations,
-  graph clean after each**: claims released (co1th SUPERSEDED→cu85s; 4 stale → open),
-  ancestry-proven DONE closures (czzns, v1xzd, tqhe9), 28 canonical reparents total
-  (features+tasks; journal-trio adjudicated: expose→harvest precedes any delete, ADR
-  required), cpzjo cutover (7 children mapped child-by-child → SUPERSEDED→1wjg1), d421
-  SUPERSEDED→wkii, crossrefs (mbowt, ro6mj, ywet, m7xk7, 4as1t), 38p39 relink (arms
-  60s/120s unlanded). Orphans 6→4; flext-xtzkz retirement ledger →itpd1 (stale, feeds
-  B6). **jbfz** = next epic closure candidate (16/16 children closed, Snyk #292 merged)
-  — held for clean re-scan (4th source). flext-web 6560c1d committed conflict markers
-  healed via canonical gen + runtime proof (a9a56f5/f2f51ef). Integration: guarded
-  ladder (SELECTED_PROJECTS, infra WIP guard, transient retry) cycling the verbs on the
-  new base; #257 MERGED noted.
+  running, B2 queued (rate-limit serialisation).
+  **6 batches applied, ~77 mutations, graph clean after each**: claims released (co1th
+  SUPERSEDED→cu85s; 4 stale → open), ancestry-proven DONE closures (czzns, v1xzd,
+  tqhe9), 28 canonical reparents total (features+tasks; journal-trio adjudicated:
+  expose→harvest precedes any delete, ADR required), cpzjo cutover (7 children mapped
+  child-by-child → SUPERSEDED→1wjg1), d421 SUPERSEDED→wkii, crossrefs (mbowt, ro6mj,
+  ywet, m7xk7, 4as1t), 38p39 relink (arms 60s/120s unlanded). Orphans 6→4; flext-xtzkz
+  retirement ledger →itpd1 (stale, feeds B6). **jbfz** = next epic closure candidate
+  (16/16 children closed, Snyk #292 merged) — held for clean re-scan (4th source).
+  flext-web 6560c1d committed conflict markers healed via canonical gen + runtime proof
+  (a9a56f5/f2f51ef). Integration: guarded ladder (SELECTED_PROJECTS, infra WIP guard,
+  transient retry) cycling the verbs on the new base; #257 MERGED noted.
 
 - **Security batch (session zcode-lane-A, 2026-09-21晚)** — dual-scanner re-validation:
   - `flext-p57t.12` CLOSED (Mimosa sealed 0 + Semgrep 1.177.0 live 0), `flext-p57t.5`

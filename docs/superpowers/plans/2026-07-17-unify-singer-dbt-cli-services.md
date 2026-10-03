@@ -18,13 +18,13 @@ tap/target and dbt project — CLI, services, settings/config SSOT — with a ve
 net LOC, piloted on `flext-tap-ldap`, with the singer_sdk/dbt machinery owned
 exclusively by `flext-meltano`.
 
-**Architecture:** flext-meltano owns ALL external pipeline libs (singer*sdk, dbt). It
-exposes a \_declarative* tap/target/dbt base where the consumer supplies only domain
-data (stream specs + a record fetcher backed by flext-ldap/ldif/db-oracle). Each
-consumer project reduces to `base.py` (`s`), `api.py` (thin MRO facade Service),
-`cli.py` (`main()->Service.cli_main()`), `services/*` (import only `c,t,p,m,u` + `s`).
-All adapters, custom Typer groups, custom stream base classes, and `_utilities/*`
-ceremony are DELETED.
+**Architecture:** flext-meltano owns ALL external pipeline libs
+(singer*sdk, dbt). It exposes a \_declarative* tap/target/dbt base where the consumer
+supplies only domain data (stream specs + a record fetcher backed by
+flext-ldap/ldif/db-oracle). Each consumer project reduces to `base.py` (`s`), `api.py`
+(thin MRO facade Service), `cli.py` (`main()->Service.cli_main()`), `services/*` (import
+only `c,t,p,m,u` + `s`). All adapters, custom Typer groups, custom stream base classes,
+and `_utilities/*` ceremony are DELETED.
 
 **Tech Stack:** Python 3.13, Pydantic 2, flext-core/cli/meltano/ldap/ldif, singer_sdk
 (only inside flext-meltano).

@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-23). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
+
 # Handoff — Estabilização mypy/CI + ciclo de integração da frota (2026-09-23)
 
 <!-- TOC START -->
@@ -16,8 +20,8 @@
 
 ## 1. Missão (diretrizes do operador, mais recente vence)
 
-1. `make docs` = ciclo docs-only (generate → fix → fmt → validate → audit) — **entregue
-   e provado**.
+1. `make docs` = ciclo docs-only (generate → fix → fmt → validate → audit) —
+   **entregue e provado**.
 2. Findings de qualidade do flext-infra = **warning, sem bloquear CI**; nada de brigar
    com gerador/fixer — causa raiz sempre no dono; projeção gerada é canônica.
 3. **mypy e pyrefly ficam no CI** (obrigatório, com plugin pydantic); erros corrigidos
@@ -43,8 +47,9 @@ INTERNAL ERROR com 2.14.2).
 
 ## 3. Estado atual no momento do handoff (capturado)
 
-- **Raiz** (`flext`): tip local `55915989e2` ("wip", da lane) — pins de gitlinks **podem
-  estar defasados** (ver passo 3). `docs/plans` contém este arquivo (não-commitado).
+- **Raiz** (`flext`): tip local `55915989e2` ("wip", da lane) — pins de gitlinks
+  **podem estar defasados** (ver passo 3). `docs/plans` contém este arquivo
+  (não-commitado).
 - **flext-infra**: local == origin tip `ed20f39a0b` (lane estabilizou). Contém R1..R4.
 - **flext-core**: checkout local `2fb55f750` ATRASADO do origin tip `3e8c88ac83` (lane
   andou; não é bloqueio — pins usam o tip do remote).

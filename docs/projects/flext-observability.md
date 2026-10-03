@@ -42,7 +42,7 @@ pip install flext-observability
 ```
 
 ```python
-from flext_observability import flext_monitor_function, observability
+from flext_observability import flext_monitor_function, observability, u
 
 metric = observability.flext_metric("cpu_usage", 42.0, "percent")
 if metric.success:

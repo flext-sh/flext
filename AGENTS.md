@@ -115,18 +115,18 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
     to FIX AT ITS OWNER immediately (file the Bead, repair the command, rerun through
     it) — never a reason to route around it. Shared mutable tool state (e.g. Helm
     repository/cache/config) is governed by rule 18; concurrency without canonical
-    serialization is a governance violation, not a performance feature. **This binds
-    DIAGNOSIS and VALIDATION exactly as it binds mutation.** Establishing a fact about
-    the workspace — which verbs exist, whether a gate passes, whether two generated
-    files agree, how a tool behaves — is itself a validation action and MUST run through
-    the canonical verb or the documented CLI reading the SSOT. Ad-hoc `make -n`,
-    `md5sum`/`diff` sweeps over generated files, `grep` over a generated projection to
-    infer a contract, and throwaway reproduction scripts under `/tmp` are PROHIBITED as
-    evidence: they read a projection instead of its source, they are not reproducible by
-    anyone else, and they silently drift from the SSOT. When the fact you need has no
-    canonical command, that absence is the defect: add the verb/WHAT (or the CLI
-    subcommand) at its owner, land it with a test, and obtain the fact through it.
-    Evidence produced outside the canonical surface does not count as evidence.
+    serialization is a governance violation, not a performance feature.
+    **This binds DIAGNOSIS and VALIDATION exactly as it binds mutation.** Establishing a
+    fact about the workspace — which verbs exist, whether a gate passes, whether two
+    generated files agree, how a tool behaves — is itself a validation action and MUST
+    run through the canonical verb or the documented CLI reading the SSOT. Ad-hoc
+    `make -n`, `md5sum`/`diff` sweeps over generated files, `grep` over a generated
+    projection to infer a contract, and throwaway reproduction scripts under `/tmp` are
+    PROHIBITED as evidence: they read a projection instead of its source, they are not
+    reproducible by anyone else, and they silently drift from the SSOT. When the fact
+    you need has no canonical command, that absence is the defect: add the verb/WHAT (or
+    the CLI subcommand) at its owner, land it with a test, and obtain the fact through
+    it. Evidence produced outside the canonical surface does not count as evidence.
 18. **Helm is never parallelized.** Helm invocations (`dependency build/update`,
     `package`, `lint`, `template`, `repo *`, `registry *`, `push`, `pull`) always run
     serialized through the canonical Helm lock — no thread/process fan-out, no
@@ -363,17 +363,17 @@ connectors. Every package follows one canonical Clean-Architecture shape built o
 ## Structure
 
 ```text
-flext/ # superproject: workspace manager + governance + docs ├── src/flext/ #
-flext-workspace CLI (thin orchestrator over flext-cli) — AUTO-GENERATED facets ├──
-config/ # workspace.yaml topology SSOT (codegen/conform input; never overwrite) ├──
-docs/architecture/adr/ # ADR-001..019 (011-013 absent) — architectural decisions (see below) ├──
-Makefile + *.mk # root verb dispatcher (all work runs from here) ├── flext-core/ #
-foundation: c/t/p/m/u + r/e/x/h/d/s facades (every pkg depends on it) ├── flext-infra/ #
-build automation, codegen, enforcement (tooling; not a runtime dep) ├── flext-tests/ #
-shared test infra (tm/tv/tt fixtures)
-├── flext-cli|api|auth|web|grpc|observability|plugin|meltano/  # platform capabilities
-├── flext-ldap|ldif|db-oracle|oracle-wms|oracle-oic|quality/   # domain libraries
-└── flext-{tap,target,dbt}-*/ # Singer ecosystem: 5 taps, 5 targets, 4 dbt (built on flext-meltano)
+flext/                                                        # superproject: workspace manager + governance + docs
+├── src/flext/                                               # flext-workspace CLI (thin orchestrator over flext-cli) — AUTO-GENERATED facets
+├── config/                                                  # workspace.yaml topology SSOT (codegen/conform input; never overwrite)
+├── docs/architecture/adr/                                   # ADR-001..019 (011-013 absent) — architectural decisions (see below)
+├── Makefile + *.mk                                          # root verb dispatcher (all work runs from here)
+├── flext-core/                                              # foundation: c/t/p/m/u + r/e/x/h/d/s facades (every pkg depends on it)
+├── flext-infra/                                             # build automation, codegen, enforcement (tooling; not a runtime dep)
+├── flext-tests/                                             # shared test infra (tm/tv/tt fixtures)
+├── flext-cli|api|auth|web|grpc|observability|plugin|meltano/ # platform capabilities
+├── flext-ldap|ldif|db-oracle|oracle-wms|oracle-oic|quality/  # domain libraries
+└── flext-{tap,target,dbt}-*/                                # Singer ecosystem: 5 taps, 5 targets, 4 dbt (built on flext-meltano)
 ```
 
 Each submodule is an **independent git repo**. This root `AGENTS.md` is the canonical
@@ -466,8 +466,8 @@ through `make docs`; no documentation workflow invokes `uv` directly.
 - `c` constants · `t` typings · `p` protocols · `m` models (Pydantic-2) · `u` utilities
 - Operational: `r` FlextResult · `e` FlextExceptions · `x` FlextMixins · `h`
   FlextHandlers · `d` FlextDecorators · `s` FlextService
-- Forward imports (higher→lower) may be runtime; **reverse imports are
-  `TYPE_CHECKING`-only**. `c` never imports `m` at runtime.
+- Forward imports (higher→lower) may be runtime;
+  **reverse imports are `TYPE_CHECKING`-only**. `c` never imports `m` at runtime.
 - Each package exposes exactly one public `api.py` (thin MRO facade) + optional
   `cli.py`; internals live under `_constants/_typings/_protocols/_models/_utilities`.
 
@@ -495,10 +495,10 @@ CLI + pytest plugin, **never imported at runtime**.
   gen`). Never hand-edit; change the codegen source in`flext-infra`and run`make gen`.
 - **Root `pyproject.toml`** is a codegen projection from `flext-infra` templates +
   `flext-infra/config/codegen.yaml` (with `tooling.yaml` for tool configuration and
-  policy); `make upg` resolves the newest releases and writes the locks, then `make gen` projects them. The
-  `[MANAGED]` directive comments in templates are consumed and stripped during
-  projection by the inject-comments phase; they are not retained in output. Never
-  hand-edit the projection.
+  policy); `make upg` resolves the newest releases and writes the locks, then `make gen`
+  projects them. The `[MANAGED]` directive comments in templates are consumed and
+  stripped during projection by the inject-comments phase; they are not retained in
+  output. Never hand-edit the projection.
 - **Declaration layers are pure data:**
   models/protocols/constants/typings/settings/config carry ZERO methods (only Pydantic
   Field/validators/computed_field). Behavior lives only in
@@ -524,7 +524,8 @@ CLI + pytest plugin, **never imported at runtime**.
 - **Multi-agent tree:** fix-forward only, never `git reset/checkout/restore/clean/stash`
   shared work; commit by explicit paths (never `git add -A`); coordinate via beads
   (`bd`).
-- **≤200 logical LOC per module**; net-negative LOC on refactors.
+- **Config-owned module size cap** (`flext-infra/config/codegen.yaml` → `loc_cap.max_lines`,
+  enforced by the `loc-cap` check gate); net-negative LOC on refactors.
 - Toolchain: `uv` + `.venv` only, always via `make`.
 
 <!-- AIHUB-WORKSPACE-PROVIDERS-BEGIN -->

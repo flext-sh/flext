@@ -126,7 +126,7 @@ not add a `WHAT` selector or duplicate the dispatcher in a test helper.
 
 Tests for this contract exercise the generated public commands and observable artifacts.
 They do not reproduce command metadata or assert private routing implementation. See
-[ADR-004](../architecture/adr/004-generic-make-framework-in-flext-tests.md) for the
+[ADR-004](../architecture/adr/004-generated-make-codegen-ssot-flext-infra.md) for the
 canonical decision.
 
 ## Bad practices
@@ -155,5 +155,5 @@ def test_settings_override() -> None:
 ## Related
 
 - `flext-tests/src/flext_tests/_fixtures/settings.py`
-- [Architecture ADR 004](../architecture/adr/004-generic-make-framework-in-flext-tests.md)
+- [Architecture ADR 004](../architecture/adr/004-generated-make-codegen-ssot-flext-infra.md)
 - [Testing standards](../standards/testing.md)

@@ -9,12 +9,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import flext_core
-
-from ._models.base import FlextRootModelsBase
-from ._models.config import FlextRootModelsConfig
+from flext._models.base import FlextRootModelsBase
+from flext._models.config import FlextRootModelsConfig
 
 if TYPE_CHECKING:
-    from . import t
+    from flext import t
 
 
 class FlextRootModels(flext_core.m):

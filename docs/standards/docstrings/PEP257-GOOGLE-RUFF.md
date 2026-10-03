@@ -110,7 +110,7 @@ fakes, stubs, patching, monkeypatch mutation, and copied setup are prohibited.
 - promises about implementation order;
 - copied configuration values, counts, paths, versions, or thresholds;
 - compatibility, fallback, retry, suppression, or partial-success language;
-- stale `TODO`, `FIXME`, or generated prose;
+- stale task markers left behind by fixes, or generated prose;
 - raw tool commands or per-file validation recipes.
 
 ## Review checklist
