@@ -1,6 +1,8 @@
-# Copyright (c) 2026 FLEXT Team. All rights reserved.
+"""Service base for flext-workspace tests.
 
-"""Service base for flext-workspace tests."""
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 

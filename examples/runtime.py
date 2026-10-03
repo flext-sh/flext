@@ -6,13 +6,12 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_cli import cli
-from flext_ldif import c as ldif_c, ldif, m as ldif_m
-
+import flext_ldif
 from examples import FlextRootExamplesConstants
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
+from flext_cli import cli
 
 
 def main() -> int:
@@ -25,13 +24,11 @@ def main() -> int:
         RuntimeError: If ``not entries``; or if ``not acl_result.granted or
             acl_result.matched_acl is None``; or if ``first_attribute.lower() ==
             last_attribute.lower()``; or if ``len(oid_response.acls) !=
-            FlextRootExamplesConstants.EXPECTED_OID_ACL_COUNT``; or if the advanced
-            pipeline data or values mapping is missing or has no analysis entry
-            (``not advanced_values.get('analysis')``); or if ``not
-            complete.content``.
+            FlextRootExamplesConstants.EXPECTED_OID_ACL_COUNT``; or if ``not
+            advanced.data.values.get('analysis')``; or if ``not complete.content``.
 
     """
-    client = ldif()
+    client = flext_ldif.ldif()
     ldif_content = (
         "dn: cn=sample,dc=example,dc=com\n"
         "objectClass: person\n"
@@ -48,8 +45,8 @@ def main() -> int:
         FlextRootAclProcessingExample(service=client)
         .process_acls_with_pipeline(
             entry=entries[0],
-            server_type=ldif_c.Ldif.ServerTypes.OUD,
-            required_permissions=ldif_m.Ldif.AclPermissions(read=True),
+            server_type=flext_ldif.c.Ldif.ServerTypes.OUD,
+            required_permissions=flext_ldif.m.Ldif.AclPermissions(read=True),
         )
         .unwrap()
     )
@@ -59,7 +56,7 @@ def main() -> int:
         )
 
     oid_attributes = (
-        client.acl(ldif_c.Ldif.ServerTypes.OID).unwrap().resolve_acl_attributes()
+        client.acl(flext_ldif.c.Ldif.ServerTypes.OID).unwrap().resolve_acl_attributes()
     )
     first_attribute, last_attribute = oid_attributes[0], oid_attributes[-1]
     if first_attribute.lower() == last_attribute.lower():
@@ -67,15 +64,15 @@ def main() -> int:
             FlextRootExamplesConstants.ErrorMessages.OID_INSUFFICIENT_ATTRIBUTES,
         )
     oid_acl = "access to entry by * (browse)"
-    oid_entry = ldif_m.Ldif.Entry(
-        dn=ldif_m.Ldif.DN(value="cn=sample,dc=example,dc=com"),
-        attributes=ldif_m.Ldif.Attributes(
+    oid_entry = flext_ldif.m.Ldif.Entry(
+        dn=flext_ldif.m.Ldif.DN(value="cn=sample,dc=example,dc=com"),
+        attributes=flext_ldif.m.Ldif.Attributes(
             attributes={first_attribute: [oid_acl], last_attribute: [oid_acl]},
         ),
     )
     oid_response = client.extract_acls_from_entry(
         oid_entry,
-        ldif_c.Ldif.ServerTypes.OID,
+        flext_ldif.c.Ldif.ServerTypes.OID,
     ).unwrap()
     if len(oid_response.acls) != FlextRootExamplesConstants.EXPECTED_OID_ACL_COUNT:
         raise RuntimeError(
@@ -96,17 +93,7 @@ def main() -> int:
         .execute()
         .unwrap()
     )
-    advanced_data = FlextRootExamplesConstants.JsonMappingOrNoneHelper.extract(
-        advanced.get("data"),
-    )
-    advanced_values = (
-        FlextRootExamplesConstants.JsonMappingOrNoneHelper.extract(
-            advanced_data.get("values"),
-        )
-        if advanced_data is not None
-        else None
-    )
-    if advanced_values is None or not advanced_values.get("analysis"):
+    if not advanced.data.values.get("analysis"):
         raise RuntimeError(
             FlextRootExamplesConstants.ErrorMessages.ADVANCED_NO_ANALYSIS,
         )
