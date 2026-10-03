@@ -19,6 +19,7 @@ class FlextRootExamplesConstants:
 
     MIN_OID_ACL_ATTRIBUTES: int = 2
     EXPECTED_OID_ACL_COUNT: int = 2
+    MAX_VALUE_LENGTH: int = 100
 
     class Stage(StrEnum):
         """Processing stage enumeration used across pipeline examples."""

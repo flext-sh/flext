@@ -10,13 +10,12 @@ from collections.abc import MutableSequence
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
-from flext_tests import FlextTestsTypes
-
 from flext import t
+from flext_tests import FlextTestsTypes
 
 
 class TestsFlextRootTypes(t):
-    """Infrastructure test typings facade — extends flext workspace typings."""
+    """Infrastructure test typings facade — extends flext_infra typings."""
 
     class _RootWorkspaceTypes:
         """Root workspace test-infrastructure type definitions."""

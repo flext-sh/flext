@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable, MutableSequence
 
 
-class FlextRootCompleteWorkflowImmutableMappings:
+class FlextRootImmutableMappings:
     """Immutable mapping factories."""
 
     @staticmethod
@@ -89,7 +89,7 @@ class FlextRootCompleteWorkflowExample:
             description="List of workflow stages to execute",
         )
         metadata: t.JsonMapping = u.Field(
-            default_factory=FlextRootCompleteWorkflowImmutableMappings.json_mapping,
+            default_factory=FlextRootImmutableMappings.json_mapping,
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: t.MutableJsonMapping = u.Field(
@@ -121,7 +121,7 @@ class FlextRootCompleteWorkflowExample:
             description="List of warnings encountered",
         )
         stage_metadata: t.JsonMapping = u.Field(
-            default_factory=FlextRootCompleteWorkflowImmutableMappings.json_mapping,
+            default_factory=FlextRootImmutableMappings.json_mapping,
             description="Stage-specific metadata",
         )
 
@@ -147,7 +147,7 @@ class FlextRootCompleteWorkflowExample:
             description="Results from each workflow stage",
         )
         aggregated_metrics: t.JsonMapping = u.Field(
-            default_factory=FlextRootCompleteWorkflowImmutableMappings.json_mapping,
+            default_factory=FlextRootImmutableMappings.json_mapping,
             description="Aggregated metrics across all stages",
         )
         workflow_status: Annotated[
@@ -173,7 +173,7 @@ class FlextRootCompleteWorkflowExample:
             default_factory=tuple,
         )
         workflow_settings: t.ScalarMapping = u.Field(
-            default_factory=FlextRootCompleteWorkflowImmutableMappings.scalar_mapping,
+            default_factory=FlextRootImmutableMappings.scalar_mapping,
         )
 
         def execute(self) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:

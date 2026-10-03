@@ -8,9 +8,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from flext_tests import FlextTestsProtocols
-
 from flext import p
+from flext_tests import FlextTestsProtocols
 
 if TYPE_CHECKING:
     from importlib.machinery import ModuleSpec
@@ -19,7 +18,7 @@ if TYPE_CHECKING:
 
 
 class TestsFlextRootProtocols(p):
-    """Infrastructure test protocols facade — extends flext workspace protocols."""
+    """Infrastructure test protocols facade — extends flext_infra protocols."""
 
     class _RootWorkspaceProtocols:
         """Root workspace test-infrastructure protocol definitions."""
