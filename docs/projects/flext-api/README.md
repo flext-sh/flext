@@ -46,7 +46,7 @@ make check
 Programmatic use via the public facade:
 
 ```python
-from flext_api import api
+from flext_api import api, u
 
 # api is the global FlextApi instance (FlextApi.fetch_global()).
 # Settings resolve from FlextApiSettings (env prefix FLEXT_API_).

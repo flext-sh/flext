@@ -41,7 +41,7 @@ pip install flext-ldap
 ```
 
 ```python
-from flext_ldap import ldap, m
+from flext_ldap import ldap, m, u
 
 connected = ldap.connect(m.Ldap.ConnectionConfig(host="ldap.example.com", port=389))
 assert connected.is_success
