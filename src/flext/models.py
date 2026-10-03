@@ -8,7 +8,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import flext_core
+import flext_infra
+
 from flext._models.base import FlextRootModelsBase
 from flext._models.config import FlextRootModelsConfig
 
@@ -16,7 +17,7 @@ if TYPE_CHECKING:
     from flext import t
 
 
-class FlextRootModels(flext_core.m):
+class FlextRootModels(flext_infra.m):
     """Workspace root models facade — access via m.Root.*."""
 
     class Root(FlextRootModelsBase, FlextRootModelsConfig):

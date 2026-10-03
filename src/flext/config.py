@@ -17,6 +17,9 @@ if TYPE_CHECKING:
 class FlextRootConfig(flext_core.FlextConfig):
     """Workspace root configuration — extends flext-core config."""
 
+    @classmethod
+    def published(cls) -> FlextRootConfig:
+        """Return the process-wide configuration singleton.
 
 config = FlextRootConfig
 

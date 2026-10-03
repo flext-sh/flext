@@ -8,13 +8,12 @@ from __future__ import annotations
 
 from typing import Final
 
-from flext_tests import FlextTestsConstants
-
 from flext import c
+from flext_tests import FlextTestsConstants
 
 
 class TestsFlextRootConstants(c):
-    """Infrastructure test constants facade — extends flext workspace constants."""
+    """Infrastructure test constants facade — extends flext_infra constants."""
 
     class _RootWorkspaceConstants:
         """Root workspace test-infrastructure constants."""
