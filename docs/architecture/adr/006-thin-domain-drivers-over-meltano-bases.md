@@ -3,21 +3,13 @@
 <!-- TOC START -->
 
 - [Status](#status)
-
 - [Context](#context)
-
   - [The duplication / anti-patterns (verified, file:line)](#the-duplication-anti-patterns-verified-fileline)
-
 - [Decision](#decision)
-
   - [Rules (inviolable for these projects)](#rules-inviolable-for-these-projects)
-
   - [Uniform connection seam](#uniform-connection-seam)
-
 - [Consequences](#consequences)
-
 - [Realized mechanism — Declarative tap (flext-tap-ldap pilot, 2026-07-17)](#realized-mechanism-declarative-tap-flext-tap-ldap-pilot-2026-07-17)
-
 - [Evidence](#evidence)
 
 <!-- TOC END -->
@@ -49,8 +41,6 @@ models, §3a JSON is Pydantic 2-way, §1.5 no duplicated declarations across pro
 
 ## Context
 
-<!-- rumdl 0.2.78 normalize mode cannot wrap prose with inline code spans; this paragraph is hand-wrapped at the 88-char limit. -->
-<!-- markdownlint-disable-next-line MD013 -->
 The Singer/dbt integration projects ( `flext-(dbt|tap|target)-<domain>` ) are meant to
 be **thin domain drivers**: flext-meltano owns the reusable dbt/singer/tap/target
 machinery in FLEXT form, the domain **action library** (e.g. `flext-db-oracle` ) owns

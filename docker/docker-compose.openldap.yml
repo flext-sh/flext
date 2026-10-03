@@ -67,9 +67,9 @@ services:
       - flext-shared-network
 
   # Optional LDAP Admin Interface
-  openldap-REDACTED_LDAP_BIND_PASSWORD:
-    image: osixia/phpldapREDACTED_LDAP_BIND_PASSWORD:0.9.0
-    container_name: flext-openldap-test-REDACTED_LDAP_BIND_PASSWORD
+  openldap-admin:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: flext-openldap-test-admin
     environment:
       PHPLDAPADMIN_LDAP_HOSTS: "openldap"
       PHPLDAPADMIN_HTTPS: "false"
@@ -81,7 +81,7 @@ services:
     networks:
       - flext-shared-network
     profiles:
-      - REDACTED_LDAP_BIND_PASSWORD
+      - admin
 
 volumes:
   flext_ldap_data:

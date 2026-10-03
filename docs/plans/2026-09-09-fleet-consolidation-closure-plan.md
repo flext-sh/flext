@@ -24,7 +24,7 @@
 > Aprovado pelo operador (sim, tudo + campanha de dívida incluída). Executor:
 > orquestrador + esquadrão de subagentes. Lei: `~/agents/AGENTS.md` + `flext-law` +
 > `make-check` + `verification-loop`. Comandos: somente Make canônico com, prefixo
-> `MISE_VERSION=2026.9.2`.
+> `MISE_VERSION=2026.9.17`.
 
 ## Estado na aprovação (evidências gravadas)
 

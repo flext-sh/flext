@@ -73,8 +73,7 @@ and never introduces its own.
 4. Pydantic 2 only through `m/t/p/u/r/e`; every model extends an `m.*` preset; no
    `model_rebuild`; no `SkipValidation` without the owner's written justification;
    external data enters through `model_validate`/`model_validate_json`.
-5. Strict typing: no `Any`/`object`; `T | None`; `t.*` aliases and `p.*` protocols; PEP
-   695.
+5. Strict typing: no `Any`/`object`; `T | None`; `t.*` aliases and `p.*` protocols; PEP 695.
 6. `flext-core` enriches existing modules before creating new ones; every module stays
    within 200 logical lines, with net-negative LOC on refactors.
 7. Fewer public APIs: extend a method with a keyword parameter before adding a method;
