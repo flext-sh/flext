@@ -21,21 +21,21 @@
 
 ## 0. Engineering principles (blocking)
 
-Every slice, review and landing is judged against these five principles first.
-A change that violates one is red, whatever its gates say; the numbered laws
-below are how each principle is applied, never exceptions to it.
+Every slice, review and landing is judged against these five principles first. A change
+that violates one is red, whatever its gates say; the numbered laws below are how each
+principle is applied, never exceptions to it.
 
-| Principle | What it demands | Blocking check before push | Laws |
-| --------- | --------------- | -------------------------- | ---- |
-| SOLID | Each capability lives in its one correct owner (single responsibility); behavior extends by inheritance or composition of the owner, never by a rewrite beside it; contracts are narrow `p.*` protocols; callers depend on the protocol, not the concrete class | No method in the wrong layer (service behavior in `u`, behavior in declaration layers); no delegator, wrapper or local re-implementation of an owner's method; every moved method has all its callers rewired | §3.3, R14, R29, R31 |
-| SSOT | One writable owner per fact: config/settings for values, one `StrEnum` in `c` for each closed vocabulary, one model per concept, one rule text per law | Zero second derivation of the same fact (hardcoded list, parallel literal, duplicate model, duplicate rule numbering); generated surfaces change only through `make gen` | §3.8–3.9, R26, R30, R32 |
-| YAGNI | Only what a current consumer uses exists | Code, properties, helpers, fallbacks and stubs without a consumer are deleted in the same change, with their tests and docs; no skeleton facade, no-op `main()` or always-failing placeholder method | R18, R27 |
-| CA | Dependencies point inward along `c → t → p → m → u` and `api → services → adapters`; data crosses layers only as `m.*` models typed by `p.*` protocols | No loose `dict`/tuple/`object`/`bool` payload across a boundary; no reverse import outside `TYPE_CHECKING`; no model-construction helper; validation lives in the model (Pydantic-2 native) | §3.1, R27, R28, R29 |
-| DI | Services receive their collaborators as `t.Port[p.X]` ports built only by `api.py`; they never read global settings or construct adapters | No service-side construction of adapters, no global `settings`/`config` read inside a service, no `getattr`/`hasattr` capability probing in place of a declared protocol | R12, R13, R16 |
+| Principle | What it demands                                                                                                                                                                                                                                                 | Blocking check before push                                                                                                                                                                                    | Laws                    |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| SOLID     | Each capability lives in its one correct owner (single responsibility); behavior extends by inheritance or composition of the owner, never by a rewrite beside it; contracts are narrow `p.*` protocols; callers depend on the protocol, not the concrete class | No method in the wrong layer (service behavior in `u`, behavior in declaration layers); no delegator, wrapper or local re-implementation of an owner's method; every moved method has all its callers rewired | §3.3, R14, R29, R31     |
+| SSOT      | One writable owner per fact: config/settings for values, one `StrEnum` in `c` for each closed vocabulary, one model per concept, one rule text per law                                                                                                          | Zero second derivation of the same fact (hardcoded list, parallel literal, duplicate model, duplicate rule numbering); generated surfaces change only through `make gen`                                      | §3.8–3.9, R26, R30, R32 |
+| YAGNI     | Only what a current consumer uses exists                                                                                                                                                                                                                        | Code, properties, helpers, fallbacks and stubs without a consumer are deleted in the same change, with their tests and docs; no skeleton facade, no-op `main()` or always-failing placeholder method          | R18, R27                |
+| CA        | Dependencies point inward along `c → t → p → m → u` and `api → services → adapters`; data crosses layers only as `m.*` models typed by `p.*` protocols                                                                                                          | No loose `dict`/tuple/`object`/`bool` payload across a boundary; no reverse import outside `TYPE_CHECKING`; no model-construction helper; validation lives in the model (Pydantic-2 native)                   | §3.1, R27, R28, R29     |
+| DI        | Services receive their collaborators as `t.Port[p.X]` ports built only by `api.py`; they never read global settings or construct adapters                                                                                                                       | No service-side construction of adapters, no global `settings`/`config` read inside a service, no `getattr`/`hasattr` capability probing in place of a declared protocol                                      | R12, R13, R16           |
 
-Numbering is single-sourced here: R1–R33 in §11–§13 are the only law numbers;
-any other copy of this plan (for example an operator's local projection)
-mirrors this numbering and never introduces its own.
+Numbering is single-sourced here: R1–R33 in §11–§13 are the only law numbers; any other
+copy of this plan (for example an operator's local projection) mirrors this numbering
+and never introduces its own.
 
 ## 1. Authority and decisions
 
@@ -73,8 +73,7 @@ mirrors this numbering and never introduces its own.
 4. Pydantic 2 only through `m/t/p/u/r/e`; every model extends an `m.*` preset; no
    `model_rebuild`; no `SkipValidation` without the owner's written justification;
    external data enters through `model_validate`/`model_validate_json`.
-5. Strict typing: no `Any`/`object`; `T | None`; `t.*` aliases and `p.*` protocols;
-   PEP 695.
+5. Strict typing: no `Any`/`object`; `T | None`; `t.*` aliases and `p.*` protocols; PEP 695.
 6. `flext-core` enriches existing modules before creating new ones; every module stays
    within 200 logical lines, with net-negative LOC on refactors.
 7. Fewer public APIs: extend a method with a keyword parameter before adding a method;
@@ -83,8 +82,8 @@ mirrors this numbering and never introduces its own.
 9. One writable owner per fact; no hardcoded list duplicating a derivable source.
 10. Semantic validations and fixes run in one Rope cycle per project or workspace: the
     owner opens and indexes once, hands resource, module, AST, metadata and the change
-    capability to typed callbacks, and publishes the changes atomically in that cycle; no
-    re-reading outside the callback, no Rope cycle per gate or file, no parallel AST.
+    capability to typed callbacks, and publishes the changes atomically in that cycle;
+    no re-reading outside the callback, no Rope cycle per gate or file, no parallel AST.
 
 ## 4. Tests
 
@@ -100,8 +99,8 @@ mirrors this numbering and never introduces its own.
 6. `make test` always runs testmon and must select the slice's tests; zero execution
    proves nothing.
 7. Budget: at most 10 s per test, 60 s only for a materially justified slow case, and
-   120 s for the complete suite. Exceeding it stops the run and is an isolation, fixture,
-   architecture or owner defect; the ceiling is never raised.
+   120 s for the complete suite. Exceeding it stops the run and is an isolation,
+   fixture, architecture or owner defect; the ceiling is never raised.
 
 ## 5. Commands and environment
 
@@ -207,16 +206,16 @@ dolt, `dev` or `main`; content conflicts are asked.
 
 ## 13. Operator laws of 2026-09-26
 
-| Law | Content |
-| --- | ------- |
-| R23 | A candidate reaches a PR only after the local pre-push gate is green on the committed head: the same verbs CI runs (`make gen` with a clean tree, `make audit`, `make check`) plus `make test`, each time-boxed. CI confirms; it never discovers. A later commit or merge needs a new green run |
-| R24 | Tests have a zero baseline of permission to do anything wrong: no mocks, patches, fakes, private access, tautologies, hardcoded owner values, skips or xfails; the `ban-test-*` rules report zero findings for every test added or touched. A test that cannot be written cleanly means the production API is wrong |
-| R25 | Every execution carries a timeout: tests within the §4.7 budget; gate verbs (`setup`, `upg`, `gen`, `fix`, `fmt`, `check`) at most 300 s each. Expiry is red and is never retried with a larger limit. Slowness is a defect fixed at its owner after profiling, never waited out |
-| R26 | One source of truth per fact. A second derivation of the same fact (a file-existence check beside a typed role, a member list beside the declared one) is removed in the same change, never kept beside the owner |
-| R27 | No helper whose job is to create a Pydantic model. Records are built by the model itself (`M(...)`, `M.model_validate(...)` at the boundary); a parameter never accepts "value or prebuilt record" (`M \| raw`) sorted out by `isinstance`; the caller is fixed to send the one declared type |
-| R28 | Validation lives in the model and is Pydantic-2 native first: `Annotated` constraints, `Field` constraints, strict types, computed fields; field validators stay thin and delegate any real logic to `u`. Models carry no complex helpers; utilities own behavior |
-| R29 | Data is handled, transferred, transformed and returned as models typed by their protocols (`m.*` values, `p.*` contracts), following CA and DI, even when every caller and callee must be adjusted; no loose dicts, tuples or `object` payloads crossing a boundary |
-| R30 | A model is declared once. Lower namespaces never redeclare it: they reuse it as is, or extend it by inheritance or composition, keeping the upstream model's contract |
-| R31 | SOLID guides every change: duplicated logic is removed, a method in the wrong place moves to its owner, and callers use the owner instead of rewriting it locally |
-| R32 | Closed value sets are `StrEnum` members in `c`, used directly as the typed value (and as the `Literal` source where a literal type is needed); no bare string literal repeats a constant, no parallel literal alias, no patch around a wrong type |
+| Law | Content                                                                                                                                                                                                                                                                                                                                                |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| R23 | A candidate reaches a PR only after the local pre-push gate is green on the committed head: the same verbs CI runs (`make gen` with a clean tree, `make audit`, `make check`) plus `make test`, each time-boxed. CI confirms; it never discovers. A later commit or merge needs a new green run                                                        |
+| R24 | Tests have a zero baseline of permission to do anything wrong: no mocks, patches, fakes, private access, tautologies, hardcoded owner values, skips or xfails; the `ban-test-*` rules report zero findings for every test added or touched. A test that cannot be written cleanly means the production API is wrong                                    |
+| R25 | Every execution carries a timeout: tests within the §4.7 budget; gate verbs (`setup`, `upg`, `gen`, `fix`, `fmt`, `check`) at most 300 s each. Expiry is red and is never retried with a larger limit. Slowness is a defect fixed at its owner after profiling, never waited out                                                                       |
+| R26 | One source of truth per fact. A second derivation of the same fact (a file-existence check beside a typed role, a member list beside the declared one) is removed in the same change, never kept beside the owner                                                                                                                                      |
+| R27 | No helper whose job is to create a Pydantic model. Records are built by the model itself (`M(...)`, `M.model_validate(...)` at the boundary); a parameter never accepts "value or prebuilt record" (`M \| raw`) sorted out by `isinstance`; the caller is fixed to send the one declared type                                                          |
+| R28 | Validation lives in the model and is Pydantic-2 native first: `Annotated` constraints, `Field` constraints, strict types, computed fields; field validators stay thin and delegate any real logic to `u`. Models carry no complex helpers; utilities own behavior                                                                                      |
+| R29 | Data is handled, transferred, transformed and returned as models typed by their protocols (`m.*` values, `p.*` contracts), following CA and DI, even when every caller and callee must be adjusted; no loose dicts, tuples or `object` payloads crossing a boundary                                                                                    |
+| R30 | A model is declared once. Lower namespaces never redeclare it: they reuse it as is, or extend it by inheritance or composition, keeping the upstream model's contract                                                                                                                                                                                  |
+| R31 | SOLID guides every change: duplicated logic is removed, a method in the wrong place moves to its owner, and callers use the owner instead of rewriting it locally                                                                                                                                                                                      |
+| R32 | Closed value sets are `StrEnum` members in `c`, used directly as the typed value (and as the `Literal` source where a literal type is needed); no bare string literal repeats a constant, no parallel literal alias, no patch around a wrong type                                                                                                      |
 | R33 | Short landing cadence, about every 15 minutes: stabilize, commit, push, CI-confirm and merge `--no-ff` each locally green increment; every open lane merges the current integration tip with `--no-ff` on the same cadence so it never drifts, and consumers move to the new tips in the same cycle. Long-lived lanes and batched landings are defects |

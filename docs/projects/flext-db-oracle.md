@@ -110,8 +110,8 @@ The package follows the canonical FLEXT layout under `src/flext_db_oracle/`:
 
 - [Project README](https://github.com/flext-sh/flext-db-oracle/blob/0.12.0-dev/README.md)
   (auto-generated module map and integration pointers)
-- [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law (facades, `r[T]`,
-  settings SSOT)
+- [Workspace AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md) —
+  FLEXT engineering law (facades, `r[T]`, settings SSOT)
 - Generated API overview: `flext-db-oracle/docs/api-reference/generated/overview.md`
 - Downstream consumers: `flext-dbt-oracle`, `flext-tap-oracle`, `flext-target-oracle`
 

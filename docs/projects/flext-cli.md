@@ -90,7 +90,8 @@ method.
 
 - [Project README](https://github.com/flext-sh/flext-cli/blob/0.12.0-dev/README.md)
   (auto-generated module map and operation flow)
-- [Workspace AGENTS.md](../../AGENTS.md) — layering and zero-tolerance rules
+- [Workspace AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md) —
+  layering and zero-tolerance rules
 - `flext-cli/docs/api-reference/` — generated API documentation
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
 

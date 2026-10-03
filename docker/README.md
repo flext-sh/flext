@@ -365,8 +365,8 @@ ls ~/flext/docker/images/Dockerfile.* | wc -l
 ---
 
 **AUTHORITY**: This is the ONLY location for Docker artifacts in FLEXT ecosystem.
-**ENFORCEMENT**: All projects MUST use tk for container management. **ZERO
-DUPLICATION**: No Docker files allowed outside this centralized location.
+**ENFORCEMENT**: All projects MUST use tk for container management.
+**ZERO DUPLICATION**: No Docker files allowed outside this centralized location.
 
 ---
 

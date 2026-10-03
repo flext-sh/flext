@@ -12,8 +12,8 @@
 
 <!-- TOC END -->
 
-> Status: EXECUÇÃO. Decisões do operador (2026-09-10): **consertar o scaffold antes de
-> pousar**; commitar em `~/agents` apenas o arquivo novo
+> Status: EXECUÇÃO. Decisões do operador (2026-09-10):
+> **consertar o scaffold antes de pousar**; commitar em `~/agents` apenas o arquivo novo
 > `skills/tool/beads-reval/SKILL.md`; PR #238 do mcb **mantida aberta** para rebase
 > pós-repin. Pouso autorizado na linha de integração `0.12.0-dev`.
 

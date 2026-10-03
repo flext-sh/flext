@@ -6,6 +6,14 @@ status: active
 
 # Execution plan
 
+<!-- TOC START -->
+
+- [Objective](#objective)
+- [Accepted operator decisions](#accepted-operator-decisions)
+- [Ordered phases](#ordered-phases)
+
+<!-- TOC END -->
+
 ## Objective
 
 Adopt every current FLEXT lane and fix all failures forward until the public behavior is

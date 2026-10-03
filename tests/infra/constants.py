@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Final
 
-from flext_infra import c
+from flext import c
 from flext_tests import FlextTestsConstants
 
 

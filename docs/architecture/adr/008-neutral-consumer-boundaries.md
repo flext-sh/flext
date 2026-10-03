@@ -99,5 +99,5 @@ code/dependencies than it adds.
 - DataOP ADR-001 (`data-organization-pipeline-4dt`)
 - DcBackup ADR-001 (`datacosmos-backup-o6w`)
 - [ADR-003 — Manifest-owned topology](003-workspace-tooling-hub-distribution.md)
-- [ADR-004 — Generated Make and codegen SSOT](004-generic-make-framework-in-flext-tests.md)
+- [ADR-004 — Generated Make and codegen SSOT](004-generated-make-codegen-ssot-flext-infra.md)
 - [ADR-005 — Config and settings SSOT](005-config-settings-constants-templates-schemas-ssot.md)
