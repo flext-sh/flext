@@ -156,19 +156,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-3.13-tools-
 
-      # Why: Mypy's project-keyed analysis cache (make.mypy_cache) lives outside
-      # the checkout. A runner without it re-analyses the whole dependency
-      # closure, and a bounded run can die before it writes anything. Restore
-      # the newest cache of any earlier run: Mypy revalidates every entry by
-      # source hash, so a warm cache removes recompute and never hides a finding.
-      - name: Restore Mypy cache
-        uses: actions/cache/restore@v6
-        with:
-          path: ~/.cache/flext/infra/mypy
-          key: ${{ runner.os }}-3.13-mypy-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: |
-            ${{ runner.os }}-3.13-mypy-
-
       # make setup is the frozen installer. It bootstraps the committed Mise
       # release and installs the fleet toolchain from the committed
       # mise.lock and the dependencies frozen from the committed uv.lock,
@@ -213,9 +200,9 @@ jobs:
         # Why: explicit CI=Y on every make invocation (job env is not enough for matrix/docker parity).
         run: CI=Y make check
         # Fast partition only, derived from the gate registry kind:
-        # lint security markdown duplication.
+        # lint security markdown duplication loc-cap runtime-census fresh-import index-declarations codemod layout direnv.
         # Type checkers and flext-infra validators block locally and at
-        # pre-push (CI=N runs pyrefly mypy pyright loc-cap runtime-census fresh-import index-declarations codemod layout direnv).
+        # pre-push (CI=N runs pyrefly mypy pyright).
 
       - name: test (blocking)
         # Why: explicit CI=Y on every make invocation (job env is not enough for matrix/docker parity).
@@ -293,15 +280,6 @@ jobs:
             ~/.cache/uv
             ~/.local/share/mise
           key: ${{ runner.os }}-3.13-tools-${{ hashFiles('uv.lock', 'mise.lock', 'pyproject.toml') }}
-
-      # Why: save on every outcome, a failing or killed Mypy included, under a
-      # key unique to this run, so every run hands its analysis to the next.
-      - name: Save Mypy cache
-        if: ${{ always() }}
-        uses: actions/cache/save@v6
-        with:
-          path: ~/.cache/flext/infra/mypy
-          key: ${{ runner.os }}-3.13-mypy-${{ github.run_id }}-${{ github.run_attempt }}
 
   # End SECTION: ci job
 
