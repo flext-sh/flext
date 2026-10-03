@@ -17,7 +17,7 @@ Each project renders one page per public module, driven by docstrings.
 - [flext-db-oracle](flext-db-oracle/modules/index.md) — `11` modules
 - [flext-dbt-ldap](flext-dbt-ldap/modules/index.md) — `8` modules
 - [flext-dbt-ldif](flext-dbt-ldif/modules/index.md) — `8` modules
-- [flext-dbt-oracle](flext-dbt-oracle/modules/index.md) — `9` modules
+- [flext-dbt-oracle](flext-dbt-oracle/modules/index.md) — `8` modules
 - [flext-dbt-oracle-wms](flext-dbt-oracle-wms/modules/index.md) — `8` modules
 - [flext-grpc](flext-grpc/modules/index.md) — `9` modules
 - [flext-infra](flext-infra/modules/index.md) — `13` modules

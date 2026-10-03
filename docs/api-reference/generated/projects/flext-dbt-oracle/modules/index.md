@@ -10,7 +10,6 @@
 
 These pages are generated from public modules and their docstrings.
 
-- [flext_dbt_oracle.adapters](adapters.md)
 - [flext_dbt_oracle.api](api.md)
 - [flext_dbt_oracle.base](base.md)
 - [flext_dbt_oracle.cli](cli.md)
