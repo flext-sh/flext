@@ -209,7 +209,8 @@ class FlextRootAdvancedProcessingExample:
             )
 
         def _process_parallel(
-            self, data: t.JsonMapping,
+            self,
+            data: t.JsonMapping,
         ) -> p.Result[m.Root.PipelineStageData]:
             """Process items in parallel.
 
@@ -257,7 +258,8 @@ class FlextRootAdvancedProcessingExample:
             )
 
         def _validate_batch(
-            self, data: t.JsonMapping,
+            self,
+            data: t.JsonMapping,
         ) -> p.Result[m.Root.PipelineStageData]:
             """Validate batch of items.
 

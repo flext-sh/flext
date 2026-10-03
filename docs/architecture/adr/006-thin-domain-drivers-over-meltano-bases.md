@@ -26,12 +26,12 @@ declarative pilot: **flext-tap-ldap**, landed). Rollout to the remaining
 
 **Rollout status (verified 2026-09-17):**
 
-| Project | Status | Evidence |
+| Project               | Status                             | Evidence                                                                                                               |
 | --------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `flext-tap-ldap` | **Converted** (declarative driver) | Pilot realized 2026-07-17: src 3276 → 914 LOC (−72%) |
-| `flext-tap-oracle` | **Not converted** | Still has hand-rolled `tap.py` (`:26/:91/:167/:220`) and `streams.py` (`:40/:268`); bypasses the meltano base entirely |
-| `flext-target-oracle` | **Not converted** | 3211 src LOC; `create_sink()` raises `TypeError` (`:api.py:30-37`) |
-| `flext-dbt-*` (all) | **Not converted** | Each pilot re-declares Oracle connection scalars from `settings.DbOracle` |
+| `flext-tap-ldap`      | **Converted** (declarative driver) | Pilot realized 2026-07-17: src 3276 → 914 LOC (−72%)                                                                   |
+| `flext-tap-oracle`    | **Not converted**                  | Still has hand-rolled `tap.py` (`:26/:91/:167/:220`) and `streams.py` (`:40/:268`); bypasses the meltano base entirely |
+| `flext-target-oracle` | **Not converted**                  | 3211 src LOC; `create_sink()` raises `TypeError` (`:api.py:30-37`)                                                     |
+| `flext-dbt-*` (all)   | **Not converted**                  | Each pilot re-declares Oracle connection scalars from `settings.DbOracle`                                              |
 
 **Depends:** builds on ADR-005 (config/settings SSOT) and the repository FLEXT law —
 
@@ -135,11 +135,11 @@ Adopt the **Thin Domain Driver** contract for every `flext-(dbt|tap|target)-<dom
 
 project. Three layers, each with one owner:
 
-| Layer | Owner | Responsibility |
+| Layer                                                                      | Owner                                     | Responsibility                                                                                                                                                     |
 | -------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Integration interfaces** (dbt/tap/target/singer machinery in FLEXT form) | `flext-meltano` | the 3 consumer bases + `c/t/p/m/u` for meltano; 100% domain-agnostic (never references oracle/ldap/…) |
-| **Action library** (real connection + execution) | `flext-<domain>` (e.g. `flext-db-oracle`) | connection SSOT (`settings.<Domain>.*`), runtime API (`FlextDbOracleApi`), `p.<Domain>.Connection`, type/Singer maps |
-| **Thin driver** | `flext-(dbt\|tap\|target)-{domain}` | implements ONLY the base's one abstract hook; reuses `c/t/p/m/u` from BOTH flext-meltano and the action library; declares no connection settings/models of its own |
+| **Integration interfaces** (dbt/tap/target/singer machinery in FLEXT form) | `flext-meltano`                           | the 3 consumer bases + `c/t/p/m/u` for meltano; 100% domain-agnostic (never references oracle/ldap/…)                                                              |
+| **Action library** (real connection + execution)                           | `flext-<domain>` (e.g. `flext-db-oracle`) | connection SSOT (`settings.<Domain>.*`), runtime API (`FlextDbOracleApi`), `p.<Domain>.Connection`, type/Singer maps                                               |
+| **Thin driver**                                                            | `flext-(dbt\|tap\|target)-{domain}`       | implements ONLY the base's one abstract hook; reuses `c/t/p/m/u` from BOTH flext-meltano and the action library; declares no connection settings/models of its own |
 
 ### Rules (inviolable for these projects)
 
