@@ -1,58 +1,46 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Tests.infra package."""
+"""Tests.infra package.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
 from types import MappingProxyType
 from typing import TYPE_CHECKING
 
-from flext_core.lazy import build_lazy_import_map, install_lazy_exports
+from flext_core import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_tests import d, e, h, s, td, tf, tk, tm, tv, u, x
+    from tests.infra.constants import TestsFlextRootConstants
+    from tests.infra.models import TestsFlextRootModels
+    from tests.infra.protocols import TestsFlextRootProtocols
+    from tests.infra.result import TestsFlextRootResult, r
+    from tests.infra.typings import TestsFlextRootTypes
 
-    from .constants import TestsFlextRootConstants, TestsFlextRootConstants as c
-    from .models import TestsFlextRootModels, TestsFlextRootModels as m
-    from .protocols import TestsFlextRootProtocols, TestsFlextRootProtocols as p
-    from .result import TestsFlextRootResult, r
-    from .typings import TestsFlextRootTypes, TestsFlextRootTypes as t
+
 __all__: tuple[str, ...] = (
     "TestsFlextRootConstants",
     "TestsFlextRootModels",
     "TestsFlextRootProtocols",
     "TestsFlextRootResult",
     "TestsFlextRootTypes",
-    "c",
-    "d",
-    "e",
-    "h",
-    "m",
-    "p",
     "r",
-    "s",
-    "t",
-    "td",
-    "tf",
-    "tk",
-    "tm",
-    "tv",
-    "u",
-    "x",
 )
 
 _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
-            ".constants": ("TestsFlextRootConstants", "c"),
-            ".models": ("TestsFlextRootModels", "m"),
-            ".protocols": ("TestsFlextRootProtocols", "p"),
+            ".constants": ("TestsFlextRootConstants",),
+            ".models": ("TestsFlextRootModels",),
+            ".protocols": ("TestsFlextRootProtocols",),
             ".result": ("TestsFlextRootResult", "r"),
-            ".typings": ("TestsFlextRootTypes", "t"),
-            "flext_tests": ("d", "e", "h", "s", "td", "tf", "tk", "tm", "tv", "u", "x"),
+            ".typings": ("TestsFlextRootTypes",),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
-    )
+    ),
 )
 
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, public_exports=__all__)

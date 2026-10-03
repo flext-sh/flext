@@ -10,4 +10,11 @@
 
 These pages are generated from public modules and their docstrings.
 
-_No public modules discovered._
+- [flext_plugin.api](api.md)
+- [flext_plugin.base](base.md)
+- [flext_plugin.cli](cli.md)
+- [flext_plugin.constants](constants.md)
+- [flext_plugin.models](models.md)
+- [flext_plugin.protocols](protocols.md)
+- [flext_plugin.typings](typings.md)
+- [flext_plugin.utilities](utilities.md)

@@ -6,13 +6,18 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import u
+from typing import TYPE_CHECKING
 
-from ._utilities.base import FlextRootUtilitiesBase
-from ._utilities.config import FlextRootUtilitiesConfig
+import flext_infra
+
+from flext._utilities.base import FlextRootUtilitiesBase
+from flext._utilities.config import FlextRootUtilitiesConfig
+
+if TYPE_CHECKING:
+    from flext import t
 
 
-class FlextRootUtilities(u):
+class FlextRootUtilities(flext_infra.u):
     """Workspace root utilities facade — access via u.Root.*."""
 
     class Root(FlextRootUtilitiesBase, FlextRootUtilitiesConfig):
@@ -21,4 +26,4 @@ class FlextRootUtilities(u):
 
 u = FlextRootUtilities
 
-__all__: tuple[str, ...] = ("FlextRootUtilities", "u")
+__all__: t.VariadicTuple[str] = ("FlextRootUtilities", "u")

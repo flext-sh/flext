@@ -6,6 +6,7 @@
 - [Context](#context)
 - [Decision](#decision)
   - [R1 — Facade-Only Import Grammar](#r1-facade-only-import-grammar)
+  - [R1a — Lazy-Init Re-Export Derivation](#r1a-lazy-init-re-export-derivation)
   - [R2 — No Duplication (Structural Scan)](#r2-no-duplication-structural-scan)
   - [R3 — Layer Law (Declaration vs Behavior)](#r3-layer-law-declaration-vs-behavior)
   - [R4 — Gates as Products](#r4-gates-as-products)
@@ -85,6 +86,32 @@ How the generated root `__init__.py` builds `pkg.__all__` (see
 - Behavior only in `u`, `base.py`, `services/*.py`, `api.py`, `cli.py`
 - Reverse imports `TYPE_CHECKING`-only; `c` never imports `m` at runtime
 - One class per module, ≤200 LOC, Pydantic-2-way only
+
+Runtime alias inspection refinement (`flext-edcqq`).
+**State at 0.12.0-dev (2026-09-27):** the flext-core side exists
+(`DeferredInspection`/`DeferredAlias` on the integration tip); the flext-infra
+runtime-census consumer cutover is still pending:
+
+- PEP 695 aliases retain Python's lazy evaluation. Before forcing `__value__`, the core
+  inspector matches the runtime alias identity to one module-bound source declaration
+  and its lexical imports. Only unavailable names proven to be imported under
+  `typing.TYPE_CHECKING` justify deferral; matching a name or catching `NameError` is
+  insufficient proof.
+- The existing public `u.resolve_type_alias_value` contract remains value-or-None:
+  `None` represents a non-alias or this proven deferral. Local/dynamic aliases without
+  declaration evidence do not inherit a deferral exemption. Ambiguous declarations fail
+  explicitly; unexpected evaluation errors retain their original exception and
+  traceback.
+- The typed resolution owner distinguishes resolved values from `DeferredAlias`
+  provenance. Rules that require an unavailable value record a `DeferredInspection` in
+  `Report.deferred`, including the rule, location, declaration and unavailable imports.
+  `Report.complete` is false when any requested inspection was deferred. Existing
+  violation iteration describes violations only, so zero violations alone cannot
+  establish a complete check.
+- Deferral preserves a legal reverse import; it does not import the later layer at
+  runtime or manufacture a runtime violation. Static type gates own those annotations.
+  Runtime-census aggregation must retain deferral provenance and must not publish an
+  incomplete report as passed or clean.
 
 ### R4 — Gates as Products
 

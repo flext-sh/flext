@@ -14,7 +14,7 @@
 <!-- TOC END -->
 
 This plan implements [ADR-003](adr/003-workspace-tooling-hub-distribution.md),
-[ADR-004](adr/004-generic-make-framework-in-flext-tests.md), and
+[ADR-004](adr/004-generated-make-codegen-ssot-flext-infra.md), and
 [ADR-005](adr/005-config-settings-constants-templates-schemas-ssot.md) under epic
 `mro-wkii.17`.
 

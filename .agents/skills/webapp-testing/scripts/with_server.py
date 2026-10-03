@@ -15,7 +15,7 @@ Usage:
 
 import shlex
 import socket
-import subprocess
+import subprocess  # ruff: ignore[suspicious-subprocess-import] -- vendored skill tooling: spawning dev servers is this script's purpose
 import sys
 import time
 
@@ -128,7 +128,7 @@ def main() -> None:
     try:
         for server in servers:
             server_argv = shlex.split(server["cmd"])
-            process = subprocess.Popen(
+            process = subprocess.Popen(  # ruff: ignore[subprocess-without-shell-equals-true] -- vendored skill tooling
                 server_argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False
             )
             server_processes.append(process)
@@ -136,7 +136,7 @@ def main() -> None:
             if not is_server_ready(server["port"], timeout=timeout):
                 _raise_not_started(server["port"], timeout)
 
-        runner = subprocess.run(command, check=False)
+        runner = subprocess.run(command, check=False)  # ruff: ignore[subprocess-without-shell-equals-true] -- vendored skill tooling
         sys.exit(runner.returncode)
     finally:
         for process in server_processes:

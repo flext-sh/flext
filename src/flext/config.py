@@ -6,18 +6,21 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import ClassVar
+from typing import TYPE_CHECKING
 
 import flext_core
+
+if TYPE_CHECKING:
+    from flext import t
 
 
 class FlextRootConfig(flext_core.FlextConfig):
     """Workspace root configuration — extends flext-core config."""
 
-    CONFIG_DIR: ClassVar[str] = "config"
+    @classmethod
+    def published(cls) -> FlextRootConfig:
+        """Return the process-wide configuration singleton.
 
+config = FlextRootConfig
 
-config: FlextRootConfig = FlextRootConfig.fetch_global()
-"""Process-wide root configuration singleton."""
-
-__all__: tuple[str, ...] = ("FlextRootConfig", "config")
+__all__: t.VariadicTuple[str] = ("FlextRootConfig", "config")

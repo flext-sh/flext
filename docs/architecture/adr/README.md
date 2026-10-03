@@ -26,11 +26,11 @@ candidate; acceptance never proves fleet stability.
 
 - [ADR-001: Railway-Oriented Programming with r[T]](001-railway-oriented-programming.md)
   — **CURRENT IMPLEMENTATION**
-- [ADR-002: v0.13.0 Platform Baseline](002-v0-13-0-platform-baseline.md) — **ACCEPTED
-  TARGET** (forward baseline `0.13.0`)
+- [ADR-002: v0.13.0 Platform Baseline](002-v0-13-0-platform-baseline.md) —
+  **ACCEPTED TARGET** (forward baseline `0.13.0`)
 - [ADR-003: Manifest-owned topology, root workspace, and autonomous Git libraries](003-workspace-tooling-hub-distribution.md)
   — **CURRENT IMPLEMENTATION**
-- [ADR-004: Generated Make and codegen SSOT owned by `flext-infra`](004-generic-make-framework-in-flext-tests.md)
+- [ADR-004: Generated Make and codegen SSOT owned by `flext-infra`](004-generated-make-codegen-ssot-flext-infra.md)
   — **CURRENT IMPLEMENTATION**
 - [ADR-005: Config, settings, constants, templates, and schemas SSOT](005-config-settings-constants-templates-schemas-ssot.md)
   — **CURRENT IMPLEMENTATION** (§§1–5); **ACCEPTED TARGET** (§6 enforcement migration)
@@ -53,12 +53,19 @@ candidate; acceptance never proves fleet stability.
 - [ADR-017: Parametrized Rule Surfaces and the Single Modernize CLI](017-parametrized-rule-surfaces-single-modernize-cli.md)
   — **ACCEPTED TARGET** (`make mod` wired; `flext-infra/config/rules/mod/` exists;
   distribution/migration acceptance remains unproved)
+- [ADR-018: Generator Declarations Law](018-generator-declarations.md) — **ACCEPTED**
+  (operator law 2026-09-20; rule owner: global governance rule
+  `flext/generator-declarations` in the `agents-governance` catalog; phased under
+  `flext-0in0k`)
+- [ADR-019: Service Contract — Protocol Ports, Explicit Composition Root, Typed Operations](019-service-contract-ports-operations.md)
+  — **PROPOSED** (operator-approved plan V8, 2026-09-25; phased under `flext-4jtcb`)
 
 > **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance
 > (ADR-007 here). That remote catalog was not revalidated in this reconciliation; the
-> collision warning remains. This local catalog has no ADR-011/012 files. ADR-016
-> indexes the proposed settings/config singleton contract; ADR-005 (§1–§2) and the
+> collision warning remains. This local catalog has no ADR-011, ADR-012 or ADR-013 files
+> (none ever existed in this repository's history). ADR-016 indexes the proposed
+> settings/config singleton contract; ADR-005 (§1–§2) and the
 > `_settings.py`/`_config.py` owner docstrings define the canonical pattern on this
 > line. The historical citation correction remains attributed to `flext-z0zkq`
 > (2026-09-11).

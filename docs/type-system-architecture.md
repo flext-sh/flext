@@ -22,10 +22,8 @@
   - [Covariance (Subtype Compatibility)](#covariance-subtype-compatibility)
   - [Protocol Return Types (Always Covariant)](#protocol-return-types-always-covariant)
   - [Type Parameter Bounds (Always Covariant)](#type-parameter-bounds-always-covariant)
-- [# ✅ CORRECT: Use Iterable (covariant) not Sequence (invariant) @runtime_checkable class ItemProcessor(Protocol): def process_items(self, items: Iterable\[str\]) -> None: """Accepts any iterable source.""" # ❌ WRONG: Sequence is invariant @runtime_checkable class ItemProcessor(Protocol): def process_items(self, items: t.StrSequence) -> None: """Too restrictive - can't accept list subclasses."""](#correct-use-iterable-covariant-not-sequence-invariant-runtime_checkable-class-itemprocessorprotocol-def-process_itemsself-items-iterablestr-none-accepts-any-iterable-source-wrong-sequence-is-invariant-runtime_checkable-class-itemprocessorprotocol-def-process_itemsself-items-tstrsequence-none-too-restrictive-cant-accept-list-subclasses)
 - [Protocol Design](#protocol-design)
   - [Protocol Organization Rules](#protocol-organization-rules)
-- [# ✅ CORRECT: Use Self for fluent interface from typing import Self @runtime_checkable class MutableEntry(Protocol): def set_attribute(self, name: str, values: t.StrSequence) -> Self: """Returns self for method chaining.""" # Usage: Fluent interface entry.set_attribute("mail", \["new@example.com"\]).add_attribute("cn", \["User"\])](#correct-use-self-for-fluent-interface-from-typing-import-self-runtime_checkable-class-mutableentryprotocol-def-set_attributeself-name-str-values-tstrsequence-self-returns-self-for-method-chaining-usage-fluent-interface-entryset_attributemail-newexamplecomadd_attributecn-user)
 - [TypeVar Organization](#typevar-organization)
   - [Centralized TypeVars (flext-core)](#centralized-typevars-flext-core)
   - [Domain-Specific TypeVars (When Necessary)](#domain-specific-typevars-when-necessary)
@@ -196,7 +194,6 @@ class ProgressCallback(Protocol):
 
     def __call__(self, event: m.Cli.ProgressEventModel) -> None:
         """Accept any arguments for maximum flexibility."""
-        ...
 ```
 
 ### Pattern 5: Covariance in Protocols

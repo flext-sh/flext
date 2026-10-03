@@ -4,6 +4,7 @@
 # @flext-maintenance: do not edit generated projections; edit the SSOT and regenerate
 AGENTS.md
 CLAUDE.md
+GEMINI.md
 .kilo/**
 .omo/**
 .tmp/**
@@ -33,3 +34,5 @@ target/**
 docs/knowledge-index.md
 docs/architecture/communities/README.md
 docs/architecture/crg-reports/**
+docs/api-reference/generated/**
+docs/projects/generated/**

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from flext_infra import p
+from flext import p
 from flext_tests import FlextTestsProtocols
 
 if TYPE_CHECKING:
@@ -41,7 +41,11 @@ class TestsFlextRootProtocols(p):
             """Protocol for module resolution callables."""
 
             def __call__(
-                self, module_name: str, relative_path: str, *, anchor_file: Path
+                self,
+                module_name: str,
+                relative_path: str,
+                *,
+                anchor_file: Path,
             ) -> ModuleType: ...
 
         @runtime_checkable

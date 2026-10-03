@@ -326,17 +326,18 @@ from flext_tests import postgres_container
 
 ```bash
 # Check for prohibited duplicate files
-find ~/flext -name "docker-compose.yml" -o -name "docker-compose.*.yml" | grep -v "~/flext/docker/"
+find ~/flext -name "docker-compose.yml" -o -name "docker-compose.*.yml" \
+  | grep -v "~/flext/docker/"
 # Should return nothing
 
 # Check for prohibited local Dockerfiles
-find ~/flext -name "Dockerfile*" -type f | grep -v "~/flext/docker/images/" | grep -v ".bak"
+find ~/flext -name "Dockerfile*" -type f \
+  | grep -v "~/flext/docker/images/" | grep -v ".bak"
 # Should return nothing
 
 # Check for prohibited local fixtures
 find ~/flext -name "docker_fixtures.py" \
-  | grep -v "flext-core/src/flext_tests/fixtures/" \
-  | grep -v ".bak"
+  | grep -v "flext-tests/src/flext_tests/_fixtures/" | grep -v ".bak"
 # Should return nothing
 ```
 
@@ -364,8 +365,8 @@ ls ~/flext/docker/images/Dockerfile.* | wc -l
 ---
 
 **AUTHORITY**: This is the ONLY location for Docker artifacts in FLEXT ecosystem.
-**ENFORCEMENT**: All projects MUST use tk for container management. **ZERO
-DUPLICATION**: No Docker files allowed outside this centralized location.
+**ENFORCEMENT**: All projects MUST use tk for container management.
+**ZERO DUPLICATION**: No Docker files allowed outside this centralized location.
 
 ---
 

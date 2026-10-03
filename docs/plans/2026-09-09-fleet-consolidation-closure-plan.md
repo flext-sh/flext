@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-09). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
+
 # PLANO — Consolidação da Frota FLEXT: fechamento integral (2026-09-09)
 
 <!-- TOC START -->
@@ -14,12 +18,13 @@
 - [Status 2026-09-11 (execução corrente)](#status-2026-09-11-execucao-corrente)
   - [Adendo 2026-09-11 (cadeia de runtime do daemon, mapeada com evidência)](#adendo-2026-09-11-cadeia-de-runtime-do-daemon-mapeada-com-evidencia)
   - [Adendo 2 — mudanças por projeto (2026-09-11) + worktree dedicada](#adendo-2-mudancas-por-projeto-2026-09-11-worktree-dedicada)
-  <!-- TOC END -->
+
+<!-- TOC END -->
 
 > Aprovado pelo operador (sim, tudo + campanha de dívida incluída). Executor:
 > orquestrador + esquadrão de subagentes. Lei: `~/agents/AGENTS.md` + `flext-law` +
 > `make-check` + `verification-loop`. Comandos: somente Make canônico com, prefixo
-> `MISE_VERSION=2026.9.2`.
+> `MISE_VERSION=2026.9.17`.
 
 ## Estado na aprovação (evidências gravadas)
 

@@ -6,13 +6,18 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import p
+from typing import TYPE_CHECKING
 
-from ._protocols.base import FlextRootProtocolsBase
-from ._protocols.config import FlextRootProtocolsConfig
+import flext_infra
+
+from flext._protocols.base import FlextRootProtocolsBase
+from flext._protocols.config import FlextRootProtocolsConfig
+
+if TYPE_CHECKING:
+    from flext import t
 
 
-class FlextRootProtocols(p):
+class FlextRootProtocols(flext_infra.p):
     """Workspace root protocols facade — access via p.Root.*."""
 
     class Root(FlextRootProtocolsBase, FlextRootProtocolsConfig):
@@ -21,4 +26,4 @@ class FlextRootProtocols(p):
 
 p = FlextRootProtocols
 
-__all__: tuple[str, ...] = ("FlextRootProtocols", "p")
+__all__: t.VariadicTuple[str] = ("FlextRootProtocols", "p")

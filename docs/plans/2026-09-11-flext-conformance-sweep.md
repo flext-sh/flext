@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-11). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
+
 # Plano 2026-09-11 — FLEXT Conformance Sweep — REVISÃO v2 (aprofundada, visão de produção)
 
 <!-- TOC START -->
@@ -18,7 +22,7 @@
 - [6. Referências rápidas (arquivos de verdade)](#6-referencias-rapidas-arquivos-de-verdade)
 - [7. Codificação durável (~/agents — para o padrão se repetir certo)](#7-codificacao-duravel-agents-para-o-padrao-se-repetir-certo)
 - [8. Retomada rápida (nova sessão)](#8-retomada-rapida-nova-sessao)
-- [9. Delta Sweep-2 (12:30–12:40 UTC, sessão principal — consolidado SEM duplicar a revisão v2 acima)](#9-delta-sweep-2-12301240-utc-sessao-principal-consolidado-sem-duplicar-a-revisao-v2-acima)
+- [9. Delta Sweep-2 (12:30–12:40 UTC, sessão principal — consolidado SEM duplicar a](#9-delta-sweep-2-12301240-utc-sessao-principal-consolidado-sem-duplicar-a)
   - [9.1 Consolidação de beads entre lanes (lei: um dono por assunto)](#91-consolidacao-de-beads-entre-lanes-lei-um-dono-por-assunto)
   - [9.2 Skills/rules/commands em ~/agents — DRAFT pousado, LANE-EXTERNO](#92-skillsrulescommands-em-agents-draft-pousado-lane-externo)
   - [9.3 Estado do tip desta linha](#93-estado-do-tip-desta-linha)
@@ -33,12 +37,13 @@
 <!-- TOC END -->
 
 > **Status**: delta próprio 100% pousado e retirado; extermínio `.bak` preservado;
-> **PROPOSTA P2 DE EXECUÇÃO — aguardando aprovação do operador (§10)**. **Stack de
-> automação global codificada**: skill `fleet-lane-discipline` (agents `3dd920fa`) — ver
-> §9. **Snapshot re-mediado**: flext tip `c7308e6791` (local, 2 docs commits à frente) ·
-> `origin/0.12.0-dev` `396b359a1e` · flext-infra `bff592284` · resíduo `.bak` raiz **0**
-> · `persist_apply_backup` **0**. **Método**: cada afirmação = comando + cwd + saída
-> decisiva. Plano vivente (lei `lane-worktree-and-living-plan-law`).
+> **PROPOSTA P2 DE EXECUÇÃO — aguardando aprovação do operador (§10)**.
+> **Stack de automação global codificada**: skill `fleet-lane-discipline` (agents
+> `3dd920fa`) — ver §9. **Snapshot re-mediado**: flext tip `c7308e6791` (local, 2 docs
+> commits à frente) · `origin/0.12.0-dev` `396b359a1e` · flext-infra `bff592284` ·
+> resíduo `.bak` raiz **0** · `persist_apply_backup` **0**. **Método**: cada afirmação =
+> comando + cwd + saída decisiva. Plano vivente (lei
+> `lane-worktree-and-living-plan-law`).
 
 ---
 
@@ -138,8 +143,8 @@ absorção: a cada pouso do ator, revalidar gates antes de qualquer nova lane.
 **D5 — Release v0.13.0 real**: guia de migração já existe
 (`docs/guides/migration-to-v0.13.0.md` — o APPLY-extermination é breaking). Produção
 exige: CHANGELOG, version bump SSOT, tag, propagação aos 32 membros (codegen conform
-fleet), CI verde em `0.12.0-dev` → promoção a `main` **apenas sob autorização do
-operador**.
+fleet), CI verde em `0.12.0-dev` → promoção a `main`
+**apenas sob autorização do operador**.
 
 **D6 — Ativação nos consumidores**: workspaces hospedeiros (ex.: ai-hub consome
 `agents-governance` 0.5.0; o paralelo flext: workspaces de projetos hospedados
@@ -199,8 +204,8 @@ pós-pouso do ator no agents.
   `scaffolder.py`, `_layout_gitignore.py`, `_mise_artifacts_recovery.py`,
   `write_publication` (PR #673 diff é o mapa exato).
 - Macro `_require_apply`:
-  `flext-infra/src/flext_infra/templates/project/base/Makefile.j2` (~372/730) — **prova
-  por gen, não por grep** (A7).
+  `flext-infra/src/flext_infra/templates/project/base/Makefile.j2` (~372/730) —
+  **prova por gen, não por grep** (A7).
 - Drift: `codegen_file_plan.py` (header mode), `conform.py` `make_render_context` — ver
   `flext-2h0un`.
 - Lei de budget: bead `flext-38p39`; guia: `docs/guides/make-commands.md`.
@@ -363,13 +368,19 @@ in-place APÓS o pouso das lanes deles — sem push sobre tree dirty alheio. Exp
 
 ## 12. Pedido de aprovação (o que falta autoridade do operador)
 
-| Item                                                                                                       | Status                                                                    |
-| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| (a) Executar Onda-P (§11.2) em lane dedicada `hotfix/conformance-sweep-p`                                  | **requer confirmação** — expande o escopo atual para homologação da stack |
-| (b) CRG + mod/gen-loop como caminho padrão do sweep                                                        | observável — já codificado na skill; confirmação consolida                |
-| (c) Skills `~/agents` atualizadas (corpo, sem arquivo novo)                                                | **liberado e executado** (`3dd920fa`)                                     |
-| (d) Commits de planos vivos direto na integração — formalizar exceção OU migrar a PR                       | **decisão pendente** (autocrítica A5)                                     |
-| (e) Débito repo agents: `make propagate` + `make check` após o pouso das ~14 SKILL.md em voo de outro ator | agendar pós-pouso deles                                                   |
+| Item                                                                                                   | Status                                                                    |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| (a) Executar Onda-P (§11.2) em lane dedicada `hotfix/conformance-sweep-p`                              | **requer confirmação** — expande o escopo atual para homologação da stack |
+| (b) CRG + mod/gen-loop como caminho padrão do sweep                                                    | observável — já codificado na skill; confirmação consolida                |
+| (c) Skills `~/agents` atualizadas (corpo, sem arquivo novo)                                            | **liberado e executado** (`3dd920fa`)                                     |
+| (d) Commits de planos vivos direto na integração — formalizar exceção OU migrar a PR                   | **decisão pendente** (autocrítica A5)                                     |
+| Item                                                                                                   | Status                                                                    |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| (a) Executar Onda-P (§11.2) em lane dedicada `hotfix/conformance-sweep-p`                              | **requer confirmação** — expande o escopo atual para homologação da stack |
+| (b) CRG + mod/gen-loop como caminho padrão do sweep                                                    | observável — já codificado na skill; confirmação consolida                |
+| (c) Skills `~/agents` atualizadas (corpo, sem arquivo novo)                                            | **liberado e executado** (`3dd920fa`)                                     |
+| (d) Commits de planos vivos direto na integração — formalizar exceção OU migrar a PR                   | **decisão pendente** (autocrítica A5)                                     |
+| (e) Débito repo agents: `make propagate` + `make check` após o pouso das SKILL.md em voo de outro ator | agendar pós-pouso deles                                                   |
 
 _Se (a) aprovado: abrir lane, aplicar o ciclo §11.1 nas ondas P1->P3, reportar por
 beads + este plano vivente._
