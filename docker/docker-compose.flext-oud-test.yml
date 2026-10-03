@@ -13,15 +13,15 @@ services:
     environment:
       # OUD Instance Configuration - FLEXT GENERIC TEST
       OUD_INSTANCE_NAME: "flext_oud_test"
-      rootUserDN: "cn=REDACTED_LDAP_BIND_PASSWORD"
-      rootUserPassword: "REDACTED_LDAP_BIND_PASSWORD123"
-      REDACTED_LDAP_BIND_PASSWORDPassword: "REDACTED_LDAP_BIND_PASSWORD123"
+      rootUserDN: "cn=admin"
+      rootUserPassword: "admin123"
+      adminPassword: "admin123"
       baseDN: "dc=flext,dc=local"
 
       # Port Configuration
       ldapPort: "1389"
       ldapsPort: "1636"
-      REDACTED_LDAP_BIND_PASSWORDConnectorPort: "4444"
+      adminConnectorPort: "4444"
 
       # Additional Settings
       sampleData: "0"

@@ -1,3 +1,8 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record (2026-09-14;
+> superseded by later stabilization cycles). PR/bead/branch states cited below may have
+> changed; verify against the live tracker (`bd` / `gh`) before relying on anything
+> here. Notably, PR #240 cited as open below (L57) was MERGED on 2026-09-15T05:28:53Z.
+
 # Documentation
 
 <!-- TOC START -->

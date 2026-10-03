@@ -44,7 +44,7 @@ pip install flext-quality
 ```python
 from pathlib import Path
 
-from flext_quality import quality
+from flext_quality import quality, u
 
 rules = quality.load_rules(Path("rules/default.yaml"))
 if rules.success:

@@ -138,7 +138,7 @@ API surfaces.
 | Railway-Oriented Programming | [ADR-001](architecture/adr/001-railway-oriented-programming.md)                     | `result-parts-error`     | [`flext-core`](api-reference/generated/flext-core.md)       |
 | Config/Settings SSOT         | [ADR-005](architecture/adr/005-config-settings-constants-templates-schemas-ssot.md) | `base-parts-settings`    | [`flext-core`](api-reference/generated/flext-core.md)       |
 | Thin Domain Drivers          | [ADR-006](architecture/adr/006-thin-domain-drivers-over-meltano-bases.md)           | `flext-meltano-pipeline` | [`flext-meltano`](api-reference/generated/flext-meltano.md) |
-| Generic Make Framework       | [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md)            | `phases-apply`           | [`flext-tests`](api-reference/generated/flext-tests.md)     |
+| Generic Make Framework       | [ADR-004](architecture/adr/004-generated-make-codegen-ssot-flext-infra.md)          | `phases-apply`           | [`flext-infra`](api-reference/generated/flext-infra.md)     |
 | Unified Codegen              | [ADR-010](architecture/adr/010-unified-project-standardization-via-codegen.md)      | `codegen-infra`          | [`flext-infra`](api-reference/generated/flext-infra.md)     |
 | Workspace Tooling            | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md)               | `base-entry`             | [`flext-cli`](api-reference/generated/flext-cli.md)         |
 | Consumer Boundaries          | [ADR-008](architecture/adr/008-neutral-consumer-boundaries.md)                      | `services-server-grpc`   | [`flext-grpc`](api-reference/generated/flext-grpc.md)       |

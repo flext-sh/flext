@@ -5,6 +5,12 @@ updated_at: 2026-09-25T17:27:00Z
 
 # Beads reconciliation boundary
 
+<!-- TOC START -->
+
+- No sections found
+
+<!-- TOC END -->
+
 The active coordination item named by repository authority is `aihub-l42it`. Preserve
 its existing intent, relationships and evidence; do not create a replacement record.
 
@@ -12,7 +18,8 @@ At handoff creation, both of these canonical reads failed with exit 1:
 
 ```bash
 direnv exec /home/marlonsc/flext gc bd show aihub-l42it --json
-direnv exec /home/marlonsc/flext gc bd --city /home/marlonsc/gc show aihub-l42it --rig aihub --json
+direnv exec /home/marlonsc/flext gc bd --city /home/marlonsc/gc \
+  show aihub-l42it --rig aihub --json
 ```
 
 The exact failure is `PROJECT IDENTITY MISMATCH`: local metadata identifies
