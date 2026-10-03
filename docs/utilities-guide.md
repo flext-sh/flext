@@ -1,14 +1,40 @@
 # FLEXT Utilities Usage Guide
 
-**Last Updated**: 2025-12-28
-**Version**: 1.0.0
+<!-- TOC START -->
+
+- [Overview](#overview)
+- [Utilities Architecture](#utilities-architecture)
+  - [Inheritance Hierarchy](#inheritance-hierarchy)
+  - [Import Pattern (MANDATORY)](#import-pattern-mandatory)
+- [Centralized Utilities in flext-core](#centralized-utilities-in-flext-core)
+  - [Core Classes (20+ utility classes)](#core-classes-20-utility-classes)
+  - [New Methods (Added December 28, 2025)](#new-methods-added-december-28-2025)
+- [Project-Specific Utilities](#project-specific-utilities)
+  - [flext-ldif Utilities (extending flext-core)](#flext-ldif-utilities-extending-flext-core)
+  - [flext-ldap Utilities (extending flext-ldif)](#flext-ldap-utilities-extending-flext-ldif)
+  - [flext-cli Utilities (extending flext-core)](#flext-cli-utilities-extending-flext-core)
+  - [Migration Utilities (extending all)](#migration-utilities-extending-all)
+- [Best Practices](#best-practices)
+  - [DO's ✅](#dos)
+  - [DON'Ts ❌](#donts)
+- [Adding New Utilities](#adding-new-utilities)
+  - [When to Add to flext-core](#when-to-add-to-flext-core)
+  - [How to Add](#how-to-add)
+  - [Example: Add new utility method](#example-add-new-utility-method)
+- [Quality Standards](#quality-standards)
+- [See Also](#see-also)
+
+<!-- TOC END -->
+
+**Last Updated**: 2025-12-28 **Version**: 1.0.0
 
 ---
 
 ## Overview
 
-This guide documents the centralized utilities system in the FLEXT ecosystem. All generic utility functionality is
-centralized in `flext-core`, with domain-specific utilities added in each project library.
+This guide documents the centralized utilities system in the FLEXT ecosystem. All
+generic utility functionality is centralized in `flext-core`, with domain-specific
+utilities added in each project library.
 
 ## Utilities Architecture
 
@@ -36,7 +62,6 @@ result = u.get(data, "key")
 matches = u.find_callable(predicates, value)
 
 # ❌ FORBIDDEN - Direct internal imports
-from flext_core import FlextUtilitiesConversion
 ```
 
 ---
@@ -264,7 +289,8 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 1. **Use short aliases**: `from flext_core import u`
 2. **Access via namespace**: `u.method()`, `u.method()`
 3. **Chain operations**: `u.filter(...).map(...)`
-4. **Inherit for domain extensions**: Extend `FlextUtilities` for project-specific utilities
+4. **Inherit for domain extensions**: Extend `FlextUtilities` for project-specific
+   utilities
 5. **Reuse existing methods**: Check if method already exists before adding
 6. **Use full namespaces in type hints**: `u.to_str()`
 
@@ -274,7 +300,8 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 2. **Don't re-implement**: ❌ Create your own string conversion if `u.*` exists
 3. **Don't mix namespaces**: ❌ `from flext_core import FlextUtilities`
 4. **Don't use module imports**: ❌ `from flext_core import utilities as util`
-5. **Don't create new utility classes at same level**: ❌ Extend in your project, not flext-core root
+5. **Don't create new utility classes at same level**: ❌ Extend in your project, not
+   flext-core root
 
 ---
 
@@ -303,17 +330,16 @@ Add utility method to flext-core when:
 ```python
 # In src/flext_core/_utilities/conversion.py
 
+
 class FlextUtilitiesConversion:
     @staticmethod
     def new_method(value: m.Tests.UtilityInputModel) -> p.Result[str]:
         """New utility method."""
         try:
-            result = ...process value...
+            result = ...  # process the value
             return r[str].ok(result)
-        except Exception as e:
+        except ValueError as e:
             return r[str].fail(f"Error: {e}")
-
-    # **all**: list[str] = ["FlextUtilitiesConversion"]  # Already exported
 ```
 
 ---

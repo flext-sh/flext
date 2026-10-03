@@ -1,9 +1,50 @@
 # FLEXT Type System Architecture Guide
 
-**Version**: 1.0.0
-**Last Updated**: 2025-12-10
-**Scope**: Complete FLEXT ecosystem type system
-**Status**: Specification and reference
+<!-- TOC START -->
+
+- [Table of Contents](#table-of-contents)
+- [Overview](#overview)
+- [Type System Hierarchy](#type-system-hierarchy)
+  - [Project Dependency Order](#project-dependency-order)
+  - [Architecture Layering within Projects](#architecture-layering-within-projects)
+- [Canonical Type Patterns](#canonical-type-patterns)
+  - [Pattern 1: Simple Type Contract (No Namespace Needed)](#pattern-1-simple-type-contract-no-namespace-needed)
+  - [Pattern 2: Domain Collection Type (Nested Namespace)](#pattern-2-domain-collection-type-nested-namespace)
+  - [Pattern 3: TypeVar Bounded to Protocol (Avoiding Circular Imports)](#pattern-3-typevar-bounded-to-protocol-avoiding-circular-imports)
+  - [Pattern 4: Union → Protocol (Complexity Reduction)](#pattern-4-union-protocol-complexity-reduction)
+  - [Pattern 5: Covariance in Protocols](#pattern-5-covariance-in-protocols)
+  - [Pattern 6: TypeVar Reuse (Centralized)](#pattern-6-typevar-reuse-centralized)
+- [Namespace Architecture](#namespace-architecture)
+  - [Standard Namespace Structure](#standard-namespace-structure)
+  - [Namespace Organization by Project](#namespace-organization-by-project)
+  - [Models Namespace Architecture (m.\*)](#models-namespace-architecture-m)
+- [Covariance and Variance Rules](#covariance-and-variance-rules)
+  - [Covariance (Subtype Compatibility)](#covariance-subtype-compatibility)
+  - [Protocol Return Types (Always Covariant)](#protocol-return-types-always-covariant)
+  - [Type Parameter Bounds (Always Covariant)](#type-parameter-bounds-always-covariant)
+- [Protocol Design](#protocol-design)
+  - [Protocol Organization Rules](#protocol-organization-rules)
+- [TypeVar Organization](#typevar-organization)
+  - [Centralized TypeVars (flext-core)](#centralized-typevars-flext-core)
+  - [Domain-Specific TypeVars (When Necessary)](#domain-specific-typevars-when-necessary)
+- [Migration Guide](#migration-guide)
+  - [Migrating from Old Patterns to New](#migrating-from-old-patterns-to-new)
+- [Best Practices](#best-practices)
+  - [1. Use Complete Namespace Always](#1-use-complete-namespace-always)
+  - [2. No cast(), tipagem frouxa, ou TYPE_CHECKING](#2-no-cast-tipagem-frouxa-ou-type_checking)
+  - [3. Covariant Protocols for Read-Only](#3-covariant-protocols-for-read-only)
+  - [4. TypeVar with Proper Bounds](#4-typevar-with-proper-bounds)
+  - [5. Namespace Depth Management](#5-namespace-depth-management)
+- [Project Status](#project-status)
+  - [✅ Completed Projects](#completed-projects)
+  - [Type System Metrics](#type-system-metrics)
+  - [Validation Results](#validation-results)
+- [Summary](#summary)
+
+<!-- TOC END -->
+
+**Version**: 1.0.0 **Last Updated**: 2025-12-10 **Scope**: Complete FLEXT ecosystem type
+system **Status**: Specification and reference
 
 ---
 
@@ -24,7 +65,8 @@
 
 ## Overview
 
-The FLEXT type system provides a unified, composable type architecture across the core FLEXT projects:
+The FLEXT type system provides a unified, composable type architecture across the core
+FLEXT projects:
 
 1. **flext-core** - Foundation library with TypeVars, Protocols, and base types
 2. **flext-cli** - Command-line interface with CLI-specific types
@@ -33,11 +75,14 @@ The FLEXT type system provides a unified, composable type architecture across th
 
 **Key Principles**:
 
-- **2-level namespace maximum**: `t.Domain.Concept` (never `t.Domain.Concern.SubConcern.Type`)
-- **Covariance first**: Use `Mapping`/`Iterable` instead of `dict`/`Sequence` in protocols
+- **2-level namespace maximum**: `t.Domain.Concept` (never
+  `t.Domain.Concern.SubConcern.Type`)
+- **Covariance first**: Use `Mapping`/`Iterable` instead of `dict`/`Sequence` in
+  protocols
 - **Single source of truth**: No duplicate type definitions across namespace levels
 - **Protocol-based design**: Complex unions → Protocols for extensibility
-- **TypeVar centralization**: Use flext-core TypeVars, add domain-specific only when necessary
+- **TypeVar centralization**: Use flext-core TypeVars, add domain-specific only when
+  necessary
 - **Complete namespace always**: Never use root-level aliases or convenience methods
 
 ---
@@ -147,9 +192,8 @@ type ProgressCallback = (
 class ProgressCallback(Protocol):
     """Flexible callback protocol for progress tracking."""
 
-    def **call**(self, event: m.Cli.ProgressEventModel) -> None:
+    def __call__(self, event: m.Cli.ProgressEventModel) -> None:
         """Accept any arguments for maximum flexibility."""
-        ...
 ```
 
 ### Pattern 5: Covariance in Protocols
@@ -171,7 +215,6 @@ class DataProvider(Protocol):
 def process_data(provider: DataProvider) -> None:
     # Provider can return t.IntMapping, t.StrMapping, etc.
     data = provider.get_data()
-    ...
 ```
 
 ### Pattern 6: TypeVar Reuse (Centralized)
@@ -203,7 +246,7 @@ FlextCliOutputT = TypeVar("FlextCliOutputT")  # NO - use generic R
 # CORRECT: 2-level maximum nesting
 class FlextTypes:
     class Core:
-        type Result[T] = "r[T]"
+        type Result[T] = r[T]
 
     class Utilities:
         type SettingsData = t.MappingKV[str, m.Tests.SettingsEntryModel]
@@ -265,7 +308,8 @@ t.Ldap.Protocol             # Infrastructure (ldap3 wrappers)
 
 ### Models Namespace Architecture (m.\*)
 
-**CRITICAL RULE**: Models follow **2-level maximum** namespace: `m.Domain.Class` (not `m.Domain.Concern.SubClass`)
+**CRITICAL RULE**: Models follow **2-level maximum** namespace: `m.Domain.Class` (not
+`m.Domain.Concern.SubClass`)
 
 **Pattern**: Domain-level classes directly in namespace, no nested sub-namespaces
 
@@ -278,11 +322,6 @@ m.Cli.CliCommand  # CLI command model
 m.Cli.CliSession  # CLI session model
 
 # ✅ CORRECT: Module-level aliases for common classes
-from flext_cli import (
-    SystemInfo,  # alias for m.Cli.SystemInfo
-    SessionStatistics,  # alias for m.Cli.SessionStatistics
-    CommandStatistics,  # alias for m.Cli.CommandStatistics
-)
 
 # ❌ WRONG: Over-nesting (3+ levels - PROHIBITED)
 m.Cli.Value.SystemInfo  # TOO DEEP - violates 2-level rule
@@ -354,7 +393,6 @@ result: t.BoolMapping = {"ok": True}
 process_dict(result)  # Type error: dict is invariant
 
 # ✅ COVARIANT - CORRECT
-from collections.abc import Mapping
 
 
 def process_mapping(data: t.MappingKV[str, m.Tests.ValueModel]) -> None: ...
@@ -372,7 +410,6 @@ process_mapping(result)  # OK: Mapping is covariant
 class DataProvider(Protocol):
     def get_attributes(self) -> t.MappingKV[str, t.StrSequence]:
         """Returns read-only attributes - covariant."""
-        ...
 
 
 # Implementation can return more specific dict type
@@ -392,7 +429,6 @@ provider: DataProvider = MyProvider()  # OK: dict is assignable to Mapping
 class ItemProcessor(Protocol):
     def process_items(self, items: Iterable[str]) -> None:
         """Accepts any iterable source."""
-        ...
 
 
 # ❌ WRONG: Sequence is invariant
@@ -400,7 +436,6 @@ class ItemProcessor(Protocol):
 class ItemProcessor(Protocol):
     def process_items(self, items: t.StrSequence) -> None:
         """Too restrictive - can't accept list subclasses."""
-        ...
 ```
 
 ---
@@ -479,7 +514,6 @@ from typing import Self
 class MutableEntry(Protocol):
     def set_attribute(self, name: str, values: t.StrSequence) -> Self:
         """Returns self for method chaining."""
-        ...
 
 
 # Usage: Fluent interface
@@ -552,7 +586,7 @@ def track_progress(callback: ProgressCallback) -> None:
 ```python
 @runtime_checkable
 class ProgressCallback(Protocol):
-    def **call**(self, event: m.Cli.ProgressEventModel) -> None: ...
+    def __call__(self, event: m.Cli.ProgressEventModel) -> None: ...
 
 
 def track_progress(callback: ProgressCallback) -> None:
@@ -671,8 +705,6 @@ def process_model(
 
 
 # ❌ WRONG: TYPE_CHECKING (fix circular import instead)
-if TYPE_CHECKING:
-    from flext_ldif import ParserService
 ```
 
 ### 3. Covariant Protocols for Read-Only
@@ -751,7 +783,8 @@ flext-ldap:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 
 ## Summary
 
-The FLEXT type system provides a **unified, composable, and extensible** architecture across the core projects with:
+The FLEXT type system provides a **unified, composable, and extensible** architecture
+across the core projects with:
 
 1. **Consistent namespace patterns** - 2-level maximum depth
 2. **Proper covariance** - Protocols use `Mapping`/`Iterable`
@@ -761,11 +794,10 @@ The FLEXT type system provides a **unified, composable, and extensible** archite
 6. **Complete type safety** - No `cast()`, tipagem frouxa, ou blocos `TYPE_CHECKING`
 7. **Comprehensive validation** - All projects pass type checking and linting
 
-This architecture enables maintainable, type-safe code across the entire FLEXT ecosystem while supporting future
-extensions and domain-specific requirements.
+This architecture enables maintainable, type-safe code across the entire FLEXT ecosystem
+while supporting future extensions and domain-specific requirements.
 
 ---
 
-**Document Status**: Complete and ready for reference
-**Last Validation**: 2025-12-10
+**Document Status**: Complete and ready for reference **Last Validation**: 2025-12-10
 **Next Review**: When new type patterns emerge or architecture decisions change

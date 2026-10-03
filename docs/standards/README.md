@@ -1,5 +1,12 @@
 # Standards Index
 
+<!-- TOC START -->
+
+- [Governing Sources](#governing-sources)
+- [Supporting Standards](#supporting-standards)
+
+<!-- TOC END -->
+
 The root standards surface is intentionally narrow.
 
 ## Governing Sources
@@ -16,6 +23,7 @@ The root standards surface is intentionally narrow.
 - [Testing standard](testing.md)
 - [Performance profiling standard](performance-profiling.md)
 
-Historical or supporting notes that are not part of the canonical root portal stay outside the primary root navigation.
+Historical or supporting notes that are not part of the canonical root portal stay
+outside the primary root navigation.
 
 Project-specific rules remain local to each project when they are not workspace-wide.

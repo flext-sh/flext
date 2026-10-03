@@ -4,9 +4,9 @@
 
 - [Key Features](#key-features)
   - [Examples Overview](#examples-overview)
-  - [1. ACL Processing Example (`acl_processing_example.py`)](#1-acl-processing-example-aclprocessingexamplepy)
-  - [2. Advanced Processing Example (`advanced_processing_example.py`)](#2-advanced-processing-example-advancedprocessingexamplepy)
-  - [3. Complete Workflow Example (`complete_workflow_example.py`)](#3-complete-workflow-example-completeworkflowexamplepy)
+  - 1. ACL Processing Example (`acl_processing_example.py`)
+  - 1. Advanced Processing Example (`advanced_processing_example.py`)
+  - 1. Complete Workflow Example (`complete_workflow_example.py`)
 - [Architecture Patterns Demonstrated](#architecture-patterns-demonstrated)
   - [Railway Pattern](#railway-pattern)
   - [Parallel Processing](#parallel-processing)
@@ -25,13 +25,15 @@
 - [Integration with FLEXT Ecosystem](#integration-with-flext-ecosystem)
 - [Contributing](#contributing)
 - [License](#license)
+
 <!-- TOC END -->
 
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-Comprehensive examples demonstrating advanced FLEXT capabilities for enterprise data integration.
+Comprehensive examples demonstrating advanced FLEXT capabilities for enterprise data
+integration.
 
 **Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
 
@@ -43,27 +45,21 @@ Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 ### 1. ACL Processing Example (`acl_processing_example.py`)
 
-**Advanced ACL Processing with Railway Pattern**
+### ACL Processing through flext-ldif
 
-Demonstrates comprehensive Access Control List (ACL) processing capabilities:
-
-- **Parallel Batch Processing**: Using `ThreadPoolExecutor` for concurrent ACL operations.
-- **Intelligent Server Auto-detection**: Automatic detection of LDAP server types (OpenLDAP, Oracle OID, Oracle Unified Directory, Active Directory, Apache DS).
-- **Integrated ACL Validation**: Complex context-based validation with custom rules per server type.
-- **Railway Pattern**: Failure-resistant pipeline that follows functional error handling principles.
-- **Performance Analytics**: Comprehensive metrics and throughput analysis.
+The example injects the public LDIF client and composes its ACL extraction and
+permission evaluation operations. `flext-ldif` owns the LDAP entry, ACL, permission,
+server and result contracts.
 
 **Key Features:**
 
-- Server-specific ACL attribute detection
-- Parallel batch processing with settingsurable worker threads
-- Complex validation rules with forbidden permission combinations
-- Railway pattern for robust error handling
-- Performance monitoring and analytics
+- Constructor-injected LDIF client
+- Native LDIF entry and ACL models
+- Native `Result` failure propagation
 
 ### 2. Advanced Processing Example (`advanced_processing_example.py`)
 
-**Advanced Processing with Current APIs**
+### Advanced Processing with Current APIs
 
 Demonstrates modern processing capabilities with updated APIs:
 
@@ -83,7 +79,7 @@ Demonstrates modern processing capabilities with updated APIs:
 
 ### 3. Complete Workflow Example (`complete_workflow_example.py`)
 
-**Complete Workflow Integration**
+### Complete Workflow Integration
 
 Demonstrates the complete FLEXT enterprise workflow with all capabilities integrated:
 
@@ -158,52 +154,55 @@ pip install flext-core flext-ldif flext-api
 ### Basic ACL Processing
 
 ```python
-from examples import AclProcessingPipeline
+from examples.acl_processing_example import FlextRootAclProcessingExample
+from flext_ldif import c, ldif, m
 
-# Create pipeline with 8 worker threads
-pipeline = AclProcessingPipeline(max_workers=8)
-
-# Process ACL entries
-result = pipeline.process_acls_with_pipeline(
-    raw_entries=ldap_entries, server_context={"strict_mode": True}, parallel=True
+client = ldif()
+content = (
+    "dn: cn=test,dc=example,dc=com\n"
+    "objectClass: person\n"
+    "cn: test\n"
+    "sn: Example\n"
+    'aci: (target="ldap:///cn=test,dc=example,dc=com")'
+    '(targetattr="*")(version 3.0; acl "Allow read"; '
+    'allow (read) userdn="ldap:///anyone";)\n'
 )
-
-if result.is_success:
-    summary = result.unwrap()
-    # Access comprehensive processing results
-    u.Cli.print(f"Processed {summary['acls_extracted']} ACLs")
+entry = client.parse_ldif(content).unwrap().entries[0]
+result = FlextRootAclProcessingExample(service=client).process_acls_with_pipeline(
+    entry=entry,
+    server_type=c.Ldif.ServerTypes.OUD,
+    required_permissions=m.Ldif.AclPermissions(read=True),
+)
+print(result.unwrap().granted)
 ```
 
 ### Advanced Processing Pipeline
 
 ```python
-from examples import IntegratedProcessingPipeline
+from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 
-# Create integrated pipeline
-pipeline = IntegratedProcessingPipeline(max_workers=8, batch_size=200)
-
-# Execute complete pipeline
-result = pipeline.execute_integrated_pipeline(
-    items=data_items,
-    processing_func=process_function,
-    validation_func=validate_function,
-    analysis_func=analyze_function,
-    use_parallel=True,
+# Build the real validation, processing, and analysis stages
+pipeline = FlextRootAdvancedProcessingExample.FlextLdifProcessingPipeline(
+    items=[{"id": "item_1", "name": "Sample", "value": "Data"}],
+    stages=("validate", "process", "analyze"),
+    max_workers=4,
 )
+result = pipeline.execute()
 ```
 
 ### Complete Workflow
 
 ```python
-from examples import ComprehensiveRailwayPattern, CompleteWorkflowBuilder
+from examples import FlextRootCompleteWorkflow
 
 # Build workflow configuration
-settings = CompleteWorkflowBuilder.build_comprehensive_workflow(
+settings = FlextRootCompleteWorkflow.build_comprehensive_workflow(
     workflow_type="ldap_processing", requirements={"max_workers": 8, "parallel": True}
 )
 
 # Execute complete workflow
-railway = ComprehensiveRailwayPattern(max_workers=8)
+railway = FlextRootCompleteWorkflow(max_workers=8)
+input_data = {"entries": [{"dn": "cn=test,dc=example,dc=com"}]}
 result = railway.execute_workflow_railway(
     workflow_id="enterprise_workflow",
     input_data=input_data,
@@ -242,8 +241,9 @@ These examples demonstrate integration with the complete FLEXT ecosystem:
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](../docs/CONTRIBUTING.md) for details.
+We welcome contributions! Please see our Contributing Guide for details.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for
+details.

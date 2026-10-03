@@ -5,7 +5,6 @@ FROM python:3.13-slim
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Create app directory

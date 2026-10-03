@@ -1,12 +1,23 @@
 # ADR-001: Railway-Oriented Programming with `r[T]`
 
-**Status**: Accepted  
-**Reviewed**: 2026-02-17
+<!-- TOC START -->
+
+- [Context](#context)
+- [Decision](#decision)
+- [Consequences](#consequences)
+  - [Positive](#positive)
+  - [Negative](#negative)
+- [Related Documents](#related-documents)
+
+<!-- TOC END -->
+
+**Status**: Accepted — CURRENT IMPLEMENTATION **Reviewed**: 2026-02-17
 
 ## Context
 
-FLEXT needs one consistent contract for fallible operations across packages. The platform should make success and
-failure explicit in signatures and keep error handling composable.
+FLEXT needs one consistent contract for fallible operations across packages. The
+platform should make success and failure explicit in signatures and keep error handling
+composable.
 
 ## Decision
 
@@ -15,7 +26,8 @@ FLEXT uses `r[T]` as the canonical result contract for operations that can fail.
 This means:
 
 - business flows return `r[T]` instead of `T | None`
-- error handling is composed explicitly instead of relying on exceptions as routine control flow
+- error handling is composed explicitly instead of relying on exceptions as routine
+  control flow
 - success and failure paths stay visible at the call site
 
 ## Consequences

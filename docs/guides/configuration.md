@@ -1,71 +1,73 @@
 # Configuration
 
-The docs pipeline should read as much as possible from `pyproject.toml`. Root JSON policy exists only for values that
-cannot be inferred from project metadata.
+<!-- TOC START -->
 
-## Source of Truth Order
+- [Ownership order](#ownership-order)
+- [Public exports manifest](#public-exports-manifest)
+- [Documentation configuration](#documentation-configuration)
+- [Apply and validate](#apply-and-validate)
+- [Related guides](#related-guides)
 
-1. project `pyproject.toml`
-2. `[tool.flext.docs]` inside each project `pyproject.toml`
-3. minimal root policy in `docs/docs_config.json`
+<!-- TOC END -->
 
-If a value can be derived from `pyproject.toml`, it should not be duplicated in JSON.
+Configuration has one writable authority. Prefer typed `config/*.yaml` and settings; use
+`pyproject.toml` only for package and tool metadata that it owns. Derived files are
+generated projections.
 
-## Root Policy File
+## Ownership order
 
-`docs/docs_config.json` is intentionally small. It currently centralizes only:
+1. Typed config and settings own business rules, operational values, and
+   environment-tunable behavior.
+2. `pyproject.toml` owns package metadata and declared tool configuration.
+3. Generators derive managed code, docs, CI, and workspace projections.
 
-- root scope exclusions
-- placeholder audit terms
-- stale forward-guidance symbols
-- stale-symbol exempt paths for migration and baseline docs
+Never duplicate an owned value in tests, examples, JSON side files, templates, or local
+registries. Tests read the same typed owner as production.
 
-## Project Metadata
+## Public exports manifest
 
-Project docs automation should prefer these values from `pyproject.toml`:
+`config/exports.yaml` is the declarative SSOT for the workspace root's public export
+contract (RC-B). When the manifest exists, the lazy-init filesystem scan becomes a
+validator: any divergence between the manifest and the scan fails generation instead of
+mutating silently.
 
-- `[project].name`
-- `[project].description`
-- `[project].version`
-- `[project].urls`
-- wheel package paths under the build backend
+- The manifest lists the names of the root package's static public export contract.
+- Runtime lazy-alias machinery (single-letter facade aliases such as `d`, `e`, `h`, `r`,
+  `x`) is not part of the static contract; the scan does not attribute those aliases to
+  the root package and the manifest must not list them.
+- Intentional public-API changes update the manifest in the same change; deleting a
+  module without updating the manifest fails gen pointing at the orphaned entry.
 
-## `tool.flext.docs`
+## Documentation configuration
 
-Use `[tool.flext.docs]` only for metadata that is specific to the docs pipeline and cannot be safely inferred:
+Public API documentation is derived from declared public exports and docstrings. Project
+descriptions, versions, package names, and URLs come from canonical package metadata.
+Docs-only policy exists only when it cannot be derived from a typed owner.
 
-```toml
-[tool.flext.docs]
-project_class = "platform"
-site_title = "FLEXT API"
-package_name = "flext_api"
-exclude_docs = ["references/**"]
-module_include = ["flext_api.api"]
-module_exclude = ["flext_api._internal"]
-```
+Root files under `docs/guides/` own generated member guides. Change the root source,
+never the member projection.
 
-Typical fields:
+## Apply and validate
 
-- `project_class`
-- `site_title`
-- `package_name`
-- `enabled`
-- `exclude_docs`
-- `module_include`
-- `module_exclude`
-
-## Docs Generation Contract
-
-- generated API pages come from public exports and docstrings
-- mkdocs settings is generated from project metadata plus minimal docs overrides
-- curated guides must not duplicate generated API descriptions
-
-## Validation
+Run configuration propagation and validation from the workspace root:
 
 ```bash
-make docs DOCS_PHASE=generate PROJECT=flext-infra
-make docs DOCS_PHASE=validate PROJECT=flext-infra
+make gen
+make gen
+make check
+make test
+make gen
 ```
 
-Use [Troubleshooting](troubleshooting.md) when a project is missing package metadata or generated pages do not match the
-code.
+The second generation run must be a fixed point. Test validation retains the canonical
+Testmon cache. Do not invoke underlying tools or add project, file, pattern, phase, fix,
+or changed-only selectors.
+
+Warnings, missing tools, stale projections, and empty output are failures. Fix their
+canonical owner and rerun the same root verb.
+
+## Related guides
+
+- [Development](development.md)
+- [Testing](testing.md)
+- [Troubleshooting](troubleshooting.md)

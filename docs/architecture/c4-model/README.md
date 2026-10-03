@@ -1,12 +1,35 @@
 # FLEXT C4 Model Architecture Documentation
 
+<!-- TOC START -->
+
+- [Table of Contents](#table-of-contents)
+- [📋 C4 Model Levels](#c4-model-levels)
+  - [1. System Context Diagram](#1-system-context-diagram)
+  - [2. Container Diagram](#2-container-diagram)
+  - [3. Component Diagrams](#3-component-diagrams)
+  - [4. Code Diagrams](#4-code-diagrams)
+- [🎯 FLEXT Architecture Overview](#flext-architecture-overview)
+- [🏗 Key Architectural Patterns](#key-architectural-patterns)
+  - [Foundation Layer (flext-core)](#foundation-layer-flext-core)
+  - [Application Layer](#application-layer)
+  - [Infrastructure Layer](#infrastructure-layer)
+  - [Data Integration Layer (Singer Platform)](#data-integration-layer-singer-platform)
+  - [Runtime Layer](#runtime-layer)
+- [📊 Architecture Quality Attributes](#architecture-quality-attributes)
+- [🔗 Related Documentation](#related-documentation)
+
+<!-- TOC END -->
+
 ## Table of Contents
 
 - [FLEXT C4 Model Architecture Documentation](#flext-c4-model-architecture-documentation)
   - [📋 C4 Model Levels](#-c4-model-levels)
-    - [1. [System Context Diagram](./system-context.md)](#1-system-context-diagramsystem-contextmd)
-    - [2. [Container Diagram](./container-diagram.md)](#2-container-diagramcontainer-diagrammd)
-    - [3. [Component Diagrams](./component-diagrams.md)](#3-component-diagramscomponent-diagramsmd)
+    - [1.
+      [System Context Diagram](./system-context.md)](#1-system-context-diagramsystem-contextmd)
+    - [2.
+      [Container Diagram](./container-diagram.md)](#2-container-diagramcontainer-diagrammd)
+    - [3.
+      [Component Diagrams](./component-diagrams.md)](#3-component-diagramscomponent-diagramsmd)
     - [4. [Code Diagrams](./code-diagrams.md)](#4-code-diagramscode-diagramsmd)
   - [🎯 FLEXT Architecture Overview](#-flext-architecture-overview)
   - [🏗 Key Architectural Patterns](#-key-architectural-patterns)
@@ -18,19 +41,21 @@
   - [📊 Architecture Quality Attributes](#-architecture-quality-attributes)
   - [🔗 Related Documentation](#-related-documentation)
 
-This directory contains the C4 model diagrams for the FLEXT Enterprise Data Integration Platform,
-providing a comprehensive view of the system architecture at different levels of detail.
+This directory contains the C4 model diagrams for the FLEXT Enterprise Data Integration
+Platform, providing a comprehensive view of the system architecture at different levels
+of detail.
 
 ## 📋 C4 Model Levels
 
 ### 1. [System Context Diagram](./system-context.md)
 
-**Level 1** - Shows FLEXT in the context of its environment, external systems, and users.
+**Level 1** - Shows FLEXT in the context of its environment, external systems, and
+users.
 
 ### 2. [Container Diagram](./container-diagram.md)
 
-**Level 2** - Shows the high-level shape of the FLEXT architecture and how responsibilities are distributed across
-containers.
+**Level 2** - Shows the high-level shape of the FLEXT architecture and how
+responsibilities are distributed across containers.
 
 ### 3. [Component Diagrams](./component-diagrams.md)
 
@@ -38,7 +63,8 @@ containers.
 
 ### 4. [Code Diagrams](./code-diagrams.md)
 
-**Level 4** - Shows how components are implemented in code (UML class diagrams, entity relationship diagrams, etc.).
+**Level 4** - Shows how components are implemented in code (UML class diagrams, entity
+relationship diagrams, etc.).
 
 ## 🎯 FLEXT Architecture Overview
 
@@ -47,9 +73,8 @@ FLEXT is an enterprise-grade data integration platform built with:
 - **Clean Architecture** principles with clear layer separation
 - **Domain-Driven Design** patterns for business logic modeling
 - **Railway-Oriented Programming** for error handling
-- **CQRS** and **Event Sourcing** for data processing
 - **Dependency Injection** for loose coupling
-- **Microservices** architecture with Python services
+- **Typed package boundaries** across independently versioned libraries and connectors
 
 ## 🏗 Key Architectural Patterns
 
@@ -97,12 +122,6 @@ FLEXT is an enterprise-grade data integration platform built with:
 
 - [Arc42 Architecture Documentation](../arc42/README.md)
 - [Architecture Decision Records](../adr/README.md)
-- Deployment Architecture (_Documentation coming soon_)
-- Security Architecture (_Documentation coming soon_)
+- [Deployment Architecture](../arc42/07-deployment-view.md)
+- [Security Architecture](../../guides/security.md)
 - [Data Architecture](../data/README.md)
-
----
-
-**Last Updated**: 2025-01-XX
-**Version**: 1.0.0
-**Maintainer**: FLEXT Architecture Team

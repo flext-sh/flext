@@ -1,11 +1,24 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Libs package."""
+"""Tests.unit.libs package.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
-from flext_core.lazy import build_lazy_import_map, install_lazy_exports
+from types import MappingProxyType
 
-_LAZY_IMPORTS = build_lazy_import_map({".versioning_tests": ("TestVersioning",)})
+from flext_core import build_lazy_import_map, install_lazy_exports
 
+__all__: tuple[str, ...] = ()
 
-install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, publish_all=False)
+_LAZY_IMPORTS = MappingProxyType(
+    build_lazy_import_map(
+        MappingProxyType({}),
+        alias_groups=MappingProxyType({}),
+        sort_keys=False,
+    ),
+)
+
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, public_exports=__all__)

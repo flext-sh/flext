@@ -6,9 +6,7 @@
       "label": "FLEXT: Check",
       "type": "process",
       "command": "make",
-      "args": [
-        "check"
-      ],
+      "args": ["check"],
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -22,9 +20,7 @@
       "label": "FLEXT: Test",
       "type": "process",
       "command": "make",
-      "args": [
-        "test"
-      ],
+      "args": ["test"],
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -35,9 +31,7 @@
       "label": "FLEXT: Status",
       "type": "process",
       "command": "make",
-      "args": [
-        "status"
-      ],
+      "args": ["status"],
       "options": {
         "cwd": "${workspaceFolder}"
       },

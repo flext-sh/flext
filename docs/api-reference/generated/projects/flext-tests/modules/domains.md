@@ -1,8 +1,15 @@
-<!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
-
 # flext_tests.domains
 
+<!-- TOC START -->
+
+- No sections found
+
+<!-- TOC END -->
+
+<!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
+
 ::: flext_tests.domains
+
     options:
       show_root_heading: true
       show_root_full_path: false

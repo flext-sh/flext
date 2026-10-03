@@ -1,5 +1,11 @@
 # FLEXT Documentation
 
+<!-- TOC START -->
+
+- [Start Here](#start-here)
+
+<!-- TOC END -->
+
 This directory is the curated root documentation surface for the FLEXT workspace.
 
 Use it for:
@@ -9,8 +15,9 @@ Use it for:
 - migration guidance
 - generated workspace catalogs
 
-Do not treat this directory as the source of truth for every project detail. Project-specific implementation guidance
-stays in each package's own `README.md`, `AGENTS.md`, and local `docs/` tree.
+Do not treat this directory as the source of truth for every project detail.
+Project-specific implementation guidance stays in each package's own `README.md`,
+`AGENTS.md`, and local `docs/` tree.
 
 ## Start Here
 

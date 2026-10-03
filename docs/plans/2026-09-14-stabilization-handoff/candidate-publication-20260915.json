@@ -1,0 +1,285 @@
+{
+  "captured_at": "2026-09-15T00:25:23.028082+00:00",
+  "scope": "Published WIP member candidates; not integration or validation proof",
+  "members": [
+    {
+      "repository": "flext-api",
+      "head": "6c6e8d21fab0165a0dd877fb87ca3e4fa7138762",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "6f9a0bcf1234ba1c92887f546d9bb35df032c657",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "6c6e8d21fab0165a0dd877fb87ca3e4fa7138762"
+    },
+    {
+      "repository": "flext-auth",
+      "head": "f4a29971ee955b1d493aea7efa106dd4b86f0d16",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "74f71f9ef856965679937bdea5e2ea34f69395be",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "f4a29971ee955b1d493aea7efa106dd4b86f0d16"
+    },
+    {
+      "repository": "flext-cli",
+      "head": "88365b04dfc01cdc2432d17bf3febe3883b31579",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "641700e5f1d82c841aaaea496e22733d56ca3133",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "88365b04dfc01cdc2432d17bf3febe3883b31579"
+    },
+    {
+      "repository": "flext-core",
+      "head": "e09753be2144fb080b533acbb1b7cec345134799",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "5a1317238e7e00a5d4250732bd4247c6dbce8d8c",
+      "status": "M tests/unit/test_result_callables_fold.py",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "e09753be2144fb080b533acbb1b7cec345134799"
+    },
+    {
+      "repository": "flext-db-oracle",
+      "head": "7e75718c9ae8e3c1081c1a5d8c487eaf84d7061a",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "951237df67f48acf8ad49126ff4eb15234ba4b41",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "7e75718c9ae8e3c1081c1a5d8c487eaf84d7061a"
+    },
+    {
+      "repository": "flext-dbt-ldap",
+      "head": "c4c7cd63ad4a696a5889d33c9c820330c30ee6a3",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "27a5d5d2bc2c4e993127b17467499f71381f319a",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "c4c7cd63ad4a696a5889d33c9c820330c30ee6a3"
+    },
+    {
+      "repository": "flext-dbt-ldif",
+      "head": "66eb40a8e284bddc33d8f1e4bac582098fdbb177",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "e40ccecfa6e72aab614e483736ffa1e892d5e8fd",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "66eb40a8e284bddc33d8f1e4bac582098fdbb177"
+    },
+    {
+      "repository": "flext-dbt-oracle",
+      "head": "c99f7e092ce216bfa00c73ec999bf96e7c4846cd",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "9b5d1b3cdd1938c7c381639cdd96cca9cf25625d",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "c99f7e092ce216bfa00c73ec999bf96e7c4846cd"
+    },
+    {
+      "repository": "flext-dbt-oracle-wms",
+      "head": "696d78a903953fdea7542c90d2e7f851813d1be5",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "2a7933f58782a8f8433b005e1bd985c862a61cee",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "696d78a903953fdea7542c90d2e7f851813d1be5"
+    },
+    {
+      "repository": "flext-grpc",
+      "head": "3b2342d9b9559e7cd71daa28571d72952416df15",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "58605cf8e71d42828c09935da846bd8e93d762b6",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "3b2342d9b9559e7cd71daa28571d72952416df15"
+    },
+    {
+      "repository": "flext-infra",
+      "head": "895db98f7175d702571a75c3bdabae72a79d727a",
+      "branch": "bugfix/stabilize-0.12.0",
+      "upstream": "a254c1f3f3e3491a5eea34c6a088c7285e454ca6",
+      "status": "",
+      "published_ref": "origin/bugfix/stabilize-0.12.0",
+      "published_head": "895db98f7175d702571a75c3bdabae72a79d727a"
+    },
+    {
+      "repository": "flext-ldap",
+      "head": "a04199d25151c2d4951d432529952bbb982a2b48",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "79d451e8980158ba0881d32b4ce9eed7879e84d6",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "a04199d25151c2d4951d432529952bbb982a2b48"
+    },
+    {
+      "repository": "flext-ldif",
+      "head": "39d5a8893c76416f23ba85502ae6aa9453e2b800",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "048dc613c902b5ed4efa008607b51e61611525f4",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "39d5a8893c76416f23ba85502ae6aa9453e2b800"
+    },
+    {
+      "repository": "flext-meltano",
+      "head": "186b9caeea5c1bc6c2f36e1ca279c3ff470b382e",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "cd99926a3637f91931719a2bf26a544dc45d2834",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "186b9caeea5c1bc6c2f36e1ca279c3ff470b382e"
+    },
+    {
+      "repository": "flext-observability",
+      "head": "b3bfaae65f3f202164cf3be46b08d0b1eb643f78",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "08cd0df50987fde10ffbd9b270383b2ac3d2f8b0",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "b3bfaae65f3f202164cf3be46b08d0b1eb643f78"
+    },
+    {
+      "repository": "flext-oracle-oic",
+      "head": "563caa597d085042885e6984964684dd2f2a14d6",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "a2c8af20cc73715c9b45fb66f4c4297263536864",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "563caa597d085042885e6984964684dd2f2a14d6"
+    },
+    {
+      "repository": "flext-oracle-wms",
+      "head": "bc0e98fbf4bcaf6dc16172a7c7daf5d698eb7354",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "64e0c9117ee1f96d5b550ebb623b429329a7a40e",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "bc0e98fbf4bcaf6dc16172a7c7daf5d698eb7354"
+    },
+    {
+      "repository": "flext-plugin",
+      "head": "4cd71b393d6477a80afd11b3a10175c3552f4a0e",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "8b5685f57a12bac2c31261719fed531d3901c185",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "4cd71b393d6477a80afd11b3a10175c3552f4a0e"
+    },
+    {
+      "repository": "flext-quality",
+      "head": "ce8b5c571d8514efd0da24dd6b0d8d2329c760ac",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "0edef2c0dee4b3b1111ba71678708c10849c972c",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "ce8b5c571d8514efd0da24dd6b0d8d2329c760ac"
+    },
+    {
+      "repository": "flext-tap-ldap",
+      "head": "6f8bb7f767bef95dc8c423a9581b27d6ed0d002a",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "0a3ff6d223570f7696055ab0db58ee27e6b31f32",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "6f8bb7f767bef95dc8c423a9581b27d6ed0d002a"
+    },
+    {
+      "repository": "flext-tap-ldif",
+      "head": "085109a6308f944f3462707395470262e1bacb95",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "887e5f1916ee5dc6b9acefa4dd42c234ff49f947",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "085109a6308f944f3462707395470262e1bacb95"
+    },
+    {
+      "repository": "flext-tap-oracle",
+      "head": "7f20b023260886dfe6b651d33db2d446c8e56a75",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "8cb6a9ce00b710fb01e8d23cd72d68de6b31d461",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "7f20b023260886dfe6b651d33db2d446c8e56a75"
+    },
+    {
+      "repository": "flext-tap-oracle-oic",
+      "head": "2f28dd965ab8edff0b244b47ae853856426d964c",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "0912536ace213246d107e81fe74336e6c84d0d60",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "2f28dd965ab8edff0b244b47ae853856426d964c"
+    },
+    {
+      "repository": "flext-tap-oracle-wms",
+      "head": "e8b8abafa44de80df3647f20d7011101e0e46724",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "f5aff85f7f78d7340280bd2066a55f1dfcc03db6",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "e8b8abafa44de80df3647f20d7011101e0e46724"
+    },
+    {
+      "repository": "flext-target-ldap",
+      "head": "e7946350aadfb1f480b16d784bd9dc89591d650b",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "8ae57d9380f58c63fd0652ede77574ee59cf268d",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "e7946350aadfb1f480b16d784bd9dc89591d650b"
+    },
+    {
+      "repository": "flext-target-ldif",
+      "head": "5cd294541e9390f17022a064edabbb7701e16609",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "da46bb49837da02ae573b5d751e9c94b05716ad6",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "5cd294541e9390f17022a064edabbb7701e16609"
+    },
+    {
+      "repository": "flext-target-oracle",
+      "head": "a26ae5e120a83b894fbe90d625313c9b6df43b0e",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "0aebdd01934bfabb540e2ef78fa91cba7d135f69",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "a26ae5e120a83b894fbe90d625313c9b6df43b0e"
+    },
+    {
+      "repository": "flext-target-oracle-oic",
+      "head": "bbf2126eb026cc1ee6f373cf61573dc7826264ba",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "6e2bfc9155435e4ae46d0f7b64d8f4bc51a7c999",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "bbf2126eb026cc1ee6f373cf61573dc7826264ba"
+    },
+    {
+      "repository": "flext-target-oracle-wms",
+      "head": "997e30df68e99662f6d5227e509dc637b808a4f3",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "95a3cfe432a466fb058abca43a5f7853a738626e",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "997e30df68e99662f6d5227e509dc637b808a4f3"
+    },
+    {
+      "repository": "flext-tests",
+      "head": "53c3f8f29b1a5b94ad21cdf90e0c39434cc82331",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "1e0bb2b334943c8299ffb6ad1258522ce2fd6ce9",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "53c3f8f29b1a5b94ad21cdf90e0c39434cc82331"
+    },
+    {
+      "repository": "flext-web",
+      "head": "e7223adf0e763ef094b470dbbec024a403790a4d",
+      "branch": "bugfix/absorb-checkout-20260914",
+      "upstream": "0e816775baa38929feb6a6bb78ab1c300d13a014",
+      "status": "",
+      "published_ref": "origin/bugfix/absorb-checkout-20260914",
+      "published_head": "e7223adf0e763ef094b470dbbec024a403790a4d"
+    }
+  ]
+}

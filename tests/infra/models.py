@@ -1,47 +1,61 @@
-"""FLEXT infra test helpers for models."""
+"""FLEXT infra test helpers for models.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
-from flext_tests import FlextTestsModels
-from tests import u
+from flext import m, u
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
-class TestsFlextRootModels(FlextTestsModels):
-    class Workspace:
-        """Workspace-level test models."""
+class TestsFlextRootModels(m):
+    """Infrastructure test models facade — extends flext workspace models."""
 
-        class Tests:
-            """Test infrastructure model definitions."""
+    class _ModuleModels:
+        """Module reference models."""
 
-            class ModuleRef(FlextTestsModels.Value):
-                """Module reference with path and name information."""
+        class ModuleRef(m.Value):
+            """Module reference with path and name information."""
 
-                anchor_file: Annotated[
-                    Path,
-                    u.Field(description="Absolute path to the module's anchor file."),
-                ]
-                module_name: Annotated[
-                    str, u.Field(description="Fully qualified module name.")
-                ]
-                relative_path: Annotated[
-                    str,
-                    u.Field(description="Module path relative to the workspace root."),
-                ]
+            anchor_file: Annotated[
+                Path,
+                u.Field(description="Absolute path to the module's anchor file."),
+            ]
+            module_name: Annotated[
+                str,
+                u.Field(description="Fully qualified module name."),
+            ]
+            relative_path: Annotated[
+                str,
+                u.Field(description="Module path relative to the workspace root."),
+            ]
 
-            class SyncCall(FlextTestsModels.Value):
-                """Workspace synchronization call record."""
+    class _SyncModels:
+        """Sync call models."""
 
-                action: Annotated[
-                    str, u.Field(description="Sync action performed (e.g. pull, push).")
-                ]
-                repo: Annotated[Path, u.Field(description="Target repository root.")]
+        class SyncCall(m.Value):
+            """Workspace synchronization call record."""
+
+            action: Annotated[
+                str,
+                u.Field(description="Sync action performed (e.g. pull, push)."),
+            ]
+            repo: Annotated[Path, u.Field(description="Target repository root.")]
+
+        class RepoState(m.Value):
+            """Repository state snapshot."""
+
+            branch: Annotated[str, u.Field(description="Current branch name.")]
+            commit_sha: Annotated[str, u.Field(description="Current commit SHA.")]
+
+    class TestsFlextRoot(_ModuleModels, _SyncModels):
+        """Test infrastructure model definitions."""
 
 
-m = TestsFlextRootModels
-
-__all__: list[str] = ["TestsFlextRootModels", "m"]
+__all__: list[str] = ["TestsFlextRootModels"]

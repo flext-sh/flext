@@ -5,7 +5,6 @@ ARG BUILD_ENV=production
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
     PYTHONHASHSEED=random \
     PYTHONFAULTHANDLER=1 \
     PIP_NO_CACHE_DIR=1 \

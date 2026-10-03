@@ -1,7 +1,14 @@
 # Guides Index
 
-Guides are curated documents for workflow, migration, and day-to-day maintenance. They complement generated API
-reference; they do not duplicate it.
+<!-- TOC START -->
+
+- [Canonical Guides](#canonical-guides)
+- [Scope](#scope)
+
+<!-- TOC END -->
+
+Guides are curated documents for workflow, migration, and day-to-day maintenance. They
+complement generated API reference; they do not duplicate it.
 
 ## Canonical Guides
 
@@ -12,9 +19,16 @@ reference; they do not duplicate it.
 - [Configuration](configuration.md)
 - [Testing](testing.md)
 - [Troubleshooting](troubleshooting.md)
+- [Using flext-core](using-flext-core.md)
+- [Using flext-cli](using-flext-cli.md)
+- [Using flext-tests](using-flext-tests.md)
+- [Make Commands](make-commands.md)
+- [Skill Automation Pattern](skill-automation-pattern.md)
+- [Security Guide](security.md)
 
 ## Scope
 
 - architecture direction belongs in `docs/architecture/`
-- generated API details belong in `docs/api-reference/` and each project's local generated docs
+- generated API details belong in `docs/api-reference/` and each project's local
+  generated docs
 - project-specific operational playbooks remain local to the owning project

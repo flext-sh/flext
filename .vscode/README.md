@@ -5,10 +5,11 @@
 - [Purpose](#purpose)
 - [Example Files](#example-files)
 - [Changelog](#changelog)
+
 <!-- TOC END -->
 
-This directory contains VS Code workspace settings, MCP configuration,
-and extension recommendations for FLEXT.
+This directory contains VS Code workspace settings, MCP configuration, and extension
+recommendations for FLEXT.
 
 ## Purpose
 

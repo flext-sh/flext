@@ -1,146 +1,121 @@
-# Comandos Make do FLEXT
+# FLEXT Make Commands
 
-Este guia é a referência canônica para a superfície de comando `make` do monorepo FLEXT. As regras aqui valem para o
-workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locais (`make check`, `make test`, etc.).
+<!-- TOC START -->
 
-## Convenções
+- [Discover commands](#discover-commands)
+- [Canonical workflow](#canonical-workflow)
+- [Verb single-pass contract](#verb-single-pass-contract)
+- [Markdown quality pipeline](#markdown-quality-pipeline)
+- [Test contract](#test-contract)
+- [Failure contract](#failure-contract)
+- [Scope and generation](#scope-and-generation)
+- [Related guides](#related-guides)
 
-- **Poucos verbos, muitas ações**: o formato é `make <verbo> WHAT=<acao>`. Cada verbo agrupa um domínio.
-- **`all` é o padrão**: se `WHAT` for omitido, o comando executa a ação `all` daquele verbo.
-- **Projetos default = todos**: se `PROJECT` ou `PROJECTS` forem omitidos, o comando abrange todos os projetos do
-  workspace.
-- **Mutadores são dry-run por padrão**: comandos que alteram arquivos exigem `APPLY=Y` para executar de verdade.
-- **Ajuda embutida**: `make <verbo> WHAT=help` lista as ações disponíveis.
+<!-- TOC END -->
 
-## Verbos canônicos
+`make help` at the workspace root is the executable authority for command grammar. This
+guide records the invariants that every declared verb must keep.
 
-| Verbo | Domínio | Resumo | Exemplo |
-| --- | --- | --- | --- |
-| `make boot` | workspace | Bootstrap de `.venv` + submódulos | `make boot APPLY=Y` |
-| `make build` | build | Build/regen padronizado | `make build WHAT=gen APPLY=Y` |
-| `make check` | quality | Quality gates | `make check` |
-| `make clean` | workspace | Limpeza de artefatos | `make clean APPLY=Y` |
-| `make coordination` | governance | Diagnósticos de coordenação Beads | `make coordination` |
-| `make docs` | documentation | Pipeline de documentação | `make docs DOCS_PHASE=validate` |
-| `make makefile` | meta | Mostra a superfície de comandos | `make makefile` |
-| `make ship` | release | Orquestração de release | `make ship WHAT=rel APPLY=Y` |
-| `make status` | governance | Status dos Beads | `make status` |
-| `make test` | quality | Testes pytest | `make test PROJECT=flext-infra MATCH=docs` |
-| `make val` | governance | Validação de gates | `make val` |
-
-## Ações de `build` (`make build WHAT=<acao>`)
-
-| Ação | Alias curto | Muta? | Descrição |
-| --- | --- | --- | --- |
-| `all` | — | sim | Build/package em todos os projetos selecionados |
-| `constraints` | — | sim | Reescreve constraints de dependências |
-| `docs` | — | sim | Roda o pipeline de docs |
-| `gen` | `make gen` | sim | Regenera arquivos padronizados de projeto |
-| `mod` | `make mod` | sim | Moderniza `pyproject.toml` |
-| `stubs` | `make stubs` | não | Validação da cadeia de stubs |
-| `sync` | `make sync` | sim | Sincroniza Makefiles a partir do `pyproject.toml` |
-| `up` | `make up` | sim | Upgrade de dependências do workspace |
-
-## Ações de `check` (`make check WHAT=<acao>`)
-
-| Ação | Alias curto | Descrição |
-| --- | --- | --- |
-| `all` | `make lint` | Default rápido: `lint` + `pyrefly` |
-| `boundary` | `make boundary` | Boundary gate |
-| `cqrs` | `make cqrs` | CQRS compliance gate |
-| `docker_standardization` | `make docker_standardization` | Centralização de artefatos Docker |
-| `fmt` / `format` | `make fmt` / `make format` | Formatação (ruff + markdown) |
-| `go` | `make go` | Go quality gate |
-| `lint` | `make lint` | Lint + type gates |
-| `loc-cap` | `make loc-cap` | Loc-cap gate |
-| `markdown` | `make markdown` | Markdown quality gate |
-| `mypy` | `make mypy` | mypy gate |
-| `pol` | `make pol` | Typing policy gate |
-| `pyre` | `make pyre` | Pyrefly repository type check |
-| `pyrefly` | `make pyrefly` | Pyrefly scoped type check |
-| `pyright` | `make pyright` | Pyright gate |
-| `scan` | `make scan` | Security scan gates |
-| `silent-failure` | `make silent-failure` | Silent-failure gate |
-| `types` | `make types` | Typing supply chain |
-
-## Ações de `ship` (`make ship WHAT=<acao>`)
-
-| Ação | Alias curto | Muta? | Descrição |
-| --- | --- | --- | --- |
-| `all` / `rel` | `make rel` | sim | Release workflow |
-| `pr` | `make pr` | sim | Gerenciamento de PRs |
-| `push` | `make push` | sim | Push de branches/tags |
-| `save` | `make save` | sim | Commit de alterações |
-| `tag` | `make tag` | sim | Criação de tags |
-
-## Ações de `val` (`make val WHAT=<acao>`)
-
-| Ação | Alias curto | Descrição |
-| --- | --- | --- |
-| `all` | — | Roda `project` + `workspace` (padrão) |
-| `project` | `make project` | Validação ao nível de projeto |
-| `workspace` | `make workspace` | Validação ao nível de workspace |
-
-> O `VALIDATE_SCOPE` default é `all`, então `make val` já executa ambos os escopos.
-
-## Seletores de escopo
-
-Use `PROJECT` para um projeto, `PROJECTS` para vários, ou omita para todos:
+## Discover commands
 
 ```bash
-make check PROJECT=flext-infra
-make test PROJECTS="flext-core flext-cli" MATCH=docs
-make build WHAT=gen APPLY=Y              # todos os projetos
+make setup
+make help
 ```
 
-Não use `PROJECT` e `PROJECTS` juntos.
+Never infer a target, flag, or selector from historical documentation. When a required
+verb is missing or broken, repair the root dispatcher owner and rerun that verb.
 
-## Dry-run e mutação
+## Canonical workflow
 
-Comandos que alteram o workspace (build, clean, ship, boot, etc.) exibem um dry-run a menos que `APPLY=Y` seja passado:
-
-```bash
-make build WHAT=gen          # dry-run
-make build WHAT=gen APPLY=Y  # executa
-make clean                   # dry-run
-make clean APPLY=Y           # executa
-```
-
-## Exemplos do dia a dia
+Use the standard verbs directly from the workspace root:
 
 ```bash
-# Bootstrap inicial
-make boot APPLY=Y
-
-# Checagem rápida padrão (ruff + pyrefly)
+make setup
+make gen
+make mod
+make gen
+make gen
+make fix
+make fmt
 make check
-
-# Checagem em um projeto específico
-make check PROJECT=flext-infra
-
-# Regenerar arquivos padronizados
-make gen APPLY=Y
-
-# Rodar testes de um projeto
-make test PROJECT=flext-infra MATCH=docs
-
-# Validar workspace completo
-make val
-
-# Sincronizar Makefiles após mudar pyproject.toml
-make sync APPLY=Y
+make test
+make build
 ```
 
-## Descoberta
+The consecutive generation passes prove the fixed point after structural rewrites.
+`make build` packages the validated candidate; it does not replace runtime verification.
+Each verb executes its declared operation directly. No project, file, pattern, action,
+phase, fix, or changed-only selector may be attached to a standard verb.
 
-```bash
-make help                  # lista todos os verbos
-make build WHAT=help       # lista ações de build
-make build WHAT=gen/help   # ajuda detalhada de gen
-```
+`make help` is the complete live inventory. Additional declared verbs such as `upg`,
+`docs`, `audit`, `status`, `waza`, `duplication`, and the release verbs retain their own
+single operation and are invoked only when their scope applies.
 
-## Veja também
+## Verb single-pass contract
 
-- [Development](development.md) — workflow diário.
-- [Testing](testing.md) — gates de teste.
-- [Getting Started](getting-started.md) — bootstrap do workspace.
+Each mutating verb owns exactly one operation per tool, and `make check` is strictly
+read-only — no verb repeats another verb's work across the canonical sequence
+`make fix && make fmt && make check`:
+
+| Gate / tool                       | `make check` (read-only)           | `make fmt` (formatters) | `make fix` (one mutation)                  |
+| --------------------------------- | ---------------------------------- | ----------------------- | ------------------------------------------ |
+| `lint` — ruff                     | read-only `ruff` verdict           | —                       | one `ruff` repair pass                     |
+| `format` — ruff                   | — (mutating)                       | `ruff` format pass      | —                                          |
+| `markdown` — rumdl                | `rumdl check`                      | —                       | `rumdl fmt`                                |
+| `markdown-format` — prettier      | `prettier --check`                 | `prettier --write`      | —                                          |
+| `markdown-code` — ruff (embedded) | format verdict on parseable blocks | —                       | one format pass, clean round-trips spliced |
+| `canonical-alias`, `smells`       | read-only scan                     | —                       | declared repair                            |
+
+`make fmt` never runs a lint pass and `make fix` never formats: each operation runs once
+per verb, residue found by a mutation is reported there and enforced only by
+`make check`, and `make fix`/`make fmt` repeated on a green tree are no-ops.
+
+## Markdown quality pipeline
+
+The markdown standard lives once in `flext-infra/config/tooling.yaml`
+(`Infra.tooling.tools.markdown`) and is projected to every repository by `make gen`:
+
+- `rumdl` is the linter (markdownlint-compatible `MD*` rules through the generated
+  `.markdownlint.json` / `.markdownlintignore`); syntax findings inside embedded code
+  belong to the flext-tests markdown validator, not to a second linter.
+- `prettier` (pinned 3.5.x — newer releases dropped prose reflow) is the formatter:
+  `prettier --check` in `make check`, `prettier --write` in `make fmt`.
+- `markdown-code` holds parseable embedded Python and doctest examples to the
+  ruff-format contract; unparseable documentation fragments are prose and stay with the
+  validator. Generated and provider-projected trees (`.agents`, `.claude`, `.gemini`,
+  `AGENTS.md`, `target/`, and friends) are excluded by the same SSOT list.
+
+## Test contract
+
+`make test` runs the incremental selection. `make test-full` first runs that operation,
+then the complete suite, including configured external and CI-excluded markers. The
+runner owns this sequence, one monotonic deadline, and the same persistent Testmon
+database, located by the flext-infra generated configuration. External tests keep their
+declared runtime and authentication requirements. Direct runner commands and
+cache-clearing bypasses are prohibited.
+
+Separate receipts preserve each phase's mode, raw result, inventory, execution, and
+deselection counts. Warnings are counted per subprocess and globally, including any
+explicitly suspended MRO warnings. Only a typed incremental cache hit with database
+integrity checks and complete deselection accounting may execute zero tests; it is never
+reported as tests passed. The full phase must execute its complete nonempty inventory.
+
+## Failure contract
+
+- The first exception, traceback, and non-zero exit propagate unchanged.
+- Warnings, skips, empty output, and missing tools are failures.
+- No retry, fallback, suppression, normalization, partial run, or alternate raw tool
+  path can replace the canonical verb.
+
+## Scope and generation
+
+The root dispatcher resolves workspace scope from its typed topology. Generated Make
+surfaces and documentation are changed at their template or configuration owner, then
+regenerated with `make gen`.
+
+## Related guides
+
+- [Development](development.md)
+- [Testing](testing.md)
+- [Getting started](getting-started.md)

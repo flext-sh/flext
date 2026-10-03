@@ -1,26 +1,38 @@
 # Using flext-cli
 
+<!-- TOC START -->
+
+- [Aliases](#aliases)
+- [Purpose](#purpose)
+- [Settings](#settings)
+- [Model-driven command](#model-driven-command)
+- [Testing a command](#testing-a-command)
+- [Good practices](#good-practices)
+- [Bad practices](#bad-practices)
+- [Related](#related)
+
+<!-- TOC END -->
+
 `flext_cli` provides a unified Typer abstraction for model-driven CLI applications.
 
 ## Aliases
 
-```python
-from flext_cli import c, m, p, r, s, t, u
-```
+Import the aliases used by each example from the public `flext_cli` package root.
 
 `flext_cli` reexports `d`, `e`, `h`, `r`, `x` from `flext_core`.
 
-| Alias | Purpose |
-| ------- | --------- |
-| `c` | constants |
-| `m` | models |
-| `p` | protocols |
-| `r` | result (reexported from `flext_core`) |
-| `s` | service / runtime (`FlextCliServiceBase`) |
-| `t` | typings |
-| `u` | utilities |
+| Alias | Purpose                                   |
+| ----- | ----------------------------------------- |
+| `c`   | constants                                 |
+| `m`   | models                                    |
+| `p`   | protocols                                 |
+| `r`   | result (reexported from `flext_core`)     |
+| `s`   | service / runtime (`FlextCliServiceBase`) |
+| `t`   | typings                                   |
+| `u`   | utilities                                 |
 
-**Important:** `s` is the service/runtime alias. CLI settings are accessed via `FlextCliSettings` (no short alias).
+**Important:** `s` is the service/runtime alias. CLI settings are accessed via
+`FlextCliSettings` (no short alias).
 
 ## Purpose
 
@@ -30,13 +42,17 @@ from flext_cli import c, m, p, r, s, t, u
 
 ## Settings
 
-Import the existing settings class; do not redefine it:
+Import the existing settings class; without overrides, `fetch_global()` returns
+its shared per-class singleton:
 
 ```python
-from flext_cli.settings import FlextCliSettings
+from flext_cli import FlextCliSettings
+
+settings = FlextCliSettings.fetch_global()
 ```
 
-If you need a project-specific subclass, extend `FlextSettings` (or `FlextCliSettings`) with `m.SettingsConfigDict`:
+If you need a project-specific subclass, extend `FlextSettings` (or `FlextCliSettings`)
+with `m.SettingsConfigDict`:
 
 ```python
 from flext_core import FlextSettings, m
@@ -51,10 +67,7 @@ class FlextApiSettings(FlextSettings):
 ```python
 from __future__ import annotations
 
-from flext_cli import m, t
-from flext_cli.services.cli import FlextCliCli
-from flext_cli.settings import FlextCliSettings
-
+from flext_cli import FlextCliCli, FlextCliSettings, m, t
 
 settings = FlextCliSettings.fetch_global()
 
@@ -74,21 +87,49 @@ def greet_handler(model: GreetInput) -> t.JsonValue:
 command = FlextCliCli.model_command(
     model_cls=GreetInput, handler=greet_handler, settings=settings
 )
+cli = FlextCliCli()
+app = cli.create_app_with_common_params(name="greeting", help_text="Greeting commands")
+cli.register_command(app, name="greet", help_text="Build a greeting", command=command)
 ```
 
 **Common mistakes to avoid:**
 
-- `FlextCliCli.build_model_command(...)` does not exist; use `FlextCliCli.model_command(...)`.
+- `FlextCliCli.build_model_command(...)` does not exist; use
+  `FlextCliCli.model_command(...)`.
 - `m.CliInput` / `m.CliOutput` do not exist; use plain `m.BaseModel` subclasses.
 
 ## Testing a command
 
-```python
-from typer.testing import CliRunner
+Use `FlextCliCli.invoke_app` with the adapter-owned application, not Typer's `CliRunner`
+directly. This independent example constructs and invokes a real model-backed command;
+handlers return their value but do not automatically print it.
 
-runner = CliRunner()
-result = runner.invoke(app, ["greet", "--name", "Ada"])
-assert result.exit_code == 0
+```python
+from flext_cli import FlextCliCli, c, m
+from flext_tests import tm
+
+
+class GreetInput(m.BaseModel):
+    name: str
+
+
+def greet_handler(model: GreetInput) -> str:
+    return f"Hello, {model.name}!"
+
+
+def test_greet_command() -> None:
+    cli = FlextCliCli()
+    app = cli.create_app_with_common_params(
+        name="greeting", help_text="Greeting commands"
+    )
+    command = cli.model_command(model_cls=GreetInput, handler=greet_handler)
+    cli.register_command(
+        app, name="greet", help_text="Build a greeting", command=command
+    )
+    invocation = cli.invoke_app(app, args=["greet", "--name", "Ada"])
+    tm.that(invocation.success, eq=True)
+    tm.that(invocation.value.exit_code, eq=c.Cli.EXIT_CODE_SUCCESS)
+    tm.that(greet_handler(GreetInput(name="Ada")), eq="Hello, Ada!")
 ```
 
 ## Good practices
@@ -99,16 +140,27 @@ assert result.exit_code == 0
 
 ## Bad practices
 
-```python notest
-import typer
+Do not replace the model command with an untyped ad-hoc handler or bypass the adapter
+with direct printing and process termination. Register the model-backed command through
+the public facade as shown above. A corrected handler consumes its declared input model
+and returns its value:
+
+```python
+from flext_cli import m
 
 
-def main(name: str):  # ad-hoc command, no model
-    u.Cli.print(f"Hello, {name}")
+class GreetInput(m.BaseModel):
+    name: str
+
+
+def greet_handler(model: GreetInput) -> str:
+    return f"Hello, {model.name}!"
+
+
+greeting = greet_handler(GreetInput(name="Ada"))  # "Hello, Ada!"
 ```
 
 ## Related
 
-- `.agents/skills/using-flext-cli/SKILL.md`
-- `.agents/skills/coding-standards/SKILL.md`
 - `flext-cli/src/flext_cli/services/cli.py`
+- [Generated flext-core API reference](../api-reference/generated/flext-core.md)

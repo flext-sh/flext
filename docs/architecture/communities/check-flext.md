@@ -1,5 +1,16 @@
 # check-flext
 
+<!-- TOC START -->
+
+- [Overview](#overview)
+- [Members](#members)
+- [Execution Flows](#execution-flows)
+- [Dependencies](#dependencies)
+  - [Outgoing](#outgoing)
+  - [Incoming](#incoming)
+
+<!-- TOC END -->
+
 ## Overview
 
 Community of 3 nodes
@@ -10,11 +21,11 @@ Community of 3 nodes
 
 ## Members
 
-| Name | Kind | File | Lines |
-| ------ | ------ | ------ | ------- |
-| TestFlextInfraCheck | Class | flext-infra/tests/unit/check/init_tests.py | 14-26 |
-| test_getattr_raises_attribute_error_for_unknown_symbol | Test | flext-infra/tests/unit/check/init_tests.py | 17-20 |
-| test_dir_returns_all_exports | Test | flext-infra/tests/unit/check/init_tests.py | 22-26 |
+| Name                                                   | Kind  | File                                       | Lines |
+| ------------------------------------------------------ | ----- | ------------------------------------------ | ----- |
+| TestFlextInfraCheck                                    | Class | flext-infra/tests/unit/check/init_tests.py | 14-26 |
+| test_getattr_raises_attribute_error_for_unknown_symbol | Test  | flext-infra/tests/unit/check/init_tests.py | 17-20 |
+| test_dir_returns_all_exports                           | Test  | flext-infra/tests/unit/check/init_tests.py | 22-26 |
 
 ## Execution Flows
 

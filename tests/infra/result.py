@@ -1,16 +1,18 @@
-"""FLEXT infra test helpers for result."""
+"""FLEXT infra test helpers for result.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
-from flext_core import r as _r
+from flext_core import r
 
 
 class TestsFlextRootResult:
     """Workspace-level result namespace for root tests."""
 
-    Result = _r
+    Result = r
 
-
-r = _r
 
 __all__: list[str] = ["TestsFlextRootResult", "r"]

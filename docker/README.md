@@ -6,7 +6,7 @@
 - [Installation](#installation)
 - [Usage](#usage)
   - [For pytest Tests](#for-pytest-tests)
-  - [Direct tk Usage](#direct-flexttestsdocker-usage)
+  - Direct tk Usage
 - [Architecture](#architecture)
   - [DOCKER COMPOSE FILES (17 CENTRALIZED)](#docker-compose-files-17-centralized)
   - [Container Type Reference (THREE PRIMARY TYPES)](#container-type-reference-three-primary-types)
@@ -33,6 +33,7 @@
   - [FURTHER READING](#further-reading)
 - [Contributing](#contributing)
 - [License](#license)
+
 <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
@@ -43,7 +44,7 @@ Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 ## Key Features
 
-```
+```text
 ~/flext/docker/
 ├── docker-compose.*.yml    # All compose files (17 centralized configs)
 ├── images/                  # All Dockerfiles (21 consolidated images)
@@ -110,7 +111,7 @@ from flext_tests import tk
 from pathlib import Path
 
 # Initialize with workspace root
-docker_mgr = tk(workspace_root=Path.home() / "flext")
+docker_mgr = tk(repository_root=Path.home() / "flext")
 
 # Start container
 result = docker_mgr.start_container("flext-postgres-test")
@@ -142,25 +143,31 @@ All compose files follow naming convention: `docker-compose.{project}-{purpose}.
 
 ### Container Type Reference (THREE PRIMARY TYPES)
 
-**CRITICAL**: FLEXT ecosystem uses THREE distinct container types for different purposes:
+**CRITICAL**: FLEXT ecosystem uses THREE distinct container types for different
+purposes:
 
 1. **Standard Oracle Database** (`flext-oracle-db-test`)
+
    - **Port**: 1522
    - **Compose File**: `docker-compose.db-oracle.yml`
-   - **Purpose**: Standard Oracle Database for flext-db-oracle, flext-(dbt|tap|target)-oracle
+   - **Purpose**: Standard Oracle Database for flext-db-oracle,
+     flext-(dbt|tap|target)-oracle
    - **Fixture**: `oracle_container` from `flext_tests.fixtures`
 
 2. **FLEXT Oracle Unified Directory** (`flext-flext-oud-test`)
+
    - **Port**: 3389 (FLEXT production port)
    - **Compose File**: `docker-compose.flext-oud.yml`
-   - **Purpose**: FLEXT Telecom OUD migration (OpenLDAP simulating OUD with dc=invaliddc, cn=invalid_user)
+   - **Purpose**: FLEXT Telecom OUD migration (OpenLDAP simulating OUD with
+     dc=invaliddc, cn=invalid_user)
    - **Fixture**: `flext_oud_container` from `flext_tests.fixtures`
    - **Projects**: OUD migration workloads
 
 3. **Generic OpenLDAP** (`flext-openldap-test`)
    - **Port**: 3390
    - **Compose File**: `docker-compose.openldap.yml`
-   - **Purpose**: Generic LDAP/LDIF testing for flext-(ldap|ldif), flext-(dbt|tap|target)-(ldap|ldif)
+   - **Purpose**: Generic LDAP/LDIF testing for flext-(ldap|ldif),
+     flext-(dbt|tap|target)-(ldap|ldif)
    - **Fixture**: `ldap_container` from `flext_tests.fixtures`
 
 ### Infrastructure Services
@@ -319,15 +326,18 @@ from flext_tests import postgres_container
 
 ```bash
 # Check for prohibited duplicate files
-find ~/flext -name "docker-compose.yml" -o -name "docker-compose.*.yml" | grep -v "~/flext/docker/"
+find ~/flext -name "docker-compose.yml" -o -name "docker-compose.*.yml" \
+  | grep -v "~/flext/docker/"
 # Should return nothing
 
 # Check for prohibited local Dockerfiles
-find ~/flext -name "Dockerfile*" -type f | grep -v "~/flext/docker/images/" | grep -v ".bak"
+find ~/flext -name "Dockerfile*" -type f \
+  | grep -v "~/flext/docker/images/" | grep -v ".bak"
 # Should return nothing
 
 # Check for prohibited local fixtures
-find ~/flext -name "docker_fixtures.py" | grep -v "flext-core/src/flext_tests/fixtures/" | grep -v ".bak"
+find ~/flext -name "docker_fixtures.py" \
+  | grep -v "flext-tests/src/flext_tests/_fixtures/" | grep -v ".bak"
 # Should return nothing
 ```
 
@@ -360,13 +370,13 @@ ls ~/flext/docker/images/Dockerfile.* | wc -l
 
 ---
 
-**Last Updated**: 2025-09-30
-**Maintained By**: FLEXT Core Team
+**Last Updated**: 2025-09-30 **Maintained By**: FLEXT Core Team
 
 ## Contributing
 
-Please see our [Contributing Guide](../docs/CONTRIBUTING.md) for details.
+Please see our Contributing Guide for details.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for
+details.

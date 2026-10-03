@@ -7,11 +7,11 @@ O fluxo de documentação do workspace e dos subprojetos FLEXT é o alvo canôni
 
 ### Objetivo
 
-- Rodar o pipeline docs (`generate`, `fix`, `build`, `audit`, `validate`) por
-  escopo usando a superfície `make` já gerada.
+- Rodar o pipeline docs (`generate`, `fix`, `build`, `audit`, `validate`) por escopo
+  usando a superfície `make` já gerada.
 - Manter a lógica em `flext-infra`, sem scripts paralelos de manutenção.
-- Usar `workspace-docs-audit` apenas como alvo customizado estreito para lint
-  Markdown dos documentos do workspace.
+- Usar `workspace-docs-audit` apenas como alvo customizado estreito para lint Markdown
+  dos documentos do workspace.
 
 ### Contrato
 

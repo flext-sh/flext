@@ -1,81 +1,62 @@
-# @generated AUTO-GENERATED FILE — Regenerate with: make gen
-"""Flext package."""
+# AUTO-GENERATED FILE — Regenerate with: make gen
+"""Flext package.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
+from types import MappingProxyType
 from typing import TYPE_CHECKING
 
-from flext_core.lazy import build_lazy_import_map, install_lazy_exports
+from flext_core import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_core import d as d
-    from flext_core import e as e
-    from flext_core import h as h
-    from flext_core import r as r
-    from flext_core import s as s
-    from flext_core import x as x
-
-    from .constants import FlextRootConstants as FlextRootConstants
-
-    c: type[FlextRootConstants]
-    from .dev import FlextRootDev as FlextRootDev
-    from .docs import FlextRootDocs as FlextRootDocs
-    from .models import FlextRootModels as FlextRootModels
-
-    m: type[FlextRootModels]
-    from .protocols import FlextRootProtocols as FlextRootProtocols
-
-    p: type[FlextRootProtocols]
-    from .typings import FlextRootTypes as FlextRootTypes
-
-    t: type[FlextRootTypes]
-    from .utilities import FlextRootUtilities as FlextRootUtilities
-
-    u: type[FlextRootUtilities]
-    from .workspace import FlextRootWorkspace as FlextRootWorkspace
-
-_LAZY_MODULES: dict[str, tuple[str, ...]] = {
-    ".constants": ("FlextRootConstants", "c"),
-    ".dev": ("FlextRootDev",),
-    ".docs": ("FlextRootDocs",),
-    ".models": ("FlextRootModels", "m"),
-    ".protocols": ("FlextRootProtocols", "p"),
-    ".typings": ("FlextRootTypes", "t"),
-    ".utilities": ("FlextRootUtilities", "u"),
-    ".workspace": ("FlextRootWorkspace",),
-    "flext_core": ("d", "e", "h", "r", "s", "x"),
-}
+    from flext.cli import FlextRootCli, main
+    from flext.config import FlextRootConfig, config
+    from flext.constants import FlextRootConstants, c
+    from flext.models import FlextRootModels, m
+    from flext.protocols import FlextRootProtocols, p
+    from flext.settings import FlextRootSettings, settings
+    from flext.typings import FlextRootTypes, t
+    from flext.utilities import FlextRootUtilities, u
 
 
-_LAZY_ALIAS_GROUPS: dict[str, tuple[tuple[str, str], ...]] = {}
-
-
-_LAZY_IMPORTS = build_lazy_import_map(
-    _LAZY_MODULES, alias_groups=_LAZY_ALIAS_GROUPS, sort_keys=False
-)
-
-_PUBLIC_EXPORTS: tuple[str, ...] = (
+__all__: tuple[str, ...] = (
+    "FlextRootCli",
+    "FlextRootConfig",
     "FlextRootConstants",
-    "FlextRootDev",
-    "FlextRootDocs",
     "FlextRootModels",
     "FlextRootProtocols",
+    "FlextRootSettings",
     "FlextRootTypes",
     "FlextRootUtilities",
-    "FlextRootWorkspace",
     "c",
-    "d",
-    "e",
-    "h",
+    "config",
     "m",
+    "main",
     "p",
-    "r",
-    "s",
+    "settings",
     "t",
     "u",
-    "x",
 )
 
-__all__: tuple[str, ...] = tuple(_PUBLIC_EXPORTS)
+_LAZY_IMPORTS = MappingProxyType(
+    build_lazy_import_map(
+        MappingProxyType({
+            ".cli": ("FlextRootCli", "main"),
+            ".config": ("FlextRootConfig", "config"),
+            ".constants": ("FlextRootConstants", "c"),
+            ".models": ("FlextRootModels", "m"),
+            ".protocols": ("FlextRootProtocols", "p"),
+            ".settings": ("FlextRootSettings", "settings"),
+            ".typings": ("FlextRootTypes", "t"),
+            ".utilities": ("FlextRootUtilities", "u"),
+        }),
+        alias_groups=MappingProxyType({}),
+        sort_keys=False,
+    ),
+)
 
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, public_exports=__all__)

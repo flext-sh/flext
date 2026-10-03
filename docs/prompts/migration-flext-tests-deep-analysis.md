@@ -1,9 +1,65 @@
 # Prompt: Migração Profunda de flext_tests - Análise e Correção Completa
 
+<!-- TOC START -->
+
+- [Objetivo](#objetivo)
+- [Escopo](#escopo)
+  - [Projetos a Analisar](#projetos-a-analisar)
+  - [Diretórios a Verificar](#diretorios-a-verificar)
+  - [Arquivos a Verificar](#arquivos-a-verificar)
+- [Métodos Deprecados e Migrações Obrigatórias](#metodos-deprecados-e-migracoes-obrigatorias)
+  - [1. tm (TestsFlextMatchers) - Métodos Deprecados](#1-tm-testsflextmatchers-metodos-deprecados)
+  - [2. tt (TestsFlextFactories) - Métodos Deprecados](#2-tt-testsflextfactories-metodos-deprecados)
+  - [3. tf (TestsFlextFiles) - Métodos Deprecados](#3-tf-testsflextfiles-metodos-deprecados)
+  - [4. tv (TestsFlextValidator) - Verificar Uso Correto](#4-tv-testsflextvalidator-verificar-uso-correto)
+  - [5. tb (TestsFlextBuilders) - Verificar Uso Correto](#5-tb-testsflextbuilders-verificar-uso-correto)
+- [Padrões a Identificar e Corrigir](#padroes-a-identificar-e-corrigir)
+  - [1. Imports Incorretos](#1-imports-incorretos)
+  - [2. Uso de Métodos Privados ou Internos](#2-uso-de-metodos-privados-ou-internos)
+  - [3. Uso de Classes Aninhadas Deprecadas](#3-uso-de-classes-aninhadas-deprecadas)
+  - [4. Parâmetros Legacy/Deprecados](#4-parametros-legacydeprecados)
+  - [5. Uso de Métodos Não Documentados](#5-uso-de-metodos-nao-documentados)
+- [Processo de Análise e Correção](#processo-de-analise-e-correcao)
+  - [Fase 1: Identificação Completa](#fase-1-identificacao-completa)
+  - [Fase 2: Análise Contextual](#fase-2-analise-contextual)
+  - [Fase 3: Correção Sistemática](#fase-3-correcao-sistematica)
+  - [Fase 4: Validação](#fase-4-validacao)
+- [Checklist de Verificação](#checklist-de-verificacao)
+  - [Para cada projeto](#para-cada-projeto)
+- [Exceções e Casos Especiais](#excecoes-e-casos-especiais)
+  - [1. Testes de Deprecation Warnings](#1-testes-de-deprecation-warnings)
+  - [2. Código de Compatibilidade](#2-codigo-de-compatibilidade)
+  - [3. Métodos Internos Legítimos](#3-metodos-internos-legitimos)
+- [Documentação de Progresso](#documentacao-de-progresso)
+- [Resultado Esperado](#resultado-esperado)
+- [Comandos Úteis](#comandos-uteis)
+  - [Buscar usos deprecados em um projeto](#buscar-usos-deprecados-em-um-projeto)
+  - [Executar testes de um projeto](#executar-testes-de-um-projeto)
+  - [Verificar warnings](#verificar-warnings)
+- [Estrutura e Organização de Testes](#estrutura-e-organizacao-de-testes)
+  - [Regras Fundamentais de Estrutura](#regras-fundamentais-de-estrutura)
+- [Checklist de Estrutura e Organização](#checklist-de-estrutura-e-organizacao)
+  - [Para cada projeto](#para-cada-projeto_1)
+- [Processo de Reorganização](#processo-de-reorganizacao)
+  - [Fase 1: Identificação e Análise](#fase-1-identificacao-e-analise)
+  - [Fase 2: Consolidação](#fase-2-consolidacao)
+  - [Fase 3: Reorganização de Testes](#fase-3-reorganizacao-de-testes)
+  - [Fase 4: Automação](#fase-4-automacao)
+  - [Fase 5: Limpeza](#fase-5-limpeza)
+- [Comandos Úteis de Reorganização](#comandos-uteis-de-reorganizacao)
+  - [Buscar estrutura atual](#buscar-estrutura-atual)
+  - [Reorganizar testes](#reorganizar-testes)
+  - [Verificar marcações](#verificar-marcacoes)
+  - [Verificar nomenclatura](#verificar-nomenclatura)
+- [Notas Finais](#notas-finais)
+
+<!-- TOC END -->
+
 ## Objetivo
 
-Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os projetos** do ecossistema FLEXT para
-identificar e corrigir **TODOS os usos de funções de `flext_tests` que estão fora do padrão atual e não suportadas**.
+Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os projetos**
+do ecossistema FLEXT para identificar e corrigir **TODOS os usos de funções de
+`flext_tests` que estão fora do padrão atual e não suportadas**.
 
 ## Escopo
 
@@ -51,7 +107,7 @@ identificar e corrigir **TODOS os usos de funções de `flext_tests` que estão 
 
 **tm.method():**
 
-```python notest
+```python
 # ❌ ANTES
 tm.method(api, "connect")
 
@@ -62,7 +118,7 @@ tm.that(callable(getattr(api, "connect", None)), eq=True)
 
 **tm.dict\_():**
 
-```python notest
+```python
 # ❌ ANTES
 tm.dict_(data, has_key="name", length=5)
 
@@ -72,7 +128,7 @@ tm.that(data, keys=["name"], length=5)
 
 **tm.list\_():**
 
-```python notest
+```python
 # ❌ ANTES
 tm.list_(items, contains="item", length=3)
 
@@ -121,7 +177,7 @@ tm.that(items, has="item", length=3)
 
 **tf.create_file_set():**
 
-```python notest
+```python
 # ❌ ANTES
 files = tf.create_file_set({"file1.txt": "content1", "file2.txt": "content2"})
 
@@ -133,7 +189,7 @@ with tf.files({"file1.txt": "content1", "file2.txt": "content2"}) as files:
 
 **tf.get_file_info():**
 
-```python notest
+```python
 # ❌ ANTES
 info = tf.get_file_info(path)
 
@@ -165,19 +221,18 @@ info = info_result.unwrap()
 
 ### 1. Imports Incorretos
 
-```python notest
+```python
 # ❌ ERRADO
 from flext_tests import TestsFlextMatchers
 
 tm = TestsFlextMatchers()
 
 # ✅ CORRETO
-from flext_tests import tm
 ```
 
 ### 2. Uso de Métodos Privados ou Internos
 
-```python notest
+```python
 # ❌ ERRADO - Métodos que começam com _
 tm._internal_method()
 tt._private_factory()
@@ -189,7 +244,7 @@ tt.model(...)
 
 ### 3. Uso de Classes Aninhadas Deprecadas
 
-```python notest
+```python
 # ❌ ERRADO
 tb.Tests.Result.ok(value)
 tb.Tests.Model.user(...)
@@ -205,7 +260,7 @@ tt.model("user", ...)
 
 Alguns métodos podem aceitar parâmetros legacy que devem ser migrados:
 
-```python notest
+```python
 # ❌ ERRADO - Parâmetros legacy
 tm.that(data, contains="key")  # Se 'contains' for legacy para dict
 tm.that(items, contains="item")  # Se 'contains' for legacy para list
@@ -288,12 +343,14 @@ Qualquer método que não esteja na documentação pública deve ser investigado
 Para cada uso encontrado:
 
 1. **Ler o contexto completo:**
+
    - Arquivo completo ou seção relevante
    - Imports do arquivo
    - Função/método onde está sendo usado
    - Testes relacionados
 
 2. **Identificar o padrão de uso:**
+
    - Qual método deprecado está sendo usado
    - Quais parâmetros estão sendo passados
    - Qual é o resultado esperado
@@ -307,6 +364,7 @@ Para cada uso encontrado:
 ### Fase 3: Correção Sistemática
 
 1. **Para cada arquivo com usos deprecados:**
+
    - Ler o arquivo completo
    - Identificar todos os usos
    - Criar plano de migração
@@ -314,6 +372,7 @@ Para cada uso encontrado:
    - Verificar imports
 
 2. **Padrões de correção:**
+
    - Substituir método deprecado pelo método público atual
    - Ajustar parâmetros conforme necessário
    - Manter a mesma lógica e comportamento
@@ -336,6 +395,7 @@ Para cada uso encontrado:
    ```
 
 2. **Verificar warnings de deprecation:**
+
    - Não deve haver warnings de deprecation nos testes
    - Todos os métodos deprecados devem ter sido migrados
 
@@ -373,7 +433,8 @@ Para cada uso encontrado:
 
 ### 1. Testes de Deprecation Warnings
 
-Arquivos que testam explicitamente os warnings de deprecation devem manter os métodos deprecados:
+Arquivos que testam explicitamente os warnings de deprecation devem manter os métodos
+deprecados:
 
 ```python
 # ✅ CORRETO - Teste de deprecation warning
@@ -386,25 +447,30 @@ def test_deprecation_warning():
 
 ### 2. Código de Compatibilidade
 
-Se houver código de compatibilidade que precisa manter métodos deprecados temporariamente, documentar claramente.
+Se houver código de compatibilidade que precisa manter métodos deprecados
+temporariamente, documentar claramente.
 
 ### 3. Métodos Internos Legítimos
 
-Alguns métodos podem ser usados internamente pela própria biblioteca `flext_tests`. Verificar se o uso é legítimo.
+Alguns métodos podem ser usados internamente pela própria biblioteca `flext_tests`.
+Verificar se o uso é legítimo.
 
 ## Documentação de Progresso
 
 Manter um registro de:
 
 1. **Arquivos analisados:**
+
    - Lista de todos os arquivos verificados
    - Status de cada arquivo (limpo, migrado, pendente)
 
 2. **Métodos encontrados:**
+
    - Quantidade de cada método deprecado encontrado
    - Arquivos onde foram encontrados
 
 3. **Migrações realizadas:**
+
    - Quantidade de migrações por tipo
    - Arquivos modificados
 
@@ -557,15 +623,19 @@ class FlextModels(TestsFlextModels):
 **Processo obrigatório:**
 
 1. **Identificar classes base duplicadas:**
-   - Buscar `constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py` em cada projeto
+
+   - Buscar `constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py` em
+     cada projeto
    - Buscar múltiplos `conftest.py` em projetos
 
 2. **Mover objetos para `~/flext`:**
+
    - Consolidar todas as classes base em `~/flext/`
    - Estender de `flext_tests` quando apropriado
    - Criar namespaces por projeto (`.Tests[Projeto]`)
 
 3. **Atualizar imports:**
+
    - Todos os projetos devem importar de `~/flext`
    - Remover imports locais de classes base
 
@@ -579,7 +649,7 @@ class FlextModels(TestsFlextModels):
 # Buscar classes base duplicadas
 find . -name "constants.py" -o -name "models.py" -o -name "typings.py" \
   -o -name "protocols.py" -o -name "utilities.py" | grep -v "~/flext"
-find . -name "conftest.py" | wc -l  # Deve retornar 1 (apenas em ~/flext)
+find . -name "conftest.py" | wc -l # Deve retornar 1 (apenas em ~/flext)
 ```
 
 #### 4. Estrutura de Diretórios de Testes
@@ -635,21 +705,15 @@ find . -name "conftest.py" | wc -l  # Deve retornar 1 (apenas em ~/flext)
 class TestsLdapUser:
     """Testes de unidade para User do flext-ldap."""
 
-    pass
-
 
 # tests/unit/services/test_entry.py
 class TestsLdapServicesEntry:
     """Testes de unidade para Entry service do flext-ldap."""
 
-    pass
-
 
 # tests/integration/test_sync.py
 class TestsLdapSync:
     """Testes de integração para Sync do flext-ldap."""
-
-    pass
 ```
 
 #### 6. Organização de Unit Tests
@@ -657,6 +721,7 @@ class TestsLdapSync:
 **Requisitos obrigatórios:**
 
 1. **100% de cobertura com testes reais:**
+
    - ✅ Sem mocks desnecessários
    - ✅ Testes reais de funcionalidade
    - ✅ Validação de comportamento real
@@ -675,6 +740,7 @@ class TestsLdapSync:
    ```
 
 3. **Automação máxima com conftest:**
+
    - ✅ Todas as inicializações em `~/flext/conftest.py`
    - ✅ Conexões, containers, fixtures automáticas
    - ✅ Classes base avançadas de pytest
@@ -732,14 +798,12 @@ def generate_user_data(count: int = 1) -> t.SequenceOf[dict]:
 ```python
 # ~/flext/conftest.py
 import pytest
-from flext_tests import tm, tt, tf, tv, tb
 
 
 @pytest.fixture(scope="session")
 def test_container():
     """Container de dependências para testes."""
     # Automação completa
-    pass
 
 
 @pytest.fixture
@@ -748,7 +812,6 @@ def setup_test_environment():
     # Automação completa
     yield
     # Cleanup automático
-    pass
 ```
 
 #### 9. Priorização de Refatoração
@@ -777,7 +840,8 @@ def setup_test_environment():
 - [ ] Classes base (`constants.py`, `models.py`, etc.) movidas para `~/flext/`
 - [ ] Classes base estendem de `flext_tests`
 - [ ] Namespaces fáceis criados (`c`, `m`, `t`, `p`, `u`)
-- [ ] Domínios de teste prefixados corretamente (`.Tests[Projeto]`, `.TestsCore`, `.TestsRoot`)
+- [ ] Domínios de teste prefixados corretamente (`.Tests[Projeto]`, `.TestsCore`,
+      `.TestsRoot`)
 - [ ] Imports atualizados para usar `~/flext/`
 - [ ] Arquivos locais renomeados para `.bak` e removidos
 
@@ -842,11 +906,13 @@ def setup_test_environment():
 ### Fase 2: Consolidação
 
 1. **Criar estrutura centralizada:**
+
    - Criar `~/flext/constants.py`, `models.py`, etc.
    - Estender de `flext_tests`
    - Criar namespaces por projeto
 
 2. **Mover e consolidar:**
+
    - Mover objetos comuns para `~/flext/`
    - Consolidar código duplicado
    - Criar domínios de teste (`.Tests[Projeto]`)
@@ -858,11 +924,13 @@ def setup_test_environment():
 ### Fase 3: Reorganização de Testes
 
 1. **Reorganizar diretórios:**
+
    - Criar `tests/unit/`, `tests/integration/`, etc.
    - Mover testes para diretórios corretos
    - Organizar por namespace quando necessário
 
 2. **Renomear arquivos e classes:**
+
    - Renomear para `test_[modulo].py`
    - Renomear classes para `Tests[Projeto][Modulo]`
    - Consolidar múltiplas classes em uma única
@@ -874,11 +942,13 @@ def setup_test_environment():
 ### Fase 4: Automação
 
 1. **Criar conftest centralizado:**
+
    - Consolidar todos os conftest.py em `~/flext/conftest.py`
    - Criar fixtures automáticas
    - Settingsurar containers e conexões
 
 2. **Implementar classes base:**
+
    - Criar classes base avançadas de pytest
    - Automatizar setup/teardown
    - Minimizar código de teste
@@ -899,6 +969,7 @@ def setup_test_environment():
    ```
 
 2. **Remover após validação:**
+
    - Executar todos os testes
    - Verificar que tudo funciona
    - Remover arquivos `.bak`
@@ -956,5 +1027,4 @@ grep -r "class.*Test" tests/ | grep -v "Tests\[Projeto\]"
 
 ---
 
-**Última atualização:** 2025-01-XX
-**Status:** Pronto para execução
+**Última atualização:** 2025-01-XX **Status:** Pronto para execução

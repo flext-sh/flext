@@ -1,43 +1,42 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Examples package."""
+"""Examples package.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
-import typing as _t
+from types import MappingProxyType
+from typing import TYPE_CHECKING
 
-from flext_core.lazy import build_lazy_import_map, install_lazy_exports
+from flext_core import build_lazy_import_map, install_lazy_exports
 
-if _t.TYPE_CHECKING:
-    from examples.acl_processing_example import AclProcessingExample
-    from examples.advanced_processing_example import (
-        AdvancedProcessingExample,
-        PipelineStageData,
-    )
-    from examples.complete_workflow_example import CompleteWorkflowExample
-    from flext import c, d, e, h, m, p, r, t, u, x
-_LAZY_IMPORTS = build_lazy_import_map({
-    ".acl_processing_example": ("AclProcessingExample",),
-    ".advanced_processing_example": ("AdvancedProcessingExample", "PipelineStageData"),
-    ".complete_workflow_example": ("CompleteWorkflowExample",),
-    "flext": ("c", "d", "e", "h", "m", "p", "r", "t", "u", "x"),
-})
+if TYPE_CHECKING:
+    from flext import c, config, m, p, t, u
+
+    from examples._constants import FlextRootExamplesConstants
 
 
-install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)
-
-__all__: list[str] = [
-    "AclProcessingExample",
-    "AdvancedProcessingExample",
-    "CompleteWorkflowExample",
-    "PipelineStageData",
+__all__: tuple[str, ...] = (
+    "FlextRootExamplesConstants",
     "c",
-    "d",
-    "e",
-    "h",
+    "config",
     "m",
     "p",
-    "r",
     "t",
     "u",
-    "x",
-]
+)
+
+_LAZY_IMPORTS = MappingProxyType(
+    build_lazy_import_map(
+        MappingProxyType({
+            "._constants": ("FlextRootExamplesConstants",),
+            "flext": ("c", "config", "m", "p", "t", "u"),
+        }),
+        alias_groups=MappingProxyType({}),
+        sort_keys=False,
+    ),
+)
+
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, public_exports=__all__)

@@ -20,8 +20,5 @@ class FlextRootDocs:
         _ = cli.execute()
 
 
-main = FlextRootDocs.main
-
-
 if __name__ == "__main__":
-    main()
+    FlextRootDocs.main()

@@ -1,0 +1,37 @@
+"""Capture browser console logs during Playwright automation."""
+
+import pathlib
+
+from playwright.sync_api import sync_playwright
+
+# Example: Capturing console logs during browser automation
+
+url = "http://localhost:5173"  # Replace with your URL
+
+console_logs = []
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)
+    page = browser.new_page(viewport={"width": 1920, "height": 1080})
+
+    # Set up console log capture
+    def handle_console_message(playwright_message: object) -> None:
+        """Append one console message to the collected logs."""
+        console_logs.append(f"[{playwright_message.type}] {playwright_message.text}")
+
+    page.on("console", handle_console_message)
+
+    # Navigate to page
+    page.goto(url)
+    page.wait_for_load_state("networkidle")
+
+    # Interact with the page (triggers console logs)
+    page.click("text=Dashboard")
+    page.wait_for_timeout(1000)
+
+    browser.close()
+
+# Save console logs to file
+pathlib.Path("/mnt/user-data/outputs/console.log").write_text(
+    "\n".join(console_logs), encoding="utf-8"
+)
