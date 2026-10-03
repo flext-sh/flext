@@ -60,13 +60,14 @@ above are not declared with `autouse=True`.
 from __future__ import annotations
 
 from flext_core import FlextSettings
-from flext_tests import FlextTestsSettings
+from flext_tests import FlextTestsSettings, tm
 
 
 def test_settings_isolation(settings: FlextTestsSettings) -> None:
+    """The fixture settings stay distinct from the global singleton."""
     settings.debug = True
     # The settings plugin resets runtime singletons between test functions.
-    assert FlextSettings.fetch_global() is not settings
+    tm.that(FlextSettings.fetch_global() is settings, eq=False)
 ```
 
 ## Resetting singletons manually
@@ -89,22 +90,26 @@ Use the `r` alias instead of importing from `returns` directly:
 ```python
 from math import isclose
 
-from flext_tests import p, r
+from flext_tests import p, r, tm
 
 
 def safe_divide(a: float, b: float) -> p.Result[float]:
+    """Divide ``a`` by ``b`` and fail explicitly on a zero divisor.
+
+    Returns:
+        The quotient, or a ``division_by_zero`` failure.
+
+    """
     if b == 0:
         return r[float].fail("division_by_zero")
     return r[float].ok(a / b)
 
 
 def test_safe_divide() -> None:
-    result = safe_divide(10, 2)
-    assert result.success
-    assert isclose(result.unwrap(), 5.0)
-
-    failure = safe_divide(10, 0)
-    assert failure.failure
+    """Division succeeds for a nonzero divisor and fails for zero."""
+    quotient = tm.ok(safe_divide(10, 2))
+    tm.that(isclose(quotient, 5.0), eq=True)
+    tm.fail(safe_divide(10, 0))
 ```
 
 ## Good practices
@@ -140,14 +145,16 @@ mutation, including assertion failure:
 
 ```python
 from flext_core import FlextSettings
+from flext_tests import tm
 
 
 def test_settings_override() -> None:
+    """A debug override is visible and reset on both sides of the test."""
     FlextSettings.reset_for_testing()
     try:
         settings = FlextSettings.fetch_global()
         settings.debug = True
-        assert settings.debug
+        tm.that(settings.debug, eq=True)
     finally:
         FlextSettings.reset_for_testing()
 ```
