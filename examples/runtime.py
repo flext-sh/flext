@@ -25,8 +25,10 @@ def main() -> int:
         RuntimeError: If ``not entries``; or if ``not acl_result.granted or
             acl_result.matched_acl is None``; or if ``first_attribute.lower() ==
             last_attribute.lower()``; or if ``len(oid_response.acls) !=
-            FlextRootExamplesConstants.EXPECTED_OID_ACL_COUNT``; or if ``not
-            advanced.data.values.get('analysis')``; or if ``not complete.content``.
+            FlextRootExamplesConstants.EXPECTED_OID_ACL_COUNT``; or if the advanced
+            pipeline data or values mapping is missing or has no analysis entry
+            (``not advanced_values.get('analysis')``); or if ``not
+            complete.content``.
 
     """
     client = ldif()
@@ -94,7 +96,17 @@ def main() -> int:
         .execute()
         .unwrap()
     )
-    if not advanced.data.values.get("analysis"):
+    advanced_data = FlextRootExamplesConstants.JsonMappingOrNoneHelper.extract(
+        advanced.get("data"),
+    )
+    advanced_values = (
+        FlextRootExamplesConstants.JsonMappingOrNoneHelper.extract(
+            advanced_data.get("values"),
+        )
+        if advanced_data is not None
+        else None
+    )
+    if advanced_values is None or not advanced_values.get("analysis"):
         raise RuntimeError(
             FlextRootExamplesConstants.ErrorMessages.ADVANCED_NO_ANALYSIS,
         )
