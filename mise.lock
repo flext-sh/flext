@@ -131,7 +131,7 @@ url_api = "https://api.github.com/repos/direnv/direnv/releases/assets/274610569"
 [[tools."github:kucherenko/jscpd"]]
 version = "5.3.3"
 backend = "github:kucherenko/jscpd"
-specifiers = ["latest"]
+specifiers = ["5.3.3"]
 
 [tools."github:kucherenko/jscpd"."platforms.linux-arm64"]
 checksum = "sha256:e195c02b27ff01ad6debe0a0e4cdbec0cb0f250022c77b7c88119d020ab7c1f4"
