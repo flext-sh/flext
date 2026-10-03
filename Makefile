@@ -1060,6 +1060,28 @@ _activated-fix-accessors: _builtin_require_environment
 
 
 
+fix-namespace: _builtin_require_workspace
+	+@direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-fix-namespace
+
+.PHONY: _activated-fix-namespace
+_activated-fix-namespace: _builtin_require_environment
+
+	$(call RUN_PUBLIC,fix-namespace)
+
+
+
+
+fix-accessors: _builtin_require_workspace
+	+@direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-fix-accessors
+
+.PHONY: _activated-fix-accessors
+_activated-fix-accessors: _builtin_require_environment
+
+	$(call RUN_PUBLIC,fix-accessors)
+
+
+
+
 audit: _builtin_require_workspace
 	+@direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-audit
 
@@ -1351,6 +1373,10 @@ _builtin-help:
 
 	@printf '  %-16s %s\n' 'fix-accessors' 'Migrate forbidden accessor names and every resolved consumer.';
 
+	@printf '  %-16s %s\n' 'fix-namespace' 'Apply the canonical namespace enforcer to the selected workspace.';
+
+	@printf '  %-16s %s\n' 'fix-accessors' 'Migrate forbidden accessor names and every resolved consumer.';
+
 	@printf '  %-16s %s\n' 'audit' 'Inspect ownership, dependency, and generated-state health.';
 
 	@printf '  %-16s %s\n' 'status' 'Report the resolved runtime and repository state.';
@@ -1625,7 +1651,7 @@ endif
 # Like `setup`, it runs the declared pre-/post-upg lifecycle
 # hooks, post-upg inside the activated environment.
 .PHONY: _upg_lifecycle
-_upg_lifecycle: _builtin_setup_submodules
+_upg_lifecycle: $(if $(GITHUB_CI_SELF),,_builtin_setup_submodules)
 	@set -eu; \
 	case " $(CUSTOM_DECLARED_TARGETS) " in \
 		*" pre-upg "*) $(SELF_MAKE) pre-upg ;; \
