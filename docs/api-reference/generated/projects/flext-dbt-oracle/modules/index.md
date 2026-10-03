@@ -10,4 +10,12 @@
 
 These pages are generated from public modules and their docstrings.
 
-_No public modules discovered._
+- [flext_dbt_oracle.adapters](adapters.md)
+- [flext_dbt_oracle.api](api.md)
+- [flext_dbt_oracle.base](base.md)
+- [flext_dbt_oracle.cli](cli.md)
+- [flext_dbt_oracle.constants](constants.md)
+- [flext_dbt_oracle.models](models.md)
+- [flext_dbt_oracle.protocols](protocols.md)
+- [flext_dbt_oracle.typings](typings.md)
+- [flext_dbt_oracle.utilities](utilities.md)

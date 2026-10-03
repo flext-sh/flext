@@ -94,7 +94,9 @@ Source lives under `flext-tap-ldif/src/flext_tap_ldif/`:
 
 - [Project README](https://github.com/flext-sh/flext-tap-ldif/blob/0.12.0-dev/README.md)
 - Source: `flext-tap-ldif/src/flext_tap_ldif/`
-- Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
+- Workspace governance:
+  [AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md),
+  [GOVERNANCE.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/GOVERNANCE.md)
 - Related packages: `flext-ldif`, `flext-dbt-ldif`, `flext-target-ldif`,
   `flext-meltano`, `flext-core`, `flext- observability`
 
