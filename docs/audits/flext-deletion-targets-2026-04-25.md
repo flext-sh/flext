@@ -41,8 +41,8 @@ concrete violation lists:
 | 4   | `flext-target-oracle-wms/tests/integration/test_oracle.py` | `orjson`                                                   |
 | 5   | `flext-target-oracle-wms/tests/unit/test_workflow.py`      | `orjson`                                                   |
 
-**Phase 3 action** : route every banned-lib import through the appropriate
-`flext-core` facade ( `u.Yaml.*` , `u.Json.*` , `m.Settings` ). Per AGENTS.md §2.7
+**Phase 3 action** : route every banned-lib import through the appropriate `flext-core`
+facade ( `u.Yaml.*` , `u.Json.*` , `m.Settings` ). Per AGENTS.md §2.7
 abstraction-boundary law.
 
 Source: `/tmp/phase2-tier-whitelist-violations.txt`. Re-run via:
@@ -53,9 +53,9 @@ python -m flext_infra validate tier-whitelist --workspace ~/flext
 
 ### 1.2 — Silent-failure violations
 
-116 violations. Three sub-kinds: `silent-failure-except` (exception branch returns sentinel),
-`silent-failure-guard` ( `Result` failure branch swallowed), `silent-failure-unwrap-or`
-( `unwrap_or({})` hides failure).
+116 violations. Three sub-kinds: `silent-failure-except` (exception branch returns
+sentinel), `silent-failure-guard` ( `Result` failure branch swallowed),
+`silent-failure-unwrap-or` ( `unwrap_or({})` hides failure).
 
 Top offending modules (by violation count):
 
@@ -138,7 +138,6 @@ for obj, parent_paths in collisions:
 The method:
 
 <!-- markdownlint-disable MD013 -->
-
 - Builds a parent inventory by importing the 8 upstream packages ( `flext_core` ,
 `flext_cli` , `flext_tests` , `flext_infra` , `flext_web` , `flext_meltano` ,
 `flext_observability` , `flext_quality` ) and walking `c/m/p/t/u` aliases at depth 1,
@@ -178,10 +177,10 @@ project / one module at a time) — which is the design intent.
 ## Section 3 — Service-responsibility duplicates
 
 **Deferred to Phase 4** ( `flext-infra Unified Execution Reorganization` ). Section 3
-requires the ownership-mapping audit in Task 4.1, which is BLOCKING on user
-confirmation per the plan. Capturing it here would prejudge ownership decisions across
-`flext-core` , `flext-cli` , `flext-infra` , `flext-quality` , `flext-meltano` that the
-user must approve.
+requires the ownership-mapping audit in Task 4.1, which is BLOCKING on user confirmation
+per the plan. Capturing it here would prejudge ownership decisions across `flext-core` ,
+`flext-cli` , `flext-infra` , `flext-quality` , `flext-meltano` that the user must
+approve.
 
 The Phase 4 audit produces the canonical "concern → owner / duplicate / action" table at
 `docs/architecture/unified-execution-audit.md` .
@@ -205,11 +204,11 @@ decomposition candidates — each entry is one refactor target:
 **Phase 3 action** : each entry is a self-contained decomposition. Per the user's strict
 reuse directive ( `feedback_strict_ssot_dry_yagni_rootmost.md` ), the decomposition MUST
 consume existing primitives ( `FlextInfraUtilitiesProtectedEdit` ,
-`FlextInfraRefactorSafetyManager` , `u.Infra.projects()` ,
-`u.Infra.iter_matching_files` , etc.) rather than introducing new helpers. Where two
-methods share a sub-routine, extract the shared piece to flext-core or flext-infra
-`_utilities/` (most-root namespace) and consume it from both — eliminating the
-duplication that drives the high complexity.
+`FlextInfraRefactorSafetyManager` , `u.Infra.projects()` , `u.Infra.iter_matching_files`
+, etc.) rather than introducing new helpers. Where two methods share a sub-routine,
+extract the shared piece to flext-core or flext-infra `_utilities/` (most-root
+namespace) and consume it from both — eliminating the duplication that drives the high
+complexity.
 
 ## Bugs surfaced during audit (informational)
 
