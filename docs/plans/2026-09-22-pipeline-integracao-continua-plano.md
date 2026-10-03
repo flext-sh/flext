@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-22). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
+
 # Plano — Concluir o pipeline com integração contínua e prova real
 
 <!-- TOC START -->
@@ -5,7 +9,7 @@
 - [Constraints globais](#constraints-globais)
 - [Passo 0 — Registro e trackers](#passo-0-registro-e-trackers)
 - [Fase 1 — Incremento 1: ambiente e integração utilizáveis](#fase-1-incremento-1-ambiente-e-integracao-utilizaveis)
-- [Fase 2 — Incrementos funcionais (cada um: integração, publicação pelo dono, prova antes do seguinte)](#fase-2-incrementos-funcionais-cada-um-integracao-publicacao-pelo-dono-prova-antes-do-seguinte)
+- [Fase 2 — Incrementos funcionais](#fase-2-incrementos-funcionais)
 - [Fase 3 — Prova final e encerramento](#fase-3-prova-final-e-encerramento)
 
 <!-- TOC END -->
@@ -69,10 +73,11 @@ agir.
      próximo ponto estável.
 - [ ] 2. Para cada um dos 17 membros com merge aberto (auth, dbt-ldap, dbt-ldif,
      dbt-oracle, dbt-oracle-wms, ldap, oracle-oic, plugin, quality, tap-ldap, tap-ldif,
-     tap-oracle, target-ldap, target-oracle, target-oracle-oic, tests, web): resolver no
-     dono preservando ambos os lados; conflitos em projeções resolvidos reconciliando
-     fontes+gerador e produzindo a resolução por `make gen`; WIP sujo (tests 78, plugin
-     17, core 16, quality 12) preservado com commits de caminhos explícitos.
+     tap-oracle, target-ldap, target-oracle, target-oracle-oic, tests, web): resolver
+     no dono preservando ambos os lados; conflitos em projeções resolvidos
+     reconciliando fontes+gerador e produzindo a resolução por `make gen`; WIP sujo
+     (tests 78, plugin 17, core 16, quality 12) preservado com commits de caminhos
+     explícitos.
 - [ ] 3. Provar por membro que o HEAD contém ambos os lados do gitlink
      (`git merge-base --is-ancestor` dos dois SHAs); publicar membro antes de registrar
      gitlink na raiz; concluir o merge da raiz incluindo a resolução do documento
@@ -95,8 +100,8 @@ agir.
      `.venv/bin` antes de qualquer efeito (precedente mise `:253-285`); absorver bead
      `flext-bxo4y`.
 - [ ] 3. Regenerar consumidores (`make gen`: 32 Makefiles + ai-hub pelos beads
-     `flext-zxwqa`/`2nwjy`/`ts0t9`/`t9fay`); remover documentação que autoriza ambientes
-     emprestados.
+     `flext-zxwqa`/`2nwjy`/`ts0t9`/`t9fay`); remover documentação que autoriza
+     ambientes emprestados.
 - [ ] 4. Dar rota canônica executável ao cenário de substituição de ambiente hoje
      excluído por marcador.
 
@@ -105,7 +110,8 @@ resolver os problemas de make check gerados por flext-infra, eles precisam ficar
 sem bloquear o ci"):
 
 - [ ] 1. Validar classificação config/fachadas no Core, composição MRO no infra,
-     fixtures (`flext-tests`) e regras estruturais — contra donos e ADRs, não por verde.
+     fixtures (`flext-tests`) e regras estruturais — contra donos e ADRs, não por
+     verde.
 - [ ] 2. **Fazer os findings de check gerados pelo flext-infra virarem warning sem
      bloquear CI** (dono: superfície de gates do check/CI em flext-infra + projeção
      ci.yml via gen) — em vez de resolver os ~192 achados. Registrar a contagem no bead
@@ -121,9 +127,9 @@ sem bloquear o ci"):
      `35746454609`).
 - [ ] 5. Ciclo nativo na recuperação:
      `setup → gen → mod → gen → gen → fix → fmt → check → test → build`
-     (+docs/consumidores); provar convergência (`gen`/`fix`/`fmt` repetidos = no-op exit
-     0); `check` executa com findings do flext-infra em nível warning (não-bloqueante)
-     conforme re-escopo.
+     (+docs/consumidores); provar convergência (`gen`/`fix`/`fmt` repetidos = no-op
+     exit 0); `check` executa com findings do flext-infra em nível warning
+     (não-bloqueante) conforme re-escopo.
 - [ ] 6. Suíte completa dentro do orçamento tipado: investigar causa (cf.
      `aihub-kvx0x.6.2`: 1903 testes, 600 s, kill -15; `flext-yjjim`); nunca inflacionar
      limites.
@@ -170,8 +176,8 @@ CCS só sob incompatibilidade comprovada; sem flags de credenciais no CLIProxy.
      modelo novo, quota recuperada; credencial ausente/inválida/rotacionada; inventário
      malformado, catálogo incompatível, rejeição sem publicação parcial;
      seletor/rota/variante inválida sem encaminhamento alternativo; interrupção
-     transacional, segunda geração, reinício; falha pós-início de streaming sem troca de
-     candidato; isolamento de workspace (standalone, submódulo real, env herdado
+     transacional, segunda geração, reinício; falha pós-início de streaming sem troca
+     de candidato; isolamento de workspace (standalone, submódulo real, env herdado
      incorreto).
 - [ ] 2. Implantação: artefato/SHA/executável servindo em cada componente; validação com
      consumidores reais ANTES do `make deploy` canônico; chamadas mínimas por
@@ -180,7 +186,8 @@ CCS só sob incompatibilidade comprovada; sem flags de credenciais no CLIProxy.
      substitui; cliente que exija operador fica pendente explícito).
 - [ ] 3. 3 ciclos completos consecutivos + reinício controlado + 3 ciclos — intervalo
      configurado 600 s (`models.yaml:5-6`) sem encurtar; registrar gerações, SHAs,
-     modelos/rotas, elegibilidade, sondagens, chamadas, latências, erros — sem segredos.
+     modelos/rotas, elegibilidade, sondagens, chamadas, latências, erros — sem
+     segredos.
 - [ ] 4. Revalidar SHAs integrados, concluir PRs/Beads, retirar só recursos de entrega
      com integração comprovada.
 

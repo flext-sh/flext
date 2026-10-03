@@ -157,7 +157,8 @@ Pydantic `Field`/`validators`/`computed_field`. Behavior lives **only** in:
 
 **Internals**: under `_[module]/*.py` starting with `base.py`.
 
-**One class per module**; ≤200 logical LOC/module.
+**One class per module**; module size cap is config-owned (`loc_cap.max_lines`),
+enforced by the `loc-cap` gate.
 
 **No local redeclarations**, aliases, or competing long-name layers.
 
