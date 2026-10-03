@@ -8,14 +8,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
-from flext_infra import m, u
+from flext import m, u
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
 class TestsFlextRootModels(m):
-    """Infrastructure test models facade — extends flext_infra models."""
+    """Infrastructure test models facade — extends flext workspace models."""
 
     class _ModuleModels:
         """Module reference models."""

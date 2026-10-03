@@ -13,7 +13,7 @@ from pathlib import Path
 
 from flext_tests import tm
 
-from flext_core import t, u
+from flext import t, u
 
 
 class TestsFlextRootReleasePackaging:

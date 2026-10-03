@@ -51,53 +51,51 @@ class FlextRootExamplesConstants:
         ADVANCED_NO_ANALYSIS = "advanced example produced no analysis"
         COMPLETE_NO_CONTENT = "complete workflow produced no content"
 
+    class JsonMappingOrNoneHelper:
+        """Helper to extract JsonMapping from JsonValue."""
 
-__all__: list[str] = ["FlextRootExamplesConstants"]
+        @staticmethod
+        def extract(value: t.JsonValue) -> t.JsonMapping | None:
+            if not isinstance(value, Mapping):
+                return None
+            return dict(value.items())
 
+    class JsonMappingSequenceHelper:
+        """Helper to extract sequence of JsonMapping from JsonValue."""
 
-class JsonMappingOrNoneHelper:
-    """Helper to extract JsonMapping from JsonValue."""
+        @staticmethod
+        def extract(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
+            if not isinstance(value, Sequence) or isinstance(
+                value,
+                (str, bytes, bytearray),
+            ):
+                return ()
+            mappings: MutableSequence[t.JsonMapping] = []
+            for item in value:
+                mapping_item = (
+                    FlextRootExamplesConstants.JsonMappingOrNoneHelper.extract(item)
+                )
+                if mapping_item is not None:
+                    mappings.append(mapping_item)
+            return tuple(mappings)
 
-    @staticmethod
-    def extract(value: t.JsonValue) -> t.JsonMapping | None:
-        if not isinstance(value, Mapping):
-            return None
-        return dict(value.items())
+    class StringSequenceHelper:
+        """Helper to extract string sequence from JsonValue."""
 
-
-class JsonMappingSequenceHelper:
-    """Helper to extract sequence of JsonMapping from JsonValue."""
-
-    @staticmethod
-    def extract(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
-        if not isinstance(value, Sequence) or isinstance(
-            value,
-            (str, bytes, bytearray),
-        ):
-            return ()
-        mappings: MutableSequence[t.JsonMapping] = []
-        for item in value:
-            mapping_item = FlextRootExamplesConstants.JsonMappingOrNone.extract(item)
-            if mapping_item is not None:
-                mappings.append(mapping_item)
-        return tuple(mappings)
-
-
-class StringSequenceHelper:
-    """Helper to extract string sequence from JsonValue."""
-
-    @staticmethod
-    def extract(value: t.JsonValue) -> t.StrSequence:
-        if not isinstance(value, Sequence) or isinstance(
-            value,
-            (str, bytes, bytearray),
-        ):
-            return ()
-        strings: MutableSequence[str] = []
-        for item in value:
-            if isinstance(item, str):
-                strings.append(item)
-        return tuple(strings)
+        @staticmethod
+        def extract(value: t.JsonValue) -> t.StrSequence:
+            if not isinstance(value, Sequence) or isinstance(
+                value,
+                (str, bytes, bytearray),
+            ):
+                return ()
+            strings: MutableSequence[str] = []
+            for item in value:
+                if isinstance(item, str):
+                    strings.append(item)
+            return tuple(strings)
 
 
 Stage = FlextRootExamplesConstants.Stage
+
+__all__: list[str] = ["FlextRootExamplesConstants"]

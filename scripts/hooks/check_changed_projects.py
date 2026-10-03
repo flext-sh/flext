@@ -12,10 +12,11 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 
-from flext_cli import cli, p
+from flext_cli import cli
 
 
 class FlextRootCheckChangedProjects:
@@ -55,7 +56,7 @@ class FlextRootCheckChangedProjects:
         if not projects:
             return 0
 
-        outcome = cli.run(
+        outcome = subprocess.run(
             [
                 "uv",
                 "run",
@@ -70,9 +71,10 @@ class FlextRootCheckChangedProjects:
                 ",".join(sorted(projects)),
             ],
             cwd=cls.REPOSITORY_ROOT,
+            check=False,
+            capture_output=True,
         )
-        command: p.Cli.CommandOutput = outcome.unwrap()
-        return command.exit_code
+        return outcome.returncode
 
     @classmethod
     def _relative_to_workspace(cls, raw: str) -> Path:
