@@ -8,16 +8,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flext_core import p
+import flext_infra
 
-from ._protocols.base import FlextRootProtocolsBase
-from ._protocols.config import FlextRootProtocolsConfig
+from flext._protocols.base import FlextRootProtocolsBase
+from flext._protocols.config import FlextRootProtocolsConfig
 
 if TYPE_CHECKING:
-    from . import t
+    from flext import t
 
 
-class FlextRootProtocols(p):
+class FlextRootProtocols(flext_infra.p):
     """Workspace root protocols facade — access via p.Root.*."""
 
     class Root(FlextRootProtocolsBase, FlextRootProtocolsConfig):

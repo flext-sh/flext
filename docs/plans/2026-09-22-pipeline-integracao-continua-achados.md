@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-22). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
+
 # Achados da auditoria — Concluir o pipeline com integração contínua e prova real
 
 <!-- TOC START -->
@@ -54,10 +58,13 @@ Critério: HEAD do branch recovery **não contém** o gitlink stage-3 registrado
 exato; `flext-auth` e `flext-plugin` mesclam um commit de consolidação diferente (mesma
 pendência):
 
-`auth, dbt-ldap, dbt-ldif, dbt-oracle, dbt-oracle-wms, ldap, oracle-oic, plugin, quality, tap-ldap, tap-ldif, tap-oracle, target-ldap, target-oracle, target-oracle-oic, tests, web`
+`auth`, `dbt-ldap`, `dbt-ldif`, `dbt-oracle`, `dbt-oracle-wms`, `ldap`, `oracle-oic`,
+`plugin`, `quality`, `tap-ldap`, `tap-ldif`, `tap-oracle`, `target-ldap`,
+`target-oracle`, `target-oracle-oic`, `tests`, `web`.
 
-Já contêm a revisão (sem merge aberto):
-`api, cli, core, db-oracle, grpc, infra, ldif, meltano, observability, oracle-wms, tap-oracle-oic, tap-oracle-wms, target-ldif, target-oracle-wms`.
+Já contêm a revisão (sem merge aberto): `api`, `cli`, `core`, `db-oracle`, `grpc`,
+`infra`, `ldif`, `meltano`, `observability`, `oracle-wms`, `tap-oracle-oic`,
+`tap-oracle-wms`, `target-ldif`, `target-oracle-wms`.
 
 ### A.3 Publicação (main workspace x recovery)
 
@@ -94,11 +101,12 @@ Dono canônico (header dos 32 Makefiles): `flext-infra/config/codegen.yaml` +
   `config:make_profile`; idem nos demais membros).
 - `flext-core/Makefile:120-126` (idem raiz `Makefile:112-127`):
   `ifneq ($(filter standalone,$(MAKE_PROFILE))$(GEN_INIT_ONLY),)` →
-  `REPOSITORY_ROOT := $(MAKEFILE_ROOT)`. **O perfil standalone atalha o probe real do
-  superprojeto** (`git rev-parse --show-superproject-working-tree`, linha 124). Um
-  membro (submódulo real, `.git` FILE apontando para `.git/modules/…`) com perfil
-  projetado `standalone` resolve `RUNTIME_ROOT = <membro>` e
-  `RUNTIME_VENV = <membro>/.venv` (`Makefile:161-165`). É exatamente o desvio relatado.
+  `REPOSITORY_ROOT := $(MAKEFILE_ROOT)`.
+  **O perfil standalone atalha o probe real do superprojeto**
+  (`git rev-parse --show-superproject-working-tree`, linha 124). Um membro (submódulo
+  real, `.git` FILE apontando para `.git/modules/…`) com perfil projetado `standalone`
+  resolve `RUNTIME_ROOT = <membro>` e `RUNTIME_VENV = <membro>/.venv`
+  (`Makefile:161-165`). É exatamente o desvio relatado.
 - Correção conforme contrato: a relação Git REAL decide — o probe do superprojeto sempre
   executa (exceto `GEN_INIT_ONLY`); perfil standalone aplica-se só quando o probe não
   acha superprojeto.
@@ -151,9 +159,9 @@ Dono canônico (header dos 32 Makefiles): `flext-infra/config/codegen.yaml` +
 ## C. `make mod` e orçamento de suíte
 
 - Raiz `Makefile:734-740`: `mod` → `_activated-mod` → `_builtin_mod_apply`
-  (`Makefile:1170-1171`) = `$(PROJECT_FLEXT_INFRA) refactor mod --apply` — **catálogo
-  completo, sem seletor** ("selector-free"); o escopo é o cwd. Confirmado o risco de
-  escopo relatado.
+  (`Makefile:1170-1171`) = `$(PROJECT_FLEXT_INFRA) refactor mod --apply` —
+  **catálogo completo, sem seletor** ("selector-free"); o escopo é o cwd. Confirmado o
+  risco de escopo relatado.
 - Journal de geração: `flext-infra-codegen-transaction-journal.json.lock`
   (`Makefile:1126`).
 - Checkpoint/estabilidade do mod: beads `flext-5fxu6.4.11` (mod aborta via unwrap),
@@ -173,8 +181,8 @@ Dono canônico (header dos 32 Makefiles): `flext-infra/config/codegen.yaml` +
 - `/home/marlonsc/ccs` — `main` @ `7a5f9875` (8.9.0-fd.17); dirty leve
   (`.beads/config.yaml`, AGENTS/CLAUDE, backups mcp).
 - `/home/marlonsc/cliproxy` — branch `fix/quota-suspension-recovery` @ `c64dcefc`
-  ("accept an empty direct-models projection per ADR-0023"); **upstream `[gone]` — não
-  publicado**.
+  ("accept an empty direct-models projection per ADR-0023");
+  **upstream `[gone]` — não publicado**.
 
 ### D.2 Mapa de componentes (arquivo:linha)
 

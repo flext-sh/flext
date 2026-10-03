@@ -4,6 +4,10 @@
 # input. Add members or exclusions here, then run `make codegen`.
 version: 3
 name: flext
+candidate_dependencies:
+  - distribution: flext-infra
+    url: https://github.com/flext-sh/flext-infra.git
+    commit: 50aaa820c290ef861c21e38451808a3a7468d03a
 # Why (green mandate, cosmos-3flk9 decision A): production sources are the
 # namespace validator's declared scope — tests host pytest conventions and
 # scripts/examples are thin command and documentation surfaces. Lint, type,
@@ -24,6 +28,8 @@ repository:
   editable: false
   read_only: false
 project:
+  runtime_dependency_overlay:
+    - flext-ldif
   package_name: "flext"
   class_stem: "Flext"
   namespace: "Flext"

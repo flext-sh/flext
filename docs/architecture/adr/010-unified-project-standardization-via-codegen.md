@@ -1,6 +1,8 @@
-# ADR-010 — Unified project standardization (Make, scripts, tests, structure) via
+# ADR-010 — Unified project standardization via flext-infra codegen and flext-tests
 
-flext-infra codegen and flext-tests
+> **Amended by ADR-018** (generator declarations): its filename-to-letter tables, closed
+> folder lists and advisory-gate lists are superseded; see
+> [ADR-018](018-generator-declarations.md).
 
 <!-- TOC START -->
 
@@ -146,9 +148,9 @@ running app's namespace.
 - Normal settings fields keep the per-subclass namespaced pattern (each project reads
   its own `settings` singleton and its own namespaced sections).
 - The directory properties (`cache_dir`, `work_dir`, `data_dir`, `config_dir`,
-  `state_dir`, `runtime_dir`) are NOT per-subclass. They ALWAYS resolve from the **root
-  project namespace held by the settings root singleton** — a single shared source —
-  never from the `env_prefix` of the subclass that happens to access them. A
+  `state_dir`, `runtime_dir`) are NOT per-subclass. They ALWAYS resolve from the
+  **root project namespace held by the settings root singleton** — a single shared
+  source — never from the `env_prefix` of the subclass that happens to access them. A
   `flext-cli`/`flext-meltano`/`flext-core` call under application X therefore returns
   `~/.<root>/X/…`; a library MUST NEVER use its own name for the directory segment.
 
@@ -266,7 +268,7 @@ Workspace-local Kilo plans are session context, not published authority.
 ## References
 
 - [ADR-003 — Manifest-owned topology, profiles](003-workspace-tooling-hub-distribution.md)
-- [ADR-004 — Generated Make and codegen SSOT](004-generic-make-framework-in-flext-tests.md)
+- [ADR-004 — Generated Make and codegen SSOT](004-generated-make-codegen-ssot-flext-infra.md)
 - [ADR-005 — Config/settings/constants/templates/schemas SSOT](005-config-settings-constants-templates-schemas-ssot.md)
 - [ADR-007 — Performance optimization of worktree transactions and mutating CLI commands](007-worktree-transaction-performance.md)
 - [ADR-008 — Neutral consumer boundaries](008-neutral-consumer-boundaries.md)

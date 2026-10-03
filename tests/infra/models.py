@@ -8,14 +8,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
-from flext_infra import m, u
+from flext import m, u
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
 class TestsFlextRootModels(m):
-    """Infrastructure test models facade — extends flext_infra models."""
+    """Infrastructure test models facade — extends flext workspace models."""
 
     class _ModuleModels:
         """Module reference models."""
@@ -24,13 +24,16 @@ class TestsFlextRootModels(m):
             """Module reference with path and name information."""
 
             anchor_file: Annotated[
-                Path, u.Field(description="Absolute path to the module's anchor file.")
+                Path,
+                u.Field(description="Absolute path to the module's anchor file."),
             ]
             module_name: Annotated[
-                str, u.Field(description="Fully qualified module name.")
+                str,
+                u.Field(description="Fully qualified module name."),
             ]
             relative_path: Annotated[
-                str, u.Field(description="Module path relative to the workspace root.")
+                str,
+                u.Field(description="Module path relative to the workspace root."),
             ]
 
     class _SyncModels:
@@ -40,7 +43,8 @@ class TestsFlextRootModels(m):
             """Workspace synchronization call record."""
 
             action: Annotated[
-                str, u.Field(description="Sync action performed (e.g. pull, push).")
+                str,
+                u.Field(description="Sync action performed (e.g. pull, push)."),
             ]
             repo: Annotated[Path, u.Field(description="Target repository root.")]
 

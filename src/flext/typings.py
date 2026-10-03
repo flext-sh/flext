@@ -6,13 +6,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import t
+import flext_infra
 
-from ._typings.base import FlextRootTypingsBase
-from ._typings.config import FlextRootTypingsConfig
+from flext._typings.base import FlextRootTypingsBase
+from flext._typings.config import FlextRootTypingsConfig
 
 
-class FlextRootTypes(t):
+class FlextRootTypes(flext_infra.t):
     """Workspace root typings facade — access via t.Root.*."""
 
     class Root(FlextRootTypingsBase, FlextRootTypingsConfig):

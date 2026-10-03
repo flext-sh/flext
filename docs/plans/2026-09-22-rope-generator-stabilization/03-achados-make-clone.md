@@ -1,3 +1,7 @@
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
+> (2026-09-22). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
+
 # Findings — Make surface, environment and clone mechanics
 
 <!-- TOC START -->
@@ -54,17 +58,25 @@ section, and the handoff note.
   member local-only commits (members are ahead of origin by up to +45 commits at plan
   time).
 - Correct procedure (authorized by the 2026-09-22 request):
+
   1. `git clone --no-hardlinks /home/marlonsc/flext-worktrees/rope-recovery-20260921 /home/marlonsc/flext-worktrees/rope-generator-validation-20260922`
      (destination verified non-existent at plan time; if it appears, inspect and
      preserve its content before use).
   2. Per member:
-     `git submodule update --init --reference /home/marlonsc/flext/.git/modules/<member> <member-path>`
-     — alternates supply the objects for every locally-recovered SHA; the GitHub URL
-     only serves what alternates lack. The member object stores are shared through
+
+     ```bash
+     git submodule update --init \
+       --reference /home/marlonsc/flext/.git/modules/<member> <member-path>
+     ```
+
+     Alternates supply the objects for every locally-recovered SHA; the GitHub URL only
+     serves what alternates lack. The member object stores are shared through
      `/home/marlonsc/flext/.git/modules/<name>` (worktree-linked gitdirs reuse the same
      objects), so all checkout SHAs resolve locally.
+
   3. Verify `git submodule status` in the clone equals the checkpoint recorded by the
      worktree (member SHA list + superproject SHA).
+
 - The clone is an INDEPENDENT repository (not a worktree), same filesystem, outside
   `/tmp` — satisfying the request. Its `.venv` is rebuilt by `make setup` with
   `UV_PROJECT_ENVIRONMENT`/`VIRTUAL_ENV` pinned to the clone's own `.venv`.
