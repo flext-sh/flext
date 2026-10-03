@@ -6,9 +6,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
-
-from flext_infra import FlextInfraCli
 
 
 class FlextRootWorkspacePlanCollection:
@@ -23,14 +22,24 @@ class FlextRootWorkspacePlanCollection:
 
         """
         root = Path(__file__).resolve().parents[2]
-        return FlextInfraCli().main([
-            "docs",
-            "collect",
-            "--repository-root",
-            str(root),
-            "--configuration",
-            str(root / "config" / "plan-collection.yaml"),
-        ])
+        outcome = subprocess.run(
+            [
+                "uv",
+                "run",
+                "--all-packages",
+                "python",
+                "-m",
+                "flext_infra",
+                "docs",
+                "collect",
+                "--repository-root",
+                str(root),
+                "--configuration",
+                str(root / "config" / "plan-collection.yaml"),
+            ],
+            check=False,
+        )
+        return outcome.returncode
 
 
 if __name__ == "__main__":

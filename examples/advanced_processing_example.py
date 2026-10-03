@@ -101,13 +101,27 @@ class FlextRootAdvancedProcessingExample:
                 result = operation(current_data)
                 if result.failure:
                     return result
-                current_data = result.value["data"]["values"]
-            payload = FlextRootAdvancedProcessingExample.PipelinePayload.model_validate({
-                "values": current_data,
+                stage_data = FlextRootExamplesConstants.JsonMappingOrNoneHelper.extract(
+                    result.value.get("data"),
+                )
+                if stage_data is None:
+                    return r[t.JsonMapping].fail(
+                        "Stage returned no data mapping",
+                    )
+                stage_values = (
+                    FlextRootExamplesConstants.JsonMappingOrNoneHelper.extract(
+                        stage_data.get("values"),
+                    )
+                )
+                if stage_values is None:
+                    return r[t.JsonMapping].fail(
+                        "Stage returned no values mapping",
+                    )
+                current_data = stage_values
+            result_data: t.JsonMapping = t.json_mapping_adapter().validate_python({
+                "data": {"values": current_data},
             })
-            return r[t.JsonMapping].ok(
-                t.JsonMapping(data=payload),
-            )
+            return r[t.JsonMapping].ok(result_data)
 
         @staticmethod
         def _analyze_results(
@@ -182,11 +196,10 @@ class FlextRootAdvancedProcessingExample:
                 **data,
                 "analysis": analysis,
             })
-            payload = FlextRootAdvancedProcessingExample.PipelinePayload.model_validate({
-                "values": result_data,
-            })
             return r[t.JsonMapping].ok(
-                t.JsonMapping(data=payload),
+                t.json_mapping_adapter().validate_python({
+                    "data": {"values": result_data},
+                }),
             )
 
         def _process_parallel(
@@ -239,11 +252,10 @@ class FlextRootAdvancedProcessingExample:
                 if items_to_process
                 else 0,
             })
-            payload = FlextRootAdvancedProcessingExample.PipelinePayload.model_validate({
-                "values": result_data,
-            })
             return r[t.JsonMapping].ok(
-                t.JsonMapping(data=payload),
+                t.json_mapping_adapter().validate_python({
+                    "data": {"values": result_data},
+                }),
             )
 
         def _validate_batch(
@@ -285,11 +297,10 @@ class FlextRootAdvancedProcessingExample:
                 "valid_count": sum(1 for r in validation_results if r.valid),
                 "invalid_count": sum(1 for r in validation_results if not r.valid),
             })
-            payload = FlextRootAdvancedProcessingExample.PipelinePayload.model_validate({
-                "values": result_data,
-            })
             return r[t.JsonMapping].ok(
-                t.JsonMapping(data=payload),
+                t.json_mapping_adapter().validate_python({
+                    "data": {"values": result_data},
+                }),
             )
 
         @staticmethod
@@ -316,7 +327,7 @@ class FlextRootAdvancedProcessingExample:
             if (
                 isinstance(value, str)
                 and len(value)
-                > FlextRootAdvancedProcessingExample.Constants.MAX_VALUE_LENGTH
+                > FlextRootAdvancedProcessingExample._Constants.MAX_VALUE_LENGTH
             ):
                 warnings.append("Value field is very long")
             return r[FlextRootAdvancedProcessingExample.ValidationResult].ok(

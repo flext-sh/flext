@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 class TestsFlextRootProtocols(p):
-    """Infrastructure test protocols facade — extends flext_infra protocols."""
+    """Infrastructure test protocols facade — extends flext workspace protocols."""
 
     class _RootWorkspaceProtocols:
         """Root workspace test-infrastructure protocol definitions."""
