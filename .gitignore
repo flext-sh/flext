@@ -79,6 +79,7 @@ scripts/maintenance/
 !bin/mise
 !bin/mise.cmd
 !bin/mise-lock-transaction.py
+!bin/mise-lock-converge.py
 
 # Documentation
 !README.md
@@ -390,6 +391,7 @@ legado/
 !/bin/mise
 !/bin/mise.cmd
 !/bin/mise-lock-transaction.py
+!/bin/mise-lock-converge.py
 .tools/
 __pycache__/
 base.mk

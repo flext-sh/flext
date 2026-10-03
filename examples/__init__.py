@@ -13,12 +13,12 @@ from typing import TYPE_CHECKING
 from flext_core import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from examples._constants import FlextRootExamplesConstants
+    from examples._constants import ExamplesFlextRootConstants
     from flext import c, config, m, p, t, u
 
 
 __all__: tuple[str, ...] = (
-    "FlextRootExamplesConstants",
+    "ExamplesFlextRootConstants",
     "c",
     "config",
     "m",
@@ -30,7 +30,7 @@ __all__: tuple[str, ...] = (
 _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
-            "._constants": ("FlextRootExamplesConstants",),
+            "._constants": ("ExamplesFlextRootConstants",),
             "flext": ("c", "config", "m", "p", "t", "u"),
         }),
         alias_groups=MappingProxyType({}),
