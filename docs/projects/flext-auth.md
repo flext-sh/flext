@@ -42,17 +42,21 @@ make check
 ```
 
 ```python
+from getpass import getpass
+
 from flext_auth import FlextAuth
+
+password = getpass("Password: ")
 
 auth = FlextAuth.quick_start(create_admin_user=False)
 
 created = auth.register_user(
-    username="demo", email="demo@example.com", password="secure123"
+    username="demo", email="demo@example.com", password=password
 )
-assert created.is_success
+created.unwrap()
 
-session = auth.authenticate_user("demo", "secure123")
-assert session.is_success
+session = auth.authenticate_user("demo", password)
+session.unwrap()
 ```
 
 `FlextAuth.quick_start()` builds the facade with the built-in provider set;
@@ -104,7 +108,8 @@ implement the provider mixin/protocol and are registered through `FlextAuthRegis
 
 - [Project README](https://github.com/flext-sh/flext-auth/blob/0.12.0-dev/README.md)
   (auto-generated module map and operation flow)
-- [Workspace AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md) — layering and zero-tolerance rules
+- [Workspace AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md) —
+  layering and zero-tolerance rules
 - `flext-auth/docs/api-reference/` — generated API documentation
 - Related projects: `flext-core`, `flext-ldap` (LDAP provider backend), `flext-grpc`
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`

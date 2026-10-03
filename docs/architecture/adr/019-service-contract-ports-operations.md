@@ -14,9 +14,20 @@
   DI definitive, S2b removed); becomes ACCEPTED when slices S1–S10 land with post-merge
   proof
 - **Date:** 2026-09-25 (amended 2026-09-26)
-- **Integrated so far:** S1 — `flext-core` #499, merge `d65ba487f`. Supporting kernel
-  fixes on the same line: #502 `5ce5919a6` (enforcement), #503 `2401cb21b` (lazy
-  initialization), #504 `8de52fa6b` (`u.process` fail-loud).
+- **Integrated so far (verified census 2026-09-30, code-level):** S1 — `flext-core` #499,
+  merge `d65ba487f`, with the kernel fixes #502 `5ce5919a6` (enforcement), #503
+  `2401cb21b` (lazy initialization), #504 `8de52fa6b` (`u.process` fail-loud).
+  S2–S7 are also in the code: truthful container (one `_registrations` bookkeeping, one
+  private write path, empty/duplicate/reserved names raise `e.ValidationError`, reserved
+  names out of `has`/`names`/`drop`, caller-unresolved `shared` raises, no
+  `provide`/`wire` bridge — `src/flext_core/container.py`); lazy operations
+  (`u.service_operations` + frozen `m.ServiceOperation`); truthful `p.Service`
+  (`@runtime_checkable`, real surface inherited once, only `execute` added); derived CLI
+  (`cli.service_routes(service_type, *, provide)` with `m.Cli.EmptyRequest` and
+  execution-time `provide`); test base port path (`isolated_test_runtime(build=…)`);
+  templates `api.py.j2`/`cli.py.j2`/`services/ping.py.j2` with the kernel free of fake
+  facades (D1). Pending: S8/S9 fail-loud — at least `u.dump` via `unwrap_or`
+  (`_utilities/model.py:71`, adversarial correction 10) — and S10 closure.
 - **Target line:** FLEXT `0.12.0-dev`, forward baseline `0.13.0`
 - **Scope:** `flext-core` (service base, container, operations), `flext-cli` (derived
   CLI), `flext-tests` (service test base), `flext-infra` (scaffold templates, detection

@@ -6,6 +6,15 @@ status: active
 
 # Phase 03: `flext-infra` test convergence and integration
 
+<!-- TOC START -->
+
+- [Entry state](#entry-state)
+- [Owned behavior](#owned-behavior)
+- [Execution loop](#execution-loop)
+- [Stop condition](#stop-condition)
+
+<!-- TOC END -->
+
 ## Entry state
 
 - Worktree: `/home/marlonsc/fleet-closure-lanes/infra-convergence-20260925/flext-infra`

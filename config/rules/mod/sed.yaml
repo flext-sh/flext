@@ -1,0 +1,101 @@
+# Canonical documentation imports are changed through make mod.
+rules:
+  - id: docs-cli-settings-singleton-without-assert
+    description: Show the public settings usage without a test-only assertion.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^assert settings is FlextCliSettings\.fetch_global\(\)$'
+    replace: ''
+    flags: [MULTILINE]
+  - id: docs-cli-settings-singleton-contract
+    description: State the verified fetch_global contract beside the usage snippet.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^Import the existing settings class; do not redefine it:$'
+    replace: 'Import the existing settings class; without overrides, `fetch_global()` returns its shared per-class singleton:'
+    flags: [MULTILINE]
+  - id: docs-cli-model-command-result
+    description: Show the public handler result as an example value rather than a test assertion.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^assert greet_handler\(GreetInput\(name="Ada"\)\) == "Hello, Ada!"$'
+    replace: 'greeting = greet_handler(GreetInput(name="Ada"))  # "Hello, Ada!"'
+    flags: [MULTILINE]
+  - id: docs-cli-test-import-matchers
+    description: Use public test matchers in the executable CLI test example.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^from flext_cli import FlextCliCli, m$'
+    replace: |-
+      from flext_cli import FlextCliCli, c, m
+      from flext_tests import tm
+    flags: [MULTILINE]
+  - id: docs-cli-test-invocation-success
+    description: Check invocation success through the shared public matcher.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^    assert invocation\.success$'
+    replace: '    tm.that(invocation.success, eq=True)'
+    flags: [MULTILINE]
+  - id: docs-cli-test-exit-code
+    description: Compare CLI success against its public constant.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^    assert invocation\.value\.exit_code == 0$'
+    replace: '    tm.that(invocation.value.exit_code, eq=c.Cli.EXIT_CODE_SUCCESS)'
+    flags: [MULTILINE]
+  - id: docs-cli-test-handler-result
+    description: Retain the handler result assertion through the shared public matcher.
+    include: [docs/guides/using-flext-cli.md]
+    find: '^    assert greet_handler\(GreetInput\(name="Ada"\)\) == "Hello, Ada!"$'
+    replace: '    tm.that(greet_handler(GreetInput(name="Ada")), eq="Hello, Ada!")'
+    flags: [MULTILINE]
+  - id: docs-public-facade-u-imports
+    description: Import the public utilities facade used by executable examples.
+    include:
+      - docs/projects/flext-api/README.md
+      - docs/projects/flext-ldap.md
+      - docs/projects/flext-ldif.md
+      - docs/projects/flext-observability.md
+      - docs/projects/flext-plugin.md
+      - docs/projects/flext-quality.md
+    find: '^from (flext_(?:api|ldap|ldif|observability|plugin|quality)) import (?![^\n]*\bu\b)([^\n]+)$'
+    replace: 'from \1 import \2, u'
+    flags: [MULTILINE]
+  - id: docs-auth-read-password-from-user
+    description: Obtain the quick-start credential at runtime instead of embedding it.
+    include: [docs/projects/flext-auth.md]
+    find: '(?<!from getpass import getpass\n\n)^from flext_auth import FlextAuth$'
+    replace: |-
+      from getpass import getpass
+
+      from flext_auth import FlextAuth
+    flags: [MULTILINE]
+  - id: docs-auth-bind-runtime-password
+    description: Reuse the prompted password across registration and authentication.
+    include: [docs/projects/flext-auth.md]
+    find: '(?<!password = getpass\("Password: "\)\n\n)^auth = FlextAuth\.quick_start\(create_admin_user=False\)$'
+    replace: |-
+      password = getpass("Password: ")
+
+      auth = FlextAuth.quick_start(create_admin_user=False)
+    flags: [MULTILINE]
+  - id: docs-auth-register-with-runtime-password
+    description: Replace the final literal credential argument in the authored registration example, preserving its keyword name.
+    include: [docs/projects/flext-auth.md]
+    find: >-
+      (auth\.register_user\(\s*username=[^,\n]+,\s*email=[^,\n]+,\s*)(?P<keyword>[A-Za-z_]\w*)=("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')(?=\s*\))
+    replace: '\1\2=password'
+    capture_equals: {keyword: password}
+  - id: docs-auth-authenticate-with-runtime-password
+    description: Use the same prompted password for authentication.
+    include: [docs/projects/flext-auth.md]
+    find: >-
+      auth\.authenticate_user\(([^,\n]+), ("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')\)
+    replace: 'auth.authenticate_user(\1, password)'
+  - id: docs-auth-registration-result
+    description: Surface the public registration failure instead of relying on an assertion.
+    include: [docs/projects/flext-auth.md]
+    find: '^assert created\.is_success$'
+    replace: 'created.unwrap()'
+    flags: [MULTILINE]
+  - id: docs-auth-session-result
+    description: Surface the public authentication failure instead of relying on an assertion.
+    include: [docs/projects/flext-auth.md]
+    find: '^assert session\.is_success$'
+    replace: 'session.unwrap()'
+    flags: [MULTILINE]

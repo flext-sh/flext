@@ -5,6 +5,13 @@ updated_at: 2026-09-25T17:27:00Z
 
 # Resumption contract
 
+<!-- TOC START -->
+
+- [Read-only preflight](#read-only-preflight)
+- [Exact continuation](#exact-continuation)
+
+<!-- TOC END -->
+
 Start from files and live repositories, never from a prior session cursor. The active
 implementation checkout is:
 
@@ -26,7 +33,8 @@ rtk git rev-parse HEAD origin/0.12.0-dev
 rtk gh pr view 861 --json url,state,isDraft,headRefOid,baseRefName,mergeStateStatus,statusCheckRollup
 
 direnv exec /home/marlonsc/flext gc rig list --json
-direnv exec /home/marlonsc/flext gc bd --city /home/marlonsc/gc show aihub-l42it --rig aihub --json
+direnv exec /home/marlonsc/flext gc bd --city /home/marlonsc/gc \
+  show aihub-l42it --rig aihub --json
 ```
 
 Expected freshness facts at handoff creation:

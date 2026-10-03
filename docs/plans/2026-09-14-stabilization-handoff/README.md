@@ -1,8 +1,8 @@
-> **HISTORICAL — dated evidence, not live authority.** Point-in-time record
-> (2026-09-14; superseded by later stabilization cycles). PR/bead/branch states
-> cited below may have changed; verify against the live tracker (`bd` / `gh`)
-> before relying on anything here. Notably, PR #240 cited as open in these
-> documents was MERGED on 2026-09-15 (`gh pr view 240`: 2026-09-15T05:28:53Z).
+> **HISTORICAL — dated evidence, not live authority.** Point-in-time record (2026-09-14;
+> superseded by later stabilization cycles). PR/bead/branch states cited below may have
+> changed; verify against the live tracker (`bd` / `gh`) before relying on anything
+> here. Notably, PR #240 cited as open in these documents was MERGED on 2026-09-15
+> (`gh pr view 240`: 2026-09-15T05:28:53Z).
 
 # FLEXT 0.12.0 — handoff de estabilização (registro histórico de 2026-09-14)
 
@@ -143,12 +143,12 @@ precisam adaptação ao merge infra mais recente e revisão antes da geração/s
 | `make gen` 17490         | Exit 0; 32 repositórios renderizados, lazy-init com zero efeitos em 333,32 s e verificações de ponto fixo/receipts concluídas.                                                                    |
 | `make gen` 69562         | Exit 0; lazy-init com zero efeitos em 220,21 s, receipts e conformidade dos 32 concluídos.                                                                                                        |
 
-Os sete membros com falha na rodada 25454 foram **API, core, infra, quality,
-tap-oracle-wms, target-oracle e target-oracle-wms**. O despachante completou os 32
-projetos; isso não significa que todas as suites internas terminaram. Infra retornou
-**erro 241** antes de completar sua suite. Seus dois testes de release marcados FAILED
-não deixaram traceback final nem JUnit da execução interrompida; causa ainda
-desconhecida.
+Os sete membros com falha na rodada 25454 foram
+**API, core, infra, quality, tap-oracle-wms, target-oracle e target-oracle-wms**. O
+despachante completou os 32 projetos; isso não significa que todas as suites internas
+terminaram. Infra retornou **erro 241** antes de completar sua suite. Seus dois testes
+de release marcados FAILED não deixaram traceback final nem JUnit da execução
+interrompida; causa ainda desconhecida.
 
 Resultados de referência dessa rodada: raiz 5 passed; API 2 failed/72 passed; auth 162
 passed; CLI 1263 passed; core 6 failed/2655 passed; DB Oracle 541 passed/6 skipped; DBT
