@@ -21,15 +21,6 @@ class FlextRootConfig(flext_core.FlextConfig):
     def published(cls) -> FlextRootConfig:
         """Return the process-wide configuration singleton.
 
-        Returns:
-            The resulting ``FlextRootConfig``.
-
-        """
-        return cls.fetch_global()
-
-
 config = FlextRootConfig
-"""The facade alias the rule contract allows beside the class; the
-process-wide singleton comes from ``FlextRootConfig.published()``."""
 
 __all__: t.VariadicTuple[str] = ("FlextRootConfig", "config")
