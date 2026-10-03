@@ -23,7 +23,7 @@ Community of 57 nodes
 
 | Name                                                        | Kind     | File                                                           | Lines   |
 | ----------------------------------------------------------- | -------- | -------------------------------------------------------------- | ------- |
-| test_format_error_template_interpolates_placeholder         | Test     | flext-cli/tests/unit/test_constants.py                         | 165-168 |
+| test_format_error_template_interpolates_field               | Test     | flext-cli/tests/unit/test_constants.py                         | 165-168 |
 | test_port_out_of_range_message_formats_with_named_fields    | Test     | flext-db-oracle/tests/unit/test_constants.py                   | 250-256 |
 | FlextInfraWorkspaceChecker                                  | Class    | flext-infra/src/flext_infra/check/workspace_check.py           | 19-205  |
 | **init**                                                    | Function | flext-infra/src/flext_infra/check/workspace_check.py           | 30-50   |

@@ -1,5 +1,17 @@
 # 08 — Runbook and handoff for the V8 plan (2026-09-26)
 
+<!-- TOC START -->
+
+- [1. Measured state](#1-measured-state)
+- [2. Runbook (mandatory order)](#2-runbook-mandatory-order)
+- [3. Open findings (each becomes a bead)](#3-open-findings-each-becomes-a-bead)
+- [4. Work in flight at session end](#4-work-in-flight-at-session-end)
+- [5. Operator decisions pending](#5-operator-decisions-pending)
+- [6. Session close evidence](#6-session-close-evidence)
+- [7. New operator laws (2026-09-26) — recorded in 04-rules.md R23–R26](#7-new-operator-laws-2026-09-26-recorded-in-04-rulesmd-r23r26)
+
+<!-- TOC END -->
+
 State at the end of session `5f6ecb1d`. The next session starts here, then reads
 `00-index.md` and `05-phases.md`. Authority: the operator's newest order. The adjusted
 `0.12.0-dev` on the primary checkout is canonical and must be adopted fix-forward, with

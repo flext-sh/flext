@@ -1,8 +1,15 @@
-"""Compose the public LDIF ACL extraction and evaluation operations."""
+"""Compose the public LDIF ACL extraction and evaluation operations.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
-from flext_ldif import c, m, p
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from flext_ldif import c, m, p
 
 
 class FlextRootAclProcessingExample:
@@ -19,9 +26,15 @@ class FlextRootAclProcessingExample:
         server_type: c.Ldif.ServerTypes,
         required_permissions: m.Ldif.AclPermissions,
     ) -> p.Result[m.Ldif.AclEvaluationResult]:
-        """Extract and evaluate without rewriting either LDIF operation."""
+        """Extract and evaluate without rewriting either LDIF operation.
+
+        Returns:
+            The resulting ``p.Result[m.Ldif.AclEvaluationResult]``.
+
+        """
         return self._service.extract_acls_from_entry(entry, server_type).flat_map(
             lambda response: self._service.evaluate_acl_context(
-                response.acls, required_permissions
-            )
+                response.acls,
+                required_permissions,
+            ),
         )

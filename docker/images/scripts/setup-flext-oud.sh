@@ -19,7 +19,7 @@ if [ ! -f "${INSTANCE_PATH}/OUD/settings/settings.ldif" ]; then
 		--no-prompt \
 		--doNotStart \
 		--instancePath "${INSTANCE_PATH}" \
-		--REDACTED_LDAP_BIND_PASSWORDConnectorPort 4444 \
+		--adminConnectorPort 4444 \
 		--ldapPort 1389 \
 		--ldapsPort 1636 \
 		--generateSelfSignedCertificate \
@@ -86,7 +86,7 @@ objectClass: person
 objectClass: top
 cn: ORCLADMIN
 sn: Administrator
-uid: orclREDACTED_LDAP_BIND_PASSWORD
+uid: orcladmin
 userPassword: invalid_password
 
 dn: cn=FLEXTDEPLOY,ou=especial,cn=Users,${BASE_DN}

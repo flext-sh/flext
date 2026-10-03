@@ -9,7 +9,7 @@
 - [Constraints globais](#constraints-globais)
 - [Passo 0 — Registro e trackers](#passo-0-registro-e-trackers)
 - [Fase 1 — Incremento 1: ambiente e integração utilizáveis](#fase-1-incremento-1-ambiente-e-integracao-utilizaveis)
-- [Fase 2 — Incrementos funcionais (cada um: integração, publicação pelo dono, prova antes do seguinte)](#fase-2-incrementos-funcionais-cada-um-integracao-publicacao-pelo-dono-prova-antes-do-seguinte)
+- [Fase 2 — Incrementos funcionais](#fase-2-incrementos-funcionais)
 - [Fase 3 — Prova final e encerramento](#fase-3-prova-final-e-encerramento)
 
 <!-- TOC END -->

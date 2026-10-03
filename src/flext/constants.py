@@ -8,16 +8,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import flext_core
+import flext_infra
 
-from ._constants.base import FlextRootConstantsBase
-from ._constants.config import FlextRootConstantsConfig
+from flext._constants.base import FlextRootConstantsBase
+from flext._constants.config import FlextRootConstantsConfig
 
 if TYPE_CHECKING:
-    from . import t
+    from flext import t
 
 
-class FlextRootConstants(flext_core.c):
+class FlextRootConstants(flext_infra.c):
     """Workspace root constants facade — access via c.Root.*."""
 
     class Root(FlextRootConstantsBase, FlextRootConstantsConfig):
