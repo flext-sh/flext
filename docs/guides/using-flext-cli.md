@@ -42,13 +42,13 @@ Import the aliases used by each example from the public `flext_cli` package root
 
 ## Settings
 
-Import the existing settings class; do not redefine it:
+Import the existing settings class; without overrides, `fetch_global()` returns
+its shared per-class singleton:
 
 ```python
 from flext_cli import FlextCliSettings
 
 settings = FlextCliSettings.fetch_global()
-assert settings is FlextCliSettings.fetch_global()
 ```
 
 If you need a project-specific subclass, extend `FlextSettings` (or `FlextCliSettings`)
@@ -105,7 +105,8 @@ directly. This independent example constructs and invokes a real model-backed co
 handlers return their value but do not automatically print it.
 
 ```python
-from flext_cli import FlextCliCli, m
+from flext_cli import FlextCliCli, c, m
+from flext_tests import tm
 
 
 class GreetInput(m.BaseModel):
@@ -126,9 +127,9 @@ def test_greet_command() -> None:
         app, name="greet", help_text="Build a greeting", command=command
     )
     invocation = cli.invoke_app(app, args=["greet", "--name", "Ada"])
-    assert invocation.success
-    assert invocation.value.exit_code == 0
-    assert greet_handler(GreetInput(name="Ada")) == "Hello, Ada!"
+    tm.that(invocation.success, eq=True)
+    tm.that(invocation.value.exit_code, eq=c.Cli.EXIT_CODE_SUCCESS)
+    tm.that(greet_handler(GreetInput(name="Ada")), eq="Hello, Ada!")
 ```
 
 ## Good practices
@@ -156,7 +157,7 @@ def greet_handler(model: GreetInput) -> str:
     return f"Hello, {model.name}!"
 
 
-assert greet_handler(GreetInput(name="Ada")) == "Hello, Ada!"
+greeting = greet_handler(GreetInput(name="Ada"))  # "Hello, Ada!"
 ```
 
 ## Related
