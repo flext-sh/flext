@@ -567,6 +567,7 @@ link-mode = "copy"
 override-dependencies = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@50aaa820c290ef861c21e38451808a3a7468d03a",
 ]
+constraint-dependencies = ["mypy<2.4.0"]
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 
 [[tool.uv.exclude-dependencies]]
