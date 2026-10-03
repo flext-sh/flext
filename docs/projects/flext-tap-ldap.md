@@ -98,7 +98,9 @@ Source lives under `flext-tap-ldap/src/flext_tap_ldap/`:
 
 - [Project README](https://github.com/flext-sh/flext-tap-ldap/blob/0.12.0-dev/README.md)
 - Source: `flext-tap-ldap/src/flext_tap_ldap/`
-- Workspace governance: [AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md), [GOVERNANCE.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/GOVERNANCE.md)
+- Workspace governance:
+  [AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md),
+  [GOVERNANCE.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/GOVERNANCE.md)
 - Related packages: `flext-ldap`, `flext-ldif`, `flext-meltano`, `flext-core`,
   `flext-cli`, `flext-target-ldap`
 

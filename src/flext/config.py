@@ -11,14 +11,13 @@ from typing import TYPE_CHECKING
 import flext_core
 
 if TYPE_CHECKING:
-    from . import t
+    from flext import t
 
 
 class FlextRootConfig(flext_core.FlextConfig):
     """Workspace root configuration — extends flext-core config."""
 
 
-config: FlextRootConfig = FlextRootConfig.fetch_global()
-"""Process-wide root configuration singleton."""
+config = FlextRootConfig
 
 __all__: t.VariadicTuple[str] = ("FlextRootConfig", "config")

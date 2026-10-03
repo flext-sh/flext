@@ -91,8 +91,9 @@ The markdown standard lives once in `flext-infra/config/tooling.yaml`
 `make test` runs the incremental selection. `make test-full` first runs that operation,
 then the complete suite, including configured external and CI-excluded markers. The
 runner owns this sequence, one monotonic deadline, and the same persistent Testmon
-database, located by the flext-infra generated configuration. External tests keep their declared runtime and authentication
-requirements. Direct runner commands and cache-clearing bypasses are prohibited.
+database, located by the flext-infra generated configuration. External tests keep their
+declared runtime and authentication requirements. Direct runner commands and
+cache-clearing bypasses are prohibited.
 
 Separate receipts preserve each phase's mode, raw result, inventory, execution, and
 deselection counts. Warnings are counted per subprocess and globally, including any

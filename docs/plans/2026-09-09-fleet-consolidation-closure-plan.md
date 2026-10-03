@@ -1,6 +1,6 @@
 > **HISTORICAL — dated evidence, not live authority.** Point-in-time record
-> (2026-09-09). PR/bead/branch states cited below may have changed; verify against
-> the live tracker (`bd` / `gh`) before relying on anything here.
+> (2026-09-09). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
 
 # PLANO — Consolidação da Frota FLEXT: fechamento integral (2026-09-09)
 
@@ -24,7 +24,7 @@
 > Aprovado pelo operador (sim, tudo + campanha de dívida incluída). Executor:
 > orquestrador + esquadrão de subagentes. Lei: `~/agents/AGENTS.md` + `flext-law` +
 > `make-check` + `verification-loop`. Comandos: somente Make canônico com, prefixo
-> `MISE_VERSION=2026.9.2`.
+> `MISE_VERSION=2026.9.17`.
 
 ## Estado na aprovação (evidências gravadas)
 

@@ -38,8 +38,9 @@ be built in parallel from the same integration tip, each as its own small PR. Be
 `flext-4jtcb.8`, S1 `.1`, S2 `.2`, S3 `.3`, S4 `.10`, S5 `.4`, S6 `.5`, S7 `.6`, S8
 `.7`, S9 `.11`, S10 `.12`; `.9` (the former S2b) is superseded by the pure-DI ruling.
 
-State on 2026-09-26: S0's PR `flext#274` MERGED 2026-09-27T08:06Z (`01d498c575`); S1 is merged (`flext-core` #499, merge
-`d65ba487f`); the `flext-core` integration tip is `8de52fa6b` (#504).
+State on 2026-09-26: S0's PR `flext#274` MERGED 2026-09-27T08:06Z (`01d498c575`); S1 is
+merged (`flext-core` #499, merge `d65ba487f`); the `flext-core` integration tip is
+`8de52fa6b` (#504).
 
 ## Common steps of every slice
 
@@ -217,9 +218,10 @@ graph-driven consumer revalidation; one commit per owner.
   `:473-485`, `:374-381`, `:120-129`; `mapper_access_part_02.py:81-82` and
   `mapper.py:98`; `_utilities/model.py:69-71`; `flexthandlers_part_07.py:130-138`;
   `context_state.py:38-46,126-134`, `context_lifecycle.py:97-138`,
-  `context_crud.py:103-107`; `_utilities/project_metadata.py:55-62`. Also the
-  `make mod` detection findings measured on 2026-09-26: `ban-silent-except-swallow` at
-  `_exceptions/helpers.py:43`, `_exceptions/_base_parts/flextexceptionsbase_part_02.py:96`,
+  `context_crud.py:103-107`; `_utilities/project_metadata.py:55-62`. Also the `make mod`
+  detection findings measured on 2026-09-26: `ban-silent-except-swallow` at
+  `_exceptions/helpers.py:43`,
+  `_exceptions/_base_parts/flextexceptionsbase_part_02.py:96`,
   `_enforcement_collect_parts/enforcement_collect_part_01.py:49`, `dispatcher.py:118`;
   `ban-ambient-environ-read` at `_config.py:235`; `ban-pass-through-wrapper` at
   `_beartype/_helpers_parts/helpers_part_01.py:155` and

@@ -1,6 +1,6 @@
 > **HISTORICAL — dated evidence, not live authority.** Point-in-time record
-> (2026-09-22). PR/bead/branch states cited below may have changed; verify against
-> the live tracker (`bd` / `gh`) before relying on anything here.
+> (2026-09-22). PR/bead/branch states cited below may have changed; verify against the
+> live tracker (`bd` / `gh`) before relying on anything here.
 
 # Findings — Codegen engine, templates and governing ADRs
 
@@ -26,12 +26,12 @@ copy, `config/codegen.yaml`, template tree, representative member `flext-ldif`, 
   `_conform/` (conformance pipeline, `execute.py::_validate_managed_fixed_point`),
   `codegen_transaction.py` (transactional publication, `commit_locked`),
   `lazy_init_planner.py` + `_lazy_init_planner_*.py` (aliases/cache/children/collision/
-  exports/parents/public*root),
-  `\_lazy_init_generation*.py`, `mise*artifacts.py` +
-  `\_mise_artifacts/\*\*.py` (staging, publication, recovery, and verification
-  of transactional artifact publication with rollback), `protocol*models.py`,
-  `scaffolder.py`, `project_new.py`, `pipeline.py`, `layout*.py`, `fixer*.py`,
-  `version_file.py`.
+  exports/parents/public*root), `\_lazy_init_generation*.py`,
+  `mise*artifacts.py`+`\_mise_artifacts/\*\*.py`(staging, publication, recovery, and
+  verification
+of transactional artifact publication with rollback),`protocol*models.py`,
+`scaffolder.py`, `project_new.py`, `pipeline.py`, `layout*.py`, `fixer*.py`,
+`version_file.py`.
 - Templates: `flext-infra/src/flext_infra/templates/` — `project/base/**` (per-project
   templates), `bootstrap/` (mise), plus root templates `lazy_init_root.py.j2`,
   `module_skeleton.py.j2`, `static_package_init.py.j2`, `version_file.py.j2`, mkdocs.

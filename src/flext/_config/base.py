@@ -1,4 +1,8 @@
-"""Base config for flext-workspace."""
+"""Base config for flext-workspace.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
