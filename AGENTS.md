@@ -777,3 +777,22 @@ rtk init --global       # Add RTK to ~/.claude/CLAUDE.md
 Overall average: **60-90% token reduction** on common development operations.
 
 <!-- /rtk-instructions -->
+
+## Learned User Preferences
+
+- Before changing code, search libraries, the project, worktrees, local and remote branches, and pull requests; adopt or cherry-pick existing lanes onto a branch cut from the latest integration tip, and fix-forward with `git merge --no-ff`. Do not rebase or force-push.
+- Dependency locks change only through `make upg`. `make setup` must still run when mise or uv has drifted, and must reconcile that drift inside setup.
+- New code is accepted only after `make fmt`, `make fix`, `make check`, `make mod`, and `make smells` are clean. Do not close a change while any of those gates fail.
+- Reassess beads one at a time: one `val<YYYYMMDDTHHMM>` label per remeasured bead, with evidence of command, working directory, exit status, and decisive output. Do not bulk-relabel.
+- Do not wait for CI to be green. `gh pr merge --admin` is authorized, then fix CI on the integration tip through flext-infra automation.
+- Reuse functions and owners that already exist in the imported projects and libraries; apply DI, DRY, YAGNI, and SSOT — invert dependencies, respect domain interfaces, and decouple instead of patching around a problem (no gambiarra).
+- Parallelize with multiple background agents and avoid heavy local processing; let CI do the heavy work and act on what it reports.
+
+## Learned Workspace Facts
+
+- Makefile commands share one place that sets `GITHUB_TOKEN`, `GH_TOKEN`, and `MISE_GITHUB_TOKEN` from `gh auth token` when GitHub auth is available.
+- `make test-file FILE=<repository-relative path>` runs one declared test file.
+- FLEXT and flext-infra integrate on `0.12.0-dev`. Sibling product repos integrate on `develop`.
+- Land the submodule commit first, then move the umbrella gitlink in a separate commit.
+- Gas City owns its worktrees: a sweep only preserves (commits and pushes) anything under `<city>/.gc/worktrees/`; `.worktree-stale` means gc resets and keeps the tree, and `gc-*`/`polecat/*` branches are pushed but never deleted by a sweep.
+- Fleet WIP may never be lost: dirty checkouts are committed to branches and pushed, stashes become branches, and only work already superseded against the integration branch is retired.

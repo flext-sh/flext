@@ -15,88 +15,74 @@ if TYPE_CHECKING:
 
 
 class ExamplesFlextRootConstants:
-    """Canonical namespace owner."""
+    """Examples constants facade — access via ExamplesFlextRootConstants.*."""
 
-    class FlextRootExamplesConstants:
-        """Examples constants facade — access via FlextRootExamplesConstants.*."""
+    MIN_OID_ACL_ATTRIBUTES: int = 2
+    EXPECTED_OID_ACL_COUNT: int = 2
+    MAX_VALUE_LENGTH: int = 100
 
-        MIN_OID_ACL_ATTRIBUTES: int = 2
-        EXPECTED_OID_ACL_COUNT: int = 2
-        MAX_VALUE_LENGTH: int = 100
+    class Stage(StrEnum):
+        """Processing stage enumeration used across pipeline examples."""
 
-        class Stage(StrEnum):
-            """Processing stage enumeration used across pipeline examples."""
+        VALIDATE = "validate"
+        PROCESS = "process"
+        ANALYZE = "analyze"
 
-            VALIDATE = "validate"
-            PROCESS = "process"
-            ANALYZE = "analyze"
+    @unique
+    class WorkflowStage(StrEnum):
+        """Processing stage enumeration used across complete-workflow examples."""
 
-        @unique
-        class WorkflowStage(StrEnum):
-            """Processing stage enumeration used across complete-workflow examples."""
+        VALIDATION = "validation"
+        PROCESSING = "processing"
+        ANALYSIS = "analysis"
+        AGGREGATION = "aggregation"
 
-            VALIDATION = "validation"
-            PROCESSING = "processing"
-            ANALYSIS = "analysis"
-            AGGREGATION = "aggregation"
+    @unique
+    class ErrorMessages(StrEnum):
+        """Runtime error message constants for example execution."""
 
-        @unique
-        class ErrorMessages(StrEnum):
-            """Runtime error message constants for example execution."""
+        LDIF_NO_ENTRIES = "LDIF parser produced no entries"
+        ACL_PERMISSION_NOT_GRANTED = (
+            "LDIF ACL example did not grant the declared permission"
+        )
+        OID_INSUFFICIENT_ATTRIBUTES = (
+            "OID server declared fewer than two ACL attributes"
+        )
+        OID_ACL_ATTRIBUTE_LOST = "OID ACL example lost a declared attribute"
+        ADVANCED_NO_ANALYSIS = "advanced example produced no analysis"
+        COMPLETE_NO_CONTENT = "complete workflow produced no content"
 
-            LDIF_NO_ENTRIES = "LDIF parser produced no entries"
-            ACL_PERMISSION_NOT_GRANTED = (
-                "LDIF ACL example did not grant the declared permission"
-            )
-            OID_INSUFFICIENT_ATTRIBUTES = (
-                "OID server declared fewer than two ACL attributes"
-            )
-            OID_ACL_ATTRIBUTE_LOST = "OID ACL example lost a declared attribute"
-            ADVANCED_NO_ANALYSIS = "advanced example produced no analysis"
-            COMPLETE_NO_CONTENT = "complete workflow produced no content"
+    class JsonMappingSequenceHelper:
+        """Helper to extract sequence of JsonMapping from JsonValue."""
 
-        class JsonMappingOrNoneHelper:
-            """Helper to extract JsonMapping from JsonValue."""
+        @staticmethod
+        def extract(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
+            if not isinstance(value, Sequence) or isinstance(
+                value,
+                (str, bytes, bytearray),
+            ):
+                return ()
+            mappings: MutableSequence[t.JsonMapping] = []
+            for item in value:
+                if isinstance(item, Mapping):
+                    mappings.append(dict(item.items()))
+            return tuple(mappings)
 
-            @staticmethod
-            def extract(value: t.JsonValue) -> t.JsonMapping | None:
-                if not isinstance(value, Mapping):
-                    return None
-                return dict(value.items())
+    class StringSequenceHelper:
+        """Helper to extract string sequence from JsonValue."""
 
-        class JsonMappingSequenceHelper:
-            """Helper to extract sequence of JsonMapping from JsonValue."""
-
-            @staticmethod
-            def extract(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
-                if not isinstance(value, Sequence) or isinstance(
-                    value,
-                    (str, bytes, bytearray),
-                ):
-                    return ()
-                mappings: MutableSequence[t.JsonMapping] = []
-                for item in value:
-                    if isinstance(item, Mapping):
-                        mappings.append(dict(item.items()))
-                return tuple(mappings)
-
-        class StringSequenceHelper:
-            """Helper to extract string sequence from JsonValue."""
-
-            @staticmethod
-            def extract(value: t.JsonValue) -> t.StrSequence:
-                if not isinstance(value, Sequence) or isinstance(
-                    value,
-                    (str, bytes, bytearray),
-                ):
-                    return ()
-                strings: MutableSequence[str] = []
-                for item in value:
-                    if isinstance(item, str):
-                        strings.append(item)
-                return tuple(strings)
-
-    Stage = FlextRootExamplesConstants.Stage
+        @staticmethod
+        def extract(value: t.JsonValue) -> t.StrSequence:
+            if not isinstance(value, Sequence) or isinstance(
+                value,
+                (str, bytes, bytearray),
+            ):
+                return ()
+            strings: MutableSequence[str] = []
+            for item in value:
+                if isinstance(item, str):
+                    strings.append(item)
+            return tuple(strings)
 
 
 __all__: list[str] = ["ExamplesFlextRootConstants"]

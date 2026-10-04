@@ -21,7 +21,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, ClassVar
 
-from examples import FlextRootExamplesConstants, m, p, t, u
+from examples import ExamplesFlextRootConstants, m, p, t, u
 from flext_core import r
 
 if TYPE_CHECKING:
@@ -67,7 +67,7 @@ class FlextRootCompleteWorkflowExample:
         )
         content: t.JsonMapping = u.Field(default_factory=dict)
 
-    Stage = FlextRootExamplesConstants.WorkflowStage
+    Stage = ExamplesFlextRootConstants.WorkflowStage
 
     class WorkflowContext(m.BaseModel):
         """Complete workflow context with correlation and metadata."""
@@ -159,12 +159,12 @@ class FlextRootCompleteWorkflowExample:
         """Workflow orchestrator coordinating the full stage pipeline."""
 
         STAGE_PARAMS: ClassVar[
-            t.MappingKV[FlextRootExamplesConstants.WorkflowStage, tuple[float, str]]
+            t.MappingKV[ExamplesFlextRootConstants.WorkflowStage, tuple[float, str]]
         ] = {
-            FlextRootExamplesConstants.WorkflowStage.VALIDATION: (0.005, "validated"),
-            FlextRootExamplesConstants.WorkflowStage.PROCESSING: (0.01, "processed"),
-            FlextRootExamplesConstants.WorkflowStage.ANALYSIS: (0.005, "analyzed"),
-            FlextRootExamplesConstants.WorkflowStage.AGGREGATION: (0.0, "aggregated"),
+            ExamplesFlextRootConstants.WorkflowStage.VALIDATION: (0.005, "validated"),
+            ExamplesFlextRootConstants.WorkflowStage.PROCESSING: (0.01, "processed"),
+            ExamplesFlextRootConstants.WorkflowStage.ANALYSIS: (0.005, "analyzed"),
+            ExamplesFlextRootConstants.WorkflowStage.AGGREGATION: (0.0, "aggregated"),
         }
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
@@ -482,7 +482,7 @@ class FlextRootCompleteWorkflowExample:
         def _process_stage(
             self,
             item: t.JsonMapping,
-            stage: FlextRootCompleteWorkflowExample.Stage,
+            stage: ExamplesFlextRootConstants.WorkflowStage,
             context: FlextRootCompleteWorkflowExample.WorkflowContext,
             extra_logic: Callable[[t.JsonMapping], t.JsonMapping] | None = None,
         ) -> t.JsonMapping:
