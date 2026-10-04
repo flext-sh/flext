@@ -76,11 +76,8 @@ class ExamplesFlextRootConstants:
                     return ()
                 mappings: MutableSequence[t.JsonMapping] = []
                 for item in value:
-                    mapping_item = ExamplesFlextRootConstants.FlextRootExamplesConstants.JsonMappingOrNoneHelper.extract(
-                        item
-                    )
-                    if mapping_item is not None:
-                        mappings.append(mapping_item)
+                    if isinstance(item, Mapping):
+                        mappings.append(dict(item.items()))
                 return tuple(mappings)
 
         class StringSequenceHelper:
