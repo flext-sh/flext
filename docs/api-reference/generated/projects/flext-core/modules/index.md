@@ -2,8 +2,6 @@
 
 <!-- TOC START -->
 
-- No sections found
-
 <!-- TOC END -->
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
@@ -13,6 +11,7 @@ These pages are generated from public modules and their docstrings.
 - [flext_core.api](api.md)
 - [flext_core.base](base.md)
 - [flext_core.cli](cli.md)
+- [flext_core.config_sources](config_sources.md)
 - [flext_core.constants](constants.md)
 - [flext_core.container](container.md)
 - [flext_core.context](context.md)
