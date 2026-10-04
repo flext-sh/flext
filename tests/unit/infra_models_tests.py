@@ -10,9 +10,9 @@ from json import dumps
 from pathlib import Path
 
 import pytest
-from flext_tests import tm
 
-from flext import c, m
+from flext import c, m, t
+from flext_tests import tm
 from tests.infra import TestsFlextRootModels
 
 
@@ -40,12 +40,14 @@ class TestsFlextRootInfraModels:
                 tm.that(current.module_name, eq=module_name)
                 tm.that(current.relative_path, eq=relative_path)
             tm.that(restored.model_dump(), eq=value.model_dump())
-            tm.that(isinstance(restored, m.Value), eq=True)
+            tm.that(m.Value in type(restored).__mro__, eq=True)
             tm.that(type(restored) is model, eq=True)
 
             schema = model.model_json_schema()
             required = {
-                name for name, field in model.model_fields.items() if field.is_required()
+                name
+                for name, field in model.model_fields.items()
+                if field.is_required()
             }
             tm.that(set(schema["required"]), eq=required)
             for name in ("anchor_file", "module_name", "relative_path"):
@@ -63,7 +65,8 @@ class TestsFlextRootInfraModels:
                     eq=True,
                 )
 
-            for invalid_path in (None, {}, []):
+            invalid_paths: t.VariadicTuple[t.JsonValue] = (None, {}, [])
+            for invalid_path in invalid_paths:
                 payload = value.model_dump(mode="json")
                 payload["anchor_file"] = invalid_path
                 with pytest.raises(c.ValidationError):
