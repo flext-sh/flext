@@ -1,5 +1,28 @@
 # FLEXT Utilities Usage Guide
 
+<!-- TOC START -->
+
+- [Overview](#overview)
+- [Utilities Architecture](#utilities-architecture)
+  - [Inheritance Hierarchy](#inheritance-hierarchy)
+  - [Import Pattern (MANDATORY)](#import-pattern-mandatory)
+- [Centralized Utilities in flext-core](#centralized-utilities-in-flext-core)
+  - [String conversion](#string-conversion)
+  - [Sequence conversion](#sequence-conversion)
+  - [Configuration-derived inputs](#configuration-derived-inputs)
+- [Project-Specific Utilities](#project-specific-utilities)
+  - [flext-ldif Utilities (extending flext-core)](#flext-ldif-utilities-extending-flext-core)
+  - [flext-ldap Utilities (extending flext-ldif)](#flext-ldap-utilities-extending-flext-ldif)
+  - [flext-cli Utilities (extending flext-core)](#flext-cli-utilities-extending-flext-core)
+- [Best Practices](#best-practices)
+- [Adding New Utilities](#adding-new-utilities)
+  - [When to Add to flext-core](#when-to-add-to-flext-core)
+  - [How to Add](#how-to-add)
+- [Quality Standards](#quality-standards)
+- [See Also](#see-also)
+
+<!-- TOC END -->
+
 ## Overview
 
 Use the owning package's public `u` facade. `flext-core` owns generic conversions

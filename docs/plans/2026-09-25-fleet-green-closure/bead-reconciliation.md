@@ -11,8 +11,6 @@ identities, and exit evidence below are unchanged.
 
 <!-- TOC START -->
 
-- No sections found
-
 <!-- TOC END -->
 
 The active coordination item named by repository authority is `aihub-l42it`. Preserve

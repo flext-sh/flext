@@ -1,5 +1,36 @@
 # FLEXT Type System Architecture Guide
 
+<!-- TOC START -->
+
+- [Overview](#overview)
+- [Type System Hierarchy](#type-system-hierarchy)
+  - [Project Dependency Order](#project-dependency-order)
+  - [Architecture Layering within Projects](#architecture-layering-within-projects)
+- [Canonical Type Patterns](#canonical-type-patterns)
+  - [Simple type contracts](#simple-type-contracts)
+  - [Validated models at boundaries](#validated-models-at-boundaries)
+  - [Protocol-based consumer interfaces](#protocol-based-consumer-interfaces)
+  - [Result contracts](#result-contracts)
+- [Namespace Architecture](#namespace-architecture)
+  - [Standard Namespace Structure](#standard-namespace-structure)
+  - [Namespace Organization by Project](#namespace-organization-by-project)
+  - [Models Namespace Architecture (m.\*)](#models-namespace-architecture-m)
+- [Covariance and Variance Rules](#covariance-and-variance-rules)
+  - [Covariance (Subtype Compatibility)](#covariance-subtype-compatibility)
+  - [Protocol Return Types](#protocol-return-types)
+  - [Type Parameter Bounds](#type-parameter-bounds)
+- [Protocol Design](#protocol-design)
+  - [Protocol Organization Rules](#protocol-organization-rules)
+- [TypeVar Organization](#typevar-organization)
+- [Migration Guide](#migration-guide)
+  - [Migrating from Old Patterns to New](#migrating-from-old-patterns-to-new)
+- [Best Practices](#best-practices)
+- [Project Status](#project-status)
+- [Summary](#summary)
+- [See Also](#see-also)
+
+<!-- TOC END -->
+
 ## Overview
 
 FLEXT separates type aliases (`t`), dependency protocols (`p`), and validated data

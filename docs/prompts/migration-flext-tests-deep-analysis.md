@@ -530,6 +530,7 @@ Todos os testes devem ser marcados explicitamente:
 
 ```python
 import pytest
+
 from flext_core import m
 from flext_tests import tm
 
@@ -689,19 +690,22 @@ find . -name "conftest.py" | wc -l # Deve retornar 1 (apenas em ~/flext)
 **Exemplos:**
 
 ```python
-# tests/unit/test_user.py
-class TestsLdapUser:
-    """Testes de unidade para User do flext-ldap."""
+from flext_core import m
+from flext_tests import tm
 
 
-# tests/unit/services/test_entry.py
-class TestsLdapServicesEntry:
-    """Testes de unidade para Entry service do flext-ldap."""
+class TestsDocument:
+    """Exercise public model serialization without a synthetic domain class."""
+
+    @staticmethod
+    def test_roundtrip() -> None:
+        """Check that JSON serialization preserves the validated record."""
+        document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+        restored = m.ConfigDocument.model_validate_json(document.model_dump_json())
+        tm.that(restored.model_dump(mode="json"), eq=document.model_dump(mode="json"))
 
 
-# tests/integration/test_sync.py
-class TestsLdapSync:
-    """Testes de integração para Sync do flext-ldap."""
+TestsDocument.test_roundtrip()
 ```
 
 #### 6. Organização de Unit Tests
@@ -717,14 +721,29 @@ class TestsLdapSync:
 2. **Uma única classe por arquivo:**
 
    ```python
-   # ✅ CORRETO
-   # tests/unit/test_user.py
-   class TestsLdapUser:
-       def test_create_user(self):
-           pass
+   from flext_core import m, r, settings
+   from flext_tests import tm
 
-       def test_validate_user(self):
-           pass
+
+   class TestsDocument:
+       """Group real public behavior checks in one test class."""
+
+       @staticmethod
+       def test_roundtrip() -> None:
+           """Check model serialization through its public boundary."""
+           document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+           restored = m.ConfigDocument.model_validate_json(document.model_dump_json())
+           tm.that(restored.model_dump(mode="json"), eq=document.model_dump(mode="json"))
+
+       @staticmethod
+       def test_settings_input() -> None:
+           """Check result composition with the same typed settings owner."""
+           result = r[bool].ok(settings.debug)
+           tm.that(result.unwrap(), eq=settings.debug)
+
+
+   TestsDocument.test_roundtrip()
+   TestsDocument.test_settings_input()
    ```
 
 3. **Automação máxima com conftest:**
@@ -760,12 +779,26 @@ class TestsLdapSync:
 **Exemplo:**
 
 ```python
-# tests/fixtures/users.py
-def generate_user_data(count: int = 1) -> t.SequenceOf[dict]:
-    """Gera dados de usuário para testes."""
+from flext_core import m, p, t
+from flext_tests import tm
+
+
+def generate_documents(count: int) -> t.SequenceOf[p.Model]:
+    """Build independent validated records from an explicit fixture input.
+
+    Returns:
+        Model instances consumed through their serialization protocol.
+    """
     return [
-        {"name": f"User {i}", "email": f"user{i}@example.com"} for i in range(count)
+        m.ConfigDocument(data={"name": f"example-{index}"}) for index in range(count)
     ]
+
+
+count = 3
+documents = generate_documents(count)
+tm.that(documents, len=count)
+for document in documents:
+    tm.that(document.model_dump(mode="json"), keys=["data"])
 ```
 
 #### 8. Conftest Centralizado
@@ -781,25 +814,24 @@ def generate_user_data(count: int = 1) -> t.SequenceOf[dict]:
 - ✅ Classes base avançadas de pytest
 - ✅ Automação máxima para mínimo de código
 
-**Exemplo de estrutura:**
+The historical empty container and yield-only fixture were not implementations.
+Use the existing public resource fixture for real setup and teardown. This
+independent example writes a validated record through `tf.files`, reads it back,
+and checks the runtime knob against its typed SSOT. It does not construct a
+second container, claim a directory/database connection, or freeze the debug
+setting. Put the corresponding typed fixture in the current owner rather than
+creating another `conftest.py` from this dated inventory.
 
 ```python
-# ~/flext/conftest.py
-import pytest
+from flext_core import m, settings
+from flext_tests import tf, tm
 
-
-@pytest.fixture(scope="session")
-def test_container():
-    """Container de dependências para testes."""
-    # Automação completa
-
-
-@pytest.fixture
-def setup_test_environment():
-    """Setup automático para cada teste."""
-    # Automação completa
-    yield
-    # Cleanup automático
+document = m.ConfigDocument(data={"debug": settings.debug})
+with tf.files({"settings-input.json": document}) as paths:
+    restored = m.ConfigDocument.model_validate_json(
+        paths["settings-input.json"].read_text(encoding="utf-8"),
+    )
+    tm.that(restored.data["debug"], eq=settings.debug)
 ```
 
 #### 9. Priorização de Refatoração

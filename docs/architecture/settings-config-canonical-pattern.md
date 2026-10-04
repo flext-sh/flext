@@ -1,5 +1,17 @@
 # Canonical Settings & Config Pattern (ADR-005 companion guide)
 
+<!-- TOC START -->
+
+- [Contract and ownership](#contract-and-ownership)
+- [Read settings through the public owner](#read-settings-through-the-public-owner)
+- [Read configuration through its typed domain](#read-configuration-through-its-typed-domain)
+- [Declaration and loading boundaries](#declaration-and-loading-boundaries)
+- [Publication and change procedure](#publication-and-change-procedure)
+- [Consumer boundaries](#consumer-boundaries)
+- [See Also](#see-also)
+
+<!-- TOC END -->
+
 ## Contract and ownership
 
 [ADR-005](adr/005-config-settings-constants-templates-schemas-ssot.md) owns the

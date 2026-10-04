@@ -15,8 +15,6 @@ running any historical command below.
 
 <!-- TOC START -->
 
-- No sections found
-
 <!-- TOC END -->
 
 This directory is the file-owned continuation authority for the active fleet closure. It

@@ -3,12 +3,12 @@
 <!-- TOC START -->
 
 - [R1 — Facade-Only Import Grammar (Consumer Legality)](#r1-facade-only-import-grammar-consumer-legality)
-  - [R1a — Lazy-Init Re-Export Derivation (how pkg.**all** is built)](#r1a-lazy-init-re-export-derivation-how-pkg__all__-is-built)
+  - [R1a — Lazy-Init Re-Export Derivation (how pkg.\_\_all\_\_ is built)](#r1a-lazy-init-re-export-derivation-how-pkg__all__-is-built)
 - [R1b — MRO OO Facade Composition (Namespace-Matched Access)](#r1b-mro-oo-facade-composition-namespace-matched-access)
 - [R2 — No Duplication (Structural Scan)](#r2-no-duplication-structural-scan)
 - [R3 — Layer Law (Declaration vs Behavior)](#r3-layer-law-declaration-vs-behavior)
 - [R4 — Gates as Products (Budget + Primitives)](#r4-gates-as-products-budget-primitives)
-- [R5 — Release Consumption (Versioning + AI_HUB_CONSUMER)](#r5-release-consumption-versioning-ai_hub_consumer)
+- [R5 — Release Consumption (Versioning + AI\_HUB\_CONSUMER)](#r5-release-consumption-versioning-ai_hub_consumer)
 - [R6 — Contribution Path Law](#r6-contribution-path-law)
 - [Canonical Sources](#canonical-sources)
 - [Anti-Hardcode Law (Enforcement)](#anti-hardcode-law-enforcement)
