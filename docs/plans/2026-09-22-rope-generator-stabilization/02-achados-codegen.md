@@ -4,6 +4,10 @@
 
 # Findings — Codegen engine, templates and governing ADRs
 
+Historical paths use `${HOME}` for the recorded operator home directory. Their
+suffixes, revisions, and measurements are unchanged; they are not live checkout
+recommendations. Resolve the active lane from the tracker before any command.
+
 <!-- TOC START -->
 
 - [1. Engine location and surfaces](#1-engine-location-and-surfaces)
@@ -16,7 +20,7 @@
 <!-- TOC END -->
 
 Date: 2026-09-22. Sources: live read-only inspection of
-`/home/marlonsc/flext/flext-infra` (main checkout, near origin tip) and the worktree
+`${HOME}/flext/flext-infra` (main checkout, near origin tip) and the worktree
 copy, `config/codegen.yaml`, template tree, representative member `flext-ldif`, and ADRs
 010/014/016/017/018.
 

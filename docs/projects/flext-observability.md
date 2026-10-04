@@ -42,19 +42,23 @@ pip install flext-observability
 ```
 
 ```python
-from flext_observability import flext_monitor_function, observability, u
+from flext_observability import flext_monitor_function, observability
 
-metric = observability.flext_metric("cpu_usage", 42.0, "percent")
-if metric.success:
-    u.Cli.print(metric.value.name, metric.value.value)
+metric = observability.flext_metric("cpu_usage", 42.0, "percent").unwrap()
+print(metric.name, metric.value)
 
 
 @flext_monitor_function(metric_name="data.work")
 def work(data: str) -> str:
-    return data
+    """Normalize a caller's label while recording execution metrics.
+
+    Returns:
+        The uppercase label.
+    """
+    return data.upper()
 
 
-work("payload")
+print(work("payload"))
 ```
 
 The `flext_metric`, `flext_trace`, `flext_alert`, `flext_health_check`, and

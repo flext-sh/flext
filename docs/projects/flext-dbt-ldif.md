@@ -40,17 +40,21 @@ workflows, and assesses data quality.
 From the workspace root, run `make setup`, `make check`, and `make test`.
 
 ```python
-from flext_dbt_ldif import FlextDbtLdif
+from flext_dbt_ldif import FlextDbtLdif, settings
 
-api = FlextDbtLdif.fetch_instance()  # shared facade; settings from the global singleton
+api = FlextDbtLdif(settings=settings)
 
-# End-to-end: parse the LDIF export, generate dbt models, optionally run them.
-result = api.process_ldif_file(
-    "exports/directory.ldif", generate_models=True, run_transformations=False
-)
-if result.success:
-    quality = api.validate_ldif_quality("exports/directory.ldif")
+source = settings.DbtLdif.ldif_file_path
+workflow = api.process_ldif_file(
+    source, generate_models=True, run_transformations=False,
+).unwrap()
+quality = api.validate_ldif_quality(source).unwrap()
+print(workflow.model_dump(mode="json"), quality.model_dump(mode="json"))
 ```
+
+Provide an existing LDIF export through typed settings and a writable configured
+dbt output project before execution. This performs real model generation and
+quality assessment without running transformations or hiding failures.
 
 Focused entry points on the same facade:
 `generate_ldif_models(ldif_file, overwrite=False)` (model metadata generation only) and

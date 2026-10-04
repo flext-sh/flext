@@ -1,803 +1,249 @@
 # FLEXT Type System Architecture Guide
 
-<!-- TOC START -->
-
-- [Table of Contents](#table-of-contents)
-- [Overview](#overview)
-- [Type System Hierarchy](#type-system-hierarchy)
-  - [Project Dependency Order](#project-dependency-order)
-  - [Architecture Layering within Projects](#architecture-layering-within-projects)
-- [Canonical Type Patterns](#canonical-type-patterns)
-  - [Pattern 1: Simple Type Contract (No Namespace Needed)](#pattern-1-simple-type-contract-no-namespace-needed)
-  - [Pattern 2: Domain Collection Type (Nested Namespace)](#pattern-2-domain-collection-type-nested-namespace)
-  - [Pattern 3: TypeVar Bounded to Protocol (Avoiding Circular Imports)](#pattern-3-typevar-bounded-to-protocol-avoiding-circular-imports)
-  - [Pattern 4: Union → Protocol (Complexity Reduction)](#pattern-4-union-protocol-complexity-reduction)
-  - [Pattern 5: Covariance in Protocols](#pattern-5-covariance-in-protocols)
-  - [Pattern 6: TypeVar Reuse (Centralized)](#pattern-6-typevar-reuse-centralized)
-- [Namespace Architecture](#namespace-architecture)
-  - [Standard Namespace Structure](#standard-namespace-structure)
-  - [Namespace Organization by Project](#namespace-organization-by-project)
-  - [Models Namespace Architecture (m.\*)](#models-namespace-architecture-m)
-- [Covariance and Variance Rules](#covariance-and-variance-rules)
-  - [Covariance (Subtype Compatibility)](#covariance-subtype-compatibility)
-  - [Protocol Return Types (Always Covariant)](#protocol-return-types-always-covariant)
-  - [Type Parameter Bounds (Always Covariant)](#type-parameter-bounds-always-covariant)
-- [Protocol Design](#protocol-design)
-  - [Protocol Organization Rules](#protocol-organization-rules)
-- [TypeVar Organization](#typevar-organization)
-  - [Centralized TypeVars (flext-core)](#centralized-typevars-flext-core)
-  - [Domain-Specific TypeVars (When Necessary)](#domain-specific-typevars-when-necessary)
-- [Migration Guide](#migration-guide)
-  - [Migrating from Old Patterns to New](#migrating-from-old-patterns-to-new)
-- [Best Practices](#best-practices)
-  - [1. Use Complete Namespace Always](#1-use-complete-namespace-always)
-  - [2. No cast(), tipagem frouxa, ou TYPE_CHECKING](#2-no-cast-tipagem-frouxa-ou-type_checking)
-  - [3. Covariant Protocols for Read-Only](#3-covariant-protocols-for-read-only)
-  - [4. TypeVar with Proper Bounds](#4-typevar-with-proper-bounds)
-  - [5. Namespace Depth Management](#5-namespace-depth-management)
-- [Project Status](#project-status)
-  - [✅ Completed Projects](#completed-projects)
-  - [Type System Metrics](#type-system-metrics)
-  - [Validation Results](#validation-results)
-- [Summary](#summary)
-
-<!-- TOC END -->
-
-**Version**: 1.0.0 **Last Updated**: 2025-12-10 **Scope**: Complete FLEXT ecosystem type
-system **Status**: Specification and reference
-
----
-
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Type System Hierarchy](#type-system-hierarchy)
-3. [Canonical Type Patterns](#canonical-type-patterns)
-4. [Namespace Architecture](#namespace-architecture)
-5. [Covariance and Variance Rules](#covariance-and-variance-rules)
-6. [Design](#protocol-design)
-7. [TypeVar Organization](#typevar-organization)
-8. [Migration Guide](#migration-guide)
-9. [Best Practices](#best-practices)
-10. [Project Status](#project-status)
-
----
-
 ## Overview
 
-The FLEXT type system provides a unified, composable type architecture across the core
-FLEXT projects:
+FLEXT separates type aliases (`t`), dependency protocols (`p`), and validated data
+models (`m`). These public facades have different responsibilities; none is a
+substitute for another. Import them from the owning package root, not its private
+family modules.
 
-1. **flext-core** - Foundation library with TypeVars, Protocols, and base types
-2. **flext-cli** - Command-line interface with CLI-specific types
-3. **flext-ldif** - LDIF processing domain library
-4. **flext-ldap** - LDAP operations library
-
-**Key Principles**:
-
-- **2-level namespace maximum**: `t.Domain.Concept` (never
-  `t.Domain.Concern.SubConcern.Type`)
-- **Covariance first**: Use `Mapping`/`Iterable` instead of `dict`/`Sequence` in
-  protocols
-- **Single source of truth**: No duplicate type definitions across namespace levels
-- **Protocol-based design**: Complex unions → Protocols for extensibility
-- **TypeVar centralization**: Use flext-core TypeVars, add domain-specific only when
-  necessary
-- **Complete namespace always**: Never use root-level aliases or convenience methods
-
----
+Each Python example is independent and includes its imports and input data.
+Examples demonstrate the public contract, not a fleet-wide validation result.
+They require execution in the candidate environment through the documentation
+validation route before they can be cited as runtime evidence.
 
 ## Type System Hierarchy
 
 ### Project Dependency Order
 
-```text
-flext-core (Foundation - No dependencies)
-    ↓
-flext-cli (depends on flext-core)
-flext-ldif (depends on flext-core)
-    ↓
-flext-ldap (depends on flext-core, flext-ldif)
-```
+`flext-core` owns the foundation contracts. `flext-cli` extends core;
+`flext-ldif` consumes core and CLI; `flext-ldap` consumes those foundations and
+LDIF. Dependencies point toward the foundation, never from core to a consumer.
 
 ### Architecture Layering within Projects
 
-**Tier 0 - Foundation (ZERO internal dependencies)**:
+The facade order is `c -> t -> p -> m -> u`. Config/settings are layer-0 owners:
+settings reads external runtime inputs, and config owns validated business rules.
+Forward dependencies may be runtime imports. Reverse dependencies must remain
+typing-only and must not create unresolved runtime model annotations.
 
-- `constants.py` - StrEnum, Final, Literal definitions only
-- `typings.py` - Type aliases, TypeVars
-- `protocols.py` - Interface definitions (Protocol classes)
-
-**Tier 1 - Domain Foundation**:
-
-- `models.py` - Pydantic models (depends on: constants, typings, protocols)
-- `utilities.py` - Helper functions (depends on: constants, typings, protocols, models)
-
-**Tier 2 - Infrastructure**:
-
-- `services/*.py` - Business logic (depends on: Tier 0, Tier 1)
-
-**Tier 3 - Application**:
-
-- `api.py` - Facade/API (depends on: all lower tiers)
-- CLI/commands modules (depends on: all lower tiers)
-
----
+Declarations belong to constants, typings, protocols, and models. Utilities and
+services own behavior, the public API wires dependencies explicitly, and the CLI
+adapts transport input and output. Generated facade files are projections; change
+their canonical owners and regenerate rather than editing the projections.
 
 ## Canonical Type Patterns
 
-### Pattern 1: Simple Type Contract (No Namespace Needed)
+### Simple type contracts
 
-**When**: Single-purpose type, used rarely, clearly scoped
-
-```python
-# Use canonical contracts from runtime facades (never bare generic types)
-type ScalarLike = t.Scalar
-
-# Usage: keep values in strict canonical contracts
-result: m.Domain.ValueModel = json_value
-```
-
-### Pattern 2: Domain Collection Type (Nested Namespace)
-
-**When**: Related collection types for same domain
+Reuse an existing alias when it already expresses the contract. The core owner
+declares `t.Scalar`, `t.StrSequence`, and `t.MappingKV` among its public aliases.
+Do not introduce a duplicate domain alias for the same meaning.
 
 ```python
-class FlextCliTypes:
-    class Cli:
-        class Data:
-            # Collection types grouped by domain
-            type RowData = t.MappingKV[str, m.Cli.RowModel]
-            type CellContent = t.Primitives | None
+from flext_core import t, u
+
+label: t.Scalar = "example"
+names: t.StrSequence = ("first", "second")
+print(label, u.join(names, separator=", "))
 ```
 
-### Pattern 3: TypeVar Bounded to Protocol (Avoiding Circular Imports)
+### Validated models at boundaries
 
-**When**: Need generic type but importing Protocol causes circular dependency
+Use an `m` preset for owned model declarations. Consumers construct the actual
+public model, not an imagined `m.Domain.InputModel` or `m.Tests.ValueModel`.
+
+`m.ConfigDocument` is the existing frozen record for parsed configuration data
+and optional source/schema references. This sample is a record serialization
+round-trip, not an installation of application settings or business rules.
 
 ```python
-# In typings.py (Tier 0)
-FlextFlextDemoMigrationEntryT = TypeVar(
-    "FlextFlextDemoMigrationEntryT", bound="fldif.Ldif.Entry"
-)
+from flext_core import m
 
-
-# In protocols.py (Tier 0) - declare actual protocol
-@runtime_checkable
-class EntryService[T: "fldif.Ldif.Entry"](Protocol):
-    """Service for entry operations with generic type parameter."""
-
-    def get(
-        self, dn: str
-    ) -> "FlextDemoMigrationProtocols.FlextDemoMigration.Result[T]": ...
+document = m.ConfigDocument.model_validate_json('{"data":{"label":"example"}}')
+serialized = document.model_dump_json()
+restored = m.ConfigDocument.model_validate_json(serialized)
+print(restored.model_dump(mode="json"))
 ```
 
-### Pattern 4: Union → Protocol (Complexity Reduction)
+The model owner supplies validation and defaults. Do not copy those defaults
+into expectations or turn a mapping into a second data contract. JSON enters via
+`model_validate_json`; model serialization happens at the output boundary.
 
-**When**: Multiple Callable variants (3+ combinations)
+### Protocol-based consumer interfaces
+
+Use the smallest existing protocol that provides the capability consumed by the
+function. For example, `p.Model` describes model-instance serialization and
+copying; it is not the concrete model constructor.
 
 ```python
-# ❌ BEFORE: 5 union variants (complex, less extensible)
-type ProgressCallback = (
-    Callable[[int], None]
-    | Callable[[int, int], None]
-    | Callable[[int, int, str], None]
-    | Callable[[m.Cli.ProgressEventModel], None]
-    | Callable[[Exception], None]
-)
+from flext_core import m, p, t
 
 
-# ✅ AFTER: Protocol-based (extensible, maintainable)
-@runtime_checkable
-class ProgressCallback(Protocol):
-    """Flexible callback protocol for progress tracking."""
+def serialize_model(value: p.Model) -> t.JsonDict:
+    """Serialize a validated model through its public instance protocol.
 
-    def __call__(self, event: m.Cli.ProgressEventModel) -> None:
-        """Accept any arguments for maximum flexibility."""
+    Returns:
+        The model's JSON-compatible output mapping.
+    """
+    return value.model_dump(mode="json")
+
+
+document = m.ConfigDocument.model_validate_json('{"data":{"label":"example"}}')
+print(serialize_model(document))
 ```
 
-### Pattern 5: Covariance in Protocols
+The composition root supplies the validated instance. The consumer does not
+resolve a dependency by string, access a container singleton, or import a private
+implementation.
 
-**Rule**: Read-only protocols use `Mapping`/`Iterable`, not `dict`/`Sequence`
+### Result contracts
+
+Annotate consumer results through `p.Result` and construct them through `r`.
+Do not use a result as permission to accept an unvalidated payload or manufacture
+success after a failure.
 
 ```python
-# ❌ WRONG: Invariant dict (rejects Mapping-compatible inputs)
-class DataProvider(Protocol):
-    def get_data(self) -> t.MappingKV[str, m.Tests.ValueModel]: ...
+from flext_core import p, r
 
-
-# ✅ CORRECT: Covariant Mapping (accepts multiple mapping implementations)
-class DataProvider(Protocol):
-    def get_data(self) -> t.MappingKV[str, m.Tests.ValueModel]: ...
-
-
-# Usage: Works with any dict subtype
-def process_data(provider: DataProvider) -> None:
-    # Provider can return t.IntMapping, t.StrMapping, etc.
-    data = provider.get_data()
+result: p.Result[str] = r[str].ok("example")
+print(result.unwrap())
 ```
-
-### Pattern 6: TypeVar Reuse (Centralized)
-
-**Rule**: Use flext-core TypeVars, add domain-specific only when absolutely necessary
-
-```python
-# ✅ CORRECT: Use centralized TypeVars from flext-core
-from flext_core import t
-
-T = T  # Generic type variable
-M = t.M  # Generic mapping type
-S = t.S  # Generic sequence type
-R = t.R  # Generic result type
-E = t.E  # Generic exception type
-
-# ❌ WRONG: Creating redundant domain-specific TypeVars
-FlextCliCommandT = TypeVar("FlextCliCommandT", bound="CliCommand")  # NO - use generic T
-FlextCliOutputT = TypeVar("FlextCliOutputT")  # NO - use generic R
-```
-
----
 
 ## Namespace Architecture
 
 ### Standard Namespace Structure
 
-```python
-# CORRECT: 2-level maximum nesting
-class FlextTypes:
-    class Core:
-        type Result[T] = r[T]
-
-    class Utilities:
-        type SettingsData = t.MappingKV[str, m.Tests.SettingsEntryModel]
-
-
-# Usage
-result: t.Tests.Result[bool] = ok_result
-data: t.Utilities.SettingsData = {"key": m.Tests.SettingsEntryModel(value="value")}
-
-
-# ❌ WRONG: Over-nesting (3+ levels)
-class FlextTypes:
-    class Domain:
-        class Subdomain:
-            class Details:
-                type SomeType = str  # TOO DEEP!
-```
+Core aliases and presets may be published directly on their facades. Domain
+declarations use their published domain namespace, for example `m.Ldif.Entry`.
+The spelling is determined by the declaring owner, not by a blanket rule that
+every symbol must have an extra namespace level.
 
 ### Namespace Organization by Project
 
-**flext-core**:
+Use the project's facade to inherit upstream contracts and expose its own domain
+declarations. A namespaced alias does not justify a second definition at another
+level. Keep family declarations flat and use MRO composition as specified by
+[ADR-014](architecture/adr/014-family-part-shape-rope-codemod-rules.md).
 
-```text
-t.Tests                      # Foundation (Result, Settings, Handler)
-t.Utilities                 # Reusable (Json, Collection, Validation)
-t.Exceptions                # Error types
-t.Constants                 # Enum definitions
-t.Decorators                # Type decorators
-```
+### Models Namespace Architecture (m.*)
 
-**flext-cli**:
+An owned model extends an appropriate public `m` preset, such as `m.FrozenModel`
+or `m.StrictBoundaryModel`, rather than a raw Pydantic base at a consumer.
+Choose the preset for the actual validation/mutability contract. Resolve its
+annotations at the declaration owner; `model_rebuild` is not an import repair.
 
-```text
-t.Cli                       # CLI-specific
-  .Data                     # Data structures (Tables, Progress)
-  .Output                   # Output formats (Table, JSON, YAML)
-  .Auth                     # Authentication
-```
-
-**flext-ldif**:
-
-```text
-t.Ldif                      # LDIF domain
-  .Entry                    # Entry types
-  .Attribute                # Attribute types
-  .Schema                   # Schema types
-  .ModelMetadata            # Model metadata
-```
-
-**flext-ldap**:
-
-```text
-t.Ldap                      # LDAP operations
-  .Client                   # Client types
-  .Connection               # Connection types
-  .Operation                # Operation types
-t.Ldap.Protocol             # Infrastructure (ldap3 wrappers)
-```
-
-### Models Namespace Architecture (m.\*)
-
-**CRITICAL RULE**: Models follow **2-level maximum** namespace: `m.Domain.Class` (not
-`m.Domain.Concern.SubClass`)
-
-**Pattern**: Domain-level classes directly in namespace, no nested sub-namespaces
-
-```python
-# ✅ CORRECT: 2-level namespace (flext-cli examples)
-m.Cli.SystemInfo  # CLI-specific system info model
-m.Cli.SessionStatistics  # CLI session statistics
-m.Cli.CommandStatistics  # CLI command statistics
-m.Cli.CliCommand  # CLI command model
-m.Cli.CliSession  # CLI session model
-
-# ✅ CORRECT: Module-level aliases for common classes
-
-# ❌ WRONG: Over-nesting (3+ levels - PROHIBITED)
-m.Cli.Value.SystemInfo  # TOO DEEP - violates 2-level rule
-m.Cli.Data.Command.Execution  # TOO DEEP - nested sub-concerns
-
-# ❌ WRONG: Root-level aliases without domain
-m.SystemInfo  # Missing domain context (m.Cli.*)
-m.Statistics  # Ambiguous - which domain?
-```
-
-**Models Organization by Project**:
-
-**flext-core**:
-
-```text
-m.Settings                    # Configuration models
-m.ProcessingSettings          # Processing-specific settings
-m.RuntimeScopeOptions       # Runtime options
-m.Options                   # Generic options
-```
-
-**flext-cli**:
-
-```text
-m.Cli                       # CLI domain
-  .CliCommand               # Command model
-  .CliSession               # Session model
-  .CliSettings                # CLI configuration
-  .SystemInfo               # System information (module alias available)
-  .EnvironmentInfo          # Environment info (module alias available)
-  .PathInfo                 # Path information (module alias available)
-  .CommandStatistics        # Command stats (module alias available)
-  .SessionStatistics        # Session stats (module alias available)
-  .ServiceExecutionResult   # Service result (module alias available)
-```
-
-**flext-ldif**:
-
-```text
-m.Ldif                      # LDIF domain
-  .Entry                    # LDIF entry
-  .Attribute                # LDIF attribute
-  .Schema                   # LDIF schema
-```
-
-**flext-ldap**:
-
-```text
-m.Ldap                      # LDAP domain
-  .Connection               # Connection model
-  .Operation                # Operation model
-  .Result                   # Operation result
-```
-
----
+Do not annotate a consumer with a concrete model when a `p` capability or a `t`
+alias is the declared boundary. Construct and validate through `m`; consume
+through the appropriate protocol.
 
 ## Covariance and Variance Rules
 
 ### Covariance (Subtype Compatibility)
 
-```python
-# Example: t.BoolMapping should be compatible with t.MappingKV[str, m.Tests.ValueModel]
+`t.MappingKV` is backed by `collections.abc.Mapping`, and `t.SequenceOf` is backed
+by `collections.abc.Sequence`. Both are read-only contracts with covariance in
+their value/item parameter. `dict` and mutable collections are invariant. Sequence
+is not invariant merely because it is more restrictive than Iterable.
 
-# ❌ INVARIANT - WRONG
-def process_dict(data: t.MappingKV[str, m.Tests.ValueModel]) -> None: ...
-
-
-result: t.BoolMapping = {"ok": True}
-process_dict(result)  # Type error: dict is invariant
-
-# ✅ COVARIANT - CORRECT
-
-
-def process_mapping(data: t.MappingKV[str, m.Tests.ValueModel]) -> None: ...
-
-
-result: t.BoolMapping = {"ok": True}
-process_mapping(result)  # OK: Mapping is covariant
-```
-
-### Protocol Return Types (Always Covariant)
+Select `t.IterableOf` when the operation only needs iteration, `t.SequenceOf` when
+it needs sequence operations, and a mutable alias only when mutation is required.
 
 ```python
-# ✅ CORRECT: Return type uses covariant Mapping
-@runtime_checkable
-class DataProvider(Protocol):
-    def get_attributes(self) -> t.MappingKV[str, t.StrSequence]:
-        """Returns read-only attributes - covariant."""
+from flext_core import t, u
 
-
-# Implementation can return more specific dict type
-class MyProvider:
-    def get_attributes(self) -> t.MappingKV[str, t.StrSequence]:
-        return {"cn": ["test"], "mail": ["user@example.com"]}
-
-
-provider: DataProvider = MyProvider()  # OK: dict is assignable to Mapping
+tuple_names: t.StrSequence = ("first", "second")
+list_names: t.StrSequence = ["first", "second"]
+print(u.join(tuple_names), u.join(list_names))
 ```
 
-### Type Parameter Bounds (Always Covariant)
+### Protocol Return Types
 
-```python
-# ✅ CORRECT: Use Iterable (covariant) not Sequence (invariant)
-@runtime_checkable
-class ItemProcessor(Protocol):
-    def process_items(self, items: Iterable[str]) -> None:
-        """Accepts any iterable source."""
+Return a read-only collection contract when callers only read it. Covariance
+does not make unrelated element types compatible: a Boolean mapping is not a
+mapping of arbitrary Pydantic models. A protocol also does not make calls with
+different argument counts interchangeable.
 
+### Type Parameter Bounds
 
-# ❌ WRONG: Sequence is invariant
-@runtime_checkable
-class ItemProcessor(Protocol):
-    def process_items(self, items: t.StrSequence) -> None:
-        """Too restrictive - can't accept list subclasses."""
-```
-
----
+A bound specifies capabilities required of a type parameter; it does not imply
+covariance. Python's PEP 695 syntax expresses generic parameters locally. Reuse
+the existing public aliases instead of inventing `t.M`, `t.S`, or `t.R` exports
+based on an old TypeVar inventory. Add a generic abstraction only when its
+consumer needs it.
 
 ## Protocol Design
 
 ### Protocol Organization Rules
 
-**Rule 1**: Protocols NEVER import Models, Settings, or concrete classes
+- Declare the exact operations consumed at a dependency boundary.
+- Keep implementation dependencies out of protocol declarations. Respect the
+  facade dependency direction for any annotations.
+- Use `runtime_checkable` only for a deliberate runtime structural check. Such
+  a check verifies member presence, not payload validation or every annotation.
+- Use `Self` only for an operation whose real implementation returns itself;
+  do not invent fluent methods to illustrate chaining.
+
+The existing `p.Model` protocol is runtime-checkable. A validated public model
+can be inspected without a local duplicate protocol definition:
 
 ```python
-# ✅ CORRECT: Protocols only import other Protocols
-from typing import Protocol
+from flext_core import m, p
 
-
-@runtime_checkable
-class Entry(Protocol):
-    dn: str
-    attributes: t.MappingKV[str, t.StrSequence]
-
-
-# ❌ WRONG: Don't import concrete classes
-from flext_ldif import Entry  # NO
-
-
-@runtime_checkable
-class Entry(Protocol):
-    entry: Entry  # NO - creates circular dependency
+document = m.ConfigDocument.model_validate_json('{"data":{"label":"example"}}')
+print(isinstance(document, p.Model))
 ```
-
-**Rule 2**: Protocol Composition (Extends)
-
-```python
-# ✅ CORRECT: Protocols extend other protocols
-@runtime_checkable
-class ReadableEntry(Protocol):
-    """Read-only entry access."""
-
-    @property
-    def dn(self) -> str: ...
-
-
-@runtime_checkable
-class MutableEntry(ReadableEntry, Protocol):
-    """Mutable entry with write operations."""
-
-    def set_attribute(self, name: str, values: t.StrSequence) -> Self: ...
-```
-
-**Rule 3**: @runtime_checkable for isinstance() Checks
-
-```python
-# ✅ CORRECT: Use @runtime_checkable for runtime validation
-from typing import Protocol, runtime_checkable
-
-
-@runtime_checkable
-class Entry(Protocol):
-    dn: str
-    attributes: t.MappingKV[str, t.StrSequence]
-
-
-# Can now use isinstance() at runtime
-if isinstance(obj, Entry):
-    u.Cli.print(f"DN: {obj.dn}")
-```
-
-**Rule 4**: Self Type for Method Chaining
-
-```python
-# ✅ CORRECT: Use Self for fluent interface
-from typing import Self
-
-
-@runtime_checkable
-class MutableEntry(Protocol):
-    def set_attribute(self, name: str, values: t.StrSequence) -> Self:
-        """Returns self for method chaining."""
-
-
-# Usage: Fluent interface
-entry.set_attribute("mail", ["new@example.com"]).add_attribute("cn", ["User"])
-```
-
----
 
 ## TypeVar Organization
 
-### Centralized TypeVars (flext-core)
-
-```python
-# flext-core/src/flext_core/typings.py
-
-# Generic type variables (reuse in all projects)
-T = TypeVar("T")  # Generic type
-M = TypeVar("M")  # Generic mapping/model
-S = TypeVar("S")  # Generic sequence
-R = TypeVar("R")  # Generic result
-E = TypeVar("E", bound=BaseException)  # Generic exception
-P = TypeVar("P")  # Generic protocol
-U = TypeVar("U")  # Generic utility
-
-# Bound TypeVars
-FlextModelT = TypeVar("FlextModelT", bound="FlextModels.Model")
-FlextServiceT = TypeVar("FlextServiceT", bound="s")
-```
-
-### Domain-Specific TypeVars (When Necessary)
-
-```python
-# ✅ ONLY add domain TypeVars if truly specialized
-# Example: a workspace-specific migration package has specialized entry types
-
-FlextFlextDemoMigrationEntryT = TypeVar(
-    "FlextFlextDemoMigrationEntryT",
-    bound="fldif.Ldif.Entry",  # Protocol-bound to avoid circular imports
-)
-
-# ❌ DON'T create redundant TypeVars
-FlextCliCommandT = TypeVar("FlextCliCommandT")  # NO - use T
-FlextCliOutputT = TypeVar("FlextCliOutputT")  # NO - use R
-```
-
----
+Prefer the canonical aliases and declared generic protocols. An unresolved
+quoted bound does not solve a circular dependency, and `TYPE_CHECKING` does not
+provide names required when a model evaluates its annotations at runtime.
+Repair the owning declaration and dependency direction; never add lazy imports,
+compatibility aliases, or `model_rebuild` in a consumer.
 
 ## Migration Guide
 
 ### Migrating from Old Patterns to New
 
-#### Migration 1: Union → Protocol
+Replace a duplicate alias with the existing canonical owner and rewire all
+consumers in the same change. Do not retain an old nested alias for several
+releases. Replace unions of incompatible callbacks only with a protocol whose
+actual callers and implementations agree on one signature.
 
-**Before**:
-
-```python
-type ProgressCallback = (
-    Callable[[int], None] | Callable[[int, int], None] | Callable[[int, int, str], None]
-)
-
-
-def track_progress(callback: ProgressCallback) -> None:
-    callback(50)
-    callback(50, 100)
-    callback(50, 100, "processing")
-```
-
-**After**:
-
-```python
-@runtime_checkable
-class ProgressCallback(Protocol):
-    def __call__(self, event: m.Cli.ProgressEventModel) -> None: ...
-
-
-def track_progress(callback: ProgressCallback) -> None:
-    callback(50)
-    callback(50, 100)
-    callback(50, 100, "processing")
-```
-
-**Benefits**: Extensible, clearer intent, supports any argument combination
-
----
-
-#### Migration 2: dict → Mapping in Protocols
-
-**Before**:
-
-```python
-@runtime_checkable
-class AttributeProvider(Protocol):
-    def get_attributes(self) -> t.MappingKV[str, t.StrSequence]: ...
-
-
-# Can only accept exact t.MappingKV[str, t.StrSequence]
-result: t.BoolMapping = {"ok": True}
-provider.get_attributes()  # May fail type check
-```
-
-**After**:
-
-```python
-@runtime_checkable
-class AttributeProvider(Protocol):
-    def get_attributes(self) -> t.MappingKV[str, t.StrSequence]: ...
-
-
-# Can accept any dict subtype or Mapping implementation
-result: t.BoolMapping = {"ok": True}
-provider.get_attributes()  # Works with covariance
-```
-
-**Benefits**: Better type compatibility, standard library alignment
-
----
-
-#### Migration 3: Duplicate Aliases → Single Source of Truth
-
-**Before**:
-
-```python
-# typings.py (Tier 0)
-class FlextLdapTypes:
-    class Ldap:
-        type ModifyChanges = t.MappingKV[str, t.SequenceOf[tuple[str, t.StrSequence]]]
-
-    class Ldap:
-        class Operation:
-            type ModifyChanges = t.MappingKV[
-                str, t.SequenceOf[tuple[str, t.StrSequence]]
-            ]  # DUPLICATE
-
-
-# Confusion: Which one to use?
-```
-
-**After**:
-
-```python
-# typings.py (Tier 0) - Single definition
-class FlextLdapTypes:
-    class Ldap:
-        type ModifyChanges = t.MappingKV[str, t.SequenceOf[tuple[str, t.StrSequence]]]
-
-        # Backward compatibility (remove after 2-3 releases)
-        class Operation:
-            ModifyChanges = Ldap.ModifyChanges
-
-
-# Clear: One source of truth
-```
-
-**Benefits**: No redundancy, easier maintenance, clearer dependencies
-
----
+Model construction is not a cast. Parse at the external boundary, pass the
+validated model through its protocol, and serialize only when leaving the use
+case. Do not copy the previous guide's incomplete class bodies or demonstration
+calls that reference undefined models.
 
 ## Best Practices
 
-### 1. Use Complete Namespace Always
-
-```python
-# ✅ CORRECT
-from flext_ldif import m
-
-entry = m.Ldif.Entry(dn="cn=test")
-attributes = m.Ldif.AttributeDict()
-
-# ❌ WRONG - Convenience aliases
-entry = m.Entry(dn="cn=test")  # NO
-attributes = m.AttributeDict()  # NO
-```
-
-### 2. No cast(), tipagem frouxa, ou TYPE_CHECKING
-
-```python
-# ✅ CORRECT: Use Models and Protocols
-def process_model(
-    data: t.MappingKV[str, m.Domain.InputModel],
-) -> p.Result[m.Domain.OutputModel]:
-    return r.ok(SomeModel(data))
-
-
-# ❌ WRONG: cast() hides type issues
-def process_model(
-    data: t.MappingKV[str, m.Domain.InputModel],
-) -> p.Result[m.Domain.OutputModel]:
-    return r.ok(cast(SomeModel, data))
-
-
-# ❌ WRONG: TYPE_CHECKING (fix circular import instead)
-```
-
-### 3. Covariant Protocols for Read-Only
-
-```python
-# ✅ CORRECT: Mapping for read-only
-def read_attributes(attrs: t.MappingKV[str, t.StrSequence]) -> None:
-    for key, values in attrs.items():
-        u.Cli.print(f"{key}: {values}")
-
-
-# ❌ WRONG: dict for read-only (invariant)
-def read_attributes(attrs: t.MappingKV[str, t.StrSequence]) -> None:
-    for key, values in attrs.items():
-        u.Cli.print(f"{key}: {values}")
-```
-
-### 4. TypeVar with Proper Bounds
-
-```python
-# ✅ CORRECT: Clear bounds
-T = TypeVar("T")  # Generic any type
-M = TypeVar("M", bound="FlextModels.Model")  # Specific bound
-E = TypeVar("E", bound=BaseException)  # Exception bound
-
-# ❌ WRONG: Unclear or missing bounds
-T = TypeVar("T", int, str, bool)  # Limited union (use overloads)
-M = TypeVar("M")  # Missing bound
-```
-
-### 5. Namespace Depth Management
-
-```python
-# ✅ CORRECT: Max 2 levels
-t.Cli.Output  # OK: 2 levels
-t.Ldif.Entry.Attribute  # ❌ 3 levels - flatten to t.Ldif.Attribute
-
-# ❌ WRONG: Over-nesting
-t.Cli.UI.Components.Display.Table  # NO: 5 levels!
-t.Ldif.Entry.Transformation  # NO: 4 levels!
-```
-
----
+- Import only published package-root symbols.
+- Reuse `t` aliases, `p` protocols, and `m` presets at their intended boundaries.
+- Read configurable facts from the same typed SSOT production consumes. Never
+  assert today's configured values in a test or executable document.
+- Keep declaration layers free of business behavior and inject service
+  dependencies explicitly at the API composition root.
+- Remove superseded definitions and examples instead of preserving a parallel
+  compatibility surface.
 
 ## Project Status
 
-### ✅ Completed Projects
-
-| Project        | Tier 0 | Tier 1 | Tier 2 | Status                  |
-| -------------- | ------ | ------ | ------ | ----------------------- |
-| **flext-core** | ✅     | ✅     | ✅     | Reference template      |
-| **flext-cli**  | ✅     | ✅     | ✅     | Consolidated namespaces |
-| **flext-ldif** | ✅     | ✅     | ✅     | Validated               |
-| **flext-ldap** | ✅     | ✅     | ✅     | Variance fixed          |
-
-### Type System Metrics
-
-- **Total TypeVars**: 26 (centralized in flext-core)
-- **Total Protocols**: 155+ across all projects
-- **Type Aliases**: 180+ with PEP 695 syntax
-- **Duplicate Aliases**: 0 (eliminated in CYCLE 4)
-- **Architecture Violations**: 0 (Tier 0 modules validated)
-- **Covariance Issues**: 0 (fixed in CYCLE 5)
-- **Namespace Depth**: Max 2 levels across all projects
-
-### Validation Results
-
-```text
-flext-core:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
-flext-cli:       Pyright: 0 errors | Ruff: ✅ | Tests: ✅
-flext-ldif:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
-flext-ldap:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
-```
-
----
+This guide defines contracts; it does not certify every project as lint-clean or
+type-safe. The former fixed counts and blanket green matrix were not current
+validation evidence. Acceptance requires the candidate SHA, physical environment,
+canonical command, exit status, warnings, and decisive report for each declared
+scope.
 
 ## Summary
 
-The FLEXT type system provides a **unified, composable, and extensible** architecture
-across the core projects with:
+Aliases describe values, protocols describe capabilities, and models validate
+owned data. Reuse their public owners without duplicating contracts or reversing
+dependencies. Validate the executable examples and the changed documentation
+through the root Make lifecycle; never relabel code to evade a failing check.
 
-1. **Consistent namespace patterns** - 2-level maximum depth
-2. **Proper covariance** - Protocols use `Mapping`/`Iterable`
-3. **Single source of truth** - No duplicate aliases
-4. **Extensible design** - Protocols instead of complex unions
-5. **Zero architectural violations** - Tier 0 modules have no internal imports
-6. **Complete type safety** - No `cast()`, tipagem frouxa, ou blocos `TYPE_CHECKING`
-7. **Comprehensive validation** - All projects pass type checking and linting
+## See Also
 
-This architecture enables maintainable, type-safe code across the entire FLEXT ecosystem
-while supporting future extensions and domain-specific requirements.
-
----
-
-**Document Status**: Complete and ready for reference **Last Validation**: 2025-12-10
-**Next Review**: When new type patterns emerge or architecture decisions change
+- [Utilities usage](utilities-guide.md)
+- [Architecture decisions](architecture/adr/)
+- [Stabilization checkpoint](ways-of-working/stabilization-checkpoint-0.12.md)

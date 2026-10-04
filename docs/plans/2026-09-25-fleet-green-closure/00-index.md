@@ -8,6 +8,11 @@ coordination_item: aihub-l42it
 
 # FLEXT fleet green closure handoff
 
+This is the dated 2026-09-25 handoff, not current execution authority. Paths use
+`${HOME}` for the recorded operator home directory; suffixes and evidence are
+unchanged. Resolve the current lane and authorization from the tracker before
+running any historical command below.
+
 <!-- TOC START -->
 
 - No sections found
@@ -35,6 +40,6 @@ The first authorized repository effect is the selector-free command below. It re
 full suite that was deliberately interrupted while this handoff was created.
 
 ```bash
-cd /home/marlonsc/fleet-closure-lanes/infra-convergence-20260925/flext-infra
+cd "${HOME}/fleet-closure-lanes/infra-convergence-20260925/flext-infra"
 rtk make test
 ```

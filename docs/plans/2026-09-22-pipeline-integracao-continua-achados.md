@@ -4,6 +4,10 @@
 
 # Achados da auditoria — Concluir o pipeline com integração contínua e prova real
 
+Historical paths use `${HOME}` for the recorded operator home directory. Their
+suffixes, revisions, and measurements are unchanged; they are not live checkout
+recommendations. Resolve the active lane from the tracker before any command.
+
 <!-- TOC START -->
 
 - [A. Estado real da integração](#a-estado-real-da-integracao)
@@ -45,9 +49,9 @@ integração FLEXT, contrato `.venv`, `make mod`, pipeline AI Hub (ccs/CLIProxy)
 
 | Workspace                                                                   | Branch @ HEAD                                                                                                                 | Estado                                                                                                                                                                                                                                                                                                                                            |
 | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/home/marlonsc/flext` (principal)                                          | `0.12.0-dev` @ `daa51e8822`                                                                                                   | **Avançou durante a auditoria** (`1e59a9d493` → `daa51e8822`, "update submodules to latest gitlinks", 2026-09-22 12:23:14 -03, reflog) — outro agente estava commitando na raiz. Sem merge aberto; 2 drifts de gitlink unstaged (`flext-core`, `flext-tests`); `flext-core` 4 dirty, `flext-tests` 2 dirty.                                       |
-| `/home/marlonsc/flext-worktrees/rope-recovery-20260921` (**a recuperação**) | `recovery/rope-automation-20260921` @ `a17f35a1ed` "[WIP] preserve workspace generation and incremental integration contract" | **MERGE ABERTO**: `MERGE_HEAD=1e59a9d493` (a revisão de entrada), merge-base `9229858e21`. Status: 51 entradas = **31 UU (gitlinks)** + 15 M + 4 A. Conflito de documento restante: `docs/ways-of-working/worker-lane-contract.md` (ours 147 linhas, theirs 145). Cada membro tem checkout próprio no branch `recovery/rope-automation-20260921`. |
-| `/home/marlonsc/flext-integration-20260922`                                 | `integration/beads-20260922` @ `fa9dd41cf7`                                                                                   | Stale: sem merge, 35 unstaged (31 gitlinks + 4 `__init__.py`), membros detached (ex. core @ `4534bb02e`). Não é o local da integração ativa.                                                                                                                                                                                                      |
+| `${HOME}/flext` (principal)                                          | `0.12.0-dev` @ `daa51e8822`                                                                                                   | **Avançou durante a auditoria** (`1e59a9d493` → `daa51e8822`, "update submodules to latest gitlinks", 2026-09-22 12:23:14 -03, reflog) — outro agente estava commitando na raiz. Sem merge aberto; 2 drifts de gitlink unstaged (`flext-core`, `flext-tests`); `flext-core` 4 dirty, `flext-tests` 2 dirty.                                       |
+| `${HOME}/flext-worktrees/rope-recovery-20260921` (**a recuperação**) | `recovery/rope-automation-20260921` @ `a17f35a1ed` "[WIP] preserve workspace generation and incremental integration contract" | **MERGE ABERTO**: `MERGE_HEAD=1e59a9d493` (a revisão de entrada), merge-base `9229858e21`. Status: 51 entradas = **31 UU (gitlinks)** + 15 M + 4 A. Conflito de documento restante: `docs/ways-of-working/worker-lane-contract.md` (ours 147 linhas, theirs 145). Cada membro tem checkout próprio no branch `recovery/rope-automation-20260921`. |
+| `${HOME}/flext-integration-20260922`                                 | `integration/beads-20260922` @ `fa9dd41cf7`                                                                                   | Stale: sem merge, 35 unstaged (31 gitlinks + 4 `__init__.py`), membros detached (ex. core @ `4534bb02e`). Não é o local da integração ativa.                                                                                                                                                                                                      |
 | `~/.worktrees/flext-infra-fix-20260921`                                     | —                                                                                                                             | Prunable (diretório vazio).                                                                                                                                                                                                                                                                                                                       |
 | `~/.worktrees/flext-infra-dedup-20260921`                                   | —                                                                                                                             | Worktree do módulo flext-infra, não do superprojeto.                                                                                                                                                                                                                                                                                              |
 
@@ -176,11 +180,11 @@ Dono canônico (header dos 32 Makefiles): `flext-infra/config/codegen.yaml` +
 
 ### D.1 Workspaces
 
-- `/home/marlonsc/ai-hub` — branch `dev`, **clean**, @ `80c15e20f` (sync com
+- `${HOME}/ai-hub` — branch `dev`, **clean**, @ `80c15e20f` (sync com
   origin/dev).
-- `/home/marlonsc/ccs` — `main` @ `7a5f9875` (8.9.0-fd.17); dirty leve
+- `${HOME}/ccs` — `main` @ `7a5f9875` (8.9.0-fd.17); dirty leve
   (`.beads/config.yaml`, AGENTS/CLAUDE, backups mcp).
-- `/home/marlonsc/cliproxy` — branch `fix/quota-suspension-recovery` @ `c64dcefc`
+- `${HOME}/cliproxy` — branch `fix/quota-suspension-recovery` @ `c64dcefc`
   ("accept an empty direct-models projection per ADR-0023");
   **upstream `[gone]` — não publicado**.
 
@@ -284,5 +288,5 @@ Dono canônico (header dos 32 Makefiles): `flext-infra/config/codegen.yaml` +
 3. **cliproxy upstream `[gone]`** — publicar branch antes de qualquer integração que o
    referencie.
 4. **Live mutation na raiz** — reaveriguar o tip `daa51e8822` (e eventuais novos) antes
-   de cada lote: `git -C /home/marlonsc/flext log --oneline -3` + status; incorporar com
+   de cada lote: `git -C "${HOME}/flext" log --oneline -3` + status; incorporar com
    merge `--no-ff`.

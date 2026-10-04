@@ -57,6 +57,14 @@
 
 ## Objetivo
 
+This document retains the historical migration inventory below. Its old factory
+and builder tables are evidence of the requested migration, not a current export
+catalog or permission to restore removed APIs. The pinned public owner publishes
+`tm` and `tf`, not `tt`, `tb`, or `tv`. Resolve every migration from the current
+declaration and consumer contract; the independent Python examples use the live
+public owners and real input data. Never execute a retired call as the "before"
+half of an otherwise valid example.
+
 Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os projetos**
 do ecossistema FLEXT para identificar e corrigir **TODOS os usos de funções de
 `flext_tests` que estão fora do padrão atual e não suportadas**.
@@ -108,32 +116,33 @@ do ecossistema FLEXT para identificar e corrigir **TODOS os usos de funções de
 **tm.method():**
 
 ```python
-# ❌ ANTES
-tm.method(api, "connect")
+from flext_core import m, p
+from flext_tests import tm
 
-# ✅ DEPOIS
-tm.that(hasattr(api, "connect"), eq=True)
-tm.that(callable(getattr(api, "connect", None)), eq=True)
+document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+tm.that(isinstance(document, p.Model), eq=True)
+tm.that(document.model_dump(mode="json"), keys=["data"])
 ```
 
 **tm.dict\_():**
 
 ```python
-# ❌ ANTES
-tm.dict_(data, has_key="name", length=5)
+from flext_core import m
+from flext_tests import tm
 
-# ✅ DEPOIS
-tm.that(data, keys=["name"], length=5)
+document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+tm.that(document.data, keys=["name"], length=len(document.data))
 ```
 
 **tm.list\_():**
 
 ```python
-# ❌ ANTES
-tm.list_(items, contains="item", length=3)
+from flext_core import t, u
+from flext_tests import tm
 
-# ✅ DEPOIS
-tm.that(items, has="item", length=3)
+items: t.StrSequence = ("first", "second")
+converted = u.to_str_list(items)
+tm.that(converted, has=items[0], length=len(items))
 ```
 
 ### 2. tt (TestsFlextFactories) - Métodos Deprecados
@@ -178,25 +187,22 @@ tm.that(items, has="item", length=3)
 **tf.create_file_set():**
 
 ```python
-# ❌ ANTES
-files = tf.create_file_set({"file1.txt": "content1", "file2.txt": "content2"})
+from flext_tests import tf, tm
 
-# ✅ DEPOIS
-with tf.files({"file1.txt": "content1", "file2.txt": "content2"}) as files:
-    # usar files aqui
-    pass
+content = "example"
+with tf.files({"example.txt": content}) as paths:
+    tm.that(paths["example.txt"].read_text(encoding="utf-8"), eq=content)
 ```
 
 **tf.get_file_info():**
 
 ```python
-# ❌ ANTES
-info = tf.get_file_info(path)
+from flext_tests import tf, tm
 
-# ✅ DEPOIS
-info_result = tf.info(path)
-tm.ok(info_result)
-info = info_result.unwrap()
+with tf.files({"example.txt": "example"}) as paths:
+    manager = tf()
+    info = tm.ok(manager.info(paths["example.txt"]))
+    tm.that(info.exists, eq=True)
 ```
 
 ### 4. tv (TestsFlextValidator) - Verificar Uso Correto
@@ -222,38 +228,32 @@ info = info_result.unwrap()
 ### 1. Imports Incorretos
 
 ```python
-# ❌ ERRADO
-from flext_tests import TestsFlextMatchers
+from flext_core import r
+from flext_tests import tm
 
-tm = TestsFlextMatchers()
-
-# ✅ CORRETO
+payload = "example"
+tm.that(tm.ok(r[str].ok(payload)), eq=payload)
 ```
 
 ### 2. Uso de Métodos Privados ou Internos
 
 ```python
-# ❌ ERRADO - Métodos que começam com _
-tm._internal_method()
-tt._private_factory()
+from flext_core import r, settings
+from flext_tests import tm
 
-# ✅ CORRETO - Usar apenas métodos públicos
-tm.that(...)
-tt.model(...)
+result = r[bool].ok(settings.debug)
+tm.that(tm.ok(result), eq=settings.debug)
 ```
 
 ### 3. Uso de Classes Aninhadas Deprecadas
 
 ```python
-# ❌ ERRADO
-tb.Tests.Result.ok(value)
-tb.Tests.Model.user(...)
-tt.Result.ok(value)  # Se existir
-tt.Models.user(...)  # Se existir
+from flext_core import m, p, r
+from flext_tests import tm
 
-# ✅ CORRETO
-tt.res("ok", value=value)
-tt.model("user", ...)
+document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+result: p.Result[p.Model] = r[p.Model].ok(document)
+tm.that(tm.ok(result).model_dump(mode="json"), eq=document.model_dump(mode="json"))
 ```
 
 ### 4. Parâmetros Legacy/Deprecados
@@ -261,13 +261,13 @@ tt.model("user", ...)
 Alguns métodos podem aceitar parâmetros legacy que devem ser migrados:
 
 ```python
-# ❌ ERRADO - Parâmetros legacy
-tm.that(data, contains="key")  # Se 'contains' for legacy para dict
-tm.that(items, contains="item")  # Se 'contains' for legacy para list
+from flext_core import m, t, u
+from flext_tests import tm
 
-# ✅ CORRETO - Parâmetros modernos
-tm.that(data, keys=["key"])  # Para dict
-tm.that(items, has="item")  # Para list
+document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+items: t.StrSequence = ("first", "second")
+tm.that(document.data, keys=["name"])
+tm.that(u.to_str_list(items), has=items[0])
 ```
 
 ### 5. Uso de Métodos Não Documentados
@@ -433,22 +433,27 @@ Para cada uso encontrado:
 
 ### 1. Testes de Deprecation Warnings
 
-Arquivos que testam explicitamente os warnings de deprecation devem manter os métodos
-deprecados:
+Historical warning tests must be reconciled with the live public API. A removed
+matcher is not restored to manufacture a deprecation event. The independent
+example below checks that a current public matcher emits no warnings for valid
+input; it does not claim to test a retired method's warning contract:
 
 ```python
-# ✅ CORRETO - Teste de deprecation warning
-def test_deprecation_warning():
-    with warnings.catch_warnings(record=True) as w:
-        tm.eq(1, 1)  # Manter método deprecado para testar warning
-        assert len(w) == 1
-        assert issubclass(w[0].category, DeprecationWarning)
+import warnings
+
+from flext_tests import tm
+
+with warnings.catch_warnings(record=True) as recorded:
+    warnings.simplefilter("always")
+    tm.that("example", eq="example")
+    tm.that(recorded, length=0)
 ```
 
 ### 2. Código de Compatibilidade
 
-Se houver código de compatibilidade que precisa manter métodos deprecados
-temporariamente, documentar claramente.
+The historical instruction to keep compatibility methods is superseded by the
+current cutover contract: remove the old route and update its consumers together.
+Do not create aliases or fake factories solely to make these examples pass.
 
 ### 3. Métodos Internos Legítimos
 
@@ -524,16 +529,20 @@ pytest tests/ -v -W error::DeprecationWarning
 Todos os testes devem ser marcados explicitamente:
 
 ```python
-# ✅ CORRETO - Unit test
+import pytest
+from flext_core import m
+from flext_tests import tm
+
+
 @pytest.mark.unit
-def test_user_creation():
-    pass
+def test_document_roundtrip() -> None:
+    """Check the public model's serialization round-trip."""
+    document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+    restored = m.ConfigDocument.model_validate_json(document.model_dump_json())
+    tm.that(restored.model_dump(mode="json"), eq=document.model_dump(mode="json"))
 
 
-# ✅ CORRETO - Integration test
-@pytest.mark.integration
-def test_database_connection():
-    pass
+test_document_roundtrip()
 ```
 
 **Regras:**
@@ -562,25 +571,19 @@ def test_database_connection():
 1. **Classes base em `~/flext`** devem estender as de `flext_tests`:
 
    ```python
-   # ~/flext/constants.py
-   from flext_tests import FlextTestsConstants
+    from flext_tests import c
 
-
-   class FlextConstants(FlextTestsConstants):
-       """Constants base que estende flext_tests."""
-
-       pass
+    suffix = c.Tests.DEFAULT_EXTENSION
+    print(suffix)
    ```
 
 2. **Imports rápidos por projeto:**
 
    ```python
-   # Em cada projeto, criar namespaces fáceis:
-   from flext import c
-   from flext import m
-   from flext import t
-   from flext import p
-   from flext import u
+    from flext import t, u
+
+    labels: t.StrSequence = ("first", "second")
+    print(u.join(labels, separator=", "))
    ```
 
 3. **Domínios de teste por projeto:**
@@ -592,30 +595,15 @@ def test_database_connection():
 **Exemplo de estrutura:**
 
 ```python
-# ~/flext/models.py
-from flext_tests import TestsFlextModels
+from flext_core import m
+from flext_tests import tf, tm
 
-
-class FlextModels(TestsFlextModels):
-    """Models base que estende flext_tests."""
-
-    class TestsLdap:
-        """Domínio de testes para flext-ldap."""
-
-        class User:
-            pass
-
-    class TestsCli:
-        """Domínio de testes para flext-cli."""
-
-        class Command:
-            pass
-
-    class TestsCore:
-        """Domínio de testes para flext-core."""
-
-        class Service:
-            pass
+document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+with tf.files({"document.json": document}) as paths:
+    restored = m.ConfigDocument.model_validate_json(
+        paths["document.json"].read_text(encoding="utf-8"),
+    )
+    tm.that(restored.model_dump(mode="json"), eq=document.model_dump(mode="json"))
 ```
 
 #### 3. Migração de Classes Base

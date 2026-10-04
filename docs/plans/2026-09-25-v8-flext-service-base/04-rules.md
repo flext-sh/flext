@@ -1,5 +1,9 @@
 # 04 — Rules that apply at every step
 
+This records the dated V8 rules. `${HOME}` denotes the recorded operator home
+directory; the checkout suffix is preserved, not prescribed as the current
+execution lane. Current authority remains the branch-matched law and tracker.
+
 <!-- TOC START -->
 
 - [0. Engineering principles (blocking)](#0-engineering-principles-blocking)
@@ -29,7 +33,7 @@ principle is applied, never exceptions to it.
 | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
 | SOLID     | Each capability lives in its one correct owner (single responsibility); behavior extends by inheritance or composition of the owner, never by a rewrite beside it; contracts are narrow `p.*` protocols; callers depend on the protocol, not the concrete class | No method in the wrong layer (service behavior in `u`, behavior in declaration layers); no delegator, wrapper or local re-implementation of an owner's method; every moved method has all its callers rewired | §3.3, R14, R29, R31     |
 | SSOT      | One writable owner per fact: config/settings for values, one `StrEnum` in `c` for each closed vocabulary, one model per concept, one rule text per law                                                                                                          | Zero second derivation of the same fact (hardcoded list, parallel literal, duplicate model, duplicate rule numbering); generated surfaces change only through `make gen`                                      | §3.8–3.9, R26, R30, R32 |
-| YAGNI     | Only what a current consumer uses exists                                                                                                                                                                                                                        | Code, properties, helpers, fallbacks and stubs without a consumer are deleted in the same change, with their tests and docs; no skeleton facade, no-op `main()` or always-failing placeholder method          | R18, R27                |
+| YAGNI     | Only what a current consumer uses exists                                                                                                                                                                                                                        | Code, properties, helpers, fallbacks and stubs without a consumer are deleted in the same change, with their tests and docs; no skeleton facade, no-op `main()` or method that invariably fails without implementing a use case | R18, R27                |
 | CA        | Dependencies point inward along `c → t → p → m → u` and `api → services → adapters`; data crosses layers only as `m.*` models typed by `p.*` protocols                                                                                                          | No loose `dict`/tuple/`object`/`bool` payload across a boundary; no reverse import outside `TYPE_CHECKING`; no model-construction helper; validation lives in the model (Pydantic-2 native)                   | §3.1, R27, R28, R29     |
 | DI        | Services receive their collaborators as `t.Port[p.X]` ports built only by `api.py`; they never read global settings or construct adapters                                                                                                                       | No service-side construction of adapters, no global `settings`/`config` read inside a service, no `getattr`/`hasattr` capability probing in place of a declared protocol                                      | R12, R13, R16           |
 
@@ -160,7 +164,7 @@ and never introduces its own.
 
 ## 9. Tracker
 
-1. Beads through `direnv exec /home/marlonsc/flext bd …`; check `bd context --json`
+1. Beads through `direnv exec "${HOME}/flext" bd …`; check `bd context --json`
    before mutations.
 2. Claim before effects; update at every slice boundary.
 3. A newly observed red gets a bead (or a comment on its owner) in the same turn.

@@ -42,24 +42,29 @@ make check
 ```
 
 ```python
-from getpass import getpass
+import secrets
+from uuid import uuid4
 
 from flext_auth import FlextAuth
 
-password = getpass("Password: ")
+password = secrets.token_urlsafe()
+username = uuid4().hex
 
 auth = FlextAuth.quick_start(create_admin_user=False)
 
 created = auth.register_user(
-    username="demo", email="demo@example.com", password=password
-)
-created.unwrap()
+    username=username,
+    email=f"{username}@example.com",
+    password=password,
+).unwrap()
 
-session = auth.authenticate_user("demo", password)
-session.unwrap()
+session = auth.authenticate_user(username, password).unwrap()
+print(created.unique_id, session.unique_id)
 ```
 
-`FlextAuth.quick_start()` builds the facade with the built-in provider set;
+The sample creates a fresh in-memory identity with a generated credential; it
+does not install a reusable password or print a token. Failures propagate from
+`unwrap()`. `FlextAuth.quick_start()` builds the facade with the built-in provider set;
 `FlextAuth.fetch_global()` returns the process-wide singleton (`auth` alias). Providers
 implement the provider mixin/protocol and are registered through `FlextAuthRegistry`.
 

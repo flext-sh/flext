@@ -41,16 +41,21 @@ pip install flext-grpc
 ```
 
 ```python
-from flext_grpc import grpc
+from flext_grpc import grpc, settings
 
 setup = grpc.create_complete_setup(
-    host="127.0.0.1", port=50051, service_name="Greeter", methods=["SayHello"]
-)
-assert setup.is_success
+    host=settings.Grpc.host,
+    port=settings.Grpc.port,
+    service_name="Greeter",
+    methods=["SayHello"],
+).unwrap()
 
-server = setup.value.server
-client = setup.value.client
+print(setup.server.model_dump(mode="json"), setup.client.model_dump(mode="json"))
 ```
+
+This constructs typed setup entities; it does not start a listener or certify an
+RPC. Host and port come from typed settings; service and method names are
+caller-owned demonstration input.
 
 The facade also exposes granular builders — `create_server`, `create_client`,
 `create_channel`, `create_service` — plus `parse_address` and `validate_target` helpers;
