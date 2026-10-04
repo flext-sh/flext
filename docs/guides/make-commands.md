@@ -48,6 +48,19 @@ The consecutive generation passes prove the fixed point after structural rewrite
 Each verb executes its declared operation directly. No project, file, pattern, action,
 phase, fix, or changed-only selector may be attached to a standard verb.
 
+Setup provisions governed gitlinks before creating the runtime environment. Its shared
+owner is `flext-infra/src/flext_infra/templates/project/base/submodule_setup_recipe.j2`;
+`config.Infra.codegen.make.submodule_timeout_seconds` bounds native provisioning, and
+the root credential contract supplies authentication without logging the token.
+The recorded gitlink is the parent index entry, not the origin's moving branch tip.
+A `.git` marker alone does not prove materialization. Recovery of an unfinished initial
+clone must establish checkout identity, absence of a physical index and worktree
+content (including ignored files), and initial-clone provenance before provisioning.
+An existing empty index can represent intentional staged deletions and is not that
+initial state. Established checkouts retain their HEAD, index, files, and local work;
+setup verifies their pin ancestry without fetching or rewriting them. Ambiguous state
+fails visibly rather than authorizing forced recovery or a larger timeout.
+
 `make help` is the complete live inventory. Additional declared verbs such as `upg`,
 `docs`, `audit`, `status`, `waza`, `duplication`, and the release verbs retain their own
 single operation and are invoked only when their scope applies.
