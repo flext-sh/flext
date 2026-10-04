@@ -373,11 +373,10 @@ class FlextRootCompleteWorkflowExample:
                     ``p.Result[FlextRootCompleteWorkflowExample.WorkflowData]``.
 
             """
-            items = data
             stage_results: MutableSequence[
                 FlextRootCompleteWorkflowExample.WorkflowStageResult
             ] = []
-            current_data = items
+            current_data = data
             stage_functions = {
                 "validation": self._validate_items,
                 "processing": self._process_items,
@@ -419,10 +418,6 @@ class FlextRootCompleteWorkflowExample:
                 stage_results,
                 total_time,
             )
-            aggregated_metrics_payload: t.MutableJsonMapping = {}
-            for key, value in aggregated_metrics.items():
-                aggregated_metrics_payload[key] = value
-
             workflow_result = (
                 FlextRootCompleteWorkflowExample.CompleteWorkflowResult.model_validate({
                     "workflow_id": context.workflow_id,
@@ -444,10 +439,9 @@ class FlextRootCompleteWorkflowExample:
                 "total_processing_time": workflow_result.total_processing_time,
                 "performance_summary": dict(aggregated_metrics),
             })
-            summary_content: t.JsonMapping = {**summary}
             workflow_data = (
                 FlextRootCompleteWorkflowExample.WorkflowData.model_validate({
-                    "content": summary_content,
+                    "content": summary,
                 })
             )
             return r.ok(workflow_data)
