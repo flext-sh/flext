@@ -1,4 +1,4 @@
-# flext_oracle_wms.typings
+# flext_core.config_sources
 
 <!-- TOC START -->
 
@@ -6,7 +6,7 @@
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-::: flext_oracle_wms.typings
+::: flext_core.config_sources
 
     options:
       show_root_heading: true
