@@ -10,6 +10,7 @@ from collections.abc import Mapping
 
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
+from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
 
 import flext_ldif
 from flext_ldif import FlextLdif
@@ -21,6 +22,31 @@ class TestsFlextRootExamplesRuntime:
 
     class Tests:
         """Runtime behavior, including a failure path."""
+
+        @staticmethod
+        def test_complete_workflow_returns_completed_summary() -> None:
+            """The public workflow completes its stages and reports processed items.
+
+            Raises:
+                TypeError: If the performance summary is not a mapping.
+
+            """
+            result = FlextRootCompleteWorkflowExample.run_example()
+
+            tm.that(result.success, eq=True)
+            summary = result.unwrap().content
+            tm.that(bool(summary), eq=True)
+            tm.that(bool(summary["workflow_status"]), eq=True)
+            total_stages = summary["total_stages"]
+            tm.that(isinstance(total_stages, int) and total_stages > 0, eq=True)
+            tm.that(summary["completed_stages"], eq=total_stages)
+            performance = summary["performance_summary"]
+            if not isinstance(performance, Mapping):
+                message = "performance summary must be a mapping"
+                raise TypeError(message)
+            processed = performance["total_items_processed"]
+            tm.that(isinstance(processed, int) and processed > 0, eq=True)
+            tm.that(performance["total_items_succeeded"], eq=processed)
 
         @staticmethod
         def test_advanced_pipeline_executes_declared_stages() -> None:
