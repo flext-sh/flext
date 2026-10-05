@@ -2,8 +2,6 @@
 
 <!-- TOC START -->
 
-- No sections found
-
 <!-- TOC END -->
 
 Structural communities of the FLEXT workspace, detected from the code knowledge graph

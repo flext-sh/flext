@@ -4,6 +4,10 @@
 
 # Plan — Stabilize worktree, clone for generator validation, evolve generators
 
+Historical paths use `${HOME}` for the recorded operator home directory. Their
+suffixes, revisions, and measurements are unchanged; they are not live checkout
+recommendations. Resolve the active lane from the tracker before any command.
+
 <!-- TOC START -->
 
 - [Step 0 — Record the plan markdowns (first action after approval)](#step-0-record-the-plan-markdowns-first-action-after-approval)
@@ -35,7 +39,7 @@ repository law.
 
 ## Increment 1 — Stabilize the current worktree (full WIP adoption)
 
-Work in `/home/marlonsc/flext-worktrees/rope-recovery-20260921`, preserving and adopting
+Work in `${HOME}/flext-worktrees/rope-recovery-20260921`, preserving and adopting
 all WIP.
 
 1.1 Re-read the live state (never assume the handoff is current); review and stage
@@ -70,9 +74,9 @@ flext-tests #121, flext-web #99). Green exact-head CI; re-prove the integrated S
 ## Increment 2 — Clone as the generator test bed
 
 2.1 `git clone --no-hardlinks` the stabilized worktree to
-`/home/marlonsc/flext-worktrees/rope-generator-validation-20260922` (if it already
+`${HOME}/flext-worktrees/rope-generator-validation-20260922` (if it already
 exists, inspect and preserve before using); per member
-`git submodule update --init --reference /home/marlonsc/flext/.git/modules/<member>` so
+`git submodule update --init --reference "${HOME}/flext/.git/modules/<member>"` so
 local-only member commits resolve; verify `git submodule status` matches the checkpoint.
 2.2 `make setup` in the clone with `UV_PROJECT_ENVIRONMENT` and `VIRTUAL_ENV` pinned to
 the clone's `.venv` on every command; own venv and caches; no shared mutable state with
@@ -169,17 +173,17 @@ Appended below as increments land (command, cwd, exit code, decisive output).
 
 ### 2026-09-22 — Increment 2.1 (validation clone)
 
-- `git clone --no-hardlinks /home/marlonsc/flext-worktrees/rope-recovery-20260921 /home/marlonsc/flext-worktrees/rope-generator-validation-20260922`
+- `git clone --no-hardlinks "${HOME}/flext-worktrees/rope-recovery-20260921" "${HOME}/flext-worktrees/rope-generator-validation-20260922"`
   → HEAD `8dfe0ddb0e`, clean.
 - Per member
-  `git submodule update --init --reference /home/marlonsc/flext/.git/modules/<member>` →
+  `git submodule update --init --reference "${HOME}/flext/.git/modules/<member>"` →
   31/31 OK, 0 dirty; `git submodule status` SHAs == `git ls-tree HEAD` gitlinks (diff
   empty).
 - `make setup` started in the clone with `UV_PROJECT_ENVIRONMENT` and `VIRTUAL_ENV`
   pinned to the clone's `.venv` (evidence appended after completion).
 - `make setup` completed exit 0: CPython 3.13.11, `.venv` created in the clone, 286
   packages resolved, every member built editable from
-  `file:///home/marlonsc/flext-worktrees/rope-generator-validation-20260922/<member>`
+  the file URI of `${HOME}/flext-worktrees/rope-generator-validation-20260922/<member>`
   (log `/tmp/clone-setup.log`, session run 2026-09-22). Scratch/mise state mirrors the
   clone path (`.../rope-generator-validation-20260922/scratch/...`) — no shared mutable
   state with the delivery worktree.

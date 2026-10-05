@@ -41,23 +41,35 @@ pip install flext-ldap
 ```
 
 ```python
-from flext_ldap import ldap, m, u
+from flext_ldap import FlextLdap, m, settings
 
-connected = ldap.connect(m.Ldap.ConnectionConfig(host="ldap.example.com", port=389))
-assert connected.is_success
-
-result = ldap.search(
-    m.Ldap.SearchOptions(
-        base_dn="dc=example,dc=com",
-        filter_str="(objectClass=person)",
-        attributes=["uid", "cn", "mail"],
-    )
+api = FlextLdap()
+connection = m.Ldap.ConnectionConfig(
+    host=settings.Ldap.host,
+    port=settings.Ldap.port,
+    use_ssl=settings.Ldap.use_ssl,
+    use_tls=settings.Ldap.use_tls,
+    bind_dn=settings.Ldap.bind_dn,
+    bind_password=settings.Ldap.bind_password,
+    timeout=settings.Ldap.timeout,
+    auto_bind=settings.Ldap.auto_bind,
+    auto_range=settings.Ldap.auto_range,
 )
 
-if result.is_success:
-    for entry in result.value.entries:
-        u.Cli.print(entry.dn)
+try:
+    api.connect(connection).unwrap()
+    options = m.Ldap.SearchOptions.base_scope(settings.Ldap.bind_dn)
+    result = api.search(options).unwrap()
+    for entry in result.entries:
+        print(entry.dn)
+finally:
+    api.disconnect()
 ```
+
+This requires a real directory, a nonempty configured bind DN, and authorization
+to read that entry. Connection inputs come from typed `settings.Ldap`; the model
+factory owns the base-scope request. No synthetic directory or silent success
+branch replaces a real bind and search. Cleanup runs even on failure.
 
 `ldap` is the process-wide `FlextLdap` singleton (`FlextLdap.fetch_global()`);
 `m.Ldap.SearchOptions` defaults `scope` and `filter_str` to the constants in `c.Ldap`.
