@@ -782,9 +782,9 @@ Overall average: **60-90% token reduction** on common development operations.
 
 - Before changing code, search libraries, the project, worktrees, local and remote branches, and pull requests; adopt or cherry-pick existing lanes onto a branch cut from the latest integration tip, and fix-forward with `git merge --no-ff`. Do not rebase or force-push.
 - Dependency locks change only through `make upg`. `make setup` must still run when mise or uv has drifted, and must reconcile that drift inside setup.
-- New code is accepted only after `make fmt`, `make fix`, `make check`, `make mod`, and `make smells` are clean. Do not close a change while any of those gates fail.
+- New code is accepted only after `make fmt`, `make fix`, `make check`, `make mod`, and `make smells` are clean, and the change is proven to work. Do not close a change while any of those gates fail or while the diff adds lint or type violations.
 - Reassess beads one at a time: one `val<YYYYMMDDTHHMM>` label per remeasured bead, with evidence of command, working directory, exit status, and decisive output. Do not bulk-relabel.
-- Do not wait for CI to be green. `gh pr merge --admin` is authorized, then fix CI on the integration tip through flext-infra automation.
+- Keep the project and CI green at every step. `gh pr merge --admin` is authorized for a locally green slice without waiting on remote CI; fix any integration-tip breakage through flext-infra automation.
 - Reuse functions and owners that already exist in the imported projects and libraries; apply DI, DRY, YAGNI, and SSOT — invert dependencies, respect domain interfaces, and decouple instead of patching around a problem (no gambiarra).
 - Parallelize with multiple background agents and avoid heavy local processing; let CI do the heavy work and act on what it reports.
 
