@@ -4,6 +4,10 @@
 
 # Findings — Make surface, environment and clone mechanics
 
+Historical paths use `${HOME}` for the recorded operator home directory. Their
+suffixes, revisions, and measurements are unchanged; they are not live checkout
+recommendations. Resolve the active lane from the tracker before any command.
+
 <!-- TOC START -->
 
 - [1. Canonical verb surface](#1-canonical-verb-surface)
@@ -59,19 +63,19 @@ section, and the handoff note.
   time).
 - Correct procedure (authorized by the 2026-09-22 request):
 
-  1. `git clone --no-hardlinks /home/marlonsc/flext-worktrees/rope-recovery-20260921 /home/marlonsc/flext-worktrees/rope-generator-validation-20260922`
+  1. `git clone --no-hardlinks "${HOME}/flext-worktrees/rope-recovery-20260921" "${HOME}/flext-worktrees/rope-generator-validation-20260922"`
      (destination verified non-existent at plan time; if it appears, inspect and
      preserve its content before use).
   2. Per member:
 
      ```bash
      git submodule update --init \
-       --reference /home/marlonsc/flext/.git/modules/<member> <member-path>
+       --reference "${HOME}/flext/.git/modules/<member>" <member-path>
      ```
 
      Alternates supply the objects for every locally-recovered SHA; the GitHub URL only
      serves what alternates lack. The member object stores are shared through
-     `/home/marlonsc/flext/.git/modules/<name>` (worktree-linked gitdirs reuse the same
+     `${HOME}/flext/.git/modules/<name>` (worktree-linked gitdirs reuse the same
      objects), so all checkout SHAs resolve locally.
 
   3. Verify `git submodule status` in the clone equals the checkpoint recorded by the

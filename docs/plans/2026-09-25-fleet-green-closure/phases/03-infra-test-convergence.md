@@ -6,6 +6,10 @@ status: active
 
 # Phase 03: `flext-infra` test convergence and integration
 
+This records the 2026-09-25 phase, not its current status. `${HOME}` denotes the
+recorded operator home directory; the lane suffix, SHAs, and measurements below
+are unchanged. Reconcile the live tracker before resuming any step.
+
 <!-- TOC START -->
 
 - [Entry state](#entry-state)
@@ -17,7 +21,7 @@ status: active
 
 ## Entry state
 
-- Worktree: `/home/marlonsc/fleet-closure-lanes/infra-convergence-20260925/flext-infra`
+- Worktree: `${HOME}/fleet-closure-lanes/infra-convergence-20260925/flext-infra`
 - Branch: `fix/infra-green-convergence-20260925`
 - Local/published HEAD: `44b3381eaca295eeba280142572f62770a691381`
 - Current fetched integration: `0f5d0cd7042caba1eca841e9678a2229606c0182`

@@ -40,27 +40,32 @@ reimplementing it.
 From the workspace root, run `make setup`, `make check`, and `make test`.
 
 ```python
-from flext_db_oracle import FlextDbOracleApi, FlextDbOracleSettings
+from flext_db_oracle import FlextDbOracleApi, settings
 
-# Settings resolve from env (ORACLE_DBORACLE__HOST, ORACLE_DBORACLE__PASSWORD, ...)
-# or from defaults; the DbOracle namespace carries host/port/service_name/
-# username/password/timeout/pool bounds.
-settings = FlextDbOracleSettings()
-api = FlextDbOracleApi(settings)
+api = FlextDbOracleApi(settings=settings)
 
-connected = api.connect()
-if connected.success:
-    health = api.fetch_health_status()
-    tables = api.fetch_tables()  # r[StrSequence]
-    rows = api.execute_sql(
-        "SELECT table_name FROM user_tables FETCH FIRST :n ROWS ONLY", {"n": 5}
-    )
-    api.disconnect()
+api.connect().unwrap()
+try:
+    health = api.fetch_health_status().unwrap()
+    tables = api.fetch_tables().unwrap()
+    rows = api.query(
+        "SELECT table_name FROM user_tables FETCH FIRST :n ROWS ONLY",
+        {"n": 5},
+    ).unwrap()
+    print(health, tables, rows)
+finally:
+    api.disconnect().unwrap()
 ```
 
-Alternative constructors on the same facade: `FlextDbOracleApi.from_config(settings)`,
-`FlextDbOracleApi.from_env(prefix="ORACLE_")`, and `FlextDbOracleApi.from_url(url)` —
-each returns `r[Self]`.
+This requires a real Oracle database and authorized read credentials from typed
+`settings.DbOracle`. It reads metadata and uses the public SELECT-query route;
+`execute_sql` is the DML route, not the row-fetching API. The row limit is sample
+query input, not a copied runtime setting. A mock or a failed connection is not
+evidence that this example works.
+
+`FlextDbOracleApi.from_config(settings)` constructs the facade directly;
+`FlextDbOracleApi.from_env(prefix="ORACLE_")` and
+`FlextDbOracleApi.from_url(url)` return results.
 
 ## Architecture & modules
 
