@@ -46,7 +46,9 @@ api = FlextDbtLdif(settings=settings)
 
 source = settings.DbtLdif.ldif_file_path
 workflow = api.process_ldif_file(
-    source, generate_models=True, run_transformations=False,
+    source,
+    generate_models=True,
+    run_transformations=False,
 ).unwrap()
 quality = api.validate_ldif_quality(source).unwrap()
 print(workflow.model_dump(mode="json"), quality.model_dump(mode="json"))

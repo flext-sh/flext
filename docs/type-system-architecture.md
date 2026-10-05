@@ -157,7 +157,7 @@ declarations. A namespaced alias does not justify a second definition at another
 level. Keep family declarations flat and use MRO composition as specified by
 [ADR-014](architecture/adr/014-family-part-shape-rope-codemod-rules.md).
 
-### Models Namespace Architecture (m.*)
+### Models Namespace Architecture (m.\*)
 
 An owned model extends an appropriate public `m` preset, such as `m.FrozenModel`
 or `m.StrictBoundaryModel`, rather than a raw Pydantic base at a consumer.

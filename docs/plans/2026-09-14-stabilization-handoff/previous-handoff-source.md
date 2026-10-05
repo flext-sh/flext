@@ -12,7 +12,7 @@
 - [Ordens vigentes do operador (mais nova vence)](#ordens-vigentes-do-operador-mais-nova-vence)
 - [Estado (medido)](#estado-medido)
 - [Próximos passos (ordem)](#proximos-passos-ordem)
-- [Scripts de apoio (cópias duráveis em ~/.claude/plans/land\_members.sh e ~/.claude/plans/roll\_members.sh)](#scripts-de-apoio-copias-duraveis-em-claudeplansland_memberssh-e-claudeplansroll_memberssh)
+- [Scripts de apoio (cópias duráveis em ~/.claude/plans/land_members.sh e ~/.claude/plans/roll_members.sh)](#scripts-de-apoio-copias-duraveis-em-claudeplansland_memberssh-e-claudeplansroll_memberssh)
 - [Limites do harness observados](#limites-do-harness-observados)
 
 <!-- TOC END -->

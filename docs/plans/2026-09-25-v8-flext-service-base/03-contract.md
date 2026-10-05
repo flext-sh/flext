@@ -59,7 +59,8 @@ class DocumentService(s[p.Model]):
     """Expose an injected model through the service result contract."""
 
     document: t.Port[p.Model] = m.Field(
-        exclude=True, description="Validated model supplied by the composition root.",
+        exclude=True,
+        description="Validated model supplied by the composition root.",
     )
 
     def snapshot(self) -> p.Result[p.Model]:
@@ -132,7 +133,8 @@ class DocumentService(s[p.Model]):
     """Serialize a model supplied explicitly by the composition root."""
 
     document: t.Port[p.Model] = m.Field(
-        exclude=True, description="Validated model supplied by the composition root.",
+        exclude=True,
+        description="Validated model supplied by the composition root.",
     )
 
     @override
@@ -194,7 +196,8 @@ class DocumentService(s[p.Model]):
     """Publish one real model-returning operation for CLI derivation."""
 
     document: t.Port[p.Model] = m.Field(
-        exclude=True, description="Validated model supplied by the composition root.",
+        exclude=True,
+        description="Validated model supplied by the composition root.",
     )
 
     def snapshot(self) -> p.Result[p.Model]:
@@ -226,10 +229,12 @@ def provide_document_service() -> s[p.Model]:
 
 
 app = cli.create_app_with_common_params(
-    name="document-example", help_text="Serialize an injected document.",
+    name="document-example",
+    help_text="Serialize an injected document.",
 )
 cli.register_result_routes(
-    app, cli.service_routes(DocumentService, provide=provide_document_service),
+    app,
+    cli.service_routes(DocumentService, provide=provide_document_service),
 )
 exit_code = cli.finalize_result(
     cli.execute_app(app, prog_name="document-example", args=["snapshot"]),

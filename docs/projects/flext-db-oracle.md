@@ -49,7 +49,8 @@ try:
     health = api.fetch_health_status().unwrap()
     tables = api.fetch_tables().unwrap()
     rows = api.query(
-        "SELECT table_name FROM user_tables FETCH FIRST :n ROWS ONLY", {"n": 5},
+        "SELECT table_name FROM user_tables FETCH FIRST :n ROWS ONLY",
+        {"n": 5},
     ).unwrap()
     print(health, tables, rows)
 finally:
