@@ -13,6 +13,7 @@ from examples.advanced_processing_example import FlextRootAdvancedProcessingExam
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
 
 import flext_ldif
+from flext_core import c
 from flext_ldif import FlextLdif
 from flext_tests import tm
 
@@ -36,7 +37,7 @@ class TestsFlextRootExamplesRuntime:
             tm.that(result.success, eq=True)
             summary = result.unwrap().content
             tm.that(bool(summary), eq=True)
-            tm.that(bool(summary["workflow_status"]), eq=True)
+            tm.that(summary["workflow_status"], eq=c.Status.COMPLETED)
             total_stages = summary["total_stages"]
             tm.that(isinstance(total_stages, int) and total_stages > 0, eq=True)
             tm.that(summary["completed_stages"], eq=total_stages)

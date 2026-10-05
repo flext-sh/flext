@@ -4,6 +4,10 @@
 
 # Worktree alignment assessment — flext × ai-hub
 
+Historical paths use `${HOME}` for the recorded operator home directory. Their
+suffixes, revisions, and measurements are unchanged; they are not live checkout
+recommendations. Resolve the active lane from the tracker before any command.
+
 <!-- TOC START -->
 
 - [1. Capacidade atual do flext (o que funciona)](#1-capacidade-atual-do-flext-o-que-funciona)
@@ -28,7 +32,7 @@ manutenção), estágio e todos restantes.
   `<git-project-externo>/.worktrees/<repo>-<sha12>`; lanes épicos aninham filhos;
   rollback/fast-forward em `worktree_lifecycle.py`; provisionamento de gitlinks em
   `worktree_provisioning.py`.
-- **Variações reais em disco**: `/home/marlonsc/flext-infra-worktrees/`,
+- **Variações reais em disco**: `${HOME}/flext-infra-worktrees/`,
   `flext-worktrees/`, `flext-wt/`, e lanes internas `flext-infra/.claude/worktrees/*`
   (19 registradas no flext-infra).
 - **Integração gates/gen** (funciona): `.worktrees` em `COMMON_EXCLUDED_DIRS`; `.claude`
@@ -94,7 +98,7 @@ manutenção), estágio e todos restantes.
 5. CLI gap — expor `FlextInfraWorktreeService` em verbo
    (`flext_infra worktree add|list|remove`) ou wire no work saga (ops START/LAND sem
    consumidores hoje).
-6. `/home/marlonsc/flext/worktrees/` — diretório órfão vazio: adotar como
+6. `${HOME}/flext/worktrees/` — diretório órfão vazio: adotar como
    `WORKTREES_DIRNAME` da convenção alinhada ou remover.
 7. flext-3cabz — 4 testes codegen vermelhos em worktree pristine.
 8. Alinhar `_lanes_root` à convenção ai-hub (`sibling_suffix` + bead-id) — requer acordo

@@ -2,8 +2,6 @@
 
 <!-- TOC START -->
 
-- No sections found
-
 <!-- TOC END -->
 
 Each row records a V7 claim, what the survey measured (section of `01-evidence.md`) and

@@ -42,25 +42,43 @@ pip install flext-observability
 ```
 
 ```python
-from flext_observability import flext_monitor_function, observability, u
+from flext_observability import FlextObservabilityMonitor, observability
 
-metric = observability.flext_metric("cpu_usage", 42.0, "percent")
-if metric.success:
-    u.Cli.print(metric.value.name, metric.value.value)
+metric = observability.flext_metric("cpu_usage", 42.0, "percent").unwrap()
+print(metric.name, metric.value)
+
+monitor = FlextObservabilityMonitor()
+monitor.flext_initialize_observability().unwrap()
+monitor.flext_start_monitoring().unwrap()
 
 
-@flext_monitor_function(metric_name="data.work")
+@FlextObservabilityMonitor.flext_monitor_function(
+    monitor=monitor,
+    metric_name="data.work",
+)
 def work(data: str) -> str:
-    return data
+    """Normalize a caller's label while recording execution metrics.
+
+    Returns:
+        The uppercase label.
+    """
+    return data.upper()
 
 
-work("payload")
+try:
+    print(work("payload"))
+finally:
+    monitor.flext_stop_monitoring().unwrap()
 ```
 
 The `flext_metric`, `flext_trace`, `flext_alert`, `flext_health_check`, and
 `flext_log_entry` factories return `r[...]` results wrapping the corresponding entity
-model. `flext_monitor_function` is exported at the package root and instruments any
-callable with execution metrics.
+model. The published monitor service owns
+`FlextObservabilityMonitor.flext_monitor_function`; an unqualified
+`flext_monitor_function` function is not exported by the installed public root.
+The example supplies an explicitly initialized monitor, propagates initialization
+failures, and stops monitoring through its declared public lifecycle. It does not
+change telemetry settings or claim that a configured remote exporter is healthy.
 
 ## Architecture & modules
 
