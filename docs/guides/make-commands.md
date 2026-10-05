@@ -101,11 +101,13 @@ The markdown standard lives once in `flext-infra/config/tooling.yaml`
 
 ## Test contract
 
-`make test` runs the incremental selection. `make test-full` first runs that operation,
-then the complete suite, including configured external and CI-excluded markers. The
-runner owns this sequence, one monotonic deadline, and the same persistent Testmon
-database, located by the flext-infra generated configuration. External tests keep their
-declared runtime and authentication requirements. Direct runner commands and
+The test-verb law lives in `~/agents/rules/workflow/canonical-commands.md`.
+`make test` runs incremental selection against its persistent Testmon database.
+`make test-full` is local-only, without Testmon or a time limit, and includes
+configured external and CI-excluded markers. Any preceding incremental phase retains
+its own receipt and is not the complete-suite result. CI and pre-push use `make test`;
+pre-commit runs no tests. External tests keep their declared runtime and authentication
+requirements. Repair a conflicting runner at its owner; direct runner commands and
 cache-clearing bypasses are prohibited.
 
 Separate receipts preserve each phase's mode, raw result, inventory, execution, and

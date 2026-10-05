@@ -13,7 +13,7 @@ from examples.advanced_processing_example import FlextRootAdvancedProcessingExam
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
 
 import flext_ldif
-from flext_core import c
+from flext import c
 from flext_ldif import FlextLdif
 from flext_tests import tm
 

@@ -29,8 +29,13 @@ Every generated document carries a header naming its source, adjustment point, a
 ## Command and test examples
 
 All executable examples use declared root Make verbs. Direct generators, linters,
-formatters, type checkers, test runners, and ad-hoc scripts are prohibited. Standard
-verbs accept no project, file, pattern, action, phase, fix, or changed-only selectors.
+formatters, type checkers, test runners, and ad-hoc scripts are prohibited. Use only
+parameters declared by `make help`; a declared verb parameter, such as `FILE` on
+`make test-file`, is not a selector. Do not attach undeclared project, file, pattern,
+action, phase, fix, or changed-only selectors.
+
+Documentation hooks reuse the public Infra CLI and the interpreter provisioned by
+Make. They never resolve dependencies or create a second environment during collection.
 
 Test examples exercise public facades with `tm`, the unified `conftest.py`, and typed
 shared fixtures. They contain no mocks, fakes, stubs, patching, monkeypatch mutation,
