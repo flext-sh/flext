@@ -10,8 +10,6 @@ coordination_item: aihub-l42it
 
 <!-- TOC START -->
 
-- No sections found
-
 <!-- TOC END -->
 
 This directory is the file-owned continuation authority for the active fleet closure. It

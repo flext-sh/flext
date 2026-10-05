@@ -6,7 +6,7 @@
 - [2. Minimal base surface (flext-core)](#2-minimal-base-surface-flext-core)
 - [3. Canonical project SETTINGS module — <project>/settings.py](#3-canonical-project-settings-module-projectsettingspy)
 - [4. Canonical project CONFIG module — <project>/\_config.py](#4-canonical-project-config-module-project_configpy)
-- [5. Root export (<project>/**init**.py)](#5-root-export-projectinitpy)
+- [5. Root export (<project>/\*\*init\*\*.py)](#5-root-export-projectinitpy)
 - [6. Forbidden (remove on sight)](#6-forbidden-remove-on-sight)
 - [7. Propagation checklist (per project)](#7-propagation-checklist-per-project)
 
