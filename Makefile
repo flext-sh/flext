@@ -1704,9 +1704,10 @@ _builtin-help:
 # Source: template (submodule_setup_recipe.j2)
 # Computed: workspace uses MANAGED_GITLINKS from config; standalone discovers
 #           submodules with flext-managed=true from .gitmodules at runtime.
-# Rule: setup PROVISIONS an absent governed gitlink and VERIFIES a present one.
-#       An absent checkout holds no work, so setup initializes it at the recorded
-#       gitlink. A present checkout is never destroyed: git checkout, git reset,
+# Rule: setup PROVISIONS an absent or proven unfinished initial clone and
+#       VERIFIES an established checkout. An initial clone has no physical index,
+#       no worktree content, and only its clone reflog entry. Established work
+#       is never destroyed: git checkout, git reset,
 #       fetch, and branch attachment are forbidden. Pin validity is HEAD contains
 #       gitlink. Declared branch is the named integration line;
 #       legacy branch=. still resolves to the superproject named branch if present.
@@ -1757,7 +1758,41 @@ _builtin_setup_submodules:
 	if [ -z "$$managed" ]; then exit 0; fi; \
 	absent=""; \
 	for path in $$managed; do \
-		[ -e "$$root/$$path/.git" ] || absent="$$absent $$path"; \
+		child="$$root/$$path"; \
+		if [ ! -e "$$child/.git" ]; then \
+			absent="$$absent $$path"; \
+			continue; \
+		fi; \
+		index=$$(git -C "$$child" rev-parse --path-format=absolute --git-path index); \
+		if [ -e "$$index" ]; then continue; fi; \
+		owner=$$(git -C "$$child" rev-parse --show-superproject-working-tree); \
+		checkout_root=$$(git -C "$$child" rev-parse --show-toplevel); \
+		content=$$(git -C "$$child" ls-files --others --directory); \
+		reflog=$$(git -C "$$child" reflog show --format=%gs HEAD); \
+		initial=$$(git -C "$$child" reflog show --format=%gs -1 HEAD); \
+		if [ "$$owner" != "$$root" ] || [ "$$checkout_root" != "$$child" ] || [ -n "$$content" ] || [ "$$reflog" != "$$initial" ]; then \
+			printf 'ERROR: %s: missing index with unproven initial-clone state; preserve and review\n' "$$path" >&2; \
+			exit 2; \
+		fi; \
+		case "$$initial" in \
+			'clone: from '*) ;; \
+			*) printf 'ERROR: %s: missing index without initial clone receipt\n' "$$path" >&2; exit 2 ;; \
+		esac; \
+		entry=$$(git -C "$$root" ls-files --stage -- "$$path"); \
+		set -- $$entry; \
+		if [ "$$#" -lt 2 ] || [ "$$1" != 160000 ]; then \
+			printf 'ERROR: governed path is not a gitlink: %s\n' "$$path" >&2; \
+			exit 2; \
+		fi; \
+		head=$$(git -C "$$child" rev-parse HEAD); \
+		if [ "$$head" = "$$2" ]; then \
+			printf 'setup: materializing unfinished initial clone at recorded pin: %s\n' "$$path"; \
+			GIT_TERMINAL_PROMPT=0 timeout --signal=TERM --kill-after=5s "120s" \
+				git -C "$$child" -c submodule.recurse=false checkout --detach --no-overwrite-ignore "$$head"; \
+			continue; \
+		fi; \
+		printf 'setup: resuming unfinished initial clone: %s\n' "$$path"; \
+		absent="$$absent $$path"; \
 	done; \
 	if [ -n "$$absent" ]; then \
 		credential_helper='!f() { if [ "$$1" = get ]; then printf "username=x-access-token\npassword=%s\n" "$$GITHUB_TOKEN"; fi; }; f'; \
