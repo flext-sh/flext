@@ -52,13 +52,14 @@ generated artifacts, while preserving the runtime dependency direction
 
 Large or derived structures are data-backed and generated; they are not hardcoded as
 Python constant tables. `config` and `settings` are independent typed objects.
-Consumption uses only:
+Consumption imports the public owners and reads their declared fields. This
+self-contained example uses the CLI package's typed identity configuration and
+inherited runtime debug setting, without copying their current values:
 
 ```python
-from package import config, settings
+from flext_cli import config, settings
 
-config.Namespace.domain
-settings.Namespace.domain
+print(config.Cli.name, config.Cli.version, settings.debug)
 ```
 
 Owned payloads cross boundaries as Pydantic v2 models, validated on input and dumped on

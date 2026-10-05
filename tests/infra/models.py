@@ -6,12 +6,10 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Annotated
+from pathlib import Path
+from typing import Annotated
 
 from flext import m, u
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 class TestsFlextRootModels(m):
@@ -23,18 +21,13 @@ class TestsFlextRootModels(m):
         class ModuleRef(m.Value):
             """Module reference with path and name information."""
 
-            anchor_file: Annotated[
-                Path,
-                u.Field(description="Absolute path to the module's anchor file."),
-            ]
-            module_name: Annotated[
-                str,
-                u.Field(description="Fully qualified module name."),
-            ]
-            relative_path: Annotated[
-                str,
-                u.Field(description="Module path relative to the workspace root."),
-            ]
+            anchor_file: Path = u.Field(
+                description="Absolute path to the module's anchor file.",
+            )
+            module_name: str = u.Field(description="Fully qualified module name.")
+            relative_path: str = u.Field(
+                description="Module path relative to the workspace root.",
+            )
 
     class _SyncModels:
         """Sync call models."""

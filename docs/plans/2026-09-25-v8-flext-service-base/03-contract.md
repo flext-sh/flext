@@ -19,6 +19,14 @@ This is the pattern the whole fleet follows. It feeds
 `flext-core/docs/guides/service-patterns.md` (S1–S3, S5) and ADR-019. The slice that
 makes each piece available is in parentheses.
 
+The LDAP signatures below describe the dated target contract, not a declaration
+that every proposed search/port symbol is currently exported. Each executable
+block is independent and demonstrates the same service/port/composition/CLI
+mechanism with a real serialization capability: `p.Model` and
+`m.ConfigDocument`. No synthetic directory adapter or incomplete provider stands
+in for LDAP behavior. The domain contract remains the search request/result and
+explicit connection injection described in the surrounding text.
+
 ## 1. Layer roles
 
 Sources: flext-law `:31-50,100-102`, `internal-clean-architecture` `:15-19`, ADR-010
@@ -42,16 +50,40 @@ Existence rule (D1 = A, S7): `api.py` exists only when the project composes serv
 ## 2. Service
 
 ```python
-class FlextLdapSearch(s[m.Ldap.SearchResult]):
-    """LDAP search use case."""
+from typing import override
 
-    connection: t.Port[p.Ldap.Connection] = m.Field(
-        exclude=True, description="Bound LDAP connection used for every search."
+from flext_core import m, p, r, s, t
+
+
+class DocumentService(s[p.Model]):
+    """Expose an injected model through the service result contract."""
+
+    document: t.Port[p.Model] = m.Field(
+        exclude=True,
+        description="Validated model supplied by the composition root.",
     )
 
-    def search(self, request: m.Ldap.SearchRequest) -> p.Result[m.Ldap.SearchResult]:
-        """Search entries under a base DN."""
-        return self.connection.search(request)
+    def snapshot(self) -> p.Result[p.Model]:
+        """Return the injected validated document.
+
+        Returns:
+            The document through its instance protocol.
+        """
+        return r[p.Model].ok(self.document)
+
+    @override
+    def execute(self) -> p.Result[p.Model]:
+        """Execute the snapshot operation.
+
+        Returns:
+            The snapshot result.
+        """
+        return self.snapshot()
+
+
+document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+service = DocumentService(document=document)
+print(service.execute().unwrap().model_dump(mode="json"))
 ```
 
 - Extends the project base (`s`), which extends the core `FlextService`.
@@ -66,14 +98,11 @@ class FlextLdapSearch(s[m.Ldap.SearchResult]):
 ## 3. Ports (S1)
 
 ```python
-class FlextLdapProtocolsConnection:
-    @runtime_checkable
-    class Connection(p.Base, Protocol):
-        """Bound LDAP connection capability consumed by the search use case."""
+from flext_core import m, p
 
-        def search(
-            self, request: m.Ldap.SearchRequest
-        ) -> p.Result[m.Ldap.SearchResult]: ...
+document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+print(isinstance(document, p.Model))
+print(document.model_dump(mode="json"))
 ```
 
 - A port is a `@runtime_checkable` Protocol extending `p.Base` with the minimal consumed
@@ -95,11 +124,32 @@ class FlextLdapProtocolsConnection:
 Pure DI (default):
 
 ```python
-class FlextLdap(FlextLdapSearch, FlextLdapModify):
-    """LDAP facade: the composed service."""
+from typing import override
+
+from flext_core import m, p, r, s, t
 
 
-ldap: FlextLdap = FlextLdap(connection=FlextLdapConnection(settings=settings.Ldap))
+class DocumentService(s[p.Model]):
+    """Serialize a model supplied explicitly by the composition root."""
+
+    document: t.Port[p.Model] = m.Field(
+        exclude=True,
+        description="Validated model supplied by the composition root.",
+    )
+
+    @override
+    def execute(self) -> p.Result[p.Model]:
+        """Return the injected document.
+
+        Returns:
+            The document through its instance protocol.
+        """
+        return r[p.Model].ok(self.document)
+
+
+document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+service = DocumentService(document=document)
+print(service.execute().unwrap().model_dump(mode="json"))
 ```
 
 - A shared adapter is a variable passed to several constructors. Constructing an adapter
@@ -136,9 +186,60 @@ ldap: FlextLdap = FlextLdap(connection=FlextLdapConnection(settings=settings.Lda
 ## 6. Derived CLI (`cli.py`, S5)
 
 ```python
-app = cli.create_app_with_common_params(name="flext-ldap", help_text="FLEXT LDAP")
-cli.register_result_routes(app, cli.service_routes(FlextLdap, provide=...))
-exit_code = cli.finalize_result(cli.execute_app(app, prog_name="flext-ldap"))
+from typing import override
+
+from flext_cli import cli
+from flext_core import m, p, r, s, t
+
+
+class DocumentService(s[p.Model]):
+    """Publish one real model-returning operation for CLI derivation."""
+
+    document: t.Port[p.Model] = m.Field(
+        exclude=True,
+        description="Validated model supplied by the composition root.",
+    )
+
+    def snapshot(self) -> p.Result[p.Model]:
+        """Return the injected validated document.
+
+        Returns:
+            The document through its instance protocol.
+        """
+        return r[p.Model].ok(self.document)
+
+    @override
+    def execute(self) -> p.Result[p.Model]:
+        """Execute the snapshot operation.
+
+        Returns:
+            The snapshot result.
+        """
+        return self.snapshot()
+
+
+def provide_document_service() -> s[p.Model]:
+    """Construct the service and its model only when the command executes.
+
+    Returns:
+        A service bound to a validated document.
+    """
+    document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+    return DocumentService(document=document)
+
+
+app = cli.create_app_with_common_params(
+    name="document-example",
+    help_text="Serialize an injected document.",
+)
+cli.register_result_routes(
+    app,
+    cli.service_routes(DocumentService, provide=provide_document_service),
+)
+exit_code = cli.finalize_result(
+    cli.execute_app(app, prog_name="document-example", args=["snapshot"]),
+)
+print(exit_code)
 ```
 
 - The module follows the `cli.py.j2` template (a `Flext<X>Cli` class and the canonical
