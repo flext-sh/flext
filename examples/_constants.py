@@ -51,6 +51,7 @@ class ExamplesFlextRootConstants:
         OID_ACL_ATTRIBUTE_LOST = "OID ACL example lost a declared attribute"
         ADVANCED_NO_ANALYSIS = "advanced example produced no analysis"
         COMPLETE_NO_CONTENT = "complete workflow produced no content"
+        COMPLETE_NOT_COMPLETED = "complete workflow did not report completed status"
 
     class JsonMappingSequenceHelper:
         """Helper to extract sequence of JsonMapping from JsonValue."""
