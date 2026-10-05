@@ -29,6 +29,8 @@ the canonical authorities first; this file only adds lane discipline.
 - Universal skills: `~/.agents/skills/project-wide/shell/make-check/SKILL.md`,
   `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`
 - Config/settings SSOT: [ADR-005][adr-005]
+- Command and test policy: `~/agents/rules/workflow/canonical-commands.md`
+- Inter-session mail: `~/agents/rules/coordination/inter-session-mail.md`
 
 [agents-md]: https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md
 [governance-md]: ../GOVERNANCE.md
@@ -37,8 +39,11 @@ the canonical authorities first; this file only adds lane discipline.
 ## 1. One lane, one bead, one worktree
 
 Claim exactly one bead and stay inside the worktree created for it. Do not edit paths
-outside your declared scope; do not borrow files from another lane. If another lane's
-output blocks you, message the lead instead of patching around it.
+outside your declared scope. Operator-authorized adoption of reviewed, committed work
+uses `git cherry-pick -x` or `git merge --no-ff`, with source SHA, provenance, scope,
+and authorization recorded in the Bead and PR. Never copy raw WIP, environments, caches,
+or generated projections from another lane. Notify the lead through canonical mail
+before adoption; preserve unrelated work and route blockers to their owners, never bypass them.
 
 ## 2. Gates only through root Make verbs
 
@@ -51,8 +56,8 @@ make check
 make test
 ```
 
-Every Python test run retains the canonical testmon cache. Agents do not clear, replace,
-or bypass it and do not add selector variables to this standard flow.
+Follow `canonical-commands.md` for test verbs, selection, and cache handling, including
+the local `make test-full` exception without testmon; do not maintain a competing policy here.
 
 ## 3. Cooperative git
 
@@ -72,20 +77,29 @@ Done means all of the following:
 
 - RED→GREEN proof exists for the change.
 - Exact Make-gate evidence is recorded: command, cwd, exit code, decisive line.
-- No new lint, type, or test failures are injected.
+- Applicable native lint, type, test, docs/build, and public-runtime gates pass on the
+  exact candidate; report executed, reported, deselected, and inventory counts and their
+  agreement. No new failures are injected, and zero execution is not a passing receipt
+  except where the canonical owner explicitly permits a typed cache hit.
 - Changed files are clean and scoped.
 - Nothing reaches `0.12.0-dev` except through the lane's own reviewed PR: one bead ->
   one branch -> PR against `0.12.0-dev` -> green native gates -> PR Sheriff gate
   (`pr_triage.py gate <owner/repo> <pr> --base 0.12.0-dev --head <oid>` in
   `~/.agents/skills/tool/pr-sheriff/scripts/`) -> independent review or
-  operator-authorized administrative merge -> merge commit -> post-merge runtime proof
-  -> bead evidence -> branch cleanup.
+  operator-authorized administrative merge -> actual GitHub PR `MERGED` with merge SHA
+  -> applicable integrated CI GREEN and post-merge runtime proof -> bead evidence ->
+  authorized branch cleanup. An approval waiver does not waive native gates, count
+  evidence, CI, or post-merge proof. The coordinator owns admin integration and closure;
+  workers do not merge or close.
 
 ## 6. Coordination protocol
 
-Coordinate only through the bead (`bd comment <id>`) and the PR thread. Report to the
-lead, then go idle; idle-after-report is correct. When blocked, message the lead the
-exact blocker and stop. Do not wander to other beads.
+Use `gc mail` notification and message readback under `inter-session-mail.md`; the
+Bead is execution SSOT and the PR records review, source, and CI evidence. Persist
+scoped checkpoints and continue authorized, unblocked work rather than stopping merely
+after a report. For a real blocker, record the first cause, command, cwd, and exit
+(unknown if execution never reached the command), notify the lead, and route its owner.
+Do not wander to other beads or bypass blocked gates.
 
 ## 7. Anti-patterns that burned us
 
@@ -95,7 +109,7 @@ Do not repeat these:
 - Workers wandering to unrelated beads.
 - Running bare-tool gate commands outside the Make dispatcher.
 - `git add -A` commits sweeping foreign WIP.
-- Treating idle-after-report as failure.
+- Treating a report or source checkpoint as delivery, or stopping merely after reporting.
 
 ## 8. Three-boundary validation contract
 
@@ -105,7 +119,10 @@ commit or an explicit pathspec-bound set of commits.
 
 A WIP checkpoint preserves a scoped commit on its remote branch; it does not establish
 review readiness. Resolve the integration branch from the repository's current
-declaration before fetching it. With that branch substituted for `<integration>`,
+declaration before fetching it. Substitute that branch for `<integration>` below.
+Freshly fetch and absorb `origin/<integration>` with `git merge --no-ff`, never rebase.
+Publish explicit-path scoped commits by fast-forward push and open the lane's PR against
+that verified integration branch; a DRAFT preservation PR is not delivery.
 `git merge-base --is-ancestor origin/<integration> HEAD` proves base absorption; the
 reverse order proves that the lane commit is contained in integration. Neither proof
 replaces reviewed PR merge-commit evidence or runtime validation. Propagation requires
@@ -115,8 +132,8 @@ candidate. Record these boundaries separately in the active Bead.
 The following fresh evidence is mandatory at every boundary:
 
 - `make check` for the workspace;
-- `make test`, retaining the canonical testmon cache, for every affected project and
-  integration surface;
+- applicable test evidence for affected projects and integration surfaces through the
+  verbs and cache policy owned by `canonical-commands.md`;
 - real public-surface QA for the changed behavior; and
 - generator/consumer idempotence when generated outputs are involved.
 
@@ -128,8 +145,8 @@ above and records exact commands, cwd, exit codes, and decisive output.
 ### 8.2 Updated worker lane before merge
 
 Before reporting `READY_FOR_REVIEW`, the worker must non-destructively merge the latest
-fetched integration branch into the lane, resolve resulting issues without discarding
-WIP, and rerun the complete boundary above. An upstream merge is absorbed only after
+freshly fetched, declared integration branch with `git merge --no-ff`, resolve issues
+without discarding WIP, and rerun the complete boundary above. An upstream merge is absorbed only after
 this lane-context validation passes.
 
 ### 8.3 Original target after integration
