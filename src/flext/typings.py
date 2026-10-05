@@ -20,4 +20,4 @@ class FlextRootTypes(flext_infra.t):
 
 t = FlextRootTypes
 
-__all__: t.VariadicTuple[str] = ("FlextRootTypes", "t")
+__all__ = ("FlextRootTypes", "t")

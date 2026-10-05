@@ -264,7 +264,6 @@ set -eu; \
 	fi; \
 	caller_path="$$PATH"; \
 	mise_trusted_config_paths="$$project_root"; \
-	mise_lock_drift="$${SETUP_MISE_LOCK_DRIFT:-}"; \
 mise_lockfile_platforms="linux-x64,linux-x64-musl,linux-arm64,macos-x64,macos-arm64,windows-x64"; \
 caller_comspec="$${COMSPEC:-}"; \
 caller_pathext="$${PATHEXT:-}"; \
@@ -348,7 +347,34 @@ mise_pin_file="$(MISE_VERSION_PIN)"; \
 		esac; \
 	done; \
 	scratch=$$(mktemp -d "$$project_parent/.$${project_root##*/}.mise-bootstrap.XXXXXX"); \
-	trap 'if [ -n "$${lock_stage:-}" ] && [ -d "$$lock_stage" ] && [ ! -f "$$lock_stage/transaction.json" ]; then find "$$lock_stage" -depth -delete; fi; find "$$scratch" -depth -delete' EXIT; \
+	readonly scratch; \
+	lock_stage=; \
+	trap 'bootstrap_status=$$?; trap - EXIT; \
+		lock_cleanup_status=0; scratch_cleanup_status=0; diagnostic_status=0; scratch_present=0; \
+		if [ -d "$$scratch" ]; then scratch_present=1; fi; \
+		if printf "mise scratch: cleanup path=%s present=%s entering_status=%s\n" "$$scratch" "$$scratch_present" "$$bootstrap_status" >&2; then :; \
+		else diagnostic_status=$$?; fi; \
+		if [ -n "$$lock_stage" ] && [ -d "$$lock_stage" ] && [ ! -f "$$lock_stage/transaction.json" ]; then \
+			if find "$$lock_stage" -depth -delete; then :; else \
+				lock_cleanup_status=$$?; \
+				if printf "ERROR: Mise lock stage cleanup failed: %s exit=%s\n" "$$lock_stage" "$$lock_cleanup_status" >&2; then :; \
+				else diagnostic_status=$$?; fi; \
+			fi; \
+		fi; \
+		if find "$$scratch" -depth -delete; then :; else \
+			scratch_cleanup_status=$$?; \
+			if printf "ERROR: Mise scratch cleanup failed: %s exit=%s\n" "$$scratch" "$$scratch_cleanup_status" >&2; then :; \
+			else diagnostic_status=$$?; fi; \
+		fi; \
+		if [ "$$bootstrap_status" -eq 0 ]; then \
+			if [ "$$lock_cleanup_status" -ne 0 ]; then bootstrap_status=$$lock_cleanup_status; \
+			elif [ "$$scratch_cleanup_status" -ne 0 ]; then bootstrap_status=$$scratch_cleanup_status; \
+			else bootstrap_status=$$diagnostic_status; fi; \
+		fi; \
+		if printf "mise scratch: cleaned path=%s lock_cleanup_status=%s scratch_cleanup_status=%s exit=%s\n" "$$scratch" "$$lock_cleanup_status" "$$scratch_cleanup_status" "$$bootstrap_status" >&2; then :; \
+		else diagnostic_status=$$?; if [ "$$bootstrap_status" -eq 0 ]; then bootstrap_status=$$diagnostic_status; fi; fi; \
+		exit "$$bootstrap_status"' EXIT; \
+	printf 'mise scratch: allocated path=%s\n' "$$scratch" >&2; \
 	mkdir -p "$$scratch/home" "$$scratch/home" "$$scratch/appdata" "$$scratch/appdata" "$$scratch/xdg-config" "$$scratch/xdg-data" "$$scratch/xdg-cache" "$$scratch/xdg-state" "$$scratch/config" "$$scratch/tmp" "$$scratch/." "$$scratch/system-config" "$$scratch/system-data" "$$scratch/system-installs" "$$scratch/system-shims" "$$scratch/tmp" "$$scratch/tmp" "$$scratch/tmp"; \
 : > "$$scratch/global-config.toml"; chmod 600 "$$scratch/global-config.toml"; \
 : > "$$scratch/system-config/config.toml"; chmod 600 "$$scratch/system-config/config.toml"; \
@@ -373,7 +399,6 @@ mise_exec() { \
 'LC_ALL=C' \
 'MISE_SAFE=1' \
 'MISE_PARANOID=true' \
-'MISE_QUIET=1' \
 'MISE_NO_ENV=1' \
 'MISE_NO_HOOKS=1' \
 'MISE_AUTO_ENV=false' \
@@ -397,8 +422,6 @@ mise_exec() { \
 'MISE_MINIMUM_RELEASE_AGE=7d' \
 'MISE_NPM_PACKAGE_MANAGER=bun' \
 $${mise_lockfile_platforms:+"MISE_LOCKFILE_PLATFORMS=$$mise_lockfile_platforms"} \
-			$${mise_lock_drift:+"MISE_LOCKFILE=false"} \
-			$${mise_lock_drift:+"MISE_LOCKED=false"} \
 "HOME=$$scratch/home" \
 "USERPROFILE=$$scratch/home" \
 "APPDATA=$$scratch/appdata" \
@@ -500,7 +523,6 @@ _bootstrap_setup_tools:
 	fi; \
 	caller_path="$$PATH"; \
 	mise_trusted_config_paths="$$project_root"; \
-	mise_lock_drift="$${SETUP_MISE_LOCK_DRIFT:-}"; \
 mise_lockfile_platforms="linux-x64,linux-x64-musl,linux-arm64,macos-x64,macos-arm64,windows-x64"; \
 caller_comspec="$${COMSPEC:-}"; \
 caller_pathext="$${PATHEXT:-}"; \
@@ -584,7 +606,34 @@ mise_pin_file="$(MISE_VERSION_PIN)"; \
 		esac; \
 	done; \
 	scratch=$$(mktemp -d "$$project_parent/.$${project_root##*/}.mise-bootstrap.XXXXXX"); \
-	trap 'if [ -n "$${lock_stage:-}" ] && [ -d "$$lock_stage" ] && [ ! -f "$$lock_stage/transaction.json" ]; then find "$$lock_stage" -depth -delete; fi; find "$$scratch" -depth -delete' EXIT; \
+	readonly scratch; \
+	lock_stage=; \
+	trap 'bootstrap_status=$$?; trap - EXIT; \
+		lock_cleanup_status=0; scratch_cleanup_status=0; diagnostic_status=0; scratch_present=0; \
+		if [ -d "$$scratch" ]; then scratch_present=1; fi; \
+		if printf "mise scratch: cleanup path=%s present=%s entering_status=%s\n" "$$scratch" "$$scratch_present" "$$bootstrap_status" >&2; then :; \
+		else diagnostic_status=$$?; fi; \
+		if [ -n "$$lock_stage" ] && [ -d "$$lock_stage" ] && [ ! -f "$$lock_stage/transaction.json" ]; then \
+			if find "$$lock_stage" -depth -delete; then :; else \
+				lock_cleanup_status=$$?; \
+				if printf "ERROR: Mise lock stage cleanup failed: %s exit=%s\n" "$$lock_stage" "$$lock_cleanup_status" >&2; then :; \
+				else diagnostic_status=$$?; fi; \
+			fi; \
+		fi; \
+		if find "$$scratch" -depth -delete; then :; else \
+			scratch_cleanup_status=$$?; \
+			if printf "ERROR: Mise scratch cleanup failed: %s exit=%s\n" "$$scratch" "$$scratch_cleanup_status" >&2; then :; \
+			else diagnostic_status=$$?; fi; \
+		fi; \
+		if [ "$$bootstrap_status" -eq 0 ]; then \
+			if [ "$$lock_cleanup_status" -ne 0 ]; then bootstrap_status=$$lock_cleanup_status; \
+			elif [ "$$scratch_cleanup_status" -ne 0 ]; then bootstrap_status=$$scratch_cleanup_status; \
+			else bootstrap_status=$$diagnostic_status; fi; \
+		fi; \
+		if printf "mise scratch: cleaned path=%s lock_cleanup_status=%s scratch_cleanup_status=%s exit=%s\n" "$$scratch" "$$lock_cleanup_status" "$$scratch_cleanup_status" "$$bootstrap_status" >&2; then :; \
+		else diagnostic_status=$$?; if [ "$$bootstrap_status" -eq 0 ]; then bootstrap_status=$$diagnostic_status; fi; fi; \
+		exit "$$bootstrap_status"' EXIT; \
+	printf 'mise scratch: allocated path=%s\n' "$$scratch" >&2; \
 	mkdir -p "$$scratch/home" "$$scratch/home" "$$scratch/appdata" "$$scratch/appdata" "$$scratch/xdg-config" "$$scratch/xdg-data" "$$scratch/xdg-cache" "$$scratch/xdg-state" "$$scratch/config" "$$scratch/tmp" "$$scratch/." "$$scratch/system-config" "$$scratch/system-data" "$$scratch/system-installs" "$$scratch/system-shims" "$$scratch/tmp" "$$scratch/tmp" "$$scratch/tmp"; \
 : > "$$scratch/global-config.toml"; chmod 600 "$$scratch/global-config.toml"; \
 : > "$$scratch/system-config/config.toml"; chmod 600 "$$scratch/system-config/config.toml"; \
@@ -609,7 +658,6 @@ mise_exec() { \
 'LC_ALL=C' \
 'MISE_SAFE=1' \
 'MISE_PARANOID=true' \
-'MISE_QUIET=1' \
 'MISE_NO_ENV=1' \
 'MISE_NO_HOOKS=1' \
 'MISE_AUTO_ENV=false' \
@@ -633,8 +681,6 @@ mise_exec() { \
 'MISE_MINIMUM_RELEASE_AGE=7d' \
 'MISE_NPM_PACKAGE_MANAGER=bun' \
 $${mise_lockfile_platforms:+"MISE_LOCKFILE_PLATFORMS=$$mise_lockfile_platforms"} \
-			$${mise_lock_drift:+"MISE_LOCKFILE=false"} \
-			$${mise_lock_drift:+"MISE_LOCKED=false"} \
 "HOME=$$scratch/home" \
 "USERPROFILE=$$scratch/home" \
 "APPDATA=$$scratch/appdata" \
@@ -759,7 +805,6 @@ mise_checked() { \
 	fi; \
 	locked_manifest=; \
 	if [ "$$bootstrap_lock" = "1" ]; then \
-		mise_lock_drift=; \
 		# Stage on the destination filesystem: the bumped lock is resolved and \
 		# installed from a private stage, and published by one rename only after \
 		# both succeed. A failed or killed run leaves mise.lock untouched; no \
@@ -820,22 +865,8 @@ mise_receipt launcher-version "$$lock_stage/artifacts/bin/mise"; \
 		mise_trusted_config_paths="$$project_root"; \
 		if [ "$(TOOL_BOOTSTRAP_RESOLVE)" = "1" ]; then locked_manifest="$$scratch/locked-manifest.toml"; fi; \
 	else \
-		# Only ``make upg`` writes locks; setup never does, and it always runs. \
-		# ``locked`` mode installs every tool at exactly the version the \
-		# committed mise.lock pins. When an offline dry-run shows the lock \
-		# drifted from .mise.toml (mixed-generation merge, interrupted ``upg``, \
-		# a lock written by another Mise release), setup warns and installs \
-		# from .mise.toml with the lockfile disabled for the rest of this \
-		# bootstrap, leaving mise.lock untouched for the next ``make upg``. \
-		# Only ``install --yes`` may reach the network. \
-		if mise_offline project "$$pinned_mise" -C "$$project_root" install --dry-run >"$$scratch/install-probe.log" 2>&1; then \
-			:; \
-		else \
-			probe_status=$$?; \
-			cat "$$scratch/install-probe.log" >&2; \
-			printf 'WARN: mise.lock drifts from .mise.toml under pinned Mise %s (probe exit %s); setup installs from .mise.toml without touching mise.lock; make upg rewrites it\n' "$$runtime_release" "$$probe_status" >&2; \
-			mise_lock_drift=1; \
-		fi; \
+		# Setup consumes the declared lock policy in one install. An invalid \
+		# lock stops here with its original cause; only make upg repairs it. \
 		mise_checked "$$scratch/install.log" mise_exec project "$$pinned_mise" -C "$$project_root" install --yes; \
 	fi; \
 	mise_checked_stdout "$$scratch/ast-grep-version.stdout" "$$scratch/ast-grep-version.stderr" mise_offline project "$$pinned_mise" -C "$$project_root" exec -- ast-grep --version; \
@@ -875,9 +906,11 @@ shim_farm="$$mise_storage_root/shims"; \
 		printf '%s\n' "$$shim_farm" >> "$$GITHUB_PATH"; \
 fi; \
 	printf 'setup: entering lifecycle (submodules, environment, hooks) make=%s\n' "$(SELF_MAKE_EXECUTABLE)"; \
+	scratch_present=0; if [ -d "$$scratch" ]; then scratch_present=1; fi; \
+	printf 'mise scratch: before lifecycle path=%s present=%s\n' "$$scratch" "$$scratch_present" >&2; \
 	mise_runtime_path="$$mise_storage_root/bootstrap/mise-$${runtime_release}"; \
 	if [ "$(OS)" = "Windows_NT" ]; then mise_runtime_path="$$mise_runtime_path.exe"; fi; \
-	env \
+	if env \
 "MISE_DATA_DIR=$$mise_storage_root" \
 "MISE_CACHE_DIR=$$mise_storage_root/cache" \
 "MISE_STATE_DIR=$$mise_storage_root/state" \
@@ -889,13 +922,17 @@ fi; \
 		"MISE_TRUSTED_CONFIG_PATHS=$$project_root" \
 		"MISE_VERSION=$$runtime_release" \
 		"MISE_INSTALL_PATH=$$mise_runtime_path" \
-		$${mise_lock_drift:+"SETUP_MISE_LOCK_DRIFT=1"} \
 		$(PROJECT_TOOL_EXEC) env \
 		$${locked_manifest:+"UPG_LOCKED_MISE_MANIFEST=$$locked_manifest"} \
 		"SETUP_DIRENV=$$direnv_executable" \
 		"SETUP_PYTHON=$$python_executable" \
 		"SETUP_DIRENV_XDG_DATA_HOME=$$caller_xdg_data_home" \
-		"CI=$(CI)" $(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE)
+		"CI=$(CI)" $(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE); then lifecycle_status=0; \
+	else lifecycle_status=$$?; fi; \
+	scratch_present=0; if [ -d "$$scratch" ]; then scratch_present=1; fi; \
+	if printf 'mise scratch: after lifecycle path=%s present=%s status=%s\n' "$$scratch" "$$scratch_present" "$$lifecycle_status" >&2; then :; \
+	else lifecycle_diagnostic_status=$$?; if [ "$$lifecycle_status" -eq 0 ]; then lifecycle_status=$$lifecycle_diagnostic_status; fi; fi; \
+	exit "$$lifecycle_status"
 
 # Every repository evaluates only itself, locally exactly as in CI: a workspace
 # root consumes its members as installed libraries and never fans a verb out
@@ -2091,11 +2128,11 @@ _builtin_check_all: _builtin_require_environment
 	@set -eu; \
 		gates="lint,security,markdown,markdown-format,markdown-code,duplication,pyrefly,mypy,pyright,loc-cap,runtime-census,fresh-import,index-declarations,codemod,layout,direnv"; \
 		if [ "$(strip $(CI))" = "Y" ]; then \
-			gates="lint,security,markdown,markdown-format,markdown-code,duplication,pyrefly,mypy,pyright,loc-cap,runtime-census,fresh-import,index-declarations,codemod,layout,direnv"; \
-			printf 'INFO: CI=Y runs check gates: lint security markdown markdown-format markdown-code duplication pyrefly mypy pyright loc-cap runtime-census fresh-import index-declarations codemod layout direnv\n'; \
+			gates="lint,security,markdown,markdown-format,markdown-code,duplication,pyrefly,loc-cap,runtime-census,fresh-import,index-declarations,layout,direnv"; \
+			printf 'INFO: CI=Y runs check gates: lint security markdown markdown-format markdown-code duplication pyrefly loc-cap runtime-census fresh-import index-declarations layout direnv\n'; \
 		elif [ "$(strip $(CI))" = "N" ]; then \
-			gates=""; \
-			printf 'INFO: CI=N runs check gates: \n'; \
+			gates="mypy,pyright,codemod"; \
+			printf 'INFO: CI=N runs check gates: mypy pyright codemod\n'; \
 		else \
 			printf 'INFO: default context runs check gates: lint security markdown markdown-format markdown-code duplication pyrefly mypy pyright loc-cap runtime-census fresh-import index-declarations codemod layout direnv\n'; \
 		fi; \

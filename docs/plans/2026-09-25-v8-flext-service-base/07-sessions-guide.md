@@ -8,7 +8,7 @@
   - [flext-cli (transport; CLI and file I/O)](#flext-cli-transport-cli-and-file-io)
   - [flext-tests (tests; every suite depends on it)](#flext-tests-tests-every-suite-depends-on-it)
   - [flext-infra (build machinery; never a runtime dependency)](#flext-infra-build-machinery-never-a-runtime-dependency)
-- [2. Layout of an internal\_flext project](#2-layout-of-an-internal_flext-project)
+- [2. Layout of an internal_flext project](#2-layout-of-an-internal_flext-project)
 - [3. CA and DI recipe](#3-ca-and-di-recipe)
 - [4. Refactoring fast without breaking](#4-refactoring-fast-without-breaking)
 - [5. Failures](#5-failures)

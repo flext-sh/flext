@@ -6,14 +6,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import flext_infra
 from flext._constants.base import FlextRootConstantsBase
 from flext._constants.config import FlextRootConstantsConfig
-
-if TYPE_CHECKING:
-    from flext import t
 
 
 class FlextRootConstants(flext_infra.c):
@@ -25,4 +20,4 @@ class FlextRootConstants(flext_infra.c):
 
 c = FlextRootConstants
 
-__all__: t.VariadicTuple[str] = ("FlextRootConstants", "c")
+__all__ = ("FlextRootConstants", "c")

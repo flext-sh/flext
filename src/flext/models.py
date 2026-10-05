@@ -6,14 +6,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import flext_infra
 from flext._models.base import FlextRootModelsBase
 from flext._models.config import FlextRootModelsConfig
-
-if TYPE_CHECKING:
-    from flext import t
 
 
 class FlextRootModels(flext_infra.m):
@@ -25,4 +20,4 @@ class FlextRootModels(flext_infra.m):
 
 m = FlextRootModels
 
-__all__: t.VariadicTuple[str] = ("FlextRootModels", "m")
+__all__ = ("FlextRootModels", "m")

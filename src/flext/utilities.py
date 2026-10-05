@@ -6,14 +6,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import flext_infra
 from flext._utilities.base import FlextRootUtilitiesBase
 from flext._utilities.config import FlextRootUtilitiesConfig
-
-if TYPE_CHECKING:
-    from flext import t
 
 
 class FlextRootUtilities(flext_infra.u):
@@ -25,4 +20,4 @@ class FlextRootUtilities(flext_infra.u):
 
 u = FlextRootUtilities
 
-__all__: t.VariadicTuple[str] = ("FlextRootUtilities", "u")
+__all__ = ("FlextRootUtilities", "u")
