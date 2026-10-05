@@ -43,7 +43,8 @@ outside your declared scope. Operator-authorized adoption of reviewed, committed
 uses `git cherry-pick -x` or `git merge --no-ff`, with source SHA, provenance, scope,
 and authorization recorded in the Bead and PR. Never copy raw WIP, environments, caches,
 or generated projections from another lane. Notify the lead through canonical mail
-before adoption; preserve unrelated work and route blockers to their owners, never bypass them.
+before adoption; preserve unrelated work and route blockers to their owners, never
+bypass them.
 
 ## 2. Gates only through root Make verbs
 
@@ -56,8 +57,7 @@ make check
 make test
 ```
 
-Follow `canonical-commands.md` for test verbs, selection, and cache handling, including
-the local `make test-full` exception without testmon; do not maintain a competing policy here.
+Follow `canonical-commands.md` for test verbs, selection, and cache policy.
 
 ## 3. Cooperative git
 
@@ -109,7 +109,8 @@ Do not repeat these:
 - Workers wandering to unrelated beads.
 - Running bare-tool gate commands outside the Make dispatcher.
 - `git add -A` commits sweeping foreign WIP.
-- Treating a report or source checkpoint as delivery, or stopping merely after reporting.
+- Treating a report or source checkpoint as delivery, or stopping merely after
+  reporting.
 
 ## 8. Three-boundary validation contract
 
@@ -121,8 +122,8 @@ A WIP checkpoint preserves a scoped commit on its remote branch; it does not est
 review readiness. Resolve the integration branch from the repository's current
 declaration before fetching it. Substitute that branch for `<integration>` below.
 Freshly fetch and absorb `origin/<integration>` with `git merge --no-ff`, never rebase.
-Publish explicit-path scoped commits by fast-forward push and open the lane's PR against
-that verified integration branch; a DRAFT preservation PR is not delivery.
+Publish explicit-path scoped commits by fast-forward push and open the lane's PR
+against that verified integration branch; a DRAFT preservation PR is not delivery.
 `git merge-base --is-ancestor origin/<integration> HEAD` proves base absorption; the
 reverse order proves that the lane commit is contained in integration. Neither proof
 replaces reviewed PR merge-commit evidence or runtime validation. Propagation requires
@@ -146,8 +147,8 @@ above and records exact commands, cwd, exit codes, and decisive output.
 
 Before reporting `READY_FOR_REVIEW`, the worker must non-destructively merge the latest
 freshly fetched, declared integration branch with `git merge --no-ff`, resolve issues
-without discarding WIP, and rerun the complete boundary above. An upstream merge is absorbed only after
-this lane-context validation passes.
+without discarding WIP, and rerun the complete boundary above. An upstream merge is
+absorbed only after this lane-context validation passes.
 
 ### 8.3 Original target after integration
 
