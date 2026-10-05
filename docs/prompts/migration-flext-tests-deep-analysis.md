@@ -569,23 +569,26 @@ test_document_roundtrip()
 
 **Regras de Namespace:**
 
-1. **Classes base em `~/flext`** devem estender as de `flext_tests`:
+**Classes base em `~/flext`** devem estender as de `flext_tests`:
 
-   ```python
-    from flext_tests import c
+The independent Python example reads the published inherited constant; it does
+not redeclare a base class or copy the current configuration value.
 
-    suffix = c.Tests.DEFAULT_EXTENSION
-    print(suffix)
-   ```
+```python
+from flext_tests import c
 
-2. **Imports rápidos por projeto:**
+suffix = c.Tests.DEFAULT_EXTENSION
+print(suffix)
+```
 
-   ```python
-    from flext import t, u
+**Imports rápidos por projeto:**
 
-    labels: t.StrSequence = ("first", "second")
-    print(u.join(labels, separator=", "))
-   ```
+```python
+from flext import t, u
+
+labels: t.StrSequence = ("first", "second")
+print(u.join(labels, separator=", "))
+```
 
 3. **Domínios de teste por projeto:**
    - `.Tests[Projeto]` - Para projetos específicos (ex: `.TestsLdap`, `.TestsCli`)
@@ -718,33 +721,37 @@ TestsDocument.test_roundtrip()
    - ✅ Testes reais de funcionalidade
    - ✅ Validação de comportamento real
 
-2. **Uma única classe por arquivo:**
+**Uma única classe por arquivo:**
 
-   ```python
-   from flext_core import m, r, settings
-   from flext_tests import tm
+The standalone block retains normal Python indentation inside methods. Fence
+delimiters are at document level so every native consumer receives only Python,
+not a following list item or its Markdown delimiter as part of the program.
 
-
-   class TestsDocument:
-       """Group real public behavior checks in one test class."""
-
-       @staticmethod
-       def test_roundtrip() -> None:
-           """Check model serialization through its public boundary."""
-           document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
-           restored = m.ConfigDocument.model_validate_json(document.model_dump_json())
-           tm.that(restored.model_dump(mode="json"), eq=document.model_dump(mode="json"))
-
-       @staticmethod
-       def test_settings_input() -> None:
-           """Check result composition with the same typed settings owner."""
-           result = r[bool].ok(settings.debug)
-           tm.that(result.unwrap(), eq=settings.debug)
+```python
+from flext_core import m, r, settings
+from flext_tests import tm
 
 
-   TestsDocument.test_roundtrip()
-   TestsDocument.test_settings_input()
-   ```
+class TestsDocument:
+    """Group real public behavior checks in one test class."""
+
+    @staticmethod
+    def test_roundtrip() -> None:
+        """Check model serialization through its public boundary."""
+        document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
+        restored = m.ConfigDocument.model_validate_json(document.model_dump_json())
+        tm.that(restored.model_dump(mode="json"), eq=document.model_dump(mode="json"))
+
+    @staticmethod
+    def test_settings_input() -> None:
+        """Check result composition with the same typed settings owner."""
+        result = r[bool].ok(settings.debug)
+        tm.that(result.unwrap(), eq=settings.debug)
+
+
+TestsDocument.test_roundtrip()
+TestsDocument.test_settings_input()
+```
 
 3. **Automação máxima com conftest:**
 
