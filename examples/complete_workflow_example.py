@@ -22,7 +22,7 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, ClassVar
 
 from examples import ExamplesFlextRootConstants, m, p, t, u
-from flext_core import r
+from flext_core import c, r
 
 if TYPE_CHECKING:
     from collections.abc import Callable, MutableSequence
@@ -151,9 +151,9 @@ class FlextRootCompleteWorkflowExample:
             description="Aggregated metrics across all stages",
         )
         workflow_status: Annotated[
-            str,
+            c.Status,
             u.Field(description="Overall workflow status"),
-        ] = "unknown"
+        ]
 
     class WorkflowOrchestrator(m.BaseModel):
         """Workflow orchestrator coordinating the full stage pipeline."""
@@ -428,7 +428,7 @@ class FlextRootCompleteWorkflowExample:
                     "total_processing_time": total_time,
                     "stage_results": stage_results,
                     "aggregated_metrics": aggregated_metrics,
-                    "workflow_status": "completed",
+                    "workflow_status": c.Status.COMPLETED,
                 })
             )
             summary: t.JsonMapping = t.json_mapping_adapter().validate_python({
@@ -585,7 +585,7 @@ class FlextRootCompleteWorkflowExample:
 
     @staticmethod
     def run_example() -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
-        """Run the complete workflow and expose its observable result.
+        """Run the complete workflow and expose its canonical completed status.
 
         Returns:
             The resulting ``p.Result[FlextRootCompleteWorkflowExample.WorkflowData]``.

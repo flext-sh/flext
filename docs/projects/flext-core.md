@@ -45,22 +45,40 @@ pip install flext-core
 ```
 
 ```python
-from flext_core import FlextDispatcher, p, r
+from typing import ClassVar
+
+from flext_core import FlextDispatcher, m, p, r, u
 
 
-class CreateUserHandler:
+class RouteHandler:
+    """Resolve a validated command through the result contract."""
+
+    message_type: ClassVar[str] = "example"
+
     def handle(self, message: p.Routable) -> p.Result[str]:
-        return r[str].ok(f"created:{message.username}")
+        """Handle the command registered for this route.
+
+        Returns:
+            The route name, or a failure for a mismatched route.
+        """
+        route = u.resolve_message_route(message)
+        if route != self.message_type:
+            return r[str].fail("Unexpected command route")
+        return r[str].ok(route)
 
 
 dispatcher = FlextDispatcher()
-registered = dispatcher.register_handler(CreateUserHandler())
-assert registered.is_success
+handler = RouteHandler()
+dispatcher.register_handler(handler).unwrap()
+message = m.Command(command_type=handler.message_type)
+print(dispatcher.dispatch(message).unwrap())
 ```
 
 The dispatcher routes a message to the registered handler whose declared `message_type`
 matches, and every fallible step returns `r[T]` so callers chain with `.map`/`.flat_map`
-instead of raising. More bootstrap examples live in `flext- core/examples/`
+instead of swallowing failures. This example routes a real validated command;
+`p.Routable` does not promise a `username` field. More bootstrap examples live
+in `flext-core/examples/`
 (`ex_01_flext_result.py` through dispatcher and settings walkthroughs).
 
 ## Architecture & modules

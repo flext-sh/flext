@@ -5,6 +5,10 @@ updated_at: 2026-09-25T17:27:00Z
 
 # Measured context and evidence
 
+All measurements below belong to the dated 2026-09-25 candidate, not the current
+tree. `${HOME}` denotes the recorded operator home directory; path suffixes,
+SHAs, counts, and exit evidence are preserved.
+
 <!-- TOC START -->
 
 - [flext-infra current slice](#flext-infra-current-slice)
@@ -68,7 +72,7 @@ reinterpret them.
 ## Downstream lanes preserved
 
 `flext-cli` lives at
-`/home/marlonsc/fleet-closure-lanes/cli-atomic-interrupt-20260925/flext-cli`, branch
+`${HOME}/fleet-closure-lanes/cli-atomic-interrupt-20260925/flext-cli`, branch
 `fix/cli-atomic-interrupt-race-20260925`, HEAD and fetched integration
 `c913c0aafda556b95c4c4b45c824c723b98cd2bd`. Its authored fix masks POSIX timer signals
 while ownership of an authenticated temporary descriptor is transferred, then restores
@@ -77,7 +81,7 @@ also contains obsolete generated Mise surfaces from an earlier generator. Regene
 through the integrated `flext-infra`; do not restore or preserve those old outputs
 manually.
 
-`flext-core` lives at `/home/marlonsc/fleet-closure-lanes/core-regen/flext-core`, branch
+`flext-core` lives at `${HOME}/fleet-closure-lanes/core-regen/flext-core`, branch
 `fix/core-introspection-contract-20260925`, HEAD
 `25738d509372a190f87b509cf6b1ef0af08414d4`, fetched integration
 `c47ea7d7975b9c920ca4b1db4a5f7f0ac8b96cfb`. It contains the explicit-owner local alias
@@ -87,7 +91,7 @@ and must never be staged.
 ## Handoff package lane
 
 This package was created in the dedicated superproject worktree
-`/home/marlonsc/fleet-closure-lanes/session-handoff-20260925`, branch
+`${HOME}/fleet-closure-lanes/session-handoff-20260925`, branch
 `docs/fleet-green-session-handoff-20260925`, from the fetched `origin/0.12.0-dev`
 baseline.
 

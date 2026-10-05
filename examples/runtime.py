@@ -12,6 +12,7 @@ from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
 from flext_cli import cli
+from flext_core import c
 
 
 def main() -> int:
@@ -25,7 +26,8 @@ def main() -> int:
             acl_result.matched_acl is None``; or if ``first_attribute.lower() ==
             last_attribute.lower()``; or if ``len(oid_response.acls) !=
             ExamplesFlextRootConstants.EXPECTED_OID_ACL_COUNT``; or if ``not
-            advanced.data.values.get('analysis')``; or if ``not complete.content``.
+            advanced.data.values.get('analysis')``; or if ``not complete.content``;
+            or if the workflow status is not ``c.Status.COMPLETED``.
 
     """
     client = flext_ldif.ldif()
@@ -102,6 +104,10 @@ def main() -> int:
     complete = FlextRootCompleteWorkflowExample.run_example().unwrap()
     if not complete.content:
         raise RuntimeError(ExamplesFlextRootConstants.ErrorMessages.COMPLETE_NO_CONTENT)
+    if complete.content["workflow_status"] != c.Status.COMPLETED:
+        raise RuntimeError(
+            ExamplesFlextRootConstants.ErrorMessages.COMPLETE_NOT_COMPLETED,
+        )
 
     cli.print(f"ACL=granted OID={len(oid_response.acls)} advanced=ok complete=ok")
     return 0

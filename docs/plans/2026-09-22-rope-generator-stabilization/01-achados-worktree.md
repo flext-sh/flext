@@ -4,6 +4,10 @@
 
 # Findings — Worktree state (rope-recovery-20260921)
 
+Historical paths use `${HOME}` for the recorded operator home directory. Their
+suffixes, revisions, and measurements are unchanged; they are not live checkout
+recommendations. Resolve the active lane from the tracker before any command.
+
 <!-- TOC START -->
 
 - [1. Lane identity](#1-lane-identity)
@@ -21,9 +25,9 @@ modified while collecting these findings.
 
 ## 1. Lane identity
 
-- Worktree: `/home/marlonsc/flext-worktrees/rope-recovery-20260921` (linked worktree of
-  `/home/marlonsc/flext`; gitdir
-  `/home/marlonsc/flext/.git/worktrees/rope-recovery-20260921`).
+- Worktree: `${HOME}/flext-worktrees/rope-recovery-20260921` (linked worktree of
+  `${HOME}/flext`; gitdir
+  `${HOME}/flext/.git/worktrees/rope-recovery-20260921`).
 - Branch: `recovery/rope-automation-20260921` (root and members), HEAD
   `a17f35a1edae05b3a92dd7471941f243e2456cc9` ("[WIP] preserve workspace generation and
   incremental integration contract").
@@ -79,7 +83,7 @@ modified while collecting these findings.
   tests/infra/{constants,protocols,typings}.py); flext-infra ×4; flext-core ×1;
   flext-quality ×1.
 - External patch:
-  `/home/marlonsc/flext-worktrees/rope-modernize-flext-infra-uncommitted.patch` (57,836
+  `${HOME}/flext-worktrees/rope-modernize-flext-infra-uncommitted.patch` (57,836
   bytes, 2026-09-16; first hunk: `_conform_gitignore.py` ruff per-file-ignores).
   Evidence only; inspect before adopting.
 - Local WIP checkpoints recorded by the handoff: flext-cli `62862b7e`, flext-infra
@@ -112,12 +116,12 @@ modified while collecting these findings.
 
 ## 6. Adjacent state
 
-- Validation clone `/home/marlonsc/flext-worktrees/rope-generator-validation-20260922`
+- Validation clone `${HOME}/flext-worktrees/rope-generator-validation-20260922`
   did NOT exist when this plan was written (verified).
-- Other worktrees: `/home/marlonsc/flext-integration-20260922` (branch
-  `integration/beads-20260922`) and `/home/marlonsc/.worktrees/flext-infra-fix-20260921`
+- Other worktrees: `${HOME}/flext-integration-20260922` (branch
+  `integration/beads-20260922`) and `${HOME}/.worktrees/flext-infra-fix-20260921`
   (prunable).
-- Main checkout `/home/marlonsc/flext`: branch `0.12.0-dev`, HEAD `daa51e8822`, only 2
+- Main checkout `${HOME}/flext`: branch `0.12.0-dev`, HEAD `daa51e8822`, only 2
   dirty gitlinks (flext-core, flext-tests), no merge in progress.
 - Known open PRs (remote state not freshly queried): flext #263, flext-infra #798,
   flext-cli #184, flext-dbt-oracle #107, flext-dbt-oracle-wms #107, flext-tests #121,
