@@ -227,6 +227,7 @@ allow-direct-references = true
 [tool.mypy]
 mypy_path = ["src"]
 plugins = ["pydantic.mypy"]
+disable_error_code = ["prop-decorator", "call-arg", "attr-defined"]
 python_version = "3.13"
 allow_redefinition = true
 check_untyped_defs = true
@@ -388,6 +389,7 @@ include = ["tests"]
 extraPaths = ["src", "."]
 pythonPlatform = "Linux"
 pythonVersion = "3.13"
+reportCallIssue = "none"
 reportConstantRedefinition = "error"
 reportIncompatibleMethodOverride = "error"
 reportInconsistentConstructor = "error"
@@ -463,7 +465,11 @@ quote-style = "double"
 skip-magic-trailing-comma = false
 
 [tool.ruff.lint]
-extend-safe-fixes = ["camelcase-imported-as-lowercase", "relative-imports"]
+extend-safe-fixes = [
+  "camelcase-imported-as-lowercase",
+  "relative-imports",
+  "typing-only-first-party-import",
+]
 ignore = [
   "camelcase-imported-as-lowercase",
   "implicit-namespace-package",
@@ -487,6 +493,17 @@ unfixable = [
 
 [tool.ruff.lint.flake8-copyright]
 notice-rgx = "Copyright \\(c\\) \\d{4} \\S[^\\n]*\\. All rights reserved\\."
+
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = [
+  "examples.m.BaseModel",
+  "flext.m.Value",
+  "flext_core.FlextConfig",
+  "flext_core.FlextSettings",
+  "flext_infra.m.BaseModel",
+  "flext_tests.FlextTestsServiceBase",
+  "pydantic.BaseModel",
+]
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
