@@ -22,7 +22,8 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, ClassVar
 
 from examples import ExamplesFlextRootConstants, m, p, t, u
-from flext_core import c, r
+from flext import c
+from flext_core import r
 
 if TYPE_CHECKING:
     from collections.abc import Callable, MutableSequence

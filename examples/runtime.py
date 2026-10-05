@@ -11,8 +11,8 @@ from examples import ExamplesFlextRootConstants
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
+from flext import c
 from flext_cli import cli
-from flext_core import c
 
 
 def main() -> int:
