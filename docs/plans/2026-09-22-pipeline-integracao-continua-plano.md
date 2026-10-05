@@ -4,6 +4,10 @@
 
 # Plano — Concluir o pipeline com integração contínua e prova real
 
+Historical paths use `${HOME}` for the recorded operator home directory. Their
+suffixes, revisions, and measurements are unchanged; they are not live checkout
+recommendations. Resolve the active lane from the tracker before any command.
+
 <!-- TOC START -->
 
 - [Constraints globais](#constraints-globais)
@@ -27,7 +31,7 @@ controlado).
 **Arquitetura:** workspace FLEXT (raiz `0.12.0-dev` + 31 submódulos) reconciliada na
 workspace de recuperação `~/flext-worktrees/rope-recovery-20260921`; contrato `.venv`
 corrigido no dono (`flext-infra` template+config) e regenerado; pipeline AI Hub
-(`/home/marlonsc/ai-hub`, ccs, cliproxy) sob épicos `aihub-6k1` reconciliado com
+(`${HOME}/ai-hub`, ccs, cliproxy) sob épicos `aihub-6k1` reconciliado com
 `flext-itpd1.3`.
 
 **Spec:** mensagem do operador de 2026-09-22 (5 seções) + achados da auditoria.

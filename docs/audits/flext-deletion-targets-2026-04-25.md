@@ -18,9 +18,10 @@
 across 33 projects (Phase 2.0d gate) **LOC baseline**: 354,880 LOC across 2,317 files
 (`/tmp/flext-loc-baseline-phase2-*.txt`)
 
-This catalog is the contract for Phase 3 surgical deletions. Every entry below is a
-Phase 3 candidate; the user gate at the end of this document MUST pass before Phase 3
-begins.
+This retains the dated Phase 2.4 audit and its proposed Phase 3 deletion contract.
+Counts and recorded results below are historical evidence, not current green
+receipts or authorization to delete code. Reconcile the current owner and native
+validation route before any action.
 
 ## Section 1 — Pattern violations (Phase 2.1)
 
@@ -118,28 +119,34 @@ Source: `/tmp/phase2-codegen-census.txt`.
 
 ## Section 2 — Upstream-symbol duplicates (Phase 2.3)
 
-The canonical primitive `FlextInfraRefactorCensus.parent_alias_collisions(report)` is
-now available (Phase 2.3 deliverable):
+The historical Phase 2.3 deliverable was
+`FlextInfraRefactorCensus.parent_alias_collisions(report)`. That method is no
+longer declared by the current census owner. The algorithm and measured inventory
+below remain dated evidence; do not restore the retired method or manufacture a
+new implementation in this document.
+
+For current tooling-report inspection, the public `m.Infra.WorkspaceReport`
+model validates a real census JSON artifact. The executable example below takes
+that artifact's path as its required command-line input and prints its declared
+duplicate groups. It neither runs a second census engine nor claims that today's
+duplicate groups reproduce the historical parent-alias classification. Produce
+the artifact through the current documented canonical census CLI before running
+this tooling-only consumer; do not substitute an empty or synthetic report.
 
 ```python
+import sys
 from pathlib import Path
 
-from flext_infra import FlextInfraRefactorCensus
+from flext_infra import m
 
-census = FlextInfraRefactorCensus(
-    workspace=str(Path("~/flext")),
-    projects=["flext-cli"],  # or omit for workspace
-    include_local_scopes=False,
+report = m.Infra.WorkspaceReport.model_validate_json(
+    Path(sys.argv[1]).read_text(encoding="utf-8"),
 )
-report = census.execute().unwrap()  # Rope walk — slow (~minutes per project)
-collisions = census.parent_alias_collisions(report)
-for obj, parent_paths in collisions:
-    u.Cli.print(
-        f"{obj.kind} {obj.name} @ {obj.file_path}:{obj.line} — {len(parent_paths)} parents"
-    )
+for group in report.duplicates:
+    print(group.name, group.canonical, len(group.definitions))
 ```
 
-The method:
+The historical method:
 
 - Builds a parent inventory by importing the 8 upstream packages (`flext_core` ,
   `flext_cli` , `flext_tests` , `flext_infra` , `flext_web` , `flext_meltano` ,

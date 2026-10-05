@@ -5,6 +5,10 @@ updated_at: 2026-09-25T17:27:00Z
 
 # Resumption contract
 
+This is the dated 2026-09-25 contract, not current authorization. `${HOME}`
+denotes the recorded operator home directory; suffixes, revisions, and evidence
+are unchanged. Resolve the current owner and lane before any historical command.
+
 <!-- TOC START -->
 
 - [Read-only preflight](#read-only-preflight)
@@ -16,7 +20,7 @@ Start from files and live repositories, never from a prior session cursor. The a
 implementation checkout is:
 
 ```text
-/home/marlonsc/fleet-closure-lanes/infra-convergence-20260925/flext-infra
+${HOME}/fleet-closure-lanes/infra-convergence-20260925/flext-infra
 ```
 
 Its branch is `fix/infra-green-convergence-20260925`; its open draft PR is
@@ -27,13 +31,13 @@ Its branch is `fix/infra-green-convergence-20260925`; its open draft PR is
 Run these commands in order. Record working directory, exit code and decisive output.
 
 ```bash
-cd /home/marlonsc/fleet-closure-lanes/infra-convergence-20260925/flext-infra
+cd "${HOME}/fleet-closure-lanes/infra-convergence-20260925/flext-infra"
 rtk git status --short --branch
 rtk git rev-parse HEAD origin/0.12.0-dev
 rtk gh pr view 861 --json url,state,isDraft,headRefOid,baseRefName,mergeStateStatus,statusCheckRollup
 
-direnv exec /home/marlonsc/flext gc rig list --json
-direnv exec /home/marlonsc/flext gc bd --city /home/marlonsc/gc \
+direnv exec "${HOME}/flext" gc rig list --json
+direnv exec "${HOME}/flext" gc bd --city "${HOME}/gc" \
   show aihub-l42it --rig aihub --json
 ```
 
@@ -43,7 +47,7 @@ Expected freshness facts at handoff creation:
 - fetched integration `0f5d0cd7042caba1eca841e9678a2229606c0182`;
 - PR head still points to `44b3381e...`, state `OPEN`, draft `true`, merge state
   `BEHIND`;
-- Gas City root `/home/marlonsc/gc` is running while the `flext` and `aihub` rigs are
+- Gas City root `${HOME}/gc` is running while the `flext` and `aihub` rigs are
   suspended;
 - the Beads read fails closed with `PROJECT IDENTITY MISMATCH`, local project ID
   `5e6a1521-55b4-4d51-9920-f683fa085f58`, served database project ID
@@ -58,7 +62,7 @@ set Beads endpoint variables, or create a substitute store.
 The first repository command is:
 
 ```bash
-cd /home/marlonsc/fleet-closure-lanes/infra-convergence-20260925/flext-infra
+cd "${HOME}/fleet-closure-lanes/infra-convergence-20260925/flext-infra"
 rtk make test
 ```
 

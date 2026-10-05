@@ -2,8 +2,6 @@
 
 <!-- TOC START -->
 
-- No sections found
-
 <!-- TOC END -->
 
 > ⚠️ **ARQUIVADO** — `flext-service-architecture.md` não existe mais. O conteúdo foi
