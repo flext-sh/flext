@@ -95,10 +95,13 @@ make gen
 make waza
 ```
 
-The final generation pass proves the fixed point. Use only verbs declared by
-`make help`; each verb executes its declared operation directly. Do not attach project,
-file, pattern, action, phase, fix, or changed-only selectors, and do not invoke
-underlying tools directly.
+A final generation pass alone does not prove a fixed point. Prove convergence of the
+same final candidate as required by the stabilization runbook's
+[canonical cycle](../ways-of-working/stabilization-checkpoint-0.12.md#a-canonical-cycle).
+Use declared canonical verbs and their documented inputs. Do not attach effect
+selectors or retired execution toggles to standard lifecycle verbs, or invoke
+underlying tools directly. A scoped verb does not replace required full-lifecycle
+gates.
 
 Every change, including documentation and configuration, requires the applicable
 native lint, type, test, documentation, and build gates. Exercise the real public
