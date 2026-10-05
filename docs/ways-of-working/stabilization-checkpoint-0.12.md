@@ -11,6 +11,11 @@
 
 <!-- TOC END -->
 
+The dated status and checkpoints below are historical evidence, not current runtime,
+queue, ownership, or gate receipts. Current execution follows the branch-matched law
+and the active Bead; historical selectors and manual repair approaches do not override
+the canonical cycle.
+
 > **Status (2026-09-20):** `make gen` reaches a green fixed point across the fleet
 > (32/32; landed fixes: 31 `config/workspace.yaml` identity manifests, bare-deps render
 > in the root workspace, journal recovery #780, lazy `d/e/h/r/x` exports restored in the
@@ -40,21 +45,40 @@ make build
 ```
 
 One failure → fix the verb owner; no timeout inflation; no testmon removal. Run the
-verbs without selectors at the active workspace root. Complete with the applicable
-public runtime and the native documentation/link validation. Prove that repeated
-`make gen`, `make fix`, and `make fmt` leave the candidate unchanged and exit zero;
-later mutations invalidate the affected receipts. Residual warnings and findings block
-closure. Do not start another cycle before proving the whole fleet green on the
-integrated and published SHAs.
+verbs without selectors at the active workspace root. Documentation corrections follow
+this same cycle, completed with the applicable public runtime and native documentation,
+executable-example, and link validation; a docs-only receipt does not replace the
+required gates. Prove that repeated `make gen`, `make fix`, and `make fmt` leave the
+same final candidate unchanged and exit zero. An overlapping edit, regeneration, or
+integration-base change invalidates the affected receipts and requires renewed
+convergence and validation. Generation convergence alone does not prove convergence of
+the complete configured docs lifecycle. Residual warnings and findings block closure.
+Do not start another cycle before proving the whole fleet green on the integrated and
+published SHAs.
+
+Pydantic 2 and the Mypy `pydantic.mypy` plugin are mandatory. The operator's scoped
+exception suspends only `prop-decorator` and `call-arg`; it does not waive the remaining
+lint or type gates. The policy and diagnostic-driven regression owners retain those
+repairs, with punctual causal-hunk review and real-consumer validation. The source
+contract and authorization are recorded in `flext-2guq8`; generated configurations
+must reflect their canonical policy owner rather than being patched at consumers.
 
 ## (b) Central Beads contract
 
-- `bd` runs through `direnv exec <repo> gc bd ...`
+- Rig-store commands run through the selected repository's generated environment:
+  `direnv exec <repo> bd ...`. City-store commands use the configured city scope
+  through `gc bd --city <city-root> ...`; never infer an endpoint from another rig.
 - Activation comes from the generated `.envrc`/`.envrc.local` (AGENTS_GAS_CITY_ROOT +
   the city publication port + the rig metadata database)
-- Identity repair: `gc rig set-endpoint flext --inherit`
+- Verify the selected store with `direnv exec <repo> bd context --json` before effects;
+  generated metadata alone is not connectivity or identity proof.
+- Endpoint identity repair belongs to the city owner through the authorized
+  `gc rig set-endpoint flext --inherit` route; it is not a routine worker action.
 - Never initialize an embedded database/manual port (source:
   `flext-infra/docs/guides/execution-context.md`)
+- Resolve effective orchestration through `gc status`. Orchestration suspension and
+  tracker suspension are independent; retain a selected available tracker, never
+  reactivate orchestration or create a substitute ledger to continue repository work.
 
 ## (c) Integration
 
@@ -95,8 +119,11 @@ the published integrated SHA as well.
 
 ## (d) Active exterminations
 
-`APPLY`, `uv.lock`, `mise.lock`, local beads database — reading/generation too, not just
-gitignore.
+Retired selectors and substitute local Beads databases remain prohibited. The former
+lockfile-extermination instruction is historical, not permission to delete current
+managed locks. Toolchain and dependency locks change through `make upg` at their
+canonical owner; `make setup` consumes the declared toolchain. Never hand-edit or
+discard locks, replace the selected tracker, or bypass a failing owner.
 
 ## (e) Checkpoint 2026-09-20 — engine, cli floor and fleet (flext-v4fmn)
 
