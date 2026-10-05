@@ -31,6 +31,9 @@ the canonical cycle.
 
 ## (a) Canonical cycle
 
+After provisioning and applying the changed slice, exercise its real public consumer
+before static gates and tests. Complete the applicable native cycle on that candidate:
+
 ```bash
 make setup
 make gen
@@ -39,7 +42,9 @@ make gen
 make gen
 make fix
 make fmt
+make docs
 make check
+make smells
 make test
 make build
 ```
@@ -77,13 +82,14 @@ must reflect their canonical policy owner rather than being patched at consumers
   effects, verify access to the assigned Bead through that same selected environment,
   for example `direnv exec <repo> bd show <assigned-bead> --json`. Configuration
   discovery alone does not prove database connectivity or current task ownership.
-- Endpoint identity repair belongs to the city owner through the authorized
-  `gc rig set-endpoint flext --inherit` route; it is not a routine worker action.
+- Endpoint identity repair belongs to the city owner for the selected rig through its
+  authorized native route; it is not a routine worker action.
 - Never initialize an embedded database/manual port (source:
   `flext-infra/docs/guides/execution-context.md`)
-- Resolve effective orchestration through `gc status`. Orchestration suspension and
-  tracker suspension are independent; retain a selected available tracker, never
-  reactivate orchestration or create a substitute ledger to continue repository work.
+- Resolve orchestration activation from its current owner; invoke `gc status` only when
+  that surface is selected and permitted. Orchestration suspension and tracker suspension
+  are independent: do not invoke suspended or unselected orchestration to establish
+  tracker availability, reactivate it, or create a substitute ledger.
 
 ## (c) Integration
 
@@ -92,16 +98,18 @@ deliver working behavior and keep the root, the 31 members, and the shared envir
 green. Preserving WIP means adopting it and fixing its defects; no failure is accepted
 as pre-existing or hidden behind exclusions.
 
-Before starting an increment and before publishing it, refresh the remote references and
-absorb `origin/0.12.0-dev` through a `--no-ff` merge, resolving each conflict with
+Before starting an increment and before publishing it, resolve each repository's
+integration branch from its current canonical declaration and branch-matched law,
+including `.gitmodules` for attached members. Refresh remote references and absorb the
+verified integration ref through `git merge --no-ff`, resolving each conflict with
 review of both sides' features. A base change invalidates the affected receipts. Do not
 accumulate features on a branch far from integration.
 
 The coordinator mandatorily performs the integration of every increment: complete
-implementation, local fleet lint, type, test, documentation and build gates, real
-runtime, CI on the exact PR head, a GitHub PR merged administratively into the verified
-integration branch, and post-merge proof. A local merge, pushed branch, draft PR, or
-source-only report is not delivery. The next increment only starts after that
+implementation, real runtime, applicable native lint, type, test, documentation and
+build gates, green required CI on the exact PR head, a GitHub PR merged administratively
+into the verified integration branch, and post-merge proof. A local merge, pushed branch,
+draft PR, or source-only report is not delivery. The next increment only starts after that
 composition is green. Administrative authorization replaces only the independent
 approval; it keeps every gate. While the tracker runtime is suspended, do not create
 another tracker and do not declare phase closure.
@@ -116,13 +124,16 @@ the published integrated SHA as well.
    of generation, environment, and gates.
 2. Preserve WIP and review scoped commits (explicit paths, never `git add -A`);
    deliver through a GitHub PR merged with an administrative merge commit into the
-   verified integration branch, expected `0.12.0-dev`, with the applicable review and CI.
+   repository-specific integration branch, with the applicable review and green CI.
 3. Publish members before updating the root gitlinks. Push fast-forward; divergence
    requires absorption through merge and revalidation, never rebase or force-push.
 4. Revalidate gates, generation convergence, and runtime on the published integrated
    SHA; a local checkpoint or test does not prove fleet stability.
 5. The coordinator records in the Bead the command, cwd, exit, decisive output, SHAs,
    and review/CI/runtime receipts; it closes only obligations with delivered proof.
+
+Delivery of a validated slice does not establish global fleet stabilization or close
+unrelated phase obligations.
 
 ## (d) Active exterminations
 
