@@ -5,9 +5,11 @@ updated_at: 2026-09-25T17:27:00Z
 
 # Beads reconciliation boundary
 
-<!-- TOC START -->
+This is the dated 2026-09-25 boundary, not a claim about the current tracker.
+`${HOME}` denotes the recorded operator home directory; path suffixes, database
+identities, and exit evidence below are unchanged.
 
-- No sections found
+<!-- TOC START -->
 
 <!-- TOC END -->
 
@@ -17,15 +19,15 @@ its existing intent, relationships and evidence; do not create a replacement rec
 At handoff creation, both of these canonical reads failed with exit 1:
 
 ```bash
-direnv exec /home/marlonsc/flext gc bd show aihub-l42it --json
-direnv exec /home/marlonsc/flext gc bd --city /home/marlonsc/gc \
+direnv exec "${HOME}/flext" gc bd show aihub-l42it --json
+direnv exec "${HOME}/flext" gc bd --city "${HOME}/gc" \
   show aihub-l42it --rig aihub --json
 ```
 
 The exact failure is `PROJECT IDENTITY MISMATCH`: local metadata identifies
 `5e6a1521-55b4-4d51-9920-f683fa085f58`, while the running Dolt server presents
 `a85fa192-f2e1-48f5-a62f-9d5947920786`. `gc rig list --json` proves city root
-`/home/marlonsc/gc`; only the `gc` HQ rig is running and the `aihub` and `flext` rigs
+`${HOME}/gc`; only the `gc` HQ rig is running and the `aihub` and `flext` rigs
 are suspended.
 
 Therefore no Bead was claimed, updated or closed during handoff creation. The next
