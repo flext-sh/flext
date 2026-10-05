@@ -109,6 +109,12 @@ consumer before encoding its behavior in tests. Record the command, working dire
 exit status, decisive output, and candidate SHA; static checks alone do not establish
 working runtime behavior.
 
+Every change, including documentation and configuration, requires the applicable
+native lint, type, test, documentation, and build gates. Exercise the real public
+consumer before encoding its behavior in tests. Record the command, working directory,
+exit status, decisive output, and candidate SHA; static checks alone do not establish
+working runtime behavior.
+
 ## Related
 
 - `AGENTS.md`
