@@ -1051,7 +1051,7 @@ workspace = [
 [[package]]
 name = "flext-api"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-api.git?rev=0.12.0-dev#44fb01f96d15191d749d66a7ad53b27c0d11a337" }
+source = { git = "https://github.com/flext-sh/flext-api.git?rev=0.12.0-dev#0e0757b08d5747b9e865a0702d7b3b3ec69da57f" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1250,7 +1250,7 @@ dependencies = [
 [[package]]
 name = "flext-infra"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#742656e48565b95d91cb9ae2cf81ff92e374b6db" }
+source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#f71daadb3fbac7a29d0cfd6aae01e52345f5cf88" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
