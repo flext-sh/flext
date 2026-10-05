@@ -98,11 +98,13 @@ review of both sides' features. A base change invalidates the affected receipts.
 accumulate features on a branch far from integration.
 
 The coordinator mandatorily performs the integration of every increment: complete
-implementation, local fleet gates, real runtime, CI on the exact candidate, merge, and
-post-merge proof. The next increment only starts after that composition is green. An
-administrative authorization replaces only the independent approval; it keeps every
-gate. While the tracker runtime is suspended, do not create another tracker and do not
-declare phase closure.
+implementation, local fleet lint, type, test, documentation and build gates, real
+runtime, CI on the exact PR head, a GitHub PR merged administratively into the verified
+integration branch, and post-merge proof. A local merge, pushed branch, draft PR, or
+source-only report is not delivery. The next increment only starts after that
+composition is green. Administrative authorization replaces only the independent
+approval; it keeps every gate. While the tracker runtime is suspended, do not create
+another tracker and do not declare phase closure.
 
 For cross-repository changes, order the commits by the producer/consumer contract and
 validate every intermediate composition before landing it. Do not rely on simultaneous
@@ -113,8 +115,8 @@ the published integrated SHA as well.
    coordinator maintains dependencies, integration decisions, and the serialized window
    of generation, environment, and gates.
 2. Preserve WIP and review scoped commits (explicit paths, never `git add -A`);
-   integrate through `merge --no-ff` into the verified integration branch, expected
-   `0.12.0-dev`, with the applicable review and CI.
+   deliver through a GitHub PR merged with an administrative merge commit into the
+   verified integration branch, expected `0.12.0-dev`, with the applicable review and CI.
 3. Publish members before updating the root gitlinks. Push fast-forward; divergence
    requires absorption through merge and revalidation, never rebase or force-push.
 4. Revalidate gates, generation convergence, and runtime on the published integrated
