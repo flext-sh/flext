@@ -43,9 +43,8 @@ make check
 
 ```python
 import secrets
-from uuid import uuid4
-
 from getpass import getpass
+from uuid import uuid4
 
 from flext_auth import FlextAuth
 
