@@ -234,15 +234,15 @@ class MiseLockConverge:
                 return None
 
         failed = release_key(failed_version)
-        scored: list[tuple[tuple[int, ...], str]] = []
+        candidates: list[str] = []
         for line in listing.splitlines():
             version = line.strip().lstrip("v")
             parsed = release_key(version)
             if parsed is None or (failed is not None and parsed >= failed):
                 continue
-            scored.append((parsed, version))
-        scored.sort(reverse=True)
-        return [version for _, version in scored[: cls.CANDIDATE_LIMIT]]
+            candidates.append(version)
+        candidates.sort(key=release_key, reverse=True)
+        return candidates[: cls.CANDIDATE_LIMIT]
 
     @staticmethod
     def hold_manifest_version(manifest: Path, selector: str, version: str) -> None:
@@ -291,20 +291,6 @@ class MiseLockConverge:
         if not manifest.is_relative_to(stage.resolve()):
             message = f"staged manifest escapes the stage: {manifest}"
             raise ValueError(message)
-        return manifest
-
-    @staticmethod
-    def staged_manifest(stage: Path) -> Path:
-        """Resolve the staged manifest, refusing a path that escapes the stage.
-
-        The stage directory arrives from the command line, so the manifest
-        write is guarded: a symlinked or otherwise relocated ``.mise.toml``
-        that resolves outside the declared stage stops converge loud instead
-        of rewriting an unrelated file.
-        """
-        manifest = (stage / ".mise.toml").resolve()
-        if not manifest.is_relative_to(stage.resolve()):
-            raise ValueError(f"staged manifest escapes the stage: {manifest}")
         return manifest
 
     @classmethod
