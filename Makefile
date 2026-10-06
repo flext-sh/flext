@@ -810,7 +810,7 @@ $${mise_config_argument:+"$$mise_config_argument"} \
 	}; \
 mise_has_blocking_warning() { \
 		case "$$1" in \
-			*converge.log) \
+			*converge.log|*pin-lock.log) \
 				grep -F 'mise WARN' "$$1" \
 					| grep -Fv 'not replacing unmanaged file in shims directory' \
 					| grep -Fv 'lock-time provenance verification failed' \
