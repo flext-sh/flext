@@ -1,5 +1,13 @@
 # ADR-020 — Bun installs the npm-backed mise tools fleet-wide
 
+<!-- TOC START -->
+
+- [Decision](#decision)
+- [Consequences](#consequences)
+- [References](#references)
+
+<!-- TOC END -->
+
 - **Status:** CURRENT IMPLEMENTATION (2026-10-05)
 - **Scope:** every generated `.mise.toml`, `mise.lock`, the bootstrap
   environment, and the user-global Mise registry (ai-hub ADR-0037).
