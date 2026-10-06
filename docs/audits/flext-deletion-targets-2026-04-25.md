@@ -174,16 +174,11 @@ project / one module at a time) — which is the design intent.
 
    ```bash
    python -m flext_infra refactor accessor-migrate \
-       --repository-root <consumer-repo-root> \
-       --projects . \
+       --repository . \
+       --project <consumer> \
        --module <consumer.module> \
-       --namespace <consumer-package> \
-       --apply
+       --target-alias <parent.path>
    ```
-
-   The rewrite is origin-aware: only occurrences whose defining module resolves
-   inside the rename catalog's origin package are renamed; homonyms are skipped
-   with a warning. Without `--apply` the verb reports without writing.
 
 4. Verify net-negative LOC delta and 0 ruff + 0 pyrefly post-change (verb's safety gate
    enforces this).

@@ -1,4 +1,3 @@
-# Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Run Playwright automation against a static HTML page."""
 
 import pathlib

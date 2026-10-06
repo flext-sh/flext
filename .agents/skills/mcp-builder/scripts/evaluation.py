@@ -1,4 +1,3 @@
-# Copyright (c) 2025 FLEXT Team. All rights reserved.
 """MCP Server Evaluation Harness.
 
 This script evaluates MCP servers by running test questions against them using Claude.
@@ -13,7 +12,7 @@ import traceback
 from pathlib import Path
 
 from anthropic import Anthropic
-from connections import ConnectionParams, MCPConnection, create_connection
+from connections import MCPConnection, create_connection
 from defusedxml import ElementTree as DelTree
 
 EVALUATION_PROMPT = """You are an AI assistant with access to tools.
@@ -35,11 +34,9 @@ Summary Requirements:
 Feedback Requirements:
 - In your <feedback> tags, provide constructive feedback on the tools:
   - Comment on tool names: Are they clear and descriptive?
-  - Comment on input parameters: Are they well-documented? Are required vs
-    optional parameters clear?
+  - Comment on input parameters: Are they well-documented? Are required vs optional parameters clear?
   - Comment on descriptions: Do they accurately describe what the tool does?
-  - Comment on any errors encountered during tool usage: Did the tool fail to
-    execute? Did the tool return too many tokens?
+  - Comment on any errors encountered during tool usage: Did the tool fail to execute? Did the tool return too many tokens?
   - Identify specific areas for improvement and explain WHY they would help
   - Be specific and actionable in your suggestions
 
@@ -54,15 +51,7 @@ Response Requirements:
 
 
 def parse_evaluation_file(file_path: Path) -> list[dict[str, str]]:
-    """Parse XML evaluation file with qa_pair elements.
-
-    Args:
-        file_path: Path to the XML evaluation file.
-
-    Returns:
-        List of question/answer dictionaries from qa_pair elements.
-
-    """
+    """Parse XML evaluation file with qa_pair elements."""
     tree = DelTree.parse(file_path)
     root = tree.getroot()
     return [
@@ -76,16 +65,7 @@ def parse_evaluation_file(file_path: Path) -> list[dict[str, str]]:
 
 
 def extract_xml_content(text: str, tag: str) -> str | None:
-    """Extract content from XML tags.
-
-    Args:
-        text: Text containing XML tags.
-        tag: Tag name to extract content from.
-
-    Returns:
-        Stripped content of the last matching tag, or None.
-
-    """
+    """Extract content from XML tags."""
     pattern = rf"<{tag}>(.*?)</{tag}>"
     matches = re.findall(pattern, text, re.DOTALL)
     return matches[-1].strip() if matches else None
@@ -98,19 +78,7 @@ async def agent_loop(
     tools: list[dict[str, object]],
     connection: MCPConnection,
 ) -> tuple[str | None, dict[str, object]]:
-    """Run the agent loop with MCP tools.
-
-    Args:
-        client: Anthropic API client.
-        model: Model identifier to use.
-        question: Question posed to the agent.
-        tools: Tool descriptors exposed to the agent.
-        connection: Active MCP connection for tool calls.
-
-    Returns:
-        Final response text and per-tool metrics.
-
-    """
+    """Run the agent loop with MCP tools."""
     messages: list[dict[str, object]] = [{"role": "user", "content": question}]
 
     response = await asyncio.to_thread(
@@ -156,7 +124,7 @@ async def agent_loop(
                     "type": "tool_result",
                     "tool_use_id": tool_use.id,
                     "content": tool_response,
-                },
+                }
             ],
         })
 
@@ -171,8 +139,7 @@ async def agent_loop(
         messages.append({"role": "assistant", "content": response.content})
 
     response_text = next(
-        (block.text for block in response.content if hasattr(block, "text")),
-        None,
+        (block.text for block in response.content if hasattr(block, "text")), None
     )
     return response_text, tool_metrics
 
@@ -184,27 +151,11 @@ async def evaluate_single_task(
     tools: list[dict[str, object]],
     connection: MCPConnection,
 ) -> dict[str, object]:
-    """Evaluate a single QA pair with the given tools.
-
-    Args:
-        client: Anthropic API client.
-        model: Model identifier to use.
-        qa_pair: Question/answer pair under evaluation.
-        tools: Tool descriptors exposed to the agent.
-        connection: Active MCP connection for tool calls.
-
-    Returns:
-        Evaluation result record with score and metrics.
-
-    """
+    """Evaluate a single QA pair with the given tools."""
     start_time = time.time()
 
     response, tool_metrics = await agent_loop(
-        client,
-        model,
-        qa_pair["question"],
-        tools,
-        connection,
+        client, model, qa_pair["question"], tools, connection
     )
 
     response_value = extract_xml_content(response, "response")
@@ -266,17 +217,7 @@ async def run_evaluation(
     connection: MCPConnection,
     model: str = "claude-3-7-sonnet-20250219",
 ) -> str:
-    """Run evaluation with MCP server tools.
-
-    Args:
-        eval_path: Path to the XML evaluation file.
-        connection: Active MCP connection for tool calls.
-        model: Model identifier to use.
-
-    Returns:
-        Rendered markdown evaluation report.
-
-    """
+    """Run evaluation with MCP server tools."""
     client = Anthropic()
 
     tools = await connection.list_tools()
@@ -326,15 +267,7 @@ async def run_evaluation(
 
 
 def parse_headers(header_list: list[str]) -> dict[str, str]:
-    """Parse header strings in format 'Key: Value' into a dictionary.
-
-    Args:
-        header_list: Header strings in 'Key: Value' format.
-
-    Returns:
-        Dictionary mapping header keys to values.
-
-    """
+    """Parse header strings in format 'Key: Value' into a dictionary."""
     headers = {}
     if not header_list:
         return headers
@@ -347,15 +280,7 @@ def parse_headers(header_list: list[str]) -> dict[str, str]:
 
 
 def parse_env_vars(env_list: list[str]) -> dict[str, str]:
-    """Parse environment variable strings in format 'KEY=VALUE'.
-
-    Args:
-        env_list: Environment variable strings in 'KEY=VALUE' format.
-
-    Returns:
-        Dictionary mapping variable names to values.
-
-    """
+    """Parse environment variable strings in format 'KEY=VALUE' into a dictionary."""
     env = {}
     if not env_list:
         return env
@@ -373,10 +298,8 @@ USAGE = """usage: evaluation.py [-h] eval_file
 
 Examples:
   python evaluation.py -t stdio -c python -a my_server.py eval.xml
-  python evaluation.py -t sse -u https://example.com/mcp \
-      -H "Authorization: Bearer token" eval.xml
-  python evaluation.py -t http -u https://example.com/mcp \
-      -m claude-3-5-sonnet-20241022 eval.xml"""
+  python evaluation.py -t sse -u https://example.com/mcp -H "Authorization: Bearer token" eval.xml
+  python evaluation.py -t http -u https://example.com/mcp -m claude-3-5-sonnet-20241022 eval.xml"""
 
 
 class UsageError(ValueError):
@@ -384,18 +307,7 @@ class UsageError(ValueError):
 
 
 def parse_args(argv: list[str]) -> dict[str, object]:
-    """Parse the evaluation-harness command line without a CLI framework.
-
-    Args:
-        argv: Command-line arguments excluding the program name.
-
-    Returns:
-        Parsed argument dictionary.
-
-    Raises:
-        UsageError: If the arguments are invalid.
-
-    """
+    """Parse the evaluation-harness command line without a CLI framework."""
     args: dict[str, object] = {"transport": "stdio"}
     positional: list[str] = []
     flags_getting_value = {
@@ -473,13 +385,11 @@ async def main() -> None:
     try:
         connection = create_connection(
             transport=transport,
-            params=ConnectionParams(
-                command=args.get("command"),
-                args=args.get("args"),
-                env=env_vars,
-                url=args.get("url"),
-                headers=headers,
-            ),
+            command=args.get("command"),
+            args=args.get("args"),
+            env=env_vars,
+            url=args.get("url"),
+            headers=headers,
         )
     except ValueError:
         sys.exit(1)

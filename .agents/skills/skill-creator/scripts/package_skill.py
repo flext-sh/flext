@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Skill Packager - Creates a distributable zip file of a skill folder.
 
 Usage:
@@ -23,8 +22,7 @@ def package_skill(skill_path: str, output_dir: str | None = None) -> Path | None
 
     Args:
         skill_path: Path to the skill folder
-        output_dir: Optional output directory for the zip file (defaults to
-            current directory)
+        output_dir: Optional output directory for the zip file (defaults to current directory)
 
     Returns:
         Path to the created zip file, or None if error

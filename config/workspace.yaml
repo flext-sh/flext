@@ -17,9 +17,6 @@ repository:
   package: false
   editable: false
   read_only: false
-integration:
-  provider: flext-sh
-  branch: "0.12.0-dev"
 project:
   package_name: "flext"
   class_stem: "Flext"
@@ -447,28 +444,3 @@ members:
 exclusions:
 
     []
-
-# Out-of-workspace consumers adjusted as guests by `make propagate` (bead
-# flext-20yyv): each one advances its own lane branch through ITS canonical
-# make verbs (upg advances the flext git+https branch pins, gen regenerates
-# projections, fix-namespace/fix-accessors apply the origin-aware repairs),
-# then publishes one PR per repository. Roots are absolute because the
-# consumers are sibling checkouts, not submodules. dataop rides a later wave:
-# its Makefile is an older generation without the fix-namespace/fix-accessors
-# verbs (flext-20yyv notes). datacosmos.bkp is a credential/backup area with
-# no code repositories and never enters automation.
-external_consumers:
-  - name: algar-oud-mig
-    root: /home/marlonsc/algar-oud-mig
-    integration_branch: "0.12.0-dev"
-  - name: cosmos-main
-    root: /home/marlonsc/cosmos-main
-    integration_branch: develop
-  - name: cosmos-docgen
-    root: /home/marlonsc/cosmos-docgen
-    integration_branch: dev
-  - name: invest
-    root: /home/marlonsc/invest
-    integration_branch: dev
-    fix_namespace: false
-    fix_accessors: false

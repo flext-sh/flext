@@ -43,17 +43,12 @@ make check
 
 ```python
 import secrets
-from getpass import getpass
 from uuid import uuid4
-
-from getpass import getpass
 
 from flext_auth import FlextAuth
 
 password = secrets.token_urlsafe()
 username = uuid4().hex
-
-password = getpass("Password: ")
 
 auth = FlextAuth.quick_start(create_admin_user=False)
 

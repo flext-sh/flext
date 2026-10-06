@@ -3,7 +3,6 @@
 <!-- TOC START -->
 
 - [Test design](#test-design)
-- [Pydantic and mypy](#pydantic-and-mypy)
 - [Canonical execution](#canonical-execution)
 - [Generated documentation](#generated-documentation)
 - [Related guides](#related-guides)

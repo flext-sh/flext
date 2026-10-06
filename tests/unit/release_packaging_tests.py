@@ -33,13 +33,15 @@ class TestsFlextRootReleasePackaging:
                     mapping at key.
 
             """
-            node: t.JsonMapping = dict(payload)
+            node: t.JsonValue = dict(payload)
             for key in keys:
-                section = node[key]
-                if not isinstance(section, Mapping):
+                if not isinstance(node, Mapping):
                     msg = f"expected mapping at key {key!r}"
                     raise TypeError(msg)
-                node = section
+                node = node[key]
+            if not isinstance(node, Mapping):
+                msg = "expected final section to be a mapping"
+                raise TypeError(msg)
             return node
 
         @staticmethod

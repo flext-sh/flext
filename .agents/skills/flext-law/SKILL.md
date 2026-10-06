@@ -182,9 +182,8 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
 
 ## Resume entry points
 
-- Namespace/runtime handoff and execution context:
-  `flext-infra/docs/guides/execution-context.md` (the former
-  `docs/roadmap/namespace-automation-handoff-2026-09-14.md` no longer exists).
+- Stabilization handoff (state table, first failure, next action):
+  `flext-infra/docs/roadmap/namespace-automation-handoff-2026-09-14.md`.
 - Gas City task `flext-itpd1.3` under epic `flext-itpd1` owns recovery coordination.
   Sibling workstreams `flext-itpd1.2` (documentation) and `flext-itpd1.4` (Make
   machinery) retain their bounded ownership; the coordinator owns Beads, serialized
