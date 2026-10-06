@@ -173,7 +173,18 @@ class MiseLockConverge:
             raise ValueError(
                 msg,
             )
-        if "mise WARN" in diagnostics:
+        # The minimum_release_age supply-chain policy emits a deterministic
+        # informational warning on every version listing (newer releases are
+        # hidden by the declared age window, by design). It is not a defect:
+        # treating it as blocking would make every converge fail forever.
+        expected_warnings = ("hidden by minimum_release_age",)
+        warned = [line for line in diagnostics.splitlines() if "mise WARN" in line]
+        unexpected = [
+            line
+            for line in warned
+            if not any(expected in line for expected in expected_warnings)
+        ]
+        if unexpected:
             sys.stderr.write(diagnostics)
             msg = f"Mise warned during {' '.join(arguments)}; converge stopped"
             raise ValueError(msg)
