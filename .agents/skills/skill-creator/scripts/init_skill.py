@@ -217,7 +217,8 @@ def init_skill(skill_name: str, path: str) -> Path | None:
     # Create SKILL.md from template
     skill_title = title_case_skill_name(skill_name)
     skill_content = SKILL_TEMPLATE.format(
-        skill_name=skill_name, skill_title=skill_title
+        skill_name=skill_name,
+        skill_title=skill_title,
     )
     try:
         (skill_dir / "SKILL.md").write_text(skill_content)
@@ -231,7 +232,9 @@ def init_skill(skill_name: str, path: str) -> Path | None:
 
 
 def _create_resource_directories(
-    skill_dir: Path, skill_name: str, skill_title: str
+    skill_dir: Path,
+    skill_name: str,
+    skill_title: str,
 ) -> bool:
     """Create the scripts, references, and assets starter resources."""
     try:
