@@ -591,9 +591,9 @@ specifiers = ["latest"]
 bun_args = "--trust"
 
 [[tools."npm:prettier"]]
-version = "3.9.9"
+version = "3.5.3"
 backend = "npm:prettier"
-specifiers = ["3.9.9"]
+specifiers = ["3.5.3"]
 
 [[tools.python]]
 version = "3.13.15"
