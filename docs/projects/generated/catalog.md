@@ -14,7 +14,7 @@ package.
 | [flext-api](../../api-reference/generated/flext-api.md) | domain | `flext_api` | FLEXT API - High-Performance REST API with FastAPI |
 | [flext-auth](../../api-reference/generated/flext-auth.md) | domain | `flext_auth` | FLEXT Auth - Enterprise Authentication & Authorization Service |
 | [flext-cli](../../api-reference/generated/flext-cli.md) | domain | `flext_cli` | FLEXT CLI - Developer Command Line Interface |
-| [flext-core](../../api-reference/generated/flext-core.md) | domain | `flext_core` | Enterprise Foundation Framework - Modern Python 3.13 + Clean Architecture |
+| [flext-core](../../api-reference/generated/flext-core.md) | platform | `flext_core` | Enterprise Foundation Framework - Modern Python 3.13 + Clean Architecture |
 | [flext-db-oracle](../../api-reference/generated/flext-db-oracle.md) | domain | `flext_db_oracle` | FLEXT DB Oracle - Enterprise Oracle Database Operations Library |
 | [flext-dbt-ldap](../../api-reference/generated/flext-dbt-ldap.md) | integration | `flext_dbt_ldap` | FLEXT dbt LDAP - dbt Models for LDAP Data Transformation |
 | [flext-dbt-ldif](../../api-reference/generated/flext-dbt-ldif.md) | integration | `flext_dbt_ldif` | FLEXT dbt LDAP - dbt Models for LDIF Data Transformation |
