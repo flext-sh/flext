@@ -17,6 +17,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -53,7 +54,7 @@ class MiseLockConverge:
         ("MISE_LOCKFILE", "true"),
         ("MISE_LOCKED", "true"),
         ("MISE_LOCKFILE_PLATFORMS", "linux-x64,linux-x64-musl,linux-arm64,macos-x64,macos-arm64,windows-x64"),
-        ("MISE_MINIMUM_RELEASE_AGE", "7d"),
+        ("MISE_MINIMUM_RELEASE_AGE", "10d"),
         ("MISE_NPM_PACKAGE_MANAGER", "bun"),
     )
     TRANSIENT_ENVIRONMENT = (
@@ -346,6 +347,13 @@ class MiseLockConverge:
                 return
             holds: dict[str, str] = {}
             for selector, failed_version in cls.failing_install_tools(probe_output):
+                if selector == "core:python":
+                    message = (
+                        f"core:python {failed_version} failed install; the fleet "
+                        "pins the 3.13 line by law, so holding it below 3.13 is "
+                        "not permitted — the lock needs an operator decision"
+                    )
+                    raise ValueError(message)
                 holds[selector] = cls._hold(runtime, stage, environment, selector, failed_version)
                 print(
                     f"hold: {selector} held at {holds[selector]}: release {failed_version}"
@@ -359,7 +367,53 @@ class MiseLockConverge:
             shutil.rmtree(scratch, ignore_errors=True)
 
     @classmethod
+    def pin_stage_manifest(cls, stage: Path) -> int:
+        """Pin the staged manifest's moving selectors to the staged lock.
+
+        The locked install resolves a moving selector against the live
+        registry where the supply-chain cooldown hides the newest releases,
+        so the lock's own resolution is the only installable truth. The
+        staged manifest is throwaway; the committed manifest keeps its
+        declared selector and the staged lock stays the frozen instrument.
+        """
+        lock = (stage / "mise.lock").read_text(encoding="utf-8")
+        resolved: dict[str, str] = {}
+        for name, body in re.findall(
+            r"\[\[tools\.(\S+?)\]\]\n(.*?)(?=\n\[\[|\Z)", lock, re.S
+        ):
+            found = re.search(r'^version = "([^"]+)"', body, re.M)
+            if found:
+                resolved[name.removeprefix("core:")] = found.group(1)
+        manifest_path = cls.staged_manifest(stage)
+        lines = manifest_path.read_text(encoding="utf-8").splitlines(
+            keepends=True
+        )
+        in_tools = False
+        pinned = 0
+        for index, line in enumerate(lines):
+            stripped = line.strip()
+            if stripped.startswith("["):
+                in_tools = stripped == "[tools]"
+                continue
+            if in_tools and "=" in stripped:
+                tool = stripped.split("=", 1)[0].strip().strip('"')
+                if tool in resolved:
+                    lines[index] = f'{tool} = "{resolved[tool]}"\n'
+                    pinned += 1
+        manifest_path.write_text("".join(lines), encoding="utf-8")
+        print(
+            f"INFO: pinned {pinned} staged tools to their locked resolutions",
+            file=sys.stderr,
+        )
+        return 0
+
+    @classmethod
     def main(cls, arguments: list[str]) -> int:
+        if arguments and arguments[0] == "pin":
+            if len(arguments) != 2:
+                message = "usage: mise-lock-converge.py pin STAGE"
+                raise ValueError(message)
+            return cls.pin_stage_manifest(Path(arguments[1]).absolute())
         if len(arguments) != 3:
             message = "usage: mise-lock-converge.py STORAGE STAGE RELEASE"
             raise ValueError(message)
