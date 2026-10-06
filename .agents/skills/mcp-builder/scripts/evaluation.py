@@ -124,7 +124,7 @@ async def agent_loop(
                     "type": "tool_result",
                     "tool_use_id": tool_use.id,
                     "content": tool_response,
-                }
+                },
             ],
         })
 
@@ -139,7 +139,8 @@ async def agent_loop(
         messages.append({"role": "assistant", "content": response.content})
 
     response_text = next(
-        (block.text for block in response.content if hasattr(block, "text")), None
+        (block.text for block in response.content if hasattr(block, "text")),
+        None,
     )
     return response_text, tool_metrics
 
@@ -155,7 +156,11 @@ async def evaluate_single_task(
     start_time = time.time()
 
     response, tool_metrics = await agent_loop(
-        client, model, qa_pair["question"], tools, connection
+        client,
+        model,
+        qa_pair["question"],
+        tools,
+        connection,
     )
 
     response_value = extract_xml_content(response, "response")
