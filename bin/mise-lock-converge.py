@@ -154,6 +154,7 @@ class MiseLockConverge:
         environment["GIT_CEILING_DIRECTORIES"] = str(stage.parent)
         environment["MISE_CEILING_PATHS"] = str(stage.parent)
         environment["MISE_TRUSTED_CONFIG_PATHS"] = str(stage)
+        environment["MISE_LOCKED"] = "false"
         return environment
 
     @staticmethod
@@ -227,7 +228,9 @@ class MiseLockConverge:
         return tools
 
     @classmethod
-    def release_candidates(cls, listing: str, failed_version: str) -> list[str]:
+    def release_candidates(
+        cls, listing: str, failed_version: str, selector: str
+    ) -> list[str]:
         """List releases of an ``ls-remote`` listing strictly older than the failed one."""
 
         def release_key(version: str) -> tuple[int, ...] | None:
@@ -241,26 +244,60 @@ class MiseLockConverge:
         for line in listing.splitlines():
             version = line.strip().lstrip("v")
             parsed = release_key(version)
-            if parsed is None or (failed is not None and parsed >= failed):
+            if parsed is None:
+                continue
+            if failed is not None and len(failed) <= 2:
+                # A floating minor-range declaration (python = "3.13") holds
+                # INSIDE its declared line, never below it: the fleet law
+                # pins python to a strict 3.13.x window, so crossing the
+                # minor boundary would be a downgrade, not a hold. Candidates
+                # are the concrete in-line releases, newest first.
+                if len(parsed) < 3 or parsed[:2] != failed[:2]:
+                    continue
+                if parsed == failed:
+                    continue
+            elif failed is not None and parsed >= failed:
                 continue
             candidates.append(version)
+        candidates.sort(key=release_key, reverse=True)
         return candidates[: cls.CANDIDATE_LIMIT]
 
     @staticmethod
     def hold_manifest_version(manifest: Path, selector: str, version: str) -> None:
         """Rewrite one tool's declared version inside the staged manifest copy."""
+        manifest_selector = selector.removeprefix("core:")
         lines = manifest.read_text(encoding="utf-8").splitlines(keepends=True)
-        headers = (f'[tools."{selector}"]', f"[tools.{selector}]")
+        headers = (
+            f'[tools."{manifest_selector}"]',
+            f"[tools.{manifest_selector}]",
+        )
+        inline_keys = (
+            f'"{manifest_selector}" = ',
+            f"{manifest_selector} = ",
+        )
         in_section = False
+        in_tools = False
         for index, line in enumerate(lines):
             stripped = line.strip()
-            if stripped.startswith("[tools."):
+            if stripped.startswith("["):
                 in_section = stripped in headers
+                in_tools = stripped == "[tools]"
                 continue
             if in_section and stripped.startswith("version") and "=" in stripped:
                 lines[index] = f'version = "{version}"\n'
                 manifest.write_text("".join(lines), encoding="utf-8")
                 return
+            if in_tools and any(stripped.startswith(key) for key in inline_keys):
+                # Preserve the manifest's own key quoting: dotted selectors
+                # like npm:prettier are only valid as quoted TOML keys.
+                quoted = stripped.startswith(f'"{manifest_selector}" = ')
+                key = f'"{manifest_selector}"' if quoted else manifest_selector
+                lines[index] = f'{key} = "{version}"\n'
+                manifest.write_text("".join(lines), encoding="utf-8")
+                return
+        sys.stderr.write(f"=== staged manifest ({manifest}) ===\n")
+        sys.stderr.write(manifest.read_text(encoding="utf-8"))
+        sys.stderr.write("=== end staged manifest ===\n")
         msg = f"Mise manifest has no declared version to hold: {selector}"
         raise ValueError(msg)
 
@@ -291,10 +328,21 @@ class MiseLockConverge:
         """Hold one failing tool at its newest release that installs in the stage."""
         listing = cls._run(runtime, ["ls-remote", selector], environment)
         manifest = cls.staged_manifest(stage)
-        for candidate in cls.release_candidates(listing, failed_version):
+        for candidate in cls.release_candidates(
+            listing, failed_version, selector
+        ):
             cls.hold_manifest_version(manifest, selector, candidate)
             try:
-                cls._run(runtime, ["-C", str(stage), "lock"], environment)
+                # The hold rewrite intentionally moves the manifest away from
+                # the staged lock's recorded resolution, so the re-lock emits
+                # transient "not in the lockfile" notices for the held tool
+                # before rewriting the entry. Those notices are the
+                # procedure's own intermediate state, not defects: the lock's
+                # exit code and the staged install probe below remain the
+                # success authority. MISE_QUIET keeps that intermediate noise
+                # out of the strict warning gate.
+                hold_environment = {**environment, "MISE_QUIET": "1"}
+                cls._run(runtime, ["-C", str(stage), "lock"], hold_environment)
             except ValueError as error:
                 if "refusing to replace locked version" in str(error):
                     continue
