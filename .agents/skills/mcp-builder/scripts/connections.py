@@ -10,7 +10,7 @@ from mcp.client.sse import sse_client
 from mcp.client.stdio import stdio_client
 from mcp.client.streamable_http import streamablehttp_client
 
-from . import t
+from scripts import t
 
 _RESULT_ARITY_REQUEST = 2
 _RESULT_ARITY_FULL = 3
@@ -114,7 +114,7 @@ class MCPConnectionStdio(MCPConnection):
     def _create_context(self) -> AbstractAsyncContextManager[object]:
         """Create the stdio transport context."""
         return stdio_client(
-            StdioServerParameters(command=self.command, args=self.args, env=self.env)
+            StdioServerParameters(command=self.command, args=self.args, env=self.env),
         )
 
 

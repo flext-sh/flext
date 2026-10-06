@@ -38,7 +38,8 @@ with sync_playwright() as p:
 
     # Take screenshot for visual reference
     page.screenshot(
-        path=Path(tempfile.gettempdir()) / "page_discovery.png", full_page=True
+        path=Path(tempfile.gettempdir()) / "page_discovery.png",
+        full_page=True,
     )
 
     browser.close()
