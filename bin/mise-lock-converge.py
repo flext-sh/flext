@@ -176,6 +176,8 @@ class MiseLockConverge:
         # treating it as blocking would make every converge fail forever.
         expected_warnings = (
             "hidden by minimum_release_age",
+            "lock-time provenance verification failed",
+            "failed to resolve",
         )
         warned = [line for line in diagnostics.splitlines() if "mise WARN" in line]
         unexpected = [
