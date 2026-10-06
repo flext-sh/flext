@@ -15,9 +15,9 @@ so it intentionally uses only stdlib.
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
-import re
 import sys
 import tempfile
 from pathlib import Path
@@ -203,7 +203,9 @@ class MiseLockConverge:
 
     @staticmethod
     def _probe(
-        runtime: Path, stage: Path, environment: dict[str, str]
+        runtime: Path,
+        stage: Path,
+        environment: dict[str, str],
     ) -> tuple[bool, str]:
         """Prove the staged lock installs without mutating tools."""
         completed = subprocess.run(
@@ -235,7 +237,10 @@ class MiseLockConverge:
 
     @classmethod
     def release_candidates(
-        cls, listing: str, failed_version: str, selector: str
+        cls,
+        listing: str,
+        failed_version: str,
+        selector: str,
     ) -> list[str]:
         """List releases of an ``ls-remote`` listing strictly older than the failed one."""
 
@@ -357,7 +362,11 @@ class MiseLockConverge:
                     )
                     raise ValueError(message)
                 holds[selector] = cls._hold(
-                    runtime, stage, environment, selector, failed_version
+                    runtime,
+                    stage,
+                    environment,
+                    selector,
+                    failed_version,
                 )
                 print(
                     f"hold: {selector} held at {holds[selector]}: release {failed_version}"
@@ -391,23 +400,27 @@ class MiseLockConverge:
         resolved: dict[str, str] = {}
         present: set[str] = set()
         for name, body in re.findall(
-            r"\[\[tools\.(\S+?)\]\]\n(.*?)(?=\n\[\[|\Z)", lock, re.S
+            r"\[\[tools\.(\S+?)\]\]\n(.*?)(?=\n\[\[|\Z)",
+            lock,
+            re.DOTALL,
         ):
             present.add(name)
-            found = re.search(r'^version = "([^"]+)"', body, re.M)
+            found = re.search(r'^version = "([^"]+)"', body, re.MULTILINE)
             if found:
                 resolved[name.removeprefix("core:")] = found.group(1)
         if committed_lock is not None and committed_lock.is_file():
             committed = committed_lock.read_text(encoding="utf-8")
             for name, body in re.findall(
-                r"(\[\[tools\.(\S+?)\]\]\n.*?)(?=\n\[\[|\Z)", committed, re.S
+                r"(\[\[tools\.(\S+?)\]\]\n.*?)(?=\n\[\[|\Z)",
+                committed,
+                re.DOTALL,
             ):
                 entry_name = name
                 if entry_name not in present:
                     lock = lock.rstrip("\n") + "\n\n" + name.rstrip("\n") + "\n"
                     lock_path.write_text(lock, encoding="utf-8")
                     present.add(entry_name)
-                    found = re.search(r'^version = "([^"]+)"', body, re.M)
+                    found = re.search(r'^version = "([^"]+)"', body, re.MULTILINE)
                     if found:
                         resolved[entry_name.removeprefix("core:")] = found.group(1)
                     print(
@@ -439,7 +452,7 @@ class MiseLockConverge:
     @classmethod
     def main(cls, arguments: list[str]) -> int:
         if arguments and arguments[0] == "pin":
-            if len(arguments) not in (2, 3):
+            if len(arguments) not in {2, 3}:
                 message = "usage: mise-lock-converge.py pin STAGE [COMMITTED_LOCK]"
                 raise ValueError(message)
             committed = Path(arguments[2]).absolute() if len(arguments) == 3 else None
@@ -448,7 +461,9 @@ class MiseLockConverge:
             message = "usage: mise-lock-converge.py STORAGE STAGE RELEASE"
             raise ValueError(message)
         cls.converge(
-            Path(arguments[0]).absolute(), Path(arguments[1]).absolute(), arguments[2]
+            Path(arguments[0]).absolute(),
+            Path(arguments[1]).absolute(),
+            arguments[2],
         )
         return 0
 

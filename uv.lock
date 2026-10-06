@@ -1276,7 +1276,7 @@ dependencies = [
 [[package]]
 name = "flext-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev#36bd8c00e9da16f61df81f88a9ef013c8b684541" }
+source = { git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev#e79a181995bd42e9f3eceeb46f53c9710533959e" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
