@@ -11,7 +11,7 @@
   - [S3 — Lazy operation contract](#s3-lazy-operation-contract)
   - [S4 — Truthful p.Service (consumers first)](#s4-truthful-pservice-consumers-first)
 - [F2 — Fleet tooling](#f2-fleet-tooling)
-  - [S5 — flext-cli service_routes](#s5-flext-cli-service_routes)
+  - [S5 — flext-cli service\_routes](#s5-flext-cli-service_routes)
   - [S6 — flext-tests](#s6-flext-tests)
   - [S7 — flext-infra, then the kernel without fake facades (D1 = A)](#s7-flext-infra-then-the-kernel-without-fake-facades-d1-a)
 - [F3 — Kernel desfake (flext-core)](#f3-kernel-desfake-flext-core)

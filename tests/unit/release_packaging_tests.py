@@ -33,7 +33,7 @@ class TestsFlextRootReleasePackaging:
                     mapping at key.
 
             """
-            node: t.JsonValue = dict(payload)
+            node: t.JsonMapping = dict(payload)
             for key in keys:
                 if not isinstance(node, Mapping):
                     msg = f"expected mapping at key {key!r}"
