@@ -59,6 +59,17 @@ candidate; acceptance never proves fleet stability.
   `flext-0in0k`)
 - [ADR-019: Service Contract — Protocol Ports, Explicit Composition Root, Typed Operations](019-service-contract-ports-operations.md)
   — **PROPOSED** (operator-approved plan V8, 2026-09-25; phased under `flext-4jtcb`)
+- [ADR-021: Mandatory Unsafe-Fix Lint Repair Channel](021-mandatory-unsafe-fix-lint-repair-channel.md)
+  — **ACCEPTED** (operator law 2026-10-05: `make fix` always runs
+  `ruff check --fix --unsafe-fixes --preview`; `MakeRuffSpec` requires the flag;
+  supersedes the 2026-09-08 safe-only posture)
+- [ADR-022: External Consumers as Propagation Guests](022-external-consumers-propagation-guests.md)
+  — **ACCEPTED** (workspace manifest `external_consumers`; per-consumer lane through
+  the consumer's own canonical make verbs; credential/backup areas never automate)
+- [ADR-023: Repair Phases as Mod-Loop Callbacks](023-repair-phases-mod-loop-callbacks.md)
+  — **ACCEPTED** (`p.Infra.ModLoopPhase`; namespace-relocations + accessor-rename
+  inside `refactor mod`'s joint fixed point; one engine per repair, three invocation
+  surfaces)
 
 > **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance
