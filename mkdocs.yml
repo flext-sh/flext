@@ -1,0 +1,127 @@
+# AUTO-GENERATED — DO NOT EDIT MANUALLY
+site_name: flext
+site_description: Workspace documentation generated from code and curated root docs
+site_url: https://docs.flext.sh
+repo_name: flext-sh/flext
+repo_url: https://github.com/flext-sh/flext
+docs_dir: docs
+site_dir: .reports/docs/site
+
+exclude_docs: |
+  /README.md
+  /API/**
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - toc.integrate
+    - content.code.copy
+    - content.tabs.link
+    - search.highlight
+    - search.share
+    - search.suggest
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+
+plugins:
+  - search
+  - autorefs
+  - section-index
+  - mkdocstrings:
+      handlers:
+        python:
+          paths:
+            - src
+            - flext-api/src
+            - flext-auth/src
+            - flext-cli/src
+            - flext-core/src
+            - flext-db-oracle/src
+            - flext-dbt-ldap/src
+            - flext-dbt-ldif/src
+            - flext-dbt-oracle/src
+            - flext-dbt-oracle-wms/src
+            - flext-grpc/src
+            - flext-infra/src
+            - flext-ldap/src
+            - flext-ldif/src
+            - flext-meltano/src
+            - flext-observability/src
+            - flext-oracle-oic/src
+            - flext-oracle-wms/src
+            - flext-plugin/src
+            - flext-quality/src
+            - flext-tap-ldap/src
+            - flext-tap-ldif/src
+            - flext-tap-oracle/src
+            - flext-tap-oracle-oic/src
+            - flext-tap-oracle-wms/src
+            - flext-target-ldap/src
+            - flext-target-ldif/src
+            - flext-target-oracle/src
+            - flext-target-oracle-oic/src
+            - flext-target-oracle-wms/src
+            - flext-tests/src
+            - flext-web/src
+          docstring_style: auto
+          options:
+            show_root_heading: true
+            show_root_full_path: false
+            show_source: false
+            show_signature_annotations: true
+            separate_signature: true
+            merge_init_into_class: true
+            docstring_section_style: spacy
+  - git-revision-date-localized:
+      # Why: enable_creation_date resolves via 'git log --diff-filter=Ar', which returns
+      # EMPTY for pages whose only add-commit is a merge commit. The plugin then falls back
+      # to time.time() (build clock), making first_revision > last_revision always true,
+      # which logs a warning that mkdocs --strict turns into a build failure. Revision date
+      # from the last commit touching the page is the intended and robust behavior.
+      # enable_git_follow is off for the same reason: following renames re-reads
+      # history per page and reintroduces the same empty-result fallback.
+      enable_creation_date: false
+      enable_git_follow: false
+      type: date
+      exclude:
+        - api-reference/generated/**
+  - mermaid2
+  - redirects
+  - minify:
+      minify_html: true
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+# MkDocs discovers the complete documentation tree, including maintained pages.
+# A fixed three-page nav silently omitted guides, standards, and decisions.
+not_in_nav: |
+  api-reference/generated/**
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
