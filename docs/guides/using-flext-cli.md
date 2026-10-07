@@ -186,4 +186,4 @@ greeting = greet_handler(GreetInput(name="Ada"))  # "Hello, Ada!"
 ## Related
 
 - `flext-cli/src/flext_cli/services/cli.py`
-- [Generated flext-core API reference](../api-reference/generated/flext-core.md)
+- [Generated flext-core API reference](../api-reference/generated/public-api.md)

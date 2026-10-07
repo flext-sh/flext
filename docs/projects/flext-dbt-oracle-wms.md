@@ -59,7 +59,7 @@ Use root `make check`, `make test`, and `make build` for project evidence.
 - [Project README](https://github.com/flext-sh/flext-dbt-oracle-wms/blob/0.12.0-dev/README.md)
 - [Workspace AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md) —
   FLEXT engineering law
-- [Workspace API overview](../api-reference/generated/flext-dbt-oracle-wms.md)
+- [Workspace API overview](../api-reference/generated/public-api.md)
 - Related projects: `flext-core`, `flext-oracle-wms`, `flext-meltano`,
   `flext-tap-oracle-wms`, `flext-target-oracle- wms`, `flext-dbt-oracle`
 
