@@ -45,6 +45,8 @@ make check
 import secrets
 from uuid import uuid4
 
+from getpass import getpass
+
 from flext_auth import FlextAuth
 
 password = secrets.token_urlsafe()

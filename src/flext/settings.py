@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, ClassVar
 from flext_core import FlextSettings, m
 
 if TYPE_CHECKING:
-    from flext import t
+    from flext_core import t
 
 
 class FlextRootSettings(FlextSettings):
