@@ -391,7 +391,6 @@ base.mk
 # Derived build and tool artifacts
 __pyrefly_virtual__/
 .benchmarks/
-.archive/
 .bkp/
 .cache/
 .dolt_dropped_databases/
@@ -421,7 +420,6 @@ _tmp_*/
 build/
 dist/
 node_modules/
-protos/
 site/
 target/
 .pyrefly_cache/
