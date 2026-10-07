@@ -1,3 +1,4 @@
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Lightweight connection handling for MCP servers."""
 
 from abc import ABC, abstractmethod
@@ -20,6 +21,16 @@ def _result_pair(result: t.VariadicTuple[object]) -> tuple[object, object]:
     """Split a context-manager result into its read/write pair.
 
     Versioned clients expose an extra trailing element; keep only the pair.
+
+    Args:
+        result: Raw context-manager result tuple.
+
+    Returns:
+        The reader/writer pair from the result.
+
+    Raises:
+        ValueError: If the result tuple has an unexpected arity.
+
     """
     if len(result) == _RESULT_ARITY_REQUEST:
         first, second = result
@@ -54,7 +65,12 @@ class MCPConnection(ABC):
         await self.session.initialize()
 
     async def __aenter__(self) -> Self:
-        """Initialize MCP server connection."""
+        """Initialize MCP server connection.
+
+        Returns:
+            The initialized connection instance.
+
+        """
         self._stack = AsyncExitStack()
         await self._stack.__aenter__()
         try:
@@ -79,7 +95,12 @@ class MCPConnection(ABC):
         self._stack = None
 
     async def list_tools(self) -> list[dict[str, object]]:
-        """Retrieve available tools from the MCP server."""
+        """Retrieve available tools from the MCP server.
+
+        Returns:
+            List of tool descriptors with name, description, and input schema.
+
+        """
         response = await self.session.list_tools()
         return [
             {
@@ -91,7 +112,16 @@ class MCPConnection(ABC):
         ]
 
     async def call_tool(self, tool_name: str, arguments: dict[str, object]) -> object:
-        """Call a tool on the MCP server with provided arguments."""
+        """Call a tool on the MCP server with provided arguments.
+
+        Args:
+            tool_name: Name of the tool to call.
+            arguments: Arguments passed to the tool.
+
+        Returns:
+            The tool call result content.
+
+        """
         result = await self.session.call_tool(tool_name, arguments=arguments)
         return result.content
 
@@ -112,7 +142,12 @@ class MCPConnectionStdio(MCPConnection):
         self.env = env
 
     def _create_context(self) -> AbstractAsyncContextManager[object]:
-        """Create the stdio transport context."""
+        """Create the stdio transport context.
+
+        Returns:
+            The stdio transport async context manager.
+
+        """
         return stdio_client(
             StdioServerParameters(command=self.command, args=self.args, env=self.env),
         )
@@ -128,7 +163,12 @@ class MCPConnectionSSE(MCPConnection):
         self.headers = headers or {}
 
     def _create_context(self) -> AbstractAsyncContextManager[object]:
-        """Create the Server-Sent Events transport context."""
+        """Create the Server-Sent Events transport context.
+
+        Returns:
+            The SSE transport async context manager.
+
+        """
         return sse_client(url=self.url, headers=self.headers)
 
 
@@ -142,51 +182,85 @@ class MCPConnectionHTTP(MCPConnection):
         self.headers = headers or {}
 
     def _create_context(self) -> AbstractAsyncContextManager[object]:
-        """Create the Streamable HTTP transport context."""
+        """Create the Streamable HTTP transport context.
+
+        Returns:
+            The Streamable HTTP transport async context manager.
+
+        """
         return streamablehttp_client(url=self.url, headers=self.headers)
+
+
+class ConnectionParams:
+    """Optional connection parameters for MCP transports."""
+
+    def __init__(
+        self,
+        command: str | None = None,
+        args: list[str] | None = None,
+        env: dict[str, str] | None = None,
+        url: str | None = None,
+        headers: dict[str, str] | None = None,
+    ) -> None:
+        """Initialize optional connection parameters.
+
+        Args:
+            command: Command to run (stdio only).
+            args: Command arguments (stdio only).
+            env: Environment variables (stdio only).
+            url: Server URL (sse and http only).
+            headers: HTTP headers (sse and http only).
+
+        """
+        self.command = command
+        self.args = args
+        self.env = env
+        self.url = url
+        self.headers = headers
 
 
 def create_connection(
     transport: str,
-    command: str | None = None,
-    args: list[str] | None = None,
-    env: dict[str, str] | None = None,
-    url: str | None = None,
-    headers: dict[str, str] | None = None,
+    params: ConnectionParams | None = None,
 ) -> MCPConnection:
     """Factory function to create the appropriate MCP connection.
 
     Args:
         transport: Connection type ("stdio", "sse", or "http")
-        command: Command to run (stdio only)
-        args: Command arguments (stdio only)
-        env: Environment variables (stdio only)
-        url: Server URL (sse and http only)
-        headers: HTTP headers (sse and http only)
+        params: Optional connection parameters.
 
     Returns:
         MCPConnection instance
 
+    Raises:
+        ValueError: If required parameters are missing or transport is
+            unsupported.
+
     """
+    options = params or ConnectionParams()
     transport = transport.lower()
 
     if transport == "stdio":
-        if not command:
+        if not options.command:
             msg = "Command is required for stdio transport"
             raise ValueError(msg)
-        return MCPConnectionStdio(command=command, args=args, env=env)
+        return MCPConnectionStdio(
+            command=options.command,
+            args=options.args,
+            env=options.env,
+        )
 
     if transport == "sse":
-        if not url:
+        if not options.url:
             msg = "URL is required for sse transport"
             raise ValueError(msg)
-        return MCPConnectionSSE(url=url, headers=headers)
+        return MCPConnectionSSE(url=options.url, headers=options.headers)
 
     if transport in {"http", "streamable_http", "streamable-http"}:
-        if not url:
+        if not options.url:
             msg = "URL is required for http transport"
             raise ValueError(msg)
-        return MCPConnectionHTTP(url=url, headers=headers)
+        return MCPConnectionHTTP(url=options.url, headers=options.headers)
 
     msg = f"Unsupported transport type: {transport}. Use 'stdio', 'sse', or 'http'"
     raise ValueError(msg)

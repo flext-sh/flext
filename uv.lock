@@ -1052,7 +1052,7 @@ workspace = [
 [[package]]
 name = "flext-api"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-api.git?rev=0.12.0-dev#67411b0cb0a6a62be1044d19b7250f399afb046d" }
+source = { git = "https://github.com/flext-sh/flext-api.git?rev=0.12.0-dev#73d68f6d28ccccef4a953132f0937bb93cba1d1d" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1251,7 +1251,7 @@ dependencies = [
 [[package]]
 name = "flext-infra"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#0415ada3d5ba6a0c576a629815dcaab37cce55e1" }
+source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#002b5aa3a90339d7f2ba938a790e54b3696f675a" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1276,7 +1276,7 @@ dependencies = [
 [[package]]
 name = "flext-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev#36bd8c00e9da16f61df81f88a9ef013c8b684541" }
+source = { git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev#e79a181995bd42e9f3eceeb46f53c9710533959e" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1295,7 +1295,7 @@ dependencies = [
 [[package]]
 name = "flext-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev#46fae76dc7ff51a2f0128daf7d420f640f8079c0" }
+source = { git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev#49dfc9b8cc910094084fa4e964d4c3637ba6c383" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1637,7 +1637,7 @@ dependencies = [
 [[package]]
 name = "flext-tests"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev#c674826defbeeedea62a4161a69fc6c04fd30a23" }
+source = { git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev#2e002834fa20ac24832beabff165ce58787e9465" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },

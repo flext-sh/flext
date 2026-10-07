@@ -17,6 +17,9 @@ repository:
   package: false
   editable: false
   read_only: false
+integration:
+  provider: flext-sh
+  branch: "0.12.0-dev"
 project:
   package_name: "flext"
   class_stem: "Flext"

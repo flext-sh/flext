@@ -1,3 +1,4 @@
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Capture browser console logs during Playwright automation."""
 
 import pathlib
