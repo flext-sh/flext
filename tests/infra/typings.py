@@ -10,8 +10,9 @@ from collections.abc import MutableSequence
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
-from flext import t
 from flext_tests import FlextTestsTypes
+
+from flext import t
 
 
 class TestsFlextRootTypes(t):
