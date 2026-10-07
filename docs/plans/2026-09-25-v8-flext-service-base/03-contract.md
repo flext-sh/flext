@@ -189,7 +189,6 @@ print(service.execute().unwrap().model_dump(mode="json"))
 from typing import override
 
 from flext_cli import cli
-
 from flext_core import m, p, r, s, t
 
 
