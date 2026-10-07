@@ -249,6 +249,7 @@ CALLER_VIRTUAL_ENV := $(patsubst %/,%,$(VIRTUAL_ENV))
 # Source: repository topology. workspace has .gitmodules; standalone does not.
 # Attached members share their Git superproject runtime; standalone owns itself.
 override RUNTIME_ROOT := $(REPOSITORY_ROOT)
+override MISE_VERSION_PIN := $(RUNTIME_ROOT)/mise.version
 override export GIT_CEILING_DIRECTORIES := $(abspath $(RUNTIME_ROOT)/..)
 override export MISE_CEILING_PATHS := $(abspath $(RUNTIME_ROOT)/..)
 # The physical runtime owns both its environment and frozen tool identities.
@@ -332,6 +333,15 @@ _bootstrap_setup_tools: _builtin_require_mise
 	if [ "$$mise_actual" != "2026.10.3" ]; then \
 		printf 'ERROR: mise %s differs from the declared release %s; run: mise use -g github:jdx/mise@2026.10.3\n' "$$mise_actual" "2026.10.3" >&2; \
 		exit 2; \
+	fi; \
+	mise_pin_file="$(MISE_VERSION_PIN)"; \
+	mise_pin=; \
+	if [ -f "$$mise_pin_file" ]; then \
+		mise_pin=$$(awk '!/^[[:space:]]*(#|$$)/ { lines++; release = $$0 } END { if (lines == 1) print release }' "$$mise_pin_file"); \
+		if ! printf '%s\n' "$$mise_pin" | grep -Eq '^[0-9]+(\.[0-9]+){2}$$'; then \
+			printf 'ERROR: %s records no resolved Mise release; only make upg writes it (delete a hand-edited pin first)\n' "$$mise_pin_file" >&2; \
+			exit 2; \
+		fi; \
 	fi; \
 	export MISE_VERSION="$$mise_pin"; \
 	export SETUP_PYTHON="$$(mise which python)"; \
