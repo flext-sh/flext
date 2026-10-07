@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Skill Initializer - Creates a new skill from template.
 
 Usage:
@@ -16,7 +17,9 @@ from pathlib import Path
 
 SKILL_TEMPLATE = """---
 name: {skill_name}
-description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
+description: [TODO: Complete and informative explanation of what the skill does
+  and when to use it. Include WHEN to use this skill - specific scenarios, file
+  types, or tasks that trigger it.]
 ---
 
 # {skill_title}
@@ -49,9 +52,11 @@ description: [TODO: Complete and informative explanation of what the skill does 
 - Example: Product Management with "Core Capabilities" → numbered capability list
 - Structure: ## Overview → ## Core Capabilities → ### 1. Feature → ### 2. Feature...
 
-Patterns can be mixed and matched as needed. Most skills combine patterns (e.g., start with task-based, add workflow for complex operations).
+Patterns can be mixed and matched as needed. Most skills combine patterns
+(e.g., start with task-based, add workflow for complex operations).
 
-Delete this entire "Structuring This Skill" section when done - it's just guidance.]
+Delete this entire "Structuring This Skill" section when done - it's just
+guidance.]
 
 ## [TODO: Replace with the first main section based on chosen structure]
 
@@ -63,42 +68,55 @@ Delete this entire "Structuring This Skill" section when done - it's just guidan
 
 ## Resources
 
-This skill includes example resource directories that demonstrate how to organize different types of bundled resources:
+This skill includes example resource directories that demonstrate how to
+organize different types of bundled resources:
 
 ### scripts/
-Executable code (Python/Bash/etc.) that can be run directly to perform specific operations.
+Executable code (Python/Bash/etc.) that can be run directly to perform
+specific operations.
 
 **Examples from other skills:**
-- PDF skill: `fill_fillable_fields.py`, `extract_form_field_info.py` - utilities for PDF manipulation
-- DOCX skill: `document.py`, `utilities.py` - Python modules for document processing
+- PDF skill: `fill_fillable_fields.py`, `extract_form_field_info.py` -
+  utilities for PDF manipulation
+- DOCX skill: `document.py`, `utilities.py` - Python modules for document
+  processing
 
-**Appropriate for:** Python scripts, shell scripts, or any executable code that performs automation, data processing, or specific operations.
+**Appropriate for:** Python scripts, shell scripts, or any executable code
+that performs automation, data processing, or specific operations.
 
-**Note:** Scripts may be executed without loading into context, but can still be read for patching or environment adjustments.
+**Note:** Scripts may be executed without loading into context, but can still
+be read for patching or environment adjustments.
 
 ### references/
-Documentation and reference material intended to be loaded into context to inform the agent's process and thinking.
+Documentation and reference material intended to be loaded into context to
+inform the agent's process and thinking.
 
 **Examples from other skills:**
-- Product management: `communication.md`, `context_building.md` - detailed workflow guides
+- Product management: `communication.md`, `context_building.md` - detailed
+  workflow guides
 - BigQuery: API reference documentation and query examples
 - Finance: Schema documentation, company policies
 
-**Appropriate for:** In-depth documentation, API references, database schemas, comprehensive guides, or any detailed information to reference while working.
+**Appropriate for:** In-depth documentation, API references, database
+schemas, comprehensive guides, or any detailed information to reference
+while working.
 
 ### assets/
-Files not intended to be loaded into context, but rather used within the output the agent produces.
+Files not intended to be loaded into context, but rather used within the
+output the agent produces.
 
 **Examples from other skills:**
 - Brand styling: PowerPoint template files (.pptx), logo files
 - Frontend builder: HTML/React boilerplate project directories
 - Typography: Font files (.ttf, .woff2)
 
-**Appropriate for:** Templates, boilerplate code, document templates, images, icons, fonts, or any files meant to be copied or used in the final output.
+**Appropriate for:** Templates, boilerplate code, document templates, images,
+icons, fonts, or any files meant to be copied or used in the final output.
 
 ---
 
-**Any unneeded directories can be deleted.** Not every skill requires all three types of resources.
+**Any unneeded directories can be deleted.** Not every skill requires all
+three types of resources.
 """
 
 EXAMPLE_SCRIPT = '''#!/usr/bin/env python3
@@ -128,7 +146,8 @@ This is a placeholder for detailed reference documentation.
 Replace with actual reference content or delete if not needed.
 
 Example real reference docs from other skills:
-- product-management/references/communication.md - Comprehensive guide for status updates
+- product-management/references/communication.md - Comprehensive guide for
+  status updates
 - product-management/references/context_building.md - Deep-dive on gathering context
 - bigquery/references/ - API references and query examples
 
@@ -161,7 +180,8 @@ Reference docs are ideal for:
 EXAMPLE_ASSET = """# Example Asset File
 
 This placeholder represents where asset files would be stored.
-Replace with actual asset files (templates, images, fonts, etc.) or delete if not needed.
+Replace with actual asset files (templates, images, fonts, etc.) or delete
+if not needed.
 
 Asset files are NOT intended to be loaded into context, but rather used within
 the output the agent produces.
@@ -186,7 +206,15 @@ Note: This is a text placeholder. Actual assets can be any file type.
 
 
 def title_case_skill_name(skill_name: str) -> str:
-    """Convert hyphenated skill name to Title Case for display."""
+    """Convert hyphenated skill name to Title Case for display.
+
+    Args:
+        skill_name: Hyphenated skill name.
+
+    Returns:
+        Title Case display form of the skill name.
+
+    """
     return " ".join(word.capitalize() for word in skill_name.split("-"))
 
 
@@ -217,7 +245,8 @@ def init_skill(skill_name: str, path: str) -> Path | None:
     # Create SKILL.md from template
     skill_title = title_case_skill_name(skill_name)
     skill_content = SKILL_TEMPLATE.format(
-        skill_name=skill_name, skill_title=skill_title
+        skill_name=skill_name,
+        skill_title=skill_title,
     )
     try:
         (skill_dir / "SKILL.md").write_text(skill_content)
@@ -231,9 +260,21 @@ def init_skill(skill_name: str, path: str) -> Path | None:
 
 
 def _create_resource_directories(
-    skill_dir: Path, skill_name: str, skill_title: str
+    skill_dir: Path,
+    skill_name: str,
+    skill_title: str,
 ) -> bool:
-    """Create the scripts, references, and assets starter resources."""
+    """Create the scripts, references, and assets starter resources.
+
+    Args:
+        skill_dir: Skill directory to populate.
+        skill_name: Name of the skill.
+        skill_title: Title Case display name of the skill.
+
+    Returns:
+        True when every starter resource directory was created.
+
+    """
     try:
         _create_scripts_resource(skill_dir, skill_name)
         _create_references_resource(skill_dir, skill_title)

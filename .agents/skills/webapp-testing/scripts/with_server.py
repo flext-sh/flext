@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Start one or more servers, wait for them to be ready, run a command, then clean up.
 
 Usage:
     # Single server
-    python scripts/with_server.py --server "npm run dev" --port 5173 -- python automation.py
-    python scripts/with_server.py --server "npm start" --port 3000 -- python test.py
+    python scripts/with_server.py --server "npm run dev" --port 5173 \
+      -- python automation.py
+    python scripts/with_server.py --server "npm start" --port 3000 \
+      -- python test.py
 
     # Multiple servers
     python scripts/with_server.py \
@@ -26,12 +29,22 @@ READY_POLL_INTERVAL = 1
 
 
 def is_server_ready(port: int, timeout: int = DEFAULT_SERVER_TIMEOUT) -> bool:
-    """Wait for server to be ready by polling the port."""
+    """Wait for server to be ready by polling the port.
+
+    Args:
+        port: Port the server should accept connections on.
+        timeout: Maximum seconds to wait for readiness.
+
+    Returns:
+        True when the port accepts a connection within the timeout.
+
+    """
     start_time = time.time()
     while time.time() - start_time < timeout:
         try:
             with socket.create_connection(
-                ("localhost", port), timeout=READY_POLL_INTERVAL
+                ("localhost", port),
+                timeout=READY_POLL_INTERVAL,
             ):
                 return True
         except (OSError, ConnectionRefusedError):
@@ -48,8 +61,50 @@ class UsageError(ValueError):
     """Invalid command-line usage reported to the caller."""
 
 
+def _consume_option(
+    argv: list[str],
+    handled: int,
+) -> tuple[str, object, int]:
+    """Consume one option spell and its value from the argument list.
+
+    Args:
+        argv: Remaining command-line arguments.
+        handled: Index of the option spell in argv.
+
+    Returns:
+        Tuple of option name, parsed value, and next index.
+
+    Raises:
+        UsageError: If the option is unknown or its value is missing.
+
+    """
+    spell = argv[handled]
+    handled += 1
+    if handled >= len(argv):
+        msg = f"Missing value for {spell}"
+        raise UsageError(msg)
+    value: object = argv[handled]
+    if spell in {"--port", "--timeout"}:
+        value = int(str(value))
+    elif spell != "--server":
+        msg = f"Unknown option: {spell}"
+        raise UsageError(msg)
+    return spell, value, handled + 1
+
+
 def parse_args(argv: list[str]) -> dict[str, object]:
-    """Parse the with_server invocation without a CLI framework."""
+    """Parse the with_server invocation without a CLI framework.
+
+    Args:
+        argv: Command-line arguments excluding the program name.
+
+    Returns:
+        Parsed servers, ports, timeout, and trailing command.
+
+    Raises:
+        UsageError: If the arguments are invalid.
+
+    """
     if "--" in argv:
         separator = argv.index("--")
         trailing = argv[separator + 1 :]
@@ -66,36 +121,13 @@ def parse_args(argv: list[str]) -> dict[str, object]:
     timeout: int = DEFAULT_SERVER_TIMEOUT
     handled = 0
     while handled < len(argv):
-        spell = argv[handled]
+        spell, value, handled = _consume_option(argv, handled)
         if spell == "--server":
-            handled += 1
-            if handled >= len(argv):
-                msg = "Missing value for --server"
-                raise UsageError(msg)
-            servers.append(argv[handled])
-            handled += 1
-            continue
-        if spell == "--port":
-            handled += 1
-            if handled >= len(argv):
-                msg = "Missing value for --port"
-                raise UsageError(msg)
-            ports.append(int(argv[handled]))
-            handled += 1
-            continue
-        if spell == "--timeout":
-            handled += 1
-            if handled >= len(argv):
-                msg = "Missing value for --timeout"
-                raise UsageError(msg)
-            timeout = int(argv[handled])
-            handled += 1
-            continue
-        if spell.startswith("-"):
-            msg = f"Unknown option: {spell}"
-            raise UsageError(msg)
-        msg = f"Unexpected positional argument: {spell}"
-        raise UsageError(msg)
+            servers.append(str(value))
+        elif spell == "--port":
+            ports.append(int(str(value)))
+        else:
+            timeout = int(str(value))
 
     if not servers or len(servers) != len(ports):
         msg_0 = "--port count must match --server count"
@@ -129,7 +161,10 @@ def main() -> None:
         for server in servers:
             server_argv = shlex.split(server["cmd"])
             process = subprocess.Popen(  # ruff: ignore[subprocess-without-shell-equals-true] -- vendored skill tooling
-                server_argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False
+                server_argv,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=False,
             )
             server_processes.append(process)
 

@@ -54,10 +54,12 @@ scripts/maintenance/
 # mise toolchain pinning
 !.mise.toml
 !mise.lock
+!mise.version
 !.mise.lock
 !.python-version
 
 # mise native dependency graphs
+/.mise-lock-transaction.lock
 !/.mise/
 /.mise/*
 !/.mise/locks/
@@ -74,6 +76,10 @@ scripts/maintenance/
 !Makefile.flext-docker
 !*.mk
 .jscpd.json
+!bin/mise
+!bin/mise.cmd
+!bin/mise-lock-transaction.py
+!bin/mise-lock-converge.py
 
 # Documentation
 !README.md
@@ -383,6 +389,10 @@ legado/
 .bin/
 !/bin/
 /bin/*
+!/bin/mise
+!/bin/mise.cmd
+!/bin/mise-lock-transaction.py
+!/bin/mise-lock-converge.py
 .tools/
 __pycache__/
 base.mk
@@ -466,6 +476,7 @@ CLAUDE.local.md
 !.vscode/settings.json
 !config/
 !config/gitleaks-release.toml
+!bin/
 
 # WHITELIST: governed workspace subprojects (derived)
 !/flext-api/

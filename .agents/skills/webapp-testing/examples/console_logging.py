@@ -1,3 +1,4 @@
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Capture browser console logs during Playwright automation."""
 
 import pathlib
@@ -33,5 +34,6 @@ with sync_playwright() as p:
 
 # Save console logs to file
 pathlib.Path("/mnt/user-data/outputs/console.log").write_text(
-    "\n".join(console_logs), encoding="utf-8"
+    "\n".join(console_logs),
+    encoding="utf-8",
 )
