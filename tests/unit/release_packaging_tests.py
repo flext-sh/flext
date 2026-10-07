@@ -11,8 +11,9 @@ from collections.abc import Mapping
 from importlib.resources import files
 from pathlib import Path
 
-from flext import t, u
 from flext_tests import tm
+
+from flext import t, u
 
 
 class TestsFlextRootReleasePackaging:
@@ -29,17 +30,17 @@ class TestsFlextRootReleasePackaging:
                 The resulting ``t.JsonMapping``.
 
             Raises:
-                TypeError: If any expected section along ``keys`` is not a
-                    mapping.
+                TypeError: If expected final section to be a mapping; or if expected
+                    mapping at key.
 
             """
-            node = payload
+            node: t.JsonMapping = dict(payload)
             for key in keys:
-                child = node[key]
-                if not isinstance(child, Mapping):
+                section = node[key]
+                if not isinstance(section, Mapping):
                     msg = f"expected mapping at key {key!r}"
                     raise TypeError(msg)
-                node = child
+                node = section
             return node
 
         @staticmethod
