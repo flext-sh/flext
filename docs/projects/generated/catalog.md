@@ -35,10 +35,3 @@ package.
 | [flext-tap-oracle](../../api-reference/generated/flext-tap-oracle.md) | integration | `flext_tap_oracle` | FLEXT Tap Oracle - Modern Singer Tap for Oracle Database |
 | [flext-tap-oracle-oic](../../api-reference/generated/flext-tap-oracle-oic.md) | integration | `flext_tap_oracle_oic` | FLEXT Tap Oracle OIC - Singer Tap for Oracle Integration Cloud |
 | [flext-tap-oracle-wms](../../api-reference/generated/flext-tap-oracle-wms.md) | integration | `flext_tap_oracle_wms` | FLEXT Tap Oracle WMS - Singer Tap for Oracle Warehouse Management System |
-| [flext-target-ldap](../../api-reference/generated/flext-target-ldap.md) | integration | `flext_target_ldap` | FLEXT Target for LDAP directory loading |
-| [flext-target-ldif](../../api-reference/generated/flext-target-ldif.md) | integration | `flext_target_ldif` | FLEXT Target LDIF - Singer Target for LDAP Data Interchange Format (LDIF) output |
-| [flext-target-oracle](../../api-reference/generated/flext-target-oracle.md) | integration | `flext_target_oracle` | FLEXT Target Oracle - Singer Target for Oracle Database Data Loading |
-| [flext-target-oracle-oic](../../api-reference/generated/flext-target-oracle-oic.md) | integration | `flext_target_oracle_oic` | FLEXT Target Oracle OIC - Singer Target for Oracle Integration Cloud |
-| [flext-target-oracle-wms](../../api-reference/generated/flext-target-oracle-wms.md) | integration | `flext_target_oracle_wms` | FLEXT Target Oracle WMS - Singer Target for Oracle WMS Data |
-| [flext-tests](../../api-reference/generated/flext-tests.md) | test | `flext_tests` | FLEXT Test Infrastructure - Shared test utilities, builders, factories, and validation for the FLEXT ecosystem |
-| [flext-web](../../api-reference/generated/flext-web.md) | domain | `flext_web` | FLEXT Web - Modern Web Interface for FLEXT Platform |
