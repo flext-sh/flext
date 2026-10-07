@@ -1428,7 +1428,6 @@ endif
 _builtin_setup_environment: $(if $(filter Y,$(CI)),,_builtin_setup_submodules)
 	@$(SETUP_ENVIRONMENT_RECIPE)
 ifeq ($(MAKE_PROFILE),workspace)
-ifeq ($(MAKE_PROFILE),workspace)
 	@$(UV) pip check --python "$(RUNTIME_VENV)"
 endif
 # End SECTION: setup environment
