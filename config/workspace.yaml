@@ -4,6 +4,12 @@
 # input. Add members or exclusions here, then run `make codegen`.
 version: 3
 name: flext
+# The root integration line declaration the CI member-topology guard requires
+# (fleet integration 20261007): under CI=Y every governed member resolves its
+# baseline from this declaration instead of ad-hoc discovery.
+integration:
+  provider: flext-sh
+  branch: 0.12.0-dev
 repository:
   name: flext
   distribution: flext
