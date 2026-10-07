@@ -46,16 +46,16 @@
 - [FLEXT PlantUML Diagrams](#flext-plantuml-diagrams)
   - [📋 Diagram Categories](#-diagram-categories)
     - [1.
-      [System Architecture Diagrams](./system-architecture/)](#1-system-architecture-diagramssystem-architecture)
+      [System Architecture Diagrams](system-architecture/README.md)](#1-system-architecture-diagramssystem-architecture)
     - [2.
-      [Component Diagrams](./component-diagrams/)](#2-component-diagramscomponent-diagrams)
+      [Component Diagrams](component-diagrams/README.md)](#2-component-diagramscomponent-diagrams)
     - [3.
-      [Sequence Diagrams](./sequence-diagrams/)](#3-sequence-diagramssequence-diagrams)
-    - [4. [Class Diagrams](./class-diagrams/)](#4-class-diagramsclass-diagrams)
+      [Sequence Diagrams](sequence-diagrams/README.md)](#3-sequence-diagramssequence-diagrams)
+    - [4. [Class Diagrams](class-diagrams/README.md)](#4-class-diagramsclass-diagrams)
     - [5.
-      [Deployment Diagrams](./deployment-diagrams/)](#5-deployment-diagramsdeployment-diagrams)
+      [Deployment Diagrams](deployment-diagrams/README.md)](#5-deployment-diagramsdeployment-diagrams)
     - [6.
-      [Data Flow Diagrams](./data-flow-diagrams/)](#6-data-flow-diagramsdata-flow-diagrams)
+      [Data Flow Diagrams](data-flow-diagrams/README.md)](#6-data-flow-diagramsdata-flow-diagrams)
   - [🎯 FLEXT Architecture Overview](#-flext-architecture-overview)
   - [🏗 Key Architectural Components](#-key-architectural-components)
     - [Foundation Layer (flext-core)](#foundation-layer-flext-core)
@@ -91,27 +91,27 @@ components, and interactions.
 
 ## 📋 Diagram Categories
 
-### 1. [System Architecture Diagrams](./system-architecture/)
+### 1. [System Architecture Diagrams](system-architecture/README.md)
 
 High-level system architecture and component relationships.
 
-### 2. [Component Diagrams](./component-diagrams/)
+### 2. [Component Diagrams](component-diagrams/README.md)
 
 Detailed component structure and relationships.
 
-### 3. [Sequence Diagrams](./sequence-diagrams/)
+### 3. [Sequence Diagrams](sequence-diagrams/README.md)
 
 Dynamic behavior and interaction flows.
 
-### 4. [Class Diagrams](./class-diagrams/)
+### 4. [Class Diagrams](class-diagrams/README.md)
 
 Object-oriented design and class relationships.
 
-### 5. [Deployment Diagrams](./deployment-diagrams/)
+### 5. [Deployment Diagrams](deployment-diagrams/README.md)
 
 Infrastructure and deployment architecture.
 
-### 6. [Data Flow Diagrams](./data-flow-diagrams/)
+### 6. [Data Flow Diagrams](data-flow-diagrams/README.md)
 
 Data processing and transformation flows.
 
