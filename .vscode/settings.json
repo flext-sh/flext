@@ -11,6 +11,7 @@
     "**/__pyrefly_virtual__": true,
     "**/.beads": true,
     "**/.benchmarks": true,
+    "**/.archive": true,
     "**/.bkp": true,
     "**/.cache": true,
     "**/.dolt": true,
@@ -42,6 +43,7 @@
     "**/build": true,
     "**/dist": true,
     "**/node_modules": true,
+    "**/protos": true,
     "**/site": true,
     "**/target": true
   },
@@ -50,6 +52,7 @@
     "**/__pyrefly_virtual__/**": true,
     "**/.beads/**": true,
     "**/.benchmarks/**": true,
+    "**/.archive/**": true,
     "**/.bkp/**": true,
     "**/.cache/**": true,
     "**/.dolt/**": true,
@@ -83,6 +86,7 @@
     "**/build/**": true,
     "**/dist/**": true,
     "**/node_modules/**": true,
+    "**/protos/**": true,
     "**/target/**": true
   },
   "git.autoRepositoryDetection": "subFolders",
@@ -161,6 +165,7 @@
     "**/__pyrefly_virtual__": true,
     "**/.beads": true,
     "**/.benchmarks": true,
+    "**/.archive": true,
     "**/.bkp": true,
     "**/.cache": true,
     "**/.dolt": true,
@@ -192,6 +197,7 @@
     "**/build": true,
     "**/dist": true,
     "**/node_modules": true,
+    "**/protos": true,
     "**/site": true,
     "**/target": true
   },
