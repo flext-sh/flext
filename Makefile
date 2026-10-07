@@ -315,41 +315,51 @@ override PATH := $(RUNTIME_BIN):$(SANITIZED_CALLER_PATH)
 unexport UV
 export FLEXT_INFRA_PYTHON UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH RUNTIME_ROOT
 
-# One bootstrap serves `setup` (frozen install) and `upg` (resolve + install);
-# the public verb selects its lifecycle and resolution through target-specific
-# variables.
+# The bootstrap is the NATIVE mise/uv surface: `mise install` (locked from the
+# committed mise.lock) provisions every tool including mise itself; `make upg`
+# alone advances versions (`mise lock --bump`, `uv lock --upgrade --refresh`).
+# The lifecycle receives the resolved tool identities as environment.
 TOOL_BOOTSTRAP_LIFECYCLE := _setup_lifecycle
-TOOL_BOOTSTRAP_RESOLVE :=
-.PHONY: _bootstrap_setup_tools
 
-_bootstrap_setup_tools:
-	# The lifecycle invokes recursive make through mise, so preserve jobserver FDs.
-	+@set -eu; \
-	if ! command -v mise >/dev/null 2>&1; then \
-		printf 'ERROR: mise is not installed; install it (https://mise.run) and retry\n' >&2; \
+# Pin reader: the github:jdx/mise release line of the committed mise.lock —
+# presentation logic over the one lock source; no separate pin file exists.
+
+
+.PHONY: _bootstrap_setup_tools
+_bootstrap_setup_tools: _builtin_require_mise
+	@set -eu; \
+	mise_actual="$$(mise --version 2>/dev/null | cut -d ' ' -f1)"; \
+	if [ "$$mise_actual" != "2026.10.3" ]; then \
+		printf 'ERROR: mise %s differs from the declared release %s; run: mise use -g github:jdx/mise@2026.10.3\n' "$$mise_actual" "2026.10.3" >&2; \
 		exit 2; \
 	fi; \
-	if [ "$(TOOL_BOOTSTRAP_RESOLVE)" = "1" ]; then \
-		mise -C "$(PROJECT_ROOT)" lock --bump; \
-	fi; \
-	mise -C "$(PROJECT_ROOT)" install --yes; \
-	mise_pin="$$( awk 'index($$0, "[[tools.\"github:jdx/mise\"]]") == 1 { inside = 1; next } inside && substr($$0, 1, 1) == "[" { exit } inside && $$1 == "version" { gsub(/[",]/, "", $$3); print $$3; exit }' "$(PROJECT_ROOT)/mise.lock" )"; \
-	if [ -z "$$mise_pin" ]; then \
-		printf 'ERROR: mise.lock pins no github:jdx/mise release; run make upg\n' >&2; \
-		exit 2; \
-	fi; \
-	mise_receipt="$$(mise -C "$(PROJECT_ROOT)" exec -- mise --version | cut -d ' ' -f1)"; \
-	if [ "$$mise_receipt" != "$$mise_pin" ]; then \
-		printf 'ERROR: provisioned Mise %s differs from the mise.lock pin %s; run make setup\n' "$$mise_receipt" "$$mise_pin" >&2; \
-		exit 2; \
-	fi; \
-	printf 'setup: mise %s provisioned from mise.lock\n' "$$mise_receipt"; \
-	printf 'setup: entering lifecycle (submodules, environment, hooks) make=%s\n' "$(SELF_MAKE_EXECUTABLE)"; \
-	mise -C "$(PROJECT_ROOT)" exec -- env "CI=$(CI)" $(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE)
+	export MISE_VERSION="$$mise_pin"; \
+	export SETUP_PYTHON="$$(mise which python)"; \
+	export SETUP_DIRENV="$$(mise which direnv)"; \
+	$(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE)
 
 # Every repository evaluates only itself, locally exactly as in CI: a workspace
 # root consumes its members as installed libraries and never fans a verb out
 # across them; each member runs its own lifecycle in its own repository.
+<<<<<<< HEAD
+# Provisioning is declared once and shared by every profile. A venv records the
+# exact base interpreter used to create it, so setup replaces it when Mise moves
+# the configured Python minor line to a newer patch.
+SETUP_ENVIRONMENT_RECIPE = set -eu; \
+	trap 'if [ -n "$${FLEXT_SETUP_CREDENTIAL_STORE:-}" ]; then rm -f "$$FLEXT_SETUP_CREDENTIAL_STORE"; fi' EXIT; \
+	$(REQUIRE_WORKSPACE_ENVIRONMENT); \
+	desired_python="$${SETUP_PYTHON:?missing Mise-resolved Python executable}"; \
+	if [ ! -x "$(RUNTIME_PYTHON)" ]; then \
+		$(UV) venv --python "$$desired_python" "$(RUNTIME_VENV)"; \
+	else \
+		installed_base=$$("$(RUNTIME_PYTHON)" -c 'from pathlib import Path; import sys; print(Path(sys.base_prefix).resolve())'); \
+		desired_base=$$("$$desired_python" -c 'from pathlib import Path; import sys; print(Path(sys.prefix).resolve())'); \
+		if [ "$$installed_base" != "$$desired_base" ]; then \
+			printf 'setup: replacing environment for Python %s\n' "$$desired_python"; \
+			$(UV) venv --clear --python "$$desired_python" "$(RUNTIME_VENV)"; \
+		fi; \
+	fi; \
+=======
 <<<<<<< HEAD
 # Provisioning is declared once and shared by every profile. A venv records the
 # exact base interpreter used to create it, so setup replaces it when Mise moves
@@ -380,11 +390,17 @@ SETUP_ENVIRONMENT_RECIPE = set -eu; \
 	$(REQUIRE_WORKSPACE_ENVIRONMENT); \
 	credential_env=; \
 >>>>>>> origin/0.12.0-dev
+>>>>>>> origin/0.12.0-dev
 	if [ -n "$${FLEXT_SETUP_CREDENTIAL_STORE:-}" ]; then \
 		env GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=credential.helper GIT_CONFIG_VALUE_0="store --file=$$FLEXT_SETUP_CREDENTIAL_STORE" $(UV) sync --project "$(UV_PROJECT)" $(UV_SYNC_FLAGS) --locked --link-mode "$(UV_LINK_MODE)"; \
 	else \
 		$(UV) sync --project "$(UV_PROJECT)" $(UV_SYNC_FLAGS) --locked --link-mode "$(UV_LINK_MODE)"; \
+		env GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=credential.helper GIT_CONFIG_VALUE_0="store --file=$$FLEXT_SETUP_CREDENTIAL_STORE" $(UV) sync --project "$(UV_PROJECT)" $(UV_SYNC_FLAGS) --locked --link-mode "$(UV_LINK_MODE)"; \
+	else \
+		$(UV) sync --project "$(UV_PROJECT)" $(UV_SYNC_FLAGS) --locked --link-mode "$(UV_LINK_MODE)"; \
 	fi; \
+<<<<<<< HEAD
+=======
 <<<<<<< HEAD
 =======
 	if ! $(UV) lock --check --project "$(UV_PROJECT)" >/dev/null 2>&1; then \
@@ -393,6 +409,7 @@ SETUP_ENVIRONMENT_RECIPE = set -eu; \
 		$(UV) lock --project "$(UV_PROJECT)"; \
 	fi; \
 	$$credential_env $(UV) sync --project "$(UV_PROJECT)" --python "3.13" $(UV_SYNC_FLAGS) --locked --link-mode "$(UV_LINK_MODE)"; \
+>>>>>>> origin/0.12.0-dev
 >>>>>>> origin/0.12.0-dev
 	if [ "$(strip $(CI))" != "Y" ]; then \
 		direnv allow "$(PROJECT_ROOT)"; \
@@ -446,10 +463,16 @@ override PROJECT_FLEXT_INFRA := $(PROJECT_INFRA_RUN) -m flext_infra
 # `--locked`; drift and the original install error fail without retry/resolution.
 UV_SYNC_FLAGS := --all-extras --all-groups
 =======
+<<<<<<< HEAD
+# Only `make upg` resolves and rewrites uv.lock. Setup always runs: it syncs
+# `--locked`; drift and the original install error fail without retry/resolution.
+UV_SYNC_FLAGS := --all-extras --all-groups
+=======
 # uv owns the lock. `make upg` alone advances versions; `make setup` restores
 # the DECLARED state: a missing, stale, or corrupt uv.lock is removed and
 # re-locked from the manifests before the frozen `--locked` sync.
 UV_SYNC_FLAGS := --all-extras --all-groups --all-packages
+>>>>>>> origin/0.12.0-dev
 >>>>>>> origin/0.12.0-dev
 ifeq ($(strip $(CI)),Y)
 override UV_SYNC_FLAGS := --all-extras --all-groups --all-packages --no-editable
@@ -479,6 +502,39 @@ endef
 
 
 
+<<<<<<< HEAD
+# uv resolves the containing workspace and writes its single uv.lock. Invoking
+# it once per member re-resolves that same lock for every member.
+# uv truncates and rewrites uv.lock in place, so a run killed mid-write leaves
+# a partial lock. The lock therefore resolves in a scratch mirror
+# of the manifests uv itself reports (`uv workspace dir|list`), must pass
+# `uv lock --check` against that mirror (every declared member present), and
+# only then replaces the committed lock by one rename inside its directory. An
+# interrupted run never touches the committed lock. A full upgrade resolves
+# from declared manifests without prior lock preferences, including during
+# conflict repair; the final non-upgrade relock retains the resolved lock.
+# The second argument seeds the mirror with the committed lock: only that
+# retaining relock passes it, so a full upgrade never parses a prior lock.
+define _lock_project
+	@set -eu; \
+	workspace=$$($(UV) workspace dir --project "$(PROJECT_ROOT)"); \
+	stage=$$(mktemp -d); candidate="$$workspace/.uv.lock.$$$$"; \
+	trap 'find "$${stage}" -depth -delete; rm -f "$$candidate"' EXIT; \
+	trap 'exit 129' HUP; trap 'exit 130' INT; trap 'exit 143' TERM; \
+	$(UV) workspace list --paths --project "$$workspace" > "$${stage}/.members"; \
+	while IFS= read -r member; do \
+		relative=$${member#"$$workspace"}; \
+		mkdir -p "$${stage}/mirror$$relative"; \
+		cp "$$member/pyproject.toml" "$${stage}/mirror$$relative/pyproject.toml"; \
+	done < "$${stage}/.members"; \
+	$(if $(2),if [ -f "$$workspace/uv.lock" ]; then cp "$$workspace/uv.lock" "$${stage}/mirror/uv.lock"; fi;) \
+	$(UV) lock --project "$${stage}/mirror" $(1); \
+	$(UV) lock --check --project "$${stage}/mirror"; \
+	if [ -e "$$candidate" ]; then printf 'ERROR: lock staging path already exists: %s\n' "$$candidate" >&2; exit 2; fi; \
+	cp "$${stage}/mirror/uv.lock" "$$candidate"; \
+	mv -f "$$candidate" "$$workspace/uv.lock"
+endef
+=======
 <<<<<<< HEAD
 # uv resolves the containing workspace and writes its single uv.lock. Invoking
 # it once per member re-resolves that same lock for every member.
@@ -973,7 +1029,6 @@ _builtin-pre-commit:
 # then installs from the fresh lock. Native mise locks are workspace-local, so
 # an attached member relocks its own mise.lock exactly like the runtime root.
 upg: TOOL_BOOTSTRAP_LIFECYCLE := _upg_lifecycle
-upg: TOOL_BOOTSTRAP_RESOLVE := 1
 upg: _bootstrap_setup_tools
 else
 
@@ -1468,14 +1523,9 @@ _builtin_require_mise:
 		printf 'ERROR: missing %s/mise.lock; run make upg\n' "$(RUNTIME_ROOT)" >&2; \
 		exit 2; \
 	fi; \
-	mise_pin="$$( awk 'index($$0, "[[tools.\"github:jdx/mise\"]]") == 1 { inside = 1; next } inside && substr($$0, 1, 1) == "[" { exit } inside && $$1 == "version" { gsub(/[",]/, "", $$3); print $$3; exit }' "$(RUNTIME_ROOT)/mise.lock" )"; \
-	if [ -z "$$mise_pin" ]; then \
-		printf 'ERROR: mise.lock pins no github:jdx/mise release; run make upg\n' "$(RUNTIME_ROOT)" >&2; \
-		exit 2; \
-	fi; \
 	mise_actual="$$(mise --version 2>/dev/null | cut -d ' ' -f1)"; \
-	if [ "$$mise_actual" != "$$mise_pin" ]; then \
-		printf 'ERROR: mise %s differs from the mise.lock pin %s; run make setup\n' "$$mise_actual" "$$mise_pin" >&2; \
+	if [ "$$mise_actual" != "2026.10.3" ]; then \
+		printf 'ERROR: mise %s differs from the declared release %s; run: mise use -g github:jdx/mise@2026.10.3\n' "$$mise_actual" "2026.10.3" >&2; \
 		exit 2; \
 	fi
 
@@ -1495,6 +1545,13 @@ endif
 # Setup PROVISIONS tooling only — mise, venv, dependencies.
 # It never generates, conforms, or mutates project code; `make gen` is the
 # single public conformance/generation surface.
+<<<<<<< HEAD
+# Setup installs from the committed locks and never writes them; when a lock
+# drifts from its manifest it warns and installs without touching it, because
+# only `make upg` rewrites locks. The venv is created when
+# missing and is never cleared while present, because a concurrent lane may be
+# running against it.
+=======
 <<<<<<< HEAD
 # Setup installs from the committed locks and never writes them; when a lock
 # drifts from its manifest it warns and installs without touching it, because
@@ -1522,7 +1579,10 @@ endif
 _builtin_setup_environment: $(if $(filter Y,$(CI)),,_builtin_setup_submodules)
 ifeq ($(MAKE_PROFILE),workspace)
 <<<<<<< HEAD
+ifeq ($(MAKE_PROFILE),workspace)
+<<<<<<< HEAD
 	@$(SETUP_ENVIRONMENT_RECIPE)
+=======
 =======
 ifeq ($(MAKE_PROFILE),workspace)
 <<<<<<< HEAD
@@ -1530,6 +1590,8 @@ ifeq ($(MAKE_PROFILE),workspace)
 >>>>>>> origin/0.12.0-dev
 >>>>>>> origin/0.12.0-dev
 	@$(UV) pip check --python "$(RUNTIME_VENV)"
+else
+	@$(SETUP_ENVIRONMENT_RECIPE)
 else
 	@$(SETUP_ENVIRONMENT_RECIPE)
 endif
@@ -1567,6 +1629,7 @@ _upg_lifecycle: _builtin_setup_submodules
 	@$(UV) lock --project "$(PROJECT_ROOT)" --upgrade --refresh
 	@$(UV) lock --check --project "$(PROJECT_ROOT)"
 >>>>>>> origin/0.12.0-dev
+>>>>>>> origin/0.12.0-dev
 	@$(SELF_MAKE) _builtin_setup_environment
 	@$(PROJECT_FLEXT_INFRA) deps modernize --repository-root "$(PROJECT_ROOT)" \
 		--apply --rewrite-constraints --projects .
@@ -1603,8 +1666,36 @@ _upg_converge:
 	@$(SELF_MAKE) _builtin_setup_environment
 	@$(UV) lock --check --project "$(PROJECT_ROOT)"
 =======
+<<<<<<< HEAD
+
+# The second half belongs to the Makefile `gen` just rendered, so it runs as a
+# fresh make invocation rather than as lines of the recipe already expanded
+# above. It locks mise.lock from the rendered .mise.toml (never from the
+# manifest the generator was provisioned with) unless that manifest is the one
+# the first half already locked, installs exactly that lock,
+# re-resolves uv.lock against the raised floors and reprovisions frozen from
+# both: the committed locks must match the committed manifests, or `setup`
+# (the CI path) warns of drift on every run. The Mise release is not resolved
+# again; the first half already pinned it.
+.PHONY: _upg_relock
+_upg_relock: TOOL_BOOTSTRAP_LIFECYCLE := _upg_converge
+_upg_relock: TOOL_BOOTSTRAP_LOCK := 1
+_upg_relock: _bootstrap_setup_tools
+
+# An upgrade publishes only after the cycle it changed still passes: the
+# generation fixed point is proven above, and every active gate must be
+# green on the upgraded tree, so a package update that breaks types, lint
+# or consistency fails the upgrade itself instead of surfacing later as
+# red tests or red CI.
+.PHONY: _upg_converge
+_upg_converge:
+	$(call _lock_project,,retain)
+	@$(SELF_MAKE) _builtin_setup_environment
+	@$(UV) lock --check --project "$(PROJECT_ROOT)"
+=======
 	@mise -C "$(PROJECT_ROOT)" install --yes
 	@$(SELF_MAKE) _builtin_require_mise
+>>>>>>> origin/0.12.0-dev
 >>>>>>> origin/0.12.0-dev
 	@set -eu; \
 	before="$$(git -C "$(PROJECT_ROOT)" status --porcelain --untracked-files=all --ignore-submodules=none | sort)"; \
