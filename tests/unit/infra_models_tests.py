@@ -10,9 +10,9 @@ from json import dumps
 from pathlib import Path
 
 import pytest
+from flext_tests import tm
 
 from flext import c, m, t
-from flext_tests import tm
 from tests.infra import TestsFlextRootModels
 
 
