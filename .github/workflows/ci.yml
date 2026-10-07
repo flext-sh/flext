@@ -126,14 +126,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-3.13-flext-testmon-flext-${{ hashFiles('uv.lock', 'mise.lock', 'pyproject.toml', 'config/**') }}-
 
-      - name: Install mise
-        shell: bash
-        run: |
-          set -eu
-          curl -fsSL https://mise.run | sh
-          echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
-          echo "${HOME}/.local/share/mise/shims" >> "${GITHUB_PATH}"
-
       - name: Install the mise release pinned by mise.lock
         shell: bash
         run: |
@@ -141,10 +133,6 @@ jobs:
           curl -fsSL https://mise.run | sh
           echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
           echo "${HOME}/.local/share/mise/shims" >> "${GITHUB_PATH}"
-          # Provision the release the committed mise.lock pins (SSOT - no
-          # second hardcoded version) and select it globally, so the
-          # Makefile's declared-release guard resolves the pinned version
-          # through the shims instead of the mise.run latest default.
           mise_pin="$(awk 'index($0, "[[tools.\"github:jdx/mise\"]]") == 1 { inside = 1; next } inside && substr($0, 1, 1) == "[" { exit } inside && $1 == "version" { gsub(/[",]/, "", $3); print $3; exit }' mise.lock)"
           "${HOME}/.local/bin/mise" install "github:jdx/mise@${mise_pin}"
           "${HOME}/.local/bin/mise" use --global "github:jdx/mise@${mise_pin}"
@@ -241,13 +229,16 @@ jobs:
           fetch-depth: 0
           submodules: recursive
           persist-credentials: false
-      - name: Install mise
+      - name: Install the mise release pinned by mise.lock
         shell: bash
         run: |
           set -eu
           curl -fsSL https://mise.run | sh
           echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
           echo "${HOME}/.local/share/mise/shims" >> "${GITHUB_PATH}"
+          mise_pin="$(awk 'index($0, "[[tools.\"github:jdx/mise\"]]") == 1 { inside = 1; next } inside && substr($0, 1, 1) == "[" { exit } inside && $1 == "version" { gsub(/[",]/, "", $3); print $3; exit }' mise.lock)"
+          "${HOME}/.local/bin/mise" install "github:jdx/mise@${mise_pin}"
+          "${HOME}/.local/bin/mise" use --global "github:jdx/mise@${mise_pin}"
 
       - name: Boot
         run: CI=Y make setup
