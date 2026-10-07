@@ -2,7 +2,7 @@
 # @flext-owner: flext-infra/config/codegen.yaml + flext-infra/src/flext_infra/templates/project/base/Makefile.j2
 # @flext-adjust: edit the owner configuration or template; never this projection
 # @flext-regenerate: make gen
-# flext-infra — selector-free generated project interface.
+# flext — selector-free generated project interface.
 # Managed by flext-infra codegen conform for new and existing repositories.
 # === SECTION: header (managed) ===
 # Source: template (base/Makefile.j2)
@@ -89,14 +89,14 @@ unexport GITHUB_API_TOKEN
 
 # === SECTION: project identity (managed) ===
 # Source: config:dist / config:make_profile / config:repository_root_rel / config:uv_link_mode
-PROJECT_NAME := flext-infra
-MAKE_PROFILE := standalone
+PROJECT_NAME := flext
+MAKE_PROFILE := workspace
 REPOSITORY_ROOT_REL := .
 # === SECTION: workspace subprojects (managed) ===
 # Source: config:workspace_subprojects (list), config:workspace_repositories (list)
 # Computed: MANAGED_GITLINKS mirrors the read-only local .gitmodules topology.
-WORKSPACE_SUBPROJECTS :=
-MANAGED_GITLINKS :=
+WORKSPACE_SUBPROJECTS := flext-api flext-auth flext-cli flext-core flext-db-oracle flext-dbt-ldap flext-dbt-ldif flext-dbt-oracle flext-dbt-oracle-wms flext-grpc flext-infra flext-ldap flext-ldif flext-meltano flext-observability flext-oracle-oic flext-oracle-wms flext-plugin flext-quality flext-tap-ldap flext-tap-ldif flext-tap-oracle flext-tap-oracle-oic flext-tap-oracle-wms flext-target-ldap flext-target-ldif flext-target-oracle flext-target-oracle-oic flext-target-oracle-wms flext-tests flext-web
+MANAGED_GITLINKS :=$(WORKSPACE_SUBPROJECTS)
 UV_LINK_MODE := copy
 # End SECTION: project identity
 
@@ -106,7 +106,7 @@ UV_LINK_MODE := copy
 # unconsumed variable is ignored.
 PYTEST_DIAG_ARGS := -rA --durations=0 --tb=long --showlocals
 PYTEST_REPORT_ARGS := -ra --durations=25 --durations-min=0.001 --tb=short
-PYTEST_PROCESS_TIMEOUT_SECONDS := 1204
+PYTEST_PROCESS_TIMEOUT_SECONDS := 124
 # The pytest process inherits a hard wall-clock boundary, so a hung
 # run is terminated even if the runner itself stalls.
 override PYTEST_BOUNDED = timeout --signal=TERM --kill-after=5s "$(PYTEST_PROCESS_TIMEOUT_SECONDS)s"
@@ -120,7 +120,7 @@ override FLEXT_PYTEST_TESTMON_DATABASE = $(if $(strip $(PYTEST_CACHE_HOME)),$(PY
 # Profiles sit beside the other reports of this checkout (.reports is ignored).
 PROFILE_REPORTS_DIR = $(PROJECT_ROOT)/$(dir $(PYTEST_REPORTS_DIR))profiles
 override PYTEST_CASE_TIMEOUT_SECONDS := 10
-override PYTEST_RUN_TIMEOUT_SECONDS := 1200
+override PYTEST_RUN_TIMEOUT_SECONDS := 120
 override PYTEST_TERMINATION_GRACE_SECONDS := 2
 override PYTEST_TIMEOUT_EXIT_CODE := 124
 override PYTEST_ENFORCEMENT_PLUGIN := flext_tests_enforcement
@@ -172,8 +172,8 @@ endif
 # === SECTION: verb dispatch (managed) ===
 # Source: config:make.verbs and the canonical gate vocabulary. A verb exists
 # only in the profiles it declares (make.verbs[].profiles).
-PUBLIC_VERBS := help setup pre-commit upg build check smells test test-full test-file file-gate profile-test profile-test-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen initialize mod mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
-BUILTIN_VERBS := help setup pre-commit upg build check smells test test-full test-file file-gate profile-test profile-test-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen initialize mod mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
+PUBLIC_VERBS := help setup pre-commit upg propagate build examples check smells test test-full test-file file-gate profile-test profile-test-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen initialize mod mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
+BUILTIN_VERBS := help setup pre-commit upg propagate build examples check smells test test-full test-file file-gate profile-test profile-test-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen initialize mod mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
 SCRIPT_VERBS :=
 
 CUSTOM_MAKEFILE := $(MAKEFILE_ROOT)/custom.mk
@@ -473,6 +473,17 @@ help:
 
 
 
+propagate: _builtin_require_workspace
+	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _activated-propagate,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-propagate)
+
+.PHONY: _activated-propagate
+_activated-propagate: _builtin_require_environment
+
+	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-propagate,$(call RUN_PUBLIC,propagate))
+
+
+
+
 build: _builtin_require_workspace
 	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _activated-build,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-build)
 
@@ -480,6 +491,17 @@ build: _builtin_require_workspace
 _activated-build: _builtin_require_environment
 
 	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-build,$(call RUN_PUBLIC,build))
+
+
+
+
+examples: _builtin_require_workspace
+	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _activated-examples,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-examples)
+
+.PHONY: _activated-examples
+_activated-examples: _builtin_require_environment
+
+	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-examples,$(call RUN_PUBLIC,examples))
 
 
 
@@ -897,9 +919,17 @@ upg:
 	@printf '  %-16s %s\n' 'upg' 'Resolve the newest declared releases, write the uv and mise locks, then prove the upgraded tree still converges and passes every active check gate.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make upg to execute it.'
 
+propagate:
+	@printf '  %-16s %s\n' 'propagate' 'Apply this workspace'"'"'s flext-infra to every declared member (conform, then lock) and publish one pull-request lane per member whose projections or lock change; unchanged members publish nothing.'
+	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make propagate to execute it.'
+
 build:
 	@printf '  %-16s %s\n' 'build' 'Build the project distribution artifacts.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make build to execute it.'
+
+examples:
+	@printf '  %-16s %s\n' 'examples' 'Run the workspace public runtime examples.'
+	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make examples to execute it.'
 
 check:
 	@printf '  %-16s %s\n' 'check' 'Run the configured non-test gates except the dedicated smells audit.'
@@ -1055,7 +1085,7 @@ _setup_activated:
 	esac
 
 _builtin-help:
-	@printf '%s\n' 'flext-infra [standalone]' '';
+	@printf '%s\n' 'flext [workspace]' '';
 
 	@printf '  %-16s %s\n' 'help' 'Show the complete selector-free public interface.';
 
@@ -1065,7 +1095,11 @@ _builtin-help:
 
 	@printf '  %-16s %s\n' 'upg' 'Resolve the newest declared releases, write the uv and mise locks, then prove the upgraded tree still converges and passes every active check gate.';
 
+	@printf '  %-16s %s\n' 'propagate' 'Apply this workspace'"'"'s flext-infra to every declared member (conform, then lock) and publish one pull-request lane per member whose projections or lock change; unchanged members publish nothing.';
+
 	@printf '  %-16s %s\n' 'build' 'Build the project distribution artifacts.';
+
+	@printf '  %-16s %s\n' 'examples' 'Run the workspace public runtime examples.';
 
 	@printf '  %-16s %s\n' 'check' 'Run the configured non-test gates except the dedicated smells audit.';
 
@@ -1462,7 +1496,7 @@ _upg_activated:
 # in every profile: a workspace root evaluates itself exactly as CI does.
 _builtin_build_artifacts:
 
-	@$(UV) build --project "$(PROJECT_ROOT)"
+	@printf '%s\n' 'INFO: build: repository declares package=false (content-only root); no distribution to build'
 
 
 # Check is read-only: it runs the gates without --apply, so the tree is left
@@ -1601,6 +1635,12 @@ _builtin_sonarcloud_issues_all: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) maintenance sonarcloud-issues --repository-root "$(PROJECT_ROOT)"
 
 
+# Member propagation exists only where members exist: this workspace's
+# flext-infra conforms and relocks each declared member and publishes one
+# pull-request lane per member that changed. It never merges.
+_builtin-propagate: _builtin_require_environment
+	@$(PROJECT_FLEXT_INFRA) workspace propagate --repository-root "$(PROJECT_ROOT)"
+
 _builtin_run_default: _builtin_require_environment
 	@$(UV_RUN) $(PROJECT_NAME) $(ARGS)
 
@@ -1641,7 +1681,7 @@ profile-gen: _builtin_require_environment
 	@$(RUNTIME_PYTHON) -c \
 		'import cProfile, sys; from flext_infra.cli import main; profile = cProfile.Profile(); status = profile.runcall(main, sys.argv[2:]); profile.dump_stats(sys.argv[1]); raise SystemExit(status)' \
 		"$(PROFILE_REPORTS_DIR)/lazy-init.pstats" codegen lazy-init \
-		--repository-root "$(PROJECT_ROOT)" --module flext_infra --dry-run
+		--repository-root "$(PROJECT_ROOT)" --module flext --dry-run
 
 .PHONY: profile-gen-report
 profile-gen-report: _builtin_require_environment
@@ -1790,7 +1830,7 @@ _builtin_mod_snapshots: _builtin_require_environment
 # member profile enforces only itself.
 
 _builtin_fix_namespace: _builtin_require_environment
-	@$(PROJECT_FLEXT_INFRA) refactor namespace-enforce --repository-root "$(PROJECT_ROOT)" --projects . --apply
+	@$(PROJECT_FLEXT_INFRA) refactor namespace-enforce --repository-root "$(PROJECT_ROOT)" --apply
 
 
 _builtin_fix_accessors: _builtin_require_environment
@@ -1799,6 +1839,9 @@ _builtin_fix_accessors: _builtin_require_environment
 # Selector-free public verbs map one-to-one to their canonical implementation;
 # each implementation owns one fixed operation.
 _builtin-build: _builtin_build_artifacts
+
+_builtin-examples: _builtin_require_environment
+	@timeout --signal=TERM --kill-after=5s "120s" $(UV_RUN) python -m examples.runtime
 
 _builtin-check: _builtin_check_all
 _builtin-test: _builtin_test_all
