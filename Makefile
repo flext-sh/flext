@@ -335,7 +335,6 @@ set -eu; \
 		caller_xdg_data_home="$$caller_home/.local/share"; \
 	fi; \
 	caller_path="$$PATH"; \
-	caller_github_token="$${GITHUB_TOKEN:-}"; \
 	mise_trusted_config_paths="$$project_root"; \
 mise_lockfile_platforms="linux-x64,linux-x64-musl,linux-arm64,macos-x64,macos-arm64,windows-x64"; \
 caller_comspec="$${COMSPEC:-}"; \
@@ -529,7 +528,6 @@ $${mise_lockfile_platforms:+"MISE_LOCKFILE_PLATFORMS=$$mise_lockfile_platforms"}
 "GIT_CEILING_DIRECTORIES=$$project_parent" \
 			"MISE_CEILING_PATHS=$$project_parent" \
 			"MISE_TRUSTED_CONFIG_PATHS=$$mise_trusted_config_paths" \
-$${caller_github_token:+"GITHUB_TOKEN=$$caller_github_token"} \
 $${caller_path:+"PATH=$$caller_path"} \
 $${caller_comspec:+"COMSPEC=$$caller_comspec"} \
 $${caller_pathext:+"PATHEXT=$$caller_pathext"} \
@@ -598,7 +596,6 @@ _bootstrap_setup_tools:
 		caller_xdg_data_home="$$caller_home/.local/share"; \
 	fi; \
 	caller_path="$$PATH"; \
-	caller_github_token="$${GITHUB_TOKEN:-}"; \
 	mise_trusted_config_paths="$$project_root"; \
 mise_lockfile_platforms="linux-x64,linux-x64-musl,linux-arm64,macos-x64,macos-arm64,windows-x64"; \
 caller_comspec="$${COMSPEC:-}"; \
@@ -792,7 +789,6 @@ $${mise_lockfile_platforms:+"MISE_LOCKFILE_PLATFORMS=$$mise_lockfile_platforms"}
 "GIT_CEILING_DIRECTORIES=$$project_parent" \
 			"MISE_CEILING_PATHS=$$project_parent" \
 			"MISE_TRUSTED_CONFIG_PATHS=$$mise_trusted_config_paths" \
-$${caller_github_token:+"GITHUB_TOKEN=$$caller_github_token"} \
 $${caller_path:+"PATH=$$caller_path"} \
 $${caller_comspec:+"COMSPEC=$$caller_comspec"} \
 $${caller_pathext:+"PATHEXT=$$caller_pathext"} \
