@@ -1,10 +1,17 @@
-# Copyright (c) 2025 FLEXT Team. All rights reserved.
-"""Discover page elements and capture a reference screenshot."""
+"""AI Hub governance hook projection: element_discovery.
 
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 import tempfile
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
+
+"""Discover page elements and capture a reference screenshot."""
+
 
 # Example: Discovering buttons and other elements on a page
 

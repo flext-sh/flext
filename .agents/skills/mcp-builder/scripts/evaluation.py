@@ -1,9 +1,10 @@
-# Copyright (c) 2025 FLEXT Team. All rights reserved.
-"""MCP Server Evaluation Harness.
+"""AI Hub governance hook projection: evaluation.
 
-This script evaluates MCP servers by running test questions against them using Claude.
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
 
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 import asyncio
 import json
 import re
@@ -15,6 +16,12 @@ from pathlib import Path
 from anthropic import Anthropic
 from connections import ConnectionParams, MCPConnection, create_connection
 from defusedxml import ElementTree as DelTree
+
+"""MCP Server Evaluation Harness.
+
+This script evaluates MCP servers by running test questions against them using Claude.
+"""
+
 
 EVALUATION_PROMPT = """You are an AI assistant with access to tools.
 

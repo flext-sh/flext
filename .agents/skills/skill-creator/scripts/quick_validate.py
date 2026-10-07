@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
-# Copyright (c) 2025 FLEXT Team. All rights reserved.
-"""Quick validation script for skills - minimal version."""
+"""AI Hub governance hook projection: quick_validate.
 
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 import re
 import sys
 from pathlib import Path
+
+"""Quick validation script for skills - minimal version."""
+
 
 _HYPHEN_CASE_PATTERN = r"^[a-z0-9-]+$"
 
