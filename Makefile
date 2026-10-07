@@ -249,6 +249,7 @@ CALLER_VIRTUAL_ENV := $(patsubst %/,%,$(VIRTUAL_ENV))
 # Source: repository topology. workspace has .gitmodules; standalone does not.
 # Attached members share their Git superproject runtime; standalone owns itself.
 override RUNTIME_ROOT := $(REPOSITORY_ROOT)
+override MISE_VERSION_PIN := $(RUNTIME_ROOT)/mise.version
 override export GIT_CEILING_DIRECTORIES := $(abspath $(RUNTIME_ROOT)/..)
 override export MISE_CEILING_PATHS := $(abspath $(RUNTIME_ROOT)/..)
 # The physical runtime owns both its environment and frozen tool identities.
@@ -319,13 +320,27 @@ export FLEXT_INFRA_PYTHON UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH RUN
 # committed mise.lock) provisions every tool including mise itself; `make upg`
 # alone advances versions (`mise lock --bump`, `uv lock --upgrade --refresh`).
 # The lifecycle receives the resolved tool identities as environment.
+# The bootstrap is the NATIVE mise/uv surface: `mise install` (locked from the
+# committed mise.lock) provisions every tool including mise itself; `make upg`
+# alone advances versions (`mise lock --bump`, `uv lock --upgrade --refresh`).
+# The lifecycle receives the resolved tool identities as environment.
 TOOL_BOOTSTRAP_LIFECYCLE := _setup_lifecycle
 
 # Pin reader: the github:jdx/mise release line of the committed mise.lock —
 # presentation logic over the one lock source; no separate pin file exists.
 
 
+
+# Pin reader: the github:jdx/mise release line of the committed mise.lock —
+# presentation logic over the one lock source; no separate pin file exists.
+
+
 .PHONY: _bootstrap_setup_tools
+_bootstrap_setup_tools: _builtin_require_mise
+	@set -eu; \
+	mise_actual="$$(mise --version 2>/dev/null | cut -d ' ' -f1)"; \
+	if [ "$$mise_actual" != "2026.10.3" ]; then \
+		printf 'ERROR: mise %s differs from the declared release %s; run: mise use -g github:jdx/mise@2026.10.3\n' "$$mise_actual" "2026.10.3" >&2; \
 _bootstrap_setup_tools: _builtin_require_mise
 	@set -eu; \
 	mise_actual="$$(mise --version 2>/dev/null | cut -d ' ' -f1)"; \
@@ -1524,6 +1539,8 @@ _builtin_require_mise:
 		exit 2; \
 	fi; \
 	mise_actual="$$(mise --version 2>/dev/null | cut -d ' ' -f1)"; \
+	if [ "$$mise_actual" != "2026.10.3" ]; then \
+		printf 'ERROR: mise %s differs from the declared release %s; run: mise use -g github:jdx/mise@2026.10.3\n' "$$mise_actual" "2026.10.3" >&2; \
 	if [ "$$mise_actual" != "2026.10.3" ]; then \
 		printf 'ERROR: mise %s differs from the declared release %s; run: mise use -g github:jdx/mise@2026.10.3\n' "$$mise_actual" "2026.10.3" >&2; \
 		exit 2; \
