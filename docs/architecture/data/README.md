@@ -110,27 +110,27 @@ including data models, flow patterns, storage strategies, and integration approa
 
 ## 📋 Data Architecture Components
 
-### 1. [Data Models](./data-models/)
+### 1. [Data Models](data-models/README.md)
 
 Comprehensive data models and schemas used throughout the FLEXT platform.
 
-### 2. [Data Flow Patterns](./data-flow-patterns/)
+### 2. [Data Flow Patterns](data-flow-patterns/README.md)
 
 Data processing and transformation flow patterns.
 
-### 3. [Storage Architecture](./storage-architecture/)
+### 3. [Storage Architecture](storage-architecture/README.md)
 
 Data storage strategies and database design.
 
-### 4. [Integration Patterns](./integration-patterns/)
+### 4. [Integration Patterns](integration-patterns/README.md)
 
 Data integration approaches and protocols.
 
-### 5. [Data Quality](./data-quality/)
+### 5. [Data Quality](data-quality/README.md)
 
 Data quality management and validation strategies.
 
-### 6. [Data Governance](./data-governance/)
+### 6. [Data Governance](data-governance/README.md)
 
 Data governance, compliance, and audit requirements.
 

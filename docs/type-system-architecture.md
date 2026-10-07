@@ -276,5 +276,5 @@ through the root Make lifecycle; never relabel code to evade a failing check.
 ## See Also
 
 - [Utilities usage](utilities-guide.md)
-- [Architecture decisions](architecture/adr/)
+- [Architecture decisions](architecture/adr/README.md)
 - [Stabilization checkpoint](ways-of-working/stabilization-checkpoint-0.12.md)
