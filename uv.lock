@@ -1251,7 +1251,7 @@ dependencies = [
 [[package]]
 name = "flext-infra"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#3c62754976e79e6fed5f07578d9fcef59808b0ae" }
+source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#c67472372a46f5f8193888975f85ce6370d9d5e2" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1414,7 +1414,7 @@ dependencies = [
 [[package]]
 name = "flext-quality"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-quality.git?rev=0.12.0-dev#9da98618124a63aa6f6e68b6f0582e3ffb929a1f" }
+source = { git = "https://github.com/flext-sh/flext-quality.git?rev=0.12.0-dev#15cc8cc8bc10723e5a9c602e5bb810b49488384f" }
 dependencies = [
     { name = "aiohttp" },
     { name = "annotated-types" },
