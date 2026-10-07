@@ -7,9 +7,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import flext_infra
-
-from flext._protocols.base import FlextRootProtocolsBase
-from flext._protocols.config import FlextRootProtocolsConfig
+from flext._protocols import FlextRootProtocolsBase, FlextRootProtocolsConfig
 
 
 class FlextRootProtocols(flext_infra.p):

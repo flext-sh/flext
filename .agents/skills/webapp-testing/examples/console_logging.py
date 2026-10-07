@@ -1,9 +1,16 @@
-# Copyright (c) 2025 FLEXT Team. All rights reserved.
-"""Capture browser console logs during Playwright automation."""
+"""AI Hub governance hook projection: console_logging.
 
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 import pathlib
 
 from playwright.sync_api import sync_playwright
+
+"""Capture browser console logs during Playwright automation."""
+
 
 # Example: Capturing console logs during browser automation
 

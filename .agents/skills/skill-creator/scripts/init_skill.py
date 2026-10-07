@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
+"""AI Hub governance hook projection: init_skill.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
 # Copyright (c) 2025 FLEXT Team. All rights reserved.
+import sys
+from pathlib import Path
+
 """Skill Initializer - Creates a new skill from template.
 
 Usage:
@@ -12,8 +21,6 @@ Examples:
 
 """
 
-import sys
-from pathlib import Path
 
 SKILL_TEMPLATE = """---
 name: {skill_name}
