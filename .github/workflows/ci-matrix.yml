@@ -50,7 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          submodules: false
+          submodules: recursive
           # No step needs authenticated git after checkout; persisting the
           # token into .git/config would expose it to every later command.
           persist-credentials: false
@@ -88,10 +88,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          submodules: false
+          submodules: recursive
           # No step needs authenticated git after checkout; persisting the
           # token into .git/config would expose it to every later command.
-          persist-credentials: false- name: Install mise
+          persist-credentials: false
+      - name: Install mise
         shell: bash
         run: |
           set -eu
@@ -126,10 +127,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          submodules: false
+          submodules: recursive
           # No step needs authenticated git after checkout; persisting the
           # token into .git/config would expose it to every later command.
-          persist-credentials: false- name: Install mise
+          persist-credentials: false
+      - name: Install mise
         shell: bash
         run: |
           set -eu
