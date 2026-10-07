@@ -164,4 +164,4 @@ its singleton through `fetch_global()`.
 ## Related
 
 - `flext-core/src/flext_core/README.md`
-- [Foundation API reference](../api-reference/generated/flext-core.md)
+- [Foundation API reference](../api-reference/generated/public-api.md)
