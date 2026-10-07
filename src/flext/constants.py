@@ -7,8 +7,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import flext_infra
-from flext._constants import FlextRootConstantsBase
-from flext._constants import FlextRootConstantsConfig
+from flext._constants import FlextRootConstantsBase, FlextRootConstantsConfig
 
 
 class FlextRootConstants(flext_infra.c):
