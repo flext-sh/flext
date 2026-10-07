@@ -51,8 +51,7 @@ def _validate_name(frontmatter: str) -> str | None:
         )
     if name.startswith("-") or name.endswith("-") or "--" in name:
         return (
-            f"Name '{name}' cannot start/end with hyphen "
-            "or contain consecutive hyphens"
+            f"Name '{name}' cannot start/end with hyphen or contain consecutive hyphens"
         )
     return None
 
