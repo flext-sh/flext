@@ -41,7 +41,7 @@ pip install flext-ldap
 ```
 
 ```python
-from flext_ldap import FlextLdap, m, settings
+from flext_ldap import FlextLdap, m, settings, u
 
 api = FlextLdap()
 connection = m.Ldap.ConnectionConfig(
