@@ -352,6 +352,10 @@ _bootstrap_setup_tools: _builtin_require_mise
 	export SETUP_PYTHON="$$(mise which python)"; \
 	export SETUP_DIRENV="$$(mise which direnv)"; \
 	$(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE)
+	export MISE_VERSION="$$mise_pin"; \
+	export SETUP_PYTHON="$$(mise which python)"; \
+	export SETUP_DIRENV="$$(mise which direnv)"; \
+	$(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE)
 
 # Every repository evaluates only itself, locally exactly as in CI: a workspace
 # root consumes its members as installed libraries and never fans a verb out
