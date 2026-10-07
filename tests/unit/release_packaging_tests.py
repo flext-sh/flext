@@ -29,19 +29,17 @@ class TestsFlextRootReleasePackaging:
                 The resulting ``t.JsonMapping``.
 
             Raises:
-                TypeError: If expected final section to be a mapping; or if expected
-                    mapping at key.
+                TypeError: If any expected section along ``keys`` is not a
+                    mapping.
 
             """
-            node: t.JsonMapping = dict(payload)
+            node = payload
             for key in keys:
-                if not isinstance(node, Mapping):
+                child = node[key]
+                if not isinstance(child, Mapping):
                     msg = f"expected mapping at key {key!r}"
                     raise TypeError(msg)
-                node = node[key]
-            if not isinstance(node, Mapping):
-                msg = "expected final section to be a mapping"
-                raise TypeError(msg)
+                node = child
             return node
 
         @staticmethod
