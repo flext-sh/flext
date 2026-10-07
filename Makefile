@@ -445,6 +445,12 @@ endef
 # the manifests (run with the lock disabled), exactly as uv prescribes. The
 # committed lock is the journal: an interrupted write is recovered by the
 # same path (uv lock --check fails, uv lock re-derives).
+# uv owns the lock. `make upg` is the only verb that advances versions
+# (`uv lock --upgrade --refresh`); `make setup` restores the DECLARED state:
+# a uv.lock that is missing, stale, or corrupt is removed and re-locked from
+# the manifests (run with the lock disabled), exactly as uv prescribes. The
+# committed lock is the journal: an interrupted write is recovered by the
+# same path (uv lock --check fails, uv lock re-derives).
 
 .PHONY: $(PUBLIC_VERBS) $(addprefix _builtin-,$(PUBLIC_VERBS))
 .PHONY: _builtin_gen_init _builtin_gen_all
@@ -1410,6 +1416,10 @@ endif
 # removed and re-locked from the manifests (never a version advance — that
 # belongs to `make upg` alone); uv then owns the venv: `uv sync --python`
 # creates or replaces it against the declared interpreter.
+# Setup restores the declared state: a uv.lock missing, stale, or corrupt is
+# removed and re-locked from the manifests (never a version advance — that
+# belongs to `make upg` alone); uv then owns the venv: `uv sync --python`
+# creates or replaces it against the declared interpreter.
 # Governed gitlinks are provisioned in every context, GitHub Actions included:
 # the workspace projections (Makefile, pyproject, .gitignore, dependabot, docs)
 # derive from the member checkouts, so a member-less CI checkout would render a
@@ -1417,6 +1427,7 @@ endif
 # members are read as libraries; no verb gates them from here.
 _builtin_setup_environment: $(if $(filter Y,$(CI)),,_builtin_setup_submodules)
 	@$(SETUP_ENVIRONMENT_RECIPE)
+ifeq ($(MAKE_PROFILE),workspace)
 ifeq ($(MAKE_PROFILE),workspace)
 	@$(UV) pip check --python "$(RUNTIME_VENV)"
 endif
@@ -1815,7 +1826,14 @@ _builtin_mod_snapshots: _builtin_require_environment
 # aggregates per project and one project's findings never stop the sweep. A
 # member profile enforces only itself.
 
+# The workspace profile sweeps every namespace-enabled project of the topology
+# (the root repository and each declared member) in one process: the report
+# aggregates per project and one project's findings never stop the sweep. A
+# member profile enforces only itself.
+
 _builtin_fix_namespace: _builtin_require_environment
+	@$(PROJECT_FLEXT_INFRA) refactor namespace-enforce --repository-root "$(PROJECT_ROOT)" --apply
+
 	@$(PROJECT_FLEXT_INFRA) refactor namespace-enforce --repository-root "$(PROJECT_ROOT)" --apply
 
 
