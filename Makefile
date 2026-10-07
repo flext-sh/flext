@@ -322,39 +322,6 @@ override PATH := $(RUNTIME_BIN):$(SANITIZED_CALLER_PATH)
 unexport UV
 export FLEXT_INFRA_PYTHON UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH RUNTIME_ROOT
 
-<<<<<<< HEAD
-# One bootstrap serves `setup` (frozen install) and `upg` (resolve + install);
-# the public verb selects its lifecycle and resolution through target-specific
-# variables.
-TOOL_BOOTSTRAP_LIFECYCLE := _setup_lifecycle
-TOOL_BOOTSTRAP_RESOLVE :=
-.PHONY: _bootstrap_setup_tools
-
-_bootstrap_setup_tools:
-	# The lifecycle invokes recursive make through mise, so preserve jobserver FDs.
-	+@set -eu; \
-	if ! command -v mise >/dev/null 2>&1; then \
-		printf 'ERROR: mise is not installed; install it (https://mise.run) and retry\n' >&2; \
-		exit 2; \
-	fi; \
-	if [ "$(TOOL_BOOTSTRAP_RESOLVE)" = "1" ]; then \
-		mise -C "$(PROJECT_ROOT)" lock --bump; \
-	fi; \
-	mise -C "$(PROJECT_ROOT)" install --yes; \
-	mise_pin="$$( awk 'index($$0, "[[tools.\"github:jdx/mise\"]]") == 1 { inside = 1; next } inside && substr($$0, 1, 1) == "[" { exit } inside && $$1 == "version" { gsub(/[",]/, "", $$3); print $$3; exit }' "$(PROJECT_ROOT)/mise.lock" )"; \
-	if [ -z "$$mise_pin" ]; then \
-		printf 'ERROR: mise.lock pins no github:jdx/mise release; run make upg\n' >&2; \
-		exit 2; \
-	fi; \
-	mise_receipt="$$(mise -C "$(PROJECT_ROOT)" exec -- mise --version | cut -d ' ' -f1)"; \
-	if [ "$$mise_receipt" != "$$mise_pin" ]; then \
-		printf 'ERROR: provisioned Mise %s differs from the mise.lock pin %s; run make setup\n' "$$mise_receipt" "$$mise_pin" >&2; \
-		exit 2; \
-	fi; \
-	printf 'setup: mise %s provisioned from mise.lock\n' "$$mise_receipt"; \
-	printf 'setup: entering lifecycle (submodules, environment, hooks) make=%s\n' "$(SELF_MAKE_EXECUTABLE)"; \
-	mise -C "$(PROJECT_ROOT)" exec -- env "CI=$(CI)" $(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE)
-=======
 # Resolve native tools through the same isolated lock reader used by setup.
 # Execute the caller's command with that PATH without reloading host Mise tools.
 define PROJECT_TOOL_RUNTIME
@@ -1067,23 +1034,10 @@ mise_has_blocking_warning() { \
 	if printf 'mise scratch: after lifecycle path=%s present=%s status=%s\n' "$$scratch" "$$scratch_present" "$$lifecycle_status" >&2; then :; \
 	else lifecycle_diagnostic_status=$$?; if [ "$$lifecycle_status" -eq 0 ]; then lifecycle_status=$$lifecycle_diagnostic_status; fi; fi; \
 	exit "$$lifecycle_status"
->>>>>>> e8c3b18ddbb751a25ece712ede3a1900671725d0
 
 # Every repository evaluates only itself, locally exactly as in CI: a workspace
 # root consumes its members as installed libraries and never fans a verb out
 # across them; each member runs its own lifecycle in its own repository.
-<<<<<<< HEAD
-# Provisioning is declared once and shared by every profile. Dev environments
-# consume present members as LIVE editable installs natively (operator law
-# 2026-10-06: a commit never influences dev behavior — the worktree is the
-# behavior): [tool.uv.workspace] makes every declared member a workspace
-# member and `uv sync --all-packages` provisions them as editables; CI's
-# --no-editable keeps the frozen builds.
-SETUP_ENVIRONMENT_RECIPE = set -eu; \
-	trap 'if [ -n "$${FLEXT_SETUP_CREDENTIAL_STORE:-}" ]; then rm -f "$$FLEXT_SETUP_CREDENTIAL_STORE"; fi' EXIT; \
-	$(REQUIRE_WORKSPACE_ENVIRONMENT); \
-	credential_env=; \
-=======
 # Provisioning is declared once and shared by every profile. A venv records the
 # exact base interpreter used to create it, so setup replaces it when Mise moves
 # the configured Python minor line to a newer patch.
@@ -1101,19 +1055,11 @@ SETUP_ENVIRONMENT_RECIPE = set -eu; \
 			$(UV) venv --clear --python "$$desired_python" "$(RUNTIME_VENV)"; \
 		fi; \
 	fi; \
->>>>>>> e8c3b18ddbb751a25ece712ede3a1900671725d0
 	if [ -n "$${FLEXT_SETUP_CREDENTIAL_STORE:-}" ]; then \
-		credential_env="env GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=credential.helper GIT_CONFIG_VALUE_0=store --file=$$FLEXT_SETUP_CREDENTIAL_STORE"; \
+		env GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=credential.helper GIT_CONFIG_VALUE_0="store --file=$$FLEXT_SETUP_CREDENTIAL_STORE" $(UV) sync --project "$(UV_PROJECT)" $(UV_SYNC_FLAGS) --locked --link-mode "$(UV_LINK_MODE)"; \
+	else \
+		$(UV) sync --project "$(UV_PROJECT)" $(UV_SYNC_FLAGS) --locked --link-mode "$(UV_LINK_MODE)"; \
 	fi; \
-<<<<<<< HEAD
-	if ! $(UV) lock --check --project "$(UV_PROJECT)" >/dev/null 2>&1; then \
-		printf 'setup: uv.lock missing, stale, or corrupt; removing it and re-locking from manifests\n'; \
-		rm -f "$(UV_PROJECT)/uv.lock"; \
-		$(UV) lock --project "$(UV_PROJECT)"; \
-	fi; \
-	$$credential_env $(UV) sync --project "$(UV_PROJECT)" --python "3.13" $(UV_SYNC_FLAGS) --locked --link-mode "$(UV_LINK_MODE)"; \
-=======
->>>>>>> e8c3b18ddbb751a25ece712ede3a1900671725d0
 	if [ "$(strip $(CI))" != "Y" ]; then \
 	XDG_DATA_HOME="$${SETUP_DIRENV_XDG_DATA_HOME:?missing persistent direnv data home}" \
 		"$${SETUP_DIRENV:?missing Mise-resolved direnv executable}" allow "$(PROJECT_ROOT)"; \
@@ -1162,16 +1108,9 @@ endif
 override PROJECT_INFRA_RUN = if [ ! -x "$(FLEXT_INFRA_PYTHON)" ]; then printf 'ERROR: FLEXT_INFRA_PYTHON must name an executable managed Python\n' >&2; exit 2; fi; $(PROJECT_TOOL_EXEC) env -u PYTHONPATH -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u UV_PROJECT_ENVIRONMENT PYTHONPATH="$(PROJECT_INFRA_PYTHONPATH)" $(FLEXT_INFRA_PYTHON)
 override PROJECT_FLEXT_INFRA := $(PROJECT_INFRA_RUN) -m flext_infra
 # Scaffold dev tools live in the validated optional dev
-<<<<<<< HEAD
-# uv owns the lock. `make upg` alone advances versions; `make setup` restores
-# the DECLARED state: a missing, stale, or corrupt uv.lock is removed and
-# re-locked from the manifests before the frozen `--locked` sync.
-UV_SYNC_FLAGS := --all-extras --all-groups --all-packages
-=======
 # Only `make upg` resolves and rewrites uv.lock. Setup always runs: it syncs
 # `--locked`; drift and the original install error fail without retry/resolution.
 UV_SYNC_FLAGS := --all-extras --all-groups
->>>>>>> e8c3b18ddbb751a25ece712ede3a1900671725d0
 ifeq ($(strip $(CI)),Y)
 override UV_SYNC_FLAGS := --all-extras --all-groups --no-editable
 endif
@@ -1200,14 +1139,6 @@ endef
 
 
 
-<<<<<<< HEAD
-# uv owns the lock. `make upg` is the only verb that advances versions
-# (`uv lock --upgrade --refresh`); `make setup` restores the DECLARED state:
-# a uv.lock that is missing, stale, or corrupt is removed and re-locked from
-# the manifests (run with the lock disabled), exactly as uv prescribes. The
-# committed lock is the journal: an interrupted write is recovered by the
-# same path (uv lock --check fails, uv lock re-derives).
-=======
 # uv resolves the containing workspace and writes its single uv.lock. Invoking
 # it once per member re-resolves that same lock for every member.
 # uv truncates and rewrites uv.lock in place, so a run killed mid-write leaves
@@ -1239,7 +1170,6 @@ define _lock_project
 	cp "$${stage}/mirror/uv.lock" "$$candidate"; \
 	mv -f "$$candidate" "$$workspace/uv.lock"
 endef
->>>>>>> e8c3b18ddbb751a25ece712ede3a1900671725d0
 
 .PHONY: $(PUBLIC_VERBS) $(addprefix _builtin-,$(PUBLIC_VERBS))
 .PHONY: _builtin_gen_init _builtin_gen_all
@@ -1692,12 +1622,8 @@ _builtin-pre-commit:
 # already satisfies it and the relock installs from it without resolving again.
 upg: TOOL_BOOTSTRAP_LIFECYCLE := _upg_lifecycle
 upg: TOOL_BOOTSTRAP_RESOLVE := 1
-<<<<<<< HEAD
-upg: _bootstrap_setup_tools
-=======
 upg: TOOL_BOOTSTRAP_LOCK := 1
 upg: _builtin_require_runtime_root _bootstrap_setup_tools
->>>>>>> e8c3b18ddbb751a25ece712ede3a1900671725d0
 else
 
 help:
@@ -2224,16 +2150,6 @@ _builtin_require_mise_pin: _builtin_recover_mise
 		printf 'ERROR: missing or empty %s; make upg records the Mise release\n' "$(MISE_VERSION_PIN)" >&2; \
 		exit 2; \
 	fi; \
-<<<<<<< HEAD
-	mise_pin="$$( awk 'index($$0, "[[tools.\"github:jdx/mise\"]]") == 1 { inside = 1; next } inside && substr($$0, 1, 1) == "[" { exit } inside && $$1 == "version" { gsub(/[",]/, "", $$3); print $$3; exit }' "$(RUNTIME_ROOT)/mise.lock" )"; \
-	if [ -z "$$mise_pin" ]; then \
-		printf 'ERROR: mise.lock pins no github:jdx/mise release; run make upg\n' "$(RUNTIME_ROOT)" >&2; \
-		exit 2; \
-	fi; \
-	mise_actual="$$(mise --version 2>/dev/null | cut -d ' ' -f1)"; \
-	if [ "$$mise_actual" != "$$mise_pin" ]; then \
-		printf 'ERROR: mise %s differs from the mise.lock pin %s; run make setup\n' "$$mise_actual" "$$mise_pin" >&2; \
-=======
 	mise_pin=$$(awk '!/^[[:space:]]*(#|$$)/ { lines++; release = $$0 } END { if (lines == 1) print release }' "$(MISE_VERSION_PIN)"); \
 	if ! printf '%s\n' "$$mise_pin" | grep -Eq '^[0-9]+(\.[0-9]+){2}$$'; then \
 		printf 'ERROR: %s must contain a resolved Mise release; make upg writes it\n' "$(MISE_VERSION_PIN)" >&2; \
@@ -2241,7 +2157,6 @@ _builtin_require_mise_pin: _builtin_recover_mise
 	fi; \
 	if [ -n "$${MISE_VERSION:-}" ] && [ "$${MISE_VERSION#v}" != "$$mise_pin" ]; then \
 		printf 'ERROR: MISE_VERSION conflicts with %s\n' "$(MISE_VERSION_PIN)" >&2; \
->>>>>>> e8c3b18ddbb751a25ece712ede3a1900671725d0
 		exit 2; \
 	fi
 
@@ -2261,32 +2176,22 @@ endif
 # Setup PROVISIONS tooling only — mise, venv, dependencies.
 # It never generates, conforms, or mutates project code; `make gen` is the
 # single public conformance/generation surface.
-<<<<<<< HEAD
-# Setup restores the declared state: a uv.lock missing, stale, or corrupt is
-# removed and re-locked from the manifests (never a version advance — that
-# belongs to `make upg` alone); uv then owns the venv: `uv sync --python`
-# creates or replaces it against the declared interpreter.
-=======
 # Setup installs from the committed locks and never writes them; when a lock
 # drifts from its manifest it warns and installs without touching it, because
 # only `make upg` rewrites locks. The venv is created when
 # missing and is never cleared while present, because a concurrent lane may be
 # running against it.
->>>>>>> e8c3b18ddbb751a25ece712ede3a1900671725d0
 # Governed gitlinks are provisioned in every context, GitHub Actions included:
 # the workspace projections (Makefile, pyproject, .gitignore, dependabot, docs)
 # derive from the member checkouts, so a member-less CI checkout would render a
 # different workspace and break the gen fixed point. Provisioned
 # members are read as libraries; no verb gates them from here.
 _builtin_setup_environment: $(if $(filter Y,$(CI)),,_builtin_setup_submodules)
-<<<<<<< HEAD
-	@$(SETUP_ENVIRONMENT_RECIPE)
-ifeq ($(MAKE_PROFILE),workspace)
-=======
 ifeq ($(MAKE_PROFILE),workspace)
 	@$(SETUP_ENVIRONMENT_RECIPE)
->>>>>>> e8c3b18ddbb751a25ece712ede3a1900671725d0
 	@$(UV) pip check --python "$(RUNTIME_VENV)"
+else
+	@$(SETUP_ENVIRONMENT_RECIPE)
 endif
 # End SECTION: setup environment
 
@@ -2308,12 +2213,7 @@ _upg_lifecycle: _builtin_setup_submodules
 	case " $(CUSTOM_DECLARED_TARGETS) " in \
 		*" pre-upg "*) $(SELF_MAKE) pre-upg ;; \
 	esac
-<<<<<<< HEAD
-	@$(UV) lock --project "$(PROJECT_ROOT)" --upgrade --refresh
-	@$(UV) lock --check --project "$(PROJECT_ROOT)"
-=======
 	$(call _lock_project,--upgrade --refresh)
->>>>>>> e8c3b18ddbb751a25ece712ede3a1900671725d0
 	@$(SELF_MAKE) _builtin_setup_environment
 	@$(PROJECT_FLEXT_INFRA) deps modernize --repository-root "$(PROJECT_ROOT)" \
 		--apply --rewrite-constraints --projects .
@@ -2324,10 +2224,6 @@ _upg_lifecycle: _builtin_setup_submodules
 		git add -- .mise/locks; \
 		printf 'INFO: staged the .mise/locks sidecars written by mise lock (declared tracked by the generated .gitignore; commit them with the relock)\n'; \
 	fi
-<<<<<<< HEAD
-	@mise -C "$(PROJECT_ROOT)" install --yes
-	@$(SELF_MAKE) _builtin_require_mise
-=======
 
 # The second half belongs to the Makefile `gen` just rendered, so it runs as a
 # fresh make invocation rather than as lines of the recipe already expanded
@@ -2353,7 +2249,6 @@ _upg_converge:
 	$(call _lock_project,,retain)
 	@$(SELF_MAKE) _builtin_setup_environment
 	@$(UV) lock --check --project "$(PROJECT_ROOT)"
->>>>>>> e8c3b18ddbb751a25ece712ede3a1900671725d0
 	@set -eu; \
 	before="$$(git -C "$(PROJECT_ROOT)" status --porcelain --untracked-files=all --ignore-submodules=none | sort)"; \
 	$(SELF_MAKE) gen; \
@@ -2707,19 +2602,8 @@ _builtin_mod_snapshots: _builtin_require_environment
 
 # Namespace and accessor migration are the same selector-free refactor surface
 # as `mod`: each public verb owns one fixed rewrite of every resolved consumer.
-<<<<<<< HEAD
-# The workspace profile sweeps every namespace-enabled project of the topology
-# (the root repository and each declared member) in one process: the report
-# aggregates per project and one project's findings never stop the sweep. A
-# member profile enforces only itself.
-
-_builtin_fix_namespace: _builtin_require_environment
-	@$(PROJECT_FLEXT_INFRA) refactor namespace-enforce --repository-root "$(PROJECT_ROOT)" --apply
-
-=======
 _builtin_fix_namespace: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) refactor namespace-enforce --repository-root "$(PROJECT_ROOT)" --projects . --apply
->>>>>>> e8c3b18ddbb751a25ece712ede3a1900671725d0
 
 _builtin_fix_accessors: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) refactor accessor-migrate --repository-root "$(PROJECT_ROOT)" --projects . --apply
