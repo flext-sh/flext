@@ -7,13 +7,12 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import flext_ldif
-from flext_cli import cli
-
 from examples import ExamplesFlextRootConstants
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
 from flext import c
+from flext_cli import cli
 
 
 def main() -> int:
