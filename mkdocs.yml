@@ -47,37 +47,6 @@ plugins:
         python:
           paths:
             - src
-            - flext-api/src
-            - flext-auth/src
-            - flext-cli/src
-            - flext-core/src
-            - flext-db-oracle/src
-            - flext-dbt-ldap/src
-            - flext-dbt-ldif/src
-            - flext-dbt-oracle/src
-            - flext-dbt-oracle-wms/src
-            - flext-grpc/src
-            - flext-infra/src
-            - flext-ldap/src
-            - flext-ldif/src
-            - flext-meltano/src
-            - flext-observability/src
-            - flext-oracle-oic/src
-            - flext-oracle-wms/src
-            - flext-plugin/src
-            - flext-quality/src
-            - flext-tap-ldap/src
-            - flext-tap-ldif/src
-            - flext-tap-oracle/src
-            - flext-tap-oracle-oic/src
-            - flext-tap-oracle-wms/src
-            - flext-target-ldap/src
-            - flext-target-ldif/src
-            - flext-target-oracle/src
-            - flext-target-oracle-oic/src
-            - flext-target-oracle-wms/src
-            - flext-tests/src
-            - flext-web/src
           docstring_style: auto
           options:
             show_root_heading: true
