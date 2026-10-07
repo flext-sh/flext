@@ -1251,7 +1251,7 @@ dependencies = [
 [[package]]
 name = "flext-infra"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#ef35de8ae6a154350316b01a991032b0d45e3da9" }
+source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#3c62754976e79e6fed5f07578d9fcef59808b0ae" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1295,7 +1295,7 @@ dependencies = [
 [[package]]
 name = "flext-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev#572bb87c5f6f1692ac32c5b64ca4325cbc0d787d" }
+source = { git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev#c20a19832b4e876ead521db22b86c8cb2301d9c4" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1414,7 +1414,7 @@ dependencies = [
 [[package]]
 name = "flext-quality"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-quality.git?rev=0.12.0-dev#d48e957cd47cd2a2173bed97c6f720d0e5bbf058" }
+source = { git = "https://github.com/flext-sh/flext-quality.git?rev=0.12.0-dev#9da98618124a63aa6f6e68b6f0582e3ffb929a1f" }
 dependencies = [
     { name = "aiohttp" },
     { name = "annotated-types" },
@@ -1637,7 +1637,7 @@ dependencies = [
 [[package]]
 name = "flext-tests"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev#59bf297ee81d82e0e28b632375deb96390ec049e" }
+source = { git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev#566e26956f6cfcba3a6b5af10fdd51372b9c6c53" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
