@@ -1,4 +1,17 @@
 #!/usr/bin/env python3
+"""AI Hub governance hook projection: package_skill.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
+import sys
+import zipfile
+from pathlib import Path
+
+from quick_validate import validate_skill
+
 """Skill Packager - Creates a distributable zip file of a skill folder.
 
 Usage:
@@ -10,19 +23,14 @@ Example:
 
 """
 
-import sys
-import zipfile
-from pathlib import Path
-
-from quick_validate import validate_skill
-
 
 def package_skill(skill_path: str, output_dir: str | None = None) -> Path | None:
     """Package a skill folder into a zip file.
 
     Args:
         skill_path: Path to the skill folder
-        output_dir: Optional output directory for the zip file (defaults to current directory)
+        output_dir: Optional output directory for the zip file (defaults to
+            current directory)
 
     Returns:
         Path to the created zip file, or None if error

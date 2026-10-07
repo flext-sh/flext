@@ -1,62 +1,107 @@
 #!/usr/bin/env python3
-"""Quick validation script for skills - minimal version."""
+"""AI Hub governance hook projection: quick_validate.
 
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 import re
 import sys
 from pathlib import Path
 
+"""Quick validation script for skills - minimal version."""
 
-def validate_skill(skill_path: str) -> tuple[bool, str]:
-    """Basic validation of a skill."""
-    skill_path = Path(skill_path)
 
-    # Check SKILL.md exists
-    skill_md = skill_path / "SKILL.md"
+_HYPHEN_CASE_PATTERN = r"^[a-z0-9-]+$"
+
+
+def _read_frontmatter(skill_md: Path) -> str | None:
+    """Read and extract the YAML frontmatter block.
+
+    Args:
+        skill_md: Path to the SKILL.md file.
+
+    Returns:
+        The frontmatter block content, or None when missing or invalid.
+
+    """
     if not skill_md.exists():
-        return False, "SKILL.md not found"
-
-    # Read and validate frontmatter
-    content = skill_md.read_text()
+        return None
+    content = skill_md.read_text(encoding="utf-8")
     if not content.startswith("---"):
-        return False, "No YAML frontmatter found"
-
-    # Extract frontmatter
+        return None
     match = re.match(r"^---\n(.*?)\n---", content, re.DOTALL)
     if not match:
-        return False, "Invalid frontmatter format"
+        return None
+    return match.group(1)
 
-    frontmatter = match.group(1)
 
-    # Check required fields
-    if "name:" not in frontmatter:
-        return False, "Missing 'name' in frontmatter"
-    if "description:" not in frontmatter:
-        return False, "Missing 'description' in frontmatter"
+def _validate_name(frontmatter: str) -> str | None:
+    """Validate the skill name field.
 
-    # Extract name for validation
+    Args:
+        frontmatter: Frontmatter block content.
+
+    Returns:
+        Error message when invalid, None when valid.
+
+    """
     name_match = re.search(r"name:\s*(.+)", frontmatter)
-    if name_match:
-        name = name_match.group(1).strip()
-        # Check naming convention (hyphen-case: lowercase with hyphens)
-        if not re.match(r"^[a-z0-9-]+$", name):
-            return (
-                False,
-                f"Name '{name}' should be hyphen-case (lowercase letters, digits, and hyphens only)",
-            )
-        if name.startswith("-") or name.endswith("-") or "--" in name:
-            return (
-                False,
-                f"Name '{name}' cannot start/end with hyphen or contain consecutive hyphens",
-            )
+    if not name_match:
+        return None
+    name = name_match.group(1).strip()
+    if not re.match(_HYPHEN_CASE_PATTERN, name):
+        return (
+            f"Name '{name}' should be hyphen-case "
+            "(lowercase letters, digits, and hyphens only)"
+        )
+    if name.startswith("-") or name.endswith("-") or "--" in name:
+        return (
+            f"Name '{name}' cannot start/end with hyphen or contain consecutive hyphens"
+        )
+    return None
 
-    # Extract and validate description
+
+def _validate_description(frontmatter: str) -> str | None:
+    """Validate the skill description field.
+
+    Args:
+        frontmatter: Frontmatter block content.
+
+    Returns:
+        Error message when invalid, None when valid.
+
+    """
+    if "description:" not in frontmatter:
+        return "Missing 'description' in frontmatter"
     desc_match = re.search(r"description:\s*(.+)", frontmatter)
     if desc_match:
         description = desc_match.group(1).strip()
-        # Check for angle brackets
         if "<" in description or ">" in description:
-            return False, "Description cannot contain angle brackets (< or >)"
+            return "Description cannot contain angle brackets (< or >)"
+    return None
 
+
+def validate_skill(skill_path: str) -> tuple[bool, str]:
+    """Basic validation of a skill.
+
+    Args:
+        skill_path: Path to the skill directory.
+
+    Returns:
+        Tuple of validity flag and human-readable validation message.
+
+    """
+    frontmatter = _read_frontmatter(Path(skill_path) / "SKILL.md")
+    if frontmatter is None:
+        return False, "SKILL.md not found"
+    if "name:" not in frontmatter:
+        return False, "Missing 'name' in frontmatter"
+    for validator in (_validate_name, _validate_description):
+        error = validator(frontmatter)
+        if error:
+            return False, error
     return True, "Skill is valid!"
 
 
