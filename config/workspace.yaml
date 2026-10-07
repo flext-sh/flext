@@ -17,6 +17,9 @@ repository:
   package: false
   editable: false
   read_only: false
+integration:
+  provider: flext-sh
+  branch: "0.12.0-dev"
 project:
   package_name: "flext"
   class_stem: "Flext"
@@ -444,13 +447,6 @@ members:
 exclusions:
 
     []
-
-# CI member topology (flext-infra context_render): under CI=Y the generator
-# resolves governed member baselines only when the workspace declares its
-# integration provider and branch. This root advances 0.12.0-dev.
-integration:
-  provider: "flext-sh"
-  branch: "0.12.0-dev"
 
 # Out-of-workspace consumers adjusted as guests by `make propagate` (bead
 # flext-20yyv): each one advances its own lane branch through ITS canonical

@@ -1,3 +1,4 @@
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Discover page elements and capture a reference screenshot."""
 
 import tempfile
