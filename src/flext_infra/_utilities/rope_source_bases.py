@@ -245,16 +245,6 @@ class FlextInfraUtilitiesRopeSourceBases:
                 f"Unsupported class binding mutation in {self._module}: {ast.unparse(node)}"
             )
             raise ValueError(message)
-        if self._provider_metadata_rebind(targets, bindings):
-            return
-        if self._module_table_mutation(targets, bindings):
-            return
-        if self._complete_class_namespace(node, targets, bindings, lexical):
-            return
-        message = (
-            f"Unsupported class binding mutation in {self._module}: {ast.unparse(node)}"
-        )
-        raise ValueError(message)
 
         def _provider_metadata_rebind(
             self,
