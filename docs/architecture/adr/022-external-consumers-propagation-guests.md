@@ -10,9 +10,11 @@
 
 <!-- TOC END -->
 
-- **Status:** CURRENT IMPLEMENTATION (2026-10-05) — manifest section, typed spec, and
-  propagation lane live on the workspace line (root PR #417, `flext-20yyv`); `dataop`
-  rides a later wave by declaration.
+- **Status:** SUPERSEDED (2026-10-08) by
+  [ADR-024](024-di-config-contract-derived-defaults-minimal-overrides.md) — a workspace
+  that lists its consumers violates dependency inversion (D1, D5): consumers pull through
+  their own `make upg`, and FLEXT declares nothing about them. Historical record of the
+  2026-10-05 implementation (root PR #417, `flext-20yyv`).
 - **Date:** 2026-10-05
 - **Scope:** `config/workspace.yaml` (manifest SSOT), `flext-infra`
   (`ExternalConsumerSpec`, `workspace/propagation.py`), the five declared external
