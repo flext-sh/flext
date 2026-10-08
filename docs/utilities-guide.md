@@ -206,5 +206,5 @@ to avoid validation.
 ## See Also
 
 - [Type system architecture](type-system-architecture.md)
-- [Architecture decisions](architecture/adr/)
+- [Architecture decisions](architecture/adr/README.md)
 - [Stabilization checkpoint](ways-of-working/stabilization-checkpoint-0.12.md)

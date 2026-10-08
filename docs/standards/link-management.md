@@ -358,13 +358,13 @@ For now, maintain awareness of key cross-project relationships:
 **Within Project**:
 
 - [Documentation Standards](documentation.md) - General documentation standards
-- [README](../README.md) - Standards overview
+- [README](README.md) - Standards overview
 
 **Across Projects**:
 
 - [flext-core Documentation Standards](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs/standards/documentation.md)
   - Core documentation patterns
-- [FLEXT Workspace Documentation](../README.md) - Workspace-level documentation
+- [FLEXT Workspace Documentation](README.md) - Workspace-level documentation
 
 **External Resources**:
 

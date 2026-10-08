@@ -1,6 +1,10 @@
-# Copyright (c) 2025 FLEXT Team. All rights reserved.
-"""Lightweight connection handling for MCP servers."""
+"""AI Hub governance hook projection: connections.
 
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 from abc import ABC, abstractmethod
 from contextlib import AbstractAsyncContextManager, AsyncExitStack
 from types import TracebackType
@@ -12,6 +16,9 @@ from mcp.client.stdio import stdio_client
 from mcp.client.streamable_http import streamablehttp_client
 
 from scripts import t
+
+"""Lightweight connection handling for MCP servers."""
+
 
 _RESULT_ARITY_REQUEST = 2
 _RESULT_ARITY_FULL = 3

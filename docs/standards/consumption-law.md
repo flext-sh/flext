@@ -8,7 +8,7 @@
 - [R2 — No Duplication (Structural Scan)](#r2-no-duplication-structural-scan)
 - [R3 — Layer Law (Declaration vs Behavior)](#r3-layer-law-declaration-vs-behavior)
 - [R4 — Gates as Products (Budget + Primitives)](#r4-gates-as-products-budget-primitives)
-- [R5 — Release Consumption (Versioning + AI\_HUB\_CONSUMER)](#r5-release-consumption-versioning-ai_hub_consumer)
+- [R5 — Release Consumption (Versioning + AI_HUB_CONSUMER)](#r5-release-consumption-versioning-ai_hub_consumer)
 - [R6 — Contribution Path Law](#r6-contribution-path-law)
 - [Canonical Sources](#canonical-sources)
 - [Anti-Hardcode Law (Enforcement)](#anti-hardcode-law-enforcement)

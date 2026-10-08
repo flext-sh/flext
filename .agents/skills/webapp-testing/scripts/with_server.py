@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
+"""AI Hub governance hook projection: with_server.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
 # Copyright (c) 2025 FLEXT Team. All rights reserved.
+import shlex
+import socket
+import subprocess  # ruff: ignore[suspicious-subprocess-import] -- vendored skill tooling: spawning dev servers is this script's purpose
+import sys
+import time
+
 """Start one or more servers, wait for them to be ready, run a command, then clean up.
 
 Usage:
@@ -16,11 +28,6 @@ Usage:
       -- python test.py
 """
 
-import shlex
-import socket
-import subprocess  # ruff: ignore[suspicious-subprocess-import] -- vendored skill tooling: spawning dev servers is this script's purpose
-import sys
-import time
 
 DEFAULT_SERVER_TIMEOUT = 30
 SERVER_WAIT_SECONDS = 0.5

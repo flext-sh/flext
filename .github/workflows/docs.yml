@@ -101,7 +101,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          submodules: false
+          submodules: recursive
           fetch-depth: 0
 
       # Why: a cold runner re-downloaded every locked Mise tool
@@ -126,13 +126,17 @@ jobs:
           key: ${{ runner.os }}-3.13-tools-${{ hashFiles('uv.lock', 'mise.lock', 'pyproject.toml') }}
           restore-keys: |
             ${{ runner.os }}-3.13-tools-
-- name: Install mise
+
+      - name: Install the mise release pinned by mise.lock
         shell: bash
         run: |
           set -eu
           curl -fsSL https://mise.run | sh
           echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
           echo "${HOME}/.local/share/mise/shims" >> "${GITHUB_PATH}"
+          mise_pin="$(awk 'index($0, "[[tools.\"github:jdx/mise\"]]") == 1 { inside = 1; next } inside && substr($0, 1, 1) == "[" { exit } inside && $1 == "version" { gsub(/[",]/, "", $3); print $3; exit }' mise.lock)"
+          "${HOME}/.local/bin/mise" install "github:jdx/mise@${mise_pin}"
+          "${HOME}/.local/bin/mise" use --global "github:jdx/mise@${mise_pin}"
 
       - name: Sync workspace toolchain
         run: make setup
@@ -228,7 +232,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          submodules: false
+          submodules: recursive
           fetch-depth: 0
 
       # Why: same cold-download protection as the docs-quality job.
@@ -249,13 +253,17 @@ jobs:
           key: ${{ runner.os }}-3.13-tools-${{ hashFiles('uv.lock', 'mise.lock', 'pyproject.toml') }}
           restore-keys: |
             ${{ runner.os }}-3.13-tools-
-- name: Install mise
+
+      - name: Install the mise release pinned by mise.lock
         shell: bash
         run: |
           set -eu
           curl -fsSL https://mise.run | sh
           echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
           echo "${HOME}/.local/share/mise/shims" >> "${GITHUB_PATH}"
+          mise_pin="$(awk 'index($0, "[[tools.\"github:jdx/mise\"]]") == 1 { inside = 1; next } inside && substr($0, 1, 1) == "[" { exit } inside && $1 == "version" { gsub(/[",]/, "", $3); print $3; exit }' mise.lock)"
+          "${HOME}/.local/bin/mise" install "github:jdx/mise@${mise_pin}"
+          "${HOME}/.local/bin/mise" use --global "github:jdx/mise@${mise_pin}"
 
       - name: Sync workspace toolchain
         run: make setup
