@@ -75,8 +75,8 @@ read-only — no verb repeats another verb's work across the canonical sequence
 | --------------------------------- | ---------------------------------- | ----------------------- | ------------------------------------------ |
 | `lint` — ruff                     | read-only `ruff` verdict           | —                       | one `ruff` repair pass                     |
 | `format` — ruff                   | — (mutating)                       | `ruff` format pass      | —                                          |
-| `markdown` — rumdl                | `rumdl check`                      | —                       | `rumdl fmt`                                |
-| `markdown-format` — prettier      | `prettier --check`                 | `prettier --write`      | —                                          |
+| `markdown` — rumdl                | `rumdl check`                      | —                       | `rumdl check --fix`                        |
+| `markdown-format` — rumdl         | `rumdl fmt --check`                | `rumdl fmt`             | —                                          |
 | `markdown-code` — ruff (embedded) | format verdict on parseable blocks | —                       | one format pass, clean round-trips spliced |
 | `canonical-alias`, `smells`       | read-only scan                     | —                       | declared repair                            |
 
@@ -92,8 +92,9 @@ The markdown standard lives once in `flext-infra/config/tooling.yaml`
 - `rumdl` is the linter (markdownlint-compatible `MD*` rules through the generated
   `.markdownlint.json` / `.markdownlintignore`); syntax findings inside embedded code
   belong to the flext-tests markdown validator, not to a second linter.
-- `prettier` (pinned 3.5.x — newer releases dropped prose reflow) is the formatter:
-  `prettier --check` in `make check`, `prettier --write` in `make fmt`.
+- `rumdl fmt` is the formatter and reads the same `.markdownlint.json`:
+  `rumdl fmt --check` in `make check`, `rumdl fmt` in `make fmt`. rumdl is locked in
+  `uv.lock`; the fleet toolchain has no npm-backed tool (ADR-025).
 - `markdown-code` holds parseable embedded Python and doctest examples to the
   ruff-format contract; unparseable documentation fragments are prose and stay with the
   validator. Generated and provider-projected trees (`.agents`, `.claude`, `.gemini`,

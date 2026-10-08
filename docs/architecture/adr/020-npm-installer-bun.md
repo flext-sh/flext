@@ -8,7 +8,9 @@
 
 <!-- TOC END -->
 
-- **Status:** CURRENT IMPLEMENTATION (2026-10-05)
+- **Status:** SUPERSEDED by
+  [ADR-025](025-npm-free-fleet-toolchain.md) (2026-10-08): the fleet toolchain
+  has no npm backend. Kept as historical evidence of the 2026-10-05 decision.
 - **Scope:** every generated `.mise.toml`, `mise.lock`, the bootstrap
   environment, and the user-global Mise registry (ai-hub ADR-0037).
 - **Decides:** `npm.package_manager = "bun"` fleet-wide; the embedded aube

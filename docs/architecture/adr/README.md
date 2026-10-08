@@ -59,6 +59,8 @@ candidate; acceptance never proves fleet stability.
   `flext-0in0k`)
 - [ADR-019: Service Contract — Protocol Ports, Explicit Composition Root, Typed Operations](019-service-contract-ports-operations.md)
   — **PROPOSED** (operator-approved plan V8, 2026-09-25; phased under `flext-4jtcb`)
+- [ADR-020: Bun installs the npm-backed mise tools fleet-wide](020-npm-installer-bun.md)
+  — **SUPERSEDED** by ADR-025 (the fleet toolchain has no npm backend)
 - [ADR-021: Mandatory Unsafe-Fix Lint Repair Channel](021-mandatory-unsafe-fix-lint-repair-channel.md)
   — **ACCEPTED** (operator law 2026-10-05: `make fix` always runs
   `ruff check --fix --unsafe-fixes --preview`; `MakeRuffSpec` requires the flag;
@@ -73,6 +75,10 @@ candidate; acceptance never proves fleet stability.
   — **ACCEPTED TARGET** (operator order 2026-10-08; a repository declares only its own
   deltas; library ships generic defaults; injected root with library < repo < local
   layers; pull never push; phased under `flext-itpd1.11`)
+- [ADR-025: The fleet toolchain has no npm backend](025-npm-free-fleet-toolchain.md)
+  — **ACCEPTED** (operator approval 2026-10-08; ast-grep from aqua, rumdl formats
+  markdown, setup installs only declared tools and proves each one; supersedes ADR-020;
+  bead `flext-0shvv`)
 
 > **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance
