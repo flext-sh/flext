@@ -8,9 +8,6 @@
 
 Each project renders one page per public module, driven by docstrings.
 
-<<<<<<< HEAD
-_No projects discovered._
-=======
 - [flext-api](flext-api/modules/index.md) — `8` modules
 - [flext-auth](flext-auth/modules/index.md) — `9` modules
 - [flext-cli](flext-cli/modules/index.md) — `9` modules
@@ -21,7 +18,7 @@ _No projects discovered._
 - [flext-dbt-oracle](flext-dbt-oracle/modules/index.md) — `8` modules
 - [flext-dbt-oracle-wms](flext-dbt-oracle-wms/modules/index.md) — `8` modules
 - [flext-grpc](flext-grpc/modules/index.md) — `9` modules
-- [flext-infra](flext-infra/modules/index.md) — `12` modules
+- [flext-infra](flext-infra/modules/index.md) — `13` modules
 - [flext-ldap](flext-ldap/modules/index.md) — `8` modules
 - [flext-ldif](flext-ldif/modules/index.md) — `9` modules
 - [flext-meltano](flext-meltano/modules/index.md) — `10` modules
@@ -42,4 +39,3 @@ _No projects discovered._
 - [flext-target-oracle-wms](flext-target-oracle-wms/modules/index.md) — `7` modules
 - [flext-tests](flext-tests/modules/index.md) — `17` modules
 - [flext-web](flext-web/modules/index.md) — `8` modules
->>>>>>> origin/0.12.0-dev

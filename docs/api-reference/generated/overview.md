@@ -10,8 +10,8 @@
 
 - Version: `0.12.0`
 - Description: FLEXT - Enterprise Data Integration Platform - Workspace Manager
-- Governed projects: `0`
-- Project classes: _none_
+- Governed projects: `31`
+- Project classes: `domain`=15, `infra`=1, `integration`=14, `test`=1
 
 Generated from workspace discovery, `pyproject.toml`, public exports, and docstrings.
 
