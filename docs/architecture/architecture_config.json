@@ -1,153 +1,153 @@
 {
-  "output_dir": "docs/architecture",
-  "frameworks": {
-    "c4_model": true,
-    "arc42": true,
-    "adr": true,
-    "plantuml": true,
-    "interactive": false
-  },
-  "diagrams": {
-    "system_context": true,
-    "container": true,
-    "component": true,
-    "deployment": true,
-    "data_flow": true,
-    "sequence": true
-  },
-  "analysis": {
-    "code_analysis": true,
-    "dependency_analysis": true,
-    "interface_analysis": true,
-    "quality_assessment": true
-  },
-  "quality_attributes": {
-    "performance": {
-      "enabled": true,
-      "metrics": ["throughput", "latency", "scalability", "efficiency"]
+    "output_dir": "docs/architecture",
+    "frameworks": {
+        "c4_model": true,
+        "arc42": true,
+        "adr": true,
+        "plantuml": true,
+        "interactive": false
     },
-    "security": {
-      "enabled": true,
-      "metrics": [
-        "authentication",
-        "authorization",
-        "data_protection",
-        "compliance"
-      ]
+    "diagrams": {
+        "system_context": true,
+        "container": true,
+        "component": true,
+        "deployment": true,
+        "data_flow": true,
+        "sequence": true
     },
-    "reliability": {
-      "enabled": true,
-      "metrics": [
-        "availability",
-        "fault_tolerance",
-        "data_consistency",
-        "monitoring"
-      ]
+    "analysis": {
+        "code_analysis": true,
+        "dependency_analysis": true,
+        "interface_analysis": true,
+        "quality_assessment": true
     },
-    "maintainability": {
-      "enabled": true,
-      "metrics": ["modularity", "testability", "documentation", "extensibility"]
+    "quality_attributes": {
+        "performance": {
+            "enabled": true,
+            "metrics": ["throughput", "latency", "scalability", "efficiency"]
+        },
+        "security": {
+            "enabled": true,
+            "metrics": [
+                "authentication",
+                "authorization",
+                "data_protection",
+                "compliance"
+            ]
+        },
+        "reliability": {
+            "enabled": true,
+            "metrics": [
+                "availability",
+                "fault_tolerance",
+                "data_consistency",
+                "monitoring"
+            ]
+        },
+        "maintainability": {
+            "enabled": true,
+            "metrics": ["modularity", "testability", "documentation", "extensibility"]
+        },
+        "usability": {
+            "enabled": true,
+            "metrics": [
+                "api_design",
+                "cli_experience",
+                "error_messages",
+                "documentation"
+            ]
+        }
     },
-    "usability": {
-      "enabled": true,
-      "metrics": [
-        "api_design",
-        "cli_experience",
-        "error_messages",
-        "documentation"
-      ]
+    "generation": {
+        "auto_generate_diagrams": true,
+        "include_code_examples": true,
+        "generate_api_docs": true,
+        "create_cross_references": true,
+        "validate_links": true
+    },
+    "templates": {
+        "c4_model_template": "templates/c4-model.md",
+        "arc42_template": "templates/arc42.md",
+        "adr_template": "templates/adr.md",
+        "plantuml_template": "templates/diagram.puml"
+    },
+    "styling": {
+        "color_scheme": "default",
+        "diagram_theme": "plain",
+        "font_family": "sans-serif",
+        "layout": "hierarchical"
+    },
+    "metadata": {
+        "author": "FLEXT Architecture Team",
+        "version": "0.9.0",
+        "last_updated": "2026-02-17",
+        "review_cycle": "quarterly"
+    },
+    "integration": {
+        "github_pages": true,
+        "mkdocs": true,
+        "sphinx": false,
+        "custom_portal": false
+    },
+    "docs_validation": {
+        "required_skills": ["flext-law"],
+        "gate_contract": {
+            "max_violations": 0
+        },
+        "audit_gate": {
+            "max_issues_default": 0,
+            "max_issues_by_scope": {
+                "root": 0,
+                "flext-oud-mig": 0,
+                "flext-api": 0,
+                "flext-auth": 0,
+                "flext-cli": 0,
+                "flext-core": 0,
+                "flext-db-oracle": 0,
+                "flext-dbt-ldap": 0,
+                "flext-dbt-ldif": 0,
+                "flext-dbt-oracle": 0,
+                "flext-dbt-oracle-wms": 0,
+                "flext-grpc": 0,
+                "flext-ldap": 0,
+                "flext-ldif": 0,
+                "flext-meltano": 0,
+                "flext-observability": 0,
+                "flext-oracle-oic": 0,
+                "flext-oracle-wms": 0,
+                "flext-plugin": 0,
+                "flext-quality": 0,
+                "flext-tap-ldap": 0,
+                "flext-tap-ldif": 0,
+                "flext-tap-oracle": 0,
+                "flext-tap-oracle-oic": 0,
+                "flext-tap-oracle-wms": 0,
+                "flext-target-ldap": 0,
+                "flext-target-ldif": 0,
+                "flext-target-oracle": 0,
+                "flext-target-oracle-oic": 0,
+                "flext-target-oracle-wms": 0,
+                "flext-web": 0,
+                "flext-meltano-native": 0
+            }
+        }
+    },
+    "automation": {
+        "ci_integration": true,
+        "pre_commit_hooks": true,
+        "auto_update": false,
+        "notification_webhooks": []
+    },
+    "validation": {
+        "strict_mode": true,
+        "fail_on_warnings": false,
+        "max_issues_per_file": 10,
+        "required_sections": [
+            "Overview",
+            "Architecture",
+            "Components",
+            "Interfaces",
+            "Quality Attributes"
+        ]
     }
-  },
-  "generation": {
-    "auto_generate_diagrams": true,
-    "include_code_examples": true,
-    "generate_api_docs": true,
-    "create_cross_references": true,
-    "validate_links": true
-  },
-  "templates": {
-    "c4_model_template": "templates/c4-model.md",
-    "arc42_template": "templates/arc42.md",
-    "adr_template": "templates/adr.md",
-    "plantuml_template": "templates/diagram.puml"
-  },
-  "styling": {
-    "color_scheme": "default",
-    "diagram_theme": "plain",
-    "font_family": "sans-serif",
-    "layout": "hierarchical"
-  },
-  "metadata": {
-    "author": "FLEXT Architecture Team",
-    "version": "0.9.0",
-    "last_updated": "2026-02-17",
-    "review_cycle": "quarterly"
-  },
-  "integration": {
-    "github_pages": true,
-    "mkdocs": true,
-    "sphinx": false,
-    "custom_portal": false
-  },
-  "docs_validation": {
-    "required_skills": ["flext-law"],
-    "gate_contract": {
-      "max_violations": 0
-    },
-    "audit_gate": {
-      "max_issues_default": 0,
-      "max_issues_by_scope": {
-        "root": 0,
-        "flext-oud-mig": 0,
-        "flext-api": 0,
-        "flext-auth": 0,
-        "flext-cli": 0,
-        "flext-core": 0,
-        "flext-db-oracle": 0,
-        "flext-dbt-ldap": 0,
-        "flext-dbt-ldif": 0,
-        "flext-dbt-oracle": 0,
-        "flext-dbt-oracle-wms": 0,
-        "flext-grpc": 0,
-        "flext-ldap": 0,
-        "flext-ldif": 0,
-        "flext-meltano": 0,
-        "flext-observability": 0,
-        "flext-oracle-oic": 0,
-        "flext-oracle-wms": 0,
-        "flext-plugin": 0,
-        "flext-quality": 0,
-        "flext-tap-ldap": 0,
-        "flext-tap-ldif": 0,
-        "flext-tap-oracle": 0,
-        "flext-tap-oracle-oic": 0,
-        "flext-tap-oracle-wms": 0,
-        "flext-target-ldap": 0,
-        "flext-target-ldif": 0,
-        "flext-target-oracle": 0,
-        "flext-target-oracle-oic": 0,
-        "flext-target-oracle-wms": 0,
-        "flext-web": 0,
-        "flext-meltano-native": 0
-      }
-    }
-  },
-  "automation": {
-    "ci_integration": true,
-    "pre_commit_hooks": true,
-    "auto_update": false,
-    "notification_webhooks": []
-  },
-  "validation": {
-    "strict_mode": true,
-    "fail_on_warnings": false,
-    "max_issues_per_file": 10,
-    "required_sections": [
-      "Overview",
-      "Architecture",
-      "Components",
-      "Interfaces",
-      "Quality Attributes"
-    ]
-  }
 }

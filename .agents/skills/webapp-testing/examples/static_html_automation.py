@@ -1,9 +1,16 @@
-# Copyright (c) 2025 FLEXT Team. All rights reserved.
-"""Run Playwright automation against a static HTML page."""
+"""AI Hub governance hook projection: static_html_automation.
 
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
+# Copyright (c) 2025 FLEXT Team. All rights reserved.
 import pathlib
 
 from playwright.sync_api import sync_playwright
+
+"""Run Playwright automation against a static HTML page."""
+
 
 # Example: Automating interaction with static HTML files using file:// URLs
 
