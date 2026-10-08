@@ -365,8 +365,8 @@ connectors. Every package follows one canonical Clean-Architecture shape built o
 ```text
 flext/                                                        # superproject: workspace manager + governance + docs
 ├── src/flext/                                               # flext-workspace CLI (thin orchestrator over flext-cli) — AUTO-GENERATED facets
-├── config/                                                  # workspace.yaml topology SSOT (codegen/conform input; never overwrite)
-├── docs/architecture/adr/                                   # ADR-001..019 (011-013 absent) — architectural decisions (see below)
+├── config/                                                  # this repository's own deltas only (ADR-024); composition lives in .gitmodules
+├── docs/architecture/adr/                                   # ADR-001..024 (011-013 absent) — architectural decisions (see below)
 ├── Makefile + *.mk                                          # root verb dispatcher (all work runs from here)
 ├── flext-core/                                              # foundation: c/t/p/m/u + r/e/x/h/d/s facades (every pkg depends on it)
 ├── flext-infra/                                             # build automation, codegen, enforcement (tooling; not a runtime dep)
@@ -413,8 +413,8 @@ never copies or replaces either parent.
 | Foundation facades / result / DI | `flext-core/src/flext_core/`       | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base                                                                                                                                 |
 | Build/codegen/enforcement        | `flext-infra/src/flext_infra/`     | drives standard Make generation, conform, and lint rules                                                                                                                      |
 | Test fixtures & builders         | `flext-tests/src/flext_tests/`     | public test facades and typed fixtures; unified `conftest.py` pattern                                                                                                         |
-| Architectural decisions          | `docs/architecture/adr/`           | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization), ADR-014 (family shape + rope codemod), ADR-017 (parametrized rule surfaces + modernize CLI), ADR-018 (generator declarations), ADR-019 (service ports, PROPOSED) |
-| Workspace topology               | `config/workspace.yaml`            | member list, codegen input (hand-written SSOT)                                                                                                                                |
+| Architectural decisions          | `docs/architecture/adr/`           | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization), ADR-014 (family shape + rope codemod), ADR-017 (parametrized rule surfaces + modernize CLI), ADR-018 (generator declarations), ADR-019 (service ports, PROPOSED), ADR-024 (DI config contract) |
+| Workspace composition            | `.gitmodules`                      | sole member-list owner (ADR-024); `config/workspace.yaml` holds only this repository's own deltas, with generated commented defaults                                          |
 | A Singer connector               | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006)                                                                                                                              |
 
 ## Build & Test
@@ -801,7 +801,7 @@ Overall average: **60-90% token reduction** on common development operations.
 
 ## Learned User Preferences
 
-- Before changing code, inspect existing owners, worktrees, local and remote branches, and pull requests. Reconcile work on the maintained lane with `git merge --no-ff`; do not create duplicate lanes, replace shared history with cherry-picks, rebase, or force-push. The fleet-specific admission and retirement contract is `.agents/skills/flext-law/SKILL.md`, section `Fleet integration continuity`.
+- Before changing code, search libraries, the project, worktrees, local and remote branches, and pull requests; adopt or cherry-pick existing lanes onto a branch cut from the latest integration tip, and fix-forward with `git merge --no-ff`. Do not rebase or force-push.
 - Dependency locks change only through `make upg`. `make setup` must still run when mise or uv has drifted, and must reconcile that drift inside setup.
 - New code is accepted only after `make fmt`, `make fix`, `make check`, `make mod`, and `make smells` are clean, and the change is proven to work. Do not close a change while any of those gates fail or while the diff adds lint or type violations.
 - Reassess beads one at a time: one `val<YYYYMMDDTHHMM>` label per remeasured bead, with evidence of command, working directory, exit status, and decisive output. Do not bulk-relabel.
