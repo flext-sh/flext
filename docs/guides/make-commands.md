@@ -126,9 +126,70 @@ reported as tests passed. The full phase must execute its complete nonempty inve
 
 ## Scope and generation
 
+`make file-gate FILE=<repository-relative Python file>` validates one literal file
+without changing it. The checker resolves its owning project from the declared
+workspace topology, using that project's working directory, tool configuration,
+imports, and codemod policy. It never validates a member file as the workspace root.
+The generated recipe passes separate gate names through the check CLI's comma-separated
+`--gates` contract; no raw checker invocation replaces this route.
+
 The root dispatcher resolves workspace scope from its typed topology. Generated Make
 surfaces and documentation are changed at their template or configuration owner, then
 regenerated with `make gen`.
+
+The generated local `make audit` invokes the public
+`flext-infra workspace verify-lanes --repo-root <checkout>` gate. A workspace
+invocation covers its declared members as well as the root. This is detection only:
+it does not fetch, prune, merge, stash, delete refs, remove worktrees, or publish
+receipts. The coordinator synchronizes integration outside the guard. The guard
+compares the explicit live remote integration OID to the available tracking object
+and checks that the current lane consumes it.
+
+`FlextInfraGitService.verify_lanes` resolves to the single `FlextInfraGitLanes`
+evaluator. Its utility input, `u.Infra.git_lane_facts`, collects native stash OIDs
+and local/configured-remote refs only; it neither elects a base nor judges lanes.
+Partial native reads retain explicit errors which keep the evaluator red. The
+public request is `GitLaneVerificationRequest` and the response is `GitLaneReport`,
+including structured violation classes and complete textual findings. Clean linked
+worktrees already contained in the same live integration are reported as residue,
+never automatically retired. Checked-out refs are not exempted from that proof.
+
+Failures include the full exact refs, stash OIDs, and registered worktrees. A branch
+already contained in integration is residue; integration refs and symbolic remote
+HEAD are protected. Unknown ownership is inconclusive, never inferred from commit
+age or directory mtime. Open PRs and fresh, explicitly owned Bead lanes are allowed.
+Inactive owned work requires correlated tracker, ref activity, and worktree evidence;
+the activity window comes from the global governance SSOT configured by
+`BranchPolicySpec.lane_governance_file`, never a copied threshold. The public
+`--governance-file` option selects an explicit coordinator policy. Without valid
+policy evidence, ownership/activity is inconclusive rather than assumed safe.
+Optional `--evidence-file` selects a typed,
+repository-bound coordinator receipt and requires freshness under that same policy.
+Provider, tracker, policy, and Git read errors remain failures, not empty inventories.
+
+Live auxiliary reads require explicit `--read-pull-requests` and/or `--read-beads`
+selection. Installation never selects a capability. Dormant sources remain typed
+unknowns and appear as `NOT EXECUTED` in the inventory; any artifact needing that
+missing ownership proof remains inconclusive. Git facts still run independently.
+Selected Beads reads consume `BeadsProjectSpec.ownership_command_prefix` and
+`ownership_command_cwd` from the repository's `config/beads.yaml`, through the public
+city/rig wrapper declared there. An undeclared or failed selected route fails;
+the service appends the immutable read-only list protocol. There is no bare `bd`,
+alternate database, runtime startup, or retry fallback.
+An ownership receipt and live sources cannot be selected together.
+
+A storage-only primary registry row is bound to a checkout only when native Git
+proves the caller's Git directory equals shared storage and its top-level agrees
+with GitPython's working-tree identity. The raw porcelain remains available as
+evidence. An unprovable storage/checkout mapping fails rather than substituting
+the request path.
+
+The same Git service rejects stash entries and stale effective bases before a
+worktree ADD creates directories or refs. REMOVE proves that the lane tip is an
+ancestor of the live integration tip before delegating to the existing clean/index/
+untracked preservation boundary. Neither ancestry nor a green inventory grants
+retirement authorization. Direct shell/session/sweep enforcement is the separate
+governance consumer of this owner, not a second Git hygiene engine.
 
 ## Related guides
 

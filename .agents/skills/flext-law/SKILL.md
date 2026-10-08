@@ -164,6 +164,28 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   project-owned values. Every test run retains the canonical testmon cache, including an
   explicitly requested full run.
 
+## Fleet integration continuity
+
+- Accumulating unintegrated local or remote lanes, abandoned worktrees, or hidden WIP
+  is a critical failure. Do not start another implementation batch while its previous
+  slice lacks an explicit integration disposition and current validation evidence.
+- Stash creation, WIP-hiding stash workflows, rebase, force-push, and destructive
+  checkout/reset/clean are forbidden. Inspect existing stashes read-only; preserve and
+  reconcile their work through an authorized, reviewable integration slice before any
+  retirement. Never clear or drop them merely to obtain a clean census.
+- Resolve each repository's declared integration branch and refresh its remote before
+  work, after validation, and before publication. Prove the lane contains that tip;
+  adopt new integration commits with a non-rewriting merge, never a history replacement.
+- Keep one active owner per checkout. Reuse and reconcile existing lanes instead of
+  duplicating work. Dirty or divergent input is preserved, attributed, and fixed forward.
+- Land independently validated member slices first. Update superproject gitlinks only
+  after proving the member commits are on their respective remote integration branches.
+- Retire a branch or worktree only after fresh ancestor proof, complete WIP accounting,
+  and retirement authorization. A preservation branch is not evidence of integration.
+- A current lane, a published lane, and a stable integration tip are separate receipts.
+  Report behind/ahead counts, unpublished WIP, and remaining red gates explicitly;
+  neither a fetch nor a synchronization merge proves the integration is stable.
+
 ## Tracker: central Beads via direnv
 
 - Every `bd` invocation runs inside the rig checkout environment:
