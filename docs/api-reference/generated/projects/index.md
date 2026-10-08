@@ -31,7 +31,7 @@ Each project renders one page per public module, driven by docstrings.
 - [flext-tap-ldif](flext-tap-ldif/modules/index.md) — `8` modules
 - [flext-tap-oracle](flext-tap-oracle/modules/index.md) — `9` modules
 - [flext-tap-oracle-oic](flext-tap-oracle-oic/modules/index.md) — `11` modules
-- [flext-tap-oracle-wms](flext-tap-oracle-wms/modules/index.md) — `10` modules
+- [flext-tap-oracle-wms](flext-tap-oracle-wms/modules/index.md) — `9` modules
 - [flext-target-ldap](flext-target-ldap/modules/index.md) — `7` modules
 - [flext-target-ldif](flext-target-ldif/modules/index.md) — `10` modules
 - [flext-target-oracle](flext-target-oracle/modules/index.md) — `7` modules
