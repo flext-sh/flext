@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from tests.infra.protocols import TestsFlextRootProtocols
     from tests.infra.result import TestsFlextRootResult, r
     from tests.infra.typings import TestsFlextRootTypes
+    from tests.infra.utilities import TestsFlextRootUtilities, u
 
 
 __all__: tuple[str, ...] = (
@@ -26,7 +27,9 @@ __all__: tuple[str, ...] = (
     "TestsFlextRootProtocols",
     "TestsFlextRootResult",
     "TestsFlextRootTypes",
+    "TestsFlextRootUtilities",
     "r",
+    "u",
 )
 
 install_lazy_exports(
@@ -38,7 +41,9 @@ install_lazy_exports(
         "TestsFlextRootProtocols": ".protocols",
         "TestsFlextRootResult": ".result",
         "TestsFlextRootTypes": ".typings",
+        "TestsFlextRootUtilities": ".utilities",
         "r": ".result",
+        "u": ".utilities",
     }),
     public_exports=__all__,
 )

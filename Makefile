@@ -175,8 +175,8 @@ endif
 # === SECTION: verb dispatch (managed) ===
 # Source: config:make.verbs and the canonical gate vocabulary. A verb exists
 # only in the profiles it declares (make.verbs[].profiles).
-PUBLIC_VERBS := help setup pre-commit upg propagate build examples check smells test test-full test-file file-gate profile-test profile-test-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen initialize mod mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
-BUILTIN_VERBS := help setup pre-commit upg propagate build examples check smells test test-full test-file file-gate profile-test profile-test-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen initialize mod mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
+PUBLIC_VERBS := help setup pre-commit upg validate-lifecycle propagate build examples check smells test test-full test-file file-gate profile-test profile-test-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen initialize mod mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
+BUILTIN_VERBS := help setup pre-commit upg validate-lifecycle propagate build examples check smells test test-full test-file file-gate profile-test profile-test-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen initialize mod mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
 SCRIPT_VERBS :=
 
 CUSTOM_MAKEFILE := $(MAKEFILE_ROOT)/custom.mk
@@ -254,6 +254,12 @@ CALLER_VIRTUAL_ENV := $(patsubst %/,%,$(VIRTUAL_ENV))
 override RUNTIME_ROOT := $(REPOSITORY_ROOT)
 override export GIT_CEILING_DIRECTORIES := $(abspath $(RUNTIME_ROOT)/..)
 override export MISE_CEILING_PATHS := $(abspath $(RUNTIME_ROOT)/..)
+override export MISE_CONFIG_DIR := $(RUNTIME_ROOT)/.mise
+override export MISE_GLOBAL_CONFIG_FILE := $(MISE_CONFIG_DIR)/config.toml
+override export MISE_SYSTEM_CONFIG_DIR := $(MISE_CONFIG_DIR)
+# A file override wins over the system directory in native Mise discovery.
+unexport MISE_SYSTEM_CONFIG_FILE
+# Project provisioning must never install or resolve tools from host config.
 # The physical runtime owns both its environment and frozen tool identities.
 # Attached members retain their own lock inputs for standalone consumption;
 # the pinned mise release is the [tools] entry the committed mise.lock pins.
@@ -335,7 +341,7 @@ _bootstrap_setup_tools:
 	if [ "$(TOOL_BOOTSTRAP_RESOLVE)" = "1" ]; then \
 		mise -C "$(PROJECT_ROOT)" lock --upgrade --bump; \
 	fi; \
-	mise -C "$(PROJECT_ROOT)" install --yes; \
+	mise -C "$(PROJECT_ROOT)" install --yes "python" "github:jdx/mise" "uv" "kubectl" "helm" "kind" "direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "kubeconform" "node" "go" "make" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"; \
 	mise_pin="$$( awk 'index($$0, "[[tools.\"github:jdx/mise\"]]") == 1 { inside = 1; next } inside && substr($$0, 1, 1) == "[" { exit } inside && $$1 == "version" { gsub(/[",]/, "", $$3); print $$3; exit }' "$(PROJECT_ROOT)/mise.lock" )"; \
 	if [ -z "$$mise_pin" ]; then \
 		printf 'ERROR: mise.lock pins no github:jdx/mise release; run make upg\n' >&2; \
@@ -376,11 +382,11 @@ SETUP_ENVIRONMENT_RECIPE = set -eu; \
 		uv_lock_mode=--frozen; \
 	fi; \
 	$$credential_env $(UV) sync --project "$(UV_PROJECT)" --python "3.13" $(UV_SYNC_FLAGS) $$uv_lock_mode --link-mode "$(UV_LINK_MODE)"; \
+	$(PROJECT_FLEXT_INFRA) workspace sync-environment --repository-root "$(PROJECT_ROOT)"; \
 	if [ "$(strip $(CI))" != "Y" ]; then \
-		direnv allow "$(PROJECT_ROOT)"; \
 		for member in $(WORKSPACE_SUBPROJECTS); do \
 			if [ -f "$(PROJECT_ROOT)/$$member/.envrc" ]; then \
-				direnv allow "$(PROJECT_ROOT)/$$member"; \
+				$(PROJECT_FLEXT_INFRA) workspace sync-environment --repository-root "$(PROJECT_ROOT)/$$member"; \
 			fi; \
 		done; \
 	fi
@@ -448,16 +454,29 @@ define RUN_PUBLIC_POST
 	$(if $(filter post-$(1),$(CUSTOM_DECLARED_TARGETS)),+@$(SELF_MAKE) post-$(1))
 endef
 
-define RUN_PUBLIC
+# A public verb is its producer half (pre hook plus handler) followed by its
+# activation half. An activation producer re-enters the environment its
+# producer just rendered; `upg` runs the two halves apart so the toolchain
+# lock is resolved from that rendered manifest before activation demands it.
+define RUN_PUBLIC_PRODUCE
 	$(if $(filter pre-$(1),$(CUSTOM_DECLARED_TARGETS)),+@$(SELF_MAKE) pre-$(1))
 	$(if $(filter _custom-$(1),$(CUSTOM_DECLARED_TARGETS)),+@$(SELF_MAKE) _custom-$(1),+@$(SELF_MAKE) _builtin-$(1))
-	$(if $(2),+@direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-$(1),$(call RUN_PUBLIC_POST,$(1)))
+endef
+
+define RUN_PUBLIC_ACTIVATE
+	+@direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-$(1)
+endef
+
+define RUN_PUBLIC
+$(call RUN_PUBLIC_PRODUCE,$(1))
+	$(if $(2),$(call RUN_PUBLIC_ACTIVATE,$(1)),$(call RUN_PUBLIC_POST,$(1)))
 endef
 
 
 
 # `make upg` is the only verb that writes uv.lock (`uv lock --upgrade
-# --refresh`, then `uv lock --check`). Setup never writes it (lock law above).
+# --refresh`, then `uv lock` of the manifest `gen` projected and `uv lock
+# --check`). Setup never writes it (lock law above).
 
 .PHONY: $(PUBLIC_VERBS) $(addprefix _builtin-,$(PUBLIC_VERBS))
 .PHONY: _builtin_gen_init _builtin_gen_all
@@ -473,6 +492,17 @@ ifeq ($(VERB_CONTRACT),)
 help:
 
 	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-help,$(call RUN_PUBLIC,help))
+
+
+
+
+validate-lifecycle: _builtin_require_workspace
+	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _activated-validate-lifecycle,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-validate-lifecycle)
+
+.PHONY: _activated-validate-lifecycle
+_activated-validate-lifecycle: _builtin_require_environment
+
+	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-validate-lifecycle,$(call RUN_PUBLIC,validate-lifecycle))
 
 
 
@@ -920,8 +950,12 @@ pre-commit:
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make pre-commit to execute it.'
 
 upg:
-	@printf '  %-16s %s\n' 'upg' 'Resolve the newest declared releases, write the uv and mise locks, then prove the upgraded tree still converges and passes every active check gate.'
+	@printf '  %-16s %s\n' 'upg' 'Resolve the newest declared releases, write the uv and mise locks, then prove the upgraded tree still converges; gates stay with make check.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make upg to execute it.'
+
+validate-lifecycle:
+	@printf '  %-16s %s\n' 'validate-lifecycle' 'Serially run setup, gen, upg, setup, gen, gen in the root and every governed member, publishing typed receipts and stopping at the first failure.'
+	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make validate-lifecycle to execute it.'
 
 propagate:
 	@printf '  %-16s %s\n' 'propagate' 'Apply this workspace'"'"'s flext-infra to every declared member (conform, then lock) and publish one pull-request lane per member whose projections or lock change; unchanged members publish nothing.'
@@ -1081,7 +1115,11 @@ _setup_lifecycle:
 	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _setup_activated,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _setup_activated)
 
 .PHONY: _setup_activated
+# The reality proof runs before post-setup: every declared tool must be the
+# mise.lock release, self-contained in its install root, reporting the locked
+# version (codegen mise-proof). The first defect fails setup; no fallback.
 _setup_activated:
+	@$(PROJECT_FLEXT_INFRA) codegen mise-proof --repository-root "$(PROJECT_ROOT)"
 	@set -eu; \
 	case "$(strip $(CI)): $(CUSTOM_DECLARED_TARGETS) " in \
 		Y:*) ;; \
@@ -1097,7 +1135,9 @@ _builtin-help:
 
 	@printf '  %-16s %s\n' 'pre-commit' 'Approve this project through locked setup, audit, check, and incremental tests with the enforced CI contract.';
 
-	@printf '  %-16s %s\n' 'upg' 'Resolve the newest declared releases, write the uv and mise locks, then prove the upgraded tree still converges and passes every active check gate.';
+	@printf '  %-16s %s\n' 'upg' 'Resolve the newest declared releases, write the uv and mise locks, then prove the upgraded tree still converges; gates stay with make check.';
+
+	@printf '  %-16s %s\n' 'validate-lifecycle' 'Serially run setup, gen, upg, setup, gen, gen in the root and every governed member, publishing typed receipts and stopping at the first failure.';
 
 	@printf '  %-16s %s\n' 'propagate' 'Apply this workspace'"'"'s flext-infra to every declared member (conform, then lock) and publish one pull-request lane per member whose projections or lock change; unchanged members publish nothing.';
 
@@ -1446,12 +1486,22 @@ endif
 # carries the generator itself), provisions the environment frozen from it,
 # and conforms dependency floors. The floors land in the codegen SSOT, so
 # `gen` projects them into every pyproject and renders the managed tool
-# manifests (.mise.toml) of the upgraded generator. Resolve that regenerated
+# manifests (.mise.toml) of the upgraded generator. Only the producer half of
+# `gen` runs before the relock: its activation half demands the Mise release
+# the lock pins (`_builtin_require_environment`), and the lock still reflects
+# the manifest the generator was provisioned with until it is resolved from
+# the rendered one, so activation runs after the relock and its install. A
+# rendered manifest that moves the Mise self-pin therefore converges in one
+# run. The upgraded generator may also project requirements the first uv
+# resolution never saw (a runtime dependency its codegen SSOT declares), so
+# uv.lock is resolved again from the projected pyproject and the environment
+# reinstalled from it right after the producer half: one run converges for
+# both locks, never a second `make upg`. Resolve that regenerated
 # manifest before the second frozen install proves the committed mise.lock
 # satisfies it (mise has no `lock --check`: the locked install IS the
 # satisfaction check), `_builtin_require_mise` re-proves the pinned release,
-# and the convergence fixed point plus every active gate must be green before
-# the upgrade publishes. Branch-tracked git dependencies are moving sources by
+# and the convergence fixed point must hold before the upgrade publishes.
+# Gates are not part of the upgrade: `make check` stays its own verb. Branch-tracked git dependencies are moving sources by
 # declaration (workspace.yaml owns the branch): --refresh re-reads their
 # metadata so a stale cached requires-dist can never block or skew the
 # resolution. Like `setup`, it runs the declared pre-/post-upg lifecycle
@@ -1463,30 +1513,22 @@ _upg_lifecycle: _builtin_setup_submodules
 		*" pre-upg "*) $(SELF_MAKE) pre-upg ;; \
 	esac
 	@$(UV) lock --project "$(PROJECT_ROOT)" --upgrade --refresh
-	@$(UV) lock --check --project "$(PROJECT_ROOT)"
 	@$(SELF_MAKE) _builtin_setup_environment
 	@$(PROJECT_FLEXT_INFRA) deps modernize --repository-root "$(PROJECT_ROOT)" \
 		--apply --rewrite-constraints --projects .
-	@$(SELF_MAKE) gen
+	@$(SELF_MAKE) _builtin_require_environment
+	$(call RUN_PUBLIC_PRODUCE,gen)
+	@$(UV) lock --project "$(PROJECT_ROOT)"
+	@$(UV) lock --check --project "$(PROJECT_ROOT)"
+	@$(SELF_MAKE) _builtin_setup_environment
 	@mise -C "$(PROJECT_ROOT)" lock --bump
-	@set -eu; \
-	if [ -d .mise/locks ]; then \
-		git add -- .mise/locks; \
-		printf 'INFO: staged the .mise/locks sidecars written by mise lock (declared tracked by the generated .gitignore; commit them with the relock)\n'; \
-	fi
-	@mise -C "$(PROJECT_ROOT)" install --yes
+	@mise -C "$(PROJECT_ROOT)" install --yes "python" "github:jdx/mise" "uv" "kubectl" "helm" "kind" "direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "kubeconform" "node" "go" "make" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"
 	@$(SELF_MAKE) _builtin_require_mise
-	@set -eu; \
-	before="$$(git -C "$(PROJECT_ROOT)" status --porcelain --untracked-files=all --ignore-submodules=none | sort)"; \
-	$(SELF_MAKE) gen; \
-	after="$$(git -C "$(PROJECT_ROOT)" status --porcelain --untracked-files=all --ignore-submodules=none | sort)"; \
-	if [ "$$before" != "$$after" ]; then \
-		printf 'ERROR: make upg did not converge; `make gen` still rewrites:\n%s\n' "$$after" >&2; \
-		exit 2; \
-	fi
+	$(call RUN_PUBLIC_ACTIVATE,gen)
+	@$(SELF_MAKE) gen
+	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --mode check
 	@$(PROJECT_FLEXT_INFRA) deps verify-locks --repository-root "$(PROJECT_ROOT)"
 	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _upg_activated,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _upg_activated)
-	@$(SELF_MAKE) check
 
 .PHONY: _upg_activated
 _upg_activated:
@@ -1777,8 +1819,8 @@ _builtin_release_build: _builtin_require_environment
 _builtin_release_publish: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) release run --phase publish --apply $(if $(filter Y,$(INDEX)),--index)
 
-# Generation has one transaction owner. Conform runs at this repository's own
-# scope and journals ordinary, Mise, lazy-init, and documentation phases through
+# Generation has one transaction owner. Conform covers this root and all declared
+# members and journals ordinary, Mise, lazy-init, and documentation phases through
 # one fixed point. Only `upg` resolves and rewrites the locks; gen installs
 # nothing and never runs another writer before or after conform's journal.
 _builtin_gen_init:
@@ -1786,7 +1828,7 @@ _builtin_gen_init:
 	@$(PROJECT_FLEXT_INFRA) codegen init --repository-root "$(PROJECT_ROOT)" --check-only
 
 _builtin_gen_all:
-	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --mode apply
+	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope all --mode apply
 
 _builtin-bootstrap-candidate: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) codegen candidate-bootstrap --repository-root "$(PROJECT_ROOT)"
@@ -1826,6 +1868,8 @@ _builtin_fix_accessors: _builtin_require_environment
 # each implementation owns one fixed operation.
 _builtin-build: _builtin_build_artifacts
 
+_builtin-validate-lifecycle: _builtin_require_environment
+	@$(PROJECT_FLEXT_INFRA) workspace validate-lifecycle --repository-root "$(PROJECT_ROOT)"
 _builtin-examples: _builtin_require_environment
 	@timeout --signal=TERM --kill-after=5s "120s" $(UV_RUN) python -m examples.runtime
 
