@@ -1,4 +1,4 @@
-# ADR-024 — DI Config Contract: Derived Defaults, Self-Only Minimal Overrides, Generated Commented Defaults
+# ADR-024 — DI Config Contract: Self-Only Deltas over Derived Defaults
 
 <!-- TOC START -->
 
@@ -121,15 +121,15 @@ only version owners.
 
 ### Fact owners
 
-| Fact | Single owner | In a repository manifest |
-| --- | --- | --- |
-| Composition (path, url, branch, `flext-managed`) | the parent's `.gitmodules` | never |
-| Topology role | presence of `.gitmodules` | never |
-| Distribution, description, license, authors, repository URL | PEP 621 `[project]` | never |
-| provider, homepage, documentation | derived from `[project.urls].Repository` | only a genuine delta |
-| package, class stem, namespace, alias, environment prefix | one derivation each in the existing owners | only a genuine delta with a live consumer |
-| kind | the repository itself | required |
-| integration branch | the repository itself; a composed member reads its parent's `.gitmodules` `branch` | only where it is the repository's own fact |
+| Fact                                                        | Single owner                                                                       | In a repository manifest                   |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------ |
+| Composition (path, url, branch, `flext-managed`)            | the parent's `.gitmodules`                                                         | never                                      |
+| Topology role                                               | presence of `.gitmodules`                                                          | never                                      |
+| Distribution, description, license, authors, repository URL | PEP 621 `[project]`                                                                | never                                      |
+| provider, homepage, documentation                           | derived from `[project.urls].Repository`                                           | only a genuine delta                       |
+| package, class stem, namespace, alias, environment prefix   | one derivation each in the existing owners                                         | only a genuine delta with a live consumer  |
+| kind                                                        | the repository itself                                                              | required                                   |
+| integration branch                                          | the repository itself; a composed member reads its parent's `.gitmodules` `branch` | only where it is the repository's own fact |
 
 Deleted as dead (no reader): `checkout`, `state`, `beads_server`, `docs_audit`,
 `integration.provider/organization/base_url`, `namespace_attribute`, `constant_name`,
