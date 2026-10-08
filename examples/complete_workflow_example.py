@@ -40,7 +40,7 @@ class FlextRootImmutableMappings:
             A typed immutable empty JSON mapping.
 
         """
-        return MappingProxyType({})
+        return MappingProxyType[str, t.JsonValue]({})
 
     @staticmethod
     def scalar_mapping() -> t.ScalarMapping:
@@ -50,7 +50,7 @@ class FlextRootImmutableMappings:
             A typed immutable empty scalar mapping.
 
         """
-        return MappingProxyType({})
+        return MappingProxyType[str, t.Scalar]({})
 
 
 class FlextRootCompleteWorkflowExample:
@@ -241,7 +241,7 @@ class FlextRootCompleteWorkflowExample:
 
             """
             if not stage_results:
-                return {}
+                return dict[str, t.Numeric]()
             total_items_processed = sum(r.items_processed for r in stage_results)
             total_items_succeeded = sum(r.items_succeeded for r in stage_results)
             total_processing_time = sum(r.processing_time for r in stage_results)

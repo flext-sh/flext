@@ -524,6 +524,27 @@ CLI + pytest plugin, **never imported at runtime**.
 - **Multi-agent tree:** fix-forward only, never `git reset/checkout/restore/clean/stash`
   shared work; commit by explicit paths (never `git add -A`); coordinate via beads
   (`bd`).
+- **Continuous lane convergence:** accumulated local/remote branches and worktrees without
+  integration are SUPER CRITICAL: they cause duplicate/discontinued work and integration
+  wars. Keep the latest configured integration tip stable and your own lane synchronized;
+  refresh it before mutations and publications, syncing with `git merge --no-ff`, never
+  rebase, reset, or force-push. Maintain one active owned integration candidate; no new
+  lane until prior own work is preserved, validated, integrated, and safely retired.
+  Land small validated no-ff PR slices before fan-out; no completion with own unpublished
+  or unmerged WIP. Do not block legitimate foreign agents or blame concurrency.
+- **Stash is totally prohibited:** no `stash save`, `stash push`, autostash, or stash
+  creation, including lifecycle automation, hooks, checkout, and integration. Recover
+  legacy stashes without new stashes: preserve all parents and tracked, index, and
+  untracked objects through scoped Git history and validated no-ff integration before
+  retiring incident references. Never blindly apply or blanket pop, clear, or drop;
+  never discard work to pass hygiene checks. Checkpoints are not green integration.
+- **Safe retirement:** worktree/ref cleanup requires byte, index, and untracked-content
+  preservation, published integration-ancestor proof, and no active session or locked
+  WIP. HEAD ancestry alone is insufficient; never retire before integration proof.
+- **Executable guard contract:** fail fast on unsafe creation/removal while leaving
+  preservation checkpoints and merge-forward recovery available. Implementation belongs
+  to the existing infra Git service candidate (`flext-itpd1.3.26`); this is a contract,
+  not evidence that enforcement is active or code is green.
 - **Config-owned module size cap** (`flext-infra/config/codegen.yaml` → `loc_cap.max_lines`,
   enforced by the `loc-cap` check gate); net-negative LOC on refactors.
 - Toolchain: `uv` + `.venv` only, always via `make`.
@@ -792,7 +813,7 @@ Overall average: **60-90% token reduction** on common development operations.
 
 - Makefile commands share one place that sets `GITHUB_TOKEN`, `GH_TOKEN`, and `MISE_GITHUB_TOKEN` from `gh auth token` when GitHub auth is available.
 - `make test-file FILE=<repository-relative path>` runs one declared test file.
-- FLEXT and flext-infra integrate on `0.12.0-dev`. Sibling product repos integrate on `develop`.
+- FLEXT and flext-infra integrate on `0.12.0-dev`. Resolve every member's integration target from its current branch-matched authority and freshly fetched refs; never select `develop` from a stale workspace summary.
 - Land the submodule commit first, then move the umbrella gitlink in a separate commit.
 - Gas City owns its worktrees: a sweep only preserves (commits and pushes) anything under `<city>/.gc/worktrees/`; `.worktree-stale` means gc resets and keeps the tree, and `gc-*`/`polecat/*` branches are pushed but never deleted by a sweep.
-- Fleet WIP may never be lost: dirty checkouts are committed to branches and pushed, stashes become branches, and only work already superseded against the integration branch is retired.
+- Fleet WIP may never be lost. Existing stashes are recovery incidents, not an allowed workflow. Preserve and reconcile their complete contents on the authorized maintained lane; a pushed preservation branch is not integration. Retire references only after fresh ancestry proof and explicit retirement authorization. Never create, apply blindly, clear, or drop stashes to hide WIP.
