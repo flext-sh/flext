@@ -14,7 +14,9 @@
 
 <!-- TOC END -->
 
-- **Status:** Accepted (amended 2026-07-16)
+- **Status:** Accepted (amended 2026-07-16); §1 SUPERSEDED (2026-10-08) by
+  [ADR-024](024-di-config-contract-derived-defaults-minimal-overrides.md) — composition
+  is owned by the workspace's `.gitmodules`, not by a manifest member list
 - **Date:** 2026-06-24
 - **Scope:** FLEXT, Cosmos, and standalone repository topology, dependency provenance,
   and development environments.

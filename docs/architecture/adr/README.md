@@ -29,7 +29,7 @@ candidate; acceptance never proves fleet stability.
 - [ADR-002: v0.13.0 Platform Baseline](002-v0-13-0-platform-baseline.md) —
   **ACCEPTED TARGET** (forward baseline `0.13.0`)
 - [ADR-003: Manifest-owned topology, root workspace, and autonomous Git libraries](003-workspace-tooling-hub-distribution.md)
-  — **CURRENT IMPLEMENTATION**
+  — **CURRENT IMPLEMENTATION** (§1 superseded by ADR-024: `.gitmodules` owns composition)
 - [ADR-004: Generated Make and codegen SSOT owned by `flext-infra`](004-generated-make-codegen-ssot-flext-infra.md)
   — **CURRENT IMPLEMENTATION**
 - [ADR-005: Config, settings, constants, templates, and schemas SSOT](005-config-settings-constants-templates-schemas-ssot.md)
@@ -64,12 +64,15 @@ candidate; acceptance never proves fleet stability.
   `ruff check --fix --unsafe-fixes --preview`; `MakeRuffSpec` requires the flag;
   supersedes the 2026-09-08 safe-only posture)
 - [ADR-022: External Consumers as Propagation Guests](022-external-consumers-propagation-guests.md)
-  — **ACCEPTED** (workspace manifest `external_consumers`; per-consumer lane through
-  the consumer's own canonical make verbs; credential/backup areas never automate)
+  — **SUPERSEDED** by ADR-024 (a workspace never lists or pushes into its consumers)
 - [ADR-023: Repair Phases as Mod-Loop Callbacks](023-repair-phases-mod-loop-callbacks.md)
   — **ACCEPTED** (`p.Infra.ModLoopPhase`; namespace-relocations + accessor-rename
   inside `refactor mod`'s joint fixed point; one engine per repair, three invocation
   surfaces)
+- [ADR-024: DI Config Contract — Derived Defaults, Self-Only Minimal Overrides, Generated Commented Defaults](024-di-config-contract-derived-defaults-minimal-overrides.md)
+  — **ACCEPTED TARGET** (operator order 2026-10-08; a repository declares only its own
+  deltas; library ships generic defaults; injected root with library < repo < local
+  layers; pull never push; phased under `flext-itpd1.11`)
 
 > **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance
