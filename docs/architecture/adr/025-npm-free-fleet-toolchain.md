@@ -94,8 +94,9 @@ the operator's global Mise registry.
   and no finding in 4606 files; the `markdown-format` gate passed read-only in the
   root and all 31 members (2026-10-08).
 - On the implementing host, `make setup` ran `flext-infra codegen mise-proof` and
-  proved all 16 declared `toolchain.tools` entries (lock checksum, install-root containment, version
-  probe); `ast-grep 0.45.3` resolved inside `installs/aqua-ast-grep-ast-grep`.
+  proved all 16 declared `toolchain.tools` entries (lock checksum, install-root
+  containment, version probe); `ast-grep 0.45.3` resolved inside
+  `installs/aqua-ast-grep-ast-grep`. Implementation: flext-infra PR #1848.
 
 ## References
 
