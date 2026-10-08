@@ -6,11 +6,11 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext import u
+from flext import FlextRootUtilities
 from flext_tests import FlextTestsTypes
 
 
-class TestsFlextRootUtilities(u):
+class TestsFlextRootUtilities(FlextRootUtilities):
     """Infrastructure test typings facade — extends flext_infra typings."""
 
     class Tests(FlextTestsTypes.Tests):

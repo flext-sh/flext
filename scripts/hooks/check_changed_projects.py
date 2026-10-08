@@ -12,12 +12,14 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import shutil
-import subprocess  # noqa: S404 - pre-commit hook delegates through the canonical uv process boundary
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from flext_cli import cli
+from flext_cli import cli, u
+
+if TYPE_CHECKING:
+    from flext_cli import p
 
 
 class FlextRootCheckChangedProjects:
@@ -47,8 +49,6 @@ class FlextRootCheckChangedProjects:
         Returns:
             The resulting ``int``.
 
-        Raises:
-            SystemExit: If uv executable not found on PATH.
         """
         known = cls._known_projects()
         projects = {
@@ -59,13 +59,18 @@ class FlextRootCheckChangedProjects:
         if not projects:
             return 0
 
-        uv = shutil.which("uv")
-        if uv is None:
-            msg = "uv executable not found on PATH"
-            raise SystemExit(msg)
-        outcome = subprocess.run(  # noqa: S603 - argv is built from workspace directory names only, no untrusted input
+        def exit_code(output: p.Cli.CommandOutput) -> int:
+            """Return the native process exit status of one command output.
+
+            Returns:
+                The resulting ``int``.
+
+            """
+            return output.outcome.raw_return_code
+
+        outcome = u.Cli.run_raw(
             [
-                uv,
+                "uv",
                 "run",
                 "--all-packages",
                 "python",
@@ -78,10 +83,8 @@ class FlextRootCheckChangedProjects:
                 ",".join(sorted(projects)),
             ],
             cwd=cls.REPOSITORY_ROOT,
-            check=False,
-            capture_output=True,
         )
-        return outcome.returncode
+        return outcome.map(exit_code).unwrap_or(1)
 
     @classmethod
     def _relative_to_workspace(cls, raw: str) -> Path:
