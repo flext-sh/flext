@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 # Copyright (c) 2025 FLEXT Team. All rights reserved.
 import shlex
 import socket
-import subprocess  # ruff: ignore[suspicious-subprocess-import] -- vendored skill tooling: spawning dev servers is this script's purpose
+import subprocess
 import sys
 import time
 
@@ -167,7 +167,7 @@ def main() -> None:
     try:
         for server in servers:
             server_argv = shlex.split(server["cmd"])
-            process = subprocess.Popen(  # ruff: ignore[subprocess-without-shell-equals-true] -- vendored skill tooling
+            process = subprocess.Popen(
                 server_argv,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -178,7 +178,7 @@ def main() -> None:
             if not is_server_ready(server["port"], timeout=timeout):
                 _raise_not_started(server["port"], timeout)
 
-        runner = subprocess.run(command, check=False)  # ruff: ignore[subprocess-without-shell-equals-true] -- vendored skill tooling
+        runner = subprocess.run(command, check=False)
         sys.exit(runner.returncode)
     finally:
         for process in server_processes:
