@@ -12,7 +12,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import subprocess
+import shutil
+import subprocess  # noqa: S404 - pre-commit hook delegates through the canonical uv process boundary
 import sys
 from pathlib import Path
 
@@ -46,6 +47,8 @@ class FlextRootCheckChangedProjects:
         Returns:
             The resulting ``int``.
 
+        Raises:
+            SystemExit: If uv executable not found on PATH.
         """
         known = cls._known_projects()
         projects = {
@@ -56,9 +59,13 @@ class FlextRootCheckChangedProjects:
         if not projects:
             return 0
 
-        outcome = subprocess.run(
+        uv = shutil.which("uv")
+        if uv is None:
+            msg = "uv executable not found on PATH"
+            raise SystemExit(msg)
+        outcome = subprocess.run(  # noqa: S603 - argv is built from workspace directory names only, no untrusted input
             [
-                "uv",
+                uv,
                 "run",
                 "--all-packages",
                 "python",
