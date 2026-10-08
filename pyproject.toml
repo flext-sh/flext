@@ -21,11 +21,11 @@ dependencies = [
   "annotated-types>=0.8.0",
   "beartype>=0.22.9",
   "dependency-injector>=4.49.1",
-  "flext-cli",
-  "flext-core",
-  "flext-infra",
-  "flext-ldif",
-  "flext-tests",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "importlib-resources>=7.1.0",
   "packaging>=26.3",
   "pydantic>=2.13.5,<3",
@@ -62,13 +62,13 @@ Homepage = "https://github.com/flext-sh/flext"
 Repository = "https://github.com/flext-sh/flext"
 
 [dependency-groups]
-codegen = ["flext-infra"]
+codegen = ["flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev"]
 dev = [
   "actionlint-py>=1.7.12.24",
   "bandit>=1.9.4",
   "deptry",
   "editables>=0.6",
-  "flext-tests",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "hypothesis",
   "mkdocs",
   "mkdocs-autorefs",
@@ -685,23 +685,23 @@ environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 members = [
   "flext-api",
   "flext-auth",
-  "flext-cli",
-  "flext-core",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
   "flext-db-oracle",
   "flext-dbt-ldap",
   "flext-dbt-ldif",
   "flext-dbt-oracle",
   "flext-dbt-oracle-wms",
   "flext-grpc",
-  "flext-infra",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
   "flext-ldap",
-  "flext-ldif",
+  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
   "flext-meltano",
   "flext-observability",
   "flext-oracle-oic",
   "flext-oracle-wms",
   "flext-plugin",
-  "flext-quality",
+  "flext-quality @ git+https://github.com/flext-sh/flext-quality.git@0.12.0-dev",
   "flext-tap-ldap",
   "flext-tap-ldif",
   "flext-tap-oracle",
@@ -712,7 +712,7 @@ members = [
   "flext-target-oracle",
   "flext-target-oracle-oic",
   "flext-target-oracle-wms",
-  "flext-tests",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "flext-web",
 ]
 
@@ -764,17 +764,3 @@ dependencies = ["flext-tests"]
 [tool.uv.exclude-dependencies.package]
 name = "flext-infra"
 
-[tool.uv.sources.flext-cli]
-workspace = true
-
-[tool.uv.sources.flext-core]
-workspace = true
-
-[tool.uv.sources.flext-infra]
-workspace = true
-
-[tool.uv.sources.flext-ldif]
-workspace = true
-
-[tool.uv.sources.flext-tests]
-workspace = true
