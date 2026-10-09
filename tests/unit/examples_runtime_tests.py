@@ -14,6 +14,7 @@ import pytest
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
+from scripts.hooks.check_changed_projects import FlextRootCheckChangedProjects
 
 import flext_ldif
 from flext import c
@@ -22,7 +23,6 @@ from flext_infra import c as infra_constants
 from flext_infra.workspace import FlextInfraWorkspaceDetector
 from flext_ldif import FlextLdif
 from flext_tests import tm
-from scripts.hooks.check_changed_projects import FlextRootCheckChangedProjects
 
 
 class TestsFlextRootExamplesRuntime:
