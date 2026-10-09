@@ -137,6 +137,13 @@ The root dispatcher resolves workspace scope from its typed topology. Generated 
 surfaces and documentation are changed at their template or configuration owner, then
 regenerated with `make gen`.
 
+`make gen-footprint` calls the public `flext-infra codegen footprint` diagnostic
+for the root and its declared physical members. It reads the typed pending journal
+before planning, without acquiring leases, recovering a transaction, or publishing
+files. A pending participant outside the declared physical scope fails without
+changing its journal or staging. The receipt is a dated preflight, not a completed
+generation or fleet-green receipt; generation rechecks the boundary before effects.
+
 The generated local `make audit` invokes the public
 `flext-infra workspace verify-lanes --repo-root <checkout>` gate. A workspace
 invocation covers its declared members as well as the root. This is detection only:

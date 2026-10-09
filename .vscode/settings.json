@@ -222,7 +222,7 @@
   ],
   "shellcheck.useRepositoryRootAsCwd": true,
   "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "rvben.rumdl",
     "editor.formatOnSave": false
   }
 }

@@ -1,8 +1,8 @@
 """Scope workspace-wide pre-commit checks to the FLEXT projects that changed.
 
 Pre-commit passes the staged file paths as positional arguments. This helper
-extracts the affected project names (top-level submodules that contain a
-pyproject.toml) and runs ``flext_infra check --what <gate> --projects ...``
+selects affected project names from the typed workspace composition and runs
+``flext_infra check run --gates <gate> --projects ...``
 only for those projects. When no staged file belongs to a FLEXT project the
 hook exits successfully without doing any work.
 
@@ -12,11 +12,11 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from pathlib import Path
 
-from flext_cli import cli
+from flext_cli import cli, u
+from flext_infra.workspace import FlextInfraWorkspaceDetector
 
 
 class FlextRootCheckChangedProjects:
@@ -26,20 +26,6 @@ class FlextRootCheckChangedProjects:
     MIN_POSITIONAL_ARGS: int = 2
 
     @classmethod
-    def _known_projects(cls) -> frozenset[str]:
-        """Return top-level directory names that look like FLEXT projects.
-
-        Returns:
-            Top-level directory names that look like FLEXT projects.
-
-        """
-        return frozenset(
-            entry.name
-            for entry in cls.REPOSITORY_ROOT.iterdir()
-            if entry.is_dir() and (entry / "pyproject.toml").is_file()
-        )
-
-    @classmethod
     def main(cls, what: str, files: list[str]) -> int:
         """Run the requested gate only for projects touched by the staged files.
 
@@ -47,34 +33,43 @@ class FlextRootCheckChangedProjects:
             The resulting ``int``.
 
         """
-        known = cls._known_projects()
+        workspace = FlextInfraWorkspaceDetector.load_workspace_spec(cls.REPOSITORY_ROOT)
+        if workspace.failure:
+            return cli.finalize_result(workspace)
+        changed = tuple(
+            cls.REPOSITORY_ROOT / cls._relative_to_workspace(raw) for raw in files
+        )
         projects = {
-            rel.parts[0]
-            for raw in files
-            if (rel := cls._relative_to_workspace(raw)).parts and rel.parts[0] in known
+            project.name
+            for project in workspace.value.subprojects
+            if any(path.is_relative_to(project.path) for path in changed)
         }
         if not projects:
             return 0
 
-        outcome = subprocess.run(
+        outcome = u.Cli.run_raw(
             [
-                "uv",
-                "run",
-                "--all-packages",
-                "python",
+                sys.executable,
                 "-m",
                 "flext_infra",
                 "check",
-                "--what",
+                "run",
+                "--repository-root",
+                str(cls.REPOSITORY_ROOT),
+                "--gates",
                 what,
-                "--projects",
-                ",".join(sorted(projects)),
+                *(
+                    item
+                    for project in sorted(projects)
+                    for item in ("--projects", project)
+                ),
             ],
             cwd=cls.REPOSITORY_ROOT,
-            check=False,
-            capture_output=True,
+            capture=False,
         )
-        return outcome.returncode
+        if outcome.failure:
+            return cli.finalize_result(outcome)
+        return outcome.value.outcome.raw_return_code
 
     @classmethod
     def _relative_to_workspace(cls, raw: str) -> Path:

@@ -81,8 +81,6 @@ scripts/maintenance/
 !codex.md
 !.markdownlint.json
 !.markdownlintignore
-!.prettierrc
-!.prettierignore
 !.shellcheckrc
 
 # Git configuration
@@ -421,7 +419,6 @@ _tmp_*/
 build/
 dist/
 node_modules/
-protos/
 site/
 target/
 .pyrefly_cache/

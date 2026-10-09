@@ -6,16 +6,23 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import sys
 from collections.abc import Mapping
+from pathlib import Path
 
+import pytest
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
 
 import flext_ldif
 from flext import c
+from flext_cli import cli, u
+from flext_infra import c as infra_constants
+from flext_infra.workspace import FlextInfraWorkspaceDetector
 from flext_ldif import FlextLdif
 from flext_tests import tm
+from scripts.hooks.check_changed_projects import FlextRootCheckChangedProjects
 
 
 class TestsFlextRootExamplesRuntime:
@@ -23,6 +30,80 @@ class TestsFlextRootExamplesRuntime:
 
     class Tests:
         """Runtime behavior, including a failure path."""
+
+        @staticmethod
+        def test_changed_project_hook_has_a_no_project_noop() -> None:
+            """A root metadata path does not select an arbitrary member check."""
+            tm.that(
+                FlextRootCheckChangedProjects.main("unregistered", ["pyproject.toml"]),
+                eq=c.Cli.EXIT_CODE_SUCCESS,
+            )
+
+        @staticmethod
+        @pytest.mark.slow
+        def test_changed_project_hook_preserves_the_native_gate_rejection(
+            capfd: pytest.CaptureFixture[str],
+        ) -> None:
+            """Execute the real repeated-project CLI route and retain its exit."""
+            root = FlextRootCheckChangedProjects.REPOSITORY_ROOT
+            workspace = tm.ok(FlextInfraWorkspaceDetector.load_workspace_spec(root))
+            projects = tuple(
+                sorted(workspace.subprojects, key=lambda ref: ref.name)[:2],
+            )
+            tm.that(len(projects), eq=2)
+            gate = "unregistered_" + "_".join(
+                sorted(infra_constants.Infra.ALLOWED_GATES),
+            )
+            native = tm.ok(
+                u.Cli.run_raw(
+                    [
+                        sys.executable,
+                        "-m",
+                        "flext_infra",
+                        "check",
+                        "run",
+                        "--repository-root",
+                        str(root),
+                        "--gates",
+                        gate,
+                        *(
+                            item
+                            for project in projects
+                            for item in ("--projects", project.name)
+                        ),
+                    ],
+                    cwd=root,
+                ),
+            )
+            tm.that(native.outcome.raw_return_code, ne=c.Cli.EXIT_CODE_SUCCESS)
+            tm.that(native.stdout + native.stderr, has="unknown gate")
+            files = [
+                str(project.path.relative_to(root) / "pyproject.toml")
+                for project in projects
+            ]
+
+            status = FlextRootCheckChangedProjects.main(gate, files)
+
+            tm.that(status, eq=native.outcome.raw_return_code)
+            captured = capfd.readouterr()
+            tm.that(captured.out + captured.err, has=gate)
+
+        @staticmethod
+        def test_hook_failure_boundary_reports_the_native_launch_cause(
+            tmp_path: Path,
+            capfd: pytest.CaptureFixture[str],
+        ) -> None:
+            """The shared CLI boundary exposes a real missing executable failure."""
+            missing = tmp_path / "missing-hook-runtime"
+            result = u.Cli.run_raw([str(missing)])
+            tm.fail(result)
+
+            status = cli.finalize_result(result)
+
+            tm.that(status, ne=c.Cli.EXIT_CODE_SUCCESS)
+            captured = capfd.readouterr()
+            tm.that(captured.err, has=tm.not_none(result.error))
+            tm.that(captured.err, has=str(missing))
 
         @staticmethod
         def test_complete_workflow_returns_completed_summary() -> None:
