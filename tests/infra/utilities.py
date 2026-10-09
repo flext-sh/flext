@@ -7,13 +7,13 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext import FlextRootUtilities
-from flext_tests import FlextTestsTypes
+from flext_tests import FlextTestsUtilities
 
 
-class TestsFlextRootUtilities(FlextRootUtilities):
+class TestsFlextRootUtilities(FlextRootUtilities, FlextTestsUtilities):
     """Infrastructure test typings facade — extends flext_infra typings."""
 
-    class Tests(FlextTestsTypes.Tests):
+    class Tests(FlextTestsUtilities.Tests):
         """Test typings composing shared test + workspace type namespaces."""
 
 

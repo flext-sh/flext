@@ -133,6 +133,16 @@ imports, and codemod policy. It never validates a member file as the workspace r
 The generated recipe passes separate gate names through the check CLI's comma-separated
 `--gates` contract; no raw checker invocation replaces this route.
 
+Each `flext-infra check run` invocation exclusively creates one UUID4 directory under
+the typed request's report base. `--reports-dir` selects that base.
+Relative bases resolve under `--repository-root`, not
+the caller's working directory. All project native artifacts, full raw receipts,
+Markdown and SARIF reports stay under that same invocation directory. The CLI prints
+the actual report paths. Existing fixed-path reports remain historical files and are
+not overwritten; no shared latest writer is published. Consumers of
+`u.Infra.check_report_findings` pass the explicit invocation directory printed by
+the CLI, never the shared base or an implicitly selected latest run.
+
 The root dispatcher resolves workspace scope from its typed topology. Generated Make
 surfaces and documentation are changed at their template or configuration owner, then
 regenerated with `make gen`.
