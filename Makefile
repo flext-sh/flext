@@ -540,6 +540,11 @@ endef
 # producer just rendered; `upg` runs the two halves apart so the toolchain
 # lock is resolved from that rendered manifest before activation demands it.
 define RUN_PUBLIC_PRODUCE
+# A public verb is its producer half (pre hook plus handler) followed by its
+# activation half. An activation producer re-enters the environment its
+# producer just rendered; `upg` runs the two halves apart so the toolchain
+# lock is resolved from that rendered manifest before activation demands it.
+define RUN_PUBLIC_PRODUCE
 	$(if $(filter pre-$(1),$(CUSTOM_DECLARED_TARGETS)),+@$(SELF_MAKE) pre-$(1))
 	$(if $(filter _custom-$(1),$(CUSTOM_DECLARED_TARGETS)),+@$(SELF_MAKE) _custom-$(1),+@$(SELF_MAKE) _builtin-$(1))
 endef
@@ -1652,6 +1657,11 @@ _upg_lifecycle: _builtin_setup_submodules
 	@$(SELF_MAKE) _builtin_setup_environment
 	@$(PROJECT_FLEXT_INFRA) deps modernize --repository-root "$(PROJECT_ROOT)" \
 		--apply --rewrite-constraints --projects .
+	@$(SELF_MAKE) _builtin_require_environment
+	$(call RUN_PUBLIC_PRODUCE,gen)
+	@$(UV) lock --project "$(PROJECT_ROOT)"
+	@$(UV) lock --check --project "$(PROJECT_ROOT)"
+	@$(SELF_MAKE) _builtin_setup_environment
 	@$(SELF_MAKE) _builtin_require_environment
 	$(call RUN_PUBLIC_PRODUCE,gen)
 	@$(UV) lock --project "$(PROJECT_ROOT)"
