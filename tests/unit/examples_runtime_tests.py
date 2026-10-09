@@ -18,9 +18,8 @@ from scripts.hooks.check_changed_projects import FlextRootCheckChangedProjects
 
 import flext_ldif
 from flext import c
-from flext_cli import cli, u
-from flext_infra import c as infra_constants
-from flext_infra.workspace import FlextInfraWorkspaceDetector
+from flext_cli import cli
+from flext_infra import c as infra_constants, u
 from flext_ldif import FlextLdif
 from flext_tests import tm
 
@@ -32,10 +31,16 @@ class TestsFlextRootExamplesRuntime:
         """Runtime behavior, including a failure path."""
 
         @staticmethod
-        def test_changed_project_hook_has_a_no_project_noop() -> None:
-            """A root metadata path does not select an arbitrary member check."""
+        @pytest.mark.parametrize(
+            "files",
+            [(), ("pyproject.toml",), ("pyproject.toml", ".gitmodules", ".gitignore")],
+        )
+        def test_changed_project_hook_has_a_no_project_noop(
+            files: tuple[str, ...],
+        ) -> None:
+            """Empty and multiple root-file inputs do not select member checks."""
             tm.that(
-                FlextRootCheckChangedProjects.main("unregistered", ["pyproject.toml"]),
+                FlextRootCheckChangedProjects.main("unregistered", list(files)),
                 eq=c.Cli.EXIT_CODE_SUCCESS,
             )
 
@@ -46,9 +51,9 @@ class TestsFlextRootExamplesRuntime:
         ) -> None:
             """Execute the real repeated-project CLI route and retain its exit."""
             root = FlextRootCheckChangedProjects.REPOSITORY_ROOT
-            workspace = tm.ok(FlextInfraWorkspaceDetector.load_workspace_spec(root))
+            declared = tm.ok(u.Infra.git_declared_submodule_paths(root))
             projects = tuple(
-                sorted(workspace.subprojects, key=lambda ref: ref.name)[:2],
+                sorted(declared, key=Path.as_posix)[:2],
             )
             tm.that(len(projects), eq=2)
             gate = "unregistered_" + "_".join(
@@ -69,7 +74,7 @@ class TestsFlextRootExamplesRuntime:
                         *(
                             item
                             for project in projects
-                            for item in ("--projects", project.name)
+                            for item in ("--projects", project.as_posix())
                         ),
                     ],
                     cwd=root,
@@ -77,10 +82,7 @@ class TestsFlextRootExamplesRuntime:
             )
             tm.that(native.outcome.raw_return_code, ne=c.Cli.EXIT_CODE_SUCCESS)
             tm.that(native.stdout + native.stderr, has="unknown gate")
-            files = [
-                str(project.path.relative_to(root) / "pyproject.toml")
-                for project in projects
-            ]
+            files = [(project / "pyproject.toml").as_posix() for project in projects]
 
             status = FlextRootCheckChangedProjects.main(gate, files)
 

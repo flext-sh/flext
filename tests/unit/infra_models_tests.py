@@ -13,7 +13,7 @@ import pytest
 
 from flext import c, m, t
 from flext_tests import tm
-from tests.infra import TestsFlextRootModels
+from tests import infra
 
 
 class TestsFlextRootInfraModels:
@@ -25,7 +25,7 @@ class TestsFlextRootInfraModels:
         @staticmethod
         def test_module_ref_json_contract(tmp_path: Path) -> None:
             """Preserve supplied values, schema metadata and validation failures."""
-            model = TestsFlextRootModels.TestsFlextRoot.ModuleRef
+            model = infra.TestsFlextRootModels.Tests.ModuleRef
             anchor_file = tmp_path / "module.py"
             module_name = __name__
             relative_path = "module.py"

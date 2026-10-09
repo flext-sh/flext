@@ -10,13 +10,14 @@ from pathlib import Path
 from typing import Annotated
 
 from flext import m, u
+from flext_tests import FlextTestsModels
 
 
-class TestsFlextRootModels(m):
+class TestsFlextRootModels(m, FlextTestsModels):
     """Infrastructure test models facade — extends flext workspace models."""
 
-    class _ModuleModels:
-        """Module reference models."""
+    class Tests(FlextTestsModels.Tests):
+        """Test infrastructure model definitions."""
 
         class ModuleRef(m.Value):
             """Module reference with path and name information."""
@@ -28,9 +29,6 @@ class TestsFlextRootModels(m):
             relative_path: str = u.Field(
                 description="Module path relative to the workspace root.",
             )
-
-    class _SyncModels:
-        """Sync call models."""
 
         class SyncCall(m.Value):
             """Workspace synchronization call record."""
@@ -46,9 +44,6 @@ class TestsFlextRootModels(m):
 
             branch: Annotated[str, u.Field(description="Current branch name.")]
             commit_sha: Annotated[str, u.Field(description="Current commit SHA.")]
-
-    class TestsFlextRoot(_ModuleModels, _SyncModels):
-        """Test infrastructure model definitions."""
 
 
 __all__: list[str] = ["TestsFlextRootModels"]

@@ -15,14 +15,11 @@ from flext_tests import FlextTestsConstants
 class TestsFlextRootConstants(c):
     """Infrastructure test constants facade — extends flext_infra constants."""
 
-    class _RootWorkspaceConstants:
-        """Root workspace test-infrastructure constants."""
+    class Tests(FlextTestsConstants.Tests):
+        """Test infrastructure constants composing shared test + workspace parts."""
 
         MODULE_VERSIONING: Final[str] = "libs/versioning.py"
         DEFAULT_BRANCH: Final[str] = "main"
-
-    class TestsFlextRoot(FlextTestsConstants.Tests, _RootWorkspaceConstants):
-        """Test infrastructure constants composing shared test + workspace parts."""
 
 
 __all__: list[str] = ["TestsFlextRootConstants"]
