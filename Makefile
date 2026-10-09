@@ -72,6 +72,12 @@ endif
 # stays in the environment and is never printed.
 GITHUB_AUTH_SOURCE := $(if $(strip $(GITHUB_TOKEN)),GITHUB_TOKEN,$(if $(strip $(GH_TOKEN)),GH_TOKEN,$(if $(strip $(MISE_GITHUB_TOKEN)),MISE_GITHUB_TOKEN,none)))
 GITHUB_AUTH_STATUS := not-selected
+override GITHUB_AUTH_COMMAND := not-selected
+override GITHUB_AUTH_COMMAND_STATUS := not-selected
+GITHUB_AUTH_HOST_SOURCE := $(if $(strip $(GH_HOST)),GH_HOST,native-default)
+GITHUB_AUTH_CONFIG_OVERRIDE := $(if $(strip $(GH_CONFIG_DIR)),yes,no)
+GITHUB_AUTH_XDG_OVERRIDE := $(if $(strip $(XDG_CONFIG_HOME)),yes,no)
+GITHUB_AUTH_SESSION_BUS := $(if $(strip $(DBUS_SESSION_BUS_ADDRESS)),yes,no)
 GITHUB_AUTH_CI := other
 ifeq ($(strip $(CI)),Y)
 GITHUB_AUTH_CI := ci
@@ -84,8 +90,14 @@ GITHUB_TOKEN := $(firstword $(GITHUB_TOKEN) $(GH_TOKEN) $(MISE_GITHUB_TOKEN))
 ifeq ($(GITHUB_TOKEN),)
 ifneq ($(filter local unset,$(GITHUB_AUTH_CI)),)
 GITHUB_AUTH_SOURCE := gh
-GITHUB_TOKEN := $(shell command -v gh >/dev/null 2>&1 && gh auth token 2>/dev/null)
+override GITHUB_AUTH_COMMAND := $(shell command -v gh 2>/dev/null)
+override GITHUB_AUTH_COMMAND_STATUS := $(.SHELLSTATUS)
+ifeq ($(GITHUB_AUTH_COMMAND_STATUS),0)
+GITHUB_TOKEN := $(shell "$(GITHUB_AUTH_COMMAND)" auth token 2>/dev/null)
 GITHUB_AUTH_STATUS := $(.SHELLSTATUS)
+else
+GITHUB_AUTH_STATUS := $(GITHUB_AUTH_COMMAND_STATUS)
+endif
 endif
 endif
 ifneq ($(GITHUB_TOKEN),)
@@ -97,8 +109,9 @@ unexport GITHUB_TOKEN GH_TOKEN MISE_GITHUB_TOKEN
 endif
 unexport GITHUB_API_TOKEN
 GITHUB_AUTH_PRESENT := $(if $(strip $(GITHUB_TOKEN)),yes,no)
+GITHUB_AUTH_PHYSICAL_COMMAND := $(if $(filter gh,$(GITHUB_AUTH_SOURCE)),$(realpath $(GITHUB_AUTH_COMMAND)),not-selected)
 # Diagnostics expose only producer metadata, never credentials or command stderr.
-GITHUB_AUTH_DIAGNOSTICS = printf 'github-auth source=%s extraction-exit=%s present=%s ci=%s\n' '$(GITHUB_AUTH_SOURCE)' '$(GITHUB_AUTH_STATUS)' '$(GITHUB_AUTH_PRESENT)' '$(GITHUB_AUTH_CI)'
+GITHUB_AUTH_DIAGNOSTICS = printf 'github-auth source=%s extraction-exit=%s present=%s ci=%s command-exit=%s command=%s physical-command=%s host-source=%s gh-config-override=%s xdg-config-override=%s session-bus=%s\n' '$(GITHUB_AUTH_SOURCE)' '$(GITHUB_AUTH_STATUS)' '$(GITHUB_AUTH_PRESENT)' '$(GITHUB_AUTH_CI)' '$(GITHUB_AUTH_COMMAND_STATUS)' '$(GITHUB_AUTH_COMMAND)' '$(GITHUB_AUTH_PHYSICAL_COMMAND)' '$(GITHUB_AUTH_HOST_SOURCE)' '$(GITHUB_AUTH_CONFIG_OVERRIDE)' '$(GITHUB_AUTH_XDG_OVERRIDE)' '$(GITHUB_AUTH_SESSION_BUS)'
 
 # === SECTION: project identity (managed) ===
 # Source: config:dist / config:make_profile / config:repository_root_rel / config:uv_link_mode
@@ -188,8 +201,8 @@ endif
 # === SECTION: verb dispatch (managed) ===
 # Source: config:make.verbs and the canonical gate vocabulary. A verb exists
 # only in the profiles it declares (make.verbs[].profiles).
-PUBLIC_VERBS := help setup pre-commit upg validate-lifecycle propagate build examples check smells test test-full test-file file-gate profile-test profile-test-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen initialize mod mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
-BUILTIN_VERBS := help setup pre-commit upg validate-lifecycle propagate build examples check smells test test-full test-file file-gate profile-test profile-test-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen initialize mod mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
+PUBLIC_VERBS := help setup pre-commit upg validate-lifecycle propagate build examples check smells test test-full test-file file-gate profile-test profile-test-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint initialize mod mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
+BUILTIN_VERBS := help setup pre-commit upg validate-lifecycle propagate build examples check smells test test-full test-file file-gate profile-test profile-test-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint initialize mod mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
 SCRIPT_VERBS :=
 
 CUSTOM_MAKEFILE := $(MAKEFILE_ROOT)/custom.mk
@@ -296,7 +309,7 @@ RUNTIME_LINKED_WORKTREE := Y
 endif
 endif
 ifeq ($(RUNTIME_LINKED_WORKTREE),Y)
-override RUNTIME_VENV := $(abspath $(RUNTIME_ROOT)/../.venv
+override RUNTIME_VENV := $(abspath $(RUNTIME_ROOT)/../.venv)
 else
 override RUNTIME_VENV := $(RUNTIME_ROOT)/.venv
 endif
@@ -351,23 +364,63 @@ _bootstrap_setup_tools:
 		printf 'ERROR: mise is not installed; install it (https://mise.run) and retry\n' >&2; \
 		exit 2; \
 	fi; \
-	if [ "$(TOOL_BOOTSTRAP_RESOLVE)" = "1" ]; then \
-		mise -C "$(PROJECT_ROOT)" lock --upgrade --bump; \
-	fi; \
-	mise -C "$(PROJECT_ROOT)" install --yes "python" "github:jdx/mise" "uv" "kubectl" "helm" "kind" "direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "kubeconform" "node" "go" "make" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"; \
 	mise_pin="$$( awk 'index($$0, "[[tools.\"github:jdx/mise\"]]") == 1 { inside = 1; next } inside && substr($$0, 1, 1) == "[" { exit } inside && $$1 == "version" { gsub(/[",]/, "", $$3); print $$3; exit }' "$(PROJECT_ROOT)/mise.lock" )"; \
 	if [ -z "$$mise_pin" ]; then \
 		printf 'ERROR: mise.lock pins no github:jdx/mise release; run make upg\n' >&2; \
 		exit 2; \
 	fi; \
-	mise_receipt="$$(mise -C "$(PROJECT_ROOT)" exec -- mise --version | cut -d ' ' -f1)"; \
+	case "$$(uname -s)/$$(uname -m)" in \
+		Linux/x86_64) mise_platform=linux-x64 ;; \
+		Linux/aarch64) mise_platform=linux-arm64 ;; \
+		Darwin/arm64) mise_platform=macos-arm64 ;; \
+		Darwin/x86_64) mise_platform=macos-x64 ;; \
+		*) printf 'ERROR: no github:jdx/mise lock platform maps to %s/%s; install mise %s (https://mise.run) and retry\n' "$$(uname -s)" "$$(uname -m)" "$$mise_pin" >&2; exit 2 ;; \
+	esac; \
+	mise_key=url; \
+	mise_url="$$( awk -v section="[tools.\"github:jdx/mise\".\"platforms.$${mise_platform}\"]" -v key="$${mise_key}" \
+	'$$0 == section { inside = 1; next } inside && substr($$0, 1, 1) == "[" { exit } inside && $$1 == key { gsub(/"/, "", $$3); print $$3; exit }' "$(PROJECT_ROOT)/mise.lock" )"; \
+	case "$$mise_url" in \
+		https://github.com/*/releases/download/*) ;; \
+		*) printf 'ERROR: mise.lock has no release URL for github:jdx/mise on %s\n' "$$mise_platform" >&2; exit 2 ;; \
+	esac; \
+	mise_key=checksum; \
+	mise_checksum="$$( awk -v section="[tools.\"github:jdx/mise\".\"platforms.$${mise_platform}\"]" -v key="$${mise_key}" \
+	'$$0 == section { inside = 1; next } inside && substr($$0, 1, 1) == "[" { exit } inside && $$1 == key { gsub(/"/, "", $$3); print $$3; exit }' "$(PROJECT_ROOT)/mise.lock" )"; \
+	case "$$mise_checksum" in \
+		sha256:*) mise_sha256="$${mise_checksum#sha256:}" ;; \
+		*) printf 'ERROR: mise.lock has no sha256 for github:jdx/mise on %s\n' "$$mise_platform" >&2; exit 2 ;; \
+	esac; \
+	mise_bootstrap_root="$${XDG_CACHE_HOME:-$$HOME/.cache}/flext/infra/mise-bootstrap"; \
+	mise_bootstrap_bin="$$mise_bootstrap_root/$$mise_pin/mise"; \
+	if [ ! -x "$$mise_bootstrap_bin" ]; then \
+		printf 'setup: recovering github:jdx/mise %s from the mise.lock release asset for %s\n' "$$mise_pin" "$$mise_platform"; \
+		mise_stage="$$mise_bootstrap_root/$$mise_pin/stage"; \
+		rm -rf "$$mise_stage"; \
+		mkdir -p "$$mise_stage" "$$(dirname "$$mise_bootstrap_bin")"; \
+		curl --proto '=https' --tlsv1.2 -fsSL --retry 3 -o "$$mise_stage/archive" "$$mise_url"; \
+		if command -v sha256sum >/dev/null 2>&1; then \
+			echo "$$mise_sha256  $$mise_stage/archive" | sha256sum -c -; \
+		else \
+			echo "$$mise_sha256  $$mise_stage/archive" | shasum -a 256 -c -; \
+		fi; \
+		tar -xf "$$mise_stage/archive" -C "$$mise_stage"; \
+		mv "$$mise_stage/mise/bin/mise" "$$mise_bootstrap_bin"; \
+		chmod +x "$$mise_bootstrap_bin"; \
+		rm -rf "$$mise_stage"; \
+	fi; \
+	mise_receipt="$$("$$mise_bootstrap_bin" --version | cut -d ' ' -f1)"; \
 	if [ "$$mise_receipt" != "$$mise_pin" ]; then \
-		printf 'ERROR: provisioned Mise %s differs from the mise.lock pin %s; run make setup\n' "$$mise_receipt" "$$mise_pin" >&2; \
+		printf 'ERROR: recovered Mise %s differs from the mise.lock pin %s; delete %s and run make setup\n' "$$mise_receipt" "$$mise_pin" "$$mise_bootstrap_bin" >&2; \
 		exit 2; \
 	fi; \
+	if [ "$(TOOL_BOOTSTRAP_RESOLVE)" = "1" ]; then \
+		"$$mise_bootstrap_bin" -C "$(PROJECT_ROOT)" lock --upgrade --bump; \
+	fi; \
+	"$$mise_bootstrap_bin" -C "$(PROJECT_ROOT)" install --yes "python" "github:jdx/mise" "uv" "kubectl" "helm" "kind" "direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "kubeconform" "node" "go" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"; \
+	"$$mise_bootstrap_bin" reshim; \
 	printf 'setup: mise %s provisioned from mise.lock\n' "$$mise_receipt"; \
 	printf 'setup: entering lifecycle (submodules, environment, hooks) make=%s\n' "$(SELF_MAKE_EXECUTABLE)"; \
-	mise -C "$(PROJECT_ROOT)" exec -- env "CI=$(CI)" $(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE)
+	"$$mise_bootstrap_bin" -C "$(PROJECT_ROOT)" exec -- env "PATH=$$(dirname "$$mise_bootstrap_bin"):$${PATH}" "CI=$(CI)" $(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE)
 _bootstrap_setup_tools: _builtin_require_network_auth
 
 .PHONY: _builtin_require_network_auth
@@ -844,14 +897,26 @@ _activated-publication: _builtin_require_environment
 
 
 
-# The pre hook and selected producer run once before activation. The producer
-# owns the complete generation transaction; activation adds no second writer.
-gen: _builtin_require_workspace _builtin_require_environment
-	$(call RUN_PUBLIC,gen,1)
+
+gen: _builtin_require_workspace
+
+	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _activated-gen,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-gen)
 
 .PHONY: _activated-gen
 _activated-gen: _builtin_require_environment
-	$(call RUN_PUBLIC_POST,gen)
+
+	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-gen,$(call RUN_PUBLIC,gen))
+
+
+
+# The pre hook and selected producer run once before activation. The producer
+# owns the complete generation transaction; activation adds no second writer.
+gen-footprint: _builtin_require_workspace _builtin_require_environment
+	$(call RUN_PUBLIC,gen-footprint,1)
+
+.PHONY: _activated-gen-footprint
+_activated-gen-footprint: _builtin_require_environment
+	$(call RUN_PUBLIC_POST,gen-footprint)
 
 
 
@@ -1130,6 +1195,10 @@ gen:
 	@printf '  %-16s %s\n' 'gen' 'Regenerate every managed projection atomically.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make gen to execute it.'
 
+gen-footprint:
+	@printf '  %-16s %s\n' 'gen-footprint' 'Inspect the pending generation journal and declared physical effect footprint without leases, recovery, or publication.'
+	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make gen-footprint to execute it.'
+
 initialize:
 	@printf '  %-16s %s\n' 'initialize' 'Materialize the declared package initializer graph.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make initialize to execute it.'
@@ -1257,6 +1326,8 @@ _builtin-help:
 	@printf '  %-16s %s\n' 'publication' 'Publish only receipt-attested release artifacts.';
 
 	@printf '  %-16s %s\n' 'gen' 'Regenerate every managed projection atomically.';
+
+	@printf '  %-16s %s\n' 'gen-footprint' 'Inspect the pending generation journal and declared physical effect footprint without leases, recovery, or publication.';
 
 	@printf '  %-16s %s\n' 'initialize' 'Materialize the declared package initializer graph.';
 
@@ -1587,7 +1658,7 @@ _upg_lifecycle: _builtin_setup_submodules
 	@$(UV) lock --check --project "$(PROJECT_ROOT)"
 	@$(SELF_MAKE) _builtin_setup_environment
 	@mise -C "$(PROJECT_ROOT)" lock --bump
-	@mise -C "$(PROJECT_ROOT)" install --yes "python" "github:jdx/mise" "uv" "kubectl" "helm" "kind" "direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "kubeconform" "node" "go" "make" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"
+	@mise -C "$(PROJECT_ROOT)" install --yes "python" "github:jdx/mise" "uv" "kubectl" "helm" "kind" "direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "kubeconform" "node" "go" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"
 	@$(SELF_MAKE) _builtin_require_mise
 	$(call RUN_PUBLIC_ACTIVATE,gen)
 	@$(SELF_MAKE) gen
@@ -1895,6 +1966,9 @@ _builtin_gen_init:
 
 _builtin_gen_all:
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope all --mode apply
+
+_builtin-gen-footprint:
+	@$(PROJECT_FLEXT_INFRA) codegen footprint --root "$(PROJECT_ROOT)" --scope all
 
 _builtin-bootstrap-candidate: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) codegen candidate-bootstrap --repository-root "$(PROJECT_ROOT)"
