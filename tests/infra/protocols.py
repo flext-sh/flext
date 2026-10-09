@@ -49,6 +49,7 @@ class TestsFlextRootProtocols(p):
                 anchor_file: Path,
             ) -> ModuleType:
                 """Resolve one module name from its relative path."""
+                ...
 
         @runtime_checkable
         class ModuleSpecFactory(Protocol):
@@ -63,9 +64,11 @@ class TestsFlextRootProtocols(p):
 
             def get_branch(self) -> str:
                 """Return the repository active branch name."""
+                ...
 
             def get_remote_url(self) -> str:
                 """Return the repository remote URL."""
+                ...
 
 
 __all__: list[str] = ["TestsFlextRootProtocols"]

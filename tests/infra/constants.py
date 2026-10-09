@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import Final
+from typing import ClassVar
 
 from flext import c
 from flext_tests import FlextTestsConstants
@@ -18,8 +18,8 @@ class TestsFlextRootConstants(c):
     class Tests(FlextTestsConstants.Tests):
         """Test infrastructure constants composing shared test + workspace parts."""
 
-        MODULE_VERSIONING: Final[str] = "libs/versioning.py"
-        DEFAULT_BRANCH: Final[str] = "main"
+        MODULE_VERSIONING: ClassVar[str] = "libs/versioning.py"
+        DEFAULT_BRANCH: ClassVar[str] = "main"
 
 
 __all__: list[str] = ["TestsFlextRootConstants"]
