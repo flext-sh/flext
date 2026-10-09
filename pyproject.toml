@@ -220,10 +220,6 @@ follow_imports = "normal"
 module = ["rope.*"]
 follow_untyped_imports = true
 
-[[tool.mypy.overrides]]
-module = ["tests.infra.utilities"]
-disable_error_code = ["misc", "no-redef", "assignment"]
-
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
@@ -521,6 +517,7 @@ runtime-evaluated-base-classes = [
   "flext_core.FlextSettings",
   "flext_infra.m.BaseModel",
   "flext_tests.FlextTestsServiceBase",
+  "flext_tests.FlextTestsUtilities.Tests",
   "pydantic.BaseModel",
 ]
 

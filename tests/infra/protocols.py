@@ -20,21 +20,22 @@ if TYPE_CHECKING:
 class TestsFlextRootProtocols(p):
     """Infrastructure test protocols facade — extends flext_infra protocols."""
 
-    class _RootWorkspaceProtocols:
-        """Root workspace test-infrastructure protocol definitions."""
+    class Tests(FlextTestsProtocols.Tests):
+        """Test protocols composing shared test + workspace protocol namespaces."""
 
         @runtime_checkable
         class SpecLoader(Protocol):
             """Protocol for module spec loaders."""
 
-            def exec_module(self, module: ModuleType) -> None: ...
+            def exec_module(self, module: ModuleType) -> None:
+                """Execute the loaded module in its namespace."""
 
         @runtime_checkable
         class ModuleSpecProtocol(Protocol):
             """Protocol for module specifications."""
 
             name: str | None
-            loader: TestsFlextRootProtocols.TestsFlextRoot.SpecLoader | None
+            loader: TestsFlextRootProtocols.Tests.SpecLoader | None
 
         @runtime_checkable
         class ModuleResolver(Protocol):
@@ -46,23 +47,25 @@ class TestsFlextRootProtocols(p):
                 relative_path: str,
                 *,
                 anchor_file: Path,
-            ) -> ModuleType: ...
+            ) -> ModuleType:
+                """Resolve one module name from its relative path."""
 
         @runtime_checkable
         class ModuleSpecFactory(Protocol):
             """Protocol for module spec factory callables."""
 
-            def __call__(self, name: str, location: Path) -> ModuleSpec | None: ...
+            def __call__(self, name: str, location: Path) -> ModuleSpec | None:
+                """Build one module spec from a name and file location."""
 
         @runtime_checkable
         class RepoProvider(Protocol):
             """Protocol for repository metadata providers."""
 
-            def get_branch(self) -> str: ...
-            def get_remote_url(self) -> str: ...
+            def get_branch(self) -> str:
+                """Return the repository active branch name."""
 
-    class TestsFlextRoot(FlextTestsProtocols.Tests, _RootWorkspaceProtocols):
-        """Test protocols composing shared test + workspace protocol namespaces."""
+            def get_remote_url(self) -> str:
+                """Return the repository remote URL."""
 
 
 __all__: list[str] = ["TestsFlextRootProtocols"]
