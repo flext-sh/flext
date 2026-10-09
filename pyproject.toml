@@ -517,6 +517,7 @@ runtime-evaluated-base-classes = [
   "flext_core.FlextSettings",
   "flext_infra.m.BaseModel",
   "flext_tests.FlextTestsServiceBase",
+  "flext_tests.FlextTestsUtilities.Tests",
   "pydantic.BaseModel",
 ]
 

@@ -15,8 +15,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from flext_cli import cli, u
-from flext_infra.workspace import FlextInfraWorkspaceDetector
+from flext_cli import cli
+from flext_infra import u
 
 
 class FlextRootCheckChangedProjects:
@@ -33,16 +33,14 @@ class FlextRootCheckChangedProjects:
             The resulting ``int``.
 
         """
-        workspace = FlextInfraWorkspaceDetector.load_workspace_spec(cls.REPOSITORY_ROOT)
-        if workspace.failure:
-            return cli.finalize_result(workspace)
-        changed = tuple(
-            cls.REPOSITORY_ROOT / cls._relative_to_workspace(raw) for raw in files
-        )
+        declared = u.Infra.git_declared_submodule_paths(cls.REPOSITORY_ROOT)
+        if declared.failure:
+            return cli.finalize_result(declared)
+        changed = tuple(cls._relative_to_workspace(raw) for raw in files)
         projects = {
-            project.name
-            for project in workspace.value.subprojects
-            if any(path.is_relative_to(project.path) for path in changed)
+            project.as_posix()
+            for project in declared.value
+            if any(path.is_relative_to(project) for path in changed)
         }
         if not projects:
             return 0
