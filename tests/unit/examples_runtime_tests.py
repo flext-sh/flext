@@ -16,6 +16,7 @@ from examples.advanced_processing_example import FlextRootAdvancedProcessingExam
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
 from scripts.hooks.check_changed_projects import FlextRootCheckChangedProjects
 
+import flext_cli
 import flext_ldif
 from flext_cli import cli
 from flext_ldif import FlextLdif
@@ -40,7 +41,7 @@ class TestsFlextRootExamplesRuntime:
             """Empty and multiple root-file inputs do not select member checks."""
             tm.that(
                 FlextRootCheckChangedProjects.main("unregistered", list(files)),
-                eq=c.Cli.EXIT_CODE_SUCCESS,
+                eq=flext_cli.c.Cli.EXIT_CODE_SUCCESS,
             )
 
         @staticmethod
@@ -79,7 +80,9 @@ class TestsFlextRootExamplesRuntime:
                     cwd=root,
                 ),
             )
-            tm.that(native.outcome.raw_return_code, ne=c.Cli.EXIT_CODE_SUCCESS)
+            tm.that(
+                native.outcome.raw_return_code, ne=flext_cli.c.Cli.EXIT_CODE_SUCCESS
+            )
             tm.that(native.stdout + native.stderr, has="unknown gate")
             files = [(project / "pyproject.toml").as_posix() for project in projects]
 
@@ -101,7 +104,7 @@ class TestsFlextRootExamplesRuntime:
 
             status = cli.finalize_result(result)
 
-            tm.that(status, ne=c.Cli.EXIT_CODE_SUCCESS)
+            tm.that(status, ne=flext_cli.c.Cli.EXIT_CODE_SUCCESS)
             captured = capfd.readouterr()
             tm.that(captured.err, has=tm.not_none(result.error))
             tm.that(captured.err, has=str(missing))
