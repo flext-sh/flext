@@ -450,14 +450,30 @@ _bootstrap_setup_tools: _builtin_require_network_auth
 
 # `upg` writes the lock of the runtime it resolves in. An attached member
 # resolves inside its workspace runtime, where `uv lock` rewrites the
-# workspace lock and never the member's own, so it stops before any effect.
+# workspace lock and never the member's own. The member runs `upg` on its
+# own locks first (via the recursive call below), then the workspace aligns.
 # The target-specific TOOL_BOOTSTRAP_RESOLVE reaches this prerequisite only
 # through `upg`; `setup` passes.
 .PHONY: _builtin_require_upg_lock_owner
 _builtin_require_upg_lock_owner:
-	@if [ "$(TOOL_BOOTSTRAP_RESOLVE)" = "1" ] && [ "$(PROJECT_ROOT)" != "$(RUNTIME_ROOT)" ]; then \
-		printf 'ERROR[upg] %s is attached to the workspace %s: `uv lock` here rewrites %s/uv.lock, never %s/uv.lock.\n  Right way: an attached member never resolves its own locks.\n  How: run `make upg` in a linked worktree of this member outside %s (a standalone checkout owns its locks), or `make upg` in %s for the workspace lock.\n' "$(PROJECT_ROOT)" "$(RUNTIME_ROOT)" "$(RUNTIME_ROOT)" "$(PROJECT_ROOT)" "$(RUNTIME_ROOT)" "$(RUNTIME_ROOT)" >&2; \
-		exit 2; \
+	@if [ "$(TOOL_BOOTSTRAP_RESOLVE)" = "1" ]; then \
+		if [ "$(PROJECT_ROOT)" = "$(RUNTIME_ROOT)" ]; then \
+			:; \
+		else \
+			printf 'INFO[upg] attached member detected: updating %s (own locks) and aligning workspace %s\n' "$(PROJECT_ROOT)" "$(RUNTIME_ROOT)" >&2; \
+			rc=0; \
+			"$(MAKE)" -C "$(PROJECT_ROOT)" upg TOOL_BOOTSTRAP_RESOLVE=1 || rc=$$?; \
+			if [ $$rc -ne 0 ]; then \
+				printf 'ERROR[upg] member upg failed in %s (rc=%s)\n' "$(PROJECT_ROOT)" "$$rc" >&2; \
+				exit $$rc; \
+			fi; \
+			"$(MAKE)" -C "$(RUNTIME_ROOT)" upg TOOL_BOOTSTRAP_RESOLVE=1 || rc=$$?; \
+			if [ $$rc -ne 0 ]; then \
+				printf 'ERROR[upg] workspace upg failed in %s (rc=%s)\n' "$(RUNTIME_ROOT)" "$$rc" >&2; \
+				exit $$rc; \
+			fi; \
+			exit 0; \
+		fi; \
 	fi
 
 .PHONY: _builtin_require_network_auth
@@ -1099,7 +1115,7 @@ _builtin-pre-commit: _builtin_require_environment
 # not require a satisfied committed mise.lock either. Its bootstrap half runs
 # `mise lock --bump` first (native resolution; no stage and no prior install),
 # then installs from the fresh lock. Only a lock owner resolves: an attached
-# member stops in _builtin_require_upg_lock_owner before any lock is written.
+# member runs `upg` on its own locks first, then aligns the workspace.
 upg: TOOL_BOOTSTRAP_LIFECYCLE := _upg_lifecycle
 upg: TOOL_BOOTSTRAP_RESOLVE := 1
 upg: _bootstrap_setup_tools
