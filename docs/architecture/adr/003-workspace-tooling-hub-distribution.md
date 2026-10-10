@@ -55,10 +55,16 @@ from that manifest. No other file may independently declare workspace membership
 
 ### 2. Root workspace and library metadata have distinct responsibilities
 
-The root `flext` project is the only native uv workspace. It owns the complete
-`tool.uv.workspace.members` list and one `tool.uv.sources.<member>` entry with
-`workspace = true` for every manifest member. Those entries select local, editable
-members only when work is orchestrated from the root.
+Operator amendment (2026-10-10): the root and every member are independent UV
+projects, each owning its physical `uv.lock` and Mise lock. No generated project
+declares `tool.uv.workspace` or `workspace = true` sources. Composition remains
+derived from `.gitmodules` through the typed workspace owner (ADR-024).
+
+The root's existing `dev` group requests every declared package member, including
+its declared extras and development groups. Root-only path sources select those
+checkouts with their declared editability. Local transitive source overrides retain
+requested extras, and corresponding constraints preserve declared bounds and markers.
+External candidate Git pins never override a declared local member.
 
 Every FLEXT distribution must be independently installable from the registry. Published
 internal runtime and optional requirements use registry-resolvable package names and
@@ -91,8 +97,11 @@ own environment and registry-resolvable FLEXT dependencies.
 All other commands execute with `uv run --project <environment-owner> --no-sync`. Checks
 and tests therefore cannot synchronize, relock, rewrite metadata, or replace the
 editable overlay implicitly. Dependency upgrades are an explicit, apply-gated `deps`
-operation that updates the SSOT. `gen` writes managed projections, and `setup`
-synchronizes the environment.
+operation that updates the SSOT. `make upg` updates a member's own locks and
+completes its convergence before invoking one root workspace upgrade for alignment.
+Failure in the member prevents root alignment; a standalone upgrade runs only itself,
+and a root upgrade never calls member upgrades back. `gen` writes managed projections,
+and `setup` synchronizes the environment without writing locks.
 
 ### 4. Generated profiles define attachment behavior
 
@@ -120,8 +129,10 @@ No profile depends on files outside its repository checkout.
   workspace. Verify dependency closure, package resources, and public runtime against
   the exact artifact; sampling members is not fleet release evidence.
 - Standalone repositories pass from temporary clones with no neighboring repositories.
-- Generated manifests are byte-idempotent; only the root contains managed
-  `workspace = true` entries.
+- Generated manifests are byte-idempotent; no native workspace table or
+  `workspace = true` residue survives. Only the root selects local member paths.
+- An attached member writes its own lock in the primary checkout, then aligns the
+  root once. The native lock-owner guard rejects any remaining shared-lock topology.
 
 ## References
 
