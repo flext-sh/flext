@@ -50,7 +50,10 @@ FLEXT configuration, owns them.
 ## Failure semantics
 
 - The first exception and raw traceback escape.
-- Warnings, skips, empty collection, missing tools, and suppressed failures are red.
+- Warnings, unexpected skips, empty collection, missing tools, and suppressed failures
+  are red. Connectivity prerequisite skips follow the root `AGENTS.md` section
+  "Production Readiness And Connectivity Tests" and do not prove connectivity or
+  production readiness.
 - No retry, fallback, catch-based normalization, compatibility path, or partial
   execution may turn a failure green.
 - A failing test is repaired at the runtime owner or, when the test contradicts observed
@@ -65,9 +68,10 @@ cache:
 make test
 ```
 
-Never invoke the underlying test runner, clear Testmon state, or add project, file,
-pattern, changed-only, fix, or phase selectors. Run the complete quality gate through
-its root owner:
+For one declared test file, use the root dispatcher's
+`make test-file FILE=<repository-relative-path>`. Never invoke the underlying test
+runner, clear Testmon state, or add unsupported selectors. Run the complete quality
+gate through its root owner:
 
 ```bash
 make check

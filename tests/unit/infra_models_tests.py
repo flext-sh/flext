@@ -11,9 +11,8 @@ from pathlib import Path
 
 import pytest
 
-from tests import c, m, t
 from flext_tests import tm
-from tests import infra
+from tests import c, infra, m, t
 
 
 class TestsFlextRootInfraModels:

@@ -9,8 +9,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated
 
-from tests import m, u
 from flext_tests import FlextTestsModels
+from tests import m, u
 
 
 class TestsFlextRootModels(m, FlextTestsModels):
