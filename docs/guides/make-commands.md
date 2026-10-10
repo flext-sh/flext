@@ -147,6 +147,19 @@ The root dispatcher resolves workspace scope from its typed topology. Generated 
 surfaces and documentation are changed at their template or configuration owner, then
 regenerated with `make gen`.
 
+An omitted project selection in the workspace checker covers the root and every
+declared first-party member. Standalone checkouts cover their own root. Manifest
+exclusions remain authoritative, and literal file validation keeps its owning-project
+scope.
+
+`make mod` validates the rule fixtures, then invokes the existing Rope census to
+normalize constant consumers before the structural fixed-point cycle. The census
+derives public `c.*` paths from live facade declarations and inheritance, rewrites
+qualified import bindings, and preserves the declaration parts composing `c`.
+Config and settings bootstrap owners retain their dedicated default declarations.
+Publication requires unchanged source identities; affected projects are checked
+through the canonical lint, Pyrefly, and fresh-import gates.
+
 `make gen-footprint` calls the public `flext-infra codegen footprint` diagnostic
 for the root and its declared physical members. It reads the typed pending journal
 before planning, without acquiring leases, recovering a transaction, or publishing
