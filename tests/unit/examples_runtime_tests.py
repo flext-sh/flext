@@ -51,9 +51,9 @@ class TestsFlextRootExamplesRuntime:
         ) -> None:
             """Execute the real repeated-project CLI route and retain its exit."""
             root = FlextRootCheckChangedProjects.REPOSITORY_ROOT
-            declared = tm.ok(u.Infra.git_declared_submodule_paths(root))
+            declared = tm.ok(u.Infra.git_submodule_declarations(root))
             projects = tuple(
-                sorted(declared, key=Path.as_posix)[:2],
+                sorted((item.path for item in declared), key=Path.as_posix)[:2],
             )
             tm.that(len(projects), eq=2)
             gate = "unregistered_" + "_".join(

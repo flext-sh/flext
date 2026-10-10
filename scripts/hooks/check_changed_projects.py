@@ -33,14 +33,14 @@ class FlextRootCheckChangedProjects:
             The resulting ``int``.
 
         """
-        declared = u.Infra.git_declared_submodule_paths(cls.REPOSITORY_ROOT)
+        declared = u.Infra.git_submodule_declarations(cls.REPOSITORY_ROOT)
         if declared.failure:
             return cli.finalize_result(declared)
         changed = tuple(cls._relative_to_workspace(raw) for raw in files)
         projects = {
-            project.as_posix()
+            project.path.as_posix()
             for project in declared.value
-            if any(path.is_relative_to(project) for path in changed)
+            if any(path.is_relative_to(project.path) for path in changed)
         }
         if not projects:
             return 0
