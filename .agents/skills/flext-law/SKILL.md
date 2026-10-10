@@ -163,6 +163,9 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   fixtures instead of mocks, internal assertions, copied setup, or hardcoded
   project-owned values. Every test run retains the canonical testmon cache, including an
   explicitly requested full run.
+- Connectivity-test prerequisites and availability skips follow root `AGENTS.md`,
+  section "Production Readiness And Connectivity Tests"; they never waive failures
+  from an available service or disable pure unit/integration behavior checks.
 
 ## Fleet integration continuity
 

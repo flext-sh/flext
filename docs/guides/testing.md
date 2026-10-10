@@ -32,7 +32,9 @@ environment. Do not assume another city's activation or connection settings.
   in tests, examples, or golden files.
 - Use real, bounded dependencies. Mocks, fakes, stubs, patching, monkeypatch mutation,
   and assertions about private construction are prohibited.
-- Treat warnings, skips, empty collection, and suppressed failures as red.
+- Treat warnings, unexpected skips, empty collection, and suppressed failures as red.
+  Connectivity prerequisite skips follow root `AGENTS.md`, section "Production
+  Readiness And Connectivity Tests"; they never prove the omitted service works.
 
 Private attribute usage is enforced by Pyright's resolved owner and export semantics in
 source, tests, examples, and scripts according to the typed path policy. The
@@ -101,7 +103,8 @@ make test-full
 ```
 
 The canonical test-verb law is `~/agents/rules/workflow/canonical-commands.md`.
-`make test-full` is local-only, without Testmon or a time limit. CI and
+`make test-full` runs incremental selection and then the complete suite, including
+external and CI-excluded markers, through the same persistent Testmon cache. CI and
 pre-push use `make test`; pre-commit runs no tests. Any preceding incremental phase
 retains a separate receipt and cannot stand in for complete-suite execution. A runner
 that violates this contract is repaired at its owner, not bypassed with raw pytest.
@@ -121,7 +124,9 @@ Each phase retains its mode, database, raw process outcome, collection manifest,
 diagnostics. The latest receipt names the current attempt even when collection fails.
 Warning totals include selection, inventory, and suite occurrences, with blocking and
 explicitly suspended warnings reported separately. The existing non-strict MRO
-enforcement suspension remains visible in those receipts; skips still block acceptance.
+enforcement suspension remains visible in those receipts. Unexpected skips block
+acceptance; connectivity prerequisite skips retain their explicit unavailable reason
+and never establish production readiness.
 
 Zero execution is accepted only as a typed incremental `cache_hit`: the database must
 pass integrity checks, a complete nonempty inventory must be entirely deselected, and
@@ -165,9 +170,10 @@ scan to include submodules. A module target must resolve in exactly one selected
 Missing or ambiguous targets fail before publication, and repeated generation verifies
 the complete selected set.
 
-Selectors such as project names, file names, patterns, or changed-only flags are not
-part of this command surface. If a required workflow is missing, repair the root Make
-owner and rerun its declared verb.
+The root exposes `make test-file FILE=<repository-relative-path>` for one declared test
+file and `make file-gate FILE=<repository-relative-path>` for that file's static gates.
+Do not add unsupported selectors to the standard verbs. If a required workflow is
+missing, repair the root Make owner and rerun its declared verb.
 
 ## Generated documentation
 
