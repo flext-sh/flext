@@ -443,6 +443,29 @@ operations on the unchanged candidate; later mutations invalidate affected recei
 new stability cycle starts before the full fleet has a green integrated SHA receipt,
 without warnings or residual findings.
 
+### Production Readiness And Connectivity Tests
+
+Complete the declared scope end to end. Adopt existing defects and shared work as
+owned inputs and repair them by fix-forward; their age or provenance never exempts
+them from correction. Production readiness requires actual runtime evidence with
+no errors, warnings, failed behavior, or incomplete paths, not just passing tests.
+
+Across every FLEXT project, tests that require an external service may execute only
+when a test environment is configured in a local, untracked `.env` and is reachable.
+The shared pytest applicability owner, consumed by each project's `conftest.py`,
+must skip those connectivity tests before service-dependent fixtures run when the
+test environment is absent or unreachable. Never commit `.env` or expose its
+credentials in diagnostics. Docker-dependent connectivity tests must also skip in
+CI. Pure unit and integration tests remain active; neither their location nor an
+`integration` marker alone makes them connectivity tests.
+
+Availability skips report an unmet test prerequisite, never successful connectivity
+or production validation. Once the test environment is available, authentication,
+protocol, application, and assertion failures remain failures. Tests exercise real
+public behavior and validate the runtime contract; they never redefine that contract
+to accommodate implementation details. This operator rule (2026-10-10) supersedes
+older no-skip and capability-deselection instructions for these connectivity tests.
+
 The coordinator owns `flext-itpd1.3` recovery ordering, Beads, serialized gates,
 integration, and closure. Sibling workstreams `flext-itpd1.2` (documentation) and
 `flext-itpd1.4` (Make machinery) deliver bounded repairs under that coordination.
