@@ -17,11 +17,10 @@ from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
 from scripts.hooks.check_changed_projects import FlextRootCheckChangedProjects
 
 import flext_ldif
-from flext import c
 from flext_cli import cli
-from flext_infra import c as infra_constants, u
 from flext_ldif import FlextLdif
 from flext_tests import tm
+from tests import c, m, p, u
 
 
 class TestsFlextRootExamplesRuntime:
@@ -57,7 +56,7 @@ class TestsFlextRootExamplesRuntime:
             )
             tm.that(len(projects), eq=2)
             gate = "unregistered_" + "_".join(
-                sorted(infra_constants.Infra.ALLOWED_GATES),
+                sorted(c.Infra.ALLOWED_GATES),
             )
             native = tm.ok(
                 u.Cli.run_raw(
@@ -203,10 +202,12 @@ class TestsFlextRootExamplesRuntime:
                 }),
             )
 
-            result = processor.process_acls_with_pipeline(
-                entry=entry,
-                server_type=flext_ldif.c.Ldif.ServerTypes.OUD,
-                required_permissions=flext_ldif.m.Ldif.AclPermissions(read=True),
+            result: p.Result[m.Ldif.AclEvaluationResult] = (
+                processor.process_acls_with_pipeline(
+                    entry=entry,
+                    server_type=flext_ldif.c.Ldif.ServerTypes.OUD,
+                    required_permissions=flext_ldif.m.Ldif.AclPermissions(read=True),
+                )
             )
 
             tm.that(result.success, eq=True)

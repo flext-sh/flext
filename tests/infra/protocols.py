@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from flext import p
+from tests import p
 from flext_tests import FlextTestsProtocols
 
 if TYPE_CHECKING:

@@ -11,7 +11,7 @@ from collections.abc import Mapping
 from importlib.resources import files
 from pathlib import Path
 
-from flext import t, u
+from tests import t, u
 from flext_tests import tm
 
 

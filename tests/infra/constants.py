@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from flext import c
+from tests import c
 from flext_tests import FlextTestsConstants
 
 

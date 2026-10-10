@@ -940,7 +940,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "annotated-types", specifier = ">=0.8.0" },
-    { name = "beartype", specifier = ">=0.22.9" },
+    { name = "beartype", specifier = ">=0.23.0" },
     { name = "dependency-injector", specifier = ">=4.49.1" },
     { name = "flext-cli", editable = "flext-cli" },
     { name = "flext-core", editable = "flext-core" },
