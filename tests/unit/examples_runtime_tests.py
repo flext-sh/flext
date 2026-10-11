@@ -20,8 +20,7 @@ import flext_cli
 import flext_ldif
 from flext_cli import cli
 from flext_ldif import FlextLdif
-from flext_tests import tm
-from tests import c, m, p, u
+from tests import c, m, p, tm, u
 
 
 class TestsFlextRootExamplesRuntime:

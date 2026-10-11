@@ -431,7 +431,7 @@ class FlextRootCompleteWorkflowExample:
                     "workflow_status": c.Status.COMPLETED,
                 })
             )
-            summary: t.JsonMapping = t.json_mapping_adapter().validate_python({
+            summary: t.JsonMapping = u.json_mapping_adapter().validate_python({
                 "workflow_id": workflow_result.workflow_id,
                 "workflow_status": workflow_result.workflow_status,
                 "total_stages": workflow_result.total_stages,
@@ -573,7 +573,7 @@ class FlextRootCompleteWorkflowExample:
                 "cn": f"user{i}",
                 "sn": f"User{i}",
             }
-            item: t.JsonMapping = t.json_mapping_adapter().validate_python({
+            item: t.JsonMapping = u.json_mapping_adapter().validate_python({
                 "id": f"item_{i}",
                 "dn": f"cn=user{i},ou=users,dc=example,dc=com",
                 "name": f"User {i}",

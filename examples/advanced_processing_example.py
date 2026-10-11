@@ -81,7 +81,7 @@ class FlextRootAdvancedProcessingExample:
                     operations.append(stage_func)
                 else:
                     return r[m.Root.PipelineStageData].fail(f"Unknown stage: {stage}")
-            current_data: t.JsonMapping = t.json_mapping_adapter().validate_python(
+            current_data: t.JsonMapping = u.json_mapping_adapter().validate_python(
                 self.model_dump(mode="json", include={"items"}),
             )
             for operation in operations:
@@ -140,7 +140,7 @@ class FlextRootAdvancedProcessingExample:
             field_distribution: t.JsonMapping = {
                 str(key): value for key, value in field_counts.items()
             }
-            analysis: t.JsonMapping = t.json_mapping_adapter().validate_python({
+            analysis: t.JsonMapping = u.json_mapping_adapter().validate_python({
                 "total_processed": len(items_to_analyze),
                 "field_distribution": field_distribution,
                 "avg_complexity": sum(complexity_scores) / len(complexity_scores)
@@ -149,7 +149,7 @@ class FlextRootAdvancedProcessingExample:
                 "validation_summary": validation_summary,
                 "processing_efficiency": processing_efficiency * 100,
             })
-            result_data: t.JsonMapping = t.json_mapping_adapter().validate_python({
+            result_data: t.JsonMapping = u.json_mapping_adapter().validate_python({
                 **data,
                 "analysis": analysis,
             })
@@ -198,7 +198,7 @@ class FlextRootAdvancedProcessingExample:
                 for future in as_completed(future_to_item):
                     processed_items.append(future.result())
             processing_time = time.time() - start_time
-            result_data: t.JsonMapping = t.json_mapping_adapter().validate_python({
+            result_data: t.JsonMapping = u.json_mapping_adapter().validate_python({
                 **data,
                 "processed_items": processed_items,
                 "processing_time": processing_time,
@@ -239,7 +239,7 @@ class FlextRootAdvancedProcessingExample:
                     return r[m.Root.PipelineStageData].fail(
                         f"Validation failed: {result.error}",
                     )
-            result_data: t.JsonMapping = t.json_mapping_adapter().validate_python({
+            result_data: t.JsonMapping = u.json_mapping_adapter().validate_python({
                 **data,
                 "validation_results": [
                     validation.model_dump(mode="json")

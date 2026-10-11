@@ -117,7 +117,7 @@ do ecossistema FLEXT para identificar e corrigir **TODOS os usos de funções de
 
 ```python
 from flext_core import m, p
-from flext_tests import tm
+from tests import tm
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
 tm.that(isinstance(document, p.Model), eq=True)
@@ -128,7 +128,7 @@ tm.that(document.model_dump(mode="json"), keys=["data"])
 
 ```python
 from flext_core import m
-from flext_tests import tm
+from tests import tm
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
 tm.that(document.data, keys=["name"], length=len(document.data))
@@ -138,7 +138,7 @@ tm.that(document.data, keys=["name"], length=len(document.data))
 
 ```python
 from flext_core import t, u
-from flext_tests import tm
+from tests import tm
 
 items: t.StrSequence = ("first", "second")
 converted = u.to_str_list(items)
@@ -229,7 +229,7 @@ with tf.files({"example.txt": "example"}) as paths:
 
 ```python
 from flext_core import r
-from flext_tests import tm
+from tests import tm
 
 payload = "example"
 tm.that(tm.ok(r[str].ok(payload)), eq=payload)
@@ -239,7 +239,7 @@ tm.that(tm.ok(r[str].ok(payload)), eq=payload)
 
 ```python
 from flext_core import r, settings
-from flext_tests import tm
+from tests import tm
 
 result = r[bool].ok(settings.debug)
 tm.that(tm.ok(result), eq=settings.debug)
@@ -249,7 +249,7 @@ tm.that(tm.ok(result), eq=settings.debug)
 
 ```python
 from flext_core import m, p, r
-from flext_tests import tm
+from tests import tm
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
 result: p.Result[p.Model] = r[p.Model].ok(document)
@@ -262,7 +262,7 @@ Alguns métodos podem aceitar parâmetros legacy que devem ser migrados:
 
 ```python
 from flext_core import m, t, u
-from flext_tests import tm
+from tests import tm
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
 items: t.StrSequence = ("first", "second")
@@ -441,7 +441,7 @@ input; it does not claim to test a retired method's warning contract:
 ```python
 import warnings
 
-from flext_tests import tm
+from tests import tm
 
 with warnings.catch_warnings(record=True) as recorded:
     warnings.simplefilter("always")
@@ -532,7 +532,7 @@ Todos os testes devem ser marcados explicitamente:
 import pytest
 
 from flext_core import m
-from flext_tests import tm
+from tests import tm
 
 
 @pytest.mark.unit
@@ -694,7 +694,7 @@ find . -name "conftest.py" | wc -l # Deve retornar 1 (apenas em ~/flext)
 
 ```python
 from flext_core import m
-from flext_tests import tm
+from tests import tm
 
 
 class TestsDocument:
@@ -729,7 +729,7 @@ not a following list item or its Markdown delimiter as part of the program.
 
 ```python
 from flext_core import m, r, settings
-from flext_tests import tm
+from tests import tm
 
 
 class TestsDocument:
@@ -787,7 +787,7 @@ TestsDocument.test_settings_input()
 
 ```python
 from flext_core import m, p, t
-from flext_tests import tm
+from tests import tm
 
 
 def generate_documents(count: int) -> t.SequenceOf[p.Model]:
