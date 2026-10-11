@@ -66,6 +66,14 @@ checkouts with their declared editability. Local transitive source overrides ret
 requested extras, and corresponding constraints preserve declared bounds and markers.
 External candidate Git pins never override a declared local member.
 
+The `codegen` group remains the canonical bootstrap unit; it does not collect
+all member development dependencies. Member groups compose into `dev`. The
+generator marks only its added `dev` entries with inline TOML provenance comments.
+Subsequent renders remove those owned entries before deriving the current member
+environment, while unmarked CUSTOM requirements retain their constraints and
+markers. This metadata records projection ownership, not another member registry
+or dependency source of truth.
+
 Every FLEXT distribution must be independently installable from the registry. Published
 internal runtime and optional requirements use registry-resolvable package names and
 version ranges derived by the typed dependency/version owner. They must not require

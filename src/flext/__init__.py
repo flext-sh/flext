@@ -21,6 +21,9 @@ if TYPE_CHECKING:
     from flext.settings import FlextRootSettings, settings
     from flext.typings import FlextRootTypes, t
     from flext.utilities import FlextRootUtilities, u
+    from flext_oracle_oic import d, h, r, s, x
+    from flext_oracle_wms import e
+    from flext_tests import api, td, tf, tk, tm
 
 
 __all__: tuple[str, ...] = (
@@ -32,14 +35,25 @@ __all__: tuple[str, ...] = (
     "FlextRootSettings",
     "FlextRootTypes",
     "FlextRootUtilities",
+    "api",
     "c",
     "config",
+    "d",
+    "e",
+    "h",
     "m",
     "main",
     "p",
+    "r",
+    "s",
     "settings",
     "t",
+    "td",
+    "tf",
+    "tk",
+    "tm",
     "u",
+    "x",
 )
 
 install_lazy_exports(
@@ -54,14 +68,25 @@ install_lazy_exports(
         "FlextRootSettings": ".settings",
         "FlextRootTypes": ".typings",
         "FlextRootUtilities": ".utilities",
+        "api": "flext_tests",
         "c": ".constants",
         "config": ".config",
+        "d": "flext_oracle_oic",
+        "e": "flext_oracle_wms",
+        "h": "flext_oracle_oic",
         "m": ".models",
         "main": ".cli",
         "p": ".protocols",
+        "r": "flext_oracle_oic",
+        "s": "flext_oracle_oic",
         "settings": ".settings",
         "t": ".typings",
+        "td": "flext_tests",
+        "tf": "flext_tests",
+        "tk": "flext_tests",
+        "tm": "flext_tests",
         "u": ".utilities",
+        "x": "flext_oracle_oic",
     }),
     public_exports=__all__,
 )
