@@ -21,6 +21,9 @@ repository:
 integration:
   provider: flext-sh
   branch: "0.12.0-dev"
+candidate_bootstrap_targets:
+  - path: .
+    what: makefile
 project:
   package_name: "flext"
   class_stem: "Flext"
