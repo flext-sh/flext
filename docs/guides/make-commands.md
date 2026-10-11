@@ -143,14 +143,26 @@ not overwritten; no shared latest writer is published. Consumers of
 `u.Infra.check_report_findings` pass the explicit invocation directory printed by
 the CLI, never the shared base or an implicitly selected latest run.
 
-The root dispatcher resolves workspace scope from its typed topology. Generated Make
-surfaces and documentation are changed at their template or configuration owner, then
-regenerated with `make gen`.
+Root `make check` currently checks only the root project; it is not a fleet-wide
+receipt. Run a member's standard verb from the workspace root with
+`make -f <member>/Makefile <verb>`, for example:
 
-An omitted project selection in the workspace checker covers the root and every
-declared first-party member. Standalone checkouts cover their own root. Manifest
-exclusions remain authoritative, and literal file validation keeps its owning-project
-scope.
+```bash
+make -f flext-meltano/Makefile check
+make -f flext-meltano/Makefile test
+make -f flext-meltano/Makefile build
+```
+
+The source template
+`flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, in its derived-paths
+and repository-root sections, binds `PROJECT_ROOT` to the selected Makefile's
+checkout rather than CWD. Attached members share the containing workspace's runtime
+environment. Standalone checkouts and member worktrees without a containing
+superproject own their runtime environment and run `make <verb>` from their own
+root. Selecting the member Makefile adds no project selector or alternate dispatcher.
+Manifest exclusions remain authoritative, and literal file validation keeps its
+owning-project scope. Generated Make surfaces and documentation are changed at their
+template or configuration owner, then regenerated with `make gen`.
 
 `make mod` validates the rule fixtures and applies declared consumer text cutovers,
 then invokes the existing Rope census before the structural fixed-point cycle. The census

@@ -156,7 +156,6 @@
   "ruff.interpreter": [
     "${workspaceFolder}/.venv/bin/python"
   ],
-  "ruff.nativeServer": true,
   "ruff.path": [
     "${workspaceFolder}/.venv/bin/ruff"
   ],

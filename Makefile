@@ -647,7 +647,7 @@ _activated-build: _builtin_require_environment
 
 
 
-examples: _builtin_require_workspace
+examples: _builtin_require_workspace _builtin_require_examples
 
 	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _activated-examples,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-examples)
 
@@ -1091,7 +1091,8 @@ _activated-sonarcloud-issues: _builtin_require_environment
 setup: _bootstrap_setup_tools
 
 _builtin-pre-commit: _builtin_require_environment
-	@$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gates "format,lint,markdown,conflict-markers"
+	@$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gates "lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,conflict-markers,loc-cap,runtime-census,fresh-import,index-declarations,layout"
+	+@CI=Y $(SELF_MAKE) test
 
 # `upg` builds the environment from the locks it writes, so like `setup` it
 # must not require an existing environment, and as the only resolver it must
@@ -1114,7 +1115,7 @@ setup:
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make setup to execute it.'
 
 pre-commit:
-	@printf '  %-16s %s\n' 'pre-commit' 'Approve a commit through the fast external gates the gate registry declares; no setup and no tests (the pre-commit hook entry).'
+	@printf '  %-16s %s\n' 'pre-commit' 'Approve a commit through the CI check partition and incremental tests with the persistent testmon database.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make pre-commit to execute it.'
 
 upg:
@@ -1134,7 +1135,7 @@ build:
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make build to execute it.'
 
 examples:
-	@printf '  %-16s %s\n' 'examples' 'Run the workspace public runtime examples.'
+	@printf '  %-16s %s\n' 'examples' 'Run this repository'"'"'s explicitly declared public runtime examples module.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make examples to execute it.'
 
 check:
@@ -1320,7 +1321,7 @@ _builtin-help:
 
 	@printf '  %-16s %s\n' 'setup' 'Provision the declared environment and hooks.';
 
-	@printf '  %-16s %s\n' 'pre-commit' 'Approve a commit through the fast external gates the gate registry declares; no setup and no tests (the pre-commit hook entry).';
+	@printf '  %-16s %s\n' 'pre-commit' 'Approve a commit through the CI check partition and incremental tests with the persistent testmon database.';
 
 	@printf '  %-16s %s\n' 'upg' 'Resolve the newest declared releases, write the uv and mise locks, then prove the upgraded tree still converges; gates stay with make check.';
 
@@ -1330,7 +1331,7 @@ _builtin-help:
 
 	@printf '  %-16s %s\n' 'build' 'Build the project distribution artifacts.';
 
-	@printf '  %-16s %s\n' 'examples' 'Run the workspace public runtime examples.';
+	@printf '  %-16s %s\n' 'examples' 'Run this repository'"'"'s explicitly declared public runtime examples module.';
 
 	@printf '  %-16s %s\n' 'check' 'Run the configured non-test gates except the dedicated smells audit.';
 
@@ -1854,10 +1855,7 @@ _builtin_test_file_all: _builtin_require_environment
 	scratch_tmp="$$(cd "$$scratch/tmp" && pwd -P)"; \
 	TMPDIR="$$scratch_tmp"; TMP="$$scratch_tmp"; TEMP="$$scratch_tmp"; \
 	export TMPDIR TMP TEMP; \
-	file_executed=0; \
-	if TESTMON_DATAFILE="$$database" $(PYTEST_BOUNDED) $(call UV_RUN,$(PROJECT_INFRA_PYTHONPATH)) python -m flext_infra._pytest_entry file; then file_executed=1; else phase_status=$$?; case "$$phase_status" in 5) printf 'INFO: test-file file NOT EXECUTED: no requested tests in phase\n' ;; *) exit "$$phase_status" ;; esac; fi; \
-	if TESTMON_DATAFILE="$$database" $(PYTEST_BOUNDED) $(call UV_RUN,$(PROJECT_INFRA_PYTHONPATH)) python -m flext_infra._pytest_entry file-slow; then file_executed=1; else phase_status=$$?; case "$$phase_status" in 5) printf 'INFO: test-file file-slow NOT EXECUTED: no requested tests in phase\n' ;; *) exit "$$phase_status" ;; esac; fi; \
-	if [ "$$file_executed" -eq 0 ]; then printf 'ERROR: test-file executed zero requested tests\n' >&2; exit 5; fi
+	TESTMON_DATAFILE="$$database" $(PYTEST_BOUNDED) $(call UV_RUN,$(PROJECT_INFRA_PYTHONPATH)) python -m flext_infra._pytest_entry file
 
 # Literal-file selection and verdicts belong to the existing canonical checker.
 # Export the raw Make value instead of interpolating operator input into shell code.
@@ -2128,7 +2126,18 @@ _builtin-build: _builtin_build_artifacts
 
 _builtin-validate-lifecycle: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) workspace validate-lifecycle --repository-root "$(PROJECT_ROOT)"
+
+.PHONY: _builtin_require_examples
+_builtin_require_examples:
+
+	@if [ ! -f "$(PROJECT_ROOT)/examples/runtime.py" ]; then \
+		printf 'ERROR: examples: declared module source is missing: %s\n' "$(PROJECT_ROOT)/examples/runtime.py" >&2; \
+		exit 2; \
+	fi
+
+
 _builtin-examples: _builtin_require_environment
+
 	@timeout --signal=TERM --kill-after=5s "120s" $(UV_RUN) python -m examples.runtime
 
 _builtin-check: _builtin_check_all

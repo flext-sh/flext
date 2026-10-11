@@ -420,11 +420,20 @@ never copies or replaces either parent.
 ## Build & Test
 
 **All commands run from the active workspace/worktree root**, never from inside a
-submodule (the root dispatcher forwards to each project). Use `make`, never bare
+submodule. Use `make`, never bare
 `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
 
+Root `make check` currently checks only the root project, not every member. To run
+a member's standard verb while keeping the workspace root as CWD, use
+`make -f <member>/Makefile <verb>` (for example,
+`make -f flext-meltano/Makefile check`). The source template
+`flext-infra/src/flext_infra/templates/project/base/Makefile.j2` derives
+`PROJECT_ROOT` from the selected Makefile, not CWD. Attached members share their
+containing workspace's runtime environment; standalone checkouts and member
+worktrees without a containing superproject own their runtime environment.
+
 ```bash
-# Standard selector-free workspace lifecycle.
+# Standard root lifecycle; each verb retains its declared scope.
 make setup
 make gen
 make mod
