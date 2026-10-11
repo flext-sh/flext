@@ -21,11 +21,11 @@ dependencies = [
   "annotated-types>=0.8.0",
   "beartype>=0.23.0",
   "dependency-injector>=4.49.1",
-  "flext-cli",
-  "flext-core",
-  "flext-infra",
-  "flext-ldif",
-  "flext-tests",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "importlib-resources>=7.1.0",
   "packaging>=26.3",
   "pydantic>=2.14.0,<3",
@@ -62,13 +62,45 @@ Homepage = "https://github.com/flext-sh/flext"
 Repository = "https://github.com/flext-sh/flext"
 
 [dependency-groups]
-codegen = ["flext-infra"]
+codegen = [
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+]
 dev = [
   "actionlint-py>=1.7.12.24",
   "bandit>=1.9.4",
   "deptry",
   "editables>=0.6",
-  "flext-tests",
+  "flext-api @ git+https://github.com/flext-sh/flext-api.git@0.12.0-dev",                             # flext: derived member environment
+  "flext-auth @ git+https://github.com/flext-sh/flext-auth.git@0.12.0-dev",                           # flext: derived member environment
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",                             # flext: derived member environment
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",                           # flext: derived member environment
+  "flext-db-oracle @ git+https://github.com/flext-sh/flext-db-oracle.git@0.12.0-dev",                 # flext: derived member environment
+  "flext-dbt-ldap @ git+https://github.com/flext-sh/flext-dbt-ldap.git@0.12.0-dev",                   # flext: derived member environment
+  "flext-dbt-ldif @ git+https://github.com/flext-sh/flext-dbt-ldif.git@0.12.0-dev",                   # flext: derived member environment
+  "flext-dbt-oracle @ git+https://github.com/flext-sh/flext-dbt-oracle.git@0.12.0-dev",               # flext: derived member environment
+  "flext-dbt-oracle-wms @ git+https://github.com/flext-sh/flext-dbt-oracle-wms.git@0.12.0-dev",       # flext: derived member environment
+  "flext-grpc @ git+https://github.com/flext-sh/flext-grpc.git@0.12.0-dev",                           # flext: derived member environment
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",                         # flext: derived member environment
+  "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",                           # flext: derived member environment
+  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",                           # flext: derived member environment
+  "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",                     # flext: derived member environment
+  "flext-observability @ git+https://github.com/flext-sh/flext-observability.git@0.12.0-dev",         # flext: derived member environment
+  "flext-oracle-oic @ git+https://github.com/flext-sh/flext-oracle-oic.git@0.12.0-dev",               # flext: derived member environment
+  "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",               # flext: derived member environment
+  "flext-plugin @ git+https://github.com/flext-sh/flext-plugin.git@0.12.0-dev",                       # flext: derived member environment
+  "flext-quality @ git+https://github.com/flext-sh/flext-quality.git@0.12.0-dev",                     # flext: derived member environment
+  "flext-tap-ldap @ git+https://github.com/flext-sh/flext-tap-ldap.git@0.12.0-dev",                   # flext: derived member environment
+  "flext-tap-ldif @ git+https://github.com/flext-sh/flext-tap-ldif.git@0.12.0-dev",                   # flext: derived member environment
+  "flext-tap-oracle @ git+https://github.com/flext-sh/flext-tap-oracle.git@0.12.0-dev",               # flext: derived member environment
+  "flext-tap-oracle-oic @ git+https://github.com/flext-sh/flext-tap-oracle-oic.git@0.12.0-dev",       # flext: derived member environment
+  "flext-tap-oracle-wms @ git+https://github.com/flext-sh/flext-tap-oracle-wms.git@0.12.0-dev",       # flext: derived member environment
+  "flext-target-ldap @ git+https://github.com/flext-sh/flext-target-ldap.git@0.12.0-dev",             # flext: derived member environment
+  "flext-target-ldif @ git+https://github.com/flext-sh/flext-target-ldif.git@0.12.0-dev",             # flext: derived member environment
+  "flext-target-oracle @ git+https://github.com/flext-sh/flext-target-oracle.git@0.12.0-dev",         # flext: derived member environment
+  "flext-target-oracle-oic @ git+https://github.com/flext-sh/flext-target-oracle-oic.git@0.12.0-dev", # flext: derived member environment
+  "flext-target-oracle-wms @ git+https://github.com/flext-sh/flext-target-oracle-wms.git@0.12.0-dev", # flext: derived member environment
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",                             # flext: derived member environment
   "hypothesis",
   "mkdocs",
   "mkdocs-autorefs",
@@ -108,6 +140,7 @@ dev = [
   "types-grpcio",
   "types-jsonschema>=4.26.0.20260518",
   "types-ldap3>=2.9.13.20260827",
+  "types-Markdown",                                                                                   # flext: derived member environment
   "types-openpyxl>=3.1.5.20260827",
   "types-paramiko>=5.0.0.20260724",
   "types-protobuf>=7.35.1.20260827",
@@ -124,6 +157,39 @@ dev = [
   "types-toml>=0.10.8.20260518",
   "vulture>=2.16",
   "yamlfix>=1.19.1",
+]
+workspace = [
+  "flext-api @ git+https://github.com/flext-sh/flext-api.git@0.12.0-dev",
+  "flext-auth @ git+https://github.com/flext-sh/flext-auth.git@0.12.0-dev",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-db-oracle @ git+https://github.com/flext-sh/flext-db-oracle.git@0.12.0-dev",
+  "flext-dbt-ldap @ git+https://github.com/flext-sh/flext-dbt-ldap.git@0.12.0-dev",
+  "flext-dbt-ldif @ git+https://github.com/flext-sh/flext-dbt-ldif.git@0.12.0-dev",
+  "flext-dbt-oracle @ git+https://github.com/flext-sh/flext-dbt-oracle.git@0.12.0-dev",
+  "flext-dbt-oracle-wms @ git+https://github.com/flext-sh/flext-dbt-oracle-wms.git@0.12.0-dev",
+  "flext-grpc @ git+https://github.com/flext-sh/flext-grpc.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
+  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
+  "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
+  "flext-observability @ git+https://github.com/flext-sh/flext-observability.git@0.12.0-dev",
+  "flext-oracle-oic @ git+https://github.com/flext-sh/flext-oracle-oic.git@0.12.0-dev",
+  "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
+  "flext-plugin @ git+https://github.com/flext-sh/flext-plugin.git@0.12.0-dev",
+  "flext-quality @ git+https://github.com/flext-sh/flext-quality.git@0.12.0-dev",
+  "flext-tap-ldap @ git+https://github.com/flext-sh/flext-tap-ldap.git@0.12.0-dev",
+  "flext-tap-ldif @ git+https://github.com/flext-sh/flext-tap-ldif.git@0.12.0-dev",
+  "flext-tap-oracle @ git+https://github.com/flext-sh/flext-tap-oracle.git@0.12.0-dev",
+  "flext-tap-oracle-oic @ git+https://github.com/flext-sh/flext-tap-oracle-oic.git@0.12.0-dev",
+  "flext-tap-oracle-wms @ git+https://github.com/flext-sh/flext-tap-oracle-wms.git@0.12.0-dev",
+  "flext-target-ldap @ git+https://github.com/flext-sh/flext-target-ldap.git@0.12.0-dev",
+  "flext-target-ldif @ git+https://github.com/flext-sh/flext-target-ldif.git@0.12.0-dev",
+  "flext-target-oracle @ git+https://github.com/flext-sh/flext-target-oracle.git@0.12.0-dev",
+  "flext-target-oracle-oic @ git+https://github.com/flext-sh/flext-target-oracle-oic.git@0.12.0-dev",
+  "flext-target-oracle-wms @ git+https://github.com/flext-sh/flext-target-oracle-wms.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
 ]
 
 [tool.codespell]
@@ -476,13 +542,13 @@ notice-rgx = "Copyright \\(c\\) \\d{4} \\S[^\\n]*\\. All rights reserved\\."
 [tool.ruff.lint.flake8-type-checking]
 runtime-evaluated-base-classes = [
   "examples.m.BaseModel",
-  "flext.m.Value",
   "flext_core.FlextConfig",
   "flext_core.FlextSettings",
   "flext_infra.m.BaseModel",
   "flext_tests.FlextTestsServiceBase",
   "flext_tests.FlextTestsUtilities.Tests",
   "pydantic.BaseModel",
+  "tests.m.Value",
 ]
 
 [tool.ruff.lint.flake8-tidy-imports]
@@ -576,7 +642,6 @@ split-on-trailing-comma = false
   "boolean-positional-value-in-call",
   "boolean-type-hint-positional-argument",
   "compare-to-empty-string",
-  "import-private-name",
   "magic-value-comparison",
   "mutable-class-default",
   "no-self-use",
@@ -584,59 +649,7 @@ split-on-trailing-comma = false
   "pytest-fixture-autouse",
   "too-many-public-methods",
 ]
-"**/tests/python/**" = ["raise-vanilla-args"]
 "**/xlsx.py" = ["import-outside-top-level"]
-"scripts/**" = [
-  "any-type",
-  "avoidable-escaped-quote",
-  "banned-api",
-  "blank-line-after-function",
-  "boolean-default-value-positional-argument",
-  "boolean-type-hint-positional-argument",
-  "builtin-open",
-  "commented-out-code",
-  "error-instead-of-exception",
-  "f-string-in-exception",
-  "if-exp-instead-of-or-operator",
-  "import-private-name",
-  "invalid-module-name",
-  "literal-membership",
-  "logging-string-concat",
-  "magic-value-comparison",
-  "manual-list-comprehension",
-  "manual-list-copy",
-  "missing-blank-line-after-summary",
-  "missing-maxsplit-arg",
-  "multi-line-summary-first-line",
-  "multiple-starts-ends-with",
-  "non-lowercase-variable-in-function",
-  "noqa-comments",
-  "os-path-abspath",
-  "os-path-dirname",
-  "os-path-exists",
-  "os-path-join",
-  "path-constructor-current-directory",
-  "print",
-  "raise-vanilla-args",
-  "raw-string-in-exception",
-  "read-whole-file",
-  "relative-imports",
-  "repeated-append",
-  "runtime-cast-value",
-  "shebang-not-executable",
-  "undocumented-public-class",
-  "undocumented-public-function",
-  "undocumented-public-init",
-  "undocumented-public-method",
-  "unnecessary-multiline-docstring",
-  "unsorted-dunder-all",
-  "unspecified-encoding",
-  "unused-function-argument",
-  "unused-noqa",
-  "used-dummy-variable",
-  "verbose-raise",
-  "write-whole-file",
-]
 "scripts/**/*.py" = [
   "commented-out-code",
   "line-too-long",
@@ -650,8 +663,21 @@ split-on-trailing-comma = false
   "subprocess-without-shell-equals-true",
   "suspicious-subprocess-import",
 ]
+"src/flext_tests/_utilities/environment.py" = [
+  "start-process-with-partial-path",
+  "subprocess-without-shell-equals-true",
+  "suspicious-subprocess-import",
+]
 "tests/**/*.py" = ["assert"]
 "tests/test_snapshot_drill.py" = ["import-private-name"]
+"tests/unit/test_capability_collection.py" = [
+  "line-too-long",
+  "missing-copyright-notice",
+  "start-process-with-partial-path",
+  "subprocess-without-shell-equals-true",
+  "suspicious-subprocess-import",
+  "undocumented-public-method",
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -679,11 +705,7 @@ whitelines = 1
 
 [tool.uv]
 link-mode = "copy"
-constraint-dependencies = ["mypy<2.4.0"]
-environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
-
-[tool.uv.workspace]
-members = [
+override-dependencies = [
   "flext-api",
   "flext-auth",
   "flext-cli",
@@ -716,6 +738,41 @@ members = [
   "flext-tests",
   "flext-web",
 ]
+constraint-dependencies = [
+  "flext-api",
+  "flext-auth",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-dbt-ldap",
+  "flext-dbt-ldif",
+  "flext-dbt-oracle",
+  "flext-dbt-oracle-wms",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-ldif",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tap-ldap",
+  "flext-tap-ldif",
+  "flext-tap-oracle",
+  "flext-tap-oracle-oic",
+  "flext-tap-oracle-wms",
+  "flext-target-ldap",
+  "flext-target-ldif",
+  "flext-target-oracle",
+  "flext-target-oracle-oic",
+  "flext-target-oracle-wms",
+  "flext-tests",
+  "flext-web",
+  "mypy<2.4.0",
+]
+environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 
 [[tool.uv.exclude-dependencies]]
 dependencies = ["flext-infra"]
@@ -766,94 +823,125 @@ dependencies = ["flext-tests"]
 name = "flext-infra"
 
 [tool.uv.sources.flext-api]
-workspace = true
+path = "flext-api"
+editable = true
 
 [tool.uv.sources.flext-auth]
-workspace = true
+path = "flext-auth"
+editable = true
 
 [tool.uv.sources.flext-cli]
-workspace = true
+path = "flext-cli"
+editable = true
 
 [tool.uv.sources.flext-core]
-workspace = true
+path = "flext-core"
+editable = true
 
 [tool.uv.sources.flext-db-oracle]
-workspace = true
+path = "flext-db-oracle"
+editable = true
 
 [tool.uv.sources.flext-dbt-ldap]
-workspace = true
+path = "flext-dbt-ldap"
+editable = true
 
 [tool.uv.sources.flext-dbt-ldif]
-workspace = true
+path = "flext-dbt-ldif"
+editable = true
 
 [tool.uv.sources.flext-dbt-oracle]
-workspace = true
+path = "flext-dbt-oracle"
+editable = true
 
 [tool.uv.sources.flext-dbt-oracle-wms]
-workspace = true
+path = "flext-dbt-oracle-wms"
+editable = true
 
 [tool.uv.sources.flext-grpc]
-workspace = true
+path = "flext-grpc"
+editable = true
 
 [tool.uv.sources.flext-infra]
-workspace = true
+path = "flext-infra"
+editable = true
 
 [tool.uv.sources.flext-ldap]
-workspace = true
+path = "flext-ldap"
+editable = true
 
 [tool.uv.sources.flext-ldif]
-workspace = true
+path = "flext-ldif"
+editable = true
 
 [tool.uv.sources.flext-meltano]
-workspace = true
+path = "flext-meltano"
+editable = true
 
 [tool.uv.sources.flext-observability]
-workspace = true
+path = "flext-observability"
+editable = true
 
 [tool.uv.sources.flext-oracle-oic]
-workspace = true
+path = "flext-oracle-oic"
+editable = true
 
 [tool.uv.sources.flext-oracle-wms]
-workspace = true
+path = "flext-oracle-wms"
+editable = true
 
 [tool.uv.sources.flext-plugin]
-workspace = true
+path = "flext-plugin"
+editable = true
 
 [tool.uv.sources.flext-quality]
-workspace = true
+path = "flext-quality"
+editable = true
 
 [tool.uv.sources.flext-tap-ldap]
-workspace = true
+path = "flext-tap-ldap"
+editable = true
 
 [tool.uv.sources.flext-tap-ldif]
-workspace = true
+path = "flext-tap-ldif"
+editable = true
 
 [tool.uv.sources.flext-tap-oracle]
-workspace = true
+path = "flext-tap-oracle"
+editable = true
 
 [tool.uv.sources.flext-tap-oracle-oic]
-workspace = true
+path = "flext-tap-oracle-oic"
+editable = true
 
 [tool.uv.sources.flext-tap-oracle-wms]
-workspace = true
+path = "flext-tap-oracle-wms"
+editable = true
 
 [tool.uv.sources.flext-target-ldap]
-workspace = true
+path = "flext-target-ldap"
+editable = true
 
 [tool.uv.sources.flext-target-ldif]
-workspace = true
+path = "flext-target-ldif"
+editable = true
 
 [tool.uv.sources.flext-target-oracle]
-workspace = true
+path = "flext-target-oracle"
+editable = true
 
 [tool.uv.sources.flext-target-oracle-oic]
-workspace = true
+path = "flext-target-oracle-oic"
+editable = true
 
 [tool.uv.sources.flext-target-oracle-wms]
-workspace = true
+path = "flext-target-oracle-wms"
+editable = true
 
 [tool.uv.sources.flext-tests]
-workspace = true
+path = "flext-tests"
+editable = true
 
 [tool.uv.sources.flext-web]
-workspace = true
+path = "flext-web"
+editable = true
