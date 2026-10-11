@@ -14,17 +14,31 @@ from flext_core import install_lazy_exports
 
 if TYPE_CHECKING:
     from examples._constants import ExamplesFlextRootConstants
-    from flext import c, config, m, p, t, u
+    from flext import c, config, d, h, m, p, r, t, u, x
+    from flext_oracle_oic import s
+    from flext_oracle_wms import e
+    from flext_tests import api, td, tf, tk, tm
 
 
 __all__: tuple[str, ...] = (
     "ExamplesFlextRootConstants",
+    "api",
     "c",
     "config",
+    "d",
+    "e",
+    "h",
     "m",
     "p",
+    "r",
+    "s",
     "t",
+    "td",
+    "tf",
+    "tk",
+    "tm",
     "u",
+    "x",
 )
 
 install_lazy_exports(
@@ -32,12 +46,23 @@ install_lazy_exports(
     globals(),
     MappingProxyType({
         "ExamplesFlextRootConstants": "._constants",
+        "api": "flext_tests",
         "c": "flext",
         "config": "flext",
+        "d": "flext",
+        "e": "flext_oracle_wms",
+        "h": "flext",
         "m": "flext",
         "p": "flext",
+        "r": "flext",
+        "s": "flext_oracle_oic",
         "t": "flext",
+        "td": "flext_tests",
+        "tf": "flext_tests",
+        "tk": "flext_tests",
+        "tm": "flext_tests",
         "u": "flext",
+        "x": "flext",
     }),
     public_exports=__all__,
 )

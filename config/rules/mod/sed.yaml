@@ -48,22 +48,11 @@ rules:
     description: Import the public utilities facade used by executable examples.
     include:
       - docs/projects/flext-api/README.md
-      - docs/projects/flext-ldap.md
       - docs/projects/flext-ldif.md
-      - docs/projects/flext-observability.md
       - docs/projects/flext-plugin.md
       - docs/projects/flext-quality.md
     find: '^from (flext_(?:api|ldap|ldif|observability|plugin|quality)) import (?![^\n]*\bu\b)([^\n]+)$'
     replace: 'from \1 import \2, u'
-    flags: [MULTILINE]
-  - id: docs-auth-read-password-from-user
-    description: Obtain the quick-start credential at runtime instead of embedding it.
-    include: [docs/projects/flext-auth.md]
-    find: '(?<!from getpass import getpass\n\n)^from flext_auth import FlextAuth$'
-    replace: |-
-      from getpass import getpass
-
-      from flext_auth import FlextAuth
     flags: [MULTILINE]
   - id: docs-auth-bind-runtime-password
     description: Reuse the prompted password across registration and authentication.
