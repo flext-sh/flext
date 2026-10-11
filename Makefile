@@ -123,6 +123,7 @@ REPOSITORY_ROOT_REL := .
 # Computed: MANAGED_GITLINKS mirrors the read-only local .gitmodules topology.
 WORKSPACE_SUBPROJECTS := flext-api flext-auth flext-cli flext-core flext-db-oracle flext-dbt-ldap flext-dbt-ldif flext-dbt-oracle flext-dbt-oracle-wms flext-grpc flext-infra flext-ldap flext-ldif flext-meltano flext-observability flext-oracle-oic flext-oracle-wms flext-plugin flext-quality flext-tap-ldap flext-tap-ldif flext-tap-oracle flext-tap-oracle-oic flext-tap-oracle-wms flext-target-ldap flext-target-ldif flext-target-oracle flext-target-oracle-oic flext-target-oracle-wms flext-tests flext-web
 MANAGED_GITLINKS :=$(WORKSPACE_SUBPROJECTS)
+WORKSPACE_EDITABLES := $(PROJECT_NAME):. flext-api:flext-api flext-auth:flext-auth flext-cli:flext-cli flext-core:flext-core flext-db-oracle:flext-db-oracle flext-dbt-ldap:flext-dbt-ldap flext-dbt-ldif:flext-dbt-ldif flext-dbt-oracle:flext-dbt-oracle flext-dbt-oracle-wms:flext-dbt-oracle-wms flext-grpc:flext-grpc flext-infra:flext-infra flext-ldap:flext-ldap flext-ldif:flext-ldif flext-meltano:flext-meltano flext-observability:flext-observability flext-oracle-oic:flext-oracle-oic flext-oracle-wms:flext-oracle-wms flext-plugin:flext-plugin flext-quality:flext-quality flext-tap-ldap:flext-tap-ldap flext-tap-ldif:flext-tap-ldif flext-tap-oracle:flext-tap-oracle flext-tap-oracle-oic:flext-tap-oracle-oic flext-tap-oracle-wms:flext-tap-oracle-wms flext-target-ldap:flext-target-ldap flext-target-ldif:flext-target-ldif flext-target-oracle:flext-target-oracle flext-target-oracle-oic:flext-target-oracle-oic flext-target-oracle-wms:flext-target-oracle-wms flext-tests:flext-tests flext-web:flext-web
 UV_LINK_MODE := copy
 # End SECTION: project identity
 
@@ -178,6 +179,12 @@ override SELF_MAKEFILE := $(realpath $(firstword $(MAKEFILE_LIST)))
 override MAKEFILE_ROOT := $(patsubst %/,%,$(dir $(SELF_MAKEFILE)))
 override PROJECT_ROOT := $(MAKEFILE_ROOT)
 SETUP_BIN := $(PROJECT_ROOT)/.bin
+ifeq ($(OS),Windows_NT)
+override TRACKED_MISE := $(PROJECT_ROOT)/bin/mise.cmd
+else
+override TRACKED_MISE := $(PROJECT_ROOT)/bin/mise
+endif
+override SETUP_MISE := $(TRACKED_MISE)
 # Caller-overridable test target (a directory or a single test file under
 # it): `make test FLEXT_PYTEST_TARGET_RAW=tests/unit/foo_test.py` runs one
 # file through the same bounded runner. The default stays the declared
@@ -272,10 +279,7 @@ MYPY_PATHS := $(strip $(foreach d,src tests examples,$(if $(wildcard $(PROJECT_R
 
 # === SECTION: project tool owner (managed) ===
 # Source: the repository's declared Mise toolchain, provisioned by make setup.
-# Every tool resolves from the mise-managed PATH (direnv activation shims, or
-# the CI provisioned PATH); _builtin_require_mise guards the running mise
-# against the committed mise.lock pin.
-override UV := uv
+override UV = $(PROJECT_TOOL_EXEC) uv
 CALLER_PATH := $(PATH)
 CALLER_VIRTUAL_ENV := $(patsubst %/,%,$(VIRTUAL_ENV))
 # End SECTION: project tool owner
@@ -293,8 +297,11 @@ override export MISE_SYSTEM_CONFIG_DIR := $(MISE_CONFIG_DIR)
 unexport MISE_SYSTEM_CONFIG_FILE
 # Project provisioning must never install or resolve tools from host config.
 # The physical runtime owns both its environment and frozen tool identities.
-# Attached members retain their own lock inputs for standalone consumption;
-# the pinned mise release is the [tools] entry the committed mise.lock pins.
+# Attached members retain their own lock inputs for standalone consumption.
+# The pin is `make upg` output: a generated header, then its release line.
+override MISE_VERSION_PIN := $(RUNTIME_ROOT)/mise.version
+# The pin is read by the bootstrap recipe after any interrupted lock journal
+# has been recovered. Parsing it here would freeze a torn pre-recovery value.
 # End SECTION: profile routing
 
 # D-VENV: the environment is <RUNTIME_ROOT>/.venv only. A member inside a
@@ -458,6 +465,7 @@ _builtin_require_network_auth:
 SETUP_ENVIRONMENT_RECIPE = set -eu; \
 	trap 'if [ -n "$${FLEXT_SETUP_CREDENTIAL_STORE:-}" ]; then rm -f "$$FLEXT_SETUP_CREDENTIAL_STORE"; fi' EXIT; \
 	$(REQUIRE_WORKSPACE_ENVIRONMENT); \
+	desired_python="$${SETUP_PYTHON:?missing Mise-resolved Python executable}"; \
 	credential_env=; \
 	if [ -n "$${FLEXT_SETUP_CREDENTIAL_STORE:-}" ]; then \
 		credential_env="env GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=credential.helper GIT_CONFIG_VALUE_0=store --file=$$FLEXT_SETUP_CREDENTIAL_STORE"; \
@@ -518,7 +526,7 @@ override PROJECT_INFRA_PYTHONPATH := $(MAKEFILE_ROOT)/src
 else
 override PROJECT_INFRA_PYTHONPATH := $(if $(wildcard $(FLEXT_INFRA_SUBMODULE_SRC)/flext_infra/.),$(FLEXT_INFRA_SUBMODULE_SRC),$(MAKEFILE_ROOT)/src)
 endif
-override PROJECT_INFRA_RUN = if [ ! -x "$(FLEXT_INFRA_PYTHON)" ]; then printf 'ERROR: FLEXT_INFRA_PYTHON must name an executable managed Python\n' >&2; exit 2; fi; env -u PYTHONPATH -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u UV_PROJECT_ENVIRONMENT PYTHONPATH="$(PROJECT_INFRA_PYTHONPATH)" $(FLEXT_INFRA_PYTHON)
+override PROJECT_INFRA_RUN = if [ ! -x "$(FLEXT_INFRA_PYTHON)" ]; then printf 'ERROR: FLEXT_INFRA_PYTHON must name an executable managed Python\n' >&2; exit 2; fi; $(PROJECT_TOOL_EXEC) env -u PYTHONPATH -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u UV_PROJECT_ENVIRONMENT PYTHONPATH="$(PROJECT_INFRA_PYTHONPATH)" $(FLEXT_INFRA_PYTHON)
 override PROJECT_FLEXT_INFRA := $(PROJECT_INFRA_RUN) -m flext_infra
 # Scaffold dev tools live in the validated optional dev
 # Lock law (operator 2026-10-03): only `make upg` writes uv.lock. Setup installs
@@ -528,6 +536,7 @@ override PROJECT_FLEXT_INFRA := $(PROJECT_INFRA_RUN) -m flext_infra
 # missing lock fails naming `make upg`.
 UV_SYNC_FLAGS := --all-extras --all-groups
 ifeq ($(strip $(CI)),Y)
+override UV_SYNC_FLAGS := --all-extras --all-groups --no-editable
 override UV_SYNC_FLAGS := --all-extras --all-groups --no-editable
 endif
 
@@ -582,6 +591,7 @@ endef
 # entry, and the promoted dispatcher renders its contract per WHAT.
 VERB_CONTRACT := $(filter 1 TRUE Y YES true y yes True Yes,$(OPTIONS) $(HELP))
 ifeq ($(VERB_CONTRACT),)
+$(filter-out help clean upg,$(BUILTIN_VERBS)): _builtin_require_mise_pin
 
 
 
@@ -1286,7 +1296,17 @@ sonarcloud-issues:
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make sonarcloud-issues to execute it.'
 
 endif
+$(filter-out help clean upg,$(SCRIPT_VERBS)): _builtin_require_mise_pin
 
+
+# Only the runtime root resolves the Mise release. An attached member's pin and
+# launchers are projections of that root, published by the root's `make gen`.
+.PHONY: _builtin_require_runtime_root
+_builtin_require_runtime_root:
+	@if [ "$(PROJECT_ROOT)" != "$(RUNTIME_ROOT)" ]; then \
+		printf 'ERROR: %s projects the Mise pin and launchers of %s; run make upg there\n' "$(PROJECT_ROOT)" "$(RUNTIME_ROOT)" >&2; \
+		exit 2; \
+	fi
 
 .PHONY: _setup_lifecycle
 _setup_lifecycle:
@@ -1296,7 +1316,7 @@ _setup_lifecycle:
 		*" pre-setup "*) $(SELF_MAKE) pre-setup ;; \
 	esac
 	@$(SELF_MAKE) _builtin_setup_environment
-	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _setup_activated,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _setup_activated)
+	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _setup_activated,XDG_DATA_HOME="$${SETUP_DIRENV_XDG_DATA_HOME:?missing persistent direnv data home}" "$${SETUP_DIRENV:?missing Mise-resolved direnv executable}" exec "$(PROJECT_ROOT)" $(SELF_MAKE) _setup_activated)
 
 # Setup only provisions, in every context, CI included: whatever the committed
 # locks pin is installed (a drifted uv.lock installs --frozen; a mise.lock
@@ -1650,7 +1670,7 @@ _builtin_require_mise:
 		exit 2; \
 	fi
 
-_builtin_require_environment: _builtin_require_workspace _builtin_require_mise
+_builtin_require_environment: _builtin_require_workspace _builtin_require_mise_pin
 # Documenting the interface (`make help`) must not require the interpreter it
 # tells the user how to provision. Only `make help` with no other goal
 # skips the check; any combined goal still demands the environment.
@@ -1681,11 +1701,11 @@ ifeq ($(MAKE_PROFILE),workspace)
 endif
 # End SECTION: setup environment
 
-# `upg` is the only recipe that resolves. Its bootstrap half ran
-# `mise lock --bump` (native resolution into the committed mise.lock) and
-# installed exactly that lock; this lifecycle upgrades every uv.lock (which
-# carries the generator itself), provisions the environment frozen from it,
-# and conforms dependency floors. The floors land in the codegen SSOT, so
+# `upg` is the only recipe that resolves. Its first half provisions the
+# generator: the bootstrap above resolves the Mise release and locks the tools
+# the committed manifest declares, then this lifecycle upgrades every uv.lock
+# (which carries the generator itself), provisions the environment frozen from
+# it, and conforms dependency floors. The floors land in the codegen SSOT, so
 # `gen` projects them into every pyproject and renders the managed tool
 # manifests (.mise.toml) of the upgraded generator. Only the producer half of
 # `gen` runs before the relock: its activation half demands the Mise release
@@ -1799,7 +1819,7 @@ mkdir -p "$$scratch/tmp"; \
 scratch_tmp="$$(cd "$$scratch/tmp" && pwd -P)"; \
 TMPDIR="$$scratch_tmp"; TMP="$$scratch_tmp"; TEMP="$$scratch_tmp"; \
 export TMPDIR TMP TEMP; \
-TESTMON_DATAFILE="$$database" $(PYTEST_BOUNDED) $(UV_RUN) python -m flext_infra._pytest_entry
+TESTMON_DATAFILE="$$database" $(PYTEST_BOUNDED) $(PROJECT_TOOL_EXEC) $(UV_RUN) python -m flext_infra._pytest_entry
 
 _builtin_test_full_all: _builtin_require_environment
 	@set -eu; \
@@ -1888,14 +1908,14 @@ _builtin_run_default: _builtin_require_environment
 .PHONY: profile-census
 profile-census: _builtin_require_environment
 	@mkdir -p "$(PROFILE_REPORTS_DIR)"
-	@$(RUNTIME_PYTHON) -c \
+	@$(PROJECT_TOOL_EXEC) "$(RUNTIME_PYTHON)" -c \
 		'import cProfile, sys; from flext_infra.cli import main; profile = cProfile.Profile(); status = profile.runcall(main, sys.argv[2:]); profile.dump_stats(sys.argv[1]); raise SystemExit(status)' \
 		"$(PROFILE_REPORTS_DIR)/runtime-census.pstats" check run \
 		--repository-root "$(PROJECT_ROOT)" --gates runtime-census
 
 .PHONY: profile-census-report
 profile-census-report: _builtin_require_environment
-	@$(RUNTIME_PYTHON) -c \
+	@$(PROJECT_TOOL_EXEC) "$(RUNTIME_PYTHON)" -c \
 		'import pstats, sys; pstats.Stats(sys.argv[1]).sort_stats("cumtime").print_stats(35)' \
 		"$(PROFILE_REPORTS_DIR)/runtime-census.pstats"
 
@@ -1910,7 +1930,7 @@ profile-mypy: _builtin_require_environment
 
 .PHONY: profile-mypy-report
 profile-mypy-report: _builtin_require_environment
-	@$(RUNTIME_PYTHON) -c \
+	@$(PROJECT_TOOL_EXEC) "$(RUNTIME_PYTHON)" -c \
 		'import pstats, sys; pstats.Stats(sys.argv[1]).sort_stats("cumtime").print_stats(50)' \
 		"$(PROFILE_REPORTS_DIR)/mypy.pstats"
 
@@ -1919,7 +1939,7 @@ profile-mypy-report: _builtin_require_environment
 .PHONY: profile-gen
 profile-gen: _builtin_require_environment
 	@mkdir -p "$(PROFILE_REPORTS_DIR)"
-	@$(RUNTIME_PYTHON) -c \
+	@$(PROJECT_TOOL_EXEC) "$(RUNTIME_PYTHON)" -c \
 		'import cProfile, sys; from flext_infra.cli import main; profile = cProfile.Profile(); status = profile.runcall(main, sys.argv[2:]); profile.dump_stats(sys.argv[1]); raise SystemExit(status)' \
 		"$(PROFILE_REPORTS_DIR)/conform.pstats" codegen conform \
 		--root "$(PROJECT_ROOT)" --scope all --mode check
@@ -1963,18 +1983,18 @@ mkdir -p "$$scratch/tmp"; \
 scratch_tmp="$$(cd "$$scratch/tmp" && pwd -P)"; \
 TMPDIR="$$scratch_tmp"; TMP="$$scratch_tmp"; TEMP="$$scratch_tmp"; \
 export TMPDIR TMP TEMP; \
-	TESTMON_DATAFILE="$$database" $(RUNTIME_PYTHON) -m flext_infra._pytest_entry profile \
+	TESTMON_DATAFILE="$$database" $(PROJECT_TOOL_EXEC) "$(RUNTIME_PYTHON)" -m flext_infra._pytest_entry profile \
 		"$(PROFILE_REPORTS_DIR)/pytest.pstats"
 
 _builtin-profile-test-report: _builtin_require_environment
-	@$(RUNTIME_PYTHON) -m flext_infra._cprofile_entry \
+	@$(PROJECT_TOOL_EXEC) "$(RUNTIME_PYTHON)" -m flext_infra._cprofile_entry \
 		"$(PROFILE_REPORTS_DIR)/pytest.pstats" "$(PROFILE_REPORTS_DIR)/pytest.pstats.json"
 
 _builtin_status_diagnostics: _builtin_require_environment
 	@$(GITHUB_AUTH_DIAGNOSTICS)
 	@printf 'profile=%s\nproject=%s\nruntime=%s\n' \
 		'$(MAKE_PROFILE)' '$(PROJECT_ROOT)' '$(RUNTIME_ROOT)'
-	@$(SHELL) -c 'command -v uv'
+	@$(PROJECT_TOOL_EXEC) $(SHELL) -c 'command -v uv'
 	@$(UV) --version
 	@if [ -x "$(RUNTIME_PYTHON)" ]; then \
 		$(UV) pip check --python "$(RUNTIME_VENV)"; \
@@ -2150,7 +2170,7 @@ _builtin-mod-text: _builtin_mod_text
 _builtin-mod-text-candidate: _builtin_mod_text_candidate
 _builtin-mod-snapshots: _builtin_mod_snapshots
 _builtin-waza:
-	@cd "$(PROJECT_ROOT)" && waza check --no-update-check
+	@cd "$(PROJECT_ROOT)" && $(PROJECT_TOOL_EXEC) waza check --no-update-check
 
 _builtin-smells:
 	@$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gates "smells"
