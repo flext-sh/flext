@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = "==3.13.*"
 
 [[package]]
@@ -1235,7 +1235,7 @@ dependencies = [
 [[package]]
 name = "flext-cli"
 version = "0.12.1"
-source = { git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev#febdd48058588161ac35cbf4fa2ca9bdffe1868b" }
+source = { git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev#a2c8bedbcaddaf02d35fc89f4d9311c48ea4d702" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1262,7 +1262,7 @@ dependencies = [
 [[package]]
 name = "flext-core"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev#8b27e71e114a28118754736b5e2dc036993e0a38" }
+source = { git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev#59ae1abb60daf923c8bf44f739b4e0f8130b9e75" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1396,7 +1396,7 @@ dependencies = [
 [[package]]
 name = "flext-infra"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#09f7363fc5fc3594f2f60c55e652cde97664b75b" }
+source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#5fa0fcd3e87e48b0674865200fe692b008d223fa" }
 dependencies = [
     { name = "annotated-types" },
     { name = "defusedxml" },
@@ -1422,7 +1422,7 @@ dependencies = [
 [[package]]
 name = "flext-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev#e74484176cf15befe4facbffef9a905ef3429959" }
+source = { git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev#319ddaa41edbbde9b1e72377eecefdb249c28fdb" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1441,7 +1441,7 @@ dependencies = [
 [[package]]
 name = "flext-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev#0aa8bdd4be5c8f875279d48536b4225e5c924093" }
+source = { git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev#0b7f9a2dd7b72bf3ea9dee4546b3045e9ac296bd" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1560,7 +1560,7 @@ dependencies = [
 [[package]]
 name = "flext-quality"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-quality.git?rev=0.12.0-dev#6cc32c1762efc9599314dcccc1fd50439b0377ad" }
+source = { git = "https://github.com/flext-sh/flext-quality.git?rev=0.12.0-dev#4c1b399a193ad438ef46715e93ee22231d01d6cd" }
 dependencies = [
     { name = "aiohttp" },
     { name = "annotated-types" },
@@ -1783,7 +1783,7 @@ dependencies = [
 [[package]]
 name = "flext-tests"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev#940387908e79ae423c9a038230ced01160500f5d" }
+source = { git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev#2478bef60abf5cf516c22b786655c876d697662d" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -2247,11 +2247,11 @@ sdist = { url = "https://files.pythonhosted.org/packages/5e/73/e01e4c5e11ad0494f
 
 [[package]]
 name = "jsonpath-ng"
-version = "1.10.0"
+version = "1.10.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/95/5f/29d3b755e3d0fd5572315435c0d0473891c60b53df5f92edf1785a9c8729/jsonpath_ng-1.10.0.tar.gz", hash = "sha256:e5fd041a757778dd5b75375a5d92237589cfd3b681c154654c3998ea37a09e64", size = 87017, upload-time = "2026-10-09T13:41:53.692Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4c/dc/178bf7bb75d2df2532d0d1796805381f2599eb805c40eeda089538af9393/jsonpath_ng-1.10.1.tar.gz", hash = "sha256:1247d0983361ebe44f47741e759bbb76e74213c68f25abb4b65f6de21d1934d6", size = 87626, upload-time = "2026-10-12T12:57:12.048Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9a/11/43dbdc0314d4ad4578f2267ebd9065bd8b73c951ce5c3f7bfde447f8f2e5/jsonpath_ng-1.10.0-py3-none-any.whl", hash = "sha256:e7456c4649e63c0f71b5c1724fcf2dee33caac024fb00cf9c8f65aaade6e138f", size = 75287, upload-time = "2026-10-09T13:41:52.195Z" },
+    { url = "https://files.pythonhosted.org/packages/08/e6/d0f38911783aa7bc69afb0cdf5151e8cefeecd8ca3944c5453e13fc5afda/jsonpath_ng-1.10.1-py3-none-any.whl", hash = "sha256:9355047e5e6a8919f5ae0ccfd5b793bff69e4165f1248b1763e8962457b58ff5", size = 75386, upload-time = "2026-10-12T12:57:10.48Z" },
 ]
 
 [[package]]
@@ -3951,7 +3951,7 @@ wheels = [
 
 [[package]]
 name = "singer-sdk"
-version = "0.54.7"
+version = "0.54.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -3972,9 +3972,9 @@ dependencies = [
     { name = "universal-pathlib" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/65/43/07f8851e2ca8e72c99bac8a11164ed726110417c0cec4d7a75109d6a421d/singer_sdk-0.54.7.tar.gz", hash = "sha256:f6362297cc5832f9d1f53363e52bf922d622a84f949b5c6ac7451db58503c302", size = 1380936, upload-time = "2026-09-29T15:02:42.25Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f2/89/966c23a90d600f336cb41e1fc48f9217035d39f16f60928eee6f0ce893a0/singer_sdk-0.54.8.tar.gz", hash = "sha256:716368c86b740d05e360ec4f1f539fd73b021132aa4b5bc4bea72cc7f71a0a14", size = 1380958, upload-time = "2026-10-12T13:08:01.449Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d4/a1/944acec05f4f9b5e658cf339ec59f5d1601c2d6a303fd8feb1ae8c85c94b/singer_sdk-0.54.7-py3-none-any.whl", hash = "sha256:b03a30fc85f4a56d644f7dcd02d5be7a0a021c8ee10ad24268f2d4f7222fd515", size = 217462, upload-time = "2026-09-29T15:02:40.202Z" },
+    { url = "https://files.pythonhosted.org/packages/e0/c6/2487ae4cbe834a1a6b25959beef74fee8753c96775cf9ef1452dac09317e/singer_sdk-0.54.8-py3-none-any.whl", hash = "sha256:23b94363122fce96993f081fc714fada95b91d4b8b3be2057973fa4770e6d2a0", size = 217479, upload-time = "2026-10-12T13:07:59.326Z" },
 ]
 
 [[package]]
@@ -4031,11 +4031,11 @@ wheels = [
 
 [[package]]
 name = "soupsieve"
-version = "3.0.1"
+version = "3.0.3"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/0e/b9/014459776d0be4dd5f0c196fd2c8dc523a4b817a561667fae4f330b04b48/soupsieve-3.0.1.tar.gz", hash = "sha256:713d5c69f90ef84deffec0b9c6244796575e3c9fc9081cefb96091ce1200a308", size = 115438, upload-time = "2026-10-10T17:10:25.848Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5e/77/2dcfa996b01702ab8fd0763d84098f6a640d6162a328f1c04c2697579a1a/soupsieve-3.0.3.tar.gz", hash = "sha256:7dcf6022eed0399eb9934a75e020148f7a2024c37b7dfcd3cf2c5505d69c364e", size = 115923, upload-time = "2026-10-12T13:21:17.696Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3a/cd/8092ac4e9009b4a480ba212f5cdfd26dabfc97990b176bbc70c7662d6f05/soupsieve-3.0.1-py3-none-any.whl", hash = "sha256:dd1d6bd1ba7cd39866edd704321c11b4df5e7ae98620174a9071a9af3a9c05cd", size = 41679, upload-time = "2026-10-10T17:10:24.546Z" },
+    { url = "https://files.pythonhosted.org/packages/49/ca/f639c80449997b88aba7bc9705d25dd76cc0844f45f187862fd8f8bb18fa/soupsieve-3.0.3-py3-none-any.whl", hash = "sha256:fa30e3ba4809cb81ce1f3209f2fbe3e779fc445f0439bc147a0d7c4601743f21", size = 41705, upload-time = "2026-10-12T13:21:16.474Z" },
 ]
 
 [[package]]
@@ -4500,7 +4500,7 @@ wheels = [
 
 [[package]]
 name = "virtualenv"
-version = "21.14.6"
+version = "21.14.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "distlib" },
@@ -4509,9 +4509,9 @@ dependencies = [
     { name = "platformdirs" },
     { name = "python-discovery" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/92/f3/589727d02bc832750cfa00ced4315d127535a22a6d7cfcb369b2fe219a2e/virtualenv-21.14.6.tar.gz", hash = "sha256:c6b74616e64bffa9532cfa9dfd54ffbab0dc9b999df2bb8ec0d75e559b983661", size = 5467961, upload-time = "2026-10-08T14:49:57.376Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/dc/3f/935cf1757643381fb7f7cc98197b4bc119223d9c2cf37dc3b03ad2a4455f/virtualenv-21.14.7.tar.gz", hash = "sha256:5f427d56f39eb7e7447d641dd4b7ab1e9c92793f498f35f26da2e4972c5546ae", size = 5471741, upload-time = "2026-10-12T01:27:31.842Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c9/1f/e5182163bcee149dda4eec823d88b0f51f2c0c531b12da896f666f0b80c1/virtualenv-21.14.6-py3-none-any.whl", hash = "sha256:eb1a20c5878569b69667f6a1af03458a8512b3afa7be771a2dafe92fdca05bb9", size = 5487469, upload-time = "2026-10-08T14:49:54.988Z" },
+    { url = "https://files.pythonhosted.org/packages/52/5b/799c3e5b8e04d5fa1c9b61a4c1f5079603e747205c7311b92abd30283df5/virtualenv-21.14.7-py3-none-any.whl", hash = "sha256:3769219a308c5d2f093e7729621ad12a6346b5767a7ec4338414e2a0fb0c526b", size = 5487587, upload-time = "2026-10-12T01:27:29.37Z" },
 ]
 
 [[package]]

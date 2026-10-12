@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import ClassVar
+from typing import ClassVar, cast
 
 from flext_infra import m, t
 
@@ -22,8 +22,8 @@ class FlextRootModelsConfig:
             extra="allow",
         )
 
-        values: t.JsonMapping = m.Field(
-            default_factory=dict,
+        values: t.MutableJsonMapping = m.Field(
+            default_factory=lambda: cast("t.MutableJsonMapping", {}),
             description="Processed item values carried across pipeline stages.",
         )
 
