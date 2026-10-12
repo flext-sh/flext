@@ -6,7 +6,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext._models import FlextRootModelsBase, FlextRootModelsConfig
+from flext._models.base import FlextRootModelsBase
+from flext._models.config import FlextRootModelsConfig
 from flext_db_oracle import FlextDbOracleModels
 from flext_grpc import FlextGrpcModels
 from flext_infra import FlextInfraModels

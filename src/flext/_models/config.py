@@ -39,4 +39,5 @@ class FlextRootModelsConfig:
             description="Payload produced by the preceding pipeline stage.",
         )
 
+
 __all__: list[str] = ["FlextRootModelsConfig"]
