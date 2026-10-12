@@ -10,4 +10,5 @@ from __future__ import annotations
 class FlextRootUtilitiesBase:
     """Base utilities for flext-workspace."""
 
+
 __all__: list[str] = ["FlextRootUtilitiesBase"]

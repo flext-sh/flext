@@ -12,4 +12,5 @@ from typing import Protocol
 class FlextRootProtocolsConfig(Protocol):
     """Config protocols for flext-workspace."""
 
+
 __all__: list[str] = ["FlextRootProtocolsConfig"]
