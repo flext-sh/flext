@@ -22,6 +22,8 @@ integration:
   provider: flext-sh
   branch: "0.12.0-dev"
 candidate_bootstrap_targets:
+  - path: flext-cli
+    what: lazy-init
   - path: .
     what: makefile
 project:
