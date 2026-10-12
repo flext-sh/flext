@@ -523,3 +523,6 @@ CLAUDE.local.md
 !/flext-tests/**
 !/flext-web/
 !/flext-web/**
+
+# RUNTIME: local projections (derived)
+/.vscode/settings.json
