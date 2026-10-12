@@ -24,6 +24,8 @@ integration:
 candidate_bootstrap_targets:
   - path: flext-cli
     what: lazy-init
+  - path: flext-web
+    what: lazy-init
   - path: .
     what: makefile
 project:

@@ -123,6 +123,12 @@ than introducing a second path:
 - The fixed-point, no-progress guard, and final validation of the mod circuit (canonical
   formatting, zero Ruff/Pyrefly/LSP diagnostics) govern the phase identically.
 
+Rope source folders use the canonical empty resource path for the repository root,
+not `.`. A dot-prefixed source folder gives declarations a second resource identity
+(`./provider.py` versus `provider.py`) and can leave a declaration unchanged while
+renaming its consumers. The atomic declaration/caller regression also verifies that
+unrelated homonyms retain their names.
+
 ### 3b. rope-in-gen (one engine, two modes)
 
 The Rope engine is a single engine with two invocation modes, and `make gen` is the only
