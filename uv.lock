@@ -1396,7 +1396,7 @@ dependencies = [
 [[package]]
 name = "flext-infra"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#5fa0fcd3e87e48b0674865200fe692b008d223fa" }
+source = { git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev#7940561495182c19e7aa38fd4a65cc3b0fe948d9" }
 dependencies = [
     { name = "annotated-types" },
     { name = "defusedxml" },
@@ -1422,7 +1422,7 @@ dependencies = [
 [[package]]
 name = "flext-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev#319ddaa41edbbde9b1e72377eecefdb249c28fdb" }
+source = { git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev#0fd952a4d3cc293f13775ae763549b4902e97f92" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
