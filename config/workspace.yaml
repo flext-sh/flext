@@ -15,7 +15,7 @@ repository:
   checkout: root
   codegen: conform
   package: false
-  editable: false
+  editable: true
   read_only: false
   examples_module: examples.runtime
 integration:
