@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from flext import c, config, d, h, m, p, r, t, u, x
     from flext_oracle_wms import e
     from flext_tests import api, td, tf, tk, tm
-    from tests import infra
     from tests.base import TestsFlextRootServiceBase, s
 
 
@@ -28,7 +27,6 @@ __all__: tuple[str, ...] = (
     "d",
     "e",
     "h",
-    "infra",
     "m",
     "p",
     "r",
@@ -53,7 +51,6 @@ install_lazy_exports(
         "d": "flext",
         "e": "flext_oracle_wms",
         "h": "flext",
-        "infra": ".infra",
         "m": "flext",
         "p": "flext",
         "r": "flext",
@@ -64,7 +61,6 @@ install_lazy_exports(
         "tk": "flext_tests",
         "tm": "flext_tests",
         "u": "flext",
-        "unit": ".unit",
         "x": "flext",
     }),
     public_exports=__all__,

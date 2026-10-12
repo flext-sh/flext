@@ -11,7 +11,7 @@ Each project renders one page per public module, driven by docstrings.
 - [flext-api](flext-api/modules/index.md) — `8` modules
 - [flext-auth](flext-auth/modules/index.md) — `9` modules
 - [flext-cli](flext-cli/modules/index.md) — `9` modules
-- [flext-core](flext-core/modules/index.md) — `22` modules
+- [flext-core](flext-core/modules/index.md) — `26` modules
 - [flext-db-oracle](flext-db-oracle/modules/index.md) — `11` modules
 - [flext-dbt-ldap](flext-dbt-ldap/modules/index.md) — `8` modules
 - [flext-dbt-ldif](flext-dbt-ldif/modules/index.md) — `8` modules
