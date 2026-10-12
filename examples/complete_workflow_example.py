@@ -19,7 +19,7 @@ from __future__ import annotations
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Annotated, ClassVar
+from typing import TYPE_CHECKING, Annotated, ClassVar, cast
 
 from examples import ExamplesFlextRootConstants, c, m, p, t, u
 from flext_core import r
@@ -65,7 +65,9 @@ class FlextRootCompleteWorkflowExample:
             arbitrary_types_allowed=True,
             extra="allow",
         )
-        content: t.JsonMapping = u.Field(default_factory=dict)
+        content: t.MutableJsonMapping = u.Field(
+            default_factory=dict[str, t.JsonValue],
+        )
 
     Stage = ExamplesFlextRootConstants.WorkflowStage
 
@@ -93,7 +95,7 @@ class FlextRootCompleteWorkflowExample:
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: t.MutableJsonMapping = u.Field(
-            default_factory=dict,
+            default_factory=dict[str, t.JsonValue],
             description="Performance metrics collected during workflow execution",
         )
 
@@ -113,11 +115,11 @@ class FlextRootCompleteWorkflowExample:
         items_failed: int = u.Field(description="Items that failed")
         processing_time: float = u.Field(description="Time taken to process stage")
         errors: t.StrSequence = u.Field(
-            default_factory=list,
+            default_factory=lambda: cast("t.StrSequence", []),
             description="List of errors encountered",
         )
         warnings: t.StrSequence = u.Field(
-            default_factory=list,
+            default_factory=lambda: cast("t.StrSequence", []),
             description="List of warnings encountered",
         )
         stage_metadata: t.JsonMapping = u.Field(
@@ -138,18 +140,23 @@ class FlextRootCompleteWorkflowExample:
         completed_stages: int = u.Field(description="Number of completed stages")
         failed_stages: int = u.Field(description="Number of failed stages")
         total_processing_time: float = u.Field(
-            description="Total workflow processing time",
+            description="Total workflow processing time"
         )
+
         stage_results: t.SequenceOf[
             FlextRootCompleteWorkflowExample.WorkflowStageResult
         ] = u.Field(
-            default_factory=list,
+            default_factory=lambda: cast(
+                "t.SequenceOf[FlextRootCompleteWorkflowExample.WorkflowStageResult]", []
+            ),
             description="Results from each workflow stage",
         )
+
         aggregated_metrics: t.JsonMapping = u.Field(
             default_factory=FlextRootImmutableMappings.json_mapping,
             description="Aggregated metrics across all stages",
         )
+
         workflow_status: Annotated[
             c.Status,
             u.Field(description="Overall workflow status"),
@@ -431,7 +438,7 @@ class FlextRootCompleteWorkflowExample:
                     "workflow_status": c.Status.COMPLETED,
                 })
             )
-            summary: t.JsonMapping = t.json_mapping_adapter().validate_python({
+            summary: t.JsonMapping = u.json_mapping_adapter().validate_python({
                 "workflow_id": workflow_result.workflow_id,
                 "workflow_status": workflow_result.workflow_status,
                 "total_stages": workflow_result.total_stages,
@@ -573,7 +580,7 @@ class FlextRootCompleteWorkflowExample:
                 "cn": f"user{i}",
                 "sn": f"User{i}",
             }
-            item: t.JsonMapping = t.json_mapping_adapter().validate_python({
+            item: t.JsonMapping = u.json_mapping_adapter().validate_python({
                 "id": f"item_{i}",
                 "dn": f"cn=user{i},ou=users,dc=example,dc=com",
                 "name": f"User {i}",

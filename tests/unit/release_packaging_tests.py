@@ -11,8 +11,7 @@ from collections.abc import Mapping
 from importlib.resources import files
 from pathlib import Path
 
-from flext_tests import tm
-from tests import t, u
+from tests import t, tm, u
 
 
 class TestsFlextRootReleasePackaging:

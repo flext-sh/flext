@@ -34,7 +34,8 @@ one typed surface.
 
 - Lint, type-check, security, and tests run through the canonical `make` verbs; current
   status is produced by the gates, not restated here.
-- Run selector-free root `make check`, `make test`, and `make build`.
+- From the workspace root, run `make -f flext-meltano/Makefile check`,
+  `make -f flext-meltano/Makefile test`, and `make -f flext-meltano/Makefile build`.
 
 ## Quick start
 
@@ -85,9 +86,21 @@ the same facade.
 
 ## Testing & quality
 
-- `make check` — lint, typing, security, and structural checks.
-- `make test` — suites through the shared Testmon cache.
-- `make build` — package candidate; runtime proof remains separate.
+Keep the workspace root as CWD and select Meltano's Makefile through the
+[supported member route](../guides/make-commands.md#scope-and-generation):
+
+- `make -f flext-meltano/Makefile check` — Meltano lint, typing, security, and
+  structural checks.
+- `make -f flext-meltano/Makefile test` — Meltano suites through the shared Testmon
+  cache.
+- `make -f flext-meltano/Makefile build` — package candidate; runtime proof remains
+  separate.
+
+Root `make check` alone checks only the root project, not Meltano. Attached Meltano
+uses the workspace's runtime environment; a standalone checkout or member worktree
+without a containing superproject owns its runtime environment and runs
+`make <verb>` from its own root.
+
 - Typing is strict (no `Any`/`object`); all owned payloads are `m.Meltano.*` Pydantic
   models and all fallible paths return `r[T]`.
 

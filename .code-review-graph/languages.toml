@@ -1,15 +1,6 @@
 # code-review-graph global custom languages - AI-HUB SSOT
 # Managed by ai-hub ai-hub-sync-crg-workspaces for every registered workspace.
 
-[languages.yaml]
-extensions = [".yaml", ".yml"]
-grammar = "yaml"
-function_node_types = ["block_mapping_pair"]
-class_node_types = ["block_mapping", "block_sequence"]
-import_node_types = []
-call_node_types = []
-comment = "Structured YAML/Kubernetes/Helm values parsing; ai-hub enriches key nodes after CRG build."
-
 [languages.toml]
 extensions = [".toml"]
 grammar = "toml"

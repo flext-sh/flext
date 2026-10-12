@@ -22,11 +22,12 @@ class TestsFlextRootModels(m, FlextTestsModels):
         class ModuleRef(m.Value):
             """Module reference with path and name information."""
 
-            anchor_file: Path = u.Field(
+            anchor_file: Path = m.Field(
                 description="Absolute path to the module's anchor file.",
             )
-            module_name: str = u.Field(description="Fully qualified module name.")
+            module_name: str = m.Field(..., description="Fully qualified module name.")
             relative_path: str = u.Field(
+                ...,
                 description="Module path relative to the workspace root.",
             )
 

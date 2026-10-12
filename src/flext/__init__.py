@@ -10,9 +10,10 @@ from __future__ import annotations
 from types import MappingProxyType
 from typing import TYPE_CHECKING
 
-from flext_core import install_lazy_exports
+from flext_core.lazy import install_lazy_exports
 
 if TYPE_CHECKING:
+    from flext import _config, _constants, _models, _protocols, _typings, _utilities
     from flext.cli import FlextRootCli, main
     from flext.config import FlextRootConfig, config
     from flext.constants import FlextRootConstants, c
@@ -35,6 +36,12 @@ __all__: tuple[str, ...] = (
     "FlextRootSettings",
     "FlextRootTypes",
     "FlextRootUtilities",
+    "_config",
+    "_constants",
+    "_models",
+    "_protocols",
+    "_typings",
+    "_utilities",
     "api",
     "c",
     "config",
@@ -68,6 +75,12 @@ install_lazy_exports(
         "FlextRootSettings": ".settings",
         "FlextRootTypes": ".typings",
         "FlextRootUtilities": ".utilities",
+        "_config": "._config",
+        "_constants": "._constants",
+        "_models": "._models",
+        "_protocols": "._protocols",
+        "_typings": "._typings",
+        "_utilities": "._utilities",
         "api": "flext_tests",
         "c": ".constants",
         "config": ".config",
