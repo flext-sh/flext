@@ -19,7 +19,7 @@ from __future__ import annotations
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Annotated, ClassVar
+from typing import TYPE_CHECKING, Annotated, ClassVar, cast
 
 from examples import ExamplesFlextRootConstants, c, m, p, t, u
 from flext_core import r
@@ -64,8 +64,10 @@ class FlextRootCompleteWorkflowExample:
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True,
             extra="allow",
-        content: t.MutableJsonMapping = u.Field(default_factory=lambda: {} as t.MutableJsonMapping)
-        content: t.MutableJsonMapping = u.Field(default_factory=lambda: {} as t.MutableJsonMapping)
+        )
+        content: t.MutableJsonMapping = u.Field(
+            default_factory=lambda: cast("t.MutableJsonMapping", {})
+        )
 
     Stage = ExamplesFlextRootConstants.WorkflowStage
 
@@ -93,7 +95,7 @@ class FlextRootCompleteWorkflowExample:
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: t.MutableJsonMapping = u.Field(
-            default_factory=lambda: {} as t.MutableJsonMapping,
+            default_factory=lambda: cast("t.MutableJsonMapping", {}),
             description="Performance metrics collected during workflow execution",
         )
 
@@ -113,11 +115,11 @@ class FlextRootCompleteWorkflowExample:
         items_failed: int = u.Field(description="Items that failed")
         processing_time: float = u.Field(description="Time taken to process stage")
         errors: t.StrSequence = u.Field(
-            default_factory=list,
+            default_factory=lambda: cast("t.StrSequence", []),
             description="List of errors encountered",
         )
         warnings: t.StrSequence = u.Field(
-            default_factory=list,
+            default_factory=lambda: cast("t.StrSequence", []),
             description="List of warnings encountered",
         )
         stage_metadata: t.JsonMapping = u.Field(
@@ -138,12 +140,15 @@ class FlextRootCompleteWorkflowExample:
         completed_stages: int = u.Field(description="Number of completed stages")
         failed_stages: int = u.Field(description="Number of failed stages")
         total_processing_time: float = u.Field(
-            description="Total workflow processing time",
+            description="Total workflow processing time"
         )
+
         stage_results: t.SequenceOf[
             FlextRootCompleteWorkflowExample.WorkflowStageResult
         ] = u.Field(
-            default_factory=list,
+            default_factory=lambda: cast(
+                "t.SequenceOf[FlextRootCompleteWorkflowExample.WorkflowStageResult]", []
+            ),
             description="Results from each workflow stage",
         )
         aggregated_metrics: t.JsonMapping = u.Field(

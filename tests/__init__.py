@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from flext import c, config, d, h, m, p, r, t, u, x
     from flext_oracle_wms import e
     from flext_tests import api, td, tf, tk, tm
-    from tests import infra, unit
+    from tests import infra
     from tests.base import TestsFlextRootServiceBase, s
 
 
@@ -39,7 +39,6 @@ __all__: tuple[str, ...] = (
     "tk",
     "tm",
     "u",
-    "unit",
     "x",
 )
 
