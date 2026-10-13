@@ -18,8 +18,7 @@ from collections.abc import Callable, MutableMapping, MutableSequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
-from examples import ExamplesFlextRootConstants, m, p, t, u
-from flext_core import r
+from examples import ExamplesFlextRootConstants, m, p, r, t, u
 
 
 class FlextRootAdvancedProcessingExample:

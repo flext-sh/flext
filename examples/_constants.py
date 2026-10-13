@@ -8,10 +8,8 @@ from __future__ import annotations
 
 from collections.abc import Mapping, MutableSequence, Sequence
 from enum import StrEnum, unique
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from examples import t
+from examples import t
 
 
 class ExamplesFlextRootConstants:

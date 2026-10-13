@@ -11,7 +11,9 @@ The root standards surface is intentionally narrow.
 
 ## Governing Sources
 
-- Root engineering law lives in `AGENTS.md`
+- [Governance router](../GOVERNANCE.md) resolves universal and exact branch-matched
+  FLEXT law and provides the shared engineering conformance review.
+- Root engineering law lives in [`AGENTS.md`](../../AGENTS.md).
 - Architecture baseline lives in `docs/architecture/baseline-v0.13.0.md`
 - Migration sequencing lives in `docs/guides/migration-to-v0.13.0.md`
 

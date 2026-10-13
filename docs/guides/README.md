@@ -10,6 +10,11 @@
 Guides are curated documents for workflow, migration, and day-to-day maintenance. They
 complement generated API reference; they do not duplicate it.
 
+Every guide follows the [governance router](../GOVERNANCE.md) and its
+[engineering conformance review](../GOVERNANCE.md#engineering-conformance-review).
+Root guides are the writable source for generated member guides; strengthen the
+shared owner rather than copying engineering law into each package.
+
 ## Canonical Guides
 
 - [Onboarding (Collection Rules)](onboarding.md)

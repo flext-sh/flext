@@ -16,6 +16,8 @@ the ADR set that records formal platform decisions.
 
 ## Canonical Documents
 
+- [Governance and engineering conformance](../GOVERNANCE.md) — universal/FLEXT
+  authority, domain ownership, namespaces, DI, and inward dependency review.
 - [Baseline v0.13.0](baseline-v0.13.0.md)
 - [ADR Index](adr/README.md)
 - [Ecosystem coordination (internal + external projects, `0.20.0-dev`)](ecosystem-coordination.md)
@@ -74,8 +76,10 @@ historical snapshot's original bytes are preserved in the published Git history.
 
 ## Interpretation Rule
 
-If an older architecture document conflicts with the baseline, the baseline wins until
-that older document is rewritten or retired.
+Apply the [governance authority order](../GOVERNANCE.md#authority) first. Within
+supporting architecture documentation, the baseline supersedes older descriptions;
+neither a baseline nor an ADR overrides current operator or universal/FLEXT law.
+Reconcile affected prose at its owner rather than starting a parallel rule surface.
 
 Historical architecture files may still exist in this tree, but they are supporting
 context only. They are not the current platform contract.

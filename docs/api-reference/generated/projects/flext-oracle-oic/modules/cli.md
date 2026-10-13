@@ -1,4 +1,4 @@
-# flext_oracle_oic.service
+# flext_oracle_oic.cli
 
 <!-- TOC START -->
 
@@ -6,7 +6,7 @@
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-::: flext_oracle_oic.service
+::: flext_oracle_oic.cli
 
     options:
       show_root_heading: true

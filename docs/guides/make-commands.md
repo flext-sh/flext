@@ -3,6 +3,7 @@
 <!-- TOC START -->
 
 - [Discover commands](#discover-commands)
+- [Architecture admission and acceptance](#architecture-admission-and-acceptance)
 - [Canonical workflow](#canonical-workflow)
 - [Verb single-pass contract](#verb-single-pass-contract)
 - [Markdown quality pipeline](#markdown-quality-pipeline)
@@ -25,6 +26,41 @@ make help
 
 Never infer a target, flag, or selector from historical documentation. When a required
 verb is missing or broken, repair the root dispatcher owner and rerun that verb.
+
+## Architecture admission and acceptance
+
+Command success does not replace architecture acceptance. Start with
+[root AGENTS.md](../../AGENTS.md), the
+[session router](../../.agents/commands/flext-law.md), and its exact
+[routing](../../.agents/skills/flext-context-routing/SKILL.md) and
+[FLEXT law](../../.agents/skills/flext-law/SKILL.md) owners. The router composes
+global `search-first`, `yagni`, `ssot`, `solid`, `simplify` and `dry`; concrete
+dependency and data boundaries additionally follow the canonical global
+`dep-injection`, `clean-architecture` and `pydantic-development` skills under
+`~/.agents/skills/`. Read their procedures, not a copied local substitute.
+
+Before gen/mod/fix-namespace, record the domain owner, declaration family,
+namespace, affected consumers and obsolete paths in the active Bead. FLEXT law's
+**Architecture and imports** owns facade MRO `c -> t -> p -> m -> u`, inward
+dependencies, data-only declarations and explicit `p`-port/`api` composition.
+Root **Architecture Overview** owns config/settings as layer-zero SSOT with no
+own-namespace imports. Repair declaration and dependency order at their owner;
+do not hide a cycle through local imports, eager exports or compatibility aliases.
+
+Reuse an existing helper only at its correct domain boundary. Parse owned input
+once through canonical Pydantic models and preserve typed serialization/results.
+The **Sources, generation, and commands** section of FLEXT law owns source-only
+projection changes and canonical regeneration. Never hand-edit generated member
+guides, facades or Makefiles to obtain a green result.
+
+After each bounded repair, prove complete consumer rewiring, removal of the old
+route and net-negative simplification of redundant implementation without reduced
+functionality. No duplicate engine, fallback, shim, suppression or weakened
+configuration is acceptance. Apply global `make-check` and `verification-loop`:
+record command, CWD, exit, scope and original receipt; exercise the public runtime,
+run applicable lint/type/test/docs gates and prove repeated gen/fix/fmt are no-ops
+on the unchanged candidate. Later edits invalidate overlapping evidence. Root-only
+checks are not fleet proof; failures and unexecuted gates remain explicit.
 
 ## Canonical workflow
 
@@ -104,8 +140,9 @@ The markdown standard lives once in `flext-infra/config/tooling.yaml`
 
 The test-verb law lives in `~/agents/rules/workflow/canonical-commands.md`.
 `make test` runs incremental selection against its persistent Testmon database.
-`make test-full` is local-only, without Testmon or a time limit, and includes
-configured external and CI-excluded markers. Any preceding incremental phase retains
+An explicitly requested full run also retains the canonical Testmon cache under
+[FLEXT law](../../.agents/skills/flext-law/SKILL.md#sources-generation-and-commands).
+External tests follow the root connectivity prerequisites. Any preceding incremental phase retains
 its own receipt and is not the complete-suite result. CI and pre-push use `make test`;
 pre-commit runs no tests. External tests keep their declared runtime and authentication
 requirements. Repair a conflicting runner at its owner; direct runner commands and
@@ -120,7 +157,9 @@ reported as tests passed. The full phase must execute its complete nonempty inve
 ## Failure contract
 
 - The first exception, traceback, and non-zero exit propagate unchanged.
-- Warnings, skips, empty output, and missing tools are failures.
+- Warnings, empty output, and missing tools are failures. Connectivity availability
+  skips follow [root prerequisite law](../../AGENTS.md#production-readiness-and-connectivity-tests)
+  and never count as successful connectivity or production validation.
 - No retry, fallback, suppression, normalization, partial run, or alternate raw tool
   path can replace the canonical verb.
 

@@ -1,0 +1,52 @@
+Infra:
+  codegen:
+    vscode:
+      additional_settings:
+        python.analysis.addExtraPathsForPythonProjects: false
+        python.analysis.enableAsyncProgram: false
+        python.analysis.enableExternalTypeServer: false
+        python.analysis.enableParallelIndexing: false
+        python.analysis.enableTroubleshootMissingImports: true
+        python.analysis.extraCommitChars: true
+        python.analysis.indexing: true
+        python.analysis.inlayHints.callArgumentNames: 'off'
+        python.analysis.inlayHints.functionReturnTypes: false
+        python.analysis.inlayHints.pytestParameters: false
+        python.analysis.inlayHints.variableTypes: false
+        python.analysis.languageServerMode: default
+        python.analysis.referencesCodeLens: false
+        python.analysis.supportDocstringTemplate: true
+        ruff.interpreter:
+        - ${workspaceFolder}/.venv/bin/python
+        ruff.path:
+        - ${workspaceFolder}/.venv/bin/ruff
+        terminal.integrated.env.linux:
+          PATH: ${workspaceFolder}/.venv/bin:${env:PATH}
+          VIRTUAL_ENV: ${workspaceFolder}/.venv
+        python-envs.workspaceSearchPaths:
+        - ./.venv
+        - ./*/.venv
+    repository:
+      project:
+        package_name: flext
+        class_stem: Flext
+        namespace: Flext
+        constant_name: flext
+        namespace_attribute: flext
+        alias: flext
+        environment_prefix: FLEXT_
+        description: FLEXT - Enterprise Data Integration Platform - Workspace Manager
+        license: MIT
+        author_name: FLEXT Team
+        author_email: team@flext.sh
+        upstream: flext_core
+        namespace_scan_dirs: []
+        homepage: https://github.com/flext-sh/flext
+        documentation: https://docs.flext.sh
+        repository_root_rel: .
+        year: 2026
+      integration:
+        provider: flext-sh
+        branch: 0.12.0-dev
+      namespace_scan_dirs: []
+      examples_module: examples.runtime
