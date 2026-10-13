@@ -17,16 +17,15 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
+from collections.abc import MutableSequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, ClassVar, cast
 
-
-from examples import ExamplesFlextRootConstants, c, m, p, t, u
-from flext_core import r
+from examples import ExamplesFlextRootConstants, c, m, p, r, t, u
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, MutableSequence
+    from collections.abc import Callable
 
 
 class FlextRootImmutableMappings:
