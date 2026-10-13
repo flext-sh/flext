@@ -1,4 +1,4 @@
-# flext_oracle_oic.main
+# flext_oracle_oic.base
 
 <!-- TOC START -->
 
@@ -6,7 +6,7 @@
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-::: flext_oracle_oic.main
+::: flext_oracle_oic.base
 
     options:
       show_root_heading: true
