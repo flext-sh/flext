@@ -17,6 +17,14 @@ local command grammars.
 
 ## Writable owners
 
+Use the [governance router](../GOVERNANCE.md) for authority and the
+[engineering conformance review](../GOVERNANCE.md#engineering-conformance-review)
+for domain, namespace, SSOT/YAGNI/DRY/SOLID, Pydantic, DI, and Clean Architecture.
+Link this shared route from maintained navigation; do not reproduce law on each page.
+Member entrypoints and generated guides inherit it from their canonical generator
+and root guide sources. Vendor, archive, cache, and historical material remain
+outside maintained engineering guidance; generated pages are projections, not owners.
+
 - Package metadata, typed config, public exports, and docstrings own technical facts.
 - Root files under `docs/guides/` own generated member guides.
 - Templates and typed generator configuration own generated navigation, API reference,

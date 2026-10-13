@@ -12,7 +12,9 @@
 
 The root `AGENTS.md`, branch-matched `flext-law`, nearest package scope, and active Bead
 define the development contract. This page is the executable summary, not a second
-policy owner.
+policy owner. Resolve them through the [governance router](../GOVERNANCE.md), and
+record its [engineering conformance review](../GOVERNANCE.md#engineering-conformance-review)
+for every bounded implementation slice.
 
 ## Start at the workspace root
 
@@ -52,8 +54,13 @@ Testmon; a direct test-runner invocation is invalid evidence.
 
 ## Architecture and tests
 
-- Generic reusable behavior survives in canonical `c`, `t`, `p`, `m`, or `u` ownership,
-  with runtime behavior in `u`, services, `api.py`, or `cli.py`.
+- Compose facade MRO in `c -> t -> p -> m -> u` order. Declaration layers remain
+  data-only; behavior belongs in `u`, reusable bases, services, `api.py`, or `cli.py`.
+  Use canonical Pydantic presets and typed ports, not model-local algorithms.
+- Search and reuse domain-owned public helpers first. SSOT, YAGNI, DRY, and SOLID
+  prohibit speculative abstractions and parallel/divergent implementations.
+- Inject `p` ports at the `api` composition root; keep Clean Architecture dependencies
+  inward and config/settings at layer zero, with no runtime import of build tooling.
 - Tests use public facades, `tm`, the unified `conftest.py`, and typed shared fixtures.
 - Mocks, fakes, stubs, patching, private construction, duplicated setup, and hardcoded
   project-owned values are prohibited.

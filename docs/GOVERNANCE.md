@@ -5,6 +5,7 @@
 - [Purpose](#purpose)
 - [Authority](#authority)
 - [Owner Routing](#owner-routing)
+- [Engineering Conformance Review](#engineering-conformance-review)
 - [Execution Contract](#execution-contract)
 - [Universal test contract (P0)](#universal-test-contract-p0)
 - [Baseline Commands](#baseline-commands)
@@ -22,13 +23,34 @@ Apply the newest applicable source in this order:
 
 1. Newest operator request.
 2. `~/.agents` universal authority (`AGENTS.md` and universal skills).
-3. Project `AGENTS.md` and routed local skills.
+3. [Root `AGENTS.md`](../AGENTS.md), exact local
+   [session router](../.agents/commands/flext-law.md),
+   [context router](../.agents/skills/flext-context-routing/SKILL.md) and
+   [FLEXT law](../.agents/skills/flext-law/SKILL.md), then the nearest member scope.
 4. Bead execution and status SSOT.
 5. In-scope ADR in [`architecture/adr/`](architecture/adr/README.md).
 6. Supporting documentation.
 
 When a higher source changes reality, update the affected lower sources in the same
 change. Ask before acting only when the conflict cannot be resolved from this order.
+
+Universal authority is installed at `~/.agents/AGENTS.md`; it is not copied into
+this portal. The context router names the exact global Make and verification skills.
+Resolve global engineering skills at their installed canonical locations:
+`project-wide/configuration/ssot`, `project-wide/refactoring/yagni`,
+`project-wide/architecture/dry`, `project-wide/architecture/solid`,
+`project-wide/refactoring/search-first`, `domain/dep-injection`,
+`domain/clean-architecture`, and `technology/pydantic-development`, each under
+`~/.agents/skills/` with `SKILL.md`. These filesystem references are deliberately
+not site links. Missing authority fails closed; do not substitute another branch,
+worktree, generated copy, or a similarly named skill.
+
+This router applies to maintained first-party workspace and member documentation,
+including executable examples. Member portals already route here through their
+generated Governance Pointer; root guides are their writable shared source.
+Vendor, archive, cache, historical evidence, and generated pages are not writable
+rule owners. In standalone mode, resolve the parent law on the same branch/release
+as the member, as required by its `AGENTS.md`.
 
 ## Owner Routing
 
@@ -53,6 +75,20 @@ The owning declaration, validated config, or fundamental rule is the source of t
 Tests and checks validate it; they never define the contract, catalog, or routing
 decision.
 
+## Engineering Conformance Review
+
+Use this review route before accepting a change; the linked law owns the rules,
+not this checklist. Record decisions and evidence in the active Bead.
+
+| Review | Required evidence and canonical reference |
+| --- | --- |
+| SSOT, YAGNI, DRY, SOLID | Search existing libraries, owners, consumers, lanes, and public helpers first. Name the current requirement and one writable owner; reuse or extend it instead of adding a parallel helper, registry, facade, or speculative framework. See [ADR-005](architecture/adr/005-config-settings-constants-templates-schemas-ssot.md) and [ADR-009](architecture/adr/009-ecosystem-coordination-and-library-evaluation.md), whose maturity is recorded in the [ADR index](architecture/adr/README.md). |
+| Domain, namespace, MRO | Identify the introducing declaration and public namespace, not merely a matching path. Compose `c -> t -> p -> m -> u`; place constants, aliases, ports, models, and utilities at their respective canonical private-family owners and expose them through generated public facades. See [FLEXT law](../.agents/skills/flext-law/SKILL.md), [ADR-014](architecture/adr/014-family-part-shape-rope-codemod-rules.md), [ADR-015](architecture/adr/015-consumer-consumption-law.md), and [ADR-018](architecture/adr/018-generator-declarations.md). |
+| Pydantic and behavior | Keep declaration layers data-only with permitted Pydantic validation/computed fields; use the existing `m.*` presets and typed `t.*`/`p.*` contracts. Parse owned payloads with `model_validate`/`model_validate_json`, serialize with `model_dump`; algorithms belong in `u`, reusable foundations in `base`, use cases in services, composition in `api`, and transport in `cli`. Follow the canonical `pydantic-development` skill, not a local model/helper clone. |
+| DI and Clean Architecture | Inject `p` ports explicitly at the `api` composition root. Keep dependencies inward toward `flext-core`; services do not construct adapters, resolve hidden globals, or import build tooling at runtime. Config/settings remain layer zero. See [ADR-024](architecture/adr/024-di-config-contract-derived-defaults-minimal-overrides.md); [ADR-019](architecture/adr/019-service-contract-ports-operations.md) records proposed service rationale, not independent acceptance evidence. |
+| Complete cutover | Rewire inherited consumers, public imports, tests, scripts, examples, and executable docs through the existing semantic automation; remove the superseded owner in the same slice. No suppression, fallback, shim, compatibility alias, duplicate route, or weakened gate substitutes for root-cause repair. See [ADR-023](architecture/adr/023-repair-phases-mod-loop-callbacks.md). |
+| Runtime and fixed point | Prove the staged artifact with real public consumers before publication, then public behavior tests and all applicable lint/type/rule/build/docs gates. Expected config values come from typed SSOT, not frozen literals. Regenerate only from owners and prove repeated gen/fix/fmt and affected migrations are no-op on the unchanged candidate. Follow [root completion law](../AGENTS.md), [Make commands](guides/make-commands.md), and [stabilization](ways-of-working/stabilization-checkpoint-0.12.md). |
+
 ## Execution Contract
 
 - Use the workspace Beads database for the root and every member project. Only an
@@ -76,20 +112,11 @@ integration still fails causally.
 
 ## Universal test contract (P0)
 
-Tests must validate any change to config and settings by construction. They are never
-allowed to hardcode the values that happen to exist today.
-
-- The canonical owner of a fact is `config/*.yaml` and `settings`; tests and golden
-  files only validate that owner.
-- Expected config-owned values must be read from the same typed SSOT production reads,
-  or proven through a generator/consumer round-trip.
-- When config or settings change, tests must adapt automatically or fail with a clear
-  message pointing back to the config source.
-- A test that requires a rewrite to accommodate a legitimate config change is a defect
-  in the test, not a reason to freeze the configuration.
-- This rule applies to all test tiers, markdown examples, and docstring snippets
-  validated by the pytest plugin.
-- Literal expectations are reserved for immutable external protocol contracts.
+Follow [P0 in the root law](../AGENTS.md#p0--tests-validate-configsettings-changes-by-construction),
+projected from `~/.agents/AGENTS.md`. At review, identify the typed config/settings
+owner used by production and verify that tests, goldens, and executable examples
+validate its contract rather than freezing today's values. This checkpoint does
+not define a second test policy.
 
 ## Baseline Commands
 

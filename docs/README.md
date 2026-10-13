@@ -21,6 +21,8 @@ Project-specific implementation guidance stays in each package's own `README.md`
 
 ## Start Here
 
+- [Governance Router](GOVERNANCE.md) — universal/FLEXT authority, canonical owners,
+  and the engineering conformance review shared by workspace and member docs.
 - [Documentation Index](index.md)
 - [Architecture Index](architecture/README.md)
 - [Guides Index](guides/README.md)

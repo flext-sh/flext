@@ -8,8 +8,13 @@
 
 <!-- mro-wkii.17.7 (agent: codex) — keep ADR pointers aligned with the accepted conform architecture. -->
 
-This directory contains the accepted Architecture Decision Records that are currently
+This directory contains Architecture Decision Records that are currently
 published in the root FLEXT portal.
+
+Read the [governance authority route](../../GOVERNANCE.md#authority) and
+[engineering conformance review](../../GOVERNANCE.md#engineering-conformance-review)
+before applying an ADR. Proposed designs do not replace the branch-matched law or
+prove implemented behavior; record owner boundaries and acceptance evidence in Beads.
 
 Catalog classifications describe recorded decision maturity, not fresh runtime receipts.
 Historical implementation labels require revalidation on the current integrated
@@ -79,6 +84,12 @@ candidate; acceptance never proves fleet stability.
   — **ACCEPTED** (operator approval 2026-10-08; ast-grep from aqua, rumdl formats
   markdown, setup installs only declared tools and proves each one; supersedes ADR-020;
   bead `flext-0shvv`)
+- [ADR-026: Engine Federation — Unified Loop and Parametrized Rule Registry](026-engine-federation-unified-loop-kernel.md)
+  — **PROPOSED** (campaign D1–D7, 2026-10-13; orchestration, registry, extraction and
+  retirement proposals, not implementation receipts; preserves ast-grep mechanical fixes,
+  Rope semantic refactors and LSP validation under current law; proposed supersession and
+  amendments do not override authority; acceptance requires full inventory provenance,
+  actual runtime and canonical gate evidence, not campaign closure)
 
 > **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance
