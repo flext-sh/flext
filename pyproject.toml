@@ -444,7 +444,7 @@ exclude = [
   ".venv",
   "vendor",
 ]
-include = ["tests"]
+include = ["src", "tests"]
 extraPaths = ["src", "."]
 pythonPlatform = "Linux"
 pythonVersion = "3.13"
@@ -463,6 +463,11 @@ reportUnusedFunction = "error"
 reportUnusedImport = "error"
 reportUnusedVariable = "error"
 typeCheckingMode = "strict"
+
+[[tool.pyright.executionEnvironments]]
+root = "src"
+extraPaths = ["src"]
+reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
 root = "tests"
@@ -770,6 +775,7 @@ constraint-dependencies = [
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 link-mode = "copy"
 override-dependencies = [
+  "flext",
   "flext-api",
   "flext-auth",
   "flext-cli",
@@ -802,54 +808,6 @@ override-dependencies = [
   "flext-tests",
   "flext-web",
 ]
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-infra"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-tests"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-core"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-infra"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-core"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-tests"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-core"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-cli"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-cli"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-infra"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-cli"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-core"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-cli"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-tests"
-
-[[tool.uv.exclude-dependencies]]
-dependencies = ["flext-tests"]
-
-[tool.uv.exclude-dependencies.package]
-name = "flext-infra"
 
 [tool.uv.sources.flext-api]
 path = "flext-api"
