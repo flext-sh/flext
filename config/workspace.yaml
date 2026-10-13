@@ -22,7 +22,65 @@ integration:
   provider: flext-sh
   branch: "0.12.0-dev"
 candidate_bootstrap_targets:
+  - path: flext-api
+    what: lazy-init
+  - path: flext-auth
+    what: lazy-init
   - path: flext-cli
+    what: lazy-init
+  - path: flext-core
+    what: lazy-init
+  - path: flext-db-oracle
+    what: lazy-init
+  - path: flext-dbt-ldap
+    what: lazy-init
+  - path: flext-dbt-ldif
+    what: lazy-init
+  - path: flext-dbt-oracle
+    what: lazy-init
+  - path: flext-dbt-oracle-wms
+    what: lazy-init
+  - path: flext-grpc
+    what: lazy-init
+  - path: flext-infra
+    what: lazy-init
+  - path: flext-ldap
+    what: lazy-init
+  - path: flext-ldif
+    what: lazy-init
+  - path: flext-meltano
+    what: lazy-init
+  - path: flext-observability
+    what: lazy-init
+  - path: flext-oracle-oic
+    what: lazy-init
+  - path: flext-oracle-wms
+    what: lazy-init
+  - path: flext-plugin
+    what: lazy-init
+  - path: flext-quality
+    what: lazy-init
+  - path: flext-tap-ldap
+    what: lazy-init
+  - path: flext-tap-ldif
+    what: lazy-init
+  - path: flext-tap-oracle
+    what: lazy-init
+  - path: flext-tap-oracle-oic
+    what: lazy-init
+  - path: flext-tap-oracle-wms
+    what: lazy-init
+  - path: flext-target-ldap
+    what: lazy-init
+  - path: flext-target-ldif
+    what: lazy-init
+  - path: flext-target-oracle
+    what: lazy-init
+  - path: flext-target-oracle-oic
+    what: lazy-init
+  - path: flext-target-oracle-wms
+    what: lazy-init
+  - path: flext-tests
     what: lazy-init
   - path: flext-web
     what: lazy-init

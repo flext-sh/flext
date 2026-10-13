@@ -64,7 +64,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          submodules: recursive
+          submodules: false
           persist-credentials: false
           fetch-depth: 0
       # Why: GitHub runners expose umask 002, so git checkout materializes
@@ -359,7 +359,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          submodules: recursive
+          submodules: false
           persist-credentials: false
       - name: Install the mise release pinned by mise.lock
         shell: bash
