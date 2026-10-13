@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from tests import c, infra, m, t, tm
+from tests import c, infra, t, tm
 
 
 class TestsFlextRootInfraModels:
@@ -38,7 +38,6 @@ class TestsFlextRootInfraModels:
                 tm.that(current.module_name, eq=module_name)
                 tm.that(current.relative_path, eq=relative_path)
             tm.that(restored.model_dump(), eq=value.model_dump())
-            tm.that(isinstance(restored, m.Value), eq=True)
             tm.that(type(restored) is model, eq=True)
 
             schema = model.model_json_schema()

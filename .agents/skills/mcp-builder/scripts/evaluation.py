@@ -17,6 +17,8 @@ from anthropic import Anthropic
 from connections import ConnectionParams, MCPConnection, create_connection
 from defusedxml import ElementTree as DelTree
 
+from flext_core import t
+
 """MCP Server Evaluation Harness.
 
 This script evaluates MCP servers by running test questions against them using Claude.

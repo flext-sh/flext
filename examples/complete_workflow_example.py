@@ -67,7 +67,7 @@ class FlextRootCompleteWorkflowExample:
             extra="allow",
         )
         content: t.MutableJsonMapping = u.Field(
-            default_factory=t.JsonDict,
+            default_factory=dict[str, t.JsonValue],
         )
 
     Stage = ExamplesFlextRootConstants.WorkflowStage
@@ -96,7 +96,7 @@ class FlextRootCompleteWorkflowExample:
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: t.MutableJsonMapping = u.Field(
-            default_factory=t.JsonDict,
+            default_factory=dict[str, t.JsonValue],
             description="Performance metrics collected during workflow execution",
         )
 
