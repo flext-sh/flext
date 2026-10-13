@@ -25,9 +25,8 @@ class TestsFlextRootModels(m, FlextTestsModels):
             anchor_file: Path = m.Field(
                 description="Absolute path to the module's anchor file.",
             )
-            module_name: str = m.Field(..., description="Fully qualified module name.")
+            module_name: str = m.Field(description="Fully qualified module name.")
             relative_path: str = u.Field(
-                ...,
                 description="Module path relative to the workspace root.",
             )
 
