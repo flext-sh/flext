@@ -8,11 +8,11 @@ from __future__ import annotations
 
 from typing import ClassVar
 
+from flext import FlextRootConstants
 from flext_tests import FlextTestsConstants
-from tests import c
 
 
-class TestsFlextRootConstants(c):
+class TestsFlextRootConstants(FlextRootConstants):
     """Infrastructure test constants facade — extends flext_infra constants."""
 
     class Tests(FlextTestsConstants.Tests):
