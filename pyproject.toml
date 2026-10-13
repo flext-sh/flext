@@ -570,13 +570,13 @@ notice-rgx = "Copyright \\(c\\) \\d{4} \\S[^\\n]*\\. All rights reserved\\."
 [tool.ruff.lint.flake8-type-checking]
 runtime-evaluated-base-classes = [
   "examples.m.BaseModel",
+  "flext.m.Value",
   "flext_core.FlextConfig",
   "flext_core.FlextSettings",
   "flext_infra.m.BaseModel",
   "flext_tests.FlextTestsServiceBase",
   "flext_tests.FlextTestsUtilities.Tests",
   "pydantic.BaseModel",
-  "tests.m.Value",
 ]
 
 [tool.ruff.lint.flake8-tidy-imports]

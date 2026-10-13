@@ -5,6 +5,7 @@
 - [Purpose](#purpose)
 - [Authority](#authority)
 - [Owner Routing](#owner-routing)
+- [Declaration invariants (apply to every slice)](#declaration-invariants-apply-to-every-slice)
 - [Engineering Conformance Review](#engineering-conformance-review)
 - [Execution Contract](#execution-contract)
 - [Universal test contract (P0)](#universal-test-contract-p0)
@@ -74,6 +75,25 @@ as the member, as required by its `AGENTS.md`.
 The owning declaration, validated config, or fundamental rule is the source of truth.
 Tests and checks validate it; they never define the contract, catalog, or routing
 decision.
+
+## Declaration invariants (apply to every slice)
+
+Forward obligations on every code, docs, and example slice — applied while
+writing, before any review. The law owns the rules; this table only routes each
+invariant to its canonical authority and never restates it. Record how each
+invariant was satisfied in the active Bead before completion; place declarations
+through `make mod` and regenerate projections through `make gen`.
+
+| Invariant       | Always                                                                                                                                              | Canonical authority                                                                                                                                                                                                                                                                                              |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SSOT            | One canonical owner per fact; derive every projection from its owner; never redeclare, freeze a configured value, or hand-edit a generated surface. | [P0 in the root law](../AGENTS.md#p0--tests-validate-configsettings-changes-by-construction), [ADR-005](architecture/adr/005-config-settings-constants-templates-schemas-ssot.md), [ADR-024](architecture/adr/024-di-config-contract-derived-defaults-minimal-overrides.md)                                        |
+| YAGNI           | Build or port nothing without a live consumer; adopt the existing lane or owner first; delete the superseded owner in the same slice.               | [FLEXT law](../.agents/skills/flext-law/SKILL.md) and [Engineering Conformance Review](#engineering-conformance-review)                                                                                                                                                                                           |
+| DRY             | One behavior, one owner; reuse the facade letters and existing helpers instead of adding a parallel helper, registry, wrapper, or fallback.         | [Owner Routing](#owner-routing) and [ADR-009](architecture/adr/009-ecosystem-coordination-and-library-evaluation.md)                                                                                                                                                                                              |
+| Pydantic        | Owned payloads are Pydantic v2 models extending `m.*` presets; JSON enters via `model_validate_json`; declarations stay data-only; no `model_rebuild`. | `~/.agents/skills/technology/pydantic-development/SKILL.md` (filesystem reference; a missing authority fails closed) and the [Pydantic review](#engineering-conformance-review)                                                                                                                                  |
+| SOLID           | One specialized service per use case; declaration layers carry zero methods; behavior lives only in `u`, bases, services, `api`, and `cli`.         | [Domain, namespace, MRO review](#engineering-conformance-review) and [FLEXT law](../.agents/skills/flext-law/SKILL.md)                                                                                                                                                                                            |
+| DI              | Dependencies cross use-case boundaries through `p` protocol ports injected at the `api` composition root; never a locator, hidden singleton, or global read. | [ADR-019](architecture/adr/019-service-contract-ports-operations.md) and [ADR-024](architecture/adr/024-di-config-contract-derived-defaults-minimal-overrides.md)                                                                                                                                               |
+| Clean Architecture | Facades compose strictly `c -> t -> p -> m -> u`; reverse imports are `TYPE_CHECKING`-only; internal tiers never import public `src` upward.     | [Architecture overview](../AGENTS.md#architecture-overview) and [ADR-014](architecture/adr/014-family-part-shape-rope-codemod-rules.md)                                                                                                                                                                          |
+| FLEXT placement | Every declaration sits in its canonical namespace and family location; structural moves run through `make mod`; consumption follows R1-R6.          | [ADR-018](architecture/adr/018-generator-declarations.md), [ADR-015](architecture/adr/015-consumer-consumption-law.md), and [FLEXT law](../.agents/skills/flext-law/SKILL.md)                                                                                                                                    |
 
 ## Engineering Conformance Review
 
