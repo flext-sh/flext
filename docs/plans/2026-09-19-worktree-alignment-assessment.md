@@ -39,9 +39,9 @@ manutenção), estágio e todos restantes.
   em `CHECK_EXCLUDED_DIRS` (lanes ai-hub-style não são duplo-escaneadas); tier-whitelist
   exclui `.worktrees|worktrees|flext-infra-worktrees` + identidade por lane; discovery
   de projects pula dot-dirs; scratch espelha `.git`→`_git` para submódulos em worktree.
-- **Baseline branch**: `repository_baseline_branch` com
-  `refs/remotes/origin/<candidato>` — agora consumindo
-  `branch_policy.integration_branch_preference` (fix `208716f4f`).
+- **Baseline branch**: `resolve_integration_branch` resolve a declaração de cada
+  repositório; `repository_baseline_branch` verifica a linha canônica
+  `branch_policy.integration_branch` em Git publicado, sem lista de candidatos.
 - **Testes**: 12 passed na amostra (`test_worktree_paths/topology/add_contract`).
 
 ## 2. Contrato ai-hub (para onde alinhar)
