@@ -30,10 +30,10 @@ verb is missing or broken, repair the root dispatcher owner and rerun that verb.
 ## Architecture admission and acceptance
 
 Command success does not replace architecture acceptance. Start with
-[root AGENTS.md](../../AGENTS.md), the
-[session router](../../.agents/commands/flext-law.md), and its exact
-[routing](../../.agents/skills/flext-context-routing/SKILL.md) and
-[FLEXT law](../../.agents/skills/flext-law/SKILL.md) owners. The router composes
+[root AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md), the
+[session router](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/commands/flext-law.md), and its exact
+[routing](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-context-routing/SKILL.md) and
+[FLEXT law](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md) owners. The router composes
 global `search-first`, `yagni`, `ssot`, `solid`, `simplify` and `dry`; concrete
 dependency and data boundaries additionally follow the canonical global
 `dep-injection`, `clean-architecture` and `pydantic-development` skills under
@@ -141,7 +141,7 @@ The markdown standard lives once in `flext-infra/config/tooling.yaml`
 The test-verb law lives in `~/agents/rules/workflow/canonical-commands.md`.
 `make test` runs incremental selection against its persistent Testmon database.
 An explicitly requested full run also retains the canonical Testmon cache under
-[FLEXT law](../../.agents/skills/flext-law/SKILL.md#sources-generation-and-commands).
+[FLEXT law](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md#sources-generation-and-commands).
 External tests follow the root connectivity prerequisites. Any preceding incremental phase retains
 its own receipt and is not the complete-suite result. CI and pre-push use `make test`;
 pre-commit runs no tests. External tests keep their declared runtime and authentication
@@ -158,7 +158,7 @@ reported as tests passed. The full phase must execute its complete nonempty inve
 
 - The first exception, traceback, and non-zero exit propagate unchanged.
 - Warnings, empty output, and missing tools are failures. Connectivity availability
-  skips follow [root prerequisite law](../../AGENTS.md#production-readiness-and-connectivity-tests)
+  skips follow [root prerequisite law](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#production-readiness-and-connectivity-tests)
   and never count as successful connectivity or production validation.
 - No retry, fallback, suppression, normalization, partial run, or alternate raw tool
   path can replace the canonical verb.
