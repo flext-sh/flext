@@ -1,5 +1,17 @@
 # ADR-026 — Engine Federation: Unified Loop and Parametrized Rule Registry
 
+<!-- TOC START -->
+
+- [FLEXT Law Anchors (binding for every slice under this ADR)](#flext-law-anchors-binding-for-every-slice-under-this-adr)
+- [Context](#context)
+- [Proposed decision (not implemented or accepted by this record)](#proposed-decision-not-implemented-or-accepted-by-this-record)
+- [Supersessions](#supersessions)
+- [Exceptions](#exceptions)
+- [Consequences](#consequences)
+- [Rejected alternatives](#rejected-alternatives)
+
+<!-- TOC END -->
+
 - **Status:** PROPOSED — draft recording campaign decisions D1–D7 (2026-10-13).
   Campaign closure (phase F6.4) does not automatically accept this ADR or prove implementation.
   Acceptance requires explicit review against current authority and the evidence below.
@@ -20,8 +32,8 @@
 ## FLEXT Law Anchors (binding for every slice under this ADR)
 
 Every slice follows the [governance authority route](../../GOVERNANCE.md#authority),
-[root law](../../../AGENTS.md), [session router](../../../.agents/commands/flext-law.md),
-and exact [FLEXT law](../../../.agents/skills/flext-law/SKILL.md).
+[root law](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md), [session router](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/commands/flext-law.md),
+and exact [FLEXT law](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md).
 The [engineering conformance review](../../GOVERNANCE.md#engineering-conformance-review)
 routes SSOT/YAGNI/DRY/SOLID, Pydantic, DI, and Clean Architecture to their canonical
 owners. The private campaign checklist is execution evidence, not normative law.
@@ -40,6 +52,11 @@ the fixed point ([ADR-014](014-family-part-shape-rope-codemod-rules.md),
 [ADR-017](017-parametrized-rule-surfaces-single-modernize-cli.md), and local FLEXT law).
 This draft establishes no new engine owner and cannot override that composition.
 The architecture below is proposed, not an implementation inventory or green receipt.
+The operator's original frozen D2 requires Python semantics/analysis through Rope
+and retirement of competing internal engines. This draft's narrower description
+below does not supersede or soften D2. That discrepancy remains pending explicit
+review and the corresponding source/consumer cutovers; this note neither approves
+the draft nor certifies those cutovers.
 Acceptance evidence must identify the complete affected repository, engine, rule, owner,
 and consumer inventory with revision and source provenance, then demonstrate actual
 public runtime behavior, applicable canonical gates, and validated cutover/retirement on

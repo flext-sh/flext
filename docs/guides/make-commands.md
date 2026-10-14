@@ -5,6 +5,7 @@
 - [Discover commands](#discover-commands)
 - [Architecture admission and acceptance](#architecture-admission-and-acceptance)
 - [Canonical workflow](#canonical-workflow)
+- [Constants migration](#constants-migration)
 - [Verb single-pass contract](#verb-single-pass-contract)
 - [Markdown quality pipeline](#markdown-quality-pipeline)
 - [Test contract](#test-contract)
@@ -30,10 +31,10 @@ verb is missing or broken, repair the root dispatcher owner and rerun that verb.
 ## Architecture admission and acceptance
 
 Command success does not replace architecture acceptance. Start with
-[root AGENTS.md](../../AGENTS.md), the
-[session router](../../.agents/commands/flext-law.md), and its exact
-[routing](../../.agents/skills/flext-context-routing/SKILL.md) and
-[FLEXT law](../../.agents/skills/flext-law/SKILL.md) owners. The router composes
+[root AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md), the
+[session router](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/commands/flext-law.md), and its exact
+[routing](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-context-routing/SKILL.md) and
+[FLEXT law](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md) owners. The router composes
 global `search-first`, `yagni`, `ssot`, `solid`, `simplify` and `dry`; concrete
 dependency and data boundaries additionally follow the canonical global
 `dep-injection`, `clean-architecture` and `pydantic-development` skills under
@@ -101,6 +102,41 @@ fails visibly rather than authorizing forced recovery or a larger timeout.
 `docs`, `audit`, `status`, `waza`, `duplication`, and the release verbs retain their own
 single operation and are invoked only when their scope applies.
 
+Under [ADR-025's October 9 amendments](../architecture/adr/025-npm-free-fleet-toolchain.md),
+setup provisions current committed locks without resolution or lock writes; audit
+judges missing, stale or incomplete locks, and CI runs audit after setup. An absent
+Mise self-pin uses the qualified host provisioning path, not an invented release.
+Functional installation failures always remain red. `make upg` owns resolution
+and lock writes. Distributed JavaScript tools belong to one owned Bun project
+with `package.json` and a frozen lock, never a Mise npm backend; native Node
+wrappers remain where used. These contracts are not current runtime receipts.
+
+## Constants migration
+
+The constants-consumer phase uses Rope identities, class ancestry, occurrence
+coordinates and native import plans. Python detection and transformation at this
+owner do not use a separate AST, CST or regular-expression parser. Its edits
+participate in the existing semantic publication and fixed-point loop.
+
+The census recognizes `typing.Final` by its resolved identity, including aliased
+imports and lowercase declaration names. A user-defined type named `Final` does
+not establish constant ownership. Parameter positions come from Rope occurrences
+in the same immutable module snapshot, including multiline signatures.
+
+Within the declared constants family, a class-level `typing.Final` annotation
+becomes `ClassVar` so a composed Pydantic namespace does not create an instance
+field. Rope resolves aliases and qualified imports; same-spelled user types,
+module bindings and function-local declarations retain their contracts. The
+initializer remains unchanged, including `frozenset` expressions that depend on
+runtime inputs. Annotation repair does not authorize extracting a calculated
+collection or replacing its elements.
+
+Constant imports resolve through their unique reaching declarations and the
+published facade's MRO. Local shadowing, import cycles and competing owners reject
+the candidate before publication. Consumer tests exercise public tap, target and
+dbt providers; their expected values come from the same upstream facades rather
+than freezing current configuration.
+
 ## Verb single-pass contract
 
 Each mutating verb owns exactly one operation per tool, and `make check` is strictly
@@ -130,7 +166,8 @@ The markdown standard lives once in `flext-infra/config/tooling.yaml`
   belong to the flext-tests markdown validator, not to a second linter.
 - `rumdl fmt` is the formatter and reads the same `.markdownlint.json`:
   `rumdl fmt --check` in `make check`, `rumdl fmt` in `make fmt`. rumdl is locked in
-  `uv.lock`; the fleet toolchain has no npm-backed tool (ADR-025).
+  `uv.lock`; the Mise npm backend remains retired (ADR-025). The amended Bun
+  project contract for distributed JavaScript tools does not change this formatter.
 - `markdown-code` holds parseable embedded Python and doctest examples to the
   ruff-format contract; unparseable documentation fragments are prose and stay with the
   validator. Generated and provider-projected trees (`.agents`, `.claude`, `.gemini`,
@@ -141,10 +178,10 @@ The markdown standard lives once in `flext-infra/config/tooling.yaml`
 The test-verb law lives in `~/agents/rules/workflow/canonical-commands.md`.
 `make test` runs incremental selection against its persistent Testmon database.
 An explicitly requested full run also retains the canonical Testmon cache under
-[FLEXT law](../../.agents/skills/flext-law/SKILL.md#sources-generation-and-commands).
-External tests follow the root connectivity prerequisites. Any preceding incremental phase retains
-its own receipt and is not the complete-suite result. CI and pre-push use `make test`;
-pre-commit runs no tests. External tests keep their declared runtime and authentication
+[FLEXT law](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md#sources-generation-and-commands).
+External tests follow the root connectivity prerequisites. Any preceding incremental
+phase retains its own receipt and is not the complete-suite result. CI and pre-push use
+`make test`; pre-commit runs no tests. External tests keep their declared runtime and authentication
 requirements. Repair a conflicting runner at its owner; direct runner commands and
 cache-clearing bypasses are prohibited.
 
@@ -158,7 +195,7 @@ reported as tests passed. The full phase must execute its complete nonempty inve
 
 - The first exception, traceback, and non-zero exit propagate unchanged.
 - Warnings, empty output, and missing tools are failures. Connectivity availability
-  skips follow [root prerequisite law](../../AGENTS.md#production-readiness-and-connectivity-tests)
+  skips follow [root prerequisite law](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#production-readiness-and-connectivity-tests)
   and never count as successful connectivity or production validation.
 - No retry, fallback, suppression, normalization, partial run, or alternate raw tool
   path can replace the canonical verb.

@@ -56,14 +56,15 @@ from that manifest. No other file may independently declare workspace membership
 ### 2. Root workspace and library metadata have distinct responsibilities
 
 Operator amendment (2026-10-10): the root and every member are independent UV
-projects, each owning its physical `uv.lock` and Mise lock. No generated project
-declares `tool.uv.workspace` or `workspace = true` sources. Composition remains
-derived from `.gitmodules` through the typed workspace owner (ADR-024).
+projects, each owning its physical `uv.lock` and Mise lock. Clarification (2026-10-13),
+not a change to the editable standard: no `tool.uv.workspace` table or parallel
+`workspace = true` dependency routing. The existing generator retains only a packaged
+root's self-only implicit `workspace = true` source override, never member routing.
+Composition remains owned by `.gitmodules` (ADR-024).
 
 The root's existing `dev` group requests every declared package member, including
-its declared extras and development groups. Root-only path sources select those
-checkouts with their declared editability. Local transitive source overrides retain
-requested extras, and corresponding constraints preserve declared bounds and markers.
+its declared extras and development groups. Local editable bindings select checkouts
+only in the development environment; declared bounds, extras and markers remain intact.
 External candidate Git pins never override a declared local member.
 
 The `codegen` group remains the canonical bootstrap unit; it does not collect
@@ -74,16 +75,12 @@ environment, while unmarked CUSTOM requirements retain their constraints and
 markers. This metadata records projection ownership, not another member registry
 or dependency source of truth.
 
-Every FLEXT distribution must be independently installable from the registry. Published
-internal runtime and optional requirements use registry-resolvable package names and
-version ranges derived by the typed dependency/version owner. They must not require
-editable paths, Git checkouts, or a consumer-side manifest rewrite. Member and
-standalone projects do not declare a native workspace table.
-
-The root source table selects local members during development. Release staging derives
-registry metadata from the accepted source and sibling versions without turning
-development overlays into published requirements. Repository provenance remains
-manifest-owned; lock policy does not own dependency identity.
+Every FLEXT distribution must be independently installable without a parent workspace
+or consumer-side metadata rewrite. Registry-backed runtime and optional requirements
+remain registry-backed; explicit Git requirements retain their declared URL and ref.
+Both preserve declared constraints, extras and markers. Local editables are environment
+bindings, not published requirement rewrites. Git and `pyproject.toml` own repository
+identity; locks record resolved provenance, not a replacement dependency origin.
 
 Mise and generated profiles consume the toolchain SSOT rather than versions copied into
 this ADR.
@@ -100,7 +97,7 @@ The generated root `setup` handler:
 
 This local selection is an environment operation, never a metadata rewrite. An attached
 member delegates `setup` to the root. The same member in an independent clone uses its
-own environment and registry-resolvable FLEXT dependencies.
+own environment and its declared dependency origins.
 
 All other commands execute with `uv run --project <environment-owner> --no-sync`. Checks
 and tests therefore cannot synchronize, relock, rewrite metadata, or replace the
@@ -122,7 +119,7 @@ No profile depends on files outside its repository checkout.
 
 ## Consequences
 
-- Dependency identity and Git provenance remain manifest-owned and auditable.
+- Dependency origins remain declaration-owned and auditable; `.gitmodules` owns composition.
 - Local source editing is selected by the root workspace without weakening the
   autonomous package metadata of any member.
 - A missing, extra, or misclassified member is a manifest validation error.
@@ -137,8 +134,9 @@ No profile depends on files outside its repository checkout.
   workspace. Verify dependency closure, package resources, and public runtime against
   the exact artifact; sampling members is not fleet release evidence.
 - Standalone repositories pass from temporary clones with no neighboring repositories.
-- Generated manifests are byte-idempotent; no native workspace table or
-  `workspace = true` residue survives. Only the root selects local member paths.
+- Generated manifests are byte-idempotent; no native workspace table or member
+  `workspace = true` routing survives. Only the packaged root's self-only implicit
+  source override remains; local editability never rewrites published requirements.
 - An attached member writes its own lock in the primary checkout, then aligns the
   root once. The native lock-owner guard rejects any remaining shared-lock topology.
 
