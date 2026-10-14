@@ -101,6 +101,15 @@ fails visibly rather than authorizing forced recovery or a larger timeout.
 `docs`, `audit`, `status`, `waza`, `duplication`, and the release verbs retain their own
 single operation and are invoked only when their scope applies.
 
+Under [ADR-025's October 9 amendments](../architecture/adr/025-npm-free-fleet-toolchain.md),
+setup provisions current committed locks without resolution or lock writes; audit
+judges missing, stale or incomplete locks, and CI runs audit after setup. An absent
+Mise self-pin uses the qualified host provisioning path, not an invented release.
+Functional installation failures always remain red. `make upg` owns resolution
+and lock writes. Distributed JavaScript tools belong to one owned Bun project
+with `package.json` and a frozen lock, never a Mise npm backend; native Node
+wrappers remain where used. These contracts are not current runtime receipts.
+
 ## Verb single-pass contract
 
 Each mutating verb owns exactly one operation per tool, and `make check` is strictly
@@ -130,7 +139,8 @@ The markdown standard lives once in `flext-infra/config/tooling.yaml`
   belong to the flext-tests markdown validator, not to a second linter.
 - `rumdl fmt` is the formatter and reads the same `.markdownlint.json`:
   `rumdl fmt --check` in `make check`, `rumdl fmt` in `make fmt`. rumdl is locked in
-  `uv.lock`; the fleet toolchain has no npm-backed tool (ADR-025).
+  `uv.lock`; the Mise npm backend remains retired (ADR-025). The amended Bun
+  project contract for distributed JavaScript tools does not change this formatter.
 - `markdown-code` holds parseable embedded Python and doctest examples to the
   ruff-format contract; unparseable documentation fragments are prose and stay with the
   validator. Generated and provider-projected trees (`.agents`, `.claude`, `.gemini`,

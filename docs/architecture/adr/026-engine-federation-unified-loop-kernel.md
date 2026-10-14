@@ -52,6 +52,11 @@ the fixed point ([ADR-014](014-family-part-shape-rope-codemod-rules.md),
 [ADR-017](017-parametrized-rule-surfaces-single-modernize-cli.md), and local FLEXT law).
 This draft establishes no new engine owner and cannot override that composition.
 The architecture below is proposed, not an implementation inventory or green receipt.
+The operator's original frozen D2 requires Python semantics/analysis through Rope
+and retirement of competing internal engines. This draft's narrower description
+below does not supersede or soften D2. That discrepancy remains pending explicit
+review and the corresponding source/consumer cutovers; this note neither approves
+the draft nor certifies those cutovers.
 Acceptance evidence must identify the complete affected repository, engine, rule, owner,
 and consumer inventory with revision and source provenance, then demonstrate actual
 public runtime behavior, applicable canonical gates, and validated cutover/retirement on
