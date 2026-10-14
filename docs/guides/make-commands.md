@@ -137,6 +137,26 @@ the candidate before publication. Consumer tests exercise public tap, target and
 dbt providers; their expected values come from the same upstream facades rather
 than freezing current configuration.
 
+The same phase can reuse an existing public string or nonnegative decimal
+integer constant in a complete function return. Rope proves the literal region,
+its exact inferred type and its single assignment owner;
+computed expressions, docstrings, defaults and metadata retain their meaning.
+An enum member cannot replace a plain string return because its runtime type
+differs from `str`.
+
+For singleton `typing.Literal` field annotations, the phase can reuse an
+existing public `enum.StrEnum` member with the same wire string. Aliased and
+qualified `Literal` imports keep their identity. Defaults and discriminator
+metadata remain intact. This rule does not create new enums or rewrite
+multi-value Literals or function annotations; those contexts require their own
+semantic proof before automatic publication.
+
+Existing singleton `frozenset` constants can replace matching built-in
+constructions on the right side of `in` and `not in`. String and decimal integer
+elements must be literal declarations. Computed values, mutable inputs and
+same-spelled user functions are excluded. Construction and return contexts keep
+fresh-object identity; this rule does not extract new collection declarations.
+
 ## Verb single-pass contract
 
 Each mutating verb owns exactly one operation per tool, and `make check` is strictly
