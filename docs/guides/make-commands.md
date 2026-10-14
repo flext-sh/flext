@@ -5,6 +5,7 @@
 - [Discover commands](#discover-commands)
 - [Architecture admission and acceptance](#architecture-admission-and-acceptance)
 - [Canonical workflow](#canonical-workflow)
+- [Constants migration](#constants-migration)
 - [Verb single-pass contract](#verb-single-pass-contract)
 - [Markdown quality pipeline](#markdown-quality-pipeline)
 - [Test contract](#test-contract)
@@ -110,6 +111,32 @@ and lock writes. Distributed JavaScript tools belong to one owned Bun project
 with `package.json` and a frozen lock, never a Mise npm backend; native Node
 wrappers remain where used. These contracts are not current runtime receipts.
 
+## Constants migration
+
+The constants-consumer phase uses Rope identities, class ancestry, occurrence
+coordinates and native import plans. Python detection and transformation at this
+owner do not use a separate AST, CST or regular-expression parser. Its edits
+participate in the existing semantic publication and fixed-point loop.
+
+The census recognizes `typing.Final` by its resolved identity, including aliased
+imports and lowercase declaration names. A user-defined type named `Final` does
+not establish constant ownership. Parameter positions come from Rope occurrences
+in the same immutable module snapshot, including multiline signatures.
+
+Within the declared constants family, a class-level `typing.Final` annotation
+becomes `ClassVar` so a composed Pydantic namespace does not create an instance
+field. Rope resolves aliases and qualified imports; same-spelled user types,
+module bindings and function-local declarations retain their contracts. The
+initializer remains unchanged, including `frozenset` expressions that depend on
+runtime inputs. Annotation repair does not authorize extracting a calculated
+collection or replacing its elements.
+
+Constant imports resolve through their unique reaching declarations and the
+published facade's MRO. Local shadowing, import cycles and competing owners reject
+the candidate before publication. Consumer tests exercise public tap, target and
+dbt providers; their expected values come from the same upstream facades rather
+than freezing current configuration.
+
 ## Verb single-pass contract
 
 Each mutating verb owns exactly one operation per tool, and `make check` is strictly
@@ -152,9 +179,9 @@ The test-verb law lives in `~/agents/rules/workflow/canonical-commands.md`.
 `make test` runs incremental selection against its persistent Testmon database.
 An explicitly requested full run also retains the canonical Testmon cache under
 [FLEXT law](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md#sources-generation-and-commands).
-External tests follow the root connectivity prerequisites. Any preceding incremental phase retains
-its own receipt and is not the complete-suite result. CI and pre-push use `make test`;
-pre-commit runs no tests. External tests keep their declared runtime and authentication
+External tests follow the root connectivity prerequisites. Any preceding incremental
+phase retains its own receipt and is not the complete-suite result. CI and pre-push use
+`make test`; pre-commit runs no tests. External tests keep their declared runtime and authentication
 requirements. Repair a conflicting runner at its owner; direct runner commands and
 cache-clearing bypasses are prohibited.
 

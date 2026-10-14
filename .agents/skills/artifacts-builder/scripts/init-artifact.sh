@@ -8,7 +8,7 @@ NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
 
 echo "🔍 Detected Node.js version: ${NODE_VERSION}"
 
-if [ "$NODE_VERSION" -lt 18 ]; then
+if [ "${NODE_VERSION}" -lt 18 ]; then
   echo "❌ Error: Node.js 18 or higher is required"
   echo "   Current version: $(node -v)"
   exit 1
@@ -47,7 +47,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPONENTS_TARBALL="${SCRIPT_DIR}/shadcn-components.tar.gz"
 
 # Check if components tarball exists
-if [ ! -f "$COMPONENTS_TARBALL" ]; then
+if [ ! -f "${COMPONENTS_TARBALL}" ]; then
   echo "❌ Error: shadcn-components.tar.gz not found in script directory"
   echo "   Expected location: ${COMPONENTS_TARBALL}"
   exit 1
@@ -56,22 +56,22 @@ fi
 echo "🚀 Creating new React + Vite project: ${PROJECT_NAME}"
 
 # Create new Vite project (always use latest create-vite, pin vite version later)
-pnpm create vite "$PROJECT_NAME" --template react-ts
+pnpm create vite "${PROJECT_NAME}" --template react-ts
 
 # Navigate into project directory
 cd "${PROJECT_NAME}"
 
 echo "🧹 Cleaning up Vite template..."
-$SED_INPLACE '/<link rel="icon".*vite\.svg/d' index.html
-${SED_INPLACE} 's/<title>.*<\/title>/<title>'"$PROJECT_NAME"'<\/title>/' index.html
+${SED_INPLACE} '/<link rel="icon".*vite\.svg/d' index.html
+${SED_INPLACE} 's/<title>.*<\/title>/<title>'"${PROJECT_NAME}"'<\/title>/' index.html
 
 echo "📦 Installing base dependencies..."
 pnpm install
 
 # Pin Vite version for Node 18
 if [ "${NODE_VERSION}" -lt 20 ]; then
-  echo "📌 Pinning Vite to $VITE_VERSION for Node 18 compatibility..."
-  pnpm add -D vite@$VITE_VERSION
+  echo "📌 Pinning Vite to ${VITE_VERSION} for Node 18 compatibility..."
+  pnpm add -D vite@${VITE_VERSION}
 fi
 
 echo "📦 Installing Tailwind CSS and dependencies..."
@@ -280,7 +280,7 @@ tar -xzf "${COMPONENTS_TARBALL}" -C src/
 echo "📝 Creating components.json config..."
 cat > components.json << 'EOF'
 {
-  "$schema": "https://ui.shadcn.com/schema.json",
+  "${schema}": "https://ui.shadcn.com/schema.json",
   "style": "default",
   "rsc": false,
   "tsx": true,
