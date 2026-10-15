@@ -40,4 +40,4 @@ class FlextRootModelsConfig:
         )
 
 
-__all__: list[str] = ["FlextRootModelsConfig"]
+__all__ = ("FlextRootModelsConfig",)
