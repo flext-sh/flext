@@ -21,8 +21,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, ClassVar
 
-from examples import ExamplesFlextRootConstants, c, m, p, t, u
-from flext_core import r
+from examples import ExamplesFlextRootConstants, c, m, p, r, t, u
 
 if TYPE_CHECKING:
     from collections.abc import Callable, MutableSequence

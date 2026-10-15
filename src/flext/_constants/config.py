@@ -9,3 +9,6 @@ from __future__ import annotations
 
 class FlextRootConstantsConfig:
     """Config constants for flext-workspace."""
+
+
+__all__ = ("FlextRootConstantsConfig",)

@@ -9,3 +9,6 @@ from __future__ import annotations
 
 class FlextRootTypingsConfig:
     """Config typings for flext-workspace."""
+
+
+__all__ = ("FlextRootTypingsConfig",)

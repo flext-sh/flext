@@ -9,3 +9,6 @@ from __future__ import annotations
 
 class FlextRootTypingsBase:
     """Base typings for flext-workspace."""
+
+
+__all__ = ("FlextRootTypingsBase",)
