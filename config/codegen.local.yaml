@@ -3,4 +3,4 @@ Infra:
     repository:
       candidate_bootstrap_targets:
         - path: .worktrees/aihub-public-inventory-20261013
-          what: pyproject
+          what: makefile
