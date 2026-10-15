@@ -13,4 +13,4 @@ class FlextRootProtocolsBase(Protocol):
     """Base protocols for flext-workspace."""
 
 
-__all__: list[str] = ["FlextRootProtocolsBase"]
+__all__ = ("FlextRootProtocolsBase",)

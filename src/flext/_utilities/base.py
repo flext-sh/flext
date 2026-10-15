@@ -11,4 +11,4 @@ class FlextRootUtilitiesBase:
     """Base utilities for flext-workspace."""
 
 
-__all__: list[str] = ["FlextRootUtilitiesBase"]
+__all__ = ("FlextRootUtilitiesBase",)
