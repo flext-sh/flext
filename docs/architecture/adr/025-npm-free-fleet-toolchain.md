@@ -49,12 +49,12 @@ the operator's global Mise registry.
 ## Decision
 
 1. **No npm-backed tool in the fleet toolchain.** The toolchain model rejects
-    an `npm:` selector at load. `npm_package_manager`, the npm-only `inline`
-    form and the `[settings.npm]` projection remain retired. Removal of the
-    `bun` entry was the October 8 disposition, not the amended contract:
-    distributed JavaScript tools, including FLEXT's, belong to one owned Bun
-    project with `package.json` and its frozen lock. This does not restore the
-    Mise npm backend or remove native Node wrappers where consumers use them.
+   an `npm:` selector at load. `npm_package_manager`, the npm-only `inline`
+   form and the `[settings.npm]` projection remain retired. Removal of the
+   `bun` entry was the October 8 disposition, not the amended contract:
+   distributed JavaScript tools, including FLEXT's, belong to one owned Bun
+   project with `package.json` and its frozen lock. This does not restore the
+   Mise npm backend or remove native Node wrappers where consumers use them.
 2. **ast-grep comes from aqua** (`aqua:ast-grep/ast-grep`), locked per
    platform in `mise.lock` like every other aqua tool. ast-grep publishes
    glibc-only binaries; no channel ships a musl build.
@@ -70,20 +70,20 @@ the operator's global Mise registry.
    (`toolchain.mise_install_keys`), so the operator's global registry is never
    provisioned by a project verb.
 5. **Setup provisions; audit judges locks.** `make setup` provisions from the
-    current committed locks without resolving releases or writing locks.
-    Missing, stale or incomplete lock declarations remain defects judged by
-    `make audit`, which CI runs after setup. An absent Mise self-pin permits
-    the qualified host Mise provisioning path; it never invents a pin or
-    certifies lock integrity. Functional installation failures always keep
-    setup red, with their native diagnostics and exit status.
-    The audit's `flext-infra codegen mise-proof` checks declared tools in order
-    and stops at the first defect: the `mise.lock` entry exists and carries a
+   current committed locks without resolving releases or writing locks.
+   Missing, stale or incomplete lock declarations remain defects judged by
+   `make audit`, which CI runs after setup. An absent Mise self-pin permits
+   the qualified host Mise provisioning path; it never invents a pin or
+   certifies lock integrity. Functional installation failures always keep
+   setup red, with their native diagnostics and exit status.
+   The audit's `flext-infra codegen mise-proof` checks declared tools in order
+   and stops at the first defect: the `mise.lock` entry exists and carries a
    current-platform checksum (unless the tool declares `lock_checksum: false`
    because its upstream publishes none); `mise where` names the install root;
    `mise which <binary>` and every symlink hop stay inside that root; the
    tool's declared `version_probe` (data in `codegen.yaml`, no default)
-    reports the locked version. Audit has no fallback, retry, or warning-only
-    verdict. `make upg` alone owns resolution and lock writes.
+   reports the locked version. Audit has no fallback, retry, or warning-only
+   verdict. `make upg` alone owns resolution and lock writes.
 
 ## Consequences
 
