@@ -136,6 +136,20 @@ The root dispatcher resolves workspace scope from its typed topology. Generated 
 surfaces and documentation are changed at their template or configuration owner, then
 regenerated with `make gen`.
 
+`make validate-lifecycle` is the workspace-only, serial lifecycle operation. It
+discovers governed members from the typed workspace topology and runs the root,
+then each member, through `setup`, `gen`, `upg`, `setup`, `gen`, and `gen`. It
+does not include external consumers, create PRs, publish commits, switch branches,
+or change integration declarations. `upg` retains its dependency-resolution and
+check contract; this operation is not read-only.
+
+Each command runs in its owning checkout, with a typed receipt recording its
+command, working directory and exit status. The first failure stops the operation;
+unreached commands remain unexecuted, never successful. Attached members share
+their physical superproject runtime, so attached validation does not substitute
+for standalone consumer proof. Ordinary root verbs remain repository-local and
+cannot, by themselves, establish a fleet-wide result.
+
 The generated local `make audit` invokes the public
 `flext-infra workspace verify-lanes --repo-root <checkout>` gate. A workspace
 invocation covers its declared members as well as the root. This is detection only:
