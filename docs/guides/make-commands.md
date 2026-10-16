@@ -142,7 +142,9 @@ templates and source exports needed for its projections, including lazy
 initializers and facade imports. Its publisher guards the consumed file identities,
 destination preimages and journaled effects without traversing the generator's
 executable dependency graph. Documentation generation uses the same physical
-publication boundary.
+publication boundary. Facade generation preserves authored declarations and imports
+outside the selected family's exported bindings. The namespace rule catalog,
+consumed by `make check`, owns their architecture findings.
 
 Generation uses the provisioned physical runtime without first activating the
 environment file it may regenerate. Verbs that consume activation enter the
