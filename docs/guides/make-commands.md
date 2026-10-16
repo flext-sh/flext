@@ -5,6 +5,7 @@
 - [Discover commands](#discover-commands)
 - [Architecture admission and acceptance](#architecture-admission-and-acceptance)
 - [Canonical workflow](#canonical-workflow)
+- [Operation ownership](#operation-ownership)
 - [Constants migration](#constants-migration)
 - [Verb single-pass contract](#verb-single-pass-contract)
 - [Markdown quality pipeline](#markdown-quality-pipeline)
@@ -110,6 +111,41 @@ Functional installation failures always remain red. `make upg` owns resolution
 and lock writes. Distributed JavaScript tools belong to one owned Bun project
 with `package.json` and a frozen lock, never a Mise npm backend; native Node
 wrappers remain where used. These contracts are not current runtime receipts.
+
+## Operation ownership
+
+Each verb enters its existing domain owner. Generation and conformance share the
+same projection planner and transaction publisher; they do not share permission
+to repair authored declarations.
+
+| Verb | Owned operation |
+| --- | --- |
+| `setup` | Install committed locks, synchronize the physical environment and generate declared runtime bindings |
+| `gen` | Render and publish projections from the current declarations |
+| `upg` | Resolve dependencies, write locks and regenerate the affected projections |
+| `mod` | Apply the declared semantic and structural consumer rewrites |
+| `fix` | Apply conformance repairs and the configured fixable gates |
+| `fmt` | Run the configured formatters |
+| `check` | Run the configured read-only gates and check conformance |
+
+The generated dispatcher invokes conformance checking only through `make check`
+and conformance repair only through `make fix`. Installing, generating,
+upgrading, rewriting or formatting does not implicitly run a global conformance
+check. Each operation still proves the prerequisites and effects it actually
+consumes. Native environment verification, input authentication and publication
+receipt verification remain required; they are not global conformance scans.
+
+Generation uses the provisioned physical runtime without first activating the
+environment file it may regenerate. Verbs that consume activation enter the
+declared environment before their handlers. Both routes retain the same physical
+workspace and interpreter ownership checks.
+
+Runtime bindings are generated outputs. `setup` and `gen` render them from the
+declared configuration without migrating authored configuration or retiring its
+Git index entries. For tracked editor settings, `fix` owns the existing migration:
+preserve the portable configuration in its declaration owner before retiring
+tracking and publishing the runtime-local binding. A binding refresh cannot
+silently authorize that source migration.
 
 ## Constants migration
 
