@@ -122,11 +122,12 @@ to repair authored declarations.
 | --- | --- |
 | `setup` | Install committed locks, synchronize the physical environment and generate declared runtime bindings |
 | `gen` | Render and publish projections from the current declarations |
-| `upg` | Resolve dependencies, write locks and regenerate the affected projections |
+| `upg` | Project current declarations with the frozen producer, then resolve dependencies and write locks |
 | `mod` | Apply the declared semantic and structural consumer rewrites |
 | `fix` | Apply conformance repairs and the configured fixable gates |
 | `fmt` | Run the configured formatters |
 | `check` | Run the configured read-only gates and check conformance |
+| `test` | Execute behavioral tests with the persistent Testmon database |
 
 The generated dispatcher invokes conformance checking only through `make check`
 and conformance repair only through `make fix`. Installing, generating,
@@ -134,6 +135,14 @@ upgrading, rewriting or formatting does not implicitly run a global conformance
 check. Each operation still proves the prerequisites and effects it actually
 consumes. Native environment verification, input authentication and publication
 receipt verification remain required; they are not global conformance scans.
+
+General code audits belong exclusively to `make check`. `make test` executes
+tests; it does not run the general check gates. Generation reads the declarations,
+templates and source exports needed for its projections, including lazy
+initializers and facade imports. Its publisher guards the consumed file identities,
+destination preimages and journaled effects without traversing the generator's
+executable dependency graph. Documentation generation uses the same physical
+publication boundary.
 
 Generation uses the provisioned physical runtime without first activating the
 environment file it may regenerate. Verbs that consume activation enter the
@@ -146,6 +155,14 @@ Git index entries. For tracked editor settings, `fix` owns the existing migratio
 preserve the portable configuration in its declaration owner before retiring
 tracking and publishing the runtime-local binding. A binding refresh cannot
 silently authorize that source migration.
+
+Within the same `make upg` invocation, the existing committed lock first
+provisions the frozen producer. That producer projects `pyproject.toml` and its
+native resolution views before the resolver upgrades either view. Lock
+reconciliation, installation and verification then consume those projections.
+A usable committed lock and a producer that supports the current declarations
+are prerequisites. This ordering does not promise compatibility with an older
+producer or introduce a separate bootstrap command.
 
 ## Constants migration
 
@@ -256,6 +273,20 @@ reported as tests passed. The full phase must execute its complete nonempty inve
 - No retry, fallback, suppression, normalization, partial run, or alternate raw tool
   path can replace the canonical verb.
 
+The recovery contract under implementation also covers a journal-listed
+`TEMPORARY` directory intent whose original preimage was absent and whose creation
+receipt is still `None`. Reconciliation must remain strictly inside the original
+authenticated transaction root. An observed empty directory is a new input to
+that reconciliation; it cannot stand in for the missing historical creation
+receipt.
+
+Removal requires an exact identity guard and applies only to the proven empty
+directory. The original authenticated manifest must agree before and after the
+removal. Unknown nonempty content, a different directory or parent identity, or
+divergent aliases remain failures and are preserved. Already published independent
+effects remain published. Native regression tests and runtime proof for this
+recovery case are pending; this contract is not a successful recovery receipt.
+
 ## Scope and generation
 
 `make file-gate FILE=<repository-relative Python file>` validates one literal file
@@ -314,12 +345,19 @@ files. A pending participant outside the declared physical scope fails without
 changing its journal or staging. The receipt is a dated preflight, not a completed
 generation or fleet-green receipt; generation rechecks the boundary before effects.
 
+`make profile-gen` runs the generation handler under cProfile and retains its
+original exit status. `make profile-gen-report` reads that profile. Keep source
+inputs unchanged during a capture and record the command's wall time separately
+from the profiler's function timings. Workspace planning uses worker processes;
+the parent profile records their waits. An individual project's profile runs its
+single planning task in the profiling process and exposes that task's call costs.
+
 `make validate-lifecycle` is the workspace-only, serial lifecycle operation. It
 discovers governed members from the typed workspace topology and runs the root,
 then each member, through `setup`, `gen`, `upg`, `setup`, `gen`, and `gen`. It
 does not include external consumers, create PRs, publish commits, switch branches,
 or change integration declarations. `upg` retains its dependency-resolution and
-check contract; this operation is not read-only.
+lock-verification contract; this operation is not read-only.
 
 Each command runs in its owning checkout, with a typed receipt recording its
 command, working directory and exit status. The first failure stops the operation;
