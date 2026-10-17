@@ -146,10 +146,34 @@ publication boundary. Facade generation preserves authored declarations and impo
 outside the selected family's exported bindings. The namespace rule catalog,
 consumed by `make check`, owns their architecture findings.
 
+The read-only conformance observer verifies the completed journal, actual inputs,
+effects and requested scope through that same publication owner. It does not
+repeat the executable dependency audit owned by the `fresh-import` check gate.
+
+Facades and the planned package initializers required by their imports form one
+dependent publication group. Generation reuses those initializer plans rather than
+publishing a facade against an older export map. Unrelated managed artifacts remain
+outside that group.
+
+Completed receipts retain their original input evidence. The advancing publication
+frontier contains outputs: a later phase proves those outputs before consuming them,
+and authenticates its own inputs before effects. Read-only inputs from a completed
+phase do not become outputs that every subsequent phase must revalidate.
+
 Generation uses the provisioned physical runtime without first activating the
 environment file it may regenerate. Verbs that consume activation enter the
 declared environment before their handlers. Both routes retain the same physical
 workspace and interpreter ownership checks.
+
+Setup in the declared CI context synchronizes the environment without authorizing a
+local `.envrc`. Native tool installation and version proof remain mandatory. Backend
+executable names belong to the typed toolchain entry and its generated Mise options;
+the installer does not repair an incorrect name through shell renames or retries.
+CI tool caches match the generated Mise configuration as well as the committed
+locks and package metadata. A cache from another declaration is not a restore
+candidate. Upgrade projects the Mise configuration and dispatcher before reparsing
+the dispatcher to resolve and install its current backend keys; post-generation
+hooks run once after the upgraded environment converges.
 
 Runtime bindings are generated outputs. `setup` and `gen` render them from the
 declared configuration without migrating authored configuration or retiring its
@@ -256,7 +280,7 @@ An explicitly requested full run also retains the canonical Testmon cache under
 [FLEXT law](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md#sources-generation-and-commands).
 External tests follow the root connectivity prerequisites. Any preceding incremental
 phase retains its own receipt and is not the complete-suite result. CI and pre-push use
-`make test`; pre-commit runs no tests. External tests keep their declared runtime and authentication
+`make test`; pre-commit runs the CI check partition and incremental tests. External tests keep their declared runtime and authentication
 requirements. Repair a conflicting runner at its owner; direct runner commands and
 cache-clearing bypasses are prohibited.
 
@@ -265,6 +289,9 @@ deselection counts. Warnings are counted per subprocess and globally, including 
 explicitly suspended MRO warnings. Only a typed incremental cache hit with database
 integrity checks and complete deselection accounting may execute zero tests; it is never
 reported as tests passed. The full phase must execute its complete nonempty inventory.
+An empty incremental selection remains distinct from an absent selection. Native
+Testmon selection and the collection manifest must agree before any test executes;
+an empty manifest must never expand into an unselected run of the complete target.
 
 ## Failure contract
 
@@ -328,6 +355,19 @@ root. Selecting the member Makefile adds no project selector or alternate dispat
 Manifest exclusions remain authoritative, and literal file validation keeps its
 owning-project scope. Generated Make surfaces and documentation are changed at their
 template or configuration owner, then regenerated with `make gen`.
+
+`make project-new` creates the declared project through the shared scaffold service.
+Generated settings use `FlextSettings.resolve_env_file` with the project's declared
+namespace: an explicit `FLEXT_ENV_FILE` takes precedence over the namespace file and
+the consumer's working-directory `.env`. Discovery never depends on the installed
+package's location. Settings use the framework's per-class singleton; YAML business
+configuration keeps its independent frozen lifecycle. Hosted setup selects the
+existing non-editable installation path, so runtime acceptance must also verify that
+the generated package is loaded from its own environment.
+The generated API supplies the ping service's configuration and settings ports
+explicitly. Its service base uses the Core kernel, and separate service instances
+retain their injected settings without reading module globals. The CLI binds the
+already-composed API alias.
 
 `make mod` validates the rule fixtures and applies declared consumer text cutovers,
 then invokes the existing Rope census before the structural fixed-point cycle. The census
