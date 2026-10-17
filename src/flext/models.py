@@ -1,3 +1,4 @@
+# AUTO-GENERATED FILE — Regenerate with: make gen
 """Models facade for flext-workspace — m.Root project namespace.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -6,8 +7,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext._models.base import FlextRootModelsBase
-from flext._models.config import FlextRootModelsConfig
+from flext._models import FlextRootModelsBase, FlextRootModelsConfig
 from flext_db_oracle import FlextDbOracleModels
 from flext_grpc import FlextGrpcModels
 from flext_infra import FlextInfraModels
