@@ -1,15 +1,18 @@
 [submodule "flext-api"]
 	path = flext-api
+	flext-layer = platform
 	url = https://github.com/flext-sh/flext-api.git
 	branch = 0.12.0-dev
 
 [submodule "flext-auth"]
 	path = flext-auth
+	flext-layer = platform
 	url = https://github.com/flext-sh/flext-auth.git
 	branch = 0.12.0-dev
 
 [submodule "flext-cli"]
 	path = flext-cli
+	flext-layer = platform
 	url = https://github.com/flext-sh/flext-cli.git
 	branch = 0.12.0-dev
 
@@ -20,6 +23,7 @@
 
 [submodule "flext-db-oracle"]
 	path = flext-db-oracle
+	flext-layer = domain
 	url = https://github.com/flext-sh/flext-db-oracle.git
 	branch = 0.12.0-dev
 
@@ -45,6 +49,7 @@
 
 [submodule "flext-grpc"]
 	path = flext-grpc
+	flext-layer = platform
 	url = https://github.com/flext-sh/flext-grpc.git
 	branch = 0.12.0-dev
 
@@ -55,41 +60,49 @@
 
 [submodule "flext-ldap"]
 	path = flext-ldap
+	flext-layer = domain
 	url = https://github.com/flext-sh/flext-ldap.git
 	branch = 0.12.0-dev
 
 [submodule "flext-ldif"]
 	path = flext-ldif
+	flext-layer = domain
 	url = https://github.com/flext-sh/flext-ldif.git
 	branch = 0.12.0-dev
 
 [submodule "flext-meltano"]
 	path = flext-meltano
+	flext-layer = platform
 	url = https://github.com/flext-sh/flext-meltano.git
 	branch = 0.12.0-dev
 
 [submodule "flext-observability"]
 	path = flext-observability
+	flext-layer = platform
 	url = https://github.com/flext-sh/flext-observability.git
 	branch = 0.12.0-dev
 
 [submodule "flext-oracle-oic"]
 	path = flext-oracle-oic
+	flext-layer = domain
 	url = https://github.com/flext-sh/flext-oracle-oic.git
 	branch = 0.12.0-dev
 
 [submodule "flext-oracle-wms"]
 	path = flext-oracle-wms
+	flext-layer = domain
 	url = https://github.com/flext-sh/flext-oracle-wms.git
 	branch = 0.12.0-dev
 
 [submodule "flext-plugin"]
 	path = flext-plugin
+	flext-layer = platform
 	url = https://github.com/flext-sh/flext-plugin.git
 	branch = 0.12.0-dev
 
 [submodule "flext-quality"]
 	path = flext-quality
+	flext-layer = domain
 	url = https://github.com/flext-sh/flext-quality.git
 	branch = 0.12.0-dev
 
@@ -150,5 +163,6 @@
 
 [submodule "flext-web"]
 	path = flext-web
+	flext-layer = platform
 	url = https://github.com/flext-sh/flext-web.git
 	branch = 0.12.0-dev

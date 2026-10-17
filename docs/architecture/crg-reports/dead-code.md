@@ -27,13 +27,13 @@
 - FlextCliVersion (`~/flext/flext-cli/src/flext_cli/__version__.py`:19)
 - CliValidationError (`~/flext/flext-cli/src/flext_cli/_constants/exceptions.py`:33)
 - FlextCliUtilitiesCli
-  (`~/flext/flext-cli/src/flext_cli/_utilities/_cli_namespace.py`:40)
+  (`~/flext/flext-cli/src/flext_cli/_utilities/cli_namespace.py`:40)
 - \_IoCounters
   (`~/flext/flext-cli/src/flext_cli/_utilities/_runtime_windows_job_start.py`:28)
 - \_BasicLimitInformation
   (`~/flext/flext-cli/src/flext_cli/_utilities/_runtime_windows_job_start.py`:38)
 - FlextCliUtilitiesXlsxFormulaCodec
-  (`~/flext/flext-cli/src/flext_cli/_utilities/_xlxx/xlsx_formula_codec.py`:9)
+  (`~/flext/flext-cli/src/flext_cli/_utilities/_xlsx/xlsx_formula_codec.py`:9)
 - ScriptsFlextConstants (`~/flext/flext-core/scripts/constants.py`:9)
 - ScriptsFlextModels (`~/flext/flext-core/scripts/models.py`:9)
 - ScriptsFlextTypes (`~/flext/flext-core/scripts/typings.py`:8)
@@ -174,11 +174,11 @@
   },
   {
     "name": "FlextCliUtilitiesCli",
-    "qualified_name": "~/flext/flext-cli/src/flext_cli/_utilities/_cli_namespace.py::FlextCliUtilitiesCli",
+    "qualified_name": "~/flext/flext-cli/src/flext_cli/_utilities/cli_namespace.py::FlextCliUtilitiesCli",
     "kind": "Class",
-    "file": "~/flext/flext-cli/src/flext_cli/_utilities/_cli_namespace.py",
-    "file_path": "~/flext/flext-cli/src/flext_cli/_utilities/_cli_namespace.py",
-    "relative_path": "flext-cli/src/flext_cli/_utilities/_cli_namespace.py",
+    "file": "~/flext/flext-cli/src/flext_cli/_utilities/cli_namespace.py",
+    "file_path": "~/flext/flext-cli/src/flext_cli/_utilities/cli_namespace.py",
+    "relative_path": "flext-cli/src/flext_cli/_utilities/cli_namespace.py",
     "line": 40,
     "language": "python"
   },
@@ -204,11 +204,11 @@
   },
   {
     "name": "FlextCliUtilitiesXlsxFormulaCodec",
-    "qualified_name": "~/flext/flext-cli/src/flext_cli/_utilities/_xlxx/xlsx_formula_codec.py::FlextCliUtilitiesXlsxFormulaCodec",
+    "qualified_name": "~/flext/flext-cli/src/flext_cli/_utilities/_xlsx/xlsx_formula_codec.py::FlextCliUtilitiesXlsxFormulaCodec",
     "kind": "Class",
-    "file": "~/flext/flext-cli/src/flext_cli/_utilities/_xlxx/xlsx_formula_codec.py",
-    "file_path": "~/flext/flext-cli/src/flext_cli/_utilities/_xlxx/xlsx_formula_codec.py",
-    "relative_path": "flext-cli/src/flext_cli/_utilities/_xlxx/xlsx_formula_codec.py",
+    "file": "~/flext/flext-cli/src/flext_cli/_utilities/_xlsx/xlsx_formula_codec.py",
+    "file_path": "~/flext/flext-cli/src/flext_cli/_utilities/_xlsx/xlsx_formula_codec.py",
+    "relative_path": "flext-cli/src/flext_cli/_utilities/_xlsx/xlsx_formula_codec.py",
     "line": 9,
     "language": "python"
   },
