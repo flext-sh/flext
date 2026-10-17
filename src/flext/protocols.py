@@ -1,3 +1,4 @@
+# AUTO-GENERATED FILE — Regenerate with: make gen
 """Protocols facade for flext-workspace — p.Root project namespace.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.

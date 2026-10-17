@@ -5,6 +5,8 @@
 - [Discover commands](#discover-commands)
 - [Architecture admission and acceptance](#architecture-admission-and-acceptance)
 - [Canonical workflow](#canonical-workflow)
+- [Operation ownership](#operation-ownership)
+- [Constants migration](#constants-migration)
 - [Verb single-pass contract](#verb-single-pass-contract)
 - [Markdown quality pipeline](#markdown-quality-pipeline)
 - [Test contract](#test-contract)
@@ -101,6 +103,115 @@ fails visibly rather than authorizing forced recovery or a larger timeout.
 `docs`, `audit`, `status`, `waza`, `duplication`, and the release verbs retain their own
 single operation and are invoked only when their scope applies.
 
+Under [ADR-025's October 9 amendments](../architecture/adr/025-npm-free-fleet-toolchain.md),
+setup provisions current committed locks without resolution or lock writes; audit
+judges missing, stale or incomplete locks, and CI runs audit after setup. An absent
+Mise self-pin uses the qualified host provisioning path, not an invented release.
+Functional installation failures always remain red. `make upg` owns resolution
+and lock writes. Distributed JavaScript tools belong to one owned Bun project
+with `package.json` and a frozen lock, never a Mise npm backend; native Node
+wrappers remain where used. These contracts are not current runtime receipts.
+
+## Operation ownership
+
+Each verb enters its existing domain owner. Generation and conformance share the
+same projection planner and transaction publisher; they do not share permission
+to repair authored declarations.
+
+| Verb | Owned operation |
+| --- | --- |
+| `setup` | Install committed locks, synchronize the physical environment and generate declared runtime bindings |
+| `gen` | Render and publish projections from the current declarations |
+| `upg` | Project current declarations with the frozen producer, then resolve dependencies and write locks |
+| `mod` | Apply the declared semantic and structural consumer rewrites |
+| `fix` | Apply conformance repairs and the configured fixable gates |
+| `fmt` | Run the configured formatters |
+| `check` | Run the configured read-only gates and check conformance |
+| `test` | Execute behavioral tests with the persistent Testmon database |
+
+The generated dispatcher invokes conformance checking only through `make check`
+and conformance repair only through `make fix`. Installing, generating,
+upgrading, rewriting or formatting does not implicitly run a global conformance
+check. Each operation still proves the prerequisites and effects it actually
+consumes. Native environment verification, input authentication and publication
+receipt verification remain required; they are not global conformance scans.
+
+General code audits belong exclusively to `make check`. `make test` executes
+tests; it does not run the general check gates. Generation reads the declarations,
+templates and source exports needed for its projections, including lazy
+initializers and facade imports. Its publisher guards the consumed file identities,
+destination preimages and journaled effects without traversing the generator's
+executable dependency graph. Documentation generation uses the same physical
+publication boundary. Facade generation preserves authored declarations and imports
+outside the selected family's exported bindings. The namespace rule catalog,
+consumed by `make check`, owns their architecture findings.
+
+Generation uses the provisioned physical runtime without first activating the
+environment file it may regenerate. Verbs that consume activation enter the
+declared environment before their handlers. Both routes retain the same physical
+workspace and interpreter ownership checks.
+
+Runtime bindings are generated outputs. `setup` and `gen` render them from the
+declared configuration without migrating authored configuration or retiring its
+Git index entries. For tracked editor settings, `fix` owns the existing migration:
+preserve the portable configuration in its declaration owner before retiring
+tracking and publishing the runtime-local binding. A binding refresh cannot
+silently authorize that source migration.
+
+Within the same `make upg` invocation, the existing committed lock first
+provisions the frozen producer. That producer projects `pyproject.toml` and its
+native resolution views before the resolver upgrades either view. Lock
+reconciliation, installation and verification then consume those projections.
+A usable committed lock and a producer that supports the current declarations
+are prerequisites. This ordering does not promise compatibility with an older
+producer or introduce a separate bootstrap command.
+
+## Constants migration
+
+The constants-consumer phase uses Rope identities, class ancestry, occurrence
+coordinates and native import plans. Python detection and transformation at this
+owner do not use a separate AST, CST or regular-expression parser. Its edits
+participate in the existing semantic publication and fixed-point loop.
+
+The census recognizes `typing.Final` by its resolved identity, including aliased
+imports and lowercase declaration names. A user-defined type named `Final` does
+not establish constant ownership. Parameter positions come from Rope occurrences
+in the same immutable module snapshot, including multiline signatures.
+
+Within the declared constants family, a class-level `typing.Final` annotation
+becomes `ClassVar` so a composed Pydantic namespace does not create an instance
+field. Rope resolves aliases and qualified imports; same-spelled user types,
+module bindings and function-local declarations retain their contracts. The
+initializer remains unchanged, including `frozenset` expressions that depend on
+runtime inputs. Annotation repair does not authorize extracting a calculated
+collection or replacing its elements.
+
+Constant imports resolve through their unique reaching declarations and the
+published facade's MRO. Local shadowing, import cycles and competing owners reject
+the candidate before publication. Consumer tests exercise public tap, target and
+dbt providers; their expected values come from the same upstream facades rather
+than freezing current configuration.
+
+The same phase can reuse an existing public string or nonnegative decimal
+integer constant in a complete function return. Rope proves the literal region,
+its exact inferred type and its single assignment owner;
+computed expressions, docstrings, defaults and metadata retain their meaning.
+An enum member cannot replace a plain string return because its runtime type
+differs from `str`.
+
+For singleton `typing.Literal` field annotations, the phase can reuse an
+existing public `enum.StrEnum` member with the same wire string. Aliased and
+qualified `Literal` imports keep their identity. Defaults and discriminator
+metadata remain intact. This rule does not create new enums or rewrite
+multi-value Literals or function annotations; those contexts require their own
+semantic proof before automatic publication.
+
+Existing singleton `frozenset` constants can replace matching built-in
+constructions on the right side of `in` and `not in`. String and decimal integer
+elements must be literal declarations. Computed values, mutable inputs and
+same-spelled user functions are excluded. Construction and return contexts keep
+fresh-object identity; this rule does not extract new collection declarations.
+
 ## Verb single-pass contract
 
 Each mutating verb owns exactly one operation per tool, and `make check` is strictly
@@ -130,7 +241,8 @@ The markdown standard lives once in `flext-infra/config/tooling.yaml`
   belong to the flext-tests markdown validator, not to a second linter.
 - `rumdl fmt` is the formatter and reads the same `.markdownlint.json`:
   `rumdl fmt --check` in `make check`, `rumdl fmt` in `make fmt`. rumdl is locked in
-  `uv.lock`; the fleet toolchain has no npm-backed tool (ADR-025).
+  `uv.lock`; the Mise npm backend remains retired (ADR-025). The amended Bun
+  project contract for distributed JavaScript tools does not change this formatter.
 - `markdown-code` holds parseable embedded Python and doctest examples to the
   ruff-format contract; unparseable documentation fragments are prose and stay with the
   validator. Generated and provider-projected trees (`.agents`, `.claude`, `.gemini`,
@@ -142,9 +254,9 @@ The test-verb law lives in `~/agents/rules/workflow/canonical-commands.md`.
 `make test` runs incremental selection against its persistent Testmon database.
 An explicitly requested full run also retains the canonical Testmon cache under
 [FLEXT law](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md#sources-generation-and-commands).
-External tests follow the root connectivity prerequisites. Any preceding incremental phase retains
-its own receipt and is not the complete-suite result. CI and pre-push use `make test`;
-pre-commit runs no tests. External tests keep their declared runtime and authentication
+External tests follow the root connectivity prerequisites. Any preceding incremental
+phase retains its own receipt and is not the complete-suite result. CI and pre-push use
+`make test`; pre-commit runs no tests. External tests keep their declared runtime and authentication
 requirements. Repair a conflicting runner at its owner; direct runner commands and
 cache-clearing bypasses are prohibited.
 
@@ -162,6 +274,20 @@ reported as tests passed. The full phase must execute its complete nonempty inve
   and never count as successful connectivity or production validation.
 - No retry, fallback, suppression, normalization, partial run, or alternate raw tool
   path can replace the canonical verb.
+
+The recovery contract under implementation also covers a journal-listed
+`TEMPORARY` directory intent whose original preimage was absent and whose creation
+receipt is still `None`. Reconciliation must remain strictly inside the original
+authenticated transaction root. An observed empty directory is a new input to
+that reconciliation; it cannot stand in for the missing historical creation
+receipt.
+
+Removal requires an exact identity guard and applies only to the proven empty
+directory. The original authenticated manifest must agree before and after the
+removal. Unknown nonempty content, a different directory or parent identity, or
+divergent aliases remain failures and are preserved. Already published independent
+effects remain published. Native regression tests and runtime proof for this
+recovery case are pending; this contract is not a successful recovery receipt.
 
 ## Scope and generation
 
@@ -220,6 +346,27 @@ before planning, without acquiring leases, recovering a transaction, or publishi
 files. A pending participant outside the declared physical scope fails without
 changing its journal or staging. The receipt is a dated preflight, not a completed
 generation or fleet-green receipt; generation rechecks the boundary before effects.
+
+`make profile-gen` runs the generation handler under cProfile and retains its
+original exit status. `make profile-gen-report` reads that profile. Keep source
+inputs unchanged during a capture and record the command's wall time separately
+from the profiler's function timings. Workspace planning uses worker processes;
+the parent profile records their waits. An individual project's profile runs its
+single planning task in the profiling process and exposes that task's call costs.
+
+`make validate-lifecycle` is the workspace-only, serial lifecycle operation. It
+discovers governed members from the typed workspace topology and runs the root,
+then each member, through `setup`, `gen`, `upg`, `setup`, `gen`, and `gen`. It
+does not include external consumers, create PRs, publish commits, switch branches,
+or change integration declarations. `upg` retains its dependency-resolution and
+lock-verification contract; this operation is not read-only.
+
+Each command runs in its owning checkout, with a typed receipt recording its
+command, working directory and exit status. The first failure stops the operation;
+unreached commands remain unexecuted, never successful. Attached members share
+their physical superproject runtime, so attached validation does not substitute
+for standalone consumer proof. Ordinary root verbs remain repository-local and
+cannot, by themselves, establish a fleet-wide result.
 
 The generated local `make audit` invokes the public
 `flext-infra workspace verify-lanes --repo-root <checkout>` gate. A workspace

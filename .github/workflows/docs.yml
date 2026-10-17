@@ -5,7 +5,7 @@ name: Docs
   push:
     branches:
       - main
-      - 0.12.0-dev
+      - upload-20261007
     paths:
       - "docs/**"
       - "mkdocs.yml"
@@ -212,9 +212,9 @@ jobs:
       # starts warm. Only written when the restore missed.
       - name: Save tool caches
         # Native cache action access mode remains authoritative before upload.
-        # Fork requests are restore-only; an interrupted run cannot publish.
+        # Only declared events may publish; fork requests remain restore-only.
         if: >-
-          ${{ always() && !cancelled() && steps.tool-cache.outcome == 'success' && steps.tool-cache.outputs.cache-primary-key != '' && ((github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')) || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
+          ${{ always() && !cancelled() && steps.tool-cache.outcome == 'success' && steps.tool-cache.outputs.cache-primary-key != '' && ((github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')) || github.event_name == 'workflow_dispatch') }}
         uses: actions/cache/save@v6
         with:
           path: |
@@ -250,13 +250,13 @@ jobs:
         run: |
           set -eu
           for report_root in .reports apps; do
-            if [ -d "$report_root" ]; then
-              find "$report_root" \
+            if [ -d "${report_root}" ]; then
+              find "${report_root}" \
                 \( -path '*/audit-summary.json' -o -path '*/audit-report.md' -o -path '*/validate-summary.json' -o -path '*/validate-report.md' \) \
                 -type f -exec sh -eu -c '
                   for report_file do
-                    printf "::group::%s\n" "$report_file"
-                    tail -n 80 "$report_file"
+                    printf "::group::%s\n" "${report_file}"
+                    tail -n 80 "${report_file}"
                     printf "::endgroup::\n"
                   done
                 ' sh {} +
@@ -408,9 +408,9 @@ jobs:
         run: make setup
       - name: Save tool caches
         # Native cache action access mode remains authoritative before upload.
-        # Fork requests are restore-only; an interrupted run cannot publish.
+        # Only declared events may publish; fork requests remain restore-only.
         if: >-
-          ${{ always() && !cancelled() && steps.tool-cache.outcome == 'success' && steps.tool-cache.outputs.cache-primary-key != '' && ((github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')) || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
+          ${{ always() && !cancelled() && steps.tool-cache.outcome == 'success' && steps.tool-cache.outputs.cache-primary-key != '' && ((github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')) || github.event_name == 'workflow_dispatch') }}
         uses: actions/cache/save@v6
         with:
           path: |

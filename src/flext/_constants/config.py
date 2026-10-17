@@ -11,4 +11,4 @@ class FlextRootConstantsConfig:
     """Config constants for flext-workspace."""
 
 
-__all__: list[str] = ["FlextRootConstantsConfig"]
+__all__ = ("FlextRootConstantsConfig",)
