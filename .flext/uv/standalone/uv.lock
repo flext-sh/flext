@@ -12,72 +12,72 @@ supported-markers = [
 
 [manifest]
 constraints = [
-    { name = "flext-api", git = "https://github.com/flext-sh/flext-api.git?branch=upload-20261007" },
-    { name = "flext-auth", git = "https://github.com/flext-sh/flext-auth.git?branch=upload-20261007" },
-    { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?branch=upload-20261007" },
-    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?branch=upload-20261007" },
-    { name = "flext-db-oracle", git = "https://github.com/flext-sh/flext-db-oracle.git?branch=upload-20261007" },
-    { name = "flext-dbt-ldap", git = "https://github.com/flext-sh/flext-dbt-ldap.git?branch=upload-20261007" },
-    { name = "flext-dbt-ldif", git = "https://github.com/flext-sh/flext-dbt-ldif.git?branch=upload-20261007" },
-    { name = "flext-dbt-oracle", git = "https://github.com/flext-sh/flext-dbt-oracle.git?branch=upload-20261007" },
-    { name = "flext-dbt-oracle-wms", git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?branch=upload-20261007" },
-    { name = "flext-grpc", git = "https://github.com/flext-sh/flext-grpc.git?branch=upload-20261007" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?branch=upload-20261007" },
-    { name = "flext-ldap", git = "https://github.com/flext-sh/flext-ldap.git?branch=upload-20261007" },
-    { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?branch=upload-20261007" },
-    { name = "flext-meltano", git = "https://github.com/flext-sh/flext-meltano.git?branch=upload-20261007" },
-    { name = "flext-observability", git = "https://github.com/flext-sh/flext-observability.git?branch=upload-20261007" },
-    { name = "flext-oracle-oic", git = "https://github.com/flext-sh/flext-oracle-oic.git?branch=upload-20261007" },
-    { name = "flext-oracle-wms", git = "https://github.com/flext-sh/flext-oracle-wms.git?branch=upload-20261007" },
-    { name = "flext-plugin", git = "https://github.com/flext-sh/flext-plugin.git?branch=upload-20261007" },
-    { name = "flext-quality", git = "https://github.com/flext-sh/flext-quality.git?branch=upload-20261007" },
-    { name = "flext-tap-ldap", git = "https://github.com/flext-sh/flext-tap-ldap.git?branch=upload-20261007" },
-    { name = "flext-tap-ldif", git = "https://github.com/flext-sh/flext-tap-ldif.git?branch=upload-20261007" },
-    { name = "flext-tap-oracle", git = "https://github.com/flext-sh/flext-tap-oracle.git?branch=upload-20261007" },
-    { name = "flext-tap-oracle-oic", git = "https://github.com/flext-sh/flext-tap-oracle-oic.git?branch=upload-20261007" },
-    { name = "flext-tap-oracle-wms", git = "https://github.com/flext-sh/flext-tap-oracle-wms.git?branch=upload-20261007" },
-    { name = "flext-target-ldap", git = "https://github.com/flext-sh/flext-target-ldap.git?branch=upload-20261007" },
-    { name = "flext-target-ldif", git = "https://github.com/flext-sh/flext-target-ldif.git?branch=upload-20261007" },
-    { name = "flext-target-oracle", git = "https://github.com/flext-sh/flext-target-oracle.git?branch=upload-20261007" },
-    { name = "flext-target-oracle-oic", git = "https://github.com/flext-sh/flext-target-oracle-oic.git?branch=upload-20261007" },
-    { name = "flext-target-oracle-wms", git = "https://github.com/flext-sh/flext-target-oracle-wms.git?branch=upload-20261007" },
-    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?branch=upload-20261007" },
-    { name = "flext-web", git = "https://github.com/flext-sh/flext-web.git?branch=upload-20261007" },
+    { name = "flext-api", git = "https://github.com/flext-sh/flext-api.git?branch=0.12.0-dev" },
+    { name = "flext-auth", git = "https://github.com/flext-sh/flext-auth.git?branch=0.12.0-dev" },
+    { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?branch=0.12.0-dev" },
+    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?branch=0.12.0-dev" },
+    { name = "flext-db-oracle", git = "https://github.com/flext-sh/flext-db-oracle.git?branch=0.12.0-dev" },
+    { name = "flext-dbt-ldap", git = "https://github.com/flext-sh/flext-dbt-ldap.git?branch=0.12.0-dev" },
+    { name = "flext-dbt-ldif", git = "https://github.com/flext-sh/flext-dbt-ldif.git?branch=0.12.0-dev" },
+    { name = "flext-dbt-oracle", git = "https://github.com/flext-sh/flext-dbt-oracle.git?branch=0.12.0-dev" },
+    { name = "flext-dbt-oracle-wms", git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?branch=0.12.0-dev" },
+    { name = "flext-grpc", git = "https://github.com/flext-sh/flext-grpc.git?branch=0.12.0-dev" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?branch=0.12.0-dev" },
+    { name = "flext-ldap", git = "https://github.com/flext-sh/flext-ldap.git?branch=0.12.0-dev" },
+    { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?branch=0.12.0-dev" },
+    { name = "flext-meltano", git = "https://github.com/flext-sh/flext-meltano.git?branch=0.12.0-dev" },
+    { name = "flext-observability", git = "https://github.com/flext-sh/flext-observability.git?branch=0.12.0-dev" },
+    { name = "flext-oracle-oic", git = "https://github.com/flext-sh/flext-oracle-oic.git?branch=0.12.0-dev" },
+    { name = "flext-oracle-wms", git = "https://github.com/flext-sh/flext-oracle-wms.git?branch=0.12.0-dev" },
+    { name = "flext-plugin", git = "https://github.com/flext-sh/flext-plugin.git?branch=0.12.0-dev" },
+    { name = "flext-quality", git = "https://github.com/flext-sh/flext-quality.git?branch=0.12.0-dev" },
+    { name = "flext-tap-ldap", git = "https://github.com/flext-sh/flext-tap-ldap.git?branch=0.12.0-dev" },
+    { name = "flext-tap-ldif", git = "https://github.com/flext-sh/flext-tap-ldif.git?branch=0.12.0-dev" },
+    { name = "flext-tap-oracle", git = "https://github.com/flext-sh/flext-tap-oracle.git?branch=0.12.0-dev" },
+    { name = "flext-tap-oracle-oic", git = "https://github.com/flext-sh/flext-tap-oracle-oic.git?branch=0.12.0-dev" },
+    { name = "flext-tap-oracle-wms", git = "https://github.com/flext-sh/flext-tap-oracle-wms.git?branch=0.12.0-dev" },
+    { name = "flext-target-ldap", git = "https://github.com/flext-sh/flext-target-ldap.git?branch=0.12.0-dev" },
+    { name = "flext-target-ldif", git = "https://github.com/flext-sh/flext-target-ldif.git?branch=0.12.0-dev" },
+    { name = "flext-target-oracle", git = "https://github.com/flext-sh/flext-target-oracle.git?branch=0.12.0-dev" },
+    { name = "flext-target-oracle-oic", git = "https://github.com/flext-sh/flext-target-oracle-oic.git?branch=0.12.0-dev" },
+    { name = "flext-target-oracle-wms", git = "https://github.com/flext-sh/flext-target-oracle-wms.git?branch=0.12.0-dev" },
+    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?branch=0.12.0-dev" },
+    { name = "flext-web", git = "https://github.com/flext-sh/flext-web.git?branch=0.12.0-dev" },
     { name = "mypy", specifier = "<2.4.0" },
 ]
 overrides = [
     { name = "flext", editable = "../../../" },
-    { name = "flext-api", git = "https://github.com/flext-sh/flext-api.git?branch=upload-20261007" },
-    { name = "flext-auth", git = "https://github.com/flext-sh/flext-auth.git?branch=upload-20261007" },
-    { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?branch=upload-20261007" },
-    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?branch=upload-20261007" },
-    { name = "flext-db-oracle", git = "https://github.com/flext-sh/flext-db-oracle.git?branch=upload-20261007" },
-    { name = "flext-dbt-ldap", git = "https://github.com/flext-sh/flext-dbt-ldap.git?branch=upload-20261007" },
-    { name = "flext-dbt-ldif", git = "https://github.com/flext-sh/flext-dbt-ldif.git?branch=upload-20261007" },
-    { name = "flext-dbt-oracle", git = "https://github.com/flext-sh/flext-dbt-oracle.git?branch=upload-20261007" },
-    { name = "flext-dbt-oracle-wms", git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?branch=upload-20261007" },
-    { name = "flext-grpc", git = "https://github.com/flext-sh/flext-grpc.git?branch=upload-20261007" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?branch=upload-20261007" },
-    { name = "flext-ldap", git = "https://github.com/flext-sh/flext-ldap.git?branch=upload-20261007" },
-    { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?branch=upload-20261007" },
-    { name = "flext-meltano", git = "https://github.com/flext-sh/flext-meltano.git?branch=upload-20261007" },
-    { name = "flext-observability", git = "https://github.com/flext-sh/flext-observability.git?branch=upload-20261007" },
-    { name = "flext-oracle-oic", git = "https://github.com/flext-sh/flext-oracle-oic.git?branch=upload-20261007" },
-    { name = "flext-oracle-wms", git = "https://github.com/flext-sh/flext-oracle-wms.git?branch=upload-20261007" },
-    { name = "flext-plugin", git = "https://github.com/flext-sh/flext-plugin.git?branch=upload-20261007" },
-    { name = "flext-quality", git = "https://github.com/flext-sh/flext-quality.git?branch=upload-20261007" },
-    { name = "flext-tap-ldap", git = "https://github.com/flext-sh/flext-tap-ldap.git?branch=upload-20261007" },
-    { name = "flext-tap-ldif", git = "https://github.com/flext-sh/flext-tap-ldif.git?branch=upload-20261007" },
-    { name = "flext-tap-oracle", git = "https://github.com/flext-sh/flext-tap-oracle.git?branch=upload-20261007" },
-    { name = "flext-tap-oracle-oic", git = "https://github.com/flext-sh/flext-tap-oracle-oic.git?branch=upload-20261007" },
-    { name = "flext-tap-oracle-wms", git = "https://github.com/flext-sh/flext-tap-oracle-wms.git?branch=upload-20261007" },
-    { name = "flext-target-ldap", git = "https://github.com/flext-sh/flext-target-ldap.git?branch=upload-20261007" },
-    { name = "flext-target-ldif", git = "https://github.com/flext-sh/flext-target-ldif.git?branch=upload-20261007" },
-    { name = "flext-target-oracle", git = "https://github.com/flext-sh/flext-target-oracle.git?branch=upload-20261007" },
-    { name = "flext-target-oracle-oic", git = "https://github.com/flext-sh/flext-target-oracle-oic.git?branch=upload-20261007" },
-    { name = "flext-target-oracle-wms", git = "https://github.com/flext-sh/flext-target-oracle-wms.git?branch=upload-20261007" },
-    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?branch=upload-20261007" },
-    { name = "flext-web", git = "https://github.com/flext-sh/flext-web.git?branch=upload-20261007" },
+    { name = "flext-api", git = "https://github.com/flext-sh/flext-api.git?branch=0.12.0-dev" },
+    { name = "flext-auth", git = "https://github.com/flext-sh/flext-auth.git?branch=0.12.0-dev" },
+    { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?branch=0.12.0-dev" },
+    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?branch=0.12.0-dev" },
+    { name = "flext-db-oracle", git = "https://github.com/flext-sh/flext-db-oracle.git?branch=0.12.0-dev" },
+    { name = "flext-dbt-ldap", git = "https://github.com/flext-sh/flext-dbt-ldap.git?branch=0.12.0-dev" },
+    { name = "flext-dbt-ldif", git = "https://github.com/flext-sh/flext-dbt-ldif.git?branch=0.12.0-dev" },
+    { name = "flext-dbt-oracle", git = "https://github.com/flext-sh/flext-dbt-oracle.git?branch=0.12.0-dev" },
+    { name = "flext-dbt-oracle-wms", git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?branch=0.12.0-dev" },
+    { name = "flext-grpc", git = "https://github.com/flext-sh/flext-grpc.git?branch=0.12.0-dev" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?branch=0.12.0-dev" },
+    { name = "flext-ldap", git = "https://github.com/flext-sh/flext-ldap.git?branch=0.12.0-dev" },
+    { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?branch=0.12.0-dev" },
+    { name = "flext-meltano", git = "https://github.com/flext-sh/flext-meltano.git?branch=0.12.0-dev" },
+    { name = "flext-observability", git = "https://github.com/flext-sh/flext-observability.git?branch=0.12.0-dev" },
+    { name = "flext-oracle-oic", git = "https://github.com/flext-sh/flext-oracle-oic.git?branch=0.12.0-dev" },
+    { name = "flext-oracle-wms", git = "https://github.com/flext-sh/flext-oracle-wms.git?branch=0.12.0-dev" },
+    { name = "flext-plugin", git = "https://github.com/flext-sh/flext-plugin.git?branch=0.12.0-dev" },
+    { name = "flext-quality", git = "https://github.com/flext-sh/flext-quality.git?branch=0.12.0-dev" },
+    { name = "flext-tap-ldap", git = "https://github.com/flext-sh/flext-tap-ldap.git?branch=0.12.0-dev" },
+    { name = "flext-tap-ldif", git = "https://github.com/flext-sh/flext-tap-ldif.git?branch=0.12.0-dev" },
+    { name = "flext-tap-oracle", git = "https://github.com/flext-sh/flext-tap-oracle.git?branch=0.12.0-dev" },
+    { name = "flext-tap-oracle-oic", git = "https://github.com/flext-sh/flext-tap-oracle-oic.git?branch=0.12.0-dev" },
+    { name = "flext-tap-oracle-wms", git = "https://github.com/flext-sh/flext-tap-oracle-wms.git?branch=0.12.0-dev" },
+    { name = "flext-target-ldap", git = "https://github.com/flext-sh/flext-target-ldap.git?branch=0.12.0-dev" },
+    { name = "flext-target-ldif", git = "https://github.com/flext-sh/flext-target-ldif.git?branch=0.12.0-dev" },
+    { name = "flext-target-oracle", git = "https://github.com/flext-sh/flext-target-oracle.git?branch=0.12.0-dev" },
+    { name = "flext-target-oracle-oic", git = "https://github.com/flext-sh/flext-target-oracle-oic.git?branch=0.12.0-dev" },
+    { name = "flext-target-oracle-wms", git = "https://github.com/flext-sh/flext-target-oracle-wms.git?branch=0.12.0-dev" },
+    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?branch=0.12.0-dev" },
+    { name = "flext-web", git = "https://github.com/flext-sh/flext-web.git?branch=0.12.0-dev" },
 ]
 
 [[package]]
@@ -898,11 +898,11 @@ requires-dist = [
     { name = "annotated-types", specifier = ">=0.8.0" },
     { name = "beartype", specifier = ">=0.23.1" },
     { name = "dependency-injector", specifier = ">=4.49.1" },
-    { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?rev=upload-20261007" },
-    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?rev=upload-20261007" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=upload-20261007" },
-    { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?rev=upload-20261007" },
-    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=upload-20261007" },
+    { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev" },
+    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev" },
+    { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev" },
+    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev" },
     { name = "importlib-resources", specifier = ">=7.1.0" },
     { name = "packaging", specifier = ">=26.3" },
     { name = "pydantic", specifier = ">=2.14.1,<3" },
@@ -919,9 +919,7 @@ codegen = [
     { name = "deptry" },
     { name = "editables", specifier = ">=0.6" },
     { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=upload-20261007" },
     { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev" },
-    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=upload-20261007" },
     { name = "hypothesis" },
     { name = "mkdocs" },
     { name = "mkdocs-autorefs" },
@@ -996,49 +994,36 @@ dev = [
     { name = "fastmcp", specifier = ">=4.1.0" },
     { name = "flask", specifier = ">=3.1.3" },
     { name = "flext-api", git = "https://github.com/flext-sh/flext-api.git?rev=0.12.0-dev" },
-    { name = "flext-api", git = "https://github.com/flext-sh/flext-api.git?rev=upload-20261007" },
     { name = "flext-auth", git = "https://github.com/flext-sh/flext-auth.git?rev=0.12.0-dev" },
-    { name = "flext-auth", git = "https://github.com/flext-sh/flext-auth.git?rev=upload-20261007" },
     { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev" },
-    { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?rev=upload-20261007" },
     { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev" },
-    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?rev=upload-20261007" },
     { name = "flext-db-oracle", git = "https://github.com/flext-sh/flext-db-oracle.git?rev=0.12.0-dev" },
-    { name = "flext-db-oracle", git = "https://github.com/flext-sh/flext-db-oracle.git?rev=upload-20261007" },
-    { name = "flext-dbt-ldap", git = "https://github.com/flext-sh/flext-dbt-ldap.git?rev=upload-20261007" },
-    { name = "flext-dbt-ldif", git = "https://github.com/flext-sh/flext-dbt-ldif.git?rev=upload-20261007" },
-    { name = "flext-dbt-oracle", git = "https://github.com/flext-sh/flext-dbt-oracle.git?rev=upload-20261007" },
-    { name = "flext-dbt-oracle-wms", git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?rev=upload-20261007" },
-    { name = "flext-grpc", git = "https://github.com/flext-sh/flext-grpc.git?rev=upload-20261007" },
+    { name = "flext-dbt-ldap", git = "https://github.com/flext-sh/flext-dbt-ldap.git?rev=0.12.0-dev" },
+    { name = "flext-dbt-ldif", git = "https://github.com/flext-sh/flext-dbt-ldif.git?rev=0.12.0-dev" },
+    { name = "flext-dbt-oracle", git = "https://github.com/flext-sh/flext-dbt-oracle.git?rev=0.12.0-dev" },
+    { name = "flext-dbt-oracle-wms", git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?rev=0.12.0-dev" },
+    { name = "flext-grpc", git = "https://github.com/flext-sh/flext-grpc.git?rev=0.12.0-dev" },
     { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=upload-20261007" },
     { name = "flext-ldap", git = "https://github.com/flext-sh/flext-ldap.git?rev=0.12.0-dev" },
-    { name = "flext-ldap", git = "https://github.com/flext-sh/flext-ldap.git?rev=upload-20261007" },
     { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev" },
-    { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?rev=upload-20261007" },
     { name = "flext-meltano", git = "https://github.com/flext-sh/flext-meltano.git?rev=0.12.0-dev" },
-    { name = "flext-meltano", git = "https://github.com/flext-sh/flext-meltano.git?rev=upload-20261007" },
-    { name = "flext-observability", git = "https://github.com/flext-sh/flext-observability.git?rev=upload-20261007" },
+    { name = "flext-observability", git = "https://github.com/flext-sh/flext-observability.git?rev=0.12.0-dev" },
     { name = "flext-oracle-oic", git = "https://github.com/flext-sh/flext-oracle-oic.git?rev=0.12.0-dev" },
-    { name = "flext-oracle-oic", git = "https://github.com/flext-sh/flext-oracle-oic.git?rev=upload-20261007" },
     { name = "flext-oracle-wms", git = "https://github.com/flext-sh/flext-oracle-wms.git?rev=0.12.0-dev" },
-    { name = "flext-oracle-wms", git = "https://github.com/flext-sh/flext-oracle-wms.git?rev=upload-20261007" },
-    { name = "flext-plugin", git = "https://github.com/flext-sh/flext-plugin.git?rev=upload-20261007" },
-    { name = "flext-quality", git = "https://github.com/flext-sh/flext-quality.git?rev=upload-20261007" },
-    { name = "flext-tap-ldap", git = "https://github.com/flext-sh/flext-tap-ldap.git?rev=upload-20261007" },
-    { name = "flext-tap-ldif", git = "https://github.com/flext-sh/flext-tap-ldif.git?rev=upload-20261007" },
-    { name = "flext-tap-oracle", git = "https://github.com/flext-sh/flext-tap-oracle.git?rev=upload-20261007" },
-    { name = "flext-tap-oracle-oic", git = "https://github.com/flext-sh/flext-tap-oracle-oic.git?rev=upload-20261007" },
-    { name = "flext-tap-oracle-wms", git = "https://github.com/flext-sh/flext-tap-oracle-wms.git?rev=upload-20261007" },
-    { name = "flext-target-ldap", git = "https://github.com/flext-sh/flext-target-ldap.git?rev=upload-20261007" },
-    { name = "flext-target-ldif", git = "https://github.com/flext-sh/flext-target-ldif.git?rev=upload-20261007" },
-    { name = "flext-target-oracle", git = "https://github.com/flext-sh/flext-target-oracle.git?rev=upload-20261007" },
-    { name = "flext-target-oracle-oic", git = "https://github.com/flext-sh/flext-target-oracle-oic.git?rev=upload-20261007" },
-    { name = "flext-target-oracle-wms", git = "https://github.com/flext-sh/flext-target-oracle-wms.git?rev=upload-20261007" },
+    { name = "flext-plugin", git = "https://github.com/flext-sh/flext-plugin.git?rev=0.12.0-dev" },
+    { name = "flext-quality", git = "https://github.com/flext-sh/flext-quality.git?rev=0.12.0-dev" },
+    { name = "flext-tap-ldap", git = "https://github.com/flext-sh/flext-tap-ldap.git?rev=0.12.0-dev" },
+    { name = "flext-tap-ldif", git = "https://github.com/flext-sh/flext-tap-ldif.git?rev=0.12.0-dev" },
+    { name = "flext-tap-oracle", git = "https://github.com/flext-sh/flext-tap-oracle.git?rev=0.12.0-dev" },
+    { name = "flext-tap-oracle-oic", git = "https://github.com/flext-sh/flext-tap-oracle-oic.git?rev=0.12.0-dev" },
+    { name = "flext-tap-oracle-wms", git = "https://github.com/flext-sh/flext-tap-oracle-wms.git?rev=0.12.0-dev" },
+    { name = "flext-target-ldap", git = "https://github.com/flext-sh/flext-target-ldap.git?rev=0.12.0-dev" },
+    { name = "flext-target-ldif", git = "https://github.com/flext-sh/flext-target-ldif.git?rev=0.12.0-dev" },
+    { name = "flext-target-oracle", git = "https://github.com/flext-sh/flext-target-oracle.git?rev=0.12.0-dev" },
+    { name = "flext-target-oracle-oic", git = "https://github.com/flext-sh/flext-target-oracle-oic.git?rev=0.12.0-dev" },
+    { name = "flext-target-oracle-wms", git = "https://github.com/flext-sh/flext-target-oracle-wms.git?rev=0.12.0-dev" },
     { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev" },
-    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=upload-20261007" },
     { name = "flext-web", git = "https://github.com/flext-sh/flext-web.git?rev=0.12.0-dev" },
-    { name = "flext-web", git = "https://github.com/flext-sh/flext-web.git?rev=upload-20261007" },
     { name = "gitdb", specifier = ">=4.0.12" },
     { name = "gitpython", specifier = ">=3.2.0" },
     { name = "grpcio", specifier = ">=1.84.0" },
@@ -1145,7 +1130,7 @@ dev = [
 [[package]]
 name = "flext-api"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-api.git?branch=upload-20261007#9dd30f7f5d330dc3a65fc88f8ef074b228c02913" }
+source = { git = "https://github.com/flext-sh/flext-api.git?branch=0.12.0-dev#d671a551851fae1118cdb9ab9a0faa48bb871d9e" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1165,7 +1150,7 @@ dependencies = [
 [[package]]
 name = "flext-auth"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-auth.git?branch=upload-20261007#65429eb96e0479474afefe771aaf222853ce1113" }
+source = { git = "https://github.com/flext-sh/flext-auth.git?branch=0.12.0-dev#4abe5c29ba489ec54499bacfd603606befa59331" }
 dependencies = [
     { name = "annotated-types" },
     { name = "bcrypt" },
@@ -1185,7 +1170,7 @@ dependencies = [
 [[package]]
 name = "flext-cli"
 version = "0.12.1"
-source = { git = "https://github.com/flext-sh/flext-cli.git?branch=upload-20261007#b9d4f802e7d0d8a53517de923ea96461ccf7db64" }
+source = { git = "https://github.com/flext-sh/flext-cli.git?branch=0.12.0-dev#6fb81afe5e3984ee4f82e8078f6eeeb5c52efcd3" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1212,7 +1197,7 @@ dependencies = [
 [[package]]
 name = "flext-core"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-core.git?branch=upload-20261007#13a3e2d41d79c4ea1958df6ff5a09044342d18c0" }
+source = { git = "https://github.com/flext-sh/flext-core.git?branch=0.12.0-dev#bc98ce4e1d20ffcc2833089ff38d44a996993576" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1228,7 +1213,7 @@ dependencies = [
 [[package]]
 name = "flext-db-oracle"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-db-oracle.git?branch=upload-20261007#0a0b2f2ea038e9983d025d0e9b67646a89ead6a8" }
+source = { git = "https://github.com/flext-sh/flext-db-oracle.git?branch=0.12.0-dev#bab4b5e0ca11b4d19d1a7173db416849cf869e84" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1248,7 +1233,7 @@ dependencies = [
 [[package]]
 name = "flext-dbt-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-dbt-ldap.git?branch=upload-20261007#a0cf4142fbe6b45e7189fe4a61eda93d8efba561" }
+source = { git = "https://github.com/flext-sh/flext-dbt-ldap.git?branch=0.12.0-dev#0a96fe437aea53074ada9c7d770673d283b2710e" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1269,7 +1254,7 @@ dependencies = [
 [[package]]
 name = "flext-dbt-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-dbt-ldif.git?branch=upload-20261007#1371ed04764a3aec229d78cc86f86674ab8a492d" }
+source = { git = "https://github.com/flext-sh/flext-dbt-ldif.git?branch=0.12.0-dev#9087d76ba0a182ae7132a5aacd29b0c885d4c44d" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1288,7 +1273,7 @@ dependencies = [
 [[package]]
 name = "flext-dbt-oracle"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-dbt-oracle.git?branch=upload-20261007#f650e12207424eb66b077418c9ec76de1bfadfec" }
+source = { git = "https://github.com/flext-sh/flext-dbt-oracle.git?branch=0.12.0-dev#606cb074abb09ed62dededf4ec8d0d594c4ccea6" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1307,7 +1292,7 @@ dependencies = [
 [[package]]
 name = "flext-dbt-oracle-wms"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?branch=upload-20261007#41d89acd8f8d77efafb9459a0d1ece8cab786bb8" }
+source = { git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?branch=0.12.0-dev#dce084288e04807b0da7ad897aad5043ee1f7873" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1326,7 +1311,7 @@ dependencies = [
 [[package]]
 name = "flext-grpc"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-grpc.git?branch=upload-20261007#0896f42c4224140816c1a20f928333665929ae07" }
+source = { git = "https://github.com/flext-sh/flext-grpc.git?branch=0.12.0-dev#1508303b5f01316a9d3a7bc128433571f4b68cc6" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1346,7 +1331,7 @@ dependencies = [
 [[package]]
 name = "flext-infra"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-infra.git?branch=upload-20261007#99dc028d67dabaf7d7e47b2b136f897a21200372" }
+source = { git = "https://github.com/flext-sh/flext-infra.git?branch=0.12.0-dev#1e3a95fa6904321f69f8d8d5c558f7e4864b0fca" }
 dependencies = [
     { name = "defusedxml" },
     { name = "flext-cli" },
@@ -1359,6 +1344,7 @@ dependencies = [
     { name = "mkdocs" },
     { name = "mypy" },
     { name = "packaging" },
+    { name = "pymdown-extensions" },
     { name = "pytest" },
     { name = "pytest-markdown-docs" },
     { name = "rope" },
@@ -1368,7 +1354,7 @@ dependencies = [
 [[package]]
 name = "flext-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldap.git?branch=upload-20261007#e5194757d3a50841ff58d5780895305070d83e72" }
+source = { git = "https://github.com/flext-sh/flext-ldap.git?branch=0.12.0-dev#99bbb85c76b123db2c10ee556562155e46eca1fe" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1387,7 +1373,7 @@ dependencies = [
 [[package]]
 name = "flext-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-ldif.git?branch=upload-20261007#6d86e85b155a94ae24e19bd85730563bf41bde0e" }
+source = { git = "https://github.com/flext-sh/flext-ldif.git?branch=0.12.0-dev#852a8914311d6df4a8e6fc6039da62bfe6e1e4eb" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1405,7 +1391,7 @@ dependencies = [
 [[package]]
 name = "flext-meltano"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-meltano.git?branch=upload-20261007#8f616cac17cdf763758de1a8e76abf1b4efcc2a2" }
+source = { git = "https://github.com/flext-sh/flext-meltano.git?branch=0.12.0-dev#d290b2f8933c09eebe68ad44cc6e7f3ff09cb5d6" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1428,7 +1414,7 @@ dependencies = [
 [[package]]
 name = "flext-observability"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-observability.git?branch=upload-20261007#2e7ba45a479088a7afbc62ae83703997a04e6c37" }
+source = { git = "https://github.com/flext-sh/flext-observability.git?branch=0.12.0-dev#ba8fea1da1eeab8134de9e1c2adf4c231d0c7441" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1449,7 +1435,7 @@ dependencies = [
 [[package]]
 name = "flext-oracle-oic"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-oracle-oic.git?branch=upload-20261007#0abff172601486499ee31bb5aa7deea922cdb4d9" }
+source = { git = "https://github.com/flext-sh/flext-oracle-oic.git?branch=0.12.0-dev#38b62003ccea134d6b79dc54a335032617e9c24b" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1469,7 +1455,7 @@ dependencies = [
 [[package]]
 name = "flext-oracle-wms"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-oracle-wms.git?branch=upload-20261007#34c859a38fe923181d50e6b84e5c262d3401355f" }
+source = { git = "https://github.com/flext-sh/flext-oracle-wms.git?branch=0.12.0-dev#2d291b7222a3e964d6371df2e671d79d3771c690" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1488,7 +1474,7 @@ dependencies = [
 [[package]]
 name = "flext-plugin"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-plugin.git?branch=upload-20261007#e8c97e4a6645ecdfe34f89700f22f524394401d2" }
+source = { git = "https://github.com/flext-sh/flext-plugin.git?branch=0.12.0-dev#2b19c4e4a0f1921a9a2eb94d2ba2449ff30e4105" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1506,7 +1492,7 @@ dependencies = [
 [[package]]
 name = "flext-quality"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-quality.git?branch=upload-20261007#a7bfe43dc93e8d50581691a73c009c276ceaef37" }
+source = { git = "https://github.com/flext-sh/flext-quality.git?branch=0.12.0-dev#c93eb14a700e19bbf4d6c8e70b7eb58c151a6414" }
 dependencies = [
     { name = "aiohttp" },
     { name = "annotated-types" },
@@ -1754,8 +1740,8 @@ codegen = [
     { name = "bandit", specifier = ">=1.9.4" },
     { name = "deptry" },
     { name = "editables", specifier = ">=0.6" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?branch=upload-20261007" },
-    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?branch=upload-20261007" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?branch=0.12.0-dev" },
+    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?branch=0.12.0-dev" },
     { name = "hypothesis" },
     { name = "mkdocs" },
     { name = "mkdocs-autorefs" },
@@ -1829,37 +1815,37 @@ dev = [
     { name = "fastapi", specifier = ">=0.143.0" },
     { name = "fastmcp", specifier = ">=4.1.0" },
     { name = "flask", specifier = ">=3.1.3" },
-    { name = "flext-api", git = "https://github.com/flext-sh/flext-api.git?branch=upload-20261007" },
-    { name = "flext-auth", git = "https://github.com/flext-sh/flext-auth.git?branch=upload-20261007" },
-    { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?branch=upload-20261007" },
-    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?branch=upload-20261007" },
-    { name = "flext-db-oracle", git = "https://github.com/flext-sh/flext-db-oracle.git?branch=upload-20261007" },
-    { name = "flext-dbt-ldap", git = "https://github.com/flext-sh/flext-dbt-ldap.git?branch=upload-20261007" },
-    { name = "flext-dbt-ldif", git = "https://github.com/flext-sh/flext-dbt-ldif.git?branch=upload-20261007" },
-    { name = "flext-dbt-oracle", git = "https://github.com/flext-sh/flext-dbt-oracle.git?branch=upload-20261007" },
-    { name = "flext-dbt-oracle-wms", git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?branch=upload-20261007" },
-    { name = "flext-grpc", git = "https://github.com/flext-sh/flext-grpc.git?branch=upload-20261007" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?branch=upload-20261007" },
-    { name = "flext-ldap", git = "https://github.com/flext-sh/flext-ldap.git?branch=upload-20261007" },
-    { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?branch=upload-20261007" },
-    { name = "flext-meltano", git = "https://github.com/flext-sh/flext-meltano.git?branch=upload-20261007" },
-    { name = "flext-observability", git = "https://github.com/flext-sh/flext-observability.git?branch=upload-20261007" },
-    { name = "flext-oracle-oic", git = "https://github.com/flext-sh/flext-oracle-oic.git?branch=upload-20261007" },
-    { name = "flext-oracle-wms", git = "https://github.com/flext-sh/flext-oracle-wms.git?branch=upload-20261007" },
-    { name = "flext-plugin", git = "https://github.com/flext-sh/flext-plugin.git?branch=upload-20261007" },
-    { name = "flext-quality", git = "https://github.com/flext-sh/flext-quality.git?branch=upload-20261007" },
-    { name = "flext-tap-ldap", git = "https://github.com/flext-sh/flext-tap-ldap.git?branch=upload-20261007" },
-    { name = "flext-tap-ldif", git = "https://github.com/flext-sh/flext-tap-ldif.git?branch=upload-20261007" },
-    { name = "flext-tap-oracle", git = "https://github.com/flext-sh/flext-tap-oracle.git?branch=upload-20261007" },
-    { name = "flext-tap-oracle-oic", git = "https://github.com/flext-sh/flext-tap-oracle-oic.git?branch=upload-20261007" },
-    { name = "flext-tap-oracle-wms", git = "https://github.com/flext-sh/flext-tap-oracle-wms.git?branch=upload-20261007" },
-    { name = "flext-target-ldap", git = "https://github.com/flext-sh/flext-target-ldap.git?branch=upload-20261007" },
-    { name = "flext-target-ldif", git = "https://github.com/flext-sh/flext-target-ldif.git?branch=upload-20261007" },
-    { name = "flext-target-oracle", git = "https://github.com/flext-sh/flext-target-oracle.git?branch=upload-20261007" },
-    { name = "flext-target-oracle-oic", git = "https://github.com/flext-sh/flext-target-oracle-oic.git?branch=upload-20261007" },
-    { name = "flext-target-oracle-wms", git = "https://github.com/flext-sh/flext-target-oracle-wms.git?branch=upload-20261007" },
-    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?branch=upload-20261007" },
-    { name = "flext-web", git = "https://github.com/flext-sh/flext-web.git?branch=upload-20261007" },
+    { name = "flext-api", git = "https://github.com/flext-sh/flext-api.git?branch=0.12.0-dev" },
+    { name = "flext-auth", git = "https://github.com/flext-sh/flext-auth.git?branch=0.12.0-dev" },
+    { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?branch=0.12.0-dev" },
+    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?branch=0.12.0-dev" },
+    { name = "flext-db-oracle", git = "https://github.com/flext-sh/flext-db-oracle.git?branch=0.12.0-dev" },
+    { name = "flext-dbt-ldap", git = "https://github.com/flext-sh/flext-dbt-ldap.git?branch=0.12.0-dev" },
+    { name = "flext-dbt-ldif", git = "https://github.com/flext-sh/flext-dbt-ldif.git?branch=0.12.0-dev" },
+    { name = "flext-dbt-oracle", git = "https://github.com/flext-sh/flext-dbt-oracle.git?branch=0.12.0-dev" },
+    { name = "flext-dbt-oracle-wms", git = "https://github.com/flext-sh/flext-dbt-oracle-wms.git?branch=0.12.0-dev" },
+    { name = "flext-grpc", git = "https://github.com/flext-sh/flext-grpc.git?branch=0.12.0-dev" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?branch=0.12.0-dev" },
+    { name = "flext-ldap", git = "https://github.com/flext-sh/flext-ldap.git?branch=0.12.0-dev" },
+    { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?branch=0.12.0-dev" },
+    { name = "flext-meltano", git = "https://github.com/flext-sh/flext-meltano.git?branch=0.12.0-dev" },
+    { name = "flext-observability", git = "https://github.com/flext-sh/flext-observability.git?branch=0.12.0-dev" },
+    { name = "flext-oracle-oic", git = "https://github.com/flext-sh/flext-oracle-oic.git?branch=0.12.0-dev" },
+    { name = "flext-oracle-wms", git = "https://github.com/flext-sh/flext-oracle-wms.git?branch=0.12.0-dev" },
+    { name = "flext-plugin", git = "https://github.com/flext-sh/flext-plugin.git?branch=0.12.0-dev" },
+    { name = "flext-quality", git = "https://github.com/flext-sh/flext-quality.git?branch=0.12.0-dev" },
+    { name = "flext-tap-ldap", git = "https://github.com/flext-sh/flext-tap-ldap.git?branch=0.12.0-dev" },
+    { name = "flext-tap-ldif", git = "https://github.com/flext-sh/flext-tap-ldif.git?branch=0.12.0-dev" },
+    { name = "flext-tap-oracle", git = "https://github.com/flext-sh/flext-tap-oracle.git?branch=0.12.0-dev" },
+    { name = "flext-tap-oracle-oic", git = "https://github.com/flext-sh/flext-tap-oracle-oic.git?branch=0.12.0-dev" },
+    { name = "flext-tap-oracle-wms", git = "https://github.com/flext-sh/flext-tap-oracle-wms.git?branch=0.12.0-dev" },
+    { name = "flext-target-ldap", git = "https://github.com/flext-sh/flext-target-ldap.git?branch=0.12.0-dev" },
+    { name = "flext-target-ldif", git = "https://github.com/flext-sh/flext-target-ldif.git?branch=0.12.0-dev" },
+    { name = "flext-target-oracle", git = "https://github.com/flext-sh/flext-target-oracle.git?branch=0.12.0-dev" },
+    { name = "flext-target-oracle-oic", git = "https://github.com/flext-sh/flext-target-oracle-oic.git?branch=0.12.0-dev" },
+    { name = "flext-target-oracle-wms", git = "https://github.com/flext-sh/flext-target-oracle-wms.git?branch=0.12.0-dev" },
+    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?branch=0.12.0-dev" },
+    { name = "flext-web", git = "https://github.com/flext-sh/flext-web.git?branch=0.12.0-dev" },
     { name = "gitdb", specifier = ">=4.0.12" },
     { name = "gitpython", specifier = ">=3.2.0" },
     { name = "grpcio", specifier = ">=1.84.0" },
@@ -1966,7 +1952,7 @@ dev = [
 [[package]]
 name = "flext-tap-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tap-ldap.git?branch=upload-20261007#20761638d18c2ffeb1ca5040b2fc840504386f42" }
+source = { git = "https://github.com/flext-sh/flext-tap-ldap.git?branch=0.12.0-dev#e3446c74641ecad1a10c3bacae29d551caf83567" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -1985,7 +1971,7 @@ dependencies = [
 [[package]]
 name = "flext-tap-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tap-ldif.git?branch=upload-20261007#208109151ccbe2fb7a858ddb6c236e26212b82a2" }
+source = { git = "https://github.com/flext-sh/flext-tap-ldif.git?branch=0.12.0-dev#cfbaff92883244489d5acee29e973eb7fc875cd5" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -2004,7 +1990,7 @@ dependencies = [
 [[package]]
 name = "flext-tap-oracle"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tap-oracle.git?branch=upload-20261007#7d56bc4b1dc6b25e193177878654a4b4762c12ec" }
+source = { git = "https://github.com/flext-sh/flext-tap-oracle.git?branch=0.12.0-dev#6b5efe7cfeb11d63877270a6c774ba3c5f4255c3" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -2023,7 +2009,7 @@ dependencies = [
 [[package]]
 name = "flext-tap-oracle-oic"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tap-oracle-oic.git?branch=upload-20261007#404c5ae7483c19e4d6e16f5642546cebb6aeed8f" }
+source = { git = "https://github.com/flext-sh/flext-tap-oracle-oic.git?branch=0.12.0-dev#f5009cc9bc38c77c2d5d944b4b24c3da7666c7d9" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -2043,7 +2029,7 @@ dependencies = [
 [[package]]
 name = "flext-tap-oracle-wms"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tap-oracle-wms.git?branch=upload-20261007#48c2ce8bacbf14a9dd682f50ddb2fcb2ef8dd13b" }
+source = { git = "https://github.com/flext-sh/flext-tap-oracle-wms.git?branch=0.12.0-dev#95872a882629fa56d5e98ce3d3fdcb336fa8d84e" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -2063,7 +2049,7 @@ dependencies = [
 [[package]]
 name = "flext-target-ldap"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-target-ldap.git?branch=upload-20261007#92e49da6a5ef1c19971bb99db55c5a46260108db" }
+source = { git = "https://github.com/flext-sh/flext-target-ldap.git?branch=0.12.0-dev#1cc0d5229356b04712f5542e2367c8a203c40e25" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -2082,7 +2068,7 @@ dependencies = [
 [[package]]
 name = "flext-target-ldif"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-target-ldif.git?branch=upload-20261007#1e7084407645e068b682077541c7d2965f3e525a" }
+source = { git = "https://github.com/flext-sh/flext-target-ldif.git?branch=0.12.0-dev#5fa81bdf4fdc264d0bd6e6072b8040c4923a9096" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -2101,7 +2087,7 @@ dependencies = [
 [[package]]
 name = "flext-target-oracle"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-target-oracle.git?branch=upload-20261007#48703465e6eb113f86a1a8a76ef04c59f04d66a0" }
+source = { git = "https://github.com/flext-sh/flext-target-oracle.git?branch=0.12.0-dev#db9891d701f89030af2479bf5f5342888e9041e1" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -2121,7 +2107,7 @@ dependencies = [
 [[package]]
 name = "flext-target-oracle-oic"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-target-oracle-oic.git?branch=upload-20261007#002abead1e6adecaaf3e1222d7bebb34a62c1399" }
+source = { git = "https://github.com/flext-sh/flext-target-oracle-oic.git?branch=0.12.0-dev#05a74e6ffe824fea3506b334f9cf6031130247d1" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -2141,7 +2127,7 @@ dependencies = [
 [[package]]
 name = "flext-target-oracle-wms"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-target-oracle-wms.git?branch=upload-20261007#b9d2c4f8f3817c1d9ba484fce65d6f81bdd26180" }
+source = { git = "https://github.com/flext-sh/flext-target-oracle-wms.git?branch=0.12.0-dev#3c83037e1949582a0c159858c72bf2ed370384bf" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -2161,7 +2147,7 @@ dependencies = [
 [[package]]
 name = "flext-tests"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-tests.git?branch=upload-20261007#a5fc54619100922b2044fe1b3b7297b56518ede8" }
+source = { git = "https://github.com/flext-sh/flext-tests.git?branch=0.12.0-dev#1cff3e0ac9b27a82a94412e30d8321a8fe575172" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
@@ -2193,7 +2179,7 @@ dependencies = [
 [[package]]
 name = "flext-web"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-web.git?branch=upload-20261007#d4ead8cfd22f75e0bc18a4150200114f16c1d370" }
+source = { git = "https://github.com/flext-sh/flext-web.git?branch=0.12.0-dev#7ec0105f28286be5ca040c71f6c7b6ca3a4d5cda" }
 dependencies = [
     { name = "annotated-types" },
     { name = "beartype" },
