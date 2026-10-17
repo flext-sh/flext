@@ -4038,7 +4038,7 @@ wheels = [
 [[package]]
 name = "rope"
 version = "1.14.0+dc.3"
-source = { git = "https://github.com/marlon-costa-dc/rope.git?rev=datacosmos#f174a13f464a3a41ffc65891df5b3ea488b824dd" }
+source = { git = "https://github.com/marlon-costa-dc/rope.git?rev=datacosmos#e93f35545045a96e96c8c94ddeb1077b29db4edd" }
 dependencies = [
     { name = "pytoolconfig", extra = ["global"] },
 ]
