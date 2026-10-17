@@ -47,6 +47,6 @@ Infra:
         year: 2026
       integration:
         provider: flext-sh
-        branch: upload-20261007
+        branch: 0.12.0-dev
       namespace_scan_dirs: []
       examples_module: examples.runtime
