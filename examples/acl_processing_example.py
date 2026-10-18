@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from examples import c, p
+    from flext_ldif import c, p
 
 
 class FlextRootAclProcessingExample:

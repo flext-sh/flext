@@ -6,12 +6,23 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import flext_ldif
 from examples import ExamplesFlextRootConstants, c
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
 from flext_cli import cli
+
+if TYPE_CHECKING:
+    from flext_ldif import c as flext_ldif_c, m as flext_ldif_m
+    from flext_ldif._protocols import (
+        EntryProtocol as Entry,
+        AclPermissionsProtocol as AclPermissions,
+        AclEvaluationResultProtocol as AclEvaluationResult,
+        AclResponseProtocol as AclResponse,
+    )
 
 
 def main() -> int:
