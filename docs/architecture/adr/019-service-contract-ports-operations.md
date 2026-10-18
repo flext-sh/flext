@@ -14,6 +14,10 @@
   DI definitive, S2b removed); becomes ACCEPTED when slices S1–S10 land with post-merge
   proof
 - **Date:** 2026-09-25 (amended 2026-09-26)
+- **Contract amendment, 2026-10-18:** request annotations use structural `p`/`t`
+  contracts; the concrete validation model is declared once in existing handler
+  metadata. Registry/handler migration is tracked in `flext-4jtcb.7`; this amendment
+  does not claim that the migration or its integrated validation is complete.
 - **Integrated so far (verified census 2026-09-30, code-level):** S1 — `flext-core` #499,
   merge `d65ba487f`, with the kernel fixes #502 `5ce5919a6` (enforcement), #503
   `2401cb21b` (lazy initialization), #504 `8de52fa6b` (`u.process` fail-loud).
@@ -85,13 +89,18 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
    `unwrap()` chains the carried exception; the container rejects duplicate, empty and
    reserved registrations.
 4. **Operations are the API.** A public instance method declared below `FlextService`
-   that takes nothing or one Pydantic request model, returns `p.Result[...]` and has a
-   docstring is an operation. `u.service_operations(Service)` discovers them lazily,
-   without `eval` and without class-creation checks, and fails loudly on malformed ones.
+   takes nothing or one structural request Protocol, returns `p.Result[...]` and
+   has a docstring. Request-taking operations declare their concrete Pydantic input
+   model once with `@h.handler(command=m.Namespace.Request)`. The signature uses
+   `p.Namespace.Request` or its `t` alias, never the concrete model as a type.
+   `u.service_operations(Service)` discovers the original callable and its model
+   metadata lazily, without `eval` or class-creation checks. Missing, ambiguous or
+   incompatible metadata fails; there is no fallback to concrete annotations.
 5. **Derived CLI.** `flext-cli` turns operations into commands with
    `cli.service_routes(Service, provide=…)` over the existing `register_result_routes`;
    `--help` builds no adapter; invalid input leaves as `e.fail_validation` with the
-   original cause and a non-zero exit.
+   original cause and a non-zero exit. Routes execute the catalogued method by
+   identity, not by a second name lookup or a per-route service wrapper.
 6. **No fake facades (operator decision D1 = A).** The kernel has no `api.py`, `cli.py`,
    `base.py` or console script; NS-LAYOUT derives when a project must provide `api.py`
    (it composes services) and `cli.py` (it declares a console script and operations).
@@ -104,6 +113,34 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
    A red has no "foreign" category: every red in a slice's blast radius is fixed at its
    owner (in its own small PR when it lives in another repository) before the slice
    lands; it is never narrowed, skipped or suppressed.
+9. **Services are Pydantic consumers by MRO.** Each project's `base.py` specializes
+   `s`; domain services inherit it and their model-owned port options. Requests,
+   outputs, state and port fields belong to `m`, capabilities to `p`, aliases to
+   `t`, and pure helpers to `u`. Services do not duplicate constructors, singleton
+   logic, settings cloning or validation. Port-bearing services are constructed at
+   the API root with every dependency supplied, not through `fetch_global()` or
+   `with_settings()` that reconstructs a class without its required ports.
+10. **One registry and dispatch owner.** `FlextRegistry` consumes an explicitly
+    supplied runtime. `FlextDispatcher` owns atomic handler registration and
+    immutable execution snapshots. Discovery receives an explicit module and
+    preserves the original callable, payload and Result. Re-registering the same
+    handler is idempotent; a different handler cannot overwrite a command route.
+    Distinct event subscribers fan out in registration order and stop on failure,
+    without promising rollback of effects already executed. Plugin payloads retain
+    identity; removal deletes real storage before ownership bookkeeping. Separate
+    API instances share a registry only when composition explicitly injects it.
+11. **No unsupported-policy success.** Handler metadata may order discovery by
+    priority, never authorize command replacement. Timeout and middleware are
+    rejected when the selected executor cannot implement them; defaults must not
+    silently request an unsupported policy. This is not permission to build another
+    executor in a consumer.
+12. **Results compose; they are not reimplemented.** Return an existing Result
+    directly when its contract already fits. Use `map` for pure value changes,
+    `flat_map` for Result-producing operations and `from_failure` when changing
+    payload type while preserving failure code, data and exception. Keep explicit
+    control flow when a combinator's exception behavior differs from the boundary.
+    Do not stringify failures or turn them into defaults. Parse once at ingress and
+    serialize once at transport egress; owned models remain models between services.
 
 ## Consequences
 
