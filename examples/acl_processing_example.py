@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from examples import c, m, p
+    from examples import c, p
 
 
 class FlextRootAclProcessingExample:
@@ -22,10 +22,10 @@ class FlextRootAclProcessingExample:
     def process_acls_with_pipeline(
         self,
         *,
-        entry: m.Ldif.Entry,
+        entry: p.Ldif.Entry,
         server_type: c.Ldif.ServerTypes,
-        required_permissions: m.Ldif.AclPermissions,
-    ) -> p.Result[m.Ldif.AclEvaluationResult]:
+        required_permissions: p.Ldif.AclPermissions,
+    ) -> p.Result[p.Ldif.AclEvaluationResult]:
         """Extract and evaluate without rewriting either LDIF operation.
 
         Returns:
