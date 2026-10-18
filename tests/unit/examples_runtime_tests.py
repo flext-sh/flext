@@ -20,7 +20,7 @@ import flext_cli
 import flext_ldif
 from flext_cli import cli
 from flext_ldif import FlextLdif
-from tests import c, m, p, tm, u
+from tests import c, p, tm, u
 
 
 class TestsFlextRootExamplesRuntime:
@@ -204,7 +204,7 @@ class TestsFlextRootExamplesRuntime:
                 }),
             )
 
-            result: p.Result[m.Ldif.AclEvaluationResult] = (
+            result: p.Result[p.Ldif.AclEvaluationResult] = (
                 processor.process_acls_with_pipeline(
                     entry=entry,
                     server_type=flext_ldif.c.Ldif.ServerTypes.OUD,
@@ -214,7 +214,7 @@ class TestsFlextRootExamplesRuntime:
 
             tm.that(result.success, eq=True)
             evaluation = result.unwrap()
-            tm.that(evaluation, is_=flext_ldif.m.Ldif.AclEvaluationResult)
+            tm.that(evaluation, is_=flext_ldif.p.Ldif.AclEvaluationResult)
             tm.that(evaluation.granted, eq=True)
 
         @staticmethod

@@ -29,7 +29,7 @@ class FlextRootAclProcessingExample:
         """Extract and evaluate without rewriting either LDIF operation.
 
         Returns:
-            The resulting ``p.Result[m.Ldif.AclEvaluationResult]``.
+            The resulting ``p.Result[p.Ldif.AclEvaluationResult]``.
 
         """
         return self._service.extract_acls_from_entry(entry, server_type).flat_map(
