@@ -302,16 +302,16 @@ warning(s)
       "dominant_language": "python",
       "description": "Community of 206 nodes",
       "members": [
-        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper_parts/flextcliutilitiesfiletesthelpersmixin_part_01.py::FlextCliUtilitiesFileTestHelpersMixin",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper_parts/flextcliutilitiesfiletesthelpersmixin_part_01.py::FlextCliUtilitiesFileTestHelpersMixin.files_context",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper_parts/flextcliutilitiesfiletesthelpersmixin_part_01.py::FlextCliUtilitiesFileTestHelpersMixin._files_write_structured",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper_parts/flextcliutilitiesfiletesthelpersmixin_part_04.py::FlextCliUtilitiesFileTestHelpersMixin",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper_parts/flextcliutilitiesfiletesthelpersmixin_part_04.py::FlextCliUtilitiesFileTestHelpersMixin.files_parse_content",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_files_parts/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_files_parts/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles.files_delete",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_files_parts/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles._delete",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_files_parts/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles.files_read_text",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_files_parts/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles.files_write_text"
+        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py::FlextCliUtilitiesFileTestHelpersMixin",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py::FlextCliUtilitiesFileTestHelpersMixin.files_context",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py::FlextCliUtilitiesFileTestHelpersMixin._files_write_structured",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_04.py::FlextCliUtilitiesFileTestHelpersMixin",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_04.py::FlextCliUtilitiesFileTestHelpersMixin.files_parse_content",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_files/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_files/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles.files_delete",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_files/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles._delete",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_files/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles.files_read_text",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_files/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles.files_write_text"
       ],
       "members_total": 206,
       "members_truncated": true

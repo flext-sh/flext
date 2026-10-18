@@ -95,6 +95,15 @@ FLEXT projects own only themselves and never inspect neighbors (ADR-003).
 `gen` owns rendering managed `pyproject.toml`, `.mise.toml`, and `.python-version` from
 the toolchain SSOT; setup is not a competing renderer.
 
+`make gen` delegates to `codegen generate` in both workspace and standalone profiles.
+It regenerates managed facades and lazy package exports from source declarations,
+without importing the target application or requiring its lint, typing, or runtime
+checks to pass. Application validation remains with `make check` and `make test`.
+Invalid generator configuration, required declarations that cannot be analyzed, and
+transaction conflicts still fail generation. Source dependency receipts exclude
+planned destinations, whose existing identity or absence is authenticated separately.
+An older standalone Makefile is refreshed through `make initialize`, not edited by hand.
+
 ### 3. Canonical structure, facades, and naming (measured, then enforced)
 
 The generated base fixes one structure for `src`, `tests`, `examples`, `scripts`:
