@@ -155,44 +155,44 @@ url_api = "https://api.github.com/repos/jdx/mise/releases/assets/612241184"
 provenance = "github-attestations"
 
 [[tools."github:kucherenko/jscpd"]]
-version = "5.4.0"
+version = "5.4.1"
 backend = "github:kucherenko/jscpd"
 specifiers = ["latest"]
 
 [tools."github:kucherenko/jscpd"."platforms.linux-arm64"]
-checksum = "sha256:e31c723f89228fbd2f4231c2fbaf885074d15d33c4dc6b93ba551a966efe3517"
-url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.0/jscpd-linux-arm64-gnu.tar.gz"
-url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/601533636"
+checksum = "sha256:6f8ddab0aec0232d08a6aa0c36cddb435ddde2c24a447cc9afe603ac8556748c"
+url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.1/jscpd-linux-arm64-gnu.tar.gz"
+url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/624938745"
 provenance = "github-attestations"
 
 [tools."github:kucherenko/jscpd"."platforms.linux-x64"]
-checksum = "sha256:4c2819a5663e5418fe5dcf0faceca7f05c1f080d3c87fd57cc4ccf99ce857194"
-url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.0/jscpd-linux-x64-gnu.tar.gz"
-url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/601533640"
+checksum = "sha256:f2017a17de2a8d5708f8354c6e7223f82da3dc6489675bce543ba00d9d529468"
+url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.1/jscpd-linux-x64-gnu.tar.gz"
+url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/624938749"
 provenance = "github-attestations"
 
 [tools."github:kucherenko/jscpd"."platforms.linux-x64-musl"]
-checksum = "sha256:10dd883b1fecedb457b7b75870a5895b17f54e1c045c87fe46864fa98730bbf2"
-url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.0/jscpd-linux-x64-musl.tar.gz"
-url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/601533659"
+checksum = "sha256:226149bbf3e48df408005dd3222d5c42367f7cfef4c5788e4da9f4f6a5003b63"
+url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.1/jscpd-linux-x64-musl.tar.gz"
+url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/624938793"
 provenance = "github-attestations"
 
 [tools."github:kucherenko/jscpd"."platforms.macos-arm64"]
-checksum = "sha256:75022b94cd6c05523a7a1639c3fff769d9a97f8c7ef3f6a614c6bee53b7e3bdd"
-url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.0/jscpd-darwin-arm64.tar.gz"
-url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/601533635"
+checksum = "sha256:48dedc0b8fa4f2900fc6ac8f06797e8eee7e36a8ab4f67f54b1ad25fd7ae103c"
+url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.1/jscpd-darwin-arm64.tar.gz"
+url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/624938747"
 provenance = "github-attestations"
 
 [tools."github:kucherenko/jscpd"."platforms.macos-x64"]
-checksum = "sha256:866676d440854f2e6083c4a88f754856fb91ccdc16f59e49a64574cd35d3f48d"
-url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.0/jscpd-darwin-x64.tar.gz"
-url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/601533634"
+checksum = "sha256:101a9b9e0d1a4ffea7b9ac86d91003745ef471f00a8a2a921353a65647b5d12f"
+url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.1/jscpd-darwin-x64.tar.gz"
+url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/624938748"
 provenance = "github-attestations"
 
 [tools."github:kucherenko/jscpd"."platforms.windows-x64"]
-checksum = "sha256:fb23edc10657bf93a66f6f2be53f10335f1be1da9456c97107f98a9d0e21ce13"
-url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.0/jscpd-windows-x64-msvc.tar.gz"
-url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/601533667"
+checksum = "sha256:69b3868a271a7f9c33c4dc0c82b861c290abc70cfb98ea59fba235a25776afe7"
+url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.1/jscpd-windows-x64-msvc.tar.gz"
+url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/624938810"
 provenance = "github-attestations"
 
 [[tools."github:microsoft/waza"]]

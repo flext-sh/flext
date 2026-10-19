@@ -33,19 +33,19 @@ class FlextRootAdvancedProcessingExample:
             arbitrary_types_allowed=True,
         )
 
-        item_id: str = u.Field(description="Unique item identifier")
-        valid: bool = u.Field(description="Whether the item is valid")
-        violations: t.StrSequence = u.Field(
+        item_id: str = m.Field(description="Unique item identifier")
+        valid: bool = m.Field(description="Whether the item is valid")
+        violations: t.StrSequence = m.Field(
             default_factory=tuple,
             description="List of validation violations",
         )
-        warnings: t.StrSequence = u.Field(
+        warnings: t.StrSequence = m.Field(
             default_factory=tuple,
             description="List of validation warnings",
         )
         validation_time: Annotated[
             float,
-            u.Field(description="Time taken for validation"),
+            m.Field(description="Time taken for validation"),
         ] = 0.0
 
     class FlextLdifProcessingPipeline(m.BaseModel):
