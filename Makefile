@@ -53,6 +53,7 @@ $(error Current Make executable has no physical path: $(MAKE_COMMAND))
 endif
 .DEFAULT_GOAL := help
 
+
 # Approval fixes its context before any topology, activation or credential read.
 ifneq ($(filter pre-commit,$(MAKECMDGOALS)),)
 override CI := Y
@@ -452,8 +453,8 @@ endif
 # === SECTION: verb dispatch (managed) ===
 # Source: config:make.verbs and the canonical gate vocabulary. A verb exists
 # only in the profiles it declares (make.verbs[].profiles).
-PUBLIC_VERBS := help setup pre-commit upg upg-sources validate-lifecycle propagate build examples check census census-constants smells test test-full test-file file-gate profile-test profile-test-report profile-environment profile-environment-report profile-lanes profile-lanes-report profile-mod profile-mod-report profile-mod-rules profile-mod-rules-report fmt fix fix-namespace fix-accessors fix-toolchain audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint initialize project-new mod mod-rules mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
-BUILTIN_VERBS := help setup pre-commit upg upg-sources validate-lifecycle propagate build examples check census census-constants smells test test-full test-file file-gate profile-test profile-test-report profile-environment profile-environment-report profile-lanes profile-lanes-report profile-mod profile-mod-report profile-mod-rules profile-mod-rules-report fmt fix fix-namespace fix-accessors fix-toolchain audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint initialize project-new mod mod-rules mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
+PUBLIC_VERBS := help setup pre-commit upg upg-sources validate-lifecycle propagate build examples check census census-constants smells test tests test-full test-file file-gate profile-test profile-test-report profile-environment profile-environment-report profile-lanes profile-lanes-report profile-mod profile-mod-report profile-mod-rules profile-mod-rules-report fmt fix fix-namespace fix-accessors fix-toolchain audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint initialize project-new mod mod-rules mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
+BUILTIN_VERBS := help setup pre-commit upg upg-sources validate-lifecycle propagate build examples check census census-constants smells test tests test-full test-file file-gate profile-test profile-test-report profile-environment profile-environment-report profile-lanes profile-lanes-report profile-mod profile-mod-report profile-mod-rules profile-mod-rules-report fmt fix fix-namespace fix-accessors fix-toolchain audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint initialize project-new mod mod-rules mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
 SCRIPT_VERBS :=
 
 CUSTOM_MAKEFILE := $(MAKEFILE_ROOT)/custom.mk
@@ -632,10 +633,13 @@ endif
 override FLEXT_INFRA_PYTHON := $(RUNTIME_PYTHON)
 override UV_LOCAL_PROJECT := $(RUNTIME_ROOT)/.flext/uv/local
 override UV_STANDALONE_PROJECT := $(RUNTIME_ROOT)/.flext/uv/standalone
+
 ifeq ($(strip $(GITHUB_ACTIONS)),true)
 override UV_PROJECT := $(UV_STANDALONE_PROJECT)
 else
+
 override UV_PROJECT := $(UV_LOCAL_PROJECT)
+
 endif
 override UV_PROJECT_ENVIRONMENT := $(RUNTIME_VENV)
 override VIRTUAL_ENV := $(RUNTIME_VENV)
@@ -810,7 +814,7 @@ _bootstrap_setup_tools: _builtin_require_workspace
 .PHONY: _builtin_require_upg_lock_owner
 _builtin_require_upg_lock_owner:
 	@set -eu; \
-	for resolution in "$(UV_LOCAL_PROJECT)" "$(UV_STANDALONE_PROJECT)"; do \
+	for resolution in "$(PROJECT_ROOT)/.flext/uv/local" "$(PROJECT_ROOT)/.flext/uv/standalone"; do \
 		owner="$$($(UV) workspace dir --project "$$resolution")"; \
 		if [ "$${owner}" != "$$resolution" ]; then \
 			printf 'ERROR[upg] UV lock owner is %s, not %s; regenerate the native resolution inputs before upgrading.\n' "$${owner}" "$$resolution" >&2; \
@@ -1105,6 +1109,21 @@ _activated-test: _builtin_require_environment
 
 
 	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-test,$(call RUN_PUBLIC,test))
+
+
+
+
+tests: _builtin_require_workspace
+	@printf '==> %s | project=%s | profile=%s\n' 'tests' "$(PROJECT_ROOT)" 'workspace'
+
+	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _activated-tests,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-tests)
+
+.PHONY: _activated-tests
+
+_activated-tests: _builtin_require_environment
+
+
+	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-tests,$(call RUN_PUBLIC,tests))
 
 
 
@@ -1736,7 +1755,9 @@ _builtin-pre-commit: _builtin_require_environment
 # before bootstrap, installation, hooks or lock resolution.
 ifeq ($(PROJECT_ROOT),$(RUNTIME_ROOT))
 upg: TOOL_BOOTSTRAP_LIFECYCLE := _upg_lifecycle
+
 upg: TOOL_BOOTSTRAP_RESOLVE := 1
+
 upg: _bootstrap_setup_tools
 else
 upg: _builtin_require_workspace
@@ -1799,6 +1820,10 @@ smells:
 test:
 	@printf '  %-16s %s\n' 'test' 'Run incremental tests through the persistent testmon cache.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make test to execute it.'
+
+tests:
+	@printf '  %-16s %s\n' 'tests' 'Run incremental tests first, then the complete eligible suite using the same persistent testmon database, without a time limit.'
+	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make tests to execute it.'
 
 test-full:
 	@printf '  %-16s %s\n' 'test-full' 'Run incremental tests first, then the complete eligible suite using the same persistent testmon database, without a time limit.'
@@ -1921,7 +1946,7 @@ gen:
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make gen to execute it.'
 
 gen-footprint:
-	@printf '  %-16s %s\n' 'gen-footprint' 'Inspect the pending generation journal and declared physical effect footprint without leases, recovery, or publication.'
+	@printf '  %-16s %s\n' 'gen-footprint' 'Inspect the pending generation journal and physical effect footprint without generation planning, participant leases, recovery, or publication.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make gen-footprint to execute it.'
 
 initialize:
@@ -2028,6 +2053,8 @@ _builtin-help:
 
 	@printf '  %-16s %s\n' 'test' 'Run incremental tests through the persistent testmon cache.';
 
+	@printf '  %-16s %s\n' 'tests' 'Run incremental tests first, then the complete eligible suite using the same persistent testmon database, without a time limit.';
+
 	@printf '  %-16s %s\n' 'test-full' 'Run incremental tests first, then the complete eligible suite using the same persistent testmon database, without a time limit.';
 
 	@printf '  %-16s %s\n' 'test-file' 'Run one declared test file incremental then complete, slow items included, with the same persistent testmon cache (FILE=<repository-relative path>).';
@@ -2088,7 +2115,7 @@ _builtin-help:
 
 	@printf '  %-16s %s\n' 'gen' 'Regenerate declared projections with guarded publication per participant, without repairing authored inputs or resolving locks.';
 
-	@printf '  %-16s %s\n' 'gen-footprint' 'Inspect the pending generation journal and declared physical effect footprint without leases, recovery, or publication.';
+	@printf '  %-16s %s\n' 'gen-footprint' 'Inspect the pending generation journal and physical effect footprint without generation planning, participant leases, recovery, or publication.';
 
 	@printf '  %-16s %s\n' 'initialize' 'Bootstrap this target'"'"'s own declaration and canonical Makefile.';
 
@@ -2411,8 +2438,9 @@ _upg_install_runtime:
 # consumer whose lock still pins an older producer (one without the routes
 # this template calls), or that has no view lock yet, upgrades in one run.
 # The corrective projection is then re-locked by _upg_reconcile_locks.
-# Only this elected runtime owner resolves both native views; attached
-# members delegate before bootstrap instead of writing member locks.
+# Only this elected runtime owner installs the resolved environment. Attached
+# members delegate before bootstrap; this owner also refreshes their own native
+# UV and tool locks for independent setup without installing member runtimes.
 # Reparse a changed dispatcher once; a second change fails the fixed point.
 .PHONY: _upg_lifecycle _upg_converge
 
@@ -2447,47 +2475,249 @@ _upg_lifecycle: _builtin_setup_submodules
 	case " $(CUSTOM_DECLARED_TARGETS) " in \
 		*" pre-upg "*) $(SELF_MAKE) pre-upg ;; \
 	esac
-	@$(SELF_MAKE) _builtin_require_upg_lock_owner
-	@set -eu; \
-	desired_python="$$(mise -C "$(RUNTIME_ROOT)" which python)"; \
-	for resolution in "$(UV_LOCAL_PROJECT)" "$(UV_STANDALONE_PROJECT)"; do \
-		$(UV) lock --project "$$resolution" --python "$$desired_python" --upgrade --refresh; \
-	done
+
+	+@$(SELF_MAKE) _upg_resolve_locks
 	@$(SELF_MAKE) _upg_install_runtime
 	@$(PROJECT_FLEXT_INFRA) codegen generate --root "$(PROJECT_ROOT)" --what pyproject --scope all
 	@$(SELF_MAKE) _upg_reconcile_locks
 	@$(SELF_MAKE) _upg_install_runtime
 	@$(PROJECT_FLEXT_INFRA) workspace verify-environment --repository-root "$(RUNTIME_ROOT)"
 	@$(PROJECT_FLEXT_INFRA) codegen generate --root "$(PROJECT_ROOT)" --what mise-config --scope self
-	@$(PROJECT_FLEXT_INFRA) codegen generate --root "$(PROJECT_ROOT)" --what makefile --scope self
+	@$(PROJECT_FLEXT_INFRA) codegen generate --root "$(PROJECT_ROOT)" --what makefile --scope all
 	+@$(SELF_MAKE) _upg_provision_tools
+	+@$(SELF_MAKE) _upg_refresh_member_locks
 	@$(PROJECT_FLEXT_INFRA) deps modernize --repository-root "$(PROJECT_ROOT)" \
 		--apply --rewrite-constraints --projects .
 	$(call RUN_PUBLIC_PRODUCE,gen)
 	+@$(SELF_MAKE) _upg_converge
 
-# Reparse the projected dispatcher before installing: its declared backend keys
-# must agree with the Mise configuration just generated by the upgraded owner.
+
+# Reparse the projected dispatcher before resolving the declared native tool
+# locks. Each writable FLEXT member retains its own lock for independent setup;
+# only the elected runtime receives an installation.
 .PHONY: _upg_provision_tools
 _upg_provision_tools:
 	@mise -C "$(PROJECT_ROOT)" lock --bump
 	@mise -C "$(PROJECT_ROOT)" install --locked --yes "python" "github:jdx/mise" "uv" "github:direnv/direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "node" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"
+
+# Member lock resolution is independent of root tool provisioning: an editable
+# supplier keeps the runtime's pins while members refresh their standalone locks.
+.PHONY: _upg_refresh_member_locks
+_upg_refresh_member_locks:
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-core"
+	@mise -C "$(PROJECT_ROOT)/flext-core" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-core/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-cli"
+	@mise -C "$(PROJECT_ROOT)/flext-cli" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-cli/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-db-oracle"
+	@mise -C "$(PROJECT_ROOT)/flext-db-oracle" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-db-oracle/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-grpc"
+	@mise -C "$(PROJECT_ROOT)/flext-grpc" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-grpc/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-infra"
+	@mise -C "$(PROJECT_ROOT)/flext-infra" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-infra/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-ldif"
+	@mise -C "$(PROJECT_ROOT)/flext-ldif" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-ldif/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-meltano"
+	@mise -C "$(PROJECT_ROOT)/flext-meltano" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-meltano/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-observability"
+	@mise -C "$(PROJECT_ROOT)/flext-observability" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-observability/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-plugin"
+	@mise -C "$(PROJECT_ROOT)/flext-plugin" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-plugin/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-web"
+	@mise -C "$(PROJECT_ROOT)/flext-web" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-web/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-api"
+	@mise -C "$(PROJECT_ROOT)/flext-api" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-api/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-dbt-ldif"
+	@mise -C "$(PROJECT_ROOT)/flext-dbt-ldif" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-dbt-ldif/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-dbt-oracle"
+	@mise -C "$(PROJECT_ROOT)/flext-dbt-oracle" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-dbt-oracle/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-ldap"
+	@mise -C "$(PROJECT_ROOT)/flext-ldap" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-ldap/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-tap-ldif"
+	@mise -C "$(PROJECT_ROOT)/flext-tap-ldif" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-tap-ldif/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-tap-oracle"
+	@mise -C "$(PROJECT_ROOT)/flext-tap-oracle" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-tap-oracle/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-target-ldif"
+	@mise -C "$(PROJECT_ROOT)/flext-target-ldif" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-target-ldif/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-target-oracle"
+	@mise -C "$(PROJECT_ROOT)/flext-target-oracle" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-target-oracle/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-tests"
+	@mise -C "$(PROJECT_ROOT)/flext-tests" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-tests/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-auth"
+	@mise -C "$(PROJECT_ROOT)/flext-auth" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-auth/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-dbt-ldap"
+	@mise -C "$(PROJECT_ROOT)/flext-dbt-ldap" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-dbt-ldap/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-oracle-wms"
+	@mise -C "$(PROJECT_ROOT)/flext-oracle-wms" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-oracle-wms/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-quality"
+	@mise -C "$(PROJECT_ROOT)/flext-quality" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-quality/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-tap-ldap"
+	@mise -C "$(PROJECT_ROOT)/flext-tap-ldap" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-tap-ldap/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-target-ldap"
+	@mise -C "$(PROJECT_ROOT)/flext-target-ldap" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-target-ldap/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-dbt-oracle-wms"
+	@mise -C "$(PROJECT_ROOT)/flext-dbt-oracle-wms" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-dbt-oracle-wms/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-oracle-oic"
+	@mise -C "$(PROJECT_ROOT)/flext-oracle-oic" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-oracle-oic/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-tap-oracle-wms"
+	@mise -C "$(PROJECT_ROOT)/flext-tap-oracle-wms" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-tap-oracle-wms/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-target-oracle-wms"
+	@mise -C "$(PROJECT_ROOT)/flext-target-oracle-wms" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-target-oracle-wms/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-tap-oracle-oic"
+	@mise -C "$(PROJECT_ROOT)/flext-tap-oracle-oic" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-tap-oracle-oic/Makefile" _upg_resolve_locks
+
+	@printf 'upg: resolving native tool and UV locks for %s\n' "$(PROJECT_ROOT)/flext-target-oracle-oic"
+	@mise -C "$(PROJECT_ROOT)/flext-target-oracle-oic" lock --bump
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-target-oracle-oic/Makefile" _upg_resolve_locks
+
 
 # Complete the upgrade against the projections just published. Re-reading the
 # current Makefile selects the new recipes without restarting the upgrade or
 # repeating generation and installation.
 _upg_converge:
 	@$(SELF_MAKE) _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-core/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-cli/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-db-oracle/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-grpc/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-infra/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-ldif/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-meltano/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-observability/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-plugin/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-web/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-api/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-dbt-ldif/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-dbt-oracle/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-ldap/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-tap-ldif/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-tap-oracle/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-target-ldif/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-target-oracle/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-tests/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-auth/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-dbt-ldap/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-oracle-wms/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-quality/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-tap-ldap/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-target-ldap/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-dbt-oracle-wms/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-oracle-oic/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-tap-oracle-wms/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-target-oracle-wms/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-tap-oracle-oic/Makefile" _upg_reconcile_locks
+
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(PROJECT_ROOT)" -f "$(PROJECT_ROOT)/flext-target-oracle-oic/Makefile" _upg_reconcile_locks
+
 	@$(SELF_MAKE) _builtin_setup_environment
 	@$(SELF_MAKE) _builtin_require_mise
 	@$(PROJECT_FLEXT_INFRA) deps verify-locks --repository-root "$(PROJECT_ROOT)"
 	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _upg_activated,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _upg_activated)
 
-.PHONY: _upg_reconcile_locks
+.PHONY: _upg_resolve_locks _upg_reconcile_locks
+_upg_resolve_locks: _builtin_require_upg_lock_owner
+	@set -eu; \
+	desired_python="$$(mise -C "$(RUNTIME_ROOT)" which python)"; \
+	for resolution in "$(PROJECT_ROOT)/.flext/uv/local" "$(PROJECT_ROOT)/.flext/uv/standalone"; do \
+		printf 'upg: upgrading UV lock for %s\n' "$$resolution"; \
+		$(UV) lock --project "$$resolution" --python "$$desired_python" --upgrade --refresh; \
+		$(UV) lock --check --project "$$resolution" --python "$$desired_python"; \
+	done
+
 _upg_reconcile_locks: _builtin_require_upg_lock_owner
 	@set -eu; \
 	desired_python="$$(mise -C "$(RUNTIME_ROOT)" which python)"; \
-	for resolution in "$(UV_LOCAL_PROJECT)" "$(UV_STANDALONE_PROJECT)"; do \
+	for resolution in "$(PROJECT_ROOT)/.flext/uv/local" "$(PROJECT_ROOT)/.flext/uv/standalone"; do \
+		printf 'upg: reconciling UV lock for %s\n' "$$resolution"; \
 		$(UV) lock --project "$$resolution" --python "$$desired_python"; \
 		$(UV) lock --check --project "$$resolution" --python "$$desired_python"; \
 	done
@@ -2594,7 +2824,7 @@ _builtin_test_file_all: _builtin_require_environment
 	scratch_tmp="$$(cd "$$scratch/tmp" && pwd -P)"; \
 	TMPDIR="$$scratch_tmp"; TMP="$$scratch_tmp"; TEMP="$$scratch_tmp"; \
 	export TMPDIR TMP TEMP; \
-	TESTMON_DATAFILE="$$database" $(PYTEST_BOUNDED) $(PROJECT_INFRA_RUN) -m flext_infra._pytest_entry file
+	TESTMON_DATAFILE="$$database" $(PROJECT_INFRA_RUN) -m flext_infra._pytest_entry file
 
 # Literal-file selection and verdicts belong to the existing canonical checker.
 # Export the raw Make value instead of interpolating operator input into shell code.
@@ -2604,15 +2834,48 @@ _builtin_file_gate_all: _builtin_require_environment
 
 # fmt is format-only (single-pass verb law): ruff formats Python, the
 # fmt_gates formatters run once through the checker's apply mode, and every
-# lint repair belongs to `make fix`. Only a real tool failure (exit >= 2)
-# breaks the verb; a formatter's residual findings stay reportable and are
-# enforced by `make check`.
+# lint repair belongs to `make fix`. Every repair requires read-only native
+# verification; remaining findings and tool failures both fail the verb.
 _builtin_fmt_all: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gates "format,markdown-format" --apply
+	@set -eu; \
+		gates="lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,mypy,pyright,conflict-markers,loc-cap,runtime-census,fresh-import,deps,index-declarations,codemod,layout,direnv"; \
+		if [ "$(strip $(CI))" = "Y" ]; then \
+			gates="lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,conflict-markers,loc-cap,runtime-census,fresh-import,deps,index-declarations,layout"; \
+			printf 'INFO: CI=Y runs check gates: lint format security markdown markdown-format markdown-code duplication pyrefly conflict-markers loc-cap runtime-census fresh-import deps index-declarations layout\n'; \
+		elif [ "$(strip $(CI))" = "N" ]; then \
+			gates="lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,mypy,pyright,conflict-markers,loc-cap,runtime-census,fresh-import,deps,index-declarations,codemod,layout,direnv"; \
+			printf 'INFO: CI=N runs check gates: lint format security markdown markdown-format markdown-code duplication pyrefly mypy pyright conflict-markers loc-cap runtime-census fresh-import deps index-declarations codemod layout direnv\n'; \
+		else \
+			printf 'INFO: default context runs check gates: lint format security markdown markdown-format markdown-code duplication pyrefly mypy pyright conflict-markers loc-cap runtime-census fresh-import deps index-declarations codemod layout direnv\n'; \
+		fi; \
+		if [ -z "$$gates" ]; then \
+			printf 'ERROR: no active check gates remain in the selected context\n' >&2; \
+			exit 2; \
+		fi; \
+		$(PROJECT_FLEXT_INFRA) workspace capture-gate --repository-root "$(PROJECT_ROOT)" --gates "$$gates"; \
+		$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope self --mode check
 
 _builtin_fix_all: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope self --mode apply
 	@$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gates "lint,markdown,markdown-code,deps" --apply
+	@set -eu; \
+		gates="lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,mypy,pyright,conflict-markers,loc-cap,runtime-census,fresh-import,deps,index-declarations,codemod,layout,direnv"; \
+		if [ "$(strip $(CI))" = "Y" ]; then \
+			gates="lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,conflict-markers,loc-cap,runtime-census,fresh-import,deps,index-declarations,layout"; \
+			printf 'INFO: CI=Y runs check gates: lint format security markdown markdown-format markdown-code duplication pyrefly conflict-markers loc-cap runtime-census fresh-import deps index-declarations layout\n'; \
+		elif [ "$(strip $(CI))" = "N" ]; then \
+			gates="lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,mypy,pyright,conflict-markers,loc-cap,runtime-census,fresh-import,deps,index-declarations,codemod,layout,direnv"; \
+			printf 'INFO: CI=N runs check gates: lint format security markdown markdown-format markdown-code duplication pyrefly mypy pyright conflict-markers loc-cap runtime-census fresh-import deps index-declarations codemod layout direnv\n'; \
+		else \
+			printf 'INFO: default context runs check gates: lint format security markdown markdown-format markdown-code duplication pyrefly mypy pyright conflict-markers loc-cap runtime-census fresh-import deps index-declarations codemod layout direnv\n'; \
+		fi; \
+		if [ -z "$$gates" ]; then \
+			printf 'ERROR: no active check gates remain in the selected context\n' >&2; \
+			exit 2; \
+		fi; \
+		$(PROJECT_FLEXT_INFRA) workspace capture-gate --repository-root "$(PROJECT_ROOT)" --gates "$$gates"; \
+		$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope self --mode check
 
 # SonarCloud server-side issue exclusions (SSOT: codegen.sonarcloud). The verb
 # writes an external service with SONAR_TOKEN from the environment; it belongs
@@ -2897,7 +3160,7 @@ _builtin_gen_all: _builtin_require_interpreter
 	$(PROJECT_FLEXT_INFRA) codegen generate --root "$(PROJECT_ROOT)" --scope "$$scope"
 
 _builtin-gen-footprint: _builtin_require_interpreter
-	@$(PROJECT_FLEXT_INFRA) codegen footprint --root "$(PROJECT_ROOT)" --scope all
+	@$(PROJECT_FLEXT_INFRA) codegen footprint --root "$(PROJECT_ROOT)"
 
 _builtin-bootstrap-candidate: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) codegen candidate-bootstrap --repository-root "$(PROJECT_ROOT)"
@@ -2963,6 +3226,7 @@ _builtin-examples: _builtin_require_environment
 
 _builtin-check: _builtin_check_all
 _builtin-test: _builtin_test_all
+_builtin-tests: _builtin_test_full_all
 _builtin-test-full: _builtin_test_full_all
 _builtin-test-file: _builtin_test_file_all
 _builtin-file-gate: _builtin_file_gate_all

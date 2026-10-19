@@ -65,7 +65,7 @@ class FlextRootCompleteWorkflowExample:
             arbitrary_types_allowed=True,
             extra="allow",
         )
-        content: t.MutableJsonMapping = u.Field(
+        content: t.MutableJsonMapping = m.Field(
             default_factory=dict[str, t.JsonValue],
         )
 
@@ -78,10 +78,10 @@ class FlextRootCompleteWorkflowExample:
             arbitrary_types_allowed=True,
         )
 
-        workflow_id: str = u.Field(description="Unique workflow identifier")
-        correlation_id: str = u.Field(description="Correlation ID for tracking")
-        start_time: float = u.Field(description="Workflow start timestamp")
-        stages: t.StrSequence = u.Field(
+        workflow_id: str = m.Field(description="Unique workflow identifier")
+        correlation_id: str = m.Field(description="Correlation ID for tracking")
+        start_time: float = m.Field(description="Workflow start timestamp")
+        stages: t.StrSequence = m.Field(
             default_factory=lambda: [
                 "validation",
                 "processing",
@@ -90,11 +90,11 @@ class FlextRootCompleteWorkflowExample:
             ],
             description="List of workflow stages to execute",
         )
-        metadata: t.JsonMapping = u.Field(
+        metadata: t.JsonMapping = m.Field(
             default_factory=FlextRootImmutableMappings.json_mapping,
             description="Workflow metadata key-value pairs",
         )
-        performance_metrics: t.MutableJsonMapping = u.Field(
+        performance_metrics: t.MutableJsonMapping = m.Field(
             default_factory=dict[str, t.JsonValue],
             description="Performance metrics collected during workflow execution",
         )
@@ -106,23 +106,23 @@ class FlextRootCompleteWorkflowExample:
             arbitrary_types_allowed=True,
         )
 
-        stage_name: str = u.Field(description="Name of the workflow stage")
-        workflow_id: str = u.Field(description="Associated workflow ID")
-        correlation_id: str = u.Field(description="Correlation ID for tracking")
-        success: bool = u.Field(description="Whether the stage succeeded")
-        items_processed: int = u.Field(description="Total items processed in stage")
-        items_succeeded: int = u.Field(description="Items that succeeded")
-        items_failed: int = u.Field(description="Items that failed")
-        processing_time: float = u.Field(description="Time taken to process stage")
-        errors: t.StrSequence = u.Field(
+        stage_name: str = m.Field(description="Name of the workflow stage")
+        workflow_id: str = m.Field(description="Associated workflow ID")
+        correlation_id: str = m.Field(description="Correlation ID for tracking")
+        success: bool = m.Field(description="Whether the stage succeeded")
+        items_processed: int = m.Field(description="Total items processed in stage")
+        items_succeeded: int = m.Field(description="Items that succeeded")
+        items_failed: int = m.Field(description="Items that failed")
+        processing_time: float = m.Field(description="Time taken to process stage")
+        errors: t.StrSequence = m.Field(
             default_factory=lambda: cast("t.StrSequence", []),
             description="List of errors encountered",
         )
-        warnings: t.StrSequence = u.Field(
+        warnings: t.StrSequence = m.Field(
             default_factory=lambda: cast("t.StrSequence", []),
             description="List of warnings encountered",
         )
-        stage_metadata: t.JsonMapping = u.Field(
+        stage_metadata: t.JsonMapping = m.Field(
             default_factory=FlextRootImmutableMappings.json_mapping,
             description="Stage-specific metadata",
         )
@@ -134,32 +134,32 @@ class FlextRootCompleteWorkflowExample:
             arbitrary_types_allowed=True,
         )
 
-        workflow_id: str = u.Field(description="Unique workflow identifier")
-        correlation_id: str = u.Field(description="Correlation ID for tracking")
-        total_stages: int = u.Field(description="Total number of stages")
-        completed_stages: int = u.Field(description="Number of completed stages")
-        failed_stages: int = u.Field(description="Number of failed stages")
-        total_processing_time: float = u.Field(
+        workflow_id: str = m.Field(description="Unique workflow identifier")
+        correlation_id: str = m.Field(description="Correlation ID for tracking")
+        total_stages: int = m.Field(description="Total number of stages")
+        completed_stages: int = m.Field(description="Number of completed stages")
+        failed_stages: int = m.Field(description="Number of failed stages")
+        total_processing_time: float = m.Field(
             description="Total workflow processing time"
         )
 
         stage_results: t.SequenceOf[
             FlextRootCompleteWorkflowExample.WorkflowStageResult
-        ] = u.Field(
+        ] = m.Field(
             default_factory=lambda: cast(
                 "t.SequenceOf[FlextRootCompleteWorkflowExample.WorkflowStageResult]", []
             ),
             description="Results from each workflow stage",
         )
 
-        aggregated_metrics: t.JsonMapping = u.Field(
+        aggregated_metrics: t.JsonMapping = m.Field(
             default_factory=FlextRootImmutableMappings.json_mapping,
             description="Aggregated metrics across all stages",
         )
 
         workflow_status: Annotated[
             c.Status,
-            u.Field(description="Overall workflow status"),
+            m.Field(description="Overall workflow status"),
         ]
 
     class WorkflowOrchestrator(m.BaseModel):
@@ -176,10 +176,10 @@ class FlextRootCompleteWorkflowExample:
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
-        data: t.SequenceOf[t.JsonMapping] = u.Field(
+        data: t.SequenceOf[t.JsonMapping] = m.Field(
             default_factory=tuple,
         )
-        workflow_settings: t.ScalarMapping = u.Field(
+        workflow_settings: t.ScalarMapping = m.Field(
             default_factory=FlextRootImmutableMappings.scalar_mapping,
         )
 

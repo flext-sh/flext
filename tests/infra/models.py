@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated
 
-from flext import m, u
+from flext import m
 from flext_tests import FlextTestsModels
 
 
@@ -26,7 +26,7 @@ class TestsFlextRootModels(m, FlextTestsModels):
                 description="Absolute path to the module's anchor file.",
             )
             module_name: str = m.Field(description="Fully qualified module name.")
-            relative_path: str = u.Field(
+            relative_path: str = m.Field(
                 description="Module path relative to the workspace root.",
             )
 
@@ -35,15 +35,15 @@ class TestsFlextRootModels(m, FlextTestsModels):
 
             action: Annotated[
                 str,
-                u.Field(description="Sync action performed (e.g. pull, push)."),
+                m.Field(description="Sync action performed (e.g. pull, push)."),
             ]
-            repo: Annotated[Path, u.Field(description="Target repository root.")]
+            repo: Annotated[Path, m.Field(description="Target repository root.")]
 
         class RepoState(m.Value):
             """Repository state snapshot."""
 
-            branch: Annotated[str, u.Field(description="Current branch name.")]
-            commit_sha: Annotated[str, u.Field(description="Current commit SHA.")]
+            branch: Annotated[str, m.Field(description="Current branch name.")]
+            commit_sha: Annotated[str, m.Field(description="Current commit SHA.")]
 
 
 __all__: list[str] = ["TestsFlextRootModels"]

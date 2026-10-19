@@ -4,73 +4,6 @@
 # @flext-regenerate: make gen
 # @flext-rendered-by: flext-infra 0.12.0
 [dependency-groups]
-codegen = [
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "actionlint-py>=1.7.12.24",
-  "bandit>=1.9.4",
-  "deptry",
-  "editables>=0.6",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "hypothesis",
-  "mkdocs",
-  "mkdocs-autorefs",
-  "mkdocs-exclude>=1.0.2",
-  "mkdocs-git-revision-date-localized-plugin>=1.5.4",
-  "mkdocs-material>=9.7.7",
-  "mkdocs-mermaid2-plugin>=1.2.3",
-  "mkdocs-minify-plugin>=0.8.0",
-  "mkdocs-redirects>=1.2.3",
-  "mkdocs-section-index>=0.3.12",
-  "mkdocstrings>=1.0.6",
-  "mkdocstrings-python>=2.0.8",
-  "msgpack-types",
-  "mypy>=2.3.1",
-  "platformdirs>=4.12.0",
-  "pymdown-extensions",
-  "pyrefly>=1.2.0",
-  "pyright>=1.1.411",
-  "pytest>=9.1.1",
-  "pytest-asyncio",
-  "pytest-benchmark",
-  "pytest-cov",
-  "pytest-markdown-docs",
-  "pytest-randomly>=4.1.0",
-  "pytest-reportlog",
-  "pytest-testmon>=2.2.0",
-  "pytest-timeout",
-  "pytest-xdist",
-  "ruff>=0.16.5",
-  "rumdl>=0.2.62",
-  "types-cachetools>=7.0.0.20260713",
-  "types-cffi>=2.1.0.20260827",
-  "types-click>=7.1.8",
-  "types-defusedxml>=0.7.0.20260504",
-  "types-docker>=7.2.0.20260827",
-  "types-grpcio",
-  "types-jsonschema>=4.26.0.20260518",
-  "types-ldap3>=2.9.13.20260827",
-  "types-Markdown",
-  "types-openpyxl>=3.1.5.20260827",
-  "types-paramiko>=5.0.0.20260724",
-  "types-protobuf>=7.35.1.20260827",
-  "types-psutil>=7.2.2.20260827",
-  "types-psycopg2>=2.9.21.20260724",
-  "types-pyasn1>=0.6.0.20260724",
-  "types-pyopenssl>=24.1.0.20240722",
-  "types-python-dateutil>=2.9.0.20260807",
-  "types-pyyaml>=6.0.12.20260815",
-  "types-redis>=4.6.0.20241004",
-  "types-requests>=2.33.0.20260712",
-  "types-setuptools>=84.0.0.20260812",
-  "types-tabulate>=0.10.0.20260508",
-  "types-toml>=0.10.8.20260518",
-  "vulture>=2.16",
-  "yamlfix>=1.19.1",
-]
 dev = [
   "mkdocstrings-python>=2.0.9",
   "actionlint-py>=1.7.12.24",
@@ -176,7 +109,7 @@ dev = [
   "pyyaml>=6.0.3",
   "redis>=8.1.0",
   "requests>=2.34.2",
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@datacosmos",
+  "rope @ git+https://github.com/marlon-costa-dc/rope.git@1.15.0%2Bdc.4",
   "ruamel.yaml>=0.19.1",
   "ruff>=0.16.5",
   "rumdl>=0.2.62",
@@ -247,8 +180,72 @@ dev = [
   "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
 ]
-flext-api-codegen = [
+codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "actionlint-py>=1.7.12.24",
+  "bandit>=1.9.4",
+  "deptry",
+  "editables>=0.6",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "hypothesis",
+  "mkdocs",
+  "mkdocs-autorefs",
+  "mkdocs-exclude>=1.0.2",
+  "mkdocs-git-revision-date-localized-plugin>=1.5.4",
+  "mkdocs-material>=9.7.7",
+  "mkdocs-mermaid2-plugin>=1.2.3",
+  "mkdocs-minify-plugin>=0.8.0",
+  "mkdocs-redirects>=1.2.3",
+  "mkdocs-section-index>=0.3.12",
+  "mkdocstrings>=1.0.6",
+  "mkdocstrings-python>=2.0.8",
+  "msgpack-types",
+  "mypy>=2.3.1",
+  "platformdirs>=4.12.0",
+  "pymdown-extensions",
+  "pyrefly>=1.2.0",
+  "pyright>=1.1.411",
+  "pytest>=9.1.1",
+  "pytest-asyncio",
+  "pytest-benchmark",
+  "pytest-cov",
+  "pytest-markdown-docs",
+  "pytest-randomly>=4.1.0",
+  "pytest-reportlog",
+  "pytest-testmon>=2.2.0",
+  "pytest-timeout",
+  "pytest-xdist",
+  "ruff>=0.16.5",
+  "rumdl>=0.2.62",
+  "types-cachetools>=7.0.0.20260713",
+  "types-cffi>=2.1.0.20260827",
+  "types-click>=7.1.8",
+  "types-defusedxml>=0.7.0.20260504",
+  "types-docker>=7.2.0.20260827",
+  "types-grpcio",
+  "types-jsonschema>=4.26.0.20260518",
+  "types-ldap3>=2.9.13.20260827",
+  "types-Markdown",
+  "types-openpyxl>=3.1.5.20260827",
+  "types-paramiko>=5.0.0.20260724",
+  "types-protobuf>=7.35.1.20260827",
+  "types-psutil>=7.2.2.20260827",
+  "types-psycopg2>=2.9.21.20260724",
+  "types-pyasn1>=0.6.0.20260724",
+  "types-pyopenssl>=24.1.0.20240722",
+  "types-python-dateutil>=2.9.0.20260807",
+  "types-pyyaml>=6.0.12.20260815",
+  "types-redis>=4.6.0.20241004",
+  "types-requests>=2.33.0.20260712",
+  "types-setuptools>=84.0.0.20260812",
+  "types-tabulate>=0.10.0.20260508",
+  "types-toml>=0.10.8.20260518",
+  "vulture>=2.16",
+  "yamlfix>=1.19.1",
 ]
 flext-api-dev = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
@@ -312,7 +309,7 @@ flext-api-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-auth-codegen = [
+flext-api-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-auth-dev = [
@@ -376,6 +373,9 @@ flext-auth-dev = [
   "types-toml>=0.10.8.20260518",
   "vulture>=2.16",
   "yamlfix>=1.19.1",
+]
+flext-auth-codegen = [
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-cli-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
@@ -442,9 +442,6 @@ flext-cli-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-core-codegen = [
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-]
 flext-core-dev = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
   "mkdocstrings-python>=2.0.9",
@@ -507,7 +504,7 @@ flext-core-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-db-oracle-codegen = [
+flext-core-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-db-oracle-dev = [
@@ -571,6 +568,9 @@ flext-db-oracle-dev = [
   "types-toml>=0.10.8.20260518",
   "vulture>=2.16",
   "yamlfix>=1.19.1",
+]
+flext-db-oracle-codegen = [
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-dbt-ldap-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
@@ -702,9 +702,6 @@ flext-dbt-ldif-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-dbt-oracle-codegen = [
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-]
 flext-dbt-oracle-dev = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
   "mkdocstrings-python>=2.0.9",
@@ -767,7 +764,7 @@ flext-dbt-oracle-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-dbt-oracle-wms-codegen = [
+flext-dbt-oracle-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-dbt-oracle-wms-dev = [
@@ -832,7 +829,7 @@ flext-dbt-oracle-wms-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-grpc-codegen = [
+flext-dbt-oracle-wms-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-grpc-dev = [
@@ -897,7 +894,9 @@ flext-grpc-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-infra-codegen = []
+flext-grpc-codegen = [
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+]
 flext-infra-dev = [
   "mkdocstrings-python>=2.0.9",
   "actionlint-py>=1.7.12.24",
@@ -961,6 +960,7 @@ flext-infra-dev = [
   "types-tabulate>=0.10.0.20260508",
   "types-toml>=0.10.8.20260518",
 ]
+flext-infra-codegen = []
 flext-ldap-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
@@ -1091,9 +1091,6 @@ flext-ldif-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-meltano-codegen = [
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-]
 flext-meltano-dev = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
   "mkdocstrings-python>=2.0.9",
@@ -1156,7 +1153,7 @@ flext-meltano-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-observability-codegen = [
+flext-meltano-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-observability-dev = [
@@ -1221,7 +1218,7 @@ flext-observability-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-oracle-oic-codegen = [
+flext-observability-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-oracle-oic-dev = [
@@ -1286,7 +1283,7 @@ flext-oracle-oic-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-oracle-wms-codegen = [
+flext-oracle-oic-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-oracle-wms-dev = [
@@ -1351,7 +1348,7 @@ flext-oracle-wms-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-plugin-codegen = [
+flext-oracle-wms-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-plugin-dev = [
@@ -1416,7 +1413,7 @@ flext-plugin-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-quality-codegen = [
+flext-plugin-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-quality-dev = [
@@ -1480,6 +1477,9 @@ flext-quality-dev = [
   "types-toml>=0.10.8.20260518",
   "vulture>=2.16",
   "yamlfix>=1.19.1",
+]
+flext-quality-codegen = [
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-tap-ldap-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
@@ -1611,9 +1611,6 @@ flext-tap-ldif-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-tap-oracle-codegen = [
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-]
 flext-tap-oracle-dev = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
   "mkdocstrings-python>=2.0.9",
@@ -1676,7 +1673,7 @@ flext-tap-oracle-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-tap-oracle-oic-codegen = [
+flext-tap-oracle-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-tap-oracle-oic-dev = [
@@ -1741,7 +1738,7 @@ flext-tap-oracle-oic-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-tap-oracle-wms-codegen = [
+flext-tap-oracle-oic-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-tap-oracle-wms-dev = [
@@ -1805,6 +1802,9 @@ flext-tap-oracle-wms-dev = [
   "types-toml>=0.10.8.20260518",
   "vulture>=2.16",
   "yamlfix>=1.19.1",
+]
+flext-tap-oracle-wms-codegen = [
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-target-ldap-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
@@ -1936,9 +1936,6 @@ flext-target-ldif-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-target-oracle-codegen = [
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-]
 flext-target-oracle-dev = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
   "mkdocstrings-python>=2.0.9",
@@ -2001,7 +1998,7 @@ flext-target-oracle-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-target-oracle-oic-codegen = [
+flext-target-oracle-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-target-oracle-oic-dev = [
@@ -2066,7 +2063,7 @@ flext-target-oracle-oic-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-target-oracle-wms-codegen = [
+flext-target-oracle-oic-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-target-oracle-wms-dev = [
@@ -2130,6 +2127,9 @@ flext-target-oracle-wms-dev = [
   "types-toml>=0.10.8.20260518",
   "vulture>=2.16",
   "yamlfix>=1.19.1",
+]
+flext-target-oracle-wms-codegen = [
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
 ]
 flext-tests-codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
@@ -2195,9 +2195,6 @@ flext-tests-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-flext-web-codegen = [
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-]
 flext-web-dev = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
   "mkdocstrings-python>=2.0.9",
@@ -2260,6 +2257,9 @@ flext-web-dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
+flext-web-codegen = [
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+]
 flext-resolution = [
   "flext-api",
   "flext-auth",
@@ -2302,12 +2302,6 @@ constraint-dependencies = [
   "flext-infra",
   "flext-ldif",
   "flext-tests",
-  "flext-infra",
-  "flext-tests",
-  "flext-infra",
-  "flext-tests",
-  "flext-infra",
-  "flext-tests",
   "flext-api",
   "flext-auth",
   "flext-cli",
@@ -2365,28 +2359,34 @@ constraint-dependencies = [
   "flext-oracle-wms",
   "flext-tests",
   "flext-web",
+  "flext-infra",
+  "flext-tests",
+  "flext-infra",
+  "flext-tests",
+  "flext-infra",
+  "flext-tests",
   "flext-core",
   "flext-web",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-api",
   "flext-core",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-core",
   "flext-infra",
   "flext-infra",
   "flext-tests",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-cli",
   "flext-core",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-cli",
   "flext-core",
   "flext-ldap",
@@ -2405,19 +2405,19 @@ constraint-dependencies = [
   "flext-db-oracle",
   "flext-meltano",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-core",
   "flext-meltano",
   "flext-oracle-wms",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-cli",
   "flext-core",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-cli",
   "flext-core",
   "flext-tests",
@@ -2434,39 +2434,39 @@ constraint-dependencies = [
   "flext-cli",
   "flext-core",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-cli",
   "flext-core",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-api",
   "flext-auth",
   "flext-cli",
   "flext-core",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-api",
   "flext-cli",
   "flext-core",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-cli",
   "flext-core",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-api",
   "flext-cli",
   "flext-core",
   "flext-infra",
   "flext-web",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-core",
   "flext-ldap",
   "flext-meltano",
@@ -2483,21 +2483,21 @@ constraint-dependencies = [
   "flext-db-oracle",
   "flext-meltano",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-api",
   "flext-core",
   "flext-meltano",
   "flext-oracle-oic",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-core",
   "flext-meltano",
   "flext-oracle-wms",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-core",
   "flext-ldap",
   "flext-meltano",
@@ -2515,22 +2515,22 @@ constraint-dependencies = [
   "flext-db-oracle",
   "flext-meltano",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-api",
   "flext-core",
   "flext-meltano",
   "flext-oracle-oic",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-cli",
   "flext-core",
   "flext-meltano",
   "flext-oracle-wms",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
   "flext-cli",
   "flext-core",
   "flext-infra",
@@ -2539,8 +2539,8 @@ constraint-dependencies = [
   "flext-cli",
   "flext-core",
   "flext-infra",
-  "flext-infra",
   "flext-tests",
+  "flext-infra",
 ]
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 link-mode = "copy"

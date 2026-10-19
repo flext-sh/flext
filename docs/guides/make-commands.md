@@ -382,10 +382,16 @@ visible as placement violations.
 
 `make gen-footprint` calls the public `flext-infra codegen footprint` diagnostic
 for the root and its declared physical members. It reads the typed pending journal
-before planning, without acquiring leases, recovering a transaction, or publishing
-files. A pending participant outside the declared physical scope fails without
-changing its journal or staging. The receipt is a dated preflight, not a completed
-generation or fleet-green receipt; generation rechecks the boundary before effects.
+and authorizes its recorded physical effects without planning generation, scanning
+source files, acquiring participant leases, recovering a transaction, or publishing
+files or reports. The request names only the root; no generation surface or scope
+selector applies. Journal reads and authorization retain the native root journal
+lease and its persistent lock identity. A pending participant outside the declared
+physical scope fails without changing its journal or staging. The receipt retains
+the observed journal identity, digests and every pending-effect field, not native
+file-plan snapshots. It is a dated preflight, not a completed generation or
+fleet-green receipt; generation rechecks the boundary before effects. Prospective
+conform planning remains a separate API and is not invoked by this diagnostic.
 
 `make profile-gen` runs the generation handler under cProfile and retains its
 original exit status. `make profile-gen-report` reads that profile. Keep source
