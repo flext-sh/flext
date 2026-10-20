@@ -11,6 +11,7 @@
 - [Consequences](#consequences)
 - [Realized mechanism — Declarative tap (flext-tap-ldap pilot, 2026-07-17)](#realized-mechanism-declarative-tap-flext-tap-ldap-pilot-2026-07-17)
 - [Evidence](#evidence)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -306,3 +307,12 @@ surface), `ses_0b2dcd20fffe` (3 pilots inventory); codegraph blast-radius on
 `connection_profile` consumers). Tap declarative pilot verified 2026-07-17: real console
 
 exit 0 + 18 tests green (see commits above).
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Reaffirm thin drivers; update consumption contracts and adoption evidence.
+- This note records planning reconciliation only. It does not change the ADR's recorded maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

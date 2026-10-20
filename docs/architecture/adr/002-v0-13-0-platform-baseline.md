@@ -16,6 +16,7 @@
 - [Alternatives Considered](#alternatives-considered)
 - [Implementation Notes](#implementation-notes)
 - [References](#references)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -167,3 +168,12 @@ future FLEXT packages.
 - [FLEXT Workspace Baseline v0.13.0](../baseline-v0.13.0.md)
 - [Migration to v0.13.0](../../guides/migration-to-v0.13.0.md)
 - [ADR-001: Railway-Oriented Programming with r[T]](./001-railway-oriented-programming.md)
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Rewrite the 0.13 matrix for names, CA/DI and approved consumers.
+- This note records planning reconciliation only. It does not change the ADR's recorded maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

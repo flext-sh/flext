@@ -13,6 +13,7 @@
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -197,3 +198,12 @@ path; migration to rope-only is in progress and tracked by beads `mro-wkii.4`,
 - [Migration plan](../config-ssot-migration-plan.md)
 - Enforcement hardening beads: `mro-wkii.4`, `mro-wkii.4.1`, `mro-wkii.4.8`; plan
   `flext-infra/.omo/plans/declarative-enforcement.md`.
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Correct direction, bootstrap, topology and tool roles; lazy imports do not make reverse dependencies lawful.
+- This note records planning reconciliation only. It does not change the ADR's recorded maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

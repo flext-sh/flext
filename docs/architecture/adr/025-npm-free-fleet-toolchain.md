@@ -7,6 +7,7 @@
 - [Consequences](#consequences)
 - [Evidence](#evidence)
 - [References](#references)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -124,3 +125,12 @@ These are dated October 8 observations, not receipts for the amended contract.
 - ADR-020 (superseded)
 - ai-hub ADR-0037 (user registry ownership)
 - [mise npm backend](https://mise.jdx.dev/dev-tools/backends/npm.html)
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Reaffirm amended contract; separate setup, locks and audit.
+- This note records planning reconciliation only. It does not change the ADR's recorded maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

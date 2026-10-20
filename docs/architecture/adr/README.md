@@ -3,6 +3,7 @@
 <!-- TOC START -->
 
 - [Published ADRs](#published-adrs)
+- [Release and forward-planning boundaries](#release-and-forward-planning-boundaries)
 
 <!-- TOC END -->
 
@@ -22,10 +23,14 @@ candidate; acceptance never proves fleet stability.
 
 **Status classification:**
 
-- **CURRENT IMPLEMENTATION** — decision is implemented and active in the current tree.
+- **CURRENT IMPLEMENTATION** — recorded implementation classification; revalidate its
+  current scope and runtime on the candidate before using it as acceptance evidence.
 - **ACCEPTED TARGET** — decision is accepted; implementation targets a forward line or
   is in progress.
 - **PROPOSED** — decision is proposed, not yet accepted.
+- **ACCEPTED** — recorded policy/decision acceptance; not a claim that its rollout or
+  validation is complete.
+- **SUPERSEDED** — historical decision replaced by the named successor, not live law.
 
 ## Published ADRs
 
@@ -46,7 +51,9 @@ candidate; acceptance never proves fleet stability.
 - [ADR-008: Neutral consumer boundaries for docs, Office bytes, and artifact metadata](008-neutral-consumer-boundaries.md)
   — **CURRENT IMPLEMENTATION**
 - [ADR-009: Ecosystem coordination and reusable-library evaluation](009-ecosystem-coordination-and-library-evaluation.md)
-  — **ACCEPTED TARGET** (`0.20.0-dev` line)
+  — **ACCEPTED TARGET** (unified `0.13.0` planning; historical origin `0.20.0-dev`;
+  accepted-to-build, rejected and deferred feature verdicts preserved; no implementation
+  receipt)
 - [ADR-010: Unified project standardization (Make, scripts, tests, structure) via codegen](010-unified-project-standardization-via-codegen.md)
   — **CURRENT IMPLEMENTATION**
 - [ADR-014: Family Part Shape, Rope, Codemod Rules](014-family-part-shape-rope-codemod-rules.md)
@@ -115,3 +122,31 @@ as proof of a green baseline.
 
 New ADRs should be added only when they represent a real architectural decision with an
 owning implementation path.
+
+## Release and forward-planning boundaries
+
+The [0.12 checkpoint](../../releases/latest.md) validates and publishes the existing
+surface. Operational root aliases and current `core` facade behavior are not removed
+by a forward ADR or a documentation-only reconciliation. Their proposed removal and
+typed lazy `core` namespace redesign belong to the 0.13 contract/migration decision,
+not to 0.12 release acceptance.
+
+ADR-009's historical 0.20 coordination plan is retargeted to that same 0.13 planning
+line, without promoting it to CURRENT IMPLEMENTATION. Static-consumer docs mode and
+Office-byte completion remain accepted future work. Package extractions retain their
+individual rejected, conditional or deferred verdicts. Retargeting is neither wholesale
+feature approval nor a promise of a separate 0.20 delivery.
+
+The supplied 2026-10-20 tracker evidence identifies `flext-ik359` as the open **0.13**
+gate epic (old 0.20 name retired), waiting for publication work `flext-1wjg1` and separate
+authorization. Approval of applicable contracts and the consumer migration matrix is
+also required before the proposed migration. This ordering does not prohibit authorized
+0.12 repairs or documentation work. It does not prove publication, current CI, completed
+migration, or closure of either Bead; this index makes no tracker changes.
+
+This bounded reconciliation does not certify the entire ADR corpus or companion docs.
+In particular, `docs/architecture/ecosystem-coordination.md` and the ecosystem row in
+`docs/GOVERNANCE.md` still carry historical 0.20 targeting. Their owner must reconcile
+those references before claiming documentation-wide consistency. Existing dated notes
+and implementation classifications elsewhere remain subject to candidate-specific
+runtime and gate evidence.

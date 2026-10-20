@@ -18,6 +18,7 @@
   - [Negative](#negative)
 - [Implementation](#implementation)
 - [References](#references)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -180,3 +181,12 @@ runtime-census consumer cutover is still pending:
 - `flext_infra.gates.duplication` (R2 enforcement)
 - `flext-infra/config/codegen.yaml` (R4/R5 config SSOT)
 - `docs/GOVERNANCE.md` (R6 router)
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Update public consumption and exports; do not confuse Protocol signatures with behavior.
+- This note records planning reconciliation only. It does not change the ADR's recorded maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

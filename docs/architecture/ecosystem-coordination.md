@@ -27,9 +27,12 @@ consistent with each owner-local ADR. It coordinates internal FLEXT packages and
 independent external applications and platforms; it never makes an external repository a
 FLEXT dependency.
 
-**Target line:** FLEXT `0.20.0-dev` (early development and planning). This is a forward
-planning contract for `0.20.0-dev`; it does not retro-fit the `0.12.0-dev` release line.
-Every coordination Bead is labelled `branch:0.20.0-dev`.
+**Target line:** FLEXT `0.13.0` (forward planning). The former `0.20.0-dev`
+name is historical provenance, not a separate implementation lane. Bead
+`flext-ik359` preserves the future inventory and gates execution on completion
+of `flext-1wjg1` and separate operator authorization. This document does not
+add future API or ecosystem migrations to the 0.12 release acceptance scope.
+Historical branch labels are not proof that the corresponding work is active.
 
 ## Projects and owners
 
@@ -131,21 +134,24 @@ Platform deployment status is planned/conditional until proven by executable evi
 | `flext-docs`                    | Rejected                 | Second real consumer + deletion-positive extraction        |
 | `flext-gworkspace`              | Rejected in current form | Deployed DMS owner + neutral Google contract + 2 consumers |
 | Backup shared library           | Not created              | DcBackup primitive proven reusable by a second consumer    |
-| Static-consumer docs mode       | Accepted, to build       | Immediate — `mro-ib6t.1`                                   |
-| Generic Office byte completion  | Accepted, to build       | Immediate — `mro-ib6t.2` / `dcdoc-gsnp`                    |
+| Static-consumer docs mode       | Accepted target, gated   | 0.13 authorization — historical reference `mro-ib6t.1`      |
+| Generic Office byte completion  | Accepted target, gated   | 0.13 authorization — historical references `mro-ib6t.2` / `dcdoc-gsnp` |
 | Neutral artifact-envelope model | Deferred                 | Two consumers need the identical neutral contract          |
 
 ## Project standardization (ADR-010)
 
-All projects — root, internal members, loose internal (independent), and external
-applications — share one generated base owned by `flext-infra` codegen with
-`flext-tests`: identical Make verbs, `.venv`/mise/direnv/`pyproject` setup, directory
-layout, `__init__.py` facades, `c/t/p/m/u` facade files and
-`_constants/*`/`_utilities/*` private namespaces, `api.py`/`base.py`/
-`_settings.py`/`_config.py`, and canonical module/class/prefix naming for `src`,
-`tests`, `examples`, `scripts`. Rollout is validation-first, then refactoring, then
-declarative enforcement. SSOT: `codegen.yaml` + `tooling.yaml` + `flext-tests`. See
-[ADR-010](adr/010-unified-project-standardization-via-codegen.md).
+First-party FLEXT projects consume the generated base owned by `flext-infra`
+and the shared fixtures owned by `flext-tests`. An external application's
+declared profile and its own authority determine adoption; this coordination
+document does not impose FLEXT layout on third-party forks or content-only
+repositories.
+
+Repository configuration describes that repository's deltas. Workspace member
+composition comes from `.gitmodules`; external consumers elect and pull their
+own supplier contract. Do not restore a workspace-wide guest list or push
+configuration into unrelated applications. See
+[ADR-010](adr/010-unified-project-standardization-via-codegen.md) and
+[ADR-024](adr/024-di-config-contract-derived-defaults-minimal-overrides.md).
 
 ## Extraction gate for any new `flext-*`
 
@@ -158,6 +164,9 @@ declarative enforcement. SSOT: `codegen.yaml` + `tooling.yaml` + `flext-tests`. 
 ## Coordination Beads
 
 - FLEXT boundaries: `mro-ib6t` (+ `mro-ib6t.1`, `mro-ib6t.2`).
+- Current future-release gate: `flext-ik359`; current 0.12 publication owner:
+  `flext-1wjg1`. Historical coordination IDs below require live tracker
+  reconciliation before any status or closure claim.
 - Ecosystem coordination epic and open-library candidates: see the epic linked from
   ADR-009.
 - Cosmos: `dcdoc-bhg1` (+ `dcdoc-bhg1.1`, `dcdoc-bhg1.2`), `dcdoc-gsnp`.

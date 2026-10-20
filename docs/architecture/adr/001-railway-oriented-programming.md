@@ -8,6 +8,7 @@
   - [Positive](#positive)
   - [Negative](#negative)
 - [Related Documents](#related-documents)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -48,3 +49,12 @@ This means:
 - [Architecture baseline](../baseline-v0.13.0.md)
 - [ADR index](README.md)
 - `AGENTS.md`
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Preserve railway semantics; replace public `r` access with the target contract without fragmenting Result.
+- This note records planning reconciliation only. It does not change the ADR's recorded maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

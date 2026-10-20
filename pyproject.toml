@@ -239,6 +239,8 @@ dev = [
   "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
   "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
+  "flext-stubs-gitdb",
+  "flext-stubs-pymdownx",
 ]
 codegen = [
   "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
@@ -1585,3 +1587,7 @@ whitelines = 1
 constraint-dependencies = ["mypy<2.4.0"]
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 link-mode = "copy"
+
+[tool.uv.sources]
+flext-stubs-gitdb = { path = "/home/marlonsc/flext/typings/flext-stubs-gitdb" }
+flext-stubs-pymdownx = { path = "/home/marlonsc/flext/typings/flext-stubs-pymdownx" }

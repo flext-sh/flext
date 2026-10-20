@@ -18,6 +18,7 @@
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -81,6 +82,12 @@ workspace timestamped `.bak` artifacts).
    `utilities.py`) keep the canonical shape: inherit the canonical layer letter(s), nest
    exactly one domain namespace composing at least two part classes through multiple
    inheritance, and end with the canonical bottom alias (`c`/`t`/`p`/`m`/`u`).
+
+Split implementation classes have distinct names derived from their part identity
+(`Part01`, `Part02`, and so on); they never redeclare an imported ancestor's name.
+Only the composing facade keeps the unsuffixed public name. Renaming updates
+inheritance, annotations, imports, and exports together; `make gen` regenerates lazy
+exports. Compatibility aliases must not preserve the old ambiguous names.
 
 ### 2. Declarative Rope rules (one YAML file per rule)
 
@@ -230,3 +237,12 @@ evidence, not published authority.
   `codemod/batch_apply.py`, `codemod/semantic_apply.py`, `codemod/sgconfig.yml`,
   `_utilities/safety.py`, `_utilities/rope_core.py`, `_utilities/rope_class_move.py`,
   `_utilities/namespace_moves.py`.
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Preserve MRO/families and unique names; correct atomicity and manual-catalog promises.
+- This note records planning reconciliation only. It does not change the ADR's recorded maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.
