@@ -23,6 +23,14 @@ environment. Do not assume another city's activation or connection settings.
 
 - Exercise only public `api.py` surfaces and canonical `c`, `t`, `p`, `m`, and `u`
   facades.
+- Follow the current source-owned signatures and return contracts. A sequence return
+  does not promise a mutable list, and a structural port exposes only its declared
+  properties. Update stale callers instead of widening production parameters.
+- Construct canonical models directly with their declared fields and collection
+  types. Keep serialization round-trips for serialization tests; do not use them,
+  unchecked copies, casts, or local conversion helpers to adapt an outdated fixture.
+- Exercise malformed external data through the public validation boundary. Keep valid
+  service calls typed, and retain their failure scenarios through real providers.
 - Project-owned helpers, including decorators, belong to the single `u` surface;
   do not introduce a competing `d`/`de` helper facade or compatibility shim.
 - Put shared setup in the unified `conftest.py` and typed fixtures under

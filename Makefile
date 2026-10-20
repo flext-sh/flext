@@ -453,8 +453,8 @@ endif
 # === SECTION: verb dispatch (managed) ===
 # Source: config:make.verbs and the canonical gate vocabulary. A verb exists
 # only in the profiles it declares (make.verbs[].profiles).
-PUBLIC_VERBS := help setup pre-commit upg upg-sources validate-lifecycle propagate build examples check census census-constants smells test tests test-full test-file file-gate profile-test profile-test-report profile-environment profile-environment-report profile-lanes profile-lanes-report profile-mod profile-mod-report profile-mod-rules profile-mod-rules-report fmt fix fix-namespace fix-accessors fix-toolchain audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint initialize project-new mod mod-rules mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
-BUILTIN_VERBS := help setup pre-commit upg upg-sources validate-lifecycle propagate build examples check census census-constants smells test tests test-full test-file file-gate profile-test profile-test-report profile-environment profile-environment-report profile-lanes profile-lanes-report profile-mod profile-mod-report profile-mod-rules profile-mod-rules-report fmt fix fix-namespace fix-accessors fix-toolchain audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint initialize project-new mod mod-rules mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
+PUBLIC_VERBS := help setup pre-commit upg upg-sources validate-lifecycle propagate build examples check check-pyright census census-constants smells test tests test-full test-file file-gate profile-test profile-test-report profile-environment profile-environment-report profile-lanes profile-lanes-report profile-mod profile-mod-report profile-mod-rules profile-mod-rules-report fmt fix fix-namespace fix-accessors fix-toolchain audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint gen-pyproject gen-editor initialize project-new mod mod-types mod-rules mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
+BUILTIN_VERBS := help setup pre-commit upg upg-sources validate-lifecycle propagate build examples check check-pyright census census-constants smells test tests test-full test-file file-gate profile-test profile-test-report profile-environment profile-environment-report profile-lanes profile-lanes-report profile-mod profile-mod-report profile-mod-rules profile-mod-rules-report fmt fix fix-namespace fix-accessors fix-toolchain audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint gen-pyproject gen-editor initialize project-new mod mod-types mod-rules mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
 SCRIPT_VERBS :=
 
 CUSTOM_MAKEFILE := $(MAKEFILE_ROOT)/custom.mk
@@ -855,8 +855,7 @@ SETUP_ENVIRONMENT_RECIPE = $(INSTALL_RUNTIME_RECIPE); \
 	setup_scope="all"; \
 	if [ "$(strip $(GITHUB_ACTIONS))" = "true" ]; then setup_scope=self; fi; \
 	$(PROJECT_FLEXT_INFRA) codegen mise-artifacts --repository-root "$(PROJECT_ROOT)" --config-only --scope "$$setup_scope"; \
-	$(PROJECT_FLEXT_INFRA) workspace sync-environment --repository-root "$(PROJECT_ROOT)" --scope "$$setup_scope" $(if $(filter Y,$(strip $(CI))),--no-allow-direnv); \
-	$(PROJECT_FLEXT_INFRA) codegen generate --root "$(PROJECT_ROOT)" --what runtime-bindings --scope "$$setup_scope"
+	$(PROJECT_FLEXT_INFRA) workspace sync-environment --repository-root "$(PROJECT_ROOT)" --scope "$$setup_scope" $(if $(filter Y,$(strip $(CI))),--no-allow-direnv)
 
 # Reject borrowed environments before bootstrap, activation or custom hooks.
 # Members may use their containing workspace, never an unrelated checkout.
@@ -1049,6 +1048,21 @@ _activated-check: _builtin_require_environment
 
 
 	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-check,$(call RUN_PUBLIC,check))
+
+
+
+
+check-pyright: _builtin_require_workspace
+	@printf '==> %s | project=%s | profile=%s\n' 'check-pyright' "$(PROJECT_ROOT)" 'workspace'
+
+	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _activated-check-pyright,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-check-pyright)
+
+.PHONY: _activated-check-pyright
+
+_activated-check-pyright: _builtin_require_environment
+
+
+	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-check-pyright,$(call RUN_PUBLIC,check-pyright))
 
 
 
@@ -1574,6 +1588,22 @@ gen-footprint: _builtin_require_workspace _builtin_require_interpreter
 
 
 
+# This operation consumes the declared physical runtime without activating the
+# environment file it may itself regenerate.
+gen-pyproject: _builtin_require_workspace _builtin_require_interpreter
+	@printf '==> %s | project=%s | profile=%s\n' 'gen-pyproject' "$(PROJECT_ROOT)" 'workspace'
+	$(call RUN_PUBLIC,gen-pyproject)
+
+
+
+# This operation consumes the declared physical runtime without activating the
+# environment file it may itself regenerate.
+gen-editor: _builtin_require_workspace _builtin_require_interpreter
+	@printf '==> %s | project=%s | profile=%s\n' 'gen-editor' "$(PROJECT_ROOT)" 'workspace'
+	$(call RUN_PUBLIC,gen-editor)
+
+
+
 
 initialize: _builtin_require_workspace
 	@printf '==> %s | project=%s | profile=%s\n' 'initialize' "$(PROJECT_ROOT)" 'workspace'
@@ -1609,6 +1639,21 @@ _activated-mod: _builtin_require_environment
 
 
 	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-mod,$(call RUN_PUBLIC,mod))
+
+
+
+
+mod-types: _builtin_require_workspace
+	@printf '==> %s | project=%s | profile=%s\n' 'mod-types' "$(PROJECT_ROOT)" 'workspace'
+
+	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _activated-mod-types,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-mod-types)
+
+.PHONY: _activated-mod-types
+
+_activated-mod-types: _builtin_require_environment
+
+
+	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-mod-types,$(call RUN_PUBLIC,mod-types))
 
 
 
@@ -1805,6 +1850,10 @@ check:
 	@printf '  %-16s %s\n' 'check' 'Check the configured quality gates and projection conformance without writes.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make check to execute it.'
 
+check-pyright:
+	@printf '  %-16s %s\n' 'check-pyright' 'Run the complete configured Pyright analysis and retain its native gate receipt.'
+	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make check-pyright to execute it.'
+
 census:
 	@printf '  %-16s %s\n' 'census' 'Inventory constants, duplicate declarations and placement across every declared first-party project.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make census to execute it.'
@@ -1949,6 +1998,14 @@ gen-footprint:
 	@printf '  %-16s %s\n' 'gen-footprint' 'Inspect the pending generation journal and physical effect footprint without generation planning, participant leases, recovery, or publication.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make gen-footprint to execute it.'
 
+gen-pyproject:
+	@printf '  %-16s %s\n' 'gen-pyproject' 'Regenerate this project'"'"'s analyzer and dependency metadata through guarded publication.'
+	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make gen-pyproject to execute it.'
+
+gen-editor:
+	@printf '  %-16s %s\n' 'gen-editor' 'Project editor settings, analyzer configuration, and Git ignores without generating Python facades.'
+	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make gen-editor to execute it.'
+
 initialize:
 	@printf '  %-16s %s\n' 'initialize' 'Bootstrap this target'"'"'s own declaration and canonical Makefile.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make initialize to execute it.'
@@ -1960,6 +2017,10 @@ project-new:
 mod:
 	@printf '  %-16s %s\n' 'mod' 'Apply the declared structural codemods; committed rule-test snapshots are verified, never rewritten.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make mod to execute it.'
+
+mod-types:
+	@printf '  %-16s %s\n' 'mod-types' 'Apply the declared source type-contract migrations through the native AST fixed point.'
+	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make mod-types to execute it.'
 
 mod-rules:
 	@printf '  %-16s %s\n' 'mod-rules' 'Evaluate the declared AST and text rule catalogs across every governed project without rewriting sources; publish occurrence evidence by rule and repository.'
@@ -2045,6 +2106,8 @@ _builtin-help:
 
 	@printf '  %-16s %s\n' 'check' 'Check the configured quality gates and projection conformance without writes.';
 
+	@printf '  %-16s %s\n' 'check-pyright' 'Run the complete configured Pyright analysis and retain its native gate receipt.';
+
 	@printf '  %-16s %s\n' 'census' 'Inventory constants, duplicate declarations and placement across every declared first-party project.';
 
 	@printf '  %-16s %s\n' 'census-constants' 'Apply identity-proven constants consumer rewrites through the workspace census and publish its complete report.';
@@ -2117,11 +2180,17 @@ _builtin-help:
 
 	@printf '  %-16s %s\n' 'gen-footprint' 'Inspect the pending generation journal and physical effect footprint without generation planning, participant leases, recovery, or publication.';
 
+	@printf '  %-16s %s\n' 'gen-pyproject' 'Regenerate this project'"'"'s analyzer and dependency metadata through guarded publication.';
+
+	@printf '  %-16s %s\n' 'gen-editor' 'Project editor settings, analyzer configuration, and Git ignores without generating Python facades.';
+
 	@printf '  %-16s %s\n' 'initialize' 'Bootstrap this target'"'"'s own declaration and canonical Makefile.';
 
 	@printf '  %-16s %s\n' 'project-new' 'Create a new project through the canonical scaffold service using explicitly declared identity inputs.';
 
 	@printf '  %-16s %s\n' 'mod' 'Apply the declared structural codemods; committed rule-test snapshots are verified, never rewritten.';
+
+	@printf '  %-16s %s\n' 'mod-types' 'Apply the declared source type-contract migrations through the native AST fixed point.';
 
 	@printf '  %-16s %s\n' 'mod-rules' 'Evaluate the declared AST and text rule catalogs across every governed project without rewriting sources; publish occurrence evidence by rule and repository.';
 
@@ -2476,6 +2545,7 @@ _upg_lifecycle: _builtin_setup_submodules
 		*" pre-upg "*) $(SELF_MAKE) pre-upg ;; \
 	esac
 
+	@$(PROJECT_FLEXT_INFRA) codegen generate --root "$(PROJECT_ROOT)" --what pyproject --scope all
 	+@$(SELF_MAKE) _upg_resolve_locks
 	@$(SELF_MAKE) _upg_install_runtime
 	@$(PROJECT_FLEXT_INFRA) codegen generate --root "$(PROJECT_ROOT)" --what pyproject --scope all
@@ -3162,6 +3232,15 @@ _builtin_gen_all: _builtin_require_interpreter
 _builtin-gen-footprint: _builtin_require_interpreter
 	@$(PROJECT_FLEXT_INFRA) codegen footprint --root "$(PROJECT_ROOT)"
 
+_builtin-gen-pyproject: _builtin_require_interpreter
+	@$(PROJECT_FLEXT_INFRA) codegen generate --root "$(PROJECT_ROOT)" --what pyproject --scope self
+
+_builtin-gen-editor: _builtin_require_interpreter
+	@set -eu; \
+	scope=all; \
+	if [ "$(strip $(CI))" = "Y" ]; then scope=self; fi; \
+	$(PROJECT_FLEXT_INFRA) codegen generate --root "$(PROJECT_ROOT)" --what editor --scope "$$scope"
+
 _builtin-bootstrap-candidate: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) codegen candidate-bootstrap --repository-root "$(PROJECT_ROOT)"
 
@@ -3225,6 +3304,8 @@ _builtin-examples: _builtin_require_environment
 	@timeout --signal=TERM --kill-after=5s "120s" $(UV_RUN) python -m examples.runtime
 
 _builtin-check: _builtin_check_all
+_builtin-check-pyright: _builtin_require_environment
+	@$(PROJECT_FLEXT_INFRA) workspace capture-gate --repository-root "$(PROJECT_ROOT)" --gates "pyright"
 _builtin-test: _builtin_test_all
 _builtin-tests: _builtin_test_full_all
 _builtin-test-full: _builtin_test_full_all
@@ -3265,6 +3346,8 @@ _builtin-publication: _builtin_release_publish
 _builtin-gen: _builtin_gen_all
 _builtin-initialize: _builtin_gen_init
 _builtin-mod: _builtin_mod_apply
+_builtin-mod-types: _builtin_require_environment
+	@$(PROJECT_FLEXT_INFRA) refactor ast --repository-root "$(PROJECT_ROOT)" --rules "bind-typing-adapter-utilities,rewire-cli-json-mapping-adapter,rewire-cli-json-list-adapter,pydantic-field-positional-default,pydantic-unset-private-attribute,codegen-conform-state-request-workspace,codegen-conform-state-workspace-request,codegen-conform-state-request,codegen-conform-state-workspace,codegen-conform-state-workspace-only,codegen-conform-state-ports" --apply
 _builtin-mod-rules: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) refactor ast --repository-root "$(PROJECT_ROOT)"
 _builtin-mod-text: _builtin_mod_text

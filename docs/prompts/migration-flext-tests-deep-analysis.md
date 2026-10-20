@@ -98,14 +98,14 @@ do ecossistema FLEXT para identificar e corrigir **TODOS os usos de funções de
 
 | Método Deprecado                      | Método Público Atual                                                 | Exemplo de Migração                                                    |
 | ------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `tm.eq(actual, expected)`             | `tm.that(actual, eq=expected)`                                       | `tm.eq(x, 5)` → `tm.that(x, eq=5)`                                     |
-| `tm.true(condition)`                  | `tm.that(condition, eq=True)`                                        | `tm.true(x > 0)` → `tm.that(x > 0, eq=True)`                           |
+| `tm.eq(actual, expected)`             | `assert actual == expected)`                                       | `tm.eq(x, 5)` → `tm.that(x, eq=5`                                     |
+| `tm.true(condition)`                  | `assert condition == True)`                                        | `tm.true(x > 0)` → `tm.that(x > 0, eq=True`                           |
 | `tm.assert_contains(container, item)` | `tm.that(container, contains=item)`                                  | `tm.assert_contains(d, "key")` → `tm.that(d, contains="key")`          |
 | `tm.str_(text, ...)`                  | `tm.that(text, ...)`                                                 | `tm.str_(url, starts="http")` → `tm.that(url, starts="http")`          |
 | `tm.is_(value, type)`                 | `tm.that(value, is_=type)`                                           | `tm.is_(x, str)` → `tm.that(x, is_=str)`                               |
 | `tm.len(items, expected)`             | `tm.that(items, length=expected)`                                    | `tm.len(lst, 5)` → `tm.that(lst, length=5)`                            |
-| `tm.hasattr(obj, *attrs)`             | `tm.that(hasattr(obj, attr), eq=True)`                               | `tm.hasattr(obj, "attr")` → `tm.that(hasattr(obj, "attr"), eq=True)`   |
-| `tm.method(obj, name)`                | `tm.that(hasattr(...), eq=True)` + `tm.that(callable(...), eq=True)` | Ver exemplo abaixo                                                     |
+| `tm.hasattr(obj, *attrs)`             | `assert hasattr(obj, attr) == True)`                               | `tm.hasattr(obj, "attr")` → `tm.that(hasattr(obj, "attr"), eq=True`   |
+| `tm.method(obj, name)`                | `assert hasattr(...) == True)` + `tm.that(callable(...), eq=True` | Ver exemplo abaixo                                                     |
 | `tm.not_none(*values)`                | `tm.that(value, none=False)`                                         | `tm.not_none(x, y)` → `tm.that(x, none=False); tm.that(y, none=False)` |
 | `tm.dict_(data, ...)`                 | `tm.that(data, keys=...)` ou `tm.that(data, length=...)`             | Ver exemplo abaixo                                                     |
 | `tm.list_(items, ...)`                | `tm.that(items, has=...)` ou `tm.that(items, length=...)`            | Ver exemplo abaixo                                                     |
