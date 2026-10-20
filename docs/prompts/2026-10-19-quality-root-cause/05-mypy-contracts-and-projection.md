@@ -1,5 +1,15 @@
 # Repair Mypy projection and remaining source contracts
 
+<!-- TOC START -->
+
+- [Assignment contract](#assignment-contract)
+- [Exclusive ownership](#exclusive-ownership)
+- [Sources to inspect](#sources-to-inspect)
+- [Required correction](#required-correction)
+- [Acceptance evidence](#acceptance-evidence)
+
+<!-- TOC END -->
+
 ## Assignment contract
 
 Work in $HOME/flext on upload-20261007, as explicitly requested by the operator. First verify the live branch, current WIP, nearest AGENTS.md, .agents/commands/flext-law.md and branch-matched skills. Preserve and adopt all existing changes; never reset, rebase, force-push, overwrite unknown work, or restore a historical tree. Historical results below are diagnosis leads, not current acceptance evidence.

@@ -116,8 +116,9 @@ do ecossistema FLEXT para identificar e corrigir **TODOS os usos de funções de
 **tm.method():**
 
 ```python
-from flext_core import m, p
 from tests import tm
+
+from flext_core import m, p
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
 tm.ok(isinstance(document, p.Model))
@@ -127,8 +128,9 @@ tm.that(document.model_dump(mode="json"), keys=["data"])
 **tm.dict\_():**
 
 ```python
-from flext_core import m
 from tests import tm
+
+from flext_core import m
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
 tm.that(document.data, keys=["name"], length=len(document.data))
@@ -137,8 +139,9 @@ tm.that(document.data, keys=["name"], length=len(document.data))
 **tm.list\_():**
 
 ```python
-from flext_core import t, u
 from tests import tm
+
+from flext_core import t, u
 
 items: t.StrSequence = ("first", "second")
 converted = u.to_str_list(items)
@@ -228,8 +231,9 @@ with tf.files({"example.txt": "example"}) as paths:
 ### 1. Imports Incorretos
 
 ```python
-from flext_core import r
 from tests import tm
+
+from flext_core import r
 
 payload = "example"
 tm.that(tm.ok(r[str].ok(payload)), eq=payload)
@@ -238,8 +242,9 @@ tm.that(tm.ok(r[str].ok(payload)), eq=payload)
 ### 2. Uso de Métodos Privados ou Internos
 
 ```python
-from flext_core import r, settings
 from tests import tm
+
+from flext_core import r, settings
 
 result = r[bool].ok(settings.debug)
 tm.that(tm.ok(result), eq=settings.debug)
@@ -248,8 +253,9 @@ tm.that(tm.ok(result), eq=settings.debug)
 ### 3. Uso de Classes Aninhadas Deprecadas
 
 ```python
-from flext_core import m, p, r
 from tests import tm
+
+from flext_core import m, p, r
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
 result: p.Result[p.Model] = r[p.Model].ok(document)
@@ -261,8 +267,9 @@ tm.that(tm.ok(result).model_dump(mode="json"), eq=document.model_dump(mode="json
 Alguns métodos podem aceitar parâmetros legacy que devem ser migrados:
 
 ```python
-from flext_core import m, t, u
 from tests import tm
+
+from flext_core import m, t, u
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
 items: t.StrSequence = ("first", "second")
@@ -530,9 +537,9 @@ Todos os testes devem ser marcados explicitamente:
 
 ```python
 import pytest
+from tests import tm
 
 from flext_core import m
-from tests import tm
 
 
 @pytest.mark.unit
@@ -693,8 +700,9 @@ find . -name "conftest.py" | wc -l # Deve retornar 1 (apenas em ~/flext)
 **Exemplos:**
 
 ```python
-from flext_core import m
 from tests import tm
+
+from flext_core import m
 
 
 class TestsDocument:
@@ -728,8 +736,9 @@ delimiters are at document level so every native consumer receives only Python,
 not a following list item or its Markdown delimiter as part of the program.
 
 ```python
-from flext_core import m, r, settings
 from tests import tm
+
+from flext_core import m, r, settings
 
 
 class TestsDocument:
@@ -786,8 +795,9 @@ TestsDocument.test_settings_input()
 **Exemplo:**
 
 ```python
-from flext_core import m, p, t
 from tests import tm
+
+from flext_core import m, p, t
 
 
 def generate_documents(count: int) -> t.SequenceOf[p.Model]:
@@ -795,6 +805,7 @@ def generate_documents(count: int) -> t.SequenceOf[p.Model]:
 
     Returns:
         Model instances consumed through their serialization protocol.
+
     """
     return [
         m.ConfigDocument(data={"name": f"example-{index}"}) for index in range(count)

@@ -60,6 +60,7 @@ class RouteHandler:
 
         Returns:
             The route name, or a failure for a mismatched route.
+
         """
         route = u.resolve_message_route(message)
         if route != self.message_type:

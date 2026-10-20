@@ -121,6 +121,7 @@ def serialize_model(value: p.Model) -> t.JsonDict:
 
     Returns:
         The model's JSON-compatible output mapping.
+
     """
     return value.model_dump(mode="json")
 

@@ -1,5 +1,11 @@
 # Root-cause correction prompts — 2026-10-19
 
+<!-- TOC START -->
+
+- [Dispatch order and collision control](#dispatch-order-and-collision-control)
+
+<!-- TOC END -->
+
 These are operator-requested prompts for manual dispatch, not a second task tracker. Work and evidence remain in central Bead gc-11qywz. No agent was launched by creating these files. No exception restoration is approved by this document.
 
 The criticism before restoration is mandatory: preserve an exception only when verified authorization, a current architectural requirement and evidence of necessity all exist. Prefer a correct owner fix whenever possible. Do not restore the historical exception catalog wholesale.
