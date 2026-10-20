@@ -79,6 +79,11 @@ names: t.StrSequence = ("first", "second")
 print(label, u.join(names, separator=", "))
 ```
 
+Generic JSON collections use `t.JsonValue` rather than a new self-recursive
+`type` alias. Runtime payload contracts may also admit a model as a direct leaf;
+that does not make a collection of model instances JSON. Declare a collection of
+models on its owning `m` contract instead of widening the generic JSON boundary.
+
 ### Validated models at boundaries
 
 Use an `m` preset for owned model declarations. Consumers construct the actual

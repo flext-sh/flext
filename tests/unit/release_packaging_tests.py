@@ -46,7 +46,7 @@ class TestsFlextRootReleasePackaging:
             """The CLI runtime owner must carry its declarative configuration."""
             config_file = files("flext_cli") / "config" / "cli.yaml"
 
-            tm.that(config_file.is_file(), eq=True)
+            tm.ok(config_file.is_file())
 
         @staticmethod
         def test_workspace_console_scripts_are_registered() -> None:
@@ -55,7 +55,7 @@ class TestsFlextRootReleasePackaging:
             names = {entry_point.name for entry_point in entry_points}
 
             for name in ("flext", "flext-dev", "flext-docs", "flext-workspace"):
-                tm.that(name in names, eq=True)
+                tm.ok(name in names)
 
         def test_installed_version_matches_version_owner(self) -> None:
             """Runtime metadata and the version SSOT must never diverge.
@@ -66,7 +66,7 @@ class TestsFlextRootReleasePackaging:
             """
             repository_root = Path(__file__).resolve().parents[2]
             loaded = u.config_load(repository_root / "pyproject.toml")
-            tm.that(loaded.failure, eq=False)
+            tm.fail(loaded.failure)
             project = self._section_of(loaded.unwrap(), "project")
             version = project["version"]
             if not isinstance(version, str):

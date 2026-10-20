@@ -120,7 +120,7 @@ from flext_core import m, p
 from tests import tm
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
-tm.that(isinstance(document, p.Model), eq=True)
+tm.ok(isinstance(document, p.Model))
 tm.that(document.model_dump(mode="json"), keys=["data"])
 ```
 
@@ -202,7 +202,7 @@ from flext_tests import tf, tm
 with tf.files({"example.txt": "example"}) as paths:
     manager = tf()
     info = tm.ok(manager.info(paths["example.txt"]))
-    tm.that(info.exists, eq=True)
+    tm.ok(info.exists)
 ```
 
 ### 4. tv (TestsFlextValidator) - Verificar Uso Correto

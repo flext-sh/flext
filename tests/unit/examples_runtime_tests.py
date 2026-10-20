@@ -118,19 +118,19 @@ class TestsFlextRootExamplesRuntime:
             """
             result = FlextRootCompleteWorkflowExample.run_example()
 
-            tm.that(result.success, eq=True)
+            tm.ok(result.success)
             summary = result.unwrap().content
-            tm.that(bool(summary), eq=True)
+            tm.ok(bool(summary))
             tm.that(summary["workflow_status"], eq=c.Status.COMPLETED)
             total_stages = summary["total_stages"]
-            tm.that(isinstance(total_stages, int) and total_stages > 0, eq=True)
+            tm.ok(isinstance(total_stages, int) and total_stages > 0)
             tm.that(summary["completed_stages"], eq=total_stages)
             performance = summary["performance_summary"]
             if not isinstance(performance, Mapping):
                 message = "performance summary must be a mapping"
                 raise TypeError(message)
             processed = performance["total_items_processed"]
-            tm.that(isinstance(processed, int) and processed > 0, eq=True)
+            tm.ok(isinstance(processed, int) and processed > 0)
             tm.that(performance["total_items_succeeded"], eq=processed)
 
         @staticmethod
@@ -151,10 +151,10 @@ class TestsFlextRootExamplesRuntime:
 
             result = pipeline.execute()
 
-            tm.that(result.success, eq=True)
+            tm.ok(result.success)
             values = result.unwrap().data.values
             processed = values["processed_items"]
-            tm.that(isinstance(processed, list), eq=True)
+            tm.ok(isinstance(processed, list))
             if not isinstance(processed, list):
                 message = "processed_items must be a list"
                 raise TypeError(message)
@@ -164,9 +164,9 @@ class TestsFlextRootExamplesRuntime:
                 message = "processed item must be a mapping"
                 raise TypeError(message)
             tm.that(processed_item["id"], eq=item["id"])
-            tm.that(processed_item["processed"], eq=True)
+            tm.ok(processed_item["processed"])
             analysis = values["analysis"]
-            tm.that(isinstance(analysis, Mapping), eq=True)
+            tm.ok(isinstance(analysis, Mapping))
             if not isinstance(analysis, Mapping):
                 message = "analysis must be a mapping"
                 raise TypeError(message)
@@ -182,7 +182,7 @@ class TestsFlextRootExamplesRuntime:
 
             result = pipeline.execute()
 
-            tm.that(result.failure, eq=True)
+            tm.ok(result.failure)
             tm.that(result.error, eq="Unknown stage: missing")
 
         @staticmethod
@@ -212,10 +212,10 @@ class TestsFlextRootExamplesRuntime:
                 )
             )
 
-            tm.that(result.success, eq=True)
+            tm.ok(result.success)
             evaluation = result.unwrap()
             tm.that(evaluation, is_=flext_ldif.p.Ldif.AclEvaluationResult)
-            tm.that(evaluation.granted, eq=True)
+            tm.ok(evaluation.granted)
 
         @staticmethod
         def test_acl_pipeline_denies_without_acl_attributes() -> None:
@@ -235,6 +235,6 @@ class TestsFlextRootExamplesRuntime:
                 required_permissions=flext_ldif.m.Ldif.AclPermissions(read=True),
             )
 
-            tm.that(result.success, eq=True)
+            tm.ok(result.success)
             evaluation = result.unwrap()
-            tm.that(evaluation.granted, eq=False)
+            tm.fail(evaluation.granted)

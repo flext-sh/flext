@@ -1,17 +1,10 @@
 Infra:
   codegen:
     vscode:
-      additional_settings:
-        python.analysis.enableTroubleshootMissingImports: true
-        ruff.interpreter:
-        - ${workspaceFolder}/.venv/bin/python
-        ruff.path:
-        - ${workspaceFolder}/.venv/bin/ruff
-        terminal.integrated.env.linux:
-          PATH: ${workspaceFolder}/.venv/bin:${env:PATH}
-          VIRTUAL_ENV: ${workspaceFolder}/.venv
-        python-envs.workspaceSearchPaths:
-        - ./.venv
+      # Ordered key/value pairs accept every extension setting and JSON value.
+      # Layer composition appends pairs; the final occurrence replaces the whole value.
+      settings:
+      - [python.analysis.enableTroubleshootMissingImports, true]
     repository:
       project:
         package_name: flext

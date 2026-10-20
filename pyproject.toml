@@ -485,14 +485,10 @@ variance-mismatch = "error"
 [tool.pyright]
 exclude = [
   "**/*.bak",
-  "**/*.bak/**",
   "**/*.egg-info/**",
   "**/*.orig",
-  "**/*.orig/**",
   "**/*.rej",
-  "**/*.rej/**",
   "**/*.swp",
-  "**/*.swp/**",
   "**/.*",
   "**/.agents-sync-home/**",
   "**/.agents/**",
@@ -555,75 +551,123 @@ exclude = [
   ".venv",
   "vendor",
 ]
+extraPaths = [".", "src"]
 include = [
   "examples",
-  "flext-api/*.toml",
-  "flext-api/pyrightconfig.json*",
-  "flext-auth/*.toml",
-  "flext-auth/pyrightconfig.json*",
-  "flext-cli/*.toml",
-  "flext-cli/pyrightconfig.json*",
-  "flext-core/*.toml",
-  "flext-core/pyrightconfig.json*",
-  "flext-db-oracle/*.toml",
-  "flext-db-oracle/pyrightconfig.json*",
-  "flext-dbt-ldap/*.toml",
-  "flext-dbt-ldap/pyrightconfig.json*",
-  "flext-dbt-ldif/*.toml",
-  "flext-dbt-ldif/pyrightconfig.json*",
-  "flext-dbt-oracle-wms/*.toml",
-  "flext-dbt-oracle-wms/pyrightconfig.json*",
-  "flext-dbt-oracle/*.toml",
-  "flext-dbt-oracle/pyrightconfig.json*",
-  "flext-grpc/*.toml",
-  "flext-grpc/pyrightconfig.json*",
-  "flext-infra/*.toml",
-  "flext-infra/pyrightconfig.json*",
-  "flext-ldap/*.toml",
-  "flext-ldap/pyrightconfig.json*",
-  "flext-ldif/*.toml",
-  "flext-ldif/pyrightconfig.json*",
-  "flext-meltano/*.toml",
-  "flext-meltano/pyrightconfig.json*",
-  "flext-observability/*.toml",
-  "flext-observability/pyrightconfig.json*",
-  "flext-oracle-oic/*.toml",
-  "flext-oracle-oic/pyrightconfig.json*",
-  "flext-oracle-wms/*.toml",
-  "flext-oracle-wms/pyrightconfig.json*",
-  "flext-plugin/*.toml",
-  "flext-plugin/pyrightconfig.json*",
-  "flext-quality/*.toml",
-  "flext-quality/pyrightconfig.json*",
-  "flext-tap-ldap/*.toml",
-  "flext-tap-ldap/pyrightconfig.json*",
-  "flext-tap-ldif/*.toml",
-  "flext-tap-ldif/pyrightconfig.json*",
-  "flext-tap-oracle-oic/*.toml",
-  "flext-tap-oracle-oic/pyrightconfig.json*",
-  "flext-tap-oracle-wms/*.toml",
-  "flext-tap-oracle-wms/pyrightconfig.json*",
-  "flext-tap-oracle/*.toml",
-  "flext-tap-oracle/pyrightconfig.json*",
-  "flext-target-ldap/*.toml",
-  "flext-target-ldap/pyrightconfig.json*",
-  "flext-target-ldif/*.toml",
-  "flext-target-ldif/pyrightconfig.json*",
-  "flext-target-oracle-oic/*.toml",
-  "flext-target-oracle-oic/pyrightconfig.json*",
-  "flext-target-oracle-wms/*.toml",
-  "flext-target-oracle-wms/pyrightconfig.json*",
-  "flext-target-oracle/*.toml",
-  "flext-target-oracle/pyrightconfig.json*",
-  "flext-tests/*.toml",
-  "flext-tests/pyrightconfig.json*",
-  "flext-web/*.toml",
-  "flext-web/pyrightconfig.json*",
+  "flext-api/conftest.py",
+  "flext-api/examples",
+  "flext-api/src",
+  "flext-api/tests",
+  "flext-auth/conftest.py",
+  "flext-auth/examples",
+  "flext-auth/src",
+  "flext-auth/tests",
+  "flext-cli/conftest.py",
+  "flext-cli/examples",
+  "flext-cli/src",
+  "flext-cli/tests",
+  "flext-core/conftest.py",
+  "flext-core/examples",
+  "flext-core/scripts",
+  "flext-core/src",
+  "flext-core/tests",
+  "flext-db-oracle/conftest.py",
+  "flext-db-oracle/examples",
+  "flext-db-oracle/src",
+  "flext-db-oracle/tests",
+  "flext-dbt-ldap/conftest.py",
+  "flext-dbt-ldap/src",
+  "flext-dbt-ldap/tests",
+  "flext-dbt-ldif/conftest.py",
+  "flext-dbt-ldif/src",
+  "flext-dbt-ldif/tests",
+  "flext-dbt-oracle-wms/conftest.py",
+  "flext-dbt-oracle-wms/src",
+  "flext-dbt-oracle-wms/tests",
+  "flext-dbt-oracle/conftest.py",
+  "flext-dbt-oracle/src",
+  "flext-dbt-oracle/tests",
+  "flext-grpc/conftest.py",
+  "flext-grpc/docs",
+  "flext-grpc/examples",
+  "flext-grpc/src",
+  "flext-grpc/tests",
+  "flext-infra/conftest.py",
+  "flext-infra/src",
+  "flext-infra/tests",
+  "flext-ldap/conftest.py",
+  "flext-ldap/src",
+  "flext-ldap/tests",
+  "flext-ldif/conftest.py",
+  "flext-ldif/examples",
+  "flext-ldif/src",
+  "flext-ldif/tests",
+  "flext-meltano/conftest.py",
+  "flext-meltano/examples",
+  "flext-meltano/src",
+  "flext-meltano/tests",
+  "flext-meltano/typings",
+  "flext-observability/conftest.py",
+  "flext-observability/examples",
+  "flext-observability/src",
+  "flext-observability/tests",
+  "flext-oracle-oic/conftest.py",
+  "flext-oracle-oic/src",
+  "flext-oracle-oic/tests",
+  "flext-oracle-wms/conftest.py",
+  "flext-oracle-wms/examples",
+  "flext-oracle-wms/src",
+  "flext-oracle-wms/tests",
+  "flext-plugin/conftest.py",
+  "flext-plugin/examples",
+  "flext-plugin/src",
+  "flext-plugin/tests",
+  "flext-quality/conftest.py",
+  "flext-quality/src",
+  "flext-quality/tests",
+  "flext-tap-ldap/conftest.py",
+  "flext-tap-ldap/src",
+  "flext-tap-ldap/tests",
+  "flext-tap-ldif/conftest.py",
+  "flext-tap-ldif/src",
+  "flext-tap-ldif/tests",
+  "flext-tap-oracle-oic/conftest.py",
+  "flext-tap-oracle-oic/src",
+  "flext-tap-oracle-oic/tests",
+  "flext-tap-oracle-wms/conftest.py",
+  "flext-tap-oracle-wms/examples",
+  "flext-tap-oracle-wms/src",
+  "flext-tap-oracle-wms/tests",
+  "flext-tap-oracle/conftest.py",
+  "flext-tap-oracle/src",
+  "flext-tap-oracle/tests",
+  "flext-target-ldap/conftest.py",
+  "flext-target-ldap/src",
+  "flext-target-ldap/tests",
+  "flext-target-ldif/conftest.py",
+  "flext-target-ldif/src",
+  "flext-target-ldif/tests",
+  "flext-target-oracle-oic/conftest.py",
+  "flext-target-oracle-oic/src",
+  "flext-target-oracle-oic/tests",
+  "flext-target-oracle-wms/conftest.py",
+  "flext-target-oracle-wms/examples",
+  "flext-target-oracle-wms/src",
+  "flext-target-oracle-wms/tests",
+  "flext-target-oracle/conftest.py",
+  "flext-target-oracle/examples",
+  "flext-target-oracle/src",
+  "flext-target-oracle/tests",
+  "flext-tests/conftest.py",
+  "flext-tests/src",
+  "flext-tests/tests",
+  "flext-web/examples",
+  "flext-web/src",
+  "flext-web/tests",
   "scripts",
   "src",
   "tests",
 ]
-extraPaths = ["src", "."]
 pythonPlatform = "Linux"
 pythonVersion = "3.13"
 reportCallIssue = "error"
@@ -641,10 +685,603 @@ reportUnusedFunction = "error"
 reportUnusedImport = "error"
 reportUnusedVariable = "error"
 typeCheckingMode = "strict"
+useLibraryCodeForTypes = true
 
 [[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-api", "flext-api/src"]
+reportPrivateUsage = "error"
+root = "flext-api/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-api/src"]
+reportPrivateUsage = "error"
+root = "flext-api/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-api", "flext-api/src"]
+reportPrivateUsage = "error"
+root = "flext-api/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-api", "flext-api/src"]
+reportPrivateUsage = "error"
+root = "flext-api"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-auth", "flext-auth/src"]
+reportPrivateUsage = "error"
+root = "flext-auth/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-auth/src"]
+reportPrivateUsage = "error"
+root = "flext-auth/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-auth", "flext-auth/src"]
+reportPrivateUsage = "error"
+root = "flext-auth/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-auth", "flext-auth/src"]
+reportPrivateUsage = "error"
+root = "flext-auth"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-cli", "flext-cli/src"]
+reportPrivateUsage = "error"
+root = "flext-cli/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-cli/src"]
+reportPrivateUsage = "error"
+root = "flext-cli/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-cli", "flext-cli/src"]
+reportPrivateUsage = "error"
+root = "flext-cli/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-cli", "flext-cli/src"]
+reportPrivateUsage = "error"
+root = "flext-cli"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-core", "flext-core/src"]
+reportPrivateUsage = "error"
+root = "flext-core/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-core", "flext-core/src"]
+reportPrivateUsage = "error"
+root = "flext-core/scripts"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-core/src"]
+reportPrivateUsage = "error"
+root = "flext-core/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-core", "flext-core/src"]
+reportPrivateUsage = "error"
+root = "flext-core/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-core", "flext-core/src"]
+reportPrivateUsage = "error"
+root = "flext-core"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-db-oracle", "flext-db-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-db-oracle/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-db-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-db-oracle/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-db-oracle", "flext-db-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-db-oracle/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-db-oracle", "flext-db-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-db-oracle"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-dbt-ldap/src"]
+reportPrivateUsage = "error"
+root = "flext-dbt-ldap/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-dbt-ldap", "flext-dbt-ldap/src"]
+reportPrivateUsage = "error"
+root = "flext-dbt-ldap/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-dbt-ldap", "flext-dbt-ldap/src"]
+reportPrivateUsage = "error"
+root = "flext-dbt-ldap"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-dbt-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-dbt-ldif/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-dbt-ldif", "flext-dbt-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-dbt-ldif/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-dbt-ldif", "flext-dbt-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-dbt-ldif"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-dbt-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-dbt-oracle/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-dbt-oracle", "flext-dbt-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-dbt-oracle/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-dbt-oracle", "flext-dbt-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-dbt-oracle"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-dbt-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-dbt-oracle-wms/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-dbt-oracle-wms", "flext-dbt-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-dbt-oracle-wms/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-dbt-oracle-wms", "flext-dbt-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-dbt-oracle-wms"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-grpc", "flext-grpc/src"]
+reportPrivateUsage = "error"
+root = "flext-grpc/docs"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-grpc", "flext-grpc/src"]
+reportPrivateUsage = "error"
+root = "flext-grpc/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-grpc/src"]
+reportPrivateUsage = "error"
+root = "flext-grpc/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-grpc", "flext-grpc/src"]
+reportPrivateUsage = "error"
+root = "flext-grpc/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-grpc", "flext-grpc/src"]
+reportPrivateUsage = "error"
+root = "flext-grpc"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-infra/src"]
+reportPrivateUsage = "error"
+root = "flext-infra/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-infra", "flext-infra/src"]
+reportPrivateUsage = "error"
+root = "flext-infra/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-infra", "flext-infra/src"]
+reportPrivateUsage = "error"
+root = "flext-infra"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-ldap/src"]
+reportPrivateUsage = "error"
+root = "flext-ldap/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-ldap", "flext-ldap/src"]
+reportPrivateUsage = "error"
+root = "flext-ldap/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-ldap", "flext-ldap/src"]
+reportPrivateUsage = "error"
+root = "flext-ldap"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-ldif", "flext-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-ldif/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-ldif/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-ldif", "flext-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-ldif/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-ldif", "flext-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-ldif"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-meltano", "flext-meltano/src"]
+reportPrivateUsage = "error"
+root = "flext-meltano/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-meltano/src"]
+reportPrivateUsage = "error"
+root = "flext-meltano/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-meltano", "flext-meltano/src"]
+reportPrivateUsage = "error"
+root = "flext-meltano/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-meltano", "flext-meltano/src"]
+reportPrivateUsage = "error"
+root = "flext-meltano/typings"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-meltano", "flext-meltano/src"]
+reportPrivateUsage = "error"
+root = "flext-meltano"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-observability", "flext-observability/src"]
+reportPrivateUsage = "error"
+root = "flext-observability/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-observability/src"]
+reportPrivateUsage = "error"
+root = "flext-observability/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-observability", "flext-observability/src"]
+reportPrivateUsage = "error"
+root = "flext-observability/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-observability", "flext-observability/src"]
+reportPrivateUsage = "error"
+root = "flext-observability"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-oracle-oic/src"]
+reportPrivateUsage = "error"
+root = "flext-oracle-oic/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-oracle-oic", "flext-oracle-oic/src"]
+reportPrivateUsage = "error"
+root = "flext-oracle-oic/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-oracle-oic", "flext-oracle-oic/src"]
+reportPrivateUsage = "error"
+root = "flext-oracle-oic"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-oracle-wms", "flext-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-oracle-wms/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-oracle-wms/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-oracle-wms", "flext-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-oracle-wms/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-oracle-wms", "flext-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-oracle-wms"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-plugin", "flext-plugin/src"]
+reportPrivateUsage = "error"
+root = "flext-plugin/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-plugin/src"]
+reportPrivateUsage = "error"
+root = "flext-plugin/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-plugin", "flext-plugin/src"]
+reportPrivateUsage = "error"
+root = "flext-plugin/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-plugin", "flext-plugin/src"]
+reportPrivateUsage = "error"
+root = "flext-plugin"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-quality/src"]
+reportPrivateUsage = "error"
+root = "flext-quality/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-quality", "flext-quality/src"]
+reportPrivateUsage = "error"
+root = "flext-quality/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-quality", "flext-quality/src"]
+reportPrivateUsage = "error"
+root = "flext-quality"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-ldap/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-ldap/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-ldap", "flext-tap-ldap/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-ldap/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-ldap", "flext-tap-ldap/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-ldap"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-ldif/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-ldif", "flext-tap-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-ldif/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-ldif", "flext-tap-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-ldif"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-oracle", "flext-tap-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-oracle", "flext-tap-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-oracle-oic/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle-oic/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-oracle-oic", "flext-tap-oracle-oic/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle-oic/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-oracle-oic", "flext-tap-oracle-oic/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle-oic"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-oracle-wms", "flext-tap-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle-wms/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle-wms/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-oracle-wms", "flext-tap-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle-wms/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tap-oracle-wms", "flext-tap-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle-wms"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-ldap/src"]
+reportPrivateUsage = "error"
+root = "flext-target-ldap/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-ldap", "flext-target-ldap/src"]
+reportPrivateUsage = "error"
+root = "flext-target-ldap/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-ldap", "flext-target-ldap/src"]
+reportPrivateUsage = "error"
+root = "flext-target-ldap"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-target-ldif/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-ldif", "flext-target-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-target-ldif/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-ldif", "flext-target-ldif/src"]
+reportPrivateUsage = "error"
+root = "flext-target-ldif"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-oracle", "flext-target-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-target-oracle/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-target-oracle/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-oracle", "flext-target-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-target-oracle/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-oracle", "flext-target-oracle/src"]
+reportPrivateUsage = "error"
+root = "flext-target-oracle"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-oracle-oic/src"]
+reportPrivateUsage = "error"
+root = "flext-target-oracle-oic/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-oracle-oic", "flext-target-oracle-oic/src"]
+reportPrivateUsage = "error"
+root = "flext-target-oracle-oic/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-oracle-oic", "flext-target-oracle-oic/src"]
+reportPrivateUsage = "error"
+root = "flext-target-oracle-oic"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-oracle-wms", "flext-target-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-target-oracle-wms/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-target-oracle-wms/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-oracle-wms", "flext-target-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-target-oracle-wms/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-target-oracle-wms", "flext-target-oracle-wms/src"]
+reportPrivateUsage = "error"
+root = "flext-target-oracle-wms"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tests/src"]
+reportPrivateUsage = "error"
+root = "flext-tests/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tests", "flext-tests/src"]
+reportPrivateUsage = "error"
+root = "flext-tests/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-tests", "flext-tests/src"]
+reportPrivateUsage = "error"
+root = "flext-tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-web", "flext-web/src"]
+reportPrivateUsage = "error"
+root = "flext-web/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-web/src"]
+reportPrivateUsage = "error"
+root = "flext-web/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-web", "flext-web/src"]
+reportPrivateUsage = "error"
+root = "flext-web/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-web", "flext-web/src"]
+reportPrivateUsage = "error"
+root = "flext-web"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [
+  ".",
+  "src",
+  "flext-api/src",
+  "flext-auth/src",
+  "flext-cli/src",
+  "flext-core/src",
+  "flext-db-oracle/src",
+  "flext-dbt-ldap/src",
+  "flext-dbt-ldif/src",
+  "flext-dbt-oracle/src",
+  "flext-dbt-oracle-wms/src",
+  "flext-grpc/src",
+  "flext-infra/src",
+  "flext-ldap/src",
+  "flext-ldif/src",
+  "flext-meltano/src",
+  "flext-observability/src",
+  "flext-oracle-oic/src",
+  "flext-oracle-wms/src",
+  "flext-plugin/src",
+  "flext-quality/src",
+  "flext-tap-ldap/src",
+  "flext-tap-ldif/src",
+  "flext-tap-oracle/src",
+  "flext-tap-oracle-oic/src",
+  "flext-tap-oracle-wms/src",
+  "flext-target-ldap/src",
+  "flext-target-ldif/src",
+  "flext-target-oracle/src",
+  "flext-target-oracle-oic/src",
+  "flext-target-oracle-wms/src",
+  "flext-tests/src",
+  "flext-web/src",
+]
+reportPrivateUsage = "error"
 root = "examples"
-reportPrivateUsage = "error"
+
+[[tool.pyright.executionEnvironments]]
 extraPaths = [
   ".",
   "src",
@@ -680,12 +1317,11 @@ extraPaths = [
   "flext-tests/src",
   "flext-web/src",
 ]
-
-[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "scripts"
-reportPrivateUsage = "error"
+
+[[tool.pyright.executionEnvironments]]
 extraPaths = [
-  ".",
   "src",
   "flext-api/src",
   "flext-auth/src",
@@ -719,48 +1355,10 @@ extraPaths = [
   "flext-tests/src",
   "flext-web/src",
 ]
-
-[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "src"
-reportPrivateUsage = "error"
-extraPaths = [
-  "src",
-  "flext-api/src",
-  "flext-auth/src",
-  "flext-cli/src",
-  "flext-core/src",
-  "flext-db-oracle/src",
-  "flext-dbt-ldap/src",
-  "flext-dbt-ldif/src",
-  "flext-dbt-oracle/src",
-  "flext-dbt-oracle-wms/src",
-  "flext-grpc/src",
-  "flext-infra/src",
-  "flext-ldap/src",
-  "flext-ldif/src",
-  "flext-meltano/src",
-  "flext-observability/src",
-  "flext-oracle-oic/src",
-  "flext-oracle-wms/src",
-  "flext-plugin/src",
-  "flext-quality/src",
-  "flext-tap-ldap/src",
-  "flext-tap-ldif/src",
-  "flext-tap-oracle/src",
-  "flext-tap-oracle-oic/src",
-  "flext-tap-oracle-wms/src",
-  "flext-target-ldap/src",
-  "flext-target-ldif/src",
-  "flext-target-oracle/src",
-  "flext-target-oracle-oic/src",
-  "flext-target-oracle-wms/src",
-  "flext-tests/src",
-  "flext-web/src",
-]
 
 [[tool.pyright.executionEnvironments]]
-root = "tests"
-reportPrivateUsage = "error"
 extraPaths = [
   ".",
   "src",
@@ -796,6 +1394,8 @@ extraPaths = [
   "flext-tests/src",
   "flext-web/src",
 ]
+reportPrivateUsage = "error"
+root = "tests"
 
 [tool.pytest.ini_options]
 addopts = [

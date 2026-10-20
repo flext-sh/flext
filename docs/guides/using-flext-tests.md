@@ -67,7 +67,7 @@ def test_settings_isolation(settings: FlextTestsSettings) -> None:
     """The fixture settings stay distinct from the global singleton."""
     settings.debug = True
     # The settings plugin resets runtime singletons between test functions.
-    tm.that(FlextSettings.fetch_global() is settings, eq=False)
+    tm.fail(FlextSettings.fetch_global() is settings)
 ```
 
 ## Resetting singletons manually
@@ -84,6 +84,20 @@ FlextContainer.reset_for_testing()
 ```
 
 ## Testing result flows
+
+`tm.ok(True)` validates a boolean predicate; `tm.false(False)` and
+`tm.fail(False)` validate a negative boolean predicate. Boolean forms return the
+unchanged boolean and accept `msg` for assertion diagnostics. Result-specific
+criteria such as `path`, `has`, or `code` require a result, not a boolean.
+
+For results, `tm.ok(result)` checks success and returns the original payload;
+`tm.fail(result)` checks failure and returns the error string. Successful payloads
+such as `False`, `0`, and empty collections remain successful. `r.ok(None)` is
+rejected by the result constructor, not by the matcher. Neither
+helper infers result state from payload truthiness. Use `tm.that(value, truth=True)`
+or `truth=False` when testing general Python truthiness instead of boolean values.
+`tm.that(condition)` with a boolean and no criteria requires `True`; explicit
+criteria such as `tm.that(False, eq=False)` retain their declared semantics.
 
 Use the `r` alias instead of importing from `returns` directly:
 
@@ -108,7 +122,7 @@ def safe_divide(a: float, b: float) -> p.Result[float]:
 def test_safe_divide() -> None:
     """Division succeeds for a nonzero divisor and fails for zero."""
     quotient = tm.ok(safe_divide(10, 2))
-    tm.that(isclose(quotient, 5.0), eq=True)
+    tm.ok(isclose(quotient, 5.0))
     tm.fail(safe_divide(10, 0))
 ```
 
@@ -154,7 +168,7 @@ def test_settings_override() -> None:
     try:
         settings = FlextSettings.fetch_global()
         settings.debug = True
-        tm.that(settings.debug, eq=True)
+        tm.ok(settings.debug)
     finally:
         FlextSettings.reset_for_testing()
 ```
