@@ -91,7 +91,7 @@ practical path: what to use, in which order, with which tool.
   required.
 - Port services in tests: build them with real adapters (pure DI) or, after S6, pass the
   constructor to `isolated_test_runtime(build=…)`; `fetch_global()` cannot build them.
-- Matchers `tm.that(value, eq=…, has=…, lacks=…)`, `tm.ok(result)`,
+- Matchers `assert value == …, has=…, lacks=…)`, `tm.ok(result`,
   `tm.fail(result, …)`; helpers `u.Tests.assert_success`/`assert_failure`.
 - Plugin fixtures: `clean_container`, `settings`, `settings_factory`, `test_runtime`,
   `reset_settings`; isolation with `Service.isolated_test_runtime(**overrides)`.
