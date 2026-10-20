@@ -1,0 +1,18 @@
+# @flext-generated: typing-stubs
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "flext-stubs-gitdb"
+version = "4.0.12+ed6dd13083e102262d2c913b66b1ceed9c2fb74e1f3af09e06ef93c113c2dcaa"
+requires-python = "\u003e=3.13,\u003c3.14"
+
+[project.entry-points."flext.typing-stubs"]
+"gitdb" = "gitdb"
+
+[tool.hatch.build.targets.wheel]
+packages = ["gitdb-stubs"]
+
+[tool.flext.typing]
+implementation = "gitdb==4.0.12"

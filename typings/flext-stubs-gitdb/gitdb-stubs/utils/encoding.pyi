@@ -1,0 +1,6 @@
+# @flext-generated: typing-stubs
+
+def force_bytes(data, encoding=...):  # -> bytes:
+    ...
+def force_text(data, encoding=...):  # -> str:
+    ...

@@ -1,0 +1,16 @@
+# @flext-generated: typing-stubs
+
+from gitdb.test.lib import TestBase
+
+"""Test for object db"""
+
+class TestStream(TestBase):
+    data_sizes = ...
+    def test_decompress_reader(self):  # -> None:
+        ...
+    def test_sha_writer(self):  # -> None:
+        ...
+    def test_compressed_writer(self):  # -> None:
+        ...
+    def test_decompress_reader_special_case(self):  # -> None:
+        ...

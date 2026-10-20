@@ -164,7 +164,7 @@ class TestsFlextRootExamplesRuntime:
                 message = "processed item must be a mapping"
                 raise TypeError(message)
             tm.that(processed_item["id"], eq=item["id"])
-            tm.ok(processed_item["processed"])
+            tm.ok(processed_item["processed"] is True)
             analysis = values["analysis"]
             tm.ok(isinstance(analysis, Mapping))
             if not isinstance(analysis, Mapping):
