@@ -74,7 +74,30 @@ See [Python docstring standards](docstrings/PEP257-GOOGLE-RUFF.md).
 
 ## Generation and validation
 
-Run the complete documentation propagation through the root dispatcher:
+For documentation-only changes, run the complete docs lifecycle through the
+root dispatcher:
+
+```bash
+make docs
+```
+
+It generates documentation, repairs and formats authored content, builds the
+site strictly, validates structure, and audits the resulting scope. Every phase
+must succeed. To validate one declared member while remaining at the workspace
+root, select that member's Makefile, for example:
+
+```bash
+make -f flext-core/Makefile docs
+```
+
+The docs audit checks Python fences statically; it does not prove their runtime
+behavior. Exercise affected executable Markdown through the declared
+`make test-file FILE=<repository-relative-path>` route with the persistent
+Testmon cache. Keep current executable examples distinct from future API
+contracts, and do not present a member receipt as whole-workspace acceptance.
+
+When source, generation policy or shared projections also change, run the
+applicable full engineering lifecycle through the same dispatcher:
 
 ```bash
 make setup
@@ -87,6 +110,7 @@ make fmt
 make check
 make test
 make build
+make docs
 ```
 
 The consecutive post-rewrite generation passes must reach a fixed point. Test validation

@@ -401,11 +401,21 @@ the parent profile records their waits. An individual project's profile runs its
 single planning task in the profiling process and exposes that task's call costs.
 
 `make validate-lifecycle` is the workspace-only, serial lifecycle operation. It
-discovers governed members from the typed workspace topology and runs the root,
-then each member, through `setup`, `gen`, `upg`, `setup`, `gen`, and `gen`. It
-does not include external consumers, create PRs, publish commits, switch branches,
-or change integration declarations. `upg` retains its dependency-resolution and
-lock-verification contract; this operation is not read-only.
+discovers governed members from the typed workspace topology and executes the
+configured `lifecycle_steps` from the packaged `codegen.yaml`. Root mutation
+steps own their member fanout; repository-level steps run for each elected
+scope. The lifecycle includes checks, tests, build, examples, documentation,
+status, audit and clean-tree verification, not only environment setup and
+generation. Context applicability also comes from that policy.
+
+This is not a docs-only operation: its local root steps include `upg`, with
+dependency resolution and lock verification. It does not include external
+consumers, create PRs, publish commits, switch branches, or change integration
+declarations. For documentation-only work, use `make docs` for the root or
+`make -f <member>/Makefile docs` for one declared member from the workspace
+root. Each runs generation, repair, formatting, strict site build, structural
+validation and audit for its selected scope; a root receipt is not a fleet
+receipt.
 
 Each command runs in its owning checkout, with a typed receipt recording its
 command, working directory and exit status. The first failure stops the operation;
