@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "flext-stubs-pymdownx"
-version = "12.3+2aab886b5f447e8d39bca488ce6c28716e10304ba776cde9c510d9efeaa92c50"
+version = "12.3+95a08d397380c9b32e24f09290f5bfdfb619a10ff00d2c0673ad7c3dbdf51c27"
 requires-python = "\u003e=3.13,\u003c3.14"
 
 [project.entry-points."flext.typing-stubs"]

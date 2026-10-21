@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "flext-stubs-gitdb"
-version = "4.0.12+ed6dd13083e102262d2c913b66b1ceed9c2fb74e1f3af09e06ef93c113c2dcaa"
+version = "4.0.12+a5657e3a29aff65e82144dfeeedb96cfe23d15e63029bbc02fbef90bcfc4d48c"
 requires-python = "\u003e=3.13,\u003c3.14"
 
 [project.entry-points."flext.typing-stubs"]
