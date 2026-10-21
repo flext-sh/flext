@@ -182,14 +182,78 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
 <!-- /UNIVERSAL-GOVERNANCE -->
 <!-- END AI-HUB MANAGED UNIVERSAL CORE -->
 
+## Shared Worktree Contract
+
+Always fix forward, adopt, and collaborate in the existing shared worktree. Dirty
+Git state, concurrent edits, and ongoing WIP are the expected operating conditions.
+Requiring a clean, globally stable, exclusive, or unchanged Git tree is expressly
+prohibited as a prerequisite for execution, validation, evidence, or completion of
+authorized scope. Such a requirement is unacceptable and will not be satisfied.
+
+This explicit operator correction overrides inherited clean-tree, quiet-workspace,
+and committed-candidate prerequisites, including conflicting managed instructions.
+Preserve compatible contributions, reread affected inputs, and revalidate only the
+actual dependency scope. Record command outcomes and scoped content evidence without
+requiring unrelated WIP to stop or Git changes to be committed or pushed. Real
+runtime, type, lint, and test failures still require repair; Git dirtiness is not one.
+Never discard work or manufacture a clean state to satisfy tooling or reporting.
+
+## Engineering And Phase Completion Contract
+
+These operator standards govern every current and future internal project phase
+in this workspace and all member repositories. External project forks retain their
+upstream architecture and contribution contracts instead of internal FLEXT shape.
+These standards override conflicting completion shortcuts.
+
+1. **Zero tolerance for defects.** Correct every known error, failure, warning,
+   violation, and pending issue in scope at its canonical owner. Existing defects
+   are adopted, not exempted by age or provenance. Do not close a phase or advance
+   dependent work while carrying unresolved defects as accepted technical debt.
+2. **Strict change control.** Preserve functionality and business rules unless the
+   approved plan explicitly changes them or the operator authorizes the change.
+   A failing test or difficult implementation never grants that authorization.
+3. **Immediate integration.** Apply and validate fixes and hotfixes through the
+   declared integration branch. A patch, side branch, or instruction to apply a
+   correction later is not integration and cannot satisfy phase completion.
+4. **Runtime authority.** Establish behavior from domain contracts, official
+   external protocols, the real consumer, and the actual environment. Tests confirm
+   that behavior; they never redefine production or become its source of truth.
+5. **Production readiness.** A phase is complete only when every required public
+   capability works end to end in the actual environment and its production path.
+   Passing unit tests, collected assertions, or partial static checks cannot replace
+   functional runtime, full applicable gates, and integration evidence.
+6. **No workarounds.** No quick-fix route, fallback, bypass, suppression, fake
+   success, masked exception, or superficial correction may replace a root-cause
+   repair. Preserve the first original failure and validate the repaired owner.
+7. **Architectural integrity.** Enforce DDD bounded contexts and domain invariants,
+    Clean Architecture with inward dependencies, and explicit typed DI at composition
+    roots. Reuse canonical owners and pass validated models and protocols directly;
+    apply DRY, YAGNI, SSOT, KISS, and SOLID to every execution branch. God components,
+    over-engineering, hidden coupling, duplicate code/rules, and alternate execution
+    pipelines are prohibited.
+8. **Documentation first.** Consult and align the relevant documentation, ADRs,
+   approved plans, and specifications before implementation. Update affected owners
+   before introducing new behavior or strategy; never implement an unaligned rule
+   change autonomously. FLEXT-specific documentation and constraints apply with
+   additional rigor and must not diverge from this contract.
+
+Apply these standards through fix, forward, adopt, and collaborate. The shared
+worktree contract remains mandatory: dirty or changing Git state is not a defect
+and never becomes a clean-tree or quiet-workspace prerequisite.
+
 ## Canonical Governance Composition
 
 The newest operator instruction has highest authority. Below it, FLEXT composes four
 non-competing layers:
 
+`~/agents/` is the single writable source of truth for provider-neutral project and
+agent governance. Installed skills and generated instruction surfaces, including
+those under `~/.agents/`, consume that authority; they are not independent writable
+owners. Project law contributes only its documented scope-specific delta.
+
 | Layer     | Canonical owner                                                                                        | Permitted content                                                                                             |
 | --------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| Global    | `~/.agents/AGENTS.md` and the global `flext-development`, `make-check`, and `verification-loop` skills | universal conduct, execution safety, command selection, evidence, and completion                              |
+| Global    | `~/agents/AGENTS.md` and its canonical rules and skills, consumed through installed projections | universal conduct, execution safety, command selection, evidence, and completion                              |
 | FLEXT     | this root file and `.agents/skills/flext-law/SKILL.md`                                                 | FLEXT architecture, imports, MRO/lazy exports, workspace Make control plane, generation, and fleet boundaries |
 | Scope     | the nearest member or standalone `AGENTS.md`                                                           | only narrower domain facts, public surfaces, and explicit exclusions                                          |
 | Execution | the active Bead                                                                                        | current intent, ownership, dependencies, phase, evidence, and stop condition                                  |

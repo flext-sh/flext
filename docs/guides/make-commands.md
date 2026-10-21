@@ -405,8 +405,14 @@ discovers governed members from the typed workspace topology and executes the
 configured `lifecycle_steps` from the packaged `codegen.yaml`. Root mutation
 steps own their member fanout; repository-level steps run for each elected
 scope. The lifecycle includes checks, tests, build, examples, documentation,
-status, audit and clean-tree verification, not only environment setup and
+status, audit and owned-artifact consistency verification, not only environment setup and
 generation. Context applicability also comes from that policy.
+
+Staged, unstaged and untracked work are normal shared-workspace inputs, not
+admission failures. The existing `verify-clean` surface must report that state
+without demanding cleanup or a globally stable tree. It does not authorize
+discarding changes or clearing recovery objects. Repair actual validation
+failures forward and recapture only the affected inputs when they change.
 
 This is not a docs-only operation: its local root steps include `upg`, with
 dependency resolution and lock verification. It does not include external

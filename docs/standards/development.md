@@ -15,9 +15,18 @@
 This standard summarizes the root `AGENTS.md` and branch-matched `flext-law`. Those
 authorities, the nearest package scope, and the active Bead own execution.
 
+Provider-neutral engineering law is owned by `~/agents/`, including its
+`engineering-core`, `production-readiness`, `living-documentation`, and
+`fix-forward-collaboration` rules. Installed and generated instructions consume
+that authority; they are not competing sources. External forks retain their
+upstream-specific architecture and delivery workflow.
+
 ## Ownership and architecture
 
 - Read the canonical owner and every consumer before mutation.
+- Consult documentation, ADRs, the approved plan and specifications, and align
+  their intended contract before implementation. Do not change functionality or
+  business rules without the plan's or operator's explicit authorization.
 - Keep the strict
   `settings -> config -> c -> t -> p -> m -> u -> base -> services -> api -> cli`
   direction.
@@ -26,6 +35,8 @@ authorities, the nearest package scope, and the active Bead own execution.
 - Wire dependencies once through typed `p` protocols at the public composition root.
 - Remove replaced owners after every consumer is rewired. Compatibility aliases,
   duplicate registries, fallback paths, and temporary bridges are prohibited.
+- Apply DDD, Clean Architecture, DI, DRY, YAGNI, SSOT, KISS and SOLID; avoid god
+  components and abstractions without a real consumer.
 
 ## Configuration and types
 
@@ -103,11 +114,15 @@ selectors or retired execution toggles to standard lifecycle verbs, or invoke
 underlying tools directly. A scoped verb does not replace required full-lifecycle
 gates.
 
-Every change, including documentation and configuration, requires the applicable
-native lint, type, test, documentation, and build gates. Exercise the real public
-consumer before encoding its behavior in tests. Record the command, working directory,
-exit status, decisive output, and candidate SHA; static checks alone do not establish
-working runtime behavior.
+All known defects in the applicable scope must be corrected before phase closure.
+Recording a Bead, passing selected tests, or preparing an unapplied patch is not
+completion. Fixes and hotfixes reach the declared integration branch in the same
+delivery cycle, with proof that the integrated public behavior works. Missing
+authority or prerequisites are explicit blockers, never fabricated readiness.
+
+Dirty Git state and concurrent WIP are expected throughout this workflow. Preserve
+and adopt compatible work, revalidate affected inputs and fix forward. Do not
+require cleanup, exclusive writers, a frozen tree or unrelated commits to proceed.
 
 Every change, including documentation and configuration, requires the applicable
 native lint, type, test, documentation, and build gates. Exercise the real public
