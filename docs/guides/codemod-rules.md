@@ -13,7 +13,7 @@
 
 FLEXT applies structural migrations through the codemod engine that flext-infra owns.
 The provider-neutral authoring procedure (one law per rule, generalization, exactness,
-consolidation) is the `ast-grep-codemod` skill. This guide covers the FLEXT engine:
+consolidation) is the `codemod` skill. This guide covers the FLEXT engine:
 where rules live, the keys it reads, and the verbs that run it. Every value named here
 is declared by the flext-infra owner cited next to it; that owner wins over this guide.
 
