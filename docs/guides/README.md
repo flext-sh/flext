@@ -28,6 +28,7 @@ shared owner rather than copying engineering law into each package.
 - [Using flext-cli](using-flext-cli.md)
 - [Using flext-tests](using-flext-tests.md)
 - [Make Commands](make-commands.md)
+- [Codemod Rules](codemod-rules.md)
 - [Skill Automation Pattern](skill-automation-pattern.md)
 - [Security Guide](security.md)
 
