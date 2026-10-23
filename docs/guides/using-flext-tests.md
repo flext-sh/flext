@@ -188,7 +188,8 @@ unresolved or unadmitted findings remain open rather than being classified green
   uses `tm.reject()` for the failing branch. It must not introduce assignments
   that change the election of global, nonlocal, or local names.
 - Use `settings_factory` when a project-specific settings subclass is required.
-- Assert result state via `.success`, `.failure`, and `.unwrap()` on `r[T]` instances.
+- Use `tm.ok(result)` and `tm.fail(result)` for result assertions; inspect state
+  properties directly only when that state query is the behavior under test.
 
 ## Make/codegen boundary
 
@@ -217,8 +218,7 @@ mutation, including assertion failure:
 ```python
 from flext_core import FlextSettings
 
-from tests import c, r
-from tests import c, tm
+from flext_tests import tm
 
 
 def test_settings_override() -> None:
