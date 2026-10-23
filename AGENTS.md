@@ -586,6 +586,16 @@ CLI + pytest plugin, **never imported at runtime**.
 
 ## Conventions & Patterns
 
+- **Module and facade ownership:** module filenames have no leading underscore,
+  except Python special modules such as `__init__.py` and `__main__.py`. Facade
+  directories begin with `_`. Remove `_part`/`_parts` split naming and organize
+  shared-prefix modules by their actual responsibility within the owning facade
+  package; numbered fragments do not establish semantic names. Facades compose
+  through MRO as facades, not mixins. Only the owning facade imports its internal
+  modules, and component classes are exposed through the base facade class, not
+  competing module/package re-exports. Consumers use that class boundary. Apply
+  source moves, consumer rewrites and generated export changes in one authenticated
+  semantic candidate through `make mod`; runtime behavior precedes test alignment.
 - **`__init__.py`, `constants.py`, `models.py`, etc. facet roots are AUTO-GENERATED**
   (`# AUTO-GENERATED FILE — regenerate through`make
   gen`). Never hand-edit; change the codegen source in`flext-infra`and run`make gen`.

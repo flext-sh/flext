@@ -61,33 +61,39 @@ workspace timestamped `.bak` artifacts).
 
 ## Decision
 
-### 1. Family directory and part-class law
+### 1. Semantic facade ownership
 
-1. Each package declares the five private families, each family begins with `base.py`
-   (namespace-gate law, unchanged).
-2. A family part file (any module inside a family directory) declares its part class — a
-   top-level class named `<FlextStem><FamilySuffix><Part>` — and nests its content
-   **directly**: entities only, one level deep. Entities are Pydantic models (`m.*Model`
-   presets), enums (StrEnum/Enum), protocols (`Protocol`), and behavior classes (bodies
-   containing function definitions, such as `Service`/`Transformer` helper classes).
-3. A top-level class other than the part class in a family part file is an **orphan**
-   and is forbidden: it is hoisted into the part class as a public nested entity
-   (PascalCase, underscore stripped), never kept beside an alias.
-4. A direct child of the part class that has no entity base and no function definitions
-   — a base-less, data-only or class-only grouping — is a **pure namespace wrapper** and
-   is forbidden. Its members are flattened one level up (prefix-merge on collision), and
-   the wrapper is deleted. Consumer attribute chains (`X.Wrapper.Y` → `X.Y`) are rewired
-   package-wide.
-5. Facade roots (`constants.py`, `typings.py`, `protocols.py`, `models.py`,
-   `utilities.py`) keep the canonical shape: inherit the canonical layer letter(s), nest
-   exactly one domain namespace composing at least two part classes through multiple
-   inheritance, and end with the canonical bottom alias (`c`/`t`/`p`/`m`/`u`).
+The operator's 2026-10-23 amendment replaces the numbered-part and mixin
+prescription. This is the target contract, not a claim that the fleet migration
+has already passed its runtime and native validation gates.
 
-Split implementation classes have distinct names derived from their part identity
-(`Part01`, `Part02`, and so on); they never redeclare an imported ancestor's name.
-Only the composing facade keeps the unsuffixed public name. Renaming updates
-inheritance, annotations, imports, and exports together; `make gen` regenerates lazy
-exports. Compatibility aliases must not preserve the old ambiguous names.
+1. Each package retains its canonical private families and `base.py` entry points.
+   Ordinary module filenames do not begin with `_`; facade-owned directories do.
+   Python protocol files retain their required names.
+2. Related declarations form a meaningful domain directory, such as `_acl`, with
+   responsibility-based modules such as `behavioral.py`, `comparator.py`,
+   `converter.py`, `events.py`, and `runtime.py`. Do not emit `_part`, `_parts`,
+   numeric chunk identities, or arbitrary collision suffixes as module owners.
+3. A facade imports its owned concrete subclasses or subfacades and reexports
+   only those through its canonical base-class namespace. Implementations remain
+   in their declaration owners; the facade does not duplicate their bodies or
+   introduce forwarding boilerplate. Library-owned native exports keep their
+   existing public contracts.
+4. MRO composition joins meaningful, self-contained facades. A numbered fragment
+   relying on undeclared members of a sibling is not a facade. Do not force extra
+   bases or wrappers merely to satisfy a count.
+5. Only an owning facade imports its internal modules. Other production modules,
+   tests, scripts, and examples consume that facade. Preserve declared dependency
+   direction and use explicit protocol injection where a runtime back-import
+   would otherwise create a cycle.
+6. Semantic rewiring updates inheritance, annotations, imports, quoted references,
+   exports, and generated surfaces together. Preserve payload behavior and intended
+   MRO; reject unresolved ownership and occupied destinations before publication.
+   Compatibility aliases and duplicate old/new owners are not migration results.
+
+The refactor and generator owners enforce this contract together. Existing symbol
+names are not renamed merely to decorate a file move; any required symbol change
+must have a semantic owner and preserve the observable consumer contract.
 
 ### 2. Declarative Rope rules (one YAML file per rule)
 

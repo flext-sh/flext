@@ -239,8 +239,6 @@ dev = [
   "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
   "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
-  "flext-stubs-gitdb",
-  "flext-stubs-pymdownx",
   "pydantic-core>=2.41.5",                                                                            # flext: derived member environment
   "rope @ git+https://github.com/marlon-costa-dc/rope.git@1.15.0%2Bdc.5",                             # flext: derived member environment
 ]
@@ -1654,9 +1652,3 @@ link-mode = "copy"
 override-dependencies = [
   "rope @ git+https://github.com/marlon-costa-dc/rope.git@2bf3ad55a32cc117f5321e1467695eba540be97b",
 ]
-
-[tool.uv.sources.flext-stubs-gitdb]
-path = "typings/flext-stubs-gitdb"
-
-[tool.uv.sources.flext-stubs-pymdownx]
-path = "typings/flext-stubs-pymdownx"

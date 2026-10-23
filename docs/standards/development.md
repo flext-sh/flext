@@ -62,6 +62,20 @@ independent runtime and architecture fixes. Source findings are not runtime proo
 
 ## Imports and modules
 
+- Ordinary Python module filenames have no leading underscore. Preserve Python
+  protocol files such as `__init__.py` and `__main__.py`; do not rename caches,
+  installed dependencies, or resource files as implementation modules.
+- Facade-owned implementation directories have a leading underscore. Group related
+  declarations by domain and responsibility, with semantic child module names;
+  `_part`, `_parts`, and numbered split-module names are not canonical owners.
+- Facades import their owned concrete subclasses or subfacades and publish them
+  only through the canonical base-class namespace. Compose meaningful facades by
+  MRO, not fragments with hidden sibling-state or cooperative-mixin requirements.
+  Keep implementation bodies in their owners, not duplicated in facade wrappers.
+- Only the owning facade imports its implementation modules. Consumers, including
+  tests, use the facade rather than private module paths. Cross-domain dependencies
+  use the other owning facade or an explicitly injected protocol; do not introduce
+  circular runtime imports through a partially initialized facade.
 - Import config and settings in their canonical single form.
 - Consume short facades from the public package boundary.
 - Forward imports may be runtime; reverse imports are type-checking only.
@@ -70,6 +84,12 @@ independent runtime and architecture fixes. Source findings are not runtime proo
   `flext-infra/config/codegen.yaml`; guidance must not copy its current value.
 - Never hand-edit generated facade roots, initializers, managed sections, or generated
   docs.
+
+The 2026-10-23 operator contract supersedes earlier numbered-part and mixin layout
+prescriptions. Implement it at the refactor and generator owners, reconcile occupied
+destinations before mutation, and preserve public behavior, declaration identity,
+payload validation, and intended MRO. A raw filename or docstring replacement does
+not establish a semantic move. Regeneration must not recreate the retired shape.
 
 ## Failure semantics
 
