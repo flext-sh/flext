@@ -226,11 +226,11 @@ These standards override conflicting completion shortcuts.
    success, masked exception, or superficial correction may replace a root-cause
    repair. Preserve the first original failure and validate the repaired owner.
 7. **Architectural integrity.** Enforce DDD bounded contexts and domain invariants,
-    Clean Architecture with inward dependencies, and explicit typed DI at composition
-    roots. Reuse canonical owners and pass validated models and protocols directly;
-    apply DRY, YAGNI, SSOT, KISS, and SOLID to every execution branch. God components,
-    over-engineering, hidden coupling, duplicate code/rules, and alternate execution
-    pipelines are prohibited.
+   Clean Architecture with inward dependencies, and explicit typed DI at composition
+   roots. Reuse canonical owners and pass validated models and protocols directly;
+   apply DRY, YAGNI, SSOT, KISS, and SOLID to every execution branch. God components,
+   over-engineering, hidden coupling, duplicate code/rules, and alternate execution
+   pipelines are prohibited.
 8. **Documentation first.** Consult and align the relevant documentation, ADRs,
    approved plans, and specifications before implementation. Update affected owners
    before introducing new behavior or strategy; never implement an unaligned rule
@@ -618,6 +618,17 @@ CLI + pytest plugin, **never imported at runtime**.
   good/bad-practice and removal catalog.
 - **Typing:** never `Any`/`object`/concrete-class annotations; type via `t.*` aliases
   and `p.*` protocols; `T | None` (never `Optional`). A model is never a type.
+- **No owned typing stubs:** handwritten and generated first-party `.pyi`, custom
+  stub distributions, stub generators, SDK-shaped shadow modules, and model-signature
+  mirrors in `.py` are prohibited. Dependency contracts belong to the smallest
+  actually consumed `p.*` protocol, injected at the existing composition root;
+  copying an entire SDK or model into a protocol is not a replacement. Retire the
+  producer, configuration, dependencies, outputs, and consumer route together.
+  Native source inventory and authenticated publication must reject prohibited
+  artifacts before effects, including empty files and unchecked copied plans.
+  Preserve legitimate Protocol signatures, overloads, `typings.py`, `py.typed`,
+  upstream typing, and generated facade composition. Protocol assignment never
+  proves unannotated vendor signatures or validates external payloads.
 - **No compat surface:** no shims, legacy branches, dual old+new paths, loose helpers,
   or suppression (`# type: ignore`/`# noqa`) without documented justification. Remove
   superseded code the same cycle.

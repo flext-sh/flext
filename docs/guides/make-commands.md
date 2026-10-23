@@ -66,23 +66,18 @@ checks are not fleet proof; failures and unexecuted gates remain explicit.
 
 ## Canonical workflow
 
-Use the standard verbs directly from the workspace root:
+Bootstrap the environment, then run the declared native acceptance from the workspace
+root:
 
 ```bash
 make setup
-make gen
-make mod
-make gen
-make gen
-make fix
-make fmt
-make check
-make test
-make build
+make validate-lifecycle
 ```
 
-The consecutive generation passes prove the fixed point after structural rewrites.
-`make build` packages the validated candidate; it does not replace runtime verification.
+The ordered steps come from the effective typed `make.lifecycle_steps` policy, not a
+second command list in this guide. Mutation and documentation generation finish before
+the final candidate's public runtime, checks and complete suite. `make build` packages
+that candidate; it does not replace runtime verification.
 Each verb executes its declared operation directly. No project, file, pattern, action,
 phase, fix, or changed-only selector may be attached to a standard verb.
 
@@ -400,13 +395,29 @@ from the profiler's function timings. Workspace planning uses worker processes;
 the parent profile records their waits. An individual project's profile runs its
 single planning task in the profiling process and exposes that task's call costs.
 
-`make validate-lifecycle` is the workspace-only, serial lifecycle operation. It
+`make validate-lifecycle` is the serial native lifecycle acceptance operation. It
 discovers governed members from the typed workspace topology and executes the
 configured `lifecycle_steps` from the packaged `codegen.yaml`. Root mutation
 steps own their member fanout; repository-level steps run for each elected
-scope. The lifecycle includes checks, tests, build, examples, documentation,
-status, audit and owned-artifact consistency verification, not only environment setup and
-generation. Context applicability also comes from that policy.
+scope through its selected Makefile while CWD stays at the invoking workspace root.
+The effective typed policy includes repository overlays. Documentation runs before final
+repair and generation because its own lifecycle generates, repairs and formats files.
+Repeated root mutation and generation probes then precede public `examples`, checks,
+`smells`, full `tests`, build, status, audit and owned-artifact consistency verification.
+`tests` retains the persistent Testmon cache but includes the complete suite; incremental
+`test` alone is not full-suite acceptance. Context applicability comes from the same
+policy.
+
+Acceptance belongs to the candidate after its last effective structural, formatting,
+generation or environment mutation. Read the native generation operation receipts and
+their journal-backed artifact batches, including unchanged outputs, actual effect
+targets, pending effects and source/output identities. Repeated generation must have no
+relevant artifact effects; routine receipt/archive publication is evidence, not source
+drift. An exit-zero invocation or unchanged `lifecycle_observed_files` is insufficient:
+those bounded observations do not cover every generated artifact. Repeated `mod`, `fix`
+and `fmt` also require zero relevant effects. A later effective change invalidates the
+affected runtime and gate receipts and requires their renewed validation, never a hidden
+retry or a whole-workspace quiet window.
 
 Staged, unstaged and untracked work are normal shared-workspace inputs, not
 admission failures. The existing `verify-clean` surface must report that state
@@ -423,8 +434,11 @@ root. Each runs generation, repair, formatting, strict site build, structural
 validation and audit for its selected scope; a root receipt is not a fleet
 receipt.
 
-Each command runs in its owning checkout, with a typed receipt recording its
-command, working directory and exit status. The first failure stops the operation;
+Each command retains a typed receipt recording its selected repository, invoking
+working directory, physical environment, applicability and original process outcome.
+The declared scope and all planned rows remain in the report, including CI-inapplicable
+members and dependencies without authenticated editable sources. Such rows are not
+execution or a fleet pass. The first failure stops the operation;
 unreached commands remain unexecuted, never successful. Attached members share
 their physical superproject runtime, so attached validation does not substitute
 for standalone consumer proof. Ordinary root verbs remain repository-local and
