@@ -137,6 +137,11 @@ def test_safe_divide() -> None:
 
 - Rely on `reset_settings` and `test_runtime` for isolation.
 - Assert public API behavior, not private internals.
+- Use `tm.not_none(value)` or `tm.instance(value, Expected)` when the returned
+  value must retain narrowing. For compound guards, call `tm.reject()` only in
+  the failing branch; it returns `Never` and raises native `AssertionError`.
+  Pass a message inside that branch to preserve lazy evaluation and its original
+  object identity instead of eagerly formatting it.
 - Use `settings_factory` when a project-specific settings subclass is required.
 - Assert result state via `.success`, `.failure`, and `.unwrap()` on `r[T]` instances.
 
@@ -165,9 +170,9 @@ For a standalone test without the settings plugin, keep the reset on both sides 
 mutation, including assertion failure:
 
 ```python
-from tests import tm
-
 from flext_core import FlextSettings
+
+from tests import tm
 
 
 def test_settings_override() -> None:
