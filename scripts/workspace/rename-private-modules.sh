@@ -42,8 +42,9 @@ count=0
 declare -A owners=() repositories=()
 declare -a repository_order=()
 occupied() {
-    local package=${1%.py}
-    [[ -e $1 || -L $1 || -e $package/__init__.py \
+    local path=$1
+    local package=${path%.py}
+    [[ -e $path || -L $path || -e $package/__init__.py \
         || -e $package/__init__.pyi || -L $package ]]
 }
 
