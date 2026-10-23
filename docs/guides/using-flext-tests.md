@@ -99,6 +99,13 @@ or `truth=False` when testing general Python truthiness instead of boolean value
 `tm.that(condition)` with a boolean and no criteria requires `True`; explicit
 criteria such as `tm.that(False, eq=False)` retain their declared semantics.
 
+Assert a runtime type with `tm.that(value, is_=ExpectedType)`; it raises on a
+mismatch. A boolean type probe whose result is discarded asserts nothing.
+
+Inspect a container through `FlextTestsDocker.fetch_container_info(name)`; it is the
+single owner of container status and fails `NOT_PROVISIONED` for an absent
+container.
+
 Use the `r` alias instead of importing from `returns` directly:
 
 ```python

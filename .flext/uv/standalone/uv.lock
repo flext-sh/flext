@@ -1319,7 +1319,7 @@ dependencies = [
 [[package]]
 name = "flext-infra"
 version = "0.12.0"
-source = { git = "https://github.com/flext-sh/flext-infra.git?branch=0.12.0-dev#3fd1da40238763215eb1171cde2f4724edd1def0" }
+source = { git = "https://github.com/flext-sh/flext-infra.git?branch=0.12.0-dev#304955c3720b85fa69d38629f900742c30670651" }
 dependencies = [
     { name = "defusedxml" },
     { name = "flext-cli" },
