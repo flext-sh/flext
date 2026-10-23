@@ -1341,7 +1341,7 @@ dependencies = [
 requires-dist = [
     { name = "click", specifier = ">=8.5.0" },
     { name = "defusedxml", specifier = ">=0.7.1" },
-    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?rev=f98efceb2b4d6221e8e6aeaf478ab8ecf1f8e55e" },
+    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "jsonschema", specifier = ">=4.26.0" },
     { name = "openpyxl", specifier = ">=3.1.5" },
@@ -1354,14 +1354,14 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-codegen = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=ac27fc75942a78e4787a74fc64f8a2b7db2a172d" }]
+codegen = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev" }]
 dev = [
     { name = "actionlint-py", specifier = ">=1.7.12.24" },
     { name = "bandit", specifier = ">=1.9.4" },
     { name = "deptry" },
     { name = "editables", specifier = ">=0.6" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=ac27fc75942a78e4787a74fc64f8a2b7db2a172d" },
-    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=4ddd702da483f0b03a247e6282916a343c60276a" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev" },
+    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev" },
     { name = "hypothesis" },
     { name = "mkdocs" },
     { name = "mkdocs-autorefs" },
@@ -8528,9 +8528,9 @@ requires-dist = [
     { name = "beartype", specifier = ">=0.22.9" },
     { name = "dependency-injector", specifier = ">=4.49.1" },
     { name = "docker", specifier = ">=7.2.0" },
-    { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?rev=fdf8a23f58bfcbcbc0f6b8b7855e3fb8859db9e8" },
-    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?rev=f98efceb2b4d6221e8e6aeaf478ab8ecf1f8e55e" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=ac27fc75942a78e4787a74fc64f8a2b7db2a172d" },
+    { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev" },
+    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev" },
     { name = "hypothesis" },
     { name = "packaging", specifier = ">=26.3" },
     { name = "pydantic", specifier = ">=2.14.1,<3" },
@@ -8552,13 +8552,13 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-codegen = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=ac27fc75942a78e4787a74fc64f8a2b7db2a172d" }]
+codegen = [{ name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev" }]
 dev = [
     { name = "actionlint-py", specifier = ">=1.7.12.24" },
     { name = "bandit", specifier = ">=1.9.4" },
     { name = "deptry" },
     { name = "editables", specifier = ">=0.6" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=ac27fc75942a78e4787a74fc64f8a2b7db2a172d" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev" },
     { name = "hypothesis" },
     { name = "mkdocs" },
     { name = "mkdocs-autorefs" },

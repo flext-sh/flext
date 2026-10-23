@@ -428,7 +428,7 @@ class FlextRootCompleteWorkflowExample:
             workflow_result = (
                 FlextRootCompleteWorkflowExample.CompleteWorkflowResult.model_validate({
                     "workflow_id": context.workflow_id,
-                    "correlation_id": context.correlation_id,
+                    c.ContextKey.CORRELATION_ID: context.correlation_id,
                     "total_stages": len(context.stages),
                     "completed_stages": len(stage_results),
                     "failed_stages": 0,
@@ -499,7 +499,7 @@ class FlextRootCompleteWorkflowExample:
             result[add_field] = True
             result["workflow_context"] = {
                 "workflow_id": context.workflow_id,
-                "correlation_id": context.correlation_id,
+                c.ContextKey.CORRELATION_ID: context.correlation_id,
             }
             if extra_logic is not None:
                 result.update(extra_logic(item))

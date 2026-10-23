@@ -11,7 +11,7 @@ from collections.abc import Mapping
 from importlib.resources import files
 from pathlib import Path
 
-from tests import t, tm, u
+from tests import c, t, tm, u
 
 
 class TestsFlextRootReleasePackaging:
@@ -65,7 +65,7 @@ class TestsFlextRootReleasePackaging:
 
             """
             repository_root = Path(__file__).resolve().parents[2]
-            loaded = u.config_load(repository_root / "pyproject.toml")
+            loaded = u.config_load(repository_root / c.PYPROJECT_FILENAME)
             tm.fail(loaded.failure)
             project = self._section_of(loaded.unwrap(), "project")
             version = project["version"]

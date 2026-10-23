@@ -120,7 +120,7 @@ async def agent_loop(
         Final response text and per-tool metrics.
 
     """
-    messages: list[dict[str, object]] = [{"role": "user", "content": question}]
+    messages: list[dict[str, object]] = [{"role": c.ContextScope.USER, "content": question}]
 
     response = await asyncio.to_thread(
         client.messages.create,
@@ -159,7 +159,7 @@ async def agent_loop(
         tool_metrics[tool_name]["durations"].append(tool_duration)
 
         messages.append({
-            "role": "user",
+            "role": c.ContextScope.USER,
             "content": [
                 {
                     "type": "tool_result",
@@ -412,8 +412,8 @@ def parse_args(argv: list[str]) -> dict[str, object]:
         "--transport": "transport",
         "-m": "model",
         "--model": "model",
-        "-c": "command",
-        "--command": "command",
+        "-c": c.HandlerMode.COMMAND,
+        "--command": c.HandlerMode.COMMAND,
         "-e": "env",
         "--env": "env",
         "-u": "url",
@@ -483,7 +483,7 @@ async def main() -> None:
         connection = create_connection(
             transport=transport,
             params=ConnectionParams(
-                command=args.get("command"),
+                command=args.get(c.HandlerMode.COMMAND),
                 args=args.get("args"),
                 env=env_vars,
                 url=args.get("url"),

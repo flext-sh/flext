@@ -48,6 +48,17 @@ tree. `ast-grep scan --rule <draft> <scratch-copy>` is for prototyping a draft o
 
 ## ast-grep rules
 
+The universal `rewire-test-assert-*` family implements the
+[workspace assertion standard](using-flext-tests.md#workspace-assertion-standard).
+Its matcher owner is `flext-tests`; its patterns, native fixtures, and generated
+snapshots have one writable owner in `flext-infra`. Consumers reexport the same
+`tm` binding rather than copying matcher or transformation implementations.
+Rules must preserve Python's evaluation and scope semantics, not merely remove
+the `assert` token. In particular, narrowing and lazy-message guards use the
+terminating public matcher without rebinding a referenced name or changing the
+exception category. Runtime comparisons against the original snippets validate
+these properties; snapshot text alone does not prove them.
+
 A rule file holds one or more YAML documents (`---`). Each is standard ast-grep
 (`id`, `language`, `severity`, `message`, `files`, `rule`, `constraints`, `utils`
 references through `matches:`, `transform`, `fix`). Shared guards live in

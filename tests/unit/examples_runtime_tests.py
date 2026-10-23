@@ -32,7 +32,11 @@ class TestsFlextRootExamplesRuntime:
         @staticmethod
         @pytest.mark.parametrize(
             "files",
-            [(), ("pyproject.toml",), ("pyproject.toml", ".gitmodules", ".gitignore")],
+            [
+                (),
+                (c.PYPROJECT_FILENAME,),
+                (c.PYPROJECT_FILENAME, ".gitmodules", ".gitignore"),
+            ],
         )
         def test_changed_project_hook_has_a_no_project_noop(
             files: tuple[str, ...],
@@ -83,7 +87,9 @@ class TestsFlextRootExamplesRuntime:
                 native.outcome.raw_return_code, ne=flext_cli.c.Cli.EXIT_CODE_SUCCESS
             )
             tm.that(native.stdout + native.stderr, has="unknown gate")
-            files = [(project / "pyproject.toml").as_posix() for project in projects]
+            files = [
+                (project / c.PYPROJECT_FILENAME).as_posix() for project in projects
+            ]
 
             status = FlextRootCheckChangedProjects.main(gate, files)
 

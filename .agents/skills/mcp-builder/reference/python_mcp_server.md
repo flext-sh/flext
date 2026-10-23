@@ -453,7 +453,7 @@ class UserSearchInput(BaseModel):
         default=ResponseFormat.MARKDOWN, description="Output format"
     )
 
-    @field_validator("query")
+    @field_validator(c.HandlerMode.QUERY)
     @classmethod
     def validate_query(cls, v: str) -> str:
         if not v.strip():
@@ -577,7 +577,7 @@ async def advanced_search(query: str, ctx: Context) -> str:
 
     # Log information for debugging
     await ctx.log_info(
-        "Processing query", {"query": query, "timestamp": datetime.now()}
+        "Processing query", {c.HandlerMode.QUERY: query, "timestamp": datetime.now()}
     )
 
     # Perform search

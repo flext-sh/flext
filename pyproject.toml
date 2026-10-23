@@ -239,6 +239,14 @@ dev = [
   "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
   "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "pydantic-core>=2.41.5",                                                                            # flext: derived member environment
   "rope @ git+https://github.com/marlon-costa-dc/rope.git@1.15.0%2Bdc.5",                             # flext: derived member environment
 ]
@@ -623,7 +631,6 @@ include = [
   "flext-grpc/examples",
   "flext-grpc/src",
   "flext-grpc/tests",
-  "flext-infra/conftest.py",
   "flext-infra/src",
   "flext-infra/tests",
   "flext-ldap/conftest.py",

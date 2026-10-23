@@ -844,7 +844,7 @@ Here's how to define tools with annotations for different scenarios:
     properties: {
       query: { type: "string" }
     },
-    required: ["query"]
+    required: [c.HandlerMode.QUERY]
   },
   annotations: {
     title: "Web Search",
