@@ -171,8 +171,10 @@ future FLEXT packages.
 
 ## 0.13 unified planning reconciliation (documentation only)
 
-- Disposition for the unified 0.13 plan: Rewrite the 0.13 matrix for names, CA/DI and approved consumers.
-- This note records planning reconciliation only. It does not change the ADR's recorded maturity, implementation status, or acceptance evidence.
+- Disposition for the unified 0.13 plan: Rewrite the 0.13 matrix for names, CA/DI and
+  approved consumers.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
 - Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
   `flext-1wjg1` plus separate authorization) and approval of the documented contracts
   and consumer migration matrix. Current 0.12 validation, bug fixes and documentation

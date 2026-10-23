@@ -275,7 +275,8 @@ An explicitly requested full run also retains the canonical Testmon cache under
 [FLEXT law](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md#sources-generation-and-commands).
 External tests follow the root connectivity prerequisites. Any preceding incremental
 phase retains its own receipt and is not the complete-suite result. CI and pre-push use
-`make test`; pre-commit runs the CI check partition and incremental tests. External tests keep their declared runtime and authentication
+`make test`; pre-commit runs the CI check partition and incremental tests. External tests
+keep their declared runtime and authentication
 requirements. Repair a conflicting runner at its owner; direct runner commands and
 cache-clearing bypasses are prohibited.
 

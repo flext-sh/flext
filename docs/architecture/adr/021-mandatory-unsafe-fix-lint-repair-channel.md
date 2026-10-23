@@ -125,8 +125,10 @@ flag absence — is the information-preservation guard.
 
 ## 0.13 unified planning reconciliation (documentation only)
 
-- Disposition for the unified 0.13 plan: Reaffirm fix channel; align references and preserved-information boundaries.
-- This note records planning reconciliation only. It does not change the ADR's recorded maturity, implementation status, or acceptance evidence.
+- Disposition for the unified 0.13 plan: Reaffirm fix channel; align references and
+  preserved-information boundaries.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
 - Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
   `flext-1wjg1` plus separate authorization) and approval of the documented contracts
   and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
