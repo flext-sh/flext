@@ -40,9 +40,16 @@ installed delivery remain separate evidence. Global governance is authored under
 - The canonical responsibility map is: `c` constants, `t` type aliases, `p` dependency
   protocols, `m` Pydantic v2 data models, and `u` pure utilities. `settings` owns
   external inputs, `config` owns validated derivation, `base` owns reusable foundations,
-  `services` owns use cases, `api` is the sole composition root, and `cli` is a thin
-  transport adapter when the project declares a CLI. Do not create competing long-name
-  or alias layers.
+  `services` orchestrate use cases, `api` is the sole composition root, and `cli` is a
+  thin transport adapter when the project declares a CLI. Do not create competing
+  long-name or alias layers.
+- Facade boundary (ADR-028; law text in root `AGENTS.md` "Facade boundary"): external
+  libraries enter only through the owning domain's `c/t/p/m/u` (layer-0 config/settings
+  for their foundation libraries); their types are named only through `t`/`p`; modules
+  outside `c/t/p/m/u` and `api` are orchestrators with no facade-kind declarations,
+  explicit or implicit; static enforcement lives only in flext-infra's declarative
+  catalog. Before writing any import or module-level name outside a facade, place it in
+  its family first.
 - Family part shape (ADR-014, `$flext-family-shape`): the five private families each
   begin with `base.py`; a part file nests entities directly
   (models/enums/protocols/behavior, one level) — top-level orphan classes and pure
@@ -77,8 +84,8 @@ installed delivery remain separate evidence. Global governance is authored under
   `flext_core`, the package root lazily re-exports `s`, and consumers use
   `from <namespace> import s`. Never rename it to `core_s` or substitute an alternative
   service-base import.
-- Declaration layers are pure data. Behavior belongs in utilities, services, bases,
-  facades, or CLI layers. Owned data crosses boundaries through typed Pydantic v2 models
+- Declaration layers are pure data. Behavior belongs in `u`; services, bases, facades
+  and CLI layers orchestrate it. Owned data crosses boundaries through typed Pydantic v2 models
   and project `t.*`/`p.*` contracts. Pydantic practice — model MRO presets, `p`/`r`
   contracts, conversions, validation, serialization, and the removal catalog — follows
   the `pydantic-development` skill; symbols reach consumers only through `m`/`t`/`u`.

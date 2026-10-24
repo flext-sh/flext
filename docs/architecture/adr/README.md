@@ -98,6 +98,7 @@ candidate; acceptance never proves fleet stability.
   amendments do not override authority; acceptance requires full inventory provenance,
   actual runtime and canonical gate evidence, not campaign closure)
 - [ADR-027: Facade Single-Owner Law](027-facade-single-owner-law.md)
+- [ADR-028: Facade Boundary — External Libraries, Orchestrators, Declarative Enforcement](028-facade-boundary-orchestrators-declarative-enforcement.md)
   — **PROPOSED** (operator order 2026-10-24; one owner family per exported object,
   derived from its kind; detected by `make gen`, rewired by a `make mod` Rope phase;
   tracked in `flext-vjj1s.11`)

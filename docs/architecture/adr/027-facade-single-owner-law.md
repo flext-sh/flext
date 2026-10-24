@@ -66,9 +66,11 @@ The kind is read from the resolved object, never from its name:
 | any other callable (functions, adapters, factories) | `u` |
 
 - Families and letters come from `u.Infra.facade_families()`.
-- Object identity and alias resolution come from the Griffe python model introduced by
-  the flext-infra cutover (G.1): `Alias.target_path` resolves every facade attribute to
-  its upstream object, so "one object exported by N families" is a single query.
+- Object identity and alias resolution come from the python-model owner `u.Infra`
+  introduced by the flext-infra cutover (G.1), whose types are declared in `t.Infra`.
+  Griffe is confined to those two facade owners (ADR-028); detection consumes only
+  `u.Infra`/`t.Infra`, never `griffe` itself. Alias resolution to the upstream object
+  makes "one object exported by N families" a single query.
 - If a predicate ever needs a mapping row, it lives in `config/tooling.yaml`, typed, not
   in code.
 
@@ -77,7 +79,7 @@ The kind is read from the resolved object, never from its name:
 The facade planner (`_utilities/codegen_facades.py`) already enumerates each family's
 exports. It adds one pass:
 
-1. Group every exported attribute by `Alias.target_path`.
+1. Group every exported attribute by its resolved upstream path (`u.Infra` python model).
 2. For each group, derive the owner from the kind predicate.
 3. Record a finding for every member exported by a non-owner family and for every group
    with more than one exporting family.
@@ -130,7 +132,7 @@ facade-single-owner: flext_ldap/_models/entry.py:41
 ## Rollout
 
 1. After the flext-infra publication cutover lands (`[coord] landed`): implement
-   detection on the Griffe model and the Rope phase.
+   detection on the `u.Infra` python model and the Rope phase.
 2. Apply to flext-core (pydantic facades first), then the fleet in dependency order.
 3. The pydantic-specific single owners (ValidationError → `c`, Field → `m`, annotation
    markers → `t`, runtime functions → `u`) fall out of the generic derivation; nothing
