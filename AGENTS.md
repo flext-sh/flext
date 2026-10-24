@@ -735,6 +735,11 @@ CLI + pytest plugin, **never imported at runtime**.
   project config) and isolated probes that skip the real rules are fake evidence,
   never proof. Never simplify to prove a point; fix root causes and their violators
   under the complete rule set.
+- **Tests run only on a green check** (operator order 2026-10-24, "lei extrema"):
+  running tests while the CI gates (lint, format, type, rule catalog) fail is
+  prohibited. `make tests` refuses to run until the same scope's `make check` is
+  green, enforced by the tests verb itself from the check receipt, never by
+  convention. Fix the gate findings first, then run tests.
 - **No hardcoded lists** (operator order 2026-10-24): hand-kept block, allow,
   registry or catalog lists are banned everywhere. Every fact is derived from its
   owner (rule metadata, configuration, package exports); only genuine exceptions are
