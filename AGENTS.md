@@ -686,6 +686,12 @@ CLI + pytest plugin, **never imported at runtime**.
   - The rules are identical in every project, applied as automatically as possible by
     flext-infra and the code-review graph; duplication and domain violations are
     rejected.
+  - Imports go through the nearest package's generated lazy exports (package root
+    for consumers, family package such as `_models`/`_utilities` for siblings and
+    facade composition), never a module path below it and never a module object
+    reached by attribute, own package and generated facades included. Short aliases
+    (`c`, `t`, `p`, `m`, `u`, `s`, …) are declared in their owning module and its
+    `__all__`; an `__init__.py` re-exports or inherits them and never assigns them.
   - No source code or long text embedded as string literals (multi-line or
     concatenated scripts for `exec`/subprocess, long text constants), in any tier,
     tests and constants included: tests call the public API with fixture data;
