@@ -1,0 +1,5 @@
+# AUTO-GENERATED FILE — Regenerate with: make gen
+id: exports--examples
+language: Python
+rule:
+  regex: ^(?:ExamplesFlextRootConstants|api|c|config|d|e|h|m|p|r|s|t|td|tf|tk|tm|u|x)$

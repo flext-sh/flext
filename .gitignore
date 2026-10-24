@@ -423,6 +423,7 @@ target/
 venv/
 .flext-sync.lock
 .sync.lock
+.testmondata*
 .planning/
 skill-create-output/
 .debug-journal.md

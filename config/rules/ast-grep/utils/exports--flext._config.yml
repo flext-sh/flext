@@ -1,0 +1,5 @@
+# AUTO-GENERATED FILE — Regenerate with: make gen
+id: exports--flext._config
+language: Python
+rule:
+  regex: ^(?:FlextRootConfigBase|FlextRootConfigConfig)$
