@@ -726,7 +726,14 @@ CLI + pytest plugin, **never imported at runtime**.
   for a genuinely unique case that no rule, generator or fixer can express, and the
   reason is stated in the commit. A recurring shape fixed by hand is a defect: write
   the rule and re-apply it. Never fix a violation with another violation; fix the
-  root cause at its owner. The fix propagates to every project without leaving any
+  root cause at its owner.
+- **Tools are used natively and fully** (operator order 2026-10-24): not using a
+  tool's own capability the correct way because of a local defect is an extremely
+  grave violation, equivalent to a bypass or fallback. The fix is to our wrapper,
+  never a reduced use of the tool: for example, the codemod catalog applies through
+  ast-grep's own `scan --update-all`, and rule semantics are expressed with
+  ast-grep's native features (utils, constraints, transforms), so a native scan and
+  `make mod` agree. The fix propagates to every project without leaving any
   error, lint, format or rule finding behind (ADR-028 Decision 8).
 - **Exterminate without fear** (global `zero-residue` rule, operator order 2026-10-24):
   Git history is the recovery for tracked code, so delete superseded, excessive, wrong
