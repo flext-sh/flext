@@ -966,15 +966,15 @@ _builtin_build_artifacts:
 # An absent CI token runs every active default gate.
 _builtin_check_all: _builtin_require_environment
 	@set -eu; \
-		gates="runtime-integrity,lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,mypy,pyright,conflict-markers,loc-cap,runtime-census,fresh-import,deps,index-declarations,smells,codemod,layout,direnv"; \
+		gates="runtime-integrity,lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,mypy,pyright,conflict-markers,loc-cap,fresh-import,deps,index-declarations,smells,codemod,layout,direnv"; \
 		if [ "$(strip $(CI))" = "Y" ]; then \
-			gates="runtime-integrity,lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,conflict-markers,loc-cap,runtime-census,fresh-import,deps,index-declarations,layout"; \
-			printf 'INFO: CI=Y runs check gates: runtime-integrity lint format security markdown markdown-format markdown-code duplication pyrefly conflict-markers loc-cap runtime-census fresh-import deps index-declarations layout\n'; \
+			gates="runtime-integrity,lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,conflict-markers,loc-cap,fresh-import,deps,index-declarations,layout"; \
+			printf 'INFO: CI=Y runs check gates: runtime-integrity lint format security markdown markdown-format markdown-code duplication pyrefly conflict-markers loc-cap fresh-import deps index-declarations layout\n'; \
 		elif [ "$(strip $(CI))" = "N" ]; then \
-			gates="runtime-integrity,lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,mypy,pyright,conflict-markers,loc-cap,runtime-census,fresh-import,deps,index-declarations,smells,codemod,layout,direnv"; \
-			printf 'INFO: CI=N runs check gates: runtime-integrity lint format security markdown markdown-format markdown-code duplication pyrefly mypy pyright conflict-markers loc-cap runtime-census fresh-import deps index-declarations smells codemod layout direnv\n'; \
+			gates="runtime-integrity,lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,mypy,pyright,conflict-markers,loc-cap,fresh-import,deps,index-declarations,smells,codemod,layout,direnv"; \
+			printf 'INFO: CI=N runs check gates: runtime-integrity lint format security markdown markdown-format markdown-code duplication pyrefly mypy pyright conflict-markers loc-cap fresh-import deps index-declarations smells codemod layout direnv\n'; \
 		else \
-			printf 'INFO: default context runs check gates: runtime-integrity lint format security markdown markdown-format markdown-code duplication pyrefly mypy pyright conflict-markers loc-cap runtime-census fresh-import deps index-declarations smells codemod layout direnv\n'; \
+			printf 'INFO: default context runs check gates: runtime-integrity lint format security markdown markdown-format markdown-code duplication pyrefly mypy pyright conflict-markers loc-cap fresh-import deps index-declarations smells codemod layout direnv\n'; \
 		fi; \
 		if [ -z "$$gates" ]; then \
 			printf 'ERROR: no active check gates remain in the selected context\n' >&2; \

@@ -18,7 +18,9 @@ if TYPE_CHECKING:
     from tests.infra.protocols import TestsFlextRootProtocols
     from tests.infra.result import TestsFlextRootResult, r
     from tests.infra.typings import TestsFlextRootTypes
-    from tests.infra.utilities import TestsFlextRootUtilities, u
+    from tests.infra.utilities import TestsFlextRootUtilities
+
+    u = TestsFlextRootUtilities
 
 
 __all__: tuple[str, ...] = (

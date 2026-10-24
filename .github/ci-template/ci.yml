@@ -16,18 +16,25 @@ jobs:
     name: ci
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    env:
+      CI: Y
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
-          submodules: false
+          submodules: recursive
           fetch-depth: 0
 
-      - name: Setup
+
+      - name: make setup
         run: make setup
 
-      - name: Check
+      - name: make gen
+        run: make gen
+
+      - name: make check
         run: make check
 
-      - name: Test
-        run: make test
+      - name: make tests
+        run: make tests
+

@@ -1,3 +1,4 @@
+# AUTO-GENERATED FILE — Regenerate with: make gen
 """Constants facade for flext-workspace — c.Root project namespace.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -6,7 +7,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext._constants import FlextRootConstantsBase, FlextRootConstantsConfig
+from flext._constants.base import FlextRootConstantsBase
+from flext._constants.config import FlextRootConstantsConfig
 from flext_db_oracle import FlextDbOracleConstants
 from flext_grpc import FlextGrpcConstants
 from flext_infra import FlextInfraConstants

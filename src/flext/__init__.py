@@ -14,16 +14,23 @@ from flext_core.lazy import install_lazy_exports
 
 if TYPE_CHECKING:
     from flext.cli import FlextRootCli, main
-    from flext.config import FlextRootConfig, config
-    from flext.constants import FlextRootConstants, c
-    from flext.models import FlextRootModels, m
-    from flext.protocols import FlextRootProtocols, p
+    from flext.config import FlextRootConfig
+    from flext.constants import FlextRootConstants
+    from flext.models import FlextRootModels
+    from flext.protocols import FlextRootProtocols
     from flext.settings import FlextRootSettings, settings
-    from flext.typings import FlextRootTypes, t
-    from flext.utilities import FlextRootUtilities, u
+    from flext.typings import FlextRootTypes
+    from flext.utilities import FlextRootUtilities
     from flext_oracle_oic import d, h, r, s, x
     from flext_oracle_wms import e
     from flext_tests import api, td, tf, tk, tm
+
+    config = FlextRootConfig
+    c = FlextRootConstants
+    m = FlextRootModels
+    p = FlextRootProtocols
+    t = FlextRootTypes
+    u = FlextRootUtilities
 
 
 __all__: tuple[str, ...] = (
