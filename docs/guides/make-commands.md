@@ -88,7 +88,7 @@ The approved `flext-0029c` native-bootstrap target uses one root uv workspace an
 lock in local execution and root CI; CI checks out declared submodules and installs
 noneditable. Suppliers use native pyproject sources, not environment selection,
 persisted state or synthetic resolvers. Official Mise acquisition and native locked
-tool provisioning precede `uv sync --locked` into the owned physical `.venv`.
+tool provisioning precede `uv sync --frozen` into the owned physical `.venv`.
 No custom Python or AWK/shell lock/installer parser, copied admission resource or
 installed Infra check precedes successful provision. The task-only
 [direct public CLI route](../../flext-infra/docs/guides/execution-context.md#native-bootstrap-task-route-flext-0029c)
