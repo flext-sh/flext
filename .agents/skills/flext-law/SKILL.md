@@ -67,6 +67,12 @@ installed delivery remain separate evidence. Global governance is authored under
 - Each package has one thin `api.py` MRO facade and one simple generated root
   `__init__.py` with automatic lazy public exports. Custom import routers, eager
   alternatives, compatibility aliases, and duplicate facades are forbidden.
+- A removed or renamed public signature that still has consumers follows the
+  deprecated-signature window (ADR-028 Decision 7; tracker memory
+  `operator-ruling-2026-10-24-deprecated-signature-window`). It stays a marked
+  pass-through to its new owner until the fleet and external census is zero, and is
+  then deleted. This window is the route to zero compatibility code, not an alias
+  exception.
 - Lazy-init re-export (generated root `__init__.py`, PEP 562): the root re-exports the
   canonical facade letters `ALIAS_NAMES = {c, t, m, p, u, r, d, e, h, s, x, tc}` (owner
   `flext_infra._constants.validate`) resolved in this order — (1) **local facade files**

@@ -57,11 +57,15 @@ from that manifest. No other file may independently declare workspace membership
 ### 2. Root workspace and library metadata have distinct responsibilities
 
 Operator amendment (2026-10-10): the root and every member are independent UV
-projects, each owning its physical `uv.lock` and Mise lock. Clarification (2026-10-13),
-not a change to the editable standard: no `tool.uv.workspace` table or parallel
-`workspace = true` dependency routing. The existing generator retains only a packaged
-root's self-only implicit `workspace = true` source override, never member routing.
-Composition remains owned by `.gitmodules` (ADR-024).
+projects, each owning its physical `uv.lock` and `mise.lock` (both written only by
+`make upg`; bead `flext-vjj1s.5` reconciles the older mise-lock extermination premise).
+Superseded in part: the 2026-10-13
+clarification ("no `tool.uv.workspace` table") no longer holds. The approved
+`flext-0029c` target is one native root uv workspace, and the generated root
+`pyproject.toml` now carries `[tool.uv.workspace] members` and per-member
+`[tool.uv.sources.<member>] workspace = true`, both derived from `.gitmodules`
+(ADR-024). That derivation is the only route. Each member still tracks its own
+`uv.lock` for independent installs and frozen CI (see the verification contract).
 
 The root's existing `dev` group requests every declared package member, including
 its declared extras and development groups. Local editable bindings select checkouts
@@ -86,8 +90,9 @@ Internal requirements stay Git URLs in `pyproject.toml` and each lock pins their
 SHA (tracker memory `operator-ruling-2026-10-24-lock-sha-pyproject-url-waves`). Because
 an internal dependency can require the locking project back by its own Git URL, which
 native uv cannot reconcile with the local project, the generator emits in each member
-one scoped `[tool.uv] exclude-dependencies` entry per internal distribution of that
-member's `override-dependencies`, removing only the requirement on the member itself.
+one scoped `[tool.uv] exclude-dependencies` entry per internal distribution derived
+from that member's declared internal Git URL requirements (flext-infra 23e07c5dbf),
+removing only the requirement on the member itself.
 An entry does nothing where that distribution does not require the member.
 
 Mise and generated profiles consume the toolchain SSOT rather than versions copied into
@@ -109,8 +114,9 @@ own environment and its declared dependency origins.
 
 All other commands execute with `uv run --project <environment-owner> --no-sync`. Checks
 and tests therefore cannot synchronize, relock, rewrite metadata, or replace the
-editable overlay implicitly. Dependency upgrades are an explicit, apply-gated `deps`
-operation that updates the SSOT. An attached member delegates `make upg` to the
+editable overlay implicitly. Dependency upgrades are the explicit `make upg` verb,
+which performs its operation directly with no apply selector (the `APPLY` flag stays
+removed). An attached member delegates `make upg` to the
 root, which relocks the root lock and then every governed member's own lock in
 dependency waves (see the verification contract); the first failure stops the
 remaining members. A standalone upgrade runs only itself. `gen` writes managed projections,

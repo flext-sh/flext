@@ -102,12 +102,23 @@ outside the facades across 12 repositories.
    the test's `tmp_path` or into a given `destination` such as a pytester consumer.
    Tests never use pytester's `copy_example`, whose `pytester_example_dir` key exists
    only while the pytester plugin is active.
-7. **Marked compatibility fails its users, not its declaration.** An old,
-   compatibility or fallback path that must survive a rewiring window carries the
-   stdlib `warnings.deprecated` marker with `compat: <old> -> <new owner>; fix: <exact
-   rewire>`. The marked declaration does not fail CI; every remaining use of it does
-   (type checkers report deprecated use as an error), so the rewire is forced and the
-   path dies with its last consumer.
+7. **The deprecated-signature window is the standard route to zero compatibility
+   code without breakage.** Operator order 2026-10-24 (verbatim): "toda a assinatura
+   antiga fica marcada com warning indicando o caminho novo até migrarmos tudo e daí
+   exterminamos o código antigo (isso tem que incluir os projetos externos mais
+   tarde)" and "não é contradição, é garantir que não vamos manter ABSOLUTAMENTE NADA
+   DE CÓDIGO ANTIGO DE COMPATIBILIDADE E SEM QUEBRAR O PROJETO" (tracker memory
+   `operator-ruling-2026-10-24-deprecated-signature-window`). Every removed or renamed
+   public signature stays as a thin pass-through to its new owner, marked with the
+   stdlib `warnings.deprecated` marker `compat: <old> -> <new owner>; fix: <exact
+   rewire>`. A constant carries the equivalent PEP 593 marker (bead `flext-1engx.12`).
+   The marked declaration does not fail CI. Every remaining use of it does: type
+   checkers report deprecated use as an error, and that report is the census. The
+   rewire is applied by rule in each consumer's wave. The pass-through is deleted when
+   the census reaches zero, external projects included (bead `flext-1engx.11`). An
+   unmarked old path, or a zero-use marked path still present, is a defect. Current
+   state: rule `report-compat-deprecated-marker.yml` still flags declarations; it is
+   corrected under bead `flext-xws5d`.
 8. **One standard, automated.** The rules are identical for every project, applied by
    flext-infra's engines and the code-review graph as automatically as possible;
    duplicated code and domain violations are rejected, never accepted as debt.
@@ -156,9 +167,13 @@ outside the facades across 12 repositories.
     narrowing or degrading its use meanwhile is the same bypass. For the codemod
     catalog this means:
     - rules apply through `ast-grep scan --update-all`, and rule semantics are native
-      ast-grep (`utils`, `constraints`, `transforms`), with SSOT-derived data generated
-      by `make gen` (class-A producers registered in `Infra.codegen.ast_grep`);
-    - per-finding Python admission is retired;
+      ast-grep (`utils`, `constraints`, `transforms`, `rewriters`). SSOT-derived rules
+      come from the class-A producers and renderers registered in
+      `Infra.codegen.ast_grep`. They are rendered in memory by the `make mod` cascade,
+      one document per shape, and are not projected into repositories (bead
+      `flext-13s6n` removes the current per-rule projection);
+    - per-finding Python admission is to be retired. Current state (2026-10-24): rules
+      carrying `metadata.context` are still admitted per finding (bead `flext-uwwxc`);
     - the staged scan configuration is reproducible with native ast-grep, so a native
       scan and `make mod` agree.
 12. **Validation applies every FLEXT rule in the real tree.** Operator order 2026-10-24:

@@ -674,18 +674,27 @@ CLI + pytest plugin, **never imported at runtime**.
     sets/tables, aliases, `TypeVar`s, inline `Literal` domains, protocols, models,
     payload dicts or reusable helpers, explicit or implicit. The families never violate
     one another.
-  - Static violation detection lives only in flext-infra's declarative rule catalog;
-    flext-core keeps none. Violations are banned and fixed, never waived.
+  - Static violation detection lives only in flext-infra's declarative rule catalog.
+    Violations are banned and fixed, never waived. Current state (2026-10-24): flext-core
+    still carries its ENFORCE catalog and static Beartype visitors until slice S
+    (bead `flext-43iz8`) moves them into flext-infra rules and deletes them from core.
   - Every module keeps all its declarations inside its single top-level nested class,
     in every tier of the repository (not only `src/`); the few exceptions are declared
     once, documented and validated automatically. `tests/` follows the same rules, with
     only `conftest.py` and `tests/fixtures/` allowed the tests-tier delta (fixtures,
     hooks, scenario data); `examples/`, `scripts/` and every other Python folder follow
     the `src/` rules exactly.
-  - A compatibility path surviving a rewiring window carries stdlib
-    `warnings.deprecated` (`compat: <old> -> <new owner>; fix: <rewire>`): the marked
-    declaration does not fail CI, every use of it does, until it dies with its last
-    consumer.
+  - **Deprecated-signature window: the standard route to zero compatibility code
+    without breaking anything** (operator order 2026-10-24, tracker memory
+    `operator-ruling-2026-10-24-deprecated-signature-window`). Every removed or
+    renamed public signature stays as a thin pass-through to the new owner, marked
+    with stdlib `warnings.deprecated` (`compat: <old> -> <new owner>; fix: <rewire>`).
+    Constants carry the equivalent PEP 593 marker (bead `flext-1engx.12`). The marked
+    declaration never fails CI. Every use of it is reported and fails, and that report
+    is the census. Consumers are rewired by rule in their waves, and the pass-through
+    is deleted when the census reaches zero, external projects included. This is how
+    the zero-residue law is met, not an exception to it. An unmarked old path, or a
+    marked path with zero uses that is still in the tree, is a defect.
   - The rules are identical in every project, applied as automatically as possible by
     flext-infra and the code-review graph; duplication and domain violations are
     rejected.
@@ -718,10 +727,16 @@ CLI + pytest plugin, **never imported at runtime**.
   artifacts before effects, including empty files and unchecked copied plans.
   Preserve legitimate Protocol signatures, overloads, `typings.py`, `py.typed`,
   upstream typing, and generated facade composition. Protocol assignment never
-  proves unannotated vendor signatures or validates external payloads.
+  proves unannotated vendor signatures or validates external payloads. The one
+  owned generator of model-derived `p.*` protocols is flext-infra's model→protocol
+  stage, which runs on every `make gen` (operator order 2026-10-24: "fazer os
+  protocolos de forma automática por flext-infra (já existe e tem que estar ativo e
+  sempre rodar no make)"; restoration tracked by bead `flext-vjj1s.8`). Its output is
+  a generated projection, not an owned stub.
 - **No compat surface:** no shims, legacy branches, dual old+new paths, loose helpers,
-  or suppression (`# type: ignore`/`# noqa`) without documented justification. Remove
-  superseded code the same cycle.
+  or suppression (`# type: ignore`/`# noqa`) without documented justification. A
+  public signature that still has consumers goes through the deprecated-signature
+  window above. Everything else superseded is removed in the same cycle.
 - **Automated correction is the law** (operator order 2026-10-24, "lei extrema"):
   every violation fix is produced by flext-infra through `gen`, `upg`, `mod`, `fix`
   or `fmt` — a catalog rule with a `fix:`, a generator or a fixer — applied to every
@@ -740,9 +755,11 @@ CLI + pytest plugin, **never imported at runtime**.
   under the complete rule set.
 - **Tests run only on a green check** (operator order 2026-10-24, "lei extrema"):
   running tests while the CI gates (lint, format, type, rule catalog) fail is
-  prohibited. `make tests` refuses to run until the same scope's `make check` is
+  prohibited. `make tests` must refuse to run until the same scope's `make check` is
   green, enforced by the tests verb itself from the check receipt, never by
-  convention. Fix the gate findings first, then run tests.
+  convention. Fix the gate findings first, then run tests. Current state
+  (2026-10-24): only the generated CI enforces this (`requires: [check]`); the local
+  check-receipt refusal is missing and tracked by bead `flext-p4lve`.
 - **No hardcoded lists** (operator order 2026-10-24): hand-kept block, allow,
   registry or catalog lists are banned everywhere. Every fact is derived from its
   owner (rule metadata, configuration, package exports); only genuine exceptions are

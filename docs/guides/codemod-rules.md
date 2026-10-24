@@ -65,8 +65,12 @@ staged `sgconfig.yml` lives under `.reports/codemod/native/<stage>`, so
 `ast-grep scan -c` reproduces the stage by hand.
 
 The cascade renders the generated utilities and rules in memory, through
-`codemod_native_generated`, from the same producers and renderers `make gen`
-projects. It reads no projection from disk.
+`codemod_native_generated`, from the producers and renderers registered in
+`Infra.codegen.ast_grep`, and reads no projection from disk. Generated rules are
+rendered in memory only. Current state (2026-10-24): `make gen` still writes an
+unread per-rule projection under `config/rules/ast-grep/{utils,rules/generated}`,
+which bead `flext-13s6n` deletes, together with consolidating each shape into one
+document with native `rewriters`.
 
 The engine applies replacements only for rules that carry `metadata.context`. A
 native rule that still reports an actionable finding after the cascade fails `make mod`.
