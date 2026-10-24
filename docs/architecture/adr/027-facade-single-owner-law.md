@@ -99,6 +99,12 @@ the existing import-alignment / constant-consumers machinery and its contract ro
 3. Re-run the detection on the result; the phase is idempotent (a second pass changes
    nothing) and is checked by the existing semantic residue pass.
 
+Publication constraint (flext-infra cutover owner, 2026-10-24): the phase publishes its
+edits only through the shared `u.Cli.publish_file_changes` owner (`m.Cli.FileChange`
+under `u.Cli.file_changes_lock`). It uses no semantic transaction, receipts or
+`source_consumption` state, and no authenticated reads from
+`_utilities/_rope/project.py`; those are retired by the publication cutover.
+
 ## Diagnostics
 
 Emitted when rewiring is not mechanical (the consumer shadows the owner letter locally,
