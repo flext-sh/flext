@@ -719,6 +719,14 @@ CLI + pytest plugin, **never imported at runtime**.
 - **No compat surface:** no shims, legacy branches, dual old+new paths, loose helpers,
   or suppression (`# type: ignore`/`# noqa`) without documented justification. Remove
   superseded code the same cycle.
+- **Automated correction is the law** (operator order 2026-10-24, "lei extrema"):
+  every violation fix is produced by flext-infra through `gen`, `upg`, `mod`, `fix`
+  or `fmt` — a catalog rule with a `fix:`, a generator or a fixer — applied to every
+  occurrence in every project. A manual edit is the exception of the exception, only
+  for a genuinely unique case that no rule, generator or fixer can express, and the
+  reason is stated in the commit. A recurring shape fixed by hand is a defect: write
+  the rule and re-apply it. Never fix a violation with another violation; fix the
+  root cause at its owner.
 - **Exterminate without fear** (global `zero-residue` rule, operator order 2026-10-24):
   Git history is the recovery for tracked code, so delete superseded, excessive, wrong
   or duplicated code and executions wherever found — for example a `setup` that
