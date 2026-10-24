@@ -82,6 +82,13 @@ remain registry-backed; explicit Git requirements retain their declared URL and 
 Both preserve declared constraints, extras and markers. Local editables are environment
 bindings, not published requirement rewrites. Git and `pyproject.toml` own repository
 identity; locks record resolved provenance, not a replacement dependency origin.
+Internal requirements stay Git URLs in `pyproject.toml` and each lock pins their exact
+SHA (tracker memory `operator-ruling-2026-10-24-lock-sha-pyproject-url-waves`). Because
+an internal dependency can require the locking project back by its own Git URL, which
+native uv cannot reconcile with the local project, the generator emits in each member
+one scoped `[tool.uv] exclude-dependencies` entry per internal distribution of that
+member's `override-dependencies`, removing only the requirement on the member itself.
+An entry does nothing where that distribution does not require the member.
 
 Mise and generated profiles consume the toolchain SSOT rather than versions copied into
 this ADR.
@@ -103,10 +110,10 @@ own environment and its declared dependency origins.
 All other commands execute with `uv run --project <environment-owner> --no-sync`. Checks
 and tests therefore cannot synchronize, relock, rewrite metadata, or replace the
 editable overlay implicitly. Dependency upgrades are an explicit, apply-gated `deps`
-operation that updates the SSOT. `make upg` updates a member's own locks and
-completes its convergence before invoking one root workspace upgrade for alignment.
-Failure in the member prevents root alignment; a standalone upgrade runs only itself,
-and a root upgrade never calls member upgrades back. `gen` writes managed projections,
+operation that updates the SSOT. An attached member delegates `make upg` to the
+root, which relocks the root lock and then every governed member's own lock in
+dependency waves (see the verification contract); the first failure stops the
+remaining members. A standalone upgrade runs only itself. `gen` writes managed projections,
 and `setup` synchronizes the environment without writing locks.
 
 ### 4. Generated profiles define attachment behavior
@@ -138,8 +145,16 @@ No profile depends on files outside its repository checkout.
 - Generated manifests are byte-idempotent; no native workspace table or member
   `workspace = true` routing survives. Only the packaged root's self-only implicit
   source override remains; local editability never rewrites published requirements.
-- An attached member writes its own lock in the primary checkout, then aligns the
-  root once. The native lock-owner guard rejects any remaining shared-lock topology.
+- Every member tracks its own `uv.lock`, which its standalone CI installs frozen
+  and never relocks (tracker memory
+  `operator-ruling-2026-10-24-ci-frozen-homologated-locks`). Native uv elects the
+  superproject for an attached member, so one root `make upg` relocks the root,
+  then each governed member in runtime-dependency waves inside a short-lived
+  native worktree of that member's repository at its fetched branch tip, outside
+  the superproject (`make.member_lock`). A changed lock is committed path-limited,
+  pushed fast-forward, proven reachable from the fresh remote ref, adopted by the
+  primary checkout and the worktree retired. The check gate runs `uv lock --check`
+  against each checkout's own committed lock through the same owner.
 
 ## References
 
