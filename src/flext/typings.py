@@ -1,3 +1,4 @@
+# AUTO-GENERATED FILE — Regenerate with: make gen
 """Typings facade for flext-workspace — t.Root project namespace.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -6,7 +7,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext._typings import FlextRootTypingsBase, FlextRootTypingsConfig
+from flext._typings.base import FlextRootTypingsBase
+from flext._typings.config import FlextRootTypingsConfig
 from flext_db_oracle import FlextDbOracleTypes
 from flext_grpc import FlextGrpcTypes
 from flext_infra import FlextInfraTypes

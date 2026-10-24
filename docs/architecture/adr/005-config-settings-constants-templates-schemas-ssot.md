@@ -13,6 +13,7 @@
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -76,6 +77,30 @@ Preserve generated lazy exports through `__init__.py`. Model annotations resolve
 their declaring owner through runtime-safe imports. Eager-export rewrites, compatibility
 aliases, and `model_rebuild` are not import-cycle repairs.
 
+Constant-family initialization may reuse a value from its pure declaring leaf,
+but cannot read the composite `c` facade while that facade is being assembled.
+Such bootstrap dependencies use the explicit leaf producer; importing the facade
+back into its own parts or substituting an empty/default value is not a repair.
+
+Generated facade imports, declaration references and codemod contexts preserve the
+complete package identity elected by the project-discovery owner, including nested
+namespace packages. A directory basename is not an import identity. An unresolved
+native class remains an error; adding an initializer or accepting an unknown Rope
+object is not a substitute for resolving its actual declaring module.
+
+2026-10-23 reconciliation (`algar-723.1.3`): source inspection found basename-derived
+imports in facade generation for nested namespaces. The source repair reuses the
+existing discovery owner; successful consumer generation and regression evidence are
+still required before claiming implementation acceptance.
+
+2026-10-24 open contract (`algar-723.1.3.3`): initial Python capture uses the Git
+source-scope owner, while workspace indexing uses declared project discovery.
+Their suffix, ignore, hidden-directory and nonparticipant rules are not proven
+equivalent. Filtering one inventory by the other does not authenticate absence
+and is not an accepted migration. Selecting one authority, preserving private
+exclusions and adding its authenticated native route require explicit
+adjudication; no scope change is authorized by a timing failure.
+
 Across packages:
 
 - `flext-core` provides runtime-minimal contracts and primitives and never imports the
@@ -92,15 +117,29 @@ operations. Direct YAML, TOML, JSON Schema, Jinja2, Typer, or Click implementati
 
 ### 3. Repository conformance is data-driven
 
-The typed repository catalog and each workspace manifest under `config/` are the only
-topology inputs. `flext-infra codegen conform` maps them into typed models including
+The parent's `.gitmodules` owns composition (ADR-024); each repository's own
+declarations own only its genuine deltas. Conformance maps them into typed models,
+including
 repository references, workspace specification, Make specification, uv environment plan,
 conform request, codegen plan, and codegen result.
 
+The approved `flext-0029c` target projects that composition into native uv workspace
+declarations and one root lock shared with root CI. Suppliers use native pyproject
+sources; environment-based supplier selection, persisted selection and synthetic
+resolver graphs are retired. Mise and uv own interpretation, resolution and
+installation of their native inputs, not a second Python or AWK/shell parser.
+Native source declarations and lock consistency replace the stronger independent
+pre-install supplier admission; installed provenance and authenticated-import
+checks remain distinct post-provision concerns. These target boundaries require
+their own cutover and runtime evidence, not a documentation-only acceptance claim.
+
 Project creation and existing-project conformance call that same pipeline. The pipeline
-supports only the three Make profiles defined by ADR-004 and uses one schema and
-template layer. Specialized migration templates or repository-type renderers are not
-allowed.
+supports only the workspace and standalone Make profiles defined by ADR-004 and uses
+one schema and template layer. Specialized migration templates or repository-type
+renderers are not allowed.
+
+2026-10-23 reconciliation: the typed `MakeProfile` owner declares these two profiles;
+governance kind and package/workspace roles are separate facts, not a third profile.
 
 ### 4. Rendering and application are deterministic transactions
 
@@ -197,3 +236,14 @@ path; migration to rope-only is in progress and tracked by beads `mro-wkii.4`,
 - [Migration plan](../config-ssot-migration-plan.md)
 - Enforcement hardening beads: `mro-wkii.4`, `mro-wkii.4.1`, `mro-wkii.4.8`; plan
   `flext-infra/.omo/plans/declarative-enforcement.md`.
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Correct direction, bootstrap, topology and tool
+  roles; lazy imports do not make reverse dependencies lawful.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

@@ -46,10 +46,10 @@ artesanais. Sem aumento de erro de lint; testes 100% verdes.
 ## Verificado por exploração (base factual)
 
 - flext-core enforcement é 100% table-driven: `PREDICATE_BINDINGS`
-  (`_utilities/_enforcement_parts/enforcement_part_01.py:37-198`), 47 tags
-  (`_constants/_enforcement_parts/flextconstantsenforcement_part_04.py:61-109`), textos
+  (`_utilities/_enforcement/enforcement_part_01.py:37-198`), 47 tags
+  (`_constants/_enforcement/flextconstantsenforcement_part_04.py:61-109`), textos
   (problem,fix) em `ENFORCEMENT_RULES_TEXT` (part_05), catálogo por row-tables
-  (`_enforcement_catalog_rows_parts/`), emit em `enforcement_emit.py:64-90` via
+  (`_enforcement_catalog_rows/`), emit em `enforcement_emit.py:64-90` via
   `warnings.warn(FlextMroViolation)`.
 - IDs livres: **ENFORCE-071..078** (056 aposentado, não reusar; 022/040 inline em
   `enforcement_part_04.py`; **066..070 ocupados por trabalho concorrente em andamento**
@@ -186,7 +186,7 @@ CODE_SMELL (warning sempre carrega ENFORCE-NNN + anchor + Fix).
     prefix-stripped; mensagem enriquecida =
     `"{sarif_text} — {problem}. Fix: {fix} [ENFORCE-NNN §anchor]"` via
     `c.Infra.SMELLS_RULE_TAGS` (ruleId→tag) +
-    `from flext_core import c as c; c.ENFORCEMENT_RULES_TEXT[tag]` —
+    `from flext_core import c; c.ENFORCEMENT_RULES_TEXT[tag]` —
     **SSOT de textos = flext-core, infra só mapeia** (drift test).
   - **"Todos, sempre":** após parse,
     `warnings.warn(issue.formatted, FlextSmellViolation, stacklevel=2)` por finding —

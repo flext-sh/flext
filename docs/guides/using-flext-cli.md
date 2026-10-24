@@ -117,8 +117,10 @@ directly. This independent example constructs and invokes a real model-backed co
 handlers return their value but do not automatically print it.
 
 ```python
-from flext_cli import FlextCliCli, c, m
-from tests import tm
+from tests import c, r
+from tests import c, m, tm
+
+from flext_cli import FlextCliCli
 
 
 class GreetInput(m.BaseModel):
@@ -147,9 +149,9 @@ def test_greet_command() -> None:
         command=command,
     )
     invocation = cli.invoke_app(app, args=["greet", "--name", "Ada"])
-    tm.that(invocation.success, eq=True)
+    tm.ok(invocation.success)
     tm.that(invocation.value.exit_code, eq=c.Cli.EXIT_CODE_SUCCESS)
-    tm.that(greet_handler(GreetInput(name="Ada")), eq="Hello, Ada!")
+    assert greet_handler(GreetInput(name="Ada")) == "Hello, Ada!"
 ```
 
 ## Good practices

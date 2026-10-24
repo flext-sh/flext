@@ -21,6 +21,15 @@ completion gates remain owned by:
 - `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`
 
 Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
+Before code changes, consult and update affected docs, README, AGENTS, ADRs, Beads
+and applicable local and global skills at their canonical owners; repeat consultation
+at phase and context boundaries. The global engineering and observable-runtime rules
+own the order: documentation first, implementation and exercised real public runtime
+next, test changes last. Their prohibitions on mocks, patches, fakes, tautologies,
+mutable config/settings hardcodes and fallbacks apply; immutable external protocol
+literals and SSOT-owned defaults remain legitimate. Source changes and AI Hub's
+installed delivery remain separate evidence. Global governance is authored under
+`~/agents/`, not in its installed `~/.agents/` projections.
 
 ## Architecture and imports
 
@@ -31,9 +40,16 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
 - The canonical responsibility map is: `c` constants, `t` type aliases, `p` dependency
   protocols, `m` Pydantic v2 data models, and `u` pure utilities. `settings` owns
   external inputs, `config` owns validated derivation, `base` owns reusable foundations,
-  `services` owns use cases, `api` is the sole composition root, and `cli` is a thin
-  transport adapter when the project declares a CLI. Do not create competing long-name
-  or alias layers.
+  `services` orchestrate use cases, `api` is the sole composition root, and `cli` is a
+  thin transport adapter when the project declares a CLI. Do not create competing
+  long-name or alias layers.
+- Facade boundary (ADR-028; law text in root `AGENTS.md` "Facade boundary"): external
+  libraries enter only through the owning domain's `c/t/p/m/u` (layer-0 config/settings
+  for their foundation libraries); their types are named only through `t`/`p`; modules
+  outside `c/t/p/m/u` and `api` are orchestrators with no facade-kind declarations,
+  explicit or implicit; static enforcement lives only in flext-infra's declarative
+  catalog. Before writing any import or module-level name outside a facade, place it in
+  its family first.
 - Family part shape (ADR-014, `$flext-family-shape`): the five private families each
   begin with `base.py`; a part file nests entities directly
   (models/enums/protocols/behavior, one level) — top-level orphan classes and pure
@@ -55,12 +71,12 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   `models.py→m`, `utilities.py→u`, `config.py→config`, `settings.py→settings`); (2) the
   **operational letters** (`r`, `d`, `e`, `h`, `s`, `x`) are inherited from the highest
   upstream flext library (`flext_cli`, which sources them from `flext_core`) through
-  `FlextInfraCodegenLazyInitPlannerAliasesMixin._resolve_aliases` /
-  `_resolve_inherited_alias_source`; (3) a **local redeclaration published in `__all__`
+  `u.Infra.lazy_init_resolve_aliases`
+  (nearest declaring, then nearest serving parent); (3) a **local redeclaration published in `__all__`
   overrides the inherited ancestor**; (4) `Flext*` long-name classes re-export only
   modules from the **current directory** — never subdirectories, parents, or siblings.
   The facade-letter set derives from the statically indexed workspace source
-  (`_export_names_for_package`), never the ambient installed/editable venv surface (the
+  (`u.Infra` `_lazy_init_package_names`), never the ambient installed/editable venv surface (the
   flext-b3xmn divergence fix: local venv and pinned CI checkout must render
   identically). Consumers import only `from <namespace> import <symbol>` with
   `<symbol> ∈ pkg.__all__` (R1).
@@ -68,8 +84,8 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   `flext_core`, the package root lazily re-exports `s`, and consumers use
   `from <namespace> import s`. Never rename it to `core_s` or substitute an alternative
   service-base import.
-- Declaration layers are pure data. Behavior belongs in utilities, services, bases,
-  facades, or CLI layers. Owned data crosses boundaries through typed Pydantic v2 models
+- Declaration layers are pure data. Behavior belongs in `u`; services, bases, facades
+  and CLI layers orchestrate it. Owned data crosses boundaries through typed Pydantic v2 models
   and project `t.*`/`p.*` contracts. Pydantic practice — model MRO presets, `p`/`r`
   contracts, conversions, validation, serialization, and the removal catalog — follows
   the `pydantic-development` skill; symbols reach consumers only through `m`/`t`/`u`.
@@ -107,6 +123,37 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
 
 ## Sources, generation, and commands
 
+For `flext-0029c` only, the operator's direct-public-CLI route supersedes the
+Make-only requirements in this law, the session router and parent instructions:
+native-bootstrap diagnosis, real runtime, semantic refactoring and applicable gates
+use the existing public `flext-infra` CLI; Make integration is last. This is not
+a project-wide CLI relaxation or permission to invoke private workers or raw tools.
+The [execution-context contract](../../../flext-infra/docs/guides/execution-context.md#native-bootstrap-task-route-flext-0029c)
+owns the task's approved provisioning boundary and documentation-before-code
+sequence. Implementation approval is separate from this documentation slice,
+which executes no runtime, gates or distribution and proves no runtime readiness.
+Universal rules and skills remain authored in `~/agents/`, not installed projections.
+
+The approved native-bootstrap target uses one root uv workspace and lock, with
+declared submodules checked out in root CI and noneditable installation there.
+Independent checkouts retain native project contracts; external suppliers use native
+pyproject sources, never environment-selected suppliers, persisted selection or
+synthetic resolver views. Official Mise acquisition and native locked tool installation
+precede `uv sync --locked` into the owned physical `.venv`. No custom Python or
+AWK/shell lock/installer parser, copied setup admission or installed Infra check runs
+before provision succeeds. Native declarations and lock consistency replace the
+stronger independent pre-install supplier admission; post-provision provenance does
+not attest an earlier install. Preserve actual source-authenticated imports as a
+separate runtime guard, not a bootstrap dependency. These are target contracts;
+the active Bead and coordinator own implementation, runtime/gate and rollout evidence.
+
+Keep the independently consumed post-install stdlib guard and hand off to existing
+typed environment, lock and provenance owners as soon as the installed runtime
+permits. Coordinate wider Make/direnv integration with `flext-itpd1.4.13`.
+Repeated bounded native QA after causal repairs and for convergence follows the
+canonical command rule's task exception; tests change only after real subsystem
+and cold-bootstrap proof. Do not restore the retired pre-install admission.
+
 - `config/*.yaml`, typed settings, schemas, and generator policy are the SSOT. Change
   the owner, regenerate every projection, and remove the superseded implementation in
   the same cutover.
@@ -123,6 +170,24 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   contract. Never add a replacement toggle or a guard for retired inputs. Agents never
   add `WHAT=` or `PROJECT=` to setup, generation, repair, formatting, checking, or
   testing.
+- The common Make surface is `setup`, `upg`, `gen`, `mod`, `fix`, `fmt`, `check`,
+  `tests`, `help`, `build` and `clean`. Repository-owned product commands remain
+  explicit extensions. Former subverbs are absorbed into their operation owner,
+  never retained as aliases or a second pipeline.
+- `tests` executes the complete applicable suite once with the persistent
+  Testmon database. It has no incremental prepass or file/full public aliases.
+  Generation and modification complete their own coherent changes, including
+  required dependent projections, through the same typed plans and semantic
+  publication engine; neither recursively runs another public operation.
+- Reconcile canonical documentation and governance before each implementation
+  slice, prove the real public consumer next, and change tests only afterward.
+  Tests never use mocks, implementation-shaped assertions, tautologies, copied
+  configuration values or fallback execution.
+- Apply the global command rule's operation-ownership contract transitively through
+  Make prerequisites, hooks and Python callbacks. Shared planning or publication
+  machinery does not authorize generation, installation, lock resolution or quality
+  checking inside a different operation. A missing initial input is prepared through
+  its explicit owner; it never selects a fallback producer.
 - Generators emit only what is declared (ADR-018, rule
   `~/agents/rules/flext/generator-declarations.md`): a facade letter belongs to the
   module that declares it in its explicit `__all__`; an `__init__.py` propagates and
@@ -134,10 +199,11 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   Every module is one nested class with nothing loose; the existing rules for that are
   `error`. Exceptions exist only by explicit operator authorization, one bead each.
 - Structural rewires run through `make mod`. Its canonical FLEXT engine composes
-  `ast-grep` rewrites, Rope semantic refactors, and real `pyright-langserver`
-  diagnostics before the fixed point is accepted. Repetitive manual call-site editing is
-  prohibited; change the codemod or its typed automation owner and let that pipeline
-  propagate the cutover.
+  `ast-grep` rewrites and Rope semantic refactors. Native symbol resolution and
+  publication integrity belong to that transformation; independent quality and
+  fresh-import diagnostics belong to explicit verification. Repetitive manual
+  call-site editing is prohibited; change the codemod or its typed automation owner
+  and let that pipeline propagate the cutover.
 - Symbol placement and nesting are discovered from the live typed module path, AST/Rope
   identities, and LSP references. Hand-maintained symbol/class mapping catalogs, copied
   path registries, inert entries, and review-only confidence lists are forbidden;
@@ -204,6 +270,34 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   Identity mismatch is repaired only with the native
   `gc rig set-endpoint <rig> --inherit` run in the city; a metadata read is not
   connectivity proof — confirm with a real `direnv exec <repo> bd show <id> --json`.
+
+## Approved plan reconciliation and TODO projection
+
+For explicitly authorized reconciliation, compose the global
+`~/.agents/skills/tool/plan-reconciliation/SKILL.md` and its complete references;
+do not copy its procedure here. The approved FLEXT scope tracked by `flext-tvkbj`
+adds these boundaries:
+
+- Read one entire plan, its companions, addenda and attachments; classify every claim
+  against current authority and evidence. Transfer useful guidance to the smallest
+  maintained documentation, ADR or skill owner and valid pending work to Beads before
+  retirement. Reconciliation does not authorize implementing historical proposals.
+- Retire only the exact reviewed path after complete transfer, attachment accounting,
+  backlink repair and validation are recorded in Beads. Re-read source revisions and
+  shared destinations immediately before deletion; changed inputs require renewed
+  adjudication. No bulk deletion, next-plan advance or inferred disposition while the
+  current plan has unresolved doubt or incomplete transfer. Collection and private-plan
+  publication require their own authorization; this contract enables neither.
+- Beads remains the sole execution truth. The approved `TODO.md` contract is an
+  AI Hub-generated, **versioned projection**, never a manually maintained checklist.
+  Explicit Bead project metadata references AI Hub's canonical project identity; its
+  typed owner defines the key. Do not infer ownership or reuse Jira's `external_ref`.
+- Each workspace root, member and standalone project view includes only its own
+  nonterminal issues of every type, including blocked, deferred and active work.
+  Shared tracker storage and dependencies never authorize root/member aggregation.
+  AI Hub owns generation and automatic convergence; it never stages, commits or pushes.
+  Do not hand-edit or ignore `TODO.md`, or substitute manual output for unavailable
+  automation. Approval and this law are not evidence of implemented or active delivery.
 
 ## Resume entry points
 

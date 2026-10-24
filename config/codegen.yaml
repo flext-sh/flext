@@ -1,31 +1,10 @@
 Infra:
   codegen:
     vscode:
-      additional_settings:
-        python.analysis.addExtraPathsForPythonProjects: false
-        python.analysis.enableAsyncProgram: false
-        python.analysis.enableExternalTypeServer: false
-        python.analysis.enableParallelIndexing: false
-        python.analysis.enableTroubleshootMissingImports: true
-        python.analysis.extraCommitChars: true
-        python.analysis.indexing: true
-        python.analysis.inlayHints.callArgumentNames: 'off'
-        python.analysis.inlayHints.functionReturnTypes: false
-        python.analysis.inlayHints.pytestParameters: false
-        python.analysis.inlayHints.variableTypes: false
-        python.analysis.languageServerMode: default
-        python.analysis.referencesCodeLens: false
-        python.analysis.supportDocstringTemplate: true
-        ruff.interpreter:
-        - ${workspaceFolder}/.venv/bin/python
-        ruff.path:
-        - ${workspaceFolder}/.venv/bin/ruff
-        terminal.integrated.env.linux:
-          PATH: ${workspaceFolder}/.venv/bin:${env:PATH}
-          VIRTUAL_ENV: ${workspaceFolder}/.venv
-        python-envs.workspaceSearchPaths:
-        - ./.venv
-        - ./*/.venv
+      # Ordered key/value pairs accept every extension setting and JSON value.
+      # Layer composition appends pairs; the final occurrence replaces the whole value.
+      settings:
+      - [python.analysis.enableTroubleshootMissingImports, true]
     repository:
       project:
         package_name: flext
@@ -50,3 +29,4 @@ Infra:
         branch: 0.12.0-dev
       namespace_scan_dirs: []
       examples_module: examples.runtime
+      publishes_release: true

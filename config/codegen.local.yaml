@@ -2,5 +2,5 @@ Infra:
   codegen:
     repository:
       candidate_bootstrap_targets:
-        - path: .worktrees/aihub-public-inventory-20261013
+        - path: ../docsmos-main
           what: makefile

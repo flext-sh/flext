@@ -10,6 +10,7 @@
 - [Decision](#decision)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -96,3 +97,14 @@ These are acceptance requirements, not recorded results. Fleet stability remains
 unproved until the canonical root lifecycle, runtime and applicable docs/link checks
 pass on the published integrated candidate, including repeated gen/fix/fmt no-op
 receipts. The coordinator owns that validation and closure.
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Update packaged-rule owners and standalone
+  adoption; no frozen path inventory.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

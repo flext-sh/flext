@@ -9,6 +9,7 @@
 - [Exceptions](#exceptions)
 - [Consequences](#consequences)
 - [Rejected alternatives](#rejected-alternatives)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -203,3 +204,14 @@ operator authorization required, ADR-018 style)
 - A parallel rule-catalog loader: rejected — extends `codemod_rule_plan` and its cache.
 - Keeping a competing rewrite engine: proposed rejection subject to the existing law and
   validated owner/consumer cutover (see §Supersessions).
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Remain proposed; record extraction/D2 divergences
+  before any acceptance.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

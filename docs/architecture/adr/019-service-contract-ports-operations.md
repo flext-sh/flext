@@ -7,6 +7,7 @@
 - [Consequences](#consequences)
 - [Rejected alternatives](#rejected-alternatives)
 - [Verification contract](#verification-contract)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -178,3 +179,14 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
   result, an invalid one exits non-zero with the validation cause, `--help` needs no
   adapter, and a non-conforming adapter fails at composition.
 - Closure: this ADR moves to ACCEPTED with the merged SHAs and receipts of S1–S10.
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Keep proposed; reconcile current API/base, pure
+  DI, metadata and namespace.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

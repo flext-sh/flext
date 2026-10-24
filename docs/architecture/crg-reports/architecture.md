@@ -107,7 +107,7 @@ warning(s)
 ```json
 {
   "status": "ok",
-  "summary": "Architecture: 2469 communities, 2437 cross-community edges, showing 100 of 2437, 42 warning(s)",
+  c.MetricType.SUMMARY: "Architecture: 2469 communities, 2437 cross-community edges, showing 100 of 2437, 42 warning(s)",
   "communities": [
     {
       "id": 84954,
@@ -149,8 +149,8 @@ warning(s)
         "~/flext/flext-core/src/flext_core/_decorators/_logging.py::FlextDecoratorsLogging._resolve_correlation_id",
         "~/flext/flext-core/src/flext_core/_decorators/_logging.py::FlextDecoratorsLogging._execute_logged_call",
         "~/flext/flext-core/src/flext_core/_decorators/_logging.py::FlextDecoratorsLogging.with_correlation",
-        "~/flext/flext-core/src/flext_core/_models/_context/__scope_parts/flextmodelscontextscope_part_02.py::FlextModelsContextScope.ContextRuntimeState",
-        "~/flext/flext-core/src/flext_core/_models/_context/__scope_parts/flextmodelscontextscope_part_02.py::FlextModelsContextScope.ContextRuntimeState.create_default"
+        "~/flext/flext-core/src/flext_core/_models/_context/__scope/flextmodelscontextscope_part_02.py::FlextModelsContextScope.ContextRuntimeState",
+        "~/flext/flext-core/src/flext_core/_models/_context/__scope/flextmodelscontextscope_part_02.py::FlextModelsContextScope.ContextRuntimeState.create_default"
       ],
       "members_total": 590,
       "members_truncated": true

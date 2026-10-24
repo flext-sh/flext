@@ -197,7 +197,8 @@ from examples import FlextRootCompleteWorkflow
 
 # Build workflow configuration
 settings = FlextRootCompleteWorkflow.build_comprehensive_workflow(
-    workflow_type="ldap_processing", requirements={"max_workers": 8, "parallel": True}
+    workflow_type="ldap_processing",
+    requirements={"max_workers": 8, c.ProcessingMode.PARALLEL: True},
 )
 
 # Execute complete workflow

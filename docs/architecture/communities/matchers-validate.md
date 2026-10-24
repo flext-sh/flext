@@ -68,11 +68,11 @@ Community of 155 nodes
 | FlextTestsFilesBatchMixin                                        | Class    | flext-tests/src/flext_tests/\_utilities/\_files/\_batch.py                               | 13-125  |
 | batch_files                                                      | Function | flext-tests/src/flext_tests/\_utilities/\_files/\_batch.py                               | 16-125  |
 | process_one                                                      | Function | flext-tests/src/flext_tests/\_utilities/\_files/\_batch.py                               | 61-101  |
-| FlextTestsFilesComparisonMixin                                   | Class    | flext-tests/src/flext_tests/\_utilities/\_files/\_comparison_parts/comparison_part_01.py | 12-95   |
-| \_read_both                                                      | Function | flext-tests/src/flext_tests/\_utilities/\_files/\_comparison_parts/comparison_part_01.py | 21-26   |
-| \_try_parse_both                                                 | Function | flext-tests/src/flext_tests/\_utilities/\_files/\_comparison_parts/comparison_part_01.py | 28-64   |
-| \_apply_key_filtering                                            | Function | flext-tests/src/flext_tests/\_utilities/\_files/\_comparison_parts/comparison_part_01.py | 66-95   |
-| FlextTestsFilesComparisonMixin                                   | Class    | flext-tests/src/flext_tests/\_utilities/\_files/\_comparison_parts/comparison_part_02.py | 15-139  |
+| FlextTestsFilesComparisonMixin                                   | Class    | flext-tests/src/flext_tests/\_utilities/\_files/\_comparison/comparison_part_01.py | 12-95   |
+| \_read_both                                                      | Function | flext-tests/src/flext_tests/\_utilities/\_files/\_comparison/comparison_part_01.py | 21-26   |
+| \_try_parse_both                                                 | Function | flext-tests/src/flext_tests/\_utilities/\_files/\_comparison/comparison_part_01.py | 28-64   |
+| \_apply_key_filtering                                            | Function | flext-tests/src/flext_tests/\_utilities/\_files/\_comparison/comparison_part_01.py | 66-95   |
+| FlextTestsFilesComparisonMixin                                   | Class    | flext-tests/src/flext_tests/\_utilities/\_files/\_comparison/comparison_part_02.py | 15-139  |
 
 _... and 105 more members._
 

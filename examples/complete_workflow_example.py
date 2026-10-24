@@ -428,7 +428,7 @@ class FlextRootCompleteWorkflowExample:
             workflow_result = (
                 FlextRootCompleteWorkflowExample.CompleteWorkflowResult.model_validate({
                     "workflow_id": context.workflow_id,
-                    "correlation_id": context.correlation_id,
+                    c.ContextKey.CORRELATION_ID: context.correlation_id,
                     "total_stages": len(context.stages),
                     "completed_stages": len(stage_results),
                     "failed_stages": 0,
@@ -499,7 +499,7 @@ class FlextRootCompleteWorkflowExample:
             result[add_field] = True
             result["workflow_context"] = {
                 "workflow_id": context.workflow_id,
-                "correlation_id": context.correlation_id,
+                c.ContextKey.CORRELATION_ID: context.correlation_id,
             }
             if extra_logic is not None:
                 result.update(extra_logic(item))
@@ -525,7 +525,7 @@ class FlextRootCompleteWorkflowExample:
                 start_time=time.time(),
                 metadata={
                     "parallel_enabled": bool(
-                        self.workflow_settings.get("parallel", True),
+                        self.workflow_settings.get(c.ProcessingMode.PARALLEL, True),
                     ),
                     "max_workers": int(
                         str(self.workflow_settings.get("max_workers", 4)),
@@ -603,7 +603,7 @@ class FlextRootCompleteWorkflowExample:
         )
         workflow_settings: t.ScalarMapping = {
             "workflow_id": "comprehensive_workflow",
-            "parallel": True,
+            c.ProcessingMode.PARALLEL: True,
             "max_workers": 4,
             "strict_mode": False,
         }

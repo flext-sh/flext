@@ -60,6 +60,7 @@ class RouteHandler:
 
         Returns:
             The route name, or a failure for a mismatched route.
+
         """
         route = u.resolve_message_route(message)
         if route != self.message_type:
@@ -90,7 +91,7 @@ in `flext-core/examples/`
   hierarchies.
 - **Domain**: `models.py` (`_models/`), `exceptions.py` (`_exceptions/`) — Pydantic v2
   models and the exception taxonomy; models are declaration-only.
-- **Runtime & DI**: `container.py` (`_container_parts/`), `context.py`, `runtime.py`,
+- **Runtime & DI**: `container.py` (`_container/`), `context.py`, `runtime.py`,
   `service.py`, `settings` (`_settings.py`) — `FlextContainer` DI wiring, structured
   logging, and the validated settings singleton.
 - **Application**: `dispatcher.py`, `registry.py`, `handlers.py`, `decorators.py`,
