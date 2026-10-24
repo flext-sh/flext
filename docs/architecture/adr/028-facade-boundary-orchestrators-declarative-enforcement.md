@@ -114,6 +114,17 @@ outside the facades across 12 repositories.
    tests included. Behavior is exercised by calling the public API directly with
    fixture data; templates live in the generator's template files; long data lives in
    typed configuration owners.
+10. **Imports go through package lazy exports, never module paths or module objects.**
+    Operator orders 2026-10-24 (verbatim): "violacao gravissima -> from
+    flext_infra.validate.testmon_db import FlextInfraTestmonDbInspector <<<< import por
+    modulo ao inves de usar __init__.py lazy import" and "violacao gravissima import do
+    modulo e uso por ele-> class FlextContext(flext_context.FlextModelsContextState
+    .ContextState, FlextUtilitiesContext)". A name is imported from the nearest package
+    whose generated lazy `__init__` publishes it: the package root for consumers, the
+    family package (`_models`, `_utilities`, …) for siblings and facade composition.
+    Importing from a module path below that package, or importing a module object and
+    reaching its classes by attribute, is forbidden in every tier, own package included,
+    and in generated facades too.
 
 ## Definitions
 
@@ -125,6 +136,10 @@ outside the facades across 12 repositories.
   loader (`lazy` and `_lazy`); they import only stdlib and their foundation libraries
   (pydantic, pydantic-settings, yaml). The roots are data in
   `c.Infra.IMPORT_LAW_LAYER_ZERO_ROOTS`, read only by `u.Infra.import_module_role`.
+  Operator ruling 2026-10-24: a pytest plugin distribution's plugin modules (the
+  modules its `pytest11` entry points register, flext-tests `_fixtures/*` included)
+  are layer-0 for that plugin's foundation libraries (pytest, hypothesis); the catalog
+  derives them from the entry points, and nothing else is allowed there.
 - **Allowed roots outside the facades:** stdlib (derived from `sys.stdlib_module_names`),
   `__future__`, the module's own package root, and FLEXT-family roots (derived from
   installed distribution metadata). No library list exists anywhere.
