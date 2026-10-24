@@ -1046,6 +1046,7 @@ dev = [
     { name = "types-jsonschema" },
     { name = "types-ldap3" },
     { name = "types-markdown" },
+    { name = "types-networkx" },
     { name = "types-openpyxl" },
     { name = "types-paramiko" },
     { name = "types-protobuf" },
@@ -1278,6 +1279,7 @@ dev = [
     { name = "types-jsonschema", specifier = ">=4.26.0.20260518" },
     { name = "types-ldap3", specifier = ">=2.9.13.20260827" },
     { name = "types-markdown" },
+    { name = "types-networkx" },
     { name = "types-openpyxl", specifier = ">=3.1.5.20260827" },
     { name = "types-paramiko", specifier = ">=5.0.0.20260724" },
     { name = "types-protobuf", specifier = ">=7.35.1.20260827" },
@@ -8658,14 +8660,14 @@ wheels = [
 
 [[package]]
 name = "starlette"
-version = "1.9.0"
+version = "1.10.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ad/eb/4e197bf26b023abafc5e9043ec8710d7de0fcb032d0969045236d72aa0b1/starlette-1.9.0.tar.gz", hash = "sha256:3d931de246ed870e35ce605974440816ef895e592f255d1396cfdf191d4c4318", size = 2732466, upload-time = "2026-10-18T15:50:33.189Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/48/bb/3d8757f21e9a53d9035c9eb039a777047139a16bfdbedfc7a58241c3d914/starlette-1.10.0.tar.gz", hash = "sha256:b8399098d4c1e3522734f7235dc79b1fc967f96cf139c81e0fa30479e0685f9b", size = 2734356, upload-time = "2026-10-24T15:04:12.342Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f3/93/181df62699d9b5aca1d87e5cfda131dac87e3cdaebf668662f7206ca3470/starlette-1.9.0-py3-none-any.whl", hash = "sha256:fd3f159936e882d06c1108f84688f7cda2cf85fc6a592a50edbd175e882c2ddc", size = 80335, upload-time = "2026-10-18T15:50:31.526Z" },
+    { url = "https://files.pythonhosted.org/packages/88/2e/947cfe02def9371c07cd5bf5b6b61c829e9aecb9904db02a66cfafbc1eec/starlette-1.10.0-py3-none-any.whl", hash = "sha256:478c0ab3b4ced6e82719849c118fa406f0278a3499c1a898cd15cd31bdc38ce4", size = 80571, upload-time = "2026-10-24T15:04:10.371Z" },
 ]
 
 [[package]]
@@ -8825,6 +8827,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/36/53/74c0baab10afb715c6c206f56fe16b9e50656d68abcab2df84cc449f8359/types_markdown-3.10.2.20261007.tar.gz", hash = "sha256:0259c70643291f4a1841d795dfabcd86380625db6854e5dea639fdaae9e4a623", size = 20393, upload-time = "2026-10-07T07:49:28.758Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/de/90/2235ec76f463899971086b90c362d993c2c1792ea34b86bc2a622d15dadc/types_markdown-3.10.2.20261007-py3-none-any.whl", hash = "sha256:d1d5faa7b06045d783ad99a27fd909b5d0c5d67c02dc4e4d44052adb2aace169", size = 25914, upload-time = "2026-10-07T07:49:27.661Z" },
+]
+
+[[package]]
+name = "types-networkx"
+version = "3.6.1.20261024"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/51/6a/f6ff53269f24a2cb2480b768e8bcf31a7d74f5446811fb088c5e35782684/types_networkx-3.6.1.20261024.tar.gz", hash = "sha256:8dc85c36358819e9c6683604b404949f41e5e3ae9bb57a98c695f38a827e402d", size = 76912, upload-time = "2026-10-24T06:36:32.942Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e8/20/eeeae3baadd8ca9b2d795063eab50b9c32b01899e5437b02011cae53a5d7/types_networkx-3.6.1.20261024-py3-none-any.whl", hash = "sha256:b193b28155eed511acee02d61e66a06f5a6b4194a0dc0f4d0215c859c9c23319", size = 167427, upload-time = "2026-10-24T06:36:31.393Z" },
 ]
 
 [[package]]
