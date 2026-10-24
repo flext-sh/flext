@@ -11,6 +11,7 @@ from pathlib import Path
 
 import pytest
 
+from tests import c, r
 from tests import c, infra, t, tm
 
 

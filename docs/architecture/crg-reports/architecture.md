@@ -107,7 +107,7 @@ warning(s)
 ```json
 {
   "status": "ok",
-  "summary": "Architecture: 2469 communities, 2437 cross-community edges, showing 100 of 2437, 42 warning(s)",
+  c.MetricType.SUMMARY: "Architecture: 2469 communities, 2437 cross-community edges, showing 100 of 2437, 42 warning(s)",
   "communities": [
     {
       "id": 84954,

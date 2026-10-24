@@ -186,7 +186,7 @@ CODE_SMELL (warning sempre carrega ENFORCE-NNN + anchor + Fix).
     prefix-stripped; mensagem enriquecida =
     `"{sarif_text} — {problem}. Fix: {fix} [ENFORCE-NNN §anchor]"` via
     `c.Infra.SMELLS_RULE_TAGS` (ruleId→tag) +
-    `from flext_core import c as c; c.ENFORCEMENT_RULES_TEXT[tag]` —
+    `from flext_core import c; c.ENFORCEMENT_RULES_TEXT[tag]` —
     **SSOT de textos = flext-core, infra só mapeia** (drift test).
   - **"Todos, sempre":** após parse,
     `warnings.warn(issue.formatted, FlextSmellViolation, stacklevel=2)` por finding —

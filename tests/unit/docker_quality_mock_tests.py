@@ -8,7 +8,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 
 class TestsFlextRootDockerQualityDockerfiles:

@@ -63,11 +63,46 @@ The engine reads these `metadata` keys, declared in
 | `consumers_of` | The rule applies only to projects whose runtime closure includes that distribution. |
 | `relocation` | A detection-only rule names the Rope relocation that repairs it and captures the symbol as `$NAME`. |
 | `expected` | The exact finding count receipt; any other count fails. |
+| `owned_path_suffix` | Reject owned `.pyi` paths from discovery even without a syntax tree; detection-only, with no context exemption. |
 
 The predicates (`stdlib-module`, `own-package`, `runtime-alias`, `emitted-symbol`,
 `member-relocation` and the rest) and their argument contracts are declared in
 `CodemodContextPredicate` in the same module. Prefer a predicate over a literal list:
 it derives the set from its source of truth.
+
+`concrete-mixin-runtime-ellipsis` also rejects concrete class-local typing shells
+whose bodies contain only ellipsis or discarded parameters, including the
+`del`/`NotImplementedError` variant. Recompose the real implementation and state
+owners instead of moving signatures into another typing-support class. Its
+`protocol-declaration` and `resolved-symbol` predicates retain real Protocols and
+resolve the typing guard; `declaration-decorator` compares the captured native
+function's decorators with its configured module/symbol pair, preserving aliased
+ABC and implemented overload declarations without a spelling-based exemption.
+Ordinary type-only imports, type aliases and productive method bodies are not
+shells. Generated headers do not exempt candidates.
+
+`ban-stub-file` is also admitted by owned path, independently of ast-grep matches.
+Both `mod` and the codemod `check` gate consume `discover_python_files` through the
+same source inventory and common admission. Empty, invalid, generated-header and
+outside-`src` stubs remain findings.
+Hidden or analysis-ignored descendants of declared source roots remain owned
+stub-policy inputs without widening ordinary `.py` analysis. Stub leaf links keep
+their own path spelling and do not grant permission to follow foreign targets.
+
+Artifact declarations marked
+`retired_typing_root` elect retired first-party typing trees even when ordinary
+source scans ignore them; environment, installed dependency, foreign Git and
+unmanaged submodule boundaries remain excluded. Reports distinguish `owned-path`
+evidence from `ast-grep` evidence and retain authenticated source states.
+
+The typed tooling document rejects stub options and producers in native pairs and
+derived declarations. Its canonical loader checks rooted native/topology search paths
+once against the elected project and actual installed interpreter roots, without
+banning source import paths or installed third-party typing. `CodegenFilePlan` rejects
+non-absent `.pyi` output, and authenticated
+publication revalidates the same model law before effects, including unchecked copied
+plans. Retirement uses `CodegenFilePlan` with absent desired bytes and mode;
+`SemanticFilePlan` with no desired content remains a no-op, not a deletion.
 
 ## Text rules
 

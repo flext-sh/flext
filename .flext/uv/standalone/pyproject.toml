@@ -179,8 +179,6 @@ dev = [
   "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
   "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
   "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
-  "flext-stubs-gitdb",
-  "flext-stubs-pymdownx",
   "pydantic-core>=2.41.5",
   "rope @ git+https://github.com/marlon-costa-dc/rope.git@1.15.0%2Bdc.5",
 ]
@@ -489,14 +487,6 @@ branch = "0.12.0-dev"
 [tool.uv.sources.flext]
 path = "../../.."
 editable = true
-
-[[tool.uv.sources.flext-stubs-gitdb]]
-path = "../../../typings/flext-stubs-gitdb"
-group = "dev"
-
-[[tool.uv.sources.flext-stubs-pymdownx]]
-path = "../../../typings/flext-stubs-pymdownx"
-group = "dev"
 
 [project]
 name = "flext-resolution"
