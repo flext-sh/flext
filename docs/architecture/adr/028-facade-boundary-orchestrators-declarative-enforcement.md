@@ -114,8 +114,10 @@ outside the facades across 12 repositories.
   file (`constants.py`, `typings.py`, `protocols.py`, `models.py`, `utilities.py`) or its
   private family package (`_constants`, `_typings`, `_protocols`, `_models`,
   `_utilities`).
-- **Layer-0 module:** `_config`, `_settings` and their source helpers; they import only
-  stdlib and their foundation libraries (pydantic, pydantic-settings, yaml).
+- **Layer-0 module:** `_config`, `_settings` and their source helpers, plus the lazy
+  loader (`lazy` and `_lazy`); they import only stdlib and their foundation libraries
+  (pydantic, pydantic-settings, yaml). The roots are data in
+  `c.Infra.IMPORT_LAW_LAYER_ZERO_ROOTS`, read only by `u.Infra.import_module_role`.
 - **Allowed roots outside the facades:** stdlib (derived from `sys.stdlib_module_names`),
   `__future__`, the module's own package root, and FLEXT-family roots (derived from
   installed distribution metadata). No library list exists anywhere.
@@ -137,6 +139,10 @@ All in flext-infra's declarative catalog, propagated to every consumer:
   (constants, aliases, `Literal` domains, protocols, models, payload dicts, reusable
   helpers outside their family; cross-family violations), with fixtures and `make mod`
   fixes wherever the move is mechanical, and where/why/how diagnostics otherwise.
+- **Embedded code** (Decision 9, `ban-embedded-code-string`): an implicitly
+  concatenated string literal spanning three or more line breaks. The fix moves the
+  content to files under `tests/fixtures/<scenario>`, which a test receives through the
+  `fixture_tree` fixture (owner `u.Tests.materialize`, flext-tests).
 
 A violation is RED in `make check`; a diagnostic is guidance, never a waiver.
 
