@@ -112,6 +112,19 @@ GITHUB_AUTH_PRESENT := $(if $(strip $(GITHUB_TOKEN)),yes,no)
 GITHUB_AUTH_PHYSICAL_COMMAND := $(if $(filter gh,$(GITHUB_AUTH_SOURCE)),$(realpath $(GITHUB_AUTH_COMMAND)),not-selected)
 # Diagnostics expose only producer metadata, never credentials or command stderr.
 GITHUB_AUTH_DIAGNOSTICS = printf 'github-auth source=%s extraction-exit=%s present=%s ci=%s command-exit=%s command=%s physical-command=%s host-source=%s gh-config-override=%s xdg-config-override=%s session-bus=%s\n' '$(GITHUB_AUTH_SOURCE)' '$(GITHUB_AUTH_STATUS)' '$(GITHUB_AUTH_PRESENT)' '$(GITHUB_AUTH_CI)' '$(GITHUB_AUTH_COMMAND_STATUS)' '$(GITHUB_AUTH_COMMAND)' '$(GITHUB_AUTH_PHYSICAL_COMMAND)' '$(GITHUB_AUTH_HOST_SOURCE)' '$(GITHUB_AUTH_CONFIG_OVERRIDE)' '$(GITHUB_AUTH_XDG_OVERRIDE)' '$(GITHUB_AUTH_SESSION_BUS)'
+# A global url.<https-url>.insteadOf rewrite that embeds credentials (a
+# userinfo with a separator colon) shadows the fleet SSH route and poisons
+# every resolver that shells out to git (uv, mise, cargo): their fetches
+# authenticate with the baked-in value and fail in confusing ways far from
+# the cause. The rewrite itself is operator territory; this gate only
+# refuses to run under it and names the offending config entry. The SSH
+# form (url.git@host:.insteadOf) is the fleet's own route and stays legal.
+GITHUB_AUTH_REWRITE := $(shell git config --global --get-regexp '^url\..*\.insteadof' 2>/dev/null | grep -E '^url\.https?://[^ /]+:[^ /]+@' | head -1)
+ifneq ($(strip $(GITHUB_AUTH_REWRITE)),)
+ifneq ($(MAKECMDGOALS),help)
+$(error git config --global embeds credentials in a GitHub URL rewrite and shadows the fleet SSH route; remove that url.*.insteadOf entry — it poisons uv/mise git resolution: $(GITHUB_AUTH_REWRITE))
+endif
+endif
 
 # === SECTION: project identity (managed) ===
 # Source: config:dist / config:make_profile / config:repository_root_rel / config:uv_link_mode
@@ -289,7 +302,12 @@ override RUNTIME_ROOT := $(REPOSITORY_ROOT)
 override export GIT_CEILING_DIRECTORIES := $(abspath $(RUNTIME_ROOT)/..)
 override export MISE_CEILING_PATHS := $(abspath $(RUNTIME_ROOT)/..)
 override export MISE_CONFIG_DIR := $(RUNTIME_ROOT)/.mise
-override export MISE_GLOBAL_CONFIG_FILE := $(MISE_CONFIG_DIR)/config.toml
+# The exported global config must be a REAL file in every topology: the
+# workspace profile carries the operator's .mise/config.toml; a standalone
+# checkout (or a member without one) falls back to the always-rendered
+# project manifest — same SSOT, so child mise/uv resolution can never
+# depend on mise's fallback behavior for a missing global file.
+override export MISE_GLOBAL_CONFIG_FILE := $(if $(wildcard $(MISE_CONFIG_DIR)/config.toml),$(MISE_CONFIG_DIR)/config.toml,$(RUNTIME_ROOT)/.mise.toml)
 override export MISE_SYSTEM_CONFIG_DIR := $(MISE_CONFIG_DIR)
 # A file override wins over the system directory in native Mise discovery.
 unexport MISE_SYSTEM_CONFIG_FILE
@@ -473,6 +491,7 @@ _bootstrap_setup_tools:
 	bootstrap_stage=lifecycle; \
 	"$$mise_bootstrap_bin" -C "$(PROJECT_ROOT)" exec -- env "PATH=$$(dirname "$$mise_bootstrap_bin"):$${MISE_SHIMS_DIR}:$${PATH}" "CI=$(CI)" $(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE); \
 	bootstrap_stage=complete; bootstrap_completed=true
+_bootstrap_setup_tools: _builtin_require_workspace
 
 # UV, not Git attachment or runtime environment selection, owns lock discovery.
 .PHONY: _builtin_require_upg_lock_owner
@@ -491,16 +510,18 @@ _builtin_require_upg_lock_owner:
 # consume present members as LIVE editable installs natively (operator law
 # 2026-10-06: a commit never influences dev behavior — the worktree is the
 # behavior): the root dev group requests every declared package, member group
-# and extra; local setup binds declared members to their live editable sources,
-# while CI's --no-editable keeps the frozen builds. Attached projects inherit
-# this root's locks. Local source binding follows the complete frozen install.
+# and extra; local setup binds the repository's OWN root (provenance law —
+# detector.py declares the self root editable=True in every profile) plus
+# every declared member to their live editable sources, while CI's
+# --no-editable keeps the frozen builds. Attached projects inherit this
+# root's locks. Local source binding follows the complete frozen install;
+# a venv whose self root survived as a non-editable install is repaired by
+# this binding on the next setup instead of failing the provenance gate.
 LOCAL_EDITABLE_FLAGS :=
-
 ifneq ($(strip $(CI)),Y)
 LOCAL_EDITABLE_FLAGS := --editable "$(PROJECT_ROOT)" --editable "$(PROJECT_ROOT)/flext-core" --editable "$(PROJECT_ROOT)/flext-cli" --editable "$(PROJECT_ROOT)/flext-web" --editable "$(PROJECT_ROOT)/flext-api" --editable "$(PROJECT_ROOT)/flext-auth" --editable "$(PROJECT_ROOT)/flext-db-oracle" --editable "$(PROJECT_ROOT)/flext-ldif" --editable "$(PROJECT_ROOT)/flext-ldap" --editable "$(PROJECT_ROOT)/flext-meltano" --editable "$(PROJECT_ROOT)/flext-dbt-ldap" --editable "$(PROJECT_ROOT)/flext-dbt-ldif" --editable "$(PROJECT_ROOT)/flext-dbt-oracle" --editable "$(PROJECT_ROOT)/flext-oracle-wms" --editable "$(PROJECT_ROOT)/flext-dbt-oracle-wms" --editable "$(PROJECT_ROOT)/flext-grpc" --editable "$(PROJECT_ROOT)/flext-infra" --editable "$(PROJECT_ROOT)/flext-observability" --editable "$(PROJECT_ROOT)/flext-oracle-oic" --editable "$(PROJECT_ROOT)/flext-plugin" --editable "$(PROJECT_ROOT)/flext-quality" --editable "$(PROJECT_ROOT)/flext-tap-ldap" --editable "$(PROJECT_ROOT)/flext-tap-ldif" --editable "$(PROJECT_ROOT)/flext-tap-oracle" --editable "$(PROJECT_ROOT)/flext-tap-oracle-oic" --editable "$(PROJECT_ROOT)/flext-tap-oracle-wms" --editable "$(PROJECT_ROOT)/flext-target-ldap" --editable "$(PROJECT_ROOT)/flext-target-ldif" --editable "$(PROJECT_ROOT)/flext-target-oracle" --editable "$(PROJECT_ROOT)/flext-target-oracle-oic" --editable "$(PROJECT_ROOT)/flext-target-oracle-wms" --editable "$(PROJECT_ROOT)/flext-tests"
 endif
-
-SETUP_ENVIRONMENT_RECIPE = set -eu; \
+INSTALL_RUNTIME_RECIPE = set -eu; \
 	trap 'if [ -n "$${FLEXT_SETUP_CREDENTIAL_STORE:-}" ]; then rm -f "$$FLEXT_SETUP_CREDENTIAL_STORE"; fi' EXIT; \
 	$(REQUIRE_WORKSPACE_ENVIRONMENT); \
 	desired_python="$$(mise -C "$(RUNTIME_ROOT)" which python)"; \
@@ -517,7 +538,8 @@ SETUP_ENVIRONMENT_RECIPE = set -eu; \
 		exit 2; \
 	fi; \
 	mise -C "$(RUNTIME_ROOT)" config ls --json; \
-	$$credential_env $(UV) sync --project "$(UV_PROJECT)" --python "$$desired_python" $(UV_SYNC_FLAGS) --frozen --link-mode "$(UV_LINK_MODE)"; \
+	$$credential_env $(UV) sync --project "$(UV_PROJECT)" --python "$$desired_python" $(UV_SYNC_FLAGS) --frozen --link-mode "$(UV_LINK_MODE)"
+SETUP_ENVIRONMENT_RECIPE = $(INSTALL_RUNTIME_RECIPE); \
 	if [ -n '$(LOCAL_EDITABLE_FLAGS)' ]; then \
 		$$credential_env $(UV) pip install --python "$(RUNTIME_PYTHON)" --no-deps $(LOCAL_EDITABLE_FLAGS); \
 	fi; \
@@ -1312,14 +1334,9 @@ _builtin-pre-commit: _builtin_require_environment
 # then installs from the fresh lock. The lifecycle verifies native UV ownership
 # before resolving its physical uv.lock; attachment selects the environment,
 # not the lock. A converged attached member then aligns its containing root once.
-ifeq ($(PROJECT_ROOT),$(RUNTIME_ROOT))
 upg: TOOL_BOOTSTRAP_LIFECYCLE := _upg_lifecycle
 upg: TOOL_BOOTSTRAP_RESOLVE := 1
 upg: _bootstrap_setup_tools
-else
-upg: _builtin_require_workspace
-	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(RUNTIME_ROOT)" -f "$(RUNTIME_ROOT)/Makefile" upg
-endif
 else
 
 help:
@@ -1343,7 +1360,7 @@ upg-sources:
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make upg-sources to execute it.'
 
 validate-lifecycle:
-	@printf '  %-16s %s\n' 'validate-lifecycle' 'Serially run setup, gen, upg, setup, gen, gen in the root and every governed member, publishing typed receipts and stopping at the first failure.'
+	@printf '  %-16s %s\n' 'validate-lifecycle' 'Execute the declared public runtime acceptance steps serially, with root-owned mutation fanout and typed first-failure receipts.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make validate-lifecycle to execute it.'
 
 propagate:
@@ -1567,7 +1584,7 @@ _builtin-help:
 
 	@printf '  %-16s %s\n' 'upg-sources' 'Migrate an explicitly selected dependency Git reference through the current tool owner before the consumer resolves its own locks.';
 
-	@printf '  %-16s %s\n' 'validate-lifecycle' 'Serially run setup, gen, upg, setup, gen, gen in the root and every governed member, publishing typed receipts and stopping at the first failure.';
+	@printf '  %-16s %s\n' 'validate-lifecycle' 'Execute the declared public runtime acceptance steps serially, with root-owned mutation fanout and typed first-failure receipts.';
 
 	@printf '  %-16s %s\n' 'propagate' 'Apply this workspace'"'"'s flext-infra to every declared member (conform, then lock) and publish one pull-request lane per member whose projections or lock change; unchanged members publish nothing.';
 
@@ -1887,7 +1904,11 @@ _builtin_setup_submodules:
 # native repair verb.
 .PHONY: _builtin_require_mise
 _builtin_require_mise:
-	@if [ ! -f "$(RUNTIME_ROOT)/mise.lock" ]; then \
+	@if [ ! -f "$(MISE_GLOBAL_CONFIG_FILE)" ]; then \
+		printf 'ERROR: missing resolved mise global config %s; the checkout is incomplete — run make gen\n' "$(MISE_GLOBAL_CONFIG_FILE)" >&2; \
+		exit 2; \
+	fi; \
+	if [ ! -f "$(RUNTIME_ROOT)/mise.lock" ]; then \
 		printf 'ERROR: missing %s/mise.lock; run make upg\n' "$(RUNTIME_ROOT)" >&2; \
 		exit 2; \
 	fi; \
@@ -1914,26 +1935,11 @@ ifneq ($(MAKECMDGOALS),help)
 	fi
 endif
 
-# The environment requirement heals the declared install mode before failing.
-# A checkout synced in the other mode (CI's frozen non-editable build vs the
-# local editable binding, operator law 2026-10-06) is recoverable state, not
-# a broken checkout: the same declared sync setup runs reapplies it and the
-# verdict re-executes once. CI never heals — its environment must be exactly
-# what the workflow provisioned, so the mismatch stays a loud failure there.
+# Operational requirements only verify the provisioned environment.
+# Setup owns reconciliation; a failed verifier never starts an installer.
 _builtin_require_environment: _builtin_require_interpreter
 ifneq ($(MAKECMDGOALS),help)
-	@$(PROJECT_FLEXT_INFRA) workspace verify-environment --repository-root "$(RUNTIME_ROOT)" || { \
-		if [ "$(strip $(CI))" = "Y" ]; then \
-			printf 'ERROR: CI environments never heal; provision with make setup\n' >&2; \
-			exit 1; \
-		fi; \
-		printf 'verify-environment: reapplying the declared local install mode\n' >&2; \
-		$(UV) sync --project "$(UV_PROJECT)" --python "$(RUNTIME_PYTHON)" $(UV_SYNC_FLAGS) --frozen --link-mode "$(UV_LINK_MODE)"; \
-		if [ -n '$(LOCAL_EDITABLE_FLAGS)' ]; then \
-			$(UV) pip install --python "$(RUNTIME_PYTHON)" --no-deps $(LOCAL_EDITABLE_FLAGS); \
-		fi; \
-		$(PROJECT_FLEXT_INFRA) workspace verify-environment --repository-root "$(RUNTIME_ROOT)"; \
-	}
+	@$(PROJECT_FLEXT_INFRA) workspace verify-environment --repository-root "$(RUNTIME_ROOT)"
 endif
 
 # === SECTION: setup environment (managed) ===
@@ -1959,39 +1965,20 @@ ifeq ($(MAKE_PROFILE),workspace)
 endif
 # End SECTION: setup environment
 
-# `upg` is the only recipe that resolves. Its bootstrap half ran
-# `mise lock --bump` (native resolution into the committed mise.lock) and
-# installed exactly that lock; this lifecycle upgrades every uv.lock (which
-# carries the generator itself), provisions the environment frozen from it,
-# and conforms dependency floors. The floors land in the codegen SSOT, so
-# `gen` projects them into every pyproject and renders the managed tool
-# manifests (.mise.toml) of the upgraded generator. Only the producer half of
-# `gen` runs before the relock: its activation half demands the Mise release
-# the lock pins (`_builtin_require_environment`), and the lock still reflects
-# the manifest the generator was provisioned with until it is resolved from
-# the rendered one, so activation runs after the relock and its install. A
-# rendered manifest that moves the Mise self-pin therefore converges in one
-# run. The upgraded generator may also project requirements the first uv
-# resolution never saw (a runtime dependency its codegen SSOT declares), so
-# uv.lock is resolved again from the projected pyproject and the environment
-# reinstalled from it right after the producer half: one run converges for
-# both locks, never a second `make upg`. Resolve that regenerated
-# manifest before the second frozen install proves the committed mise.lock
-# satisfies it (mise has no `lock --check`: the locked install IS the
-# satisfaction check), `_builtin_require_mise` re-proves the pinned release,
-# and the convergence fixed point must hold before the upgrade publishes.
-# Gates are not part of the upgrade: `make check` stays its own verb. Branch-tracked git dependencies are moving sources by
-# declaration (workspace.yaml owns the branch): --refresh re-reads their
-# metadata so a stale cached requires-dist can never block or skew the
-# resolution. Like `setup`, it runs the declared pre-/post-upg lifecycle
-# hooks, post-upg inside the activated environment.
-# Attached members retain independent locks but observe the physical root
-# environment. Resolve that root before frozen setup and floor observation,
-# then reconcile it again after member generation before activating hooks.
-# Final generation is followed by native reconciliation of every governed
-# independent lock from a fresh Make parse of the generated topology. The root
-# owns the shared install; attached-member hooks follow root convergence, never
-# precede another root generation that could invalidate their lock receipt.
+# Upgrade needs the resolved tool closure before its producer can project
+# requirements. This explicit bootstrap performs no editable overlay or final
+# environment acceptance; the complete setup follows metadata and lock convergence.
+.PHONY: _upg_install_runtime
+_upg_install_runtime:
+	@$(INSTALL_RUNTIME_RECIPE)
+
+# Upgrade resolves the declared UV and Mise selectors and installs the tool
+# closure before projecting dependency inputs. It does not require the final
+# editable environment to be healthy before the producer can derive its cure.
+# After generation, reconcile every admitted independent lock and the runtime
+# lock, install the complete environment, then activate the produced surfaces.
+# Attached projects own their lock upgrade and align the containing root once;
+# the root never recursively upgrades a member. Gates stay with make check.
 # The producer half of `gen` publishes this Makefile. A recipe never names a
 # target after that point from a file it did not parse: when publication
 # changed the Makefile, the upgrade hands off to a fresh `make upg` that
@@ -2034,13 +2021,15 @@ _upg_lifecycle: _builtin_setup_submodules
 		*" pre-upg "*) $(SELF_MAKE) pre-upg ;; \
 	esac
 	@$(UV) lock --project "$(PROJECT_ROOT)" --upgrade --refresh
-	@$(SELF_MAKE) _builtin_setup_environment
+	@if [ "$(PROJECT_ROOT)" != "$(RUNTIME_ROOT)" ]; then \
+		$(UV) lock --project "$(RUNTIME_ROOT)" --upgrade --refresh; \
+	fi
+	@$(SELF_MAKE) _upg_install_runtime
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --what mise-config --scope self --mode apply
 	@mise -C "$(PROJECT_ROOT)" lock --bump
 	@mise -C "$(PROJECT_ROOT)" install --locked --yes "python" "github:jdx/mise" "uv" "direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "node" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"
 	@$(PROJECT_FLEXT_INFRA) deps modernize --repository-root "$(PROJECT_ROOT)" \
 		--apply --rewrite-constraints --projects .
-	@$(SELF_MAKE) _builtin_require_environment
 	$(call RUN_PUBLIC_PRODUCE,gen)
 	+@set -eu; \
 	published="$$(sha256sum "$(SELF_MAKEFILE)")"; \
@@ -2055,17 +2044,38 @@ _upg_lifecycle: _builtin_setup_submodules
 	fi
 
 _upg_converge:
-	@$(UV) lock --project "$(PROJECT_ROOT)"
-	@$(UV) lock --check --project "$(PROJECT_ROOT)"
-	@$(SELF_MAKE) _builtin_setup_environment
+	@$(SELF_MAKE) _upg_reconcile_locks
+	@mise -C "$(PROJECT_ROOT)" lock --bump
 	@mise -C "$(PROJECT_ROOT)" install --locked --yes "python" "github:jdx/mise" "uv" "direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "node" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"
+	@$(SELF_MAKE) _builtin_setup_environment
 	@$(SELF_MAKE) _builtin_require_mise
 	$(call RUN_PUBLIC_ACTIVATE,gen)
 	@$(SELF_MAKE) gen
+	@$(SELF_MAKE) _upg_reconcile_locks
 	@$(SELF_MAKE) _builtin_setup_environment
-	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --mode check
+	+@if [ "$(PROJECT_ROOT)" != "$(RUNTIME_ROOT)" ]; then \
+		"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(RUNTIME_ROOT)" -f "$(RUNTIME_ROOT)/Makefile" upg; \
+	fi
 	@$(PROJECT_FLEXT_INFRA) deps verify-locks --repository-root "$(PROJECT_ROOT)"
 	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _upg_activated,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _upg_activated)
+
+.PHONY: _upg_reconcile_locks
+_upg_reconcile_locks:
+	@set -eu; \
+	for project in "$(PROJECT_ROOT)" $(if $(filter Y,$(CI)),,"$(PROJECT_ROOT)/flext-core" "$(PROJECT_ROOT)/flext-cli" "$(PROJECT_ROOT)/flext-web" "$(PROJECT_ROOT)/flext-api" "$(PROJECT_ROOT)/flext-auth" "$(PROJECT_ROOT)/flext-db-oracle" "$(PROJECT_ROOT)/flext-ldif" "$(PROJECT_ROOT)/flext-ldap" "$(PROJECT_ROOT)/flext-meltano" "$(PROJECT_ROOT)/flext-dbt-ldap" "$(PROJECT_ROOT)/flext-dbt-ldif" "$(PROJECT_ROOT)/flext-dbt-oracle" "$(PROJECT_ROOT)/flext-oracle-wms" "$(PROJECT_ROOT)/flext-dbt-oracle-wms" "$(PROJECT_ROOT)/flext-grpc" "$(PROJECT_ROOT)/flext-infra" "$(PROJECT_ROOT)/flext-observability" "$(PROJECT_ROOT)/flext-oracle-oic" "$(PROJECT_ROOT)/flext-plugin" "$(PROJECT_ROOT)/flext-quality" "$(PROJECT_ROOT)/flext-tap-ldap" "$(PROJECT_ROOT)/flext-tap-ldif" "$(PROJECT_ROOT)/flext-tap-oracle" "$(PROJECT_ROOT)/flext-tap-oracle-oic" "$(PROJECT_ROOT)/flext-tap-oracle-wms" "$(PROJECT_ROOT)/flext-target-ldap" "$(PROJECT_ROOT)/flext-target-ldif" "$(PROJECT_ROOT)/flext-target-oracle" "$(PROJECT_ROOT)/flext-target-oracle-oic" "$(PROJECT_ROOT)/flext-target-oracle-wms" "$(PROJECT_ROOT)/flext-tests" ); do \
+		owner="$$($(UV) workspace dir --project "$$project")"; \
+		if [ "$$owner" != "$$project" ]; then \
+			printf 'ERROR[upg] UV lock owner is %s, not %s; regenerate the independent-project topology before upgrading.\n' "$$owner" "$$project" >&2; \
+			exit 2; \
+		fi; \
+		printf 'upg: reconciling independent lock %s\n' "$$project"; \
+		$(UV) lock --project "$$project"; \
+		$(UV) lock --check --project "$$project"; \
+	done
+	@if [ "$(PROJECT_ROOT)" != "$(RUNTIME_ROOT)" ]; then \
+		$(UV) lock --project "$(RUNTIME_ROOT)"; \
+		$(UV) lock --check --project "$(RUNTIME_ROOT)"; \
+	fi
 
 .PHONY: _upg_activated
 _upg_activated:
@@ -2237,14 +2247,13 @@ profile-mypy-report: _builtin_require_environment
 		'import pstats, sys; pstats.Stats(sys.argv[1]).sort_stats("cumtime").print_stats(50)' \
 		"$(PROFILE_REPORTS_DIR)/mypy.pstats"
 
-# Profile the whole read-only generation plan `make gen` executes (every
-# governed repository, lazy-init and docs phases) without publishing.
+# Profile the complete generation operation, including its publication.
 .PHONY: profile-gen
 profile-gen: _builtin_require_environment
 	@mkdir -p "$(PROFILE_REPORTS_DIR)"
 	@$(PROJECT_INFRA_RUN) -m flext_infra._profile_entry \
 		"$(PROFILE_REPORTS_DIR)/conform.pstats" codegen conform \
-		--root "$(PROJECT_ROOT)" --scope all --mode check
+		--root "$(PROJECT_ROOT)" --scope all --mode apply
 
 .PHONY: profile-gen-report
 profile-gen-report: _builtin_require_environment
@@ -2489,11 +2498,9 @@ ifneq ($(CI),Y)
 endif
 	@$(UV) pip check --python "$(RUNTIME_VENV)"
 	@$(PROJECT_FLEXT_INFRA) workspace verify-environment --repository-root "$(RUNTIME_ROOT)"
-	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope self --mode check
 _builtin-status: _builtin_status_diagnostics
 	@$(PROJECT_FLEXT_INFRA) workspace signing-identity --repo-root "$(PROJECT_ROOT)"
 _builtin-verify-clean: _builtin_require_environment
-	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --mode check
 	@$(PROJECT_FLEXT_INFRA) docs audit --repository-root "$(PROJECT_ROOT)" --output-dir ".reports/docs" --projects .
 	@$(PROJECT_FLEXT_INFRA) workspace verify-clean --repo-root "$(PROJECT_ROOT)"
 _builtin-docs: _builtin_docs_all
