@@ -1,193 +1,204 @@
 #!/usr/bin/env python3
-"""AI Hub governance hook projection: with_server.
+"""Run local servers and a command with argv execution and guaranteed cleanup.
 
-Copyright (c) 2026 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
+Each --server accepts a quoted argv command, optionally prefixed with
+``cd DIRECTORY &&``. No shell expansion, pipeline or command substitution runs.
 """
 
-# Copyright (c) 2025 FLEXT Team. All rights reserved.
+# Copyright (c) 2026 agents-governance contributors. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+import asyncio
+import getopt
+import os
 import shlex
+import shutil
+import signal
 import socket
-import subprocess
 import sys
 import time
+from pathlib import Path
 
-"""Start one or more servers, wait for them to be ready, run a command, then clean up.
-
-Usage:
-    # Single server
-    python scripts/with_server.py --server "npm run dev" --port 5173 \
-      -- python automation.py
-    python scripts/with_server.py --server "npm start" --port 3000 \
-      -- python test.py
-
-    # Multiple servers
-    python scripts/with_server.py \
-      --server "cd backend && python server.py" --port 3000 \
-      --server "cd frontend && npm run dev" --port 5173 \
-      -- python test.py
-"""
+DEFAULT_TIMEOUT = 30
+POLL_INTERVAL = 0.5
+CONNECT_TIMEOUT = 1
+SHUTDOWN_TIMEOUT = 5
+DIRECTORY_PREFIX_LENGTH = 3
+USAGE = (
+    "with_server.py --server CMD --port PORT [--server CMD --port PORT ...] "
+    "[--timeout SECONDS] -- COMMAND [ARG ...]"
+)
 
 
-DEFAULT_SERVER_TIMEOUT = 30
-SERVER_WAIT_SECONDS = 0.5
-PROCESS_SHUTDOWN_LIMIT = 5
-READY_POLL_INTERVAL = 1
-
-
-def is_server_ready(port: int, timeout: int = DEFAULT_SERVER_TIMEOUT) -> bool:
-    """Wait for server to be ready by polling the port.
-
-    Args:
-        port: Port the server should accept connections on.
-        timeout: Maximum seconds to wait for readiness.
+def parse_args(argv: list[str]) -> tuple[list[str], list[int], int, list[str]]:
+    """Parse repeated server/port declarations and the untouched command argv.
 
     Returns:
-        True when the port accepts a connection within the timeout.
+        Server commands, corresponding ports, readiness timeout and command argv.
+
+    Raises:
+        ValueError: If the server declarations, timeout or command are invalid.
 
     """
-    start_time = time.time()
-    while time.time() - start_time < timeout:
+    options, command = getopt.getopt(argv, "", ["server=", "port=", "timeout=", "help"])
+    servers: list[str] = []
+    ports: list[int] = []
+    timeout = DEFAULT_TIMEOUT
+    for option, value in options:
+        if option == "--help":
+            sys.stdout.write(f"{USAGE}\n")
+            sys.exit(0)
+        if option == "--server":
+            servers.append(value)
+        elif option == "--port":
+            ports.append(int(value))
+        else:
+            timeout = int(value)
+    if not servers or len(servers) != len(ports) or timeout <= 0 or not command:
+        message = "supply one port per server, a positive timeout and a command"
+        raise ValueError(message)
+    return servers, ports, timeout, command
+
+
+def server_command(command: str) -> tuple[tuple[str, ...], Path]:
+    """Parse server argv and its optional leading working-directory declaration.
+
+    Returns:
+        The server argv and its absolute working directory.
+
+    Raises:
+        ValueError: If the server argv or directory declaration is empty.
+        NotADirectoryError: If the working directory does not exist.
+
+    """
+    argv = shlex.split(command)
+    cwd = Path.cwd()
+    if argv and argv[0] == "cd":
+        if len(argv) <= DIRECTORY_PREFIX_LENGTH or argv[2] != "&&":
+            message = "server directory syntax is: cd DIRECTORY && COMMAND [ARG ...]"
+            raise ValueError(message)
+        cwd = (cwd / Path(argv[1]).expanduser()).resolve()
+        argv = argv[DIRECTORY_PREFIX_LENGTH:]
+    if not argv:
+        message = "server command must contain an executable"
+        raise ValueError(message)
+    if not cwd.is_dir():
+        raise NotADirectoryError(str(cwd))
+    return tuple(argv), cwd
+
+
+def resolve_executable(command: str, cwd: Path) -> str:
+    """Resolve an executable without changing the caller's working directory.
+
+    Returns:
+        The absolute executable path, preserving interpreter symlinks.
+
+    Raises:
+        FileNotFoundError: If the requested executable is unavailable.
+
+    """
+    executable = (
+        shutil.which(str(cwd / command)) if os.sep in command else shutil.which(command)
+    )
+    if executable is None:
+        raise FileNotFoundError(command)
+    return str(Path(executable).absolute())
+
+
+async def start_process(argv: tuple[str, ...], cwd: Path) -> asyncio.subprocess.Process:
+    """Start argv directly, preserving cwd, argument boundaries and streams.
+
+    Returns:
+        The native asyncio process handle.
+
+    """
+    executable = await asyncio.to_thread(resolve_executable, argv[0], cwd)
+    return await asyncio.create_subprocess_exec(
+        executable,
+        *argv[1:],
+        cwd=cwd,
+        start_new_session=os.name == "posix",
+    )
+
+
+def is_server_ready(port: int, timeout: int = DEFAULT_TIMEOUT) -> bool:
+    """Wait until a local port accepts connections within the readiness deadline.
+
+    Returns:
+        Whether a connection succeeded before the monotonic deadline.
+
+    """
+    deadline = time.monotonic() + timeout
+    while (remaining := deadline - time.monotonic()) > 0:
         try:
             with socket.create_connection(
-                ("localhost", port),
-                timeout=READY_POLL_INTERVAL,
+                ("localhost", port), timeout=min(CONNECT_TIMEOUT, remaining)
             ):
                 return True
-        except (OSError, ConnectionRefusedError):
-            time.sleep(SERVER_WAIT_SECONDS)
+        except OSError:
+            time.sleep(min(POLL_INTERVAL, max(0, deadline - time.monotonic())))
     return False
 
 
-USAGE = """usage: with_server.py --server CMD --port PORT [--timeout N] [-- CMD ...]
-
-Run one command once every server answers on its port, then clean the servers up."""
-
-
-class UsageError(ValueError):
-    """Invalid command-line usage reported to the caller."""
-
-
-def _consume_option(
-    argv: list[str],
-    handled: int,
-) -> tuple[str, object, int]:
-    """Consume one option spell and its value from the argument list.
-
-    Args:
-        argv: Remaining command-line arguments.
-        handled: Index of the option spell in argv.
-
-    Returns:
-        Tuple of option name, parsed value, and next index.
-
-    Raises:
-        UsageError: If the option is unknown or its value is missing.
-
-    """
-    spell = argv[handled]
-    handled += 1
-    if handled >= len(argv):
-        msg = f"Missing value for {spell}"
-        raise UsageError(msg)
-    value: object = argv[handled]
-    if spell in {"--port", "--timeout"}:
-        value = int(str(value))
-    elif spell != "--server":
-        msg = f"Unknown option: {spell}"
-        raise UsageError(msg)
-    return spell, value, handled + 1
+def signal_process(process: asyncio.subprocess.Process, signum: signal.Signals) -> None:
+    """Signal the owned POSIX process group or its direct non-POSIX child."""
+    try:
+        if os.name == "posix":
+            os.killpg(process.pid, signum)
+        elif process.returncode is None:
+            process.send_signal(signum)
+    except ProcessLookupError:
+        # The owned process group can finish between its state check and signal.
+        return
 
 
-def parse_args(argv: list[str]) -> dict[str, object]:
-    """Parse the with_server invocation without a CLI framework.
+async def stop_process(process: asyncio.subprocess.Process) -> None:
+    """Terminate an owned server, reap it, and remove surviving descendants."""
+    signal_process(process, signal.SIGTERM)
+    try:
+        await asyncio.wait_for(process.wait(), timeout=SHUTDOWN_TIMEOUT)
+    except TimeoutError:
+        signal_process(process, signal.SIGKILL)
+        await process.wait()
+    if os.name == "posix":
+        signal_process(process, signal.SIGKILL)
 
-    Args:
-        argv: Command-line arguments excluding the program name.
+
+async def run(
+    servers: list[str], ports: list[int], readiness_seconds: int, command: list[str]
+) -> int:
+    """Run the trailing argv after every server becomes ready.
 
     Returns:
-        Parsed servers, ports, timeout, and trailing command.
+        The trailing command's exact native return code.
 
     Raises:
-        UsageError: If the arguments are invalid.
+        RuntimeError: If a server fails to become ready within its deadline.
 
     """
-    if "--" in argv:
-        separator = argv.index("--")
-        trailing = argv[separator + 1 :]
-        argv = argv[:separator]
-    else:
-        trailing = []
-
-    if not trailing:
-        msg = "a command must follow --"
-        raise UsageError(msg)
-
-    servers: list[str] = []
-    ports: list[int] = []
-    timeout: int = DEFAULT_SERVER_TIMEOUT
-    handled = 0
-    while handled < len(argv):
-        spell, value, handled = _consume_option(argv, handled)
-        if spell == "--server":
-            servers.append(str(value))
-        elif spell == "--port":
-            ports.append(int(str(value)))
-        else:
-            timeout = int(str(value))
-
-    if not servers or len(servers) != len(ports):
-        msg_0 = "--port count must match --server count"
-        raise UsageError(msg_0)
-
-    return {"servers": servers, "ports": ports, "timeout": timeout, "command": trailing}
-
-
-def _raise_not_started(port: int, timeout: int) -> None:
-    sentinel = f"Server failed to start on port {port} within {timeout}s"
-    raise RuntimeError(sentinel)
+    processes: list[asyncio.subprocess.Process] = []
+    try:
+        for server, port in zip(servers, ports, strict=True):
+            argv, cwd = server_command(server)
+            process = await start_process(argv, cwd)
+            processes.append(process)
+            if not await asyncio.to_thread(is_server_ready, port, readiness_seconds):
+                message = (
+                    f"Server failed to start on port {port} within {readiness_seconds}s"
+                )
+                raise RuntimeError(message)
+        cwd = await asyncio.to_thread(Path.cwd)
+        trailing_process = await start_process(tuple(command), cwd)
+        processes.append(trailing_process)
+        return await trailing_process.wait()
+    finally:
+        for process in reversed(processes):
+            await stop_process(process)
 
 
 def main() -> None:
-    """Start servers, run the trailing command, and clean the servers up."""
-    try:
-        args = parse_args(sys.argv[1:])
-    except UsageError as e:
-        sys.stderr.write(f"with_server.py: error: {e}\n{USAGE}\n")
-        sys.exit(1)
-
-    servers = [
-        {"cmd": cmd, "port": port}
-        for cmd, port in zip(args["servers"], args["ports"], strict=True)
-    ]
-    timeout: int = args["timeout"]
-    command: list[str] = args["command"]
-
-    server_processes = []
-    try:
-        for server in servers:
-            server_argv = shlex.split(server["cmd"])
-            process = subprocess.Popen(
-                server_argv,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                check=False,
-            )
-            server_processes.append(process)
-
-            if not is_server_ready(server["port"], timeout=timeout):
-                _raise_not_started(server["port"], timeout)
-
-        runner = subprocess.run(command, check=False)
-        sys.exit(runner.returncode)
-    finally:
-        for process in server_processes:
-            try:
-                process.terminate()
-                process.wait(timeout=PROCESS_SHUTDOWN_LIMIT)
-            except subprocess.TimeoutExpired:
-                process.kill()
-                process.wait()
+    """Parse the helper CLI and propagate the trailing command's return code."""
+    sys.exit(asyncio.run(run(*parse_args(sys.argv[1:]))))
 
 
 if __name__ == "__main__":
