@@ -154,8 +154,8 @@ async def agent_loop(
         tool_duration = time.time() - tool_start_ts
 
         if tool_name not in tool_metrics:
-            tool_metrics[tool_name] = {"count": 0, "durations": []}
-        tool_metrics[tool_name]["count"] += 1
+            tool_metrics[tool_name] = {c.Aggregation.COUNT: 0, "durations": []}
+        tool_metrics[tool_name][c.Aggregation.COUNT] += 1
         tool_metrics[tool_name]["durations"].append(tool_duration)
 
         messages.append({
@@ -217,7 +217,7 @@ async def evaluate_single_task(
     )
 
     response_value = extract_xml_content(response, "response")
-    summary = extract_xml_content(response, "summary")
+    summary = extract_xml_content(response, c.MetricType.SUMMARY)
     feedback = extract_xml_content(response, "feedback")
 
     duration_seconds = time.time() - start_time
@@ -232,7 +232,7 @@ async def evaluate_single_task(
         "num_tool_calls": sum(
             len(metrics["durations"]) for metrics in tool_metrics.values()
         ),
-        "summary": summary,
+        c.MetricType.SUMMARY: summary,
         "feedback": feedback,
     }
 
@@ -325,7 +325,7 @@ async def run_evaluation(
             correct_indicator="✅" if result["score"] else "❌",
             total_duration=result["total_duration"],
             tool_calls=json.dumps(result["tool_calls"], indent=2),
-            summary=result["summary"] or "N/A",
+            summary=result[c.MetricType.SUMMARY] or "N/A",
             feedback=result["feedback"] or "N/A",
         )
         for i, (qa_pair, result) in enumerate(zip(qa_pairs, results, strict=False))

@@ -157,6 +157,21 @@ original failure. Source evidence and destination preimages remain independently
 authenticated. An older projection is repaired through its current owner, never an alias
 or a manual Makefile patch.
 
+Temporary transaction retirement derives durable authority from the currently
+authenticated Git journal anchor, caller-authorized participants, transaction and
+original path/manifest closure. Persisted device, inode and mount observations do
+not establish identity across mounts. The original records and their internal
+ancestry remain unchanged; manifested file content, size, permissions, ownership,
+link count and timestamps still constrain retirement. Incomplete intentions retain
+their recorded fields and original parent bindings where present, without
+inventing metadata. A fresh complete inventory then passes
+to the existing descriptor-bound cleanup and exact journal CAS. This logical
+authorization makes no physical-continuity claim across indistinguishable snapshots
+or clones, and does not relax active registration, source validation, publication
+or dependent-group compensation. See the Infra recovery guide for the separately
+authorized, bounded retirement of an incompatible journal without a production
+compatibility reader.
+
 ### 3. Canonical structure, facades, and naming (measured, then enforced)
 
 The generated base fixes one structure for `src`, `tests`, `examples`, `scripts`:

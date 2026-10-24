@@ -150,7 +150,7 @@ Example pagination response structure:
 ```json
 {
   "total": 150,
-  "count": 20,
+  c.Aggregation.COUNT: 20,
   "offset": 0,
   "items": [...],
   "has_more": true,
@@ -662,7 +662,7 @@ Tools that transform or analyze data:
       operations: {
         type: "array",
         items: {
-          enum: ["sum", "average", "count"]
+          enum: [c.Aggregation.SUM, "average", c.Aggregation.COUNT]
         }
       }
     }

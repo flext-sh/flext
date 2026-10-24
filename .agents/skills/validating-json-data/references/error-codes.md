@@ -117,7 +117,7 @@ These are reported during `validateSchema()`, not during data validation.
 
 | Code              | Message template                                          | Trigger                                       |
 | ----------------- | --------------------------------------------------------- | --------------------------------------------- |
-| `SCHEMA_IS_FALSE` | Boolean schema "false" is always invalid                  | `false` used as a schema (draft-06+)          |
+| `SCHEMA_IS_FALSE` | Boolean schema c.ParserBooleanToken.FALSE is always invalid                  | `false` used as a schema (draft-06+)          |
 | `CONST`           | Value does not match const: {0}                           | `const` mismatch (draft-06+)                  |
 | `CONTAINS`        | Array does not contain an item matching the schema        | `contains` not satisfied (draft-06+)          |
 | `PROPERTY_NAMES`  | Property name {0} does not match the propertyNames schema | `propertyNames` validation failed (draft-06+) |

@@ -77,6 +77,11 @@ Preserve generated lazy exports through `__init__.py`. Model annotations resolve
 their declaring owner through runtime-safe imports. Eager-export rewrites, compatibility
 aliases, and `model_rebuild` are not import-cycle repairs.
 
+Constant-family initialization may reuse a value from its pure declaring leaf,
+but cannot read the composite `c` facade while that facade is being assembled.
+Such bootstrap dependencies use the explicit leaf producer; importing the facade
+back into its own parts or substituting an empty/default value is not a repair.
+
 Generated facade imports, declaration references and codemod contexts preserve the
 complete package identity elected by the project-discovery owner, including nested
 namespace packages. A directory basename is not an import identity. An unresolved

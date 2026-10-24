@@ -525,7 +525,7 @@ class FlextRootCompleteWorkflowExample:
                 start_time=time.time(),
                 metadata={
                     "parallel_enabled": bool(
-                        self.workflow_settings.get("parallel", True),
+                        self.workflow_settings.get(c.ProcessingMode.PARALLEL, True),
                     ),
                     "max_workers": int(
                         str(self.workflow_settings.get("max_workers", 4)),
@@ -603,7 +603,7 @@ class FlextRootCompleteWorkflowExample:
         )
         workflow_settings: t.ScalarMapping = {
             "workflow_id": "comprehensive_workflow",
-            "parallel": True,
+            c.ProcessingMode.PARALLEL: True,
             "max_workers": 4,
             "strict_mode": False,
         }
