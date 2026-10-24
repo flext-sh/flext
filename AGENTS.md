@@ -431,7 +431,7 @@ connectors. Every package follows one canonical Clean-Architecture shape built o
 
 ```text
 flext/                                                        # superproject: workspace manager + governance + docs
-├── src/flext/                                               # flext-workspace CLI (thin orchestrator over flext-cli) — AUTO-GENERATED facets
+├── src/flext/                                               # root facade package (FlextRoot* facades + FlextRootCli) — AUTO-GENERATED facets
 ├── config/                                                  # this repository's own deltas only (ADR-024); composition lives in .gitmodules
 ├── docs/architecture/adr/                                   # ADR-001..024 (011-013 absent) — architectural decisions (see below)
 ├── Makefile + *.mk                                          # root verb dispatcher (all work runs from here)
