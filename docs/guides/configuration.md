@@ -55,7 +55,7 @@ Run configuration propagation and validation from the workspace root:
 make gen
 make gen
 make check
-make test
+make tests
 make gen
 ```
 
