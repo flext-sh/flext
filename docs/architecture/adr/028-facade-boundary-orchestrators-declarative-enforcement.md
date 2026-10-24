@@ -117,7 +117,7 @@ outside the facades across 12 repositories.
 10. **Imports go through package lazy exports, never module paths or module objects.**
     Operator orders 2026-10-24 (verbatim): "violacao gravissima -> from
     flext_infra.validate.testmon_db import FlextInfraTestmonDbInspector <<<< import por
-    modulo ao inves de usar __init__.py lazy import" and "violacao gravissima import do
+    modulo ao inves de usar `__init__.py` lazy import" and "violacao gravissima import do
     modulo e uso por ele-> class FlextContext(flext_context.FlextModelsContextState
     .ContextState, FlextUtilitiesContext)". A name is imported from the nearest package
     whose generated lazy `__init__` publishes it: the package root for consumers, the
@@ -125,8 +125,8 @@ outside the facades across 12 repositories.
     Importing from a module path below that package, or importing a module object and
     reaching its classes by attribute, is forbidden in every tier, own package included,
     and in generated facades too. Operator order 2026-10-24 (verbatim): "mesmo em
-    __init__.py, as as aliases simples tem que estar declaradas no modulo e exportadas em
-    __all__ para entrarem nele (ou herdar do namespace anterior) , nao faça fixes com
+    `__init__.py`, as as aliases simples tem que estar declaradas no modulo e exportadas
+    em `__all__` para entrarem nele (ou herdar do namespace anterior) , nao faça fixes com
     violacoes, nunca, jamais, corrija pela causa raiz e regras". A short alias (`c`, `t`,
     `p`, `m`, `u`, `s`, …) is declared once in its owning module and listed in that
     module's `__all__`; an `__init__.py` only re-exports it (or inherits it from the
