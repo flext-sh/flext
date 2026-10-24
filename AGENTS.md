@@ -162,7 +162,10 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
     7, 8). A green partial, a self-report, a plan, or "safe to continue" is NOT done. Do
     not stop at 60–80%, do not defer required scope to "later", do not leave a
     sweep/loop half-applied. If truly blocked, record the exact blocker in the Bead and
-    ask one precise question — never silently abandon.
+    ask one precise question — never silently abandon. Operator order 2026-10-24: always
+    go to the end, never abandon near the end, under any circumstance. Finish over the
+    whole declared scope and rerun the operator's own measurement unscoped before
+    reporting (`~/agents/rules/coordination/full-landing-cycle.md` item 5).
 23. **Be realistic, not optimistic — small batches with executability slack.** Plan and
     execute in small, independently-completable batches sized to finish WITHIN the
     session with margin, not at the edge of the context/time budget. Do not over-promise
@@ -494,7 +497,7 @@ with root CI, which checks out declared submodules and installs noneditable.
 Independent checkouts retain their own native project contracts. External suppliers
 are native pyproject sources; retire environment-based supplier selection, persisted
 selection and synthetic resolver views. Official Mise acquisition and native locked
-tool provisioning precede `uv sync --locked` into the owned physical `.venv`.
+tool provisioning precede `uv sync --frozen` into the owned physical `.venv`.
 No custom Python admission or AWK/shell lock/installer parser, generated bootstrap
 resource or installed Infra check runs before provisioning succeeds. Native source
 declarations and lock consistency are the approved provisioning trust boundary,
@@ -679,6 +682,12 @@ CLI + pytest plugin, **never imported at runtime**.
 - **No compat surface:** no shims, legacy branches, dual old+new paths, loose helpers,
   or suppression (`# type: ignore`/`# noqa`) without documented justification. Remove
   superseded code the same cycle.
+- **Exterminate without fear** (global `zero-residue` rule, operator order 2026-10-24):
+  Git history is the recovery for tracked code, so delete superseded, excessive, wrong
+  or duplicated code and executions wherever found — for example a `setup` that
+  re-runs verifications `check` already owns. Keep only real functionality a current
+  consumer exercises; measure consumers (code graph, ast-grep) instead of keeping a
+  path "just in case".
 - **English-only** in all code, comments, docstrings, log strings, and `.j2` templates.
 - **Tests** (`flext-tests`): tests are evidence, never SSOT; behavior-only through
   public facades with `tm` and canonical `c/t/p/m/u`, NO mocks/`patch`, hardcoded
