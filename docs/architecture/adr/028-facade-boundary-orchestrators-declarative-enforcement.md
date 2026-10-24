@@ -124,7 +124,13 @@ outside the facades across 12 repositories.
     family package (`_models`, `_utilities`, …) for siblings and facade composition.
     Importing from a module path below that package, or importing a module object and
     reaching its classes by attribute, is forbidden in every tier, own package included,
-    and in generated facades too.
+    and in generated facades too. Operator order 2026-10-24 (verbatim): "mesmo em
+    __init__.py, as as aliases simples tem que estar declaradas no modulo e exportadas em
+    __all__ para entrarem nele (ou herdar do namespace anterior) , nao faça fixes com
+    violacoes, nunca, jamais, corrija pela causa raiz e regras". A short alias (`c`, `t`,
+    `p`, `m`, `u`, `s`, …) is declared once in its owning module and listed in that
+    module's `__all__`; an `__init__.py` only re-exports it (or inherits it from the
+    parent namespace) and never assigns it.
 
 ## Definitions
 
