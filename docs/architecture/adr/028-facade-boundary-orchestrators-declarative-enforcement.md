@@ -139,10 +139,13 @@ All in flext-infra's declarative catalog, propagated to every consumer:
   (constants, aliases, `Literal` domains, protocols, models, payload dicts, reusable
   helpers outside their family; cross-family violations), with fixtures and `make mod`
   fixes wherever the move is mechanical, and where/why/how diagnostics otherwise.
-- **Embedded code** (Decision 9, `ban-embedded-code-string`): an implicitly
-  concatenated string literal spanning three or more line breaks. The fix moves the
-  content to files under `tests/fixtures/<scenario>`, which a test receives through the
-  `fixture_tree` fixture (owner `u.Tests.materialize`, flext-tests).
+- **Embedded code** (Decision 9, `ban-embedded-source-literal`): a multi-line string
+  literal (one string, a triple-quoted block or an implicit concatenation) whose lines
+  start a Python statement, and any implicit concatenation spanning three or more line
+  breaks. Rendered source moves to a template under `templates/` rendered through
+  `u.Cli.template_*`; test source moves to files under `tests/fixtures/<scenario>`, which
+  a test receives through the `fixture_tree` fixture (owner `u.Tests.materialize`,
+  flext-tests).
 
 A violation is RED in `make check`; a diagnostic is guidance, never a waiver.
 
