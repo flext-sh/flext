@@ -497,7 +497,7 @@ with root CI, which checks out declared submodules and installs noneditable.
 Independent checkouts retain their own native project contracts. External suppliers
 are native pyproject sources; retire environment-based supplier selection, persisted
 selection and synthetic resolver views. Official Mise acquisition and native locked
-tool provisioning precede `uv sync --locked` into the owned physical `.venv`.
+tool provisioning precede `uv sync --frozen` into the owned physical `.venv`.
 No custom Python admission or AWK/shell lock/installer parser, generated bootstrap
 resource or installed Infra check runs before provisioning succeeds. Native source
 declarations and lock consistency are the approved provisioning trust boundary,
@@ -682,6 +682,12 @@ CLI + pytest plugin, **never imported at runtime**.
 - **No compat surface:** no shims, legacy branches, dual old+new paths, loose helpers,
   or suppression (`# type: ignore`/`# noqa`) without documented justification. Remove
   superseded code the same cycle.
+- **Exterminate without fear** (global `zero-residue` rule, operator order 2026-10-24):
+  Git history is the recovery for tracked code, so delete superseded, excessive, wrong
+  or duplicated code and executions wherever found — for example a `setup` that
+  re-runs verifications `check` already owns. Keep only real functionality a current
+  consumer exercises; measure consumers (code graph, ast-grep) instead of keeping a
+  path "just in case".
 - **English-only** in all code, comments, docstrings, log strings, and `.j2` templates.
 - **Tests** (`flext-tests`): tests are evidence, never SSOT; behavior-only through
   public facades with `tm` and canonical `c/t/p/m/u`, NO mocks/`patch`, hardcoded

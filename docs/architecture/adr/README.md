@@ -97,6 +97,10 @@ candidate; acceptance never proves fleet stability.
   Rope semantic refactors and LSP validation under current law; proposed supersession and
   amendments do not override authority; acceptance requires full inventory provenance,
   actual runtime and canonical gate evidence, not campaign closure)
+- [ADR-027: Facade Single-Owner Law](027-facade-single-owner-law.md)
+  — **PROPOSED** (operator order 2026-10-24; one owner family per exported object,
+  derived from its kind; detected by `make gen`, rewired by a `make mod` Rope phase;
+  tracked in `flext-vjj1s.11`)
 
 > **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance
