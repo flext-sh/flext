@@ -458,6 +458,7 @@ CLAUDE.local.md
 !tests/fixtures/ci/docker/alpine.Dockerfile
 !tests/fixtures/ci/docker/arch.Dockerfile
 !config/beads.yaml
+!conftest.py
 !.vscode/settings.json
 
 # WHITELIST: governed workspace subprojects (derived)

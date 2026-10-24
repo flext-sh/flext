@@ -103,10 +103,9 @@ executable module's guarded `main()` entry point and generator-emitted dunders
 (generator law p.11), plus the tests-tier delta of ADR-028 p.6 — pytest
 fixtures, `pytest_*` hooks and `pytest_plugins` at module level, admitted only in
 `conftest.py` and `tests/fixtures/**`. Ordinary test modules are not exempt.
-Test-suite modules under `tests/{unit,integration,e2e,performance,benchmark}`
-publish no `__all__` (`ban-test-suite-module-all`), so
-`declare-single-class-export` does not ask them for one. Any further exception
-needs the operator.
+Test-suite modules follow the same publication law as `src`: one `Tests<Stem>`
+class plus its `__all__`, enforced by `declare-single-class-export` with no path
+exemption. Any further exception needs the operator.
 
 `ban-stub-file` is also admitted by owned path, independently of ast-grep matches.
 Both `mod` and the codemod `check` gate consume `discover_python_files` through the
