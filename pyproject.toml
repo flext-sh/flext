@@ -312,8 +312,8 @@ codegen = [
 [tool.flext.docs]
 package_name = "flext"
 
-[tool.hatch.build.targets.wheel.force-include]
-"pyproject.toml" = "flext/pyproject.toml"
+[tool.hatch.build.targets.wheel.extra-metadata]
+"pyproject.toml" = "pyproject.toml"
 
 [tool.hatch.build.targets.sdist.force-include]
 "pyproject.toml" = "pyproject.toml"
@@ -1585,22 +1585,10 @@ msg = "Use cli.create_app_with_common_params / cli.register_command from flext_c
 [tool.ruff.lint.flake8-type-checking]
 runtime-evaluated-base-classes = [
   "examples.m.BaseModel",
-  "flext.m",
   "flext.m.Value",
   "flext_core.FlextConfig",
   "flext_core.FlextSettings",
-  "flext_db_oracle.FlextDbOracleModels",
-  "flext_grpc.FlextGrpcModels",
-  "flext_infra.FlextInfraModels",
   "flext_infra.m.BaseModel",
-  "flext_ldap.FlextLdapModels",
-  "flext_meltano.FlextMeltanoModels",
-  "flext_observability.FlextObservabilityModels",
-  "flext_oracle_oic.FlextOracleOicModels",
-  "flext_oracle_wms.FlextOracleWmsModels",
-  "flext_plugin.FlextPluginModels",
-  "flext_quality.FlextQualityModels",
-  "flext_tests.FlextTestsModels",
   "flext_tests.FlextTestsModels.Tests",
   "flext_tests.FlextTestsServiceBase",
   "pydantic.BaseModel",
@@ -1675,20 +1663,6 @@ link-mode = "copy"
 override-dependencies = [
   "rope @ git+https://github.com/marlon-costa-dc/rope.git@ff1c992a100ae983baa79188a6a970c2858734de",
 ]
-[[tool.uv.cache-keys]]
-file = "pyproject.toml"
-
-[[tool.uv.cache-keys]]
-file = "setup.py"
-
-[[tool.uv.cache-keys]]
-file = "setup.cfg"
-
-[[tool.uv.cache-keys]]
-dir = "src"
-
-[[tool.uv.cache-keys]]
-file = "src/flext/config/**/*"
 
 [tool.uv.sources.flext]
 workspace = true
