@@ -16,15 +16,33 @@
 
 <!-- TOC END -->
 
-`make help` at the workspace root is the executable authority for command grammar. This
-guide records the invariants that every declared verb must keep.
+The typed Make catalog owns command grammar. `make help` at the workspace root
+projects that catalog; this guide records the invariants every declared verb keeps.
 
 ## Discover commands
 
 ```bash
-make setup
 make help
 ```
+
+Help is available before provisioning. It lists the operations and named inputs
+declared for the selected profile. The common lifecycle has one public verb per
+operation; profiling and reporting belong to the operation's existing engine.
+`OPTIONS=Y` or `HELP=Y` displays the selected operation's catalog contract without
+running its prerequisites, hooks or handler, including repository-owned product
+verbs. These views do not install tools, prepare a runtime or enter a product
+dispatcher. Detailed product subcommand help remains owned by that dispatcher's
+declared public interface.
+The Make template owns separation of optional release and script sections and
+emits one final line feed for every profile, including an empty optional section.
+
+Named inputs describe data consumed by an operation, not an alternative supplier
+resolver or installation mode. Their presence in help does not select a partial
+operation. Workflow
+admission requires the operation in every declared profile; optional input metadata
+must not reject a valid bare invocation. Common handlers keep their complete scope.
+The violations sweep consumes those same profile declarations and uses `check` for
+its read-only rules operation.
 
 Never infer a target, flag, or selector from historical documentation. When a required
 verb is missing or broken, repair the root dispatcher owner and rerun that verb.
@@ -41,7 +59,7 @@ dependency and data boundaries additionally follow the canonical global
 `dep-injection`, `clean-architecture` and `pydantic-development` skills under
 `~/.agents/skills/`. Read their procedures, not a copied local substitute.
 
-Before gen/mod/fix-namespace, record the domain owner, declaration family,
+Before generation or structural modification, record the domain owner, declaration family,
 namespace, affected consumers and obsolete paths in the active Bead. FLEXT law's
 **Architecture and imports** owns facade MRO `c -> t -> p -> m -> u`, inward
 dependencies, data-only declarations and explicit `p`-port/`api` composition.
@@ -66,20 +84,41 @@ checks are not fleet proof; failures and unexecuted gates remain explicit.
 
 ## Canonical workflow
 
-Bootstrap the environment, then run the declared native acceptance from the workspace
-root:
+The approved `flext-0029c` native-bootstrap target uses one root uv workspace and
+lock in local execution and root CI; CI checks out declared submodules and installs
+noneditable. Suppliers use native pyproject sources, not environment selection,
+persisted state or synthetic resolvers. Official Mise acquisition and native locked
+tool provisioning precede `uv sync --locked` into the owned physical `.venv`.
+No custom Python or AWK/shell lock/installer parser, copied admission resource or
+installed Infra check precedes successful provision. The task-only
+[direct public CLI route](../../flext-infra/docs/guides/execution-context.md#native-bootstrap-task-route-flext-0029c)
+keeps Make integration last. This target contract does not attest current runtime;
+the general workflow below remains unchanged outside that task.
+
+Run each required operation explicitly from the workspace root:
 
 ```bash
 make setup
-make validate-lifecycle
+make gen
+make mod
+make fix
+make fmt
+make build
+# Exercise the selected public consumer before the final tests.
+make check
+make tests
 ```
 
-The ordered steps come from the effective typed `make.lifecycle_steps` policy, not a
-second command list in this guide. Mutation and documentation generation finish before
-the final candidate's public runtime, checks and complete suite. `make build` packages
-that candidate; it does not replace runtime verification.
-Each verb executes its declared operation directly. No project, file, pattern, action,
-phase, fix, or changed-only selector may be attached to a standard verb.
+Generation and structural modification each publish the dependent projections required
+by their own change. Repeat an operation only when its inputs changed or to prove
+convergence. Run `make upg` explicitly
+when dependency resolution needs to change, and then `make setup` to install that
+resolution. Mutation and documentation generation finish before the final
+candidate's public runtime, checks and complete suite. `make build` packages that
+candidate; it does not replace runtime verification.
+Each standard verb executes its declared operation directly, without selectors that
+change its effect or phase. Domain commands may retain explicitly declared selectors
+interpreted by their owning registry; they never select a standard lifecycle's effect.
 
 Setup provisions governed gitlinks before creating the runtime environment. Its shared
 owner is `flext-infra/src/flext_infra/templates/project/base/submodule_setup_recipe.j2`;
@@ -94,13 +133,56 @@ initial state. Established checkouts retain their HEAD, index, files, and local 
 setup verifies their pin ancestry without fetching or rewriting them. Ambiguous state
 fails visibly rather than authorizing forced recovery or a larger timeout.
 
-`make help` is the complete live inventory. Additional declared verbs such as `upg`,
-`docs`, `audit`, `status`, `waza`, `duplication`, and the release verbs retain their own
-single operation and are invoked only when their scope applies.
+`make help` is the complete live inventory. The approved common surface is
+`setup`, `upg`, `gen`, `mod`, `fix`, `fmt`, `check`, `tests`, `help`, `build` and
+`clean`. Repository-owned product commands join it only through their declared
+extension owner. No compatibility alias preserves a retired common verb.
+
+The ordinary dispatcher executes each declared `pre-<verb>` hook, handler and
+`post-<verb>` hook once in local and CI contexts. CI supplies activation and its
+declared scope; it does not bypass these extensions. Approval wrappers still
+must delegate to the corresponding builtin. Setup retains its separate
+provisioning and activation contract.
+
+Release operations belong to an explicitly declared product protocol.
+`publishes_release` elects `release-<phase>` commands from the shared release
+engine's phase enumeration. The same declaration produces their project Make
+handlers and workflow references; no duplicate `repository.extra_verbs` rows are
+required. Each handler invokes the existing release CLI directly.
+`PR_TITLE` supplies the optional plan title, `LANE_CHECKPOINT_REF` the optional
+versioning checkpoint and `INDEX=Y` the explicit package-index publication request.
+Generation, checks and local builds never perform tagging or publication.
+The same full-owned catalog declaration authorizes a workflow update or its
+retirement when its profile or capability no longer applies. Both operations
+capture the original physical destination and current declaration inputs before
+publication; a fresh clone needs no machine-local history. Headers never elect
+ownership. Authored seeds are excluded from managed plans, and merge ownership
+does not authorize deleting an entire file.
+
+Documentation uses the existing documentation engine through each operation:
+`gen` produces sources, `fix` repairs, `fmt` formats, `check` validates and audits,
+and `build` produces the local site artifact. The typed documentation policy owns
+the applicable actions and report location. Sharing its engine does not authorize
+another composite public lifecycle. The first failed action retains its original
+exit status and emission. Reached, incomplete and not-reached phases remain
+explicit in the existing receipts; partial execution is never complete acceptance.
+
+The root `pre-gen` hook invokes the existing typed plan collector using
+`config/plan-collection.yaml`. That configuration alone authorizes collection.
+When disabled, the collector only plans retirement of its recorded manifest-owned
+outputs; the hook does not enable sources or expand ownership.
+
+At the native documentation engine boundary, an explicit project selection must
+resolve to its requested governed scope, including for a standalone repository.
+Unknown, unsafe or explicitly empty
+selection fails before publishing phase outputs; it is never replaced by the root
+scope. Omitting selection retains the declared root/workspace semantics. This is
+the shared scope owner's contract for existing documentation operations, not a
+second selector implementation in a dispatcher or a new public lifecycle.
 
 Under [ADR-025's October 9 amendments](../architecture/adr/025-npm-free-fleet-toolchain.md),
-setup provisions current committed locks without resolution or lock writes; audit
-judges missing, stale or incomplete locks, and CI runs audit after setup. An absent
+setup provisions current committed locks without resolution or lock writes; check
+judges missing, stale or incomplete locks. An absent
 Mise self-pin uses the qualified host provisioning path, not an invented release.
 Functional installation failures always remain red. `make upg` owns resolution
 and lock writes. Distributed JavaScript tools belong to one owned Bun project
@@ -115,14 +197,47 @@ to repair authored declarations.
 
 | Verb | Owned operation |
 | --- | --- |
-| `setup` | Install committed locks, synchronize the physical environment and generate declared runtime bindings |
+| `setup` | Install committed locks, synchronize the physical environment and publish its declared runtime bindings |
 | `gen` | Render and publish projections from the current declarations |
-| `upg` | Project current declarations with the frozen producer, then resolve dependencies and write locks |
+| `upg` | Resolve declared dependencies and tools and publish their resolution metadata and locks |
 | `mod` | Apply the declared semantic and structural consumer rewrites |
 | `fix` | Apply conformance repairs and the configured fixable gates |
 | `fmt` | Run the configured formatters |
 | `check` | Run the configured read-only gates and check conformance |
-| `test` | Execute behavioral tests with the persistent Testmon database |
+| `tests` | Execute the complete applicable suite once with the persistent Testmon database |
+| `help` | Discover the declared public interface without effects |
+| `build` | Produce local distribution and documentation artifacts without publishing |
+| `clean` | Remove only declared disposable resources owned by the selected target |
+
+Generation and captured check processes share the validated
+`settings.Infra.profile` instrumentation setting, disabled by default.
+`FLEXT_INFRA_PROFILE=true` enables profiling through the existing adapter without
+changing the operation, scope or deadline. `make.generation_profile_path` owns
+the generation artifact's repository-relative destination. The adapter admits
+settings before starting cProfile; that admission remains inside the command's
+wall-clock deadline and outside its profile capture. Native status, tracebacks and
+interrupted-run evidence retain their existing owners. The recipe becomes active
+after its generated Makefile is published.
+Product release commands expose their optional inputs in `help` and `OPTIONS=Y`;
+contract display never executes their handlers.
+
+The operation that initiates a semantic change owns its complete coherent
+publication, including dependent facades and package exports. Generation and
+modification use the same source authority, typed plans, engines and publisher;
+neither recursively invokes another public verb. A generated file is changed
+through its generating owner, never by a second repair or formatting writer.
+
+New-project generation consumes the target's own explicit project, integration,
+kind and provenance declarations. Workspace membership comes only from
+`.gitmodules`. Its Git/worktree is prepared before generation; a missing
+`pyproject.toml` in an established repository is a failure, not scaffold intent.
+Generation never initializes remotes or creates an artificial commit.
+
+Each implementation slice reconciles its README, guides, AGENTS, ADRs, tracker
+and relevant canonical skills before code changes. Prove the public operation in
+the real consumer before changing tests. Tests then validate observable behavior
+without mocks, implementation-shaped assertions, tautologies, copied
+configuration values or fallback execution.
 
 The generated dispatcher invokes conformance checking only through `make check`
 and conformance repair only through `make fix`. Installing, generating,
@@ -131,7 +246,7 @@ check. Each operation still proves the prerequisites and effects it actually
 consumes. Native environment verification, input authentication and publication
 receipt verification remain required; they are not global conformance scans.
 
-General code audits belong exclusively to `make check`. `make test` executes
+General code audits belong exclusively to `make check`. `make tests` executes
 tests; it does not run the general check gates. Generation reads the declarations,
 templates and source exports needed for its projections, including lazy
 initializers and facade imports. Its publisher guards the consumed file identities,
@@ -166,9 +281,9 @@ executable names belong to the typed toolchain entry and its generated Mise opti
 the installer does not repair an incorrect name through shell renames or retries.
 CI tool caches match the generated Mise configuration as well as the committed
 locks and package metadata. A cache from another declaration is not a restore
-candidate. Upgrade projects the Mise configuration and dispatcher before reparsing
-the dispatcher to resolve and install its current backend keys; post-generation
-hooks run once after the upgraded environment converges.
+candidate. Upgrade consumes the current declarations and publishes resolution
+metadata and locks. Installation remains an explicit setup operation; an upgrade
+does not re-enter setup or invoke generation hooks.
 
 Runtime bindings are generated outputs. `setup` and `gen` render them from the
 declared configuration without migrating authored configuration or retiring its
@@ -177,13 +292,10 @@ preserve the portable configuration in its declaration owner before retiring
 tracking and publishing the runtime-local binding. A binding refresh cannot
 silently authorize that source migration.
 
-Within the same `make upg` invocation, the existing committed lock first
-provisions the frozen producer. That producer projects `pyproject.toml` and its
-native resolution views before the resolver upgrades either view. Lock
-reconciliation, installation and verification then consume those projections.
-A usable committed lock and a producer that supports the current declarations
-are prerequisites. This ordering does not promise compatibility with an older
-producer or introduce a separate bootstrap command.
+A usable physical runtime and a producer that understands the selected declarations
+are prerequisites. A missing prerequisite remains a failure until its owning
+operation repairs it explicitly. There is no older-producer fallback or hidden
+generation, upgrade or installation chain.
 
 ## Constants migration
 
@@ -233,26 +345,54 @@ fresh-object identity; this rule does not extract new collection declarations.
 
 ## Verb single-pass contract
 
-Each mutating verb owns exactly one operation per tool, and `make check` is strictly
-read-only — no verb repeats another verb's work across the canonical sequence
-`make fix && make fmt && make check`:
+The typed tooling and Make policy owns tool membership and capabilities; this guide
+does not maintain another gate matrix. `fix` applies declared repairs, `fmt` runs
+formatters and `check` performs read-only verification. A formatter does not become a
+second lint-repair path, and a repair does not repeat formatting.
+`make.fmt_gates` owns the formatter selection, including embedded Python in Markdown.
+The repair selection derives from the existing repair-capable catalog minus those
+formatters; a gate's reusable mutating implementation does not elect it for both
+public operations.
+`fix` also consumes the existing documentation repair owner for authored links,
+table-of-contents projections and fenced-code lint repairs. It prepares one selected
+docs bundle only to reuse its captured inputs and exact generated-output ownership;
+it does not publish that generation plan. Full generated files remain with their
+generator. A declared mixed Markdown file without an existing region compositor
+fails before any repair is published. Repairs compose against the captured bytes
+and use the existing guarded atomic writer.
 
-| Gate / tool                       | `make check` (read-only)           | `make fmt` (formatters) | `make fix` (one mutation)                  |
-| --------------------------------- | ---------------------------------- | ----------------------- | ------------------------------------------ |
-| `lint` — ruff                     | read-only `ruff` verdict           | —                       | one `ruff` repair pass                     |
-| `format` — ruff                   | — (mutating)                       | `ruff` format pass      | —                                          |
-| `markdown` — rumdl                | `rumdl check`                      | —                       | `rumdl check --fix`                        |
-| `markdown-format` — rumdl         | `rumdl fmt --check`                | `rumdl fmt`             | —                                          |
-| `markdown-code` — ruff (embedded) | format verdict on parseable blocks | —                       | one format pass, clean round-trips spliced |
-| `canonical-alias`, `smells`       | read-only scan                     | —                       | declared repair                            |
+Each operation runs once for its selected inputs. Its own admission and publication
+checks remain necessary; they do not authorize a hidden global gate pass. Repeat only
+after relevant inputs change or to prove a fixed point. Normalizing bytes owned by a
+generator remains part of its single publisher, not another formatter over authored
+sources.
 
-`make fmt` never runs a lint pass and `make fix` never formats: each operation runs once
-per verb, residue found by a mutation is reported there and enforced only by
-`make check`, and `make fix`/`make fmt` repeated on a green tree are no-ops.
+The checker owns runtime integrity as a registered gate alongside the other checks.
+It invokes the existing dependency, lock, environment-provenance and toolchain
+owners once. A repository declares additional Python-module checks in
+`make.project_check_gates`; their typed `integrity` flag includes them in the
+read-only quick-health selection. The same registry and runner execute either
+selection, including repository-specific dependency auditing.
+
+Consumers needing individual verdicts request an invocation-owned report destination
+through the declared report-output environment key. The checker publishes its
+`CheckReportSummary` there using the existing guarded atomic writer after each
+completed gate, retaining the requested inventory and actual executions. An incomplete
+inventory keeps the complete check red. Component consumers require every requested
+component and its native outcome; they cannot infer success for an unreached component.
+An overall Make exit never substitutes for a component verdict. Full health
+executes `make check` once and uses that execution's integrity results. Quick health
+selects only integrity through the existing checker CLI, preserving the original
+required/slow classification even if a later advisory check times out. Missing evidence
+is failure. Provisioned tools must have their runtime manifest declaration; an absent
+declaration fails at the existing Mise owner without selecting a host executable.
+That same owner resolves the executable using the version already recorded in the
+lock. Moving requests such as `latest` never trigger resolution during generation
+or checking; `upg` owns changes to the resolved release.
 
 ## Markdown quality pipeline
 
-The markdown standard lives once in `flext-infra/config/tooling.yaml`
+The markdown standard lives once in `flext-infra/src/flext_infra/config/tooling.yaml`
 (`Infra.tooling.tools.markdown`) and is projected to every repository by `make gen`:
 
 - `rumdl` is the linter (markdownlint-compatible `MD*` rules through the generated
@@ -269,25 +409,23 @@ The markdown standard lives once in `flext-infra/config/tooling.yaml`
 
 ## Test contract
 
-The test-verb law lives in `~/agents/rules/workflow/canonical-commands.md`.
-`make test` runs incremental selection against its persistent Testmon database.
-An explicitly requested full run also retains the canonical Testmon cache under
-[FLEXT law](https://github.com/flext-sh/flext/blob/0.12.0-dev/.agents/skills/flext-law/SKILL.md#sources-generation-and-commands).
-External tests follow the root connectivity prerequisites. Any preceding incremental
-phase retains its own receipt and is not the complete-suite result. CI and pre-push use
-`make test`; pre-commit runs the CI check partition and incremental tests. External tests
-keep their declared runtime and authentication
-requirements. Repair a conflicting runner at its owner; direct runner commands and
-cache-clearing bypasses are prohibited.
+`make tests` is the single public suite operation. It executes the complete applicable
+inventory once, retaining the same persistent Testmon database. It does not prepend an
+incremental run, clear the cache, accept a file selector or preserve an alias for a
+retired test verb. CI and Git hooks consume this same operation.
 
-Separate receipts preserve each phase's mode, raw result, inventory, execution, and
-deselection counts. Warnings are counted per subprocess and globally, including any
-explicitly suspended MRO warnings. Only a typed incremental cache hit with database
-integrity checks and complete deselection accounting may execute zero tests; it is never
-reported as tests passed. The full phase must execute its complete nonempty inventory.
-An empty incremental selection remains distinct from an absent selection. Native
-Testmon selection and the collection manifest must agree before any test executes;
-an empty manifest must never expand into an unselected run of the complete target.
+The execution receipt preserves the collected inventory, applicability decisions,
+executed counts and original subprocess outcomes. Zero collection, an absent manifest
+or a cache-only observation does not prove the complete suite. The native inventory
+and manifest must agree; neither may silently expand into another target. Warnings
+remain visible in the native result.
+
+Connectivity tests follow the root environment and reachability prerequisites;
+availability skips never prove connectivity or production readiness. Once a service
+is available, authentication, protocol and assertion errors remain failures. Pure unit
+and integration tests stay active. Establish the implemented behavior through the real
+public consumer before changing tests, then validate it without mocks, tautologies,
+private-method assertions or copied configuration expectations.
 
 ## Failure contract
 
@@ -314,12 +452,16 @@ recovery case are pending; this contract is not a successful recovery receipt.
 
 ## Scope and generation
 
-`make file-gate FILE=<repository-relative Python file>` validates one literal file
-without changing it. The checker resolves its owning project from the declared
-workspace topology, using that project's working directory, tool configuration,
-imports, and codemod policy. It never validates a member file as the workspace root.
-The generated recipe passes separate gate names through the check CLI's comma-separated
-`--gates` contract; no raw checker invocation replaces this route.
+The parent `.gitmodules` owns membership and each repository owns its typed kind and
+local policy. Local workspace generation includes the root and eligible managed
+members; `CI=Y` limits generation to the selected project. An independent checkout
+owns only itself. Non-FLEXT, unmanaged, read-only and content-only boundaries remain
+authoritative; a directory name or missing file never elects another profile or
+scaffold mode.
+
+The checker resolves every source's owning project through that topology and uses
+its working directory, tool configuration, imports and codemod policy. It never
+validates a member as the root or introduces another public file-check verb.
 
 Each `flext-infra check run` invocation exclusively creates one UUID4 directory under
 the typed request's report base. `--reports-dir` selects that base.
@@ -337,7 +479,7 @@ receipt. Run a member's standard verb from the workspace root with
 
 ```bash
 make -f flext-meltano/Makefile check
-make -f flext-meltano/Makefile test
+make -f flext-meltano/Makefile tests
 make -f flext-meltano/Makefile build
 ```
 
@@ -348,11 +490,13 @@ checkout rather than CWD. Attached members share the containing workspace's runt
 environment. Standalone checkouts and member worktrees without a containing
 superproject own their runtime environment and run `make <verb>` from their own
 root. Selecting the member Makefile adds no project selector or alternate dispatcher.
-Manifest exclusions remain authoritative, and literal file validation keeps its
-owning-project scope. Generated Make surfaces and documentation are changed at their
-template or configuration owner, then regenerated with `make gen`.
+Manifest exclusions remain authoritative. Generated Make surfaces and documentation
+are changed at their template or configuration owner, then regenerated with `make gen`.
 
-`make project-new` creates the declared project through the shared scaffold service.
+Explicit new-project declarations let `make gen` reuse the existing scaffold service.
+The target's project identity, kind, integration and provenance are validated before
+effects; its Git/worktree is prepared separately. A missing package manifest in an
+established repository is not permission to initialize Git or create a new project.
 Generated settings use `FlextSettings.resolve_env_file` with the project's declared
 namespace: an explicit `FLEXT_ENV_FILE` takes precedence over the namespace file and
 the consumer's working-directory `.env`. Discovery never depends on the installed
@@ -376,38 +520,24 @@ The census classifies constants by their declaration contract before the contain
 file's family, so constants in utilities, protocols, models, and services remain
 visible as placement violations.
 
-`make gen-footprint` calls the public `flext-infra codegen footprint` diagnostic
-for the root and its declared physical members. It reads the typed pending journal
-and authorizes its recorded physical effects without planning generation, scanning
-source files, acquiring participant leases, recovering a transaction, or publishing
-files or reports. The request names only the root; no generation surface or scope
-selector applies. Journal reads and authorization retain the native root journal
-lease and its persistent lock identity. A pending participant outside the declared
-physical scope fails without changing its journal or staging. The receipt retains
-the observed journal identity, digests and every pending-effect field, not native
-file-plan snapshots. It is a dated preflight, not a completed generation or
-fleet-green receipt; generation rechecks the boundary before effects. Prospective
-conform planning remains a separate API and is not invoked by this diagnostic.
+The single template catalog, `Infra.codegen.templates.entries`, binds each source,
+destination, profile and ownership policy. Full-file outputs are never hand-edited.
+Merged outputs preserve authored content outside managed regions; initial scaffold
+files without recurring generation ownership remain authored after creation. Change
+the declaration or generating source rather than introducing another catalog or writer.
 
-`make profile-gen` runs the generation handler under cProfile and retains its
-original exit status. `make profile-gen-report` reads that profile. Keep source
-inputs unchanged during a capture and record the command's wall time separately
-from the profiler's function timings. Workspace planning uses worker processes;
-the parent profile records their waits. An individual project's profile runs its
-single planning task in the profiling process and exposes that task's call costs.
+Journal inspection, physical-effect admission, profiling and reporting belong to the
+operation's existing engine. A preflight authenticates the actual journal and selected
+physical scope without claiming completed generation. The publisher rechecks those
+identities before effects. Profiling retains the same operation's outcome and raw
+evidence; wall time and function timings remain distinct.
 
-`make validate-lifecycle` is the serial native lifecycle acceptance operation. It
-discovers governed members from the typed workspace topology and executes the
-configured `lifecycle_steps` from the packaged `codegen.yaml`. Root mutation
-steps own their member fanout; repository-level steps run for each elected
-scope through its selected Makefile while CWD stays at the invoking workspace root.
-The effective typed policy includes repository overlays. Documentation runs before final
-repair and generation because its own lifecycle generates, repairs and formats files.
-Repeated root mutation and generation probes then precede public `examples`, checks,
-`smells`, full `tests`, build, status, audit and owned-artifact consistency verification.
-`tests` retains the persistent Testmon cache but includes the complete suite; incremental
-`test` alone is not full-suite acceptance. Context applicability comes from the same
-policy.
+Acceptance exercises each required public operation explicitly against workspace
+roots, selected members, independent checkouts and applicable CI contexts. Root
+mutation fanout follows declared membership; tests, checks and local builds retain
+their selected project scope. Product operations are exercised only through their own
+declared commands. A composite wrapper or a sampled member cannot stand in for this
+matrix.
 
 Acceptance belongs to the candidate after its last effective structural, formatting,
 generation or environment mutation. Read the native generation operation receipts and
@@ -421,19 +551,15 @@ affected runtime and gate receipts and requires their renewed validation, never 
 retry or a whole-workspace quiet window.
 
 Staged, unstaged and untracked work are normal shared-workspace inputs, not
-admission failures. The existing `verify-clean` surface must report that state
-without demanding cleanup or a globally stable tree. It does not authorize
-discarding changes or clearing recovery objects. Repair actual validation
-failures forward and recapture only the affected inputs when they change.
+admission failures. Check's existing Git observer reports that state without
+demanding cleanup or a globally stable tree. It does not authorize discarding
+changes or clearing recovery objects. Repair actual validation failures forward
+and recapture only the affected inputs when they change.
 
-This is not a docs-only operation: its local root steps include `upg`, with
-dependency resolution and lock verification. It does not include external
-consumers, create PRs, publish commits, switch branches, or change integration
-declarations. For documentation-only work, use `make docs` for the root or
-`make -f <member>/Makefile docs` for one declared member from the workspace
-root. Each runs generation, repair, formatting, strict site build, structural
-validation and audit for its selected scope; a root receipt is not a fleet
-receipt.
+Clean removes only declared disposable resources admitted by its existing owner.
+It preserves authored or foreign WIP, nested repositories, environments, persistent
+test state and active transaction journals or locks. A Git ignore rule alone does
+not establish that a resource is owned and disposable.
 
 Each command retains a typed receipt recording its selected repository, invoking
 working directory, physical environment, applicability and original process outcome.
@@ -445,7 +571,7 @@ their physical superproject runtime, so attached validation does not substitute
 for standalone consumer proof. Ordinary root verbs remain repository-local and
 cannot, by themselves, establish a fleet-wide result.
 
-The generated local `make audit` invokes the public
+The generated local `make check` includes the public
 `flext-infra workspace verify-lanes --repo-root <checkout>` gate. A workspace
 invocation covers its declared members as well as the root. This is detection only:
 it does not fetch, prune, merge, stash, delete refs, remove worktrees, or publish

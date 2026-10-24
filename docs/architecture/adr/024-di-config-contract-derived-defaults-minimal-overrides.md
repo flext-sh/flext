@@ -75,6 +75,17 @@ generated reference that marks a flext subproject as its member. A member's `kin
 the member's own declaration. These are distinct facts with distinct owners: no
 duplicate, no gate forcing two declarations to agree.
 
+The approved native-bootstrap target (`flext-0029c`) derives native root
+`[tool.uv.workspace]` member declarations from that composition owner, not a second
+authored member list or synthetic dependency graph. Root CI materializes the declared
+submodules and uses the same root lock with noneditable installation. Independent
+checkouts retain native project contracts. External supplier sources are declared
+in the consuming pyproject; remove environment-selected suppliers and persisted
+selection, without guessing host paths or pushing configuration into suppliers.
+Native declarations and locked consistency replace independent pre-install
+supplier admission; installed authentication is a distinct runtime concern.
+This target does not assert that generation, lock cutover or runtime is accepted.
+
 ### D2. The library ships generic defaults only
 
 `flext-infra`'s packaged configuration contains zero project names and zero per-project
@@ -171,16 +182,20 @@ delta, an unknown key, or a stale block.
 ## Verification contract
 
 - `make gen` twice is byte-identical in every repository.
-- A workspace checkout without initialized members renders byte-identical root
-  projections.
+- Composition derivation uses `.gitmodules` without a second member registry.
+  The native-bootstrap target requires declared members materialized for root
+  provisioning and root CI; a checkout-free remote resolver is not equivalent proof.
 - The installed `flext-infra` wheel contains no repository manifest, no tracker
   configuration, and no project name in its packaged configuration.
 - A local-layer scalar beats the committed layer, which beats the library default,
   observed through the public read with an injected repository root.
 - `make fix` removes a redundant declaration; re-adding it turns `make check` red.
-- Zero occurrences fleet-wide of `checkout:`, `members:`, `external_consumers`,
+- Zero occurrences fleet-wide of redundant config keys `checkout:`, `members:`,
+  `external_consumers`,
   `candidate_bootstrap_targets`, `tool_version_pins`, `codegen-overrides`,
   `codegen-org`, or a machine-local absolute path in any tracked config.
+  Native `[tool.uv.workspace].members` is a derived native-tool declaration, not
+  the retired config-owned member registry.
 
 ## 0.13 unified planning reconciliation (documentation only)
 

@@ -29,3 +29,4 @@ Infra:
         branch: 0.12.0-dev
       namespace_scan_dirs: []
       examples_module: examples.runtime
+      publishes_release: true

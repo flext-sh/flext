@@ -478,14 +478,46 @@ never copies or replaces either parent.
 | Build/codegen/enforcement        | `flext-infra/src/flext_infra/`     | drives standard Make generation, conform, and lint rules                                                                                                                      |
 | Test fixtures & builders         | `flext-tests/src/flext_tests/`     | public test facades and typed fixtures; unified `conftest.py` pattern                                                                                                         |
 | Architectural decisions          | `docs/architecture/adr/`           | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization), ADR-014 (family shape + rope codemod), ADR-017 (parametrized rule surfaces + modernize CLI), ADR-018 (generator declarations), ADR-019 (service ports, PROPOSED), ADR-024 (DI config contract) |
-| Workspace composition            | `.gitmodules`                      | sole member-list owner (ADR-024); `config/workspace.yaml` holds only this repository's own deltas, with generated commented defaults                                          |
+| Workspace composition            | `.gitmodules`                      | sole member-list owner (ADR-024); each repository's `config/codegen.yaml` holds its own declarations and deltas                                                             |
 | A Singer connector               | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006)                                                                                                                              |
 
 ## Build & Test
 
+Task-scoped exception: `flext-0029c` uses the direct public `flext-infra` CLI
+for native-bootstrap diagnosis, runtime, refactoring and gates; Make integration
+comes last. See [local FLEXT law](.agents/skills/flext-law/SKILL.md#sources-generation-and-commands)
+for the bounded route. The general Make-only guidance below remains unchanged
+outside that task; its documentation-only slice executes neither surface.
+
+The approved `flext-0029c` target is one native root uv workspace and lock, shared
+with root CI, which checks out declared submodules and installs noneditable.
+Independent checkouts retain their own native project contracts. External suppliers
+are native pyproject sources; retire environment-based supplier selection, persisted
+selection and synthetic resolver views. Official Mise acquisition and native locked
+tool provisioning precede `uv sync --locked` into the owned physical `.venv`.
+No custom Python admission or AWK/shell lock/installer parser, generated bootstrap
+resource or installed Infra check runs before provisioning succeeds. Native source
+declarations and lock consistency are the approved provisioning trust boundary,
+not equivalent independent pre-install supplier attestation. Keep source-authenticated
+imports as a separate runtime guard after provision. This is the approved target,
+not a claim that implementation, generated consumers or runtime are accepted.
+
+Coordinate the wider generated Make/direnv installer cutover with
+`flext-itpd1.4.13`. The [execution-context contract](flext-infra/docs/guides/execution-context.md#native-bootstrap-task-route-flext-0029c)
+owns existing typed post-install verification and repeated bounded native QA;
+tests change only after real subsystem and cold-bootstrap proof.
+
 **All commands run from the active workspace/worktree root**, never from inside a
 submodule. Use `make`, never bare
 `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
+
+The approved common Make interface is exactly `setup`, `upg`, `gen`, `mod`, `fix`,
+`fmt`, `check`, `tests`, `help`, `build`, and `clean`. The typed catalog owns its
+grammar; `make help` projects it. Product-specific commands remain in their declaring
+repositories. Generic aliases, subverbs and composite wrappers do not survive the
+cutover. The October 23 operator contract supersedes older common-verb examples;
+canonical global governance is reconciled at its source and propagated, never patched
+inside the managed block above.
 
 Root `make check` currently checks only the root project, not every member. To run
 a member's standard verb while keeping the workspace root as CWD, use
@@ -501,20 +533,32 @@ worktrees without a containing superproject own their runtime environment.
 make setup
 make gen
 make mod
-make gen
-make gen
 make fix
 make fmt
-make check
-make test
 make build
+# Prove the implemented behavior through its real public consumer before tests.
+make check
+make tests
 ```
 
-Follow the lifecycle with the applicable public runtime and documentation/link
-validation. Prove repeated `make gen`, `make fix`, and `make fmt` are no-op, exit-zero
-operations on the unchanged candidate; later mutations invalidate affected receipts. No
-new stability cycle starts before the full fleet has a green integrated SHA receipt,
-without warnings or residual findings.
+Each operation completes the change it initiated. `gen` and `mod` reuse the same
+semantic engines and publisher for dependent projections; neither invokes another
+public verb recursively. Run `upg` explicitly to change resolution metadata and locks,
+then `setup` explicitly to install them. Generation does not install dependencies.
+`check` owns read-only validation, including documentation and integrity checks.
+`tests` runs the complete applicable suite once with the same persistent Testmon
+database; it does not run an incremental suite first or accept a file selector.
+
+Consult and align the affected README, guides, AGENTS, ADRs, Beads and canonical skills
+before code. Establish real public behavior before changing tests, then run the
+applicable gates. Test expectations use public contracts and the same typed
+configuration owners, not mocks, tautologies or copied settings.
+
+Prove repeated generation, modification, repair and formatting are no-op, exit-zero
+operations on unchanged relevant inputs; later mutations invalidate affected receipts.
+Source, help and contract-inspection receipts do not prove a full generation or fleet
+rollout. No stability cycle closes before the declared fleet has its required integrated
+runtime and gate evidence, without warnings or residual findings.
 
 ### Production Readiness And Connectivity Tests
 
@@ -546,13 +590,15 @@ Workers implement assigned owners and return evidence; they do not merge or clos
 
 **Toolchain owner**: `flext-infra/config/codegen.yaml` defines
 `Infra.codegen.toolchain`, including the Python minor line and managed binary selectors.
-Python is strictly `>=3.13,<3.14`; setup resolves moving selectors.
+Python follows the declared floor; setup consumes locked versions and upg resolves
+moving selectors.
 `flext-infra/config/tooling.yaml` owns tool configuration and policy, not a separate
 version catalog. The `.default-python-packages` file was removed.
 
-**Gotchas:** mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never run mypy
-uncapped, it can blow up RAM. Docs CI provisions through `make setup` and validates
-through `make docs`; no documentation workflow invokes `uv` directly.
+**Gotchas:** the typed tooling policy owns Mypy's memory and execution limits; never
+bypass them with an uncapped direct invocation. Documentation uses the existing engines
+through gen, fix, fmt, check and build; no separate documentation lifecycle bypasses
+those owners.
 
 ## Architecture Overview
 
@@ -596,15 +642,16 @@ CLI + pytest plugin, **never imported at runtime**.
   competing module/package re-exports. Consumers use that class boundary. Apply
   source moves, consumer rewrites and generated export changes in one authenticated
   semantic candidate through `make mod`; runtime behavior precedes test alignment.
-- **`__init__.py`, `constants.py`, `models.py`, etc. facet roots are AUTO-GENERATED**
-  (`# AUTO-GENERATED FILE — regenerate through`make
-  gen`). Never hand-edit; change the codegen source in`flext-infra`and run`make gen`.
-- **Root `pyproject.toml`** is a codegen projection from `flext-infra` templates +
-  `flext-infra/config/codegen.yaml` (with `tooling.yaml` for tool configuration and
-  policy); `make upg` resolves the newest releases and writes the locks, then `make gen`
-  projects them. The `[MANAGED]` directive comments in templates are consumed and
-  stripped during projection by the inject-comments phase; they are not retained in
-  output. Never hand-edit the projection.
+- **Generated ownership** comes from `Infra.codegen.templates.entries`: one catalog
+  binds template sources, destinations, profiles and ownership. Never hand-edit a
+  fully generated file or a managed region. Merged files preserve authored content
+  outside managed regions; scaffold-only content becomes authored after creation.
+  Change the generating source or declaration and use its existing publisher.
+- **Root `pyproject.toml`** uses that catalog's managed merge policy. Tool configuration
+  comes from the packaged `codegen.yaml` and `tooling.yaml` owners; authored dependency
+  declarations and other preserved sections remain with their own source. `upg` writes
+  resolution metadata and locks, setup installs them, and gen publishes its declared
+  projections. Do not merge or hand-repair a managed projection.
 - **Declaration layers are pure data:**
   models/protocols/constants/typings/settings/config carry ZERO methods (only Pydantic
   Field/validators/computed_field). Behavior lives only in
@@ -920,7 +967,7 @@ Overall average: **60-90% token reduction** on common development operations.
 
 - Before changing code, search libraries, the project, worktrees, local and remote branches, and pull requests; adopt or cherry-pick existing lanes onto a branch cut from the latest integration tip, and fix-forward with `git merge --no-ff`. Do not rebase or force-push.
 - Dependency locks change only through `make upg`. `make setup` must still run when mise or uv has drifted, and must reconcile that drift inside setup.
-- New code is accepted only after `make fmt`, `make fix`, `make check`, `make mod`, and `make smells` are clean, and the change is proven to work. Do not close a change while any of those gates fail or while the diff adds lint or type violations.
+- New code is accepted only after the declared formatting, repair, structural and read-only checks are clean and its real public behavior is proven. Smell and other applicable audits belong to check, not extra common Make verbs. Do not close while required gates fail or the diff introduces violations.
 - Reassess beads one at a time: one `val<YYYYMMDDTHHMM>` label per remeasured bead, with evidence of command, working directory, exit status, and decisive output. Do not bulk-relabel.
 - Keep the project and CI green at every step. `gh pr merge --admin` is authorized for a locally green slice without waiting on remote CI; fix any integration-tip breakage through flext-infra automation.
 - Reuse functions and owners that already exist in the imported projects and libraries; apply DI, DRY, YAGNI, and SSOT — invert dependencies, respect domain interfaces, and decouple instead of patching around a problem (no gambiarra).
@@ -929,7 +976,7 @@ Overall average: **60-90% token reduction** on common development operations.
 ## Learned Workspace Facts
 
 - Makefile commands share one place that sets `GITHUB_TOKEN`, `GH_TOKEN`, and `MISE_GITHUB_TOKEN` from `gh auth token` when GitHub auth is available.
-- `make test-file FILE=<repository-relative path>` runs one declared test file.
+- `make tests` executes the complete applicable suite once and retains the persistent Testmon database.
 - FLEXT and flext-infra integrate on `0.12.0-dev`. Resolve every member's integration target from its current branch-matched authority and freshly fetched refs; never select `develop` from a stale workspace summary.
 - Land the submodule commit first, then move the umbrella gitlink in a separate commit.
 - Gas City owns its worktrees: a sweep only preserves (commits and pushes) anything under `<city>/.gc/worktrees/`; `.worktree-stale` means gc resets and keeps the tree, and `gc-*`/`polecat/*` branches are pushed but never deleted by a sweep.
