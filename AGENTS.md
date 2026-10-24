@@ -728,6 +728,13 @@ CLI + pytest plugin, **never imported at runtime**.
   the rule and re-apply it. Never fix a violation with another violation; fix the
   root cause at its owner. The fix propagates to every project without leaving any
   error, lint, format or rule finding behind (ADR-028 Decision 8).
+- **Validation applies every FLEXT rule** (operator order 2026-10-24): any concept,
+  design or fix is validated in the real tree under the full FLEXT law and the
+  project's own tool configuration, through the canonical gates. Throwaway scratch
+  files, loose classes, default tool presets (for example a type checker run with no
+  project config) and isolated probes that skip the real rules are fake evidence,
+  never proof. Never simplify to prove a point; fix root causes and their violators
+  under the complete rule set.
 - **Tools are used natively and fully** (operator order 2026-10-24): not using a
   tool's own capability the correct way because of a local defect is an extremely
   grave violation, equivalent to a bypass or fallback. The fix is to our wrapper,
