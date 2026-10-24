@@ -35,13 +35,15 @@ every loaded provider. A text rule may also name the projects it targets in
 
 Declared in `flext-infra/src/flext_infra/config/codegen.yaml` (`make.verbs`):
 
-| Verb | Effect |
+| Surface | Effect |
 |---|---|
-| `make mod` | Apply the ast-grep catalog to a fixed point; committed snapshots are verified, never rewritten. |
-| `make mod-text` | Apply the text rules with exact receipts; it rescans and requires zero remaining findings. |
-| `make mod-rules` | Evaluate both catalogs across every governed project without rewriting; publish occurrences per rule and repository. |
-| `make mod-snapshots` | Regenerate the snapshots of the rules this repository owns, for a reviewed commit. |
-| `make mod-types` | Apply source type-contract migrations. |
+| `make mod` | Apply ast-grep, semantic and text rules to a proven fixed point; committed snapshots are verified, never rewritten. |
+| `flext-infra refactor mod-text` | Replay only the authenticated declarative text rules. |
+| `flext-infra refactor ast` | Scan report of the ast-grep and sed cascades over the governed corpus; `--apply` reaches the mechanical fixed point. |
+| `flext-infra refactor mod-snapshots --apply` | Regenerate the snapshots of the rules this repository owns, for a reviewed commit. |
+
+`make mod` is the only common Make verb; the rest are `flext-infra refactor`
+subcommands (`flext-infra refactor --help`).
 
 Raw `ast-grep scan --update-all`, `sg -U` or engine modules never apply a rule to a
 tree. `ast-grep scan --rule <draft> <scratch-copy>` is for prototyping a draft only.
@@ -162,8 +164,7 @@ rule whenever the target has syntax.
 
 1. Search both catalogs and `utils/` for the law; widen an existing rule first.
 2. Write or widen the rule and its test. Prototype only on scratch copies.
-3. Run `make mod-snapshots` and review the snapshot diff.
-4. Run `make mod-rules` to see every occurrence across the fleet.
-5. Apply with `make mod` or `make mod-text`, then run `make test` for the affected
-   scope.
+3. Run `flext-infra refactor mod-snapshots --apply` and review the snapshot diff.
+4. Run `flext-infra refactor ast` to see every occurrence across the fleet.
+5. Apply with `make mod`, then run `make tests`.
 6. Commit the rule, test, snapshot and rewrites together.
