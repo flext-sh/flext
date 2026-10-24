@@ -115,7 +115,13 @@ outside the facades across 12 repositories.
    generator source, a codemod rule with fixtures, a fixer), applied to every project,
    and its output is itself clean: a fix that leaves a lint, format, type or rule
    finding anywhere is a defective fix. A manual edit is allowed only for a genuinely
-   unique case that no rule can express, and its reason is stated.
+   unique case that no rule can express, and its reason is stated. Operator order
+   2026-10-24 (verbatim): "nao usar funcionaldiade de ferramentas da melhor forma por
+   causa de probleams nossos é VIOLAÇÃO EXTREMAMEMENTE GRAVE, CONSIDERANDO ISSO UM BYPASS
+   OU FALLBACK, CORRIJA TUDO PARA FUNCIONAR SEMPRE FUNCIONAR DA FORMA CORRETA". When an
+   owner verb or engine is broken, it is repaired at once so the tool's full capability
+   runs through it; deferring, narrowing or degrading the tool's use meanwhile is a
+   bypass.
 9. **No embedded code or long text constants.** Operator order 2026-10-24 (verbatim):
    "código de constnats longos tipo esse a seguir em constatns ou inline (até mesmo em
    testgs) são violacoes gravíssimas". Source code or long text built as string
