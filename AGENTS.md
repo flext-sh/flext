@@ -657,8 +657,22 @@ CLI + pytest plugin, **never imported at runtime**.
   projections. Do not merge or hand-repair a managed projection.
 - **Declaration layers are pure data:**
   models/protocols/constants/typings/settings/config carry ZERO methods (only Pydantic
-  Field/validators/computed_field). Behavior lives only in
-  `u`/services/`api`/`base`/`cli`.
+  Field/validators/computed_field). Behavior lives only in `u`; services, `api`,
+  `base`, `cli` and every other module outside `c/t/p/m/u` only orchestrate it.
+- **Facade boundary** ([ADR-028](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md),
+  operator orders 2026-10-24):
+  - External libraries are imported at runtime only by the owning domain's
+    `c/t/p/m/u` modules (and layer-0 config/settings for their foundation libraries).
+    Everywhere else, only stdlib and FLEXT packages.
+  - Inside the facades too, an external library's types are named only through `t`
+    aliases or `p` protocols; `u` never re-narrows or re-parses (`isinstance` chains,
+    `ast.literal_eval`) what a `t`/`m` declaration validates once.
+  - Modules outside `c/t/p/m/u` and `api` are orchestrators: no constants, literal
+    sets/tables, aliases, `TypeVar`s, inline `Literal` domains, protocols, models,
+    payload dicts or reusable helpers, explicit or implicit. The families never violate
+    one another.
+  - Static violation detection lives only in flext-infra's declarative rule catalog;
+    flext-core keeps none. Violations are banned and fixed, never waived.
 - **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No
   `dict`/`TypedDict`/`dataclass`/`NamedTuple`/`m.Dict` as a data contract.
 - **Pydantic law:** every model extends an `m.*` preset (never a raw base at consumers);
