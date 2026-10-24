@@ -50,6 +50,27 @@ native tool use and validation in the real tree are ADR-028 Decisions 11-13. A d
 rule is prototyped with `ast-grep scan --rule <draft> <scratch-copy>`, and its proof is
 the real tree under `make mod`.
 
+`make mod` runs the native cascade first. The owner is
+`flext_infra/_utilities/codemod_native_cascade.py`, called from
+`codemod/batch_apply.py`. The cascade covers every fixable rule without
+`metadata.context`, plus the generated rules, and runs the `mod.phases.stages`
+declared in `tooling.yaml`:
+
+1. `header`: the generated `import-header` rules.
+2. `catalog`: every other native rule.
+3. `import-fix`: Ruff `F401`/`I001`.
+
+The stages repeat over one staged preview until no byte changes. Each stage's
+staged `sgconfig.yml` lives under `.reports/codemod/native/<stage>`, so
+`ast-grep scan -c` reproduces the stage by hand.
+
+The cascade renders the generated utilities and rules in memory, through
+`codemod_native_generated`, from the same producers and renderers `make gen`
+projects. It reads no projection from disk.
+
+The engine applies replacements only for rules that carry `metadata.context`. A
+native rule that still reports an actionable finding after the cascade fails `make mod`.
+
 ## ast-grep rules
 
 The universal `rewire-test-assert-*` family implements the
@@ -79,6 +100,53 @@ The engine reads these `metadata` keys, declared in
 | `relocation` | A detection-only rule names the Rope relocation that repairs it and captures the symbol as `$NAME`. |
 | `expected` | The exact finding count receipt; any other count fails. |
 | `owned_path_suffix` | Reject owned `.pyi` paths from discovery even without a syntax tree; detection-only, with no context exemption. |
+
+Generated rules come from renderers registered in `Infra.codegen.ast_grep.renderers`.
+Each renderer receives one facts model.
+`codemod_package_export_facts` supplies, for every package: its `__all__`, its
+directory, and its child modules and packages. Two renderers consume it:
+
+- `codemod_import_header_rules` emits the `import-header--<package>[--<scope>]`
+  rules.
+  - Trigger: the module uses a declared name that it binds nowhere. Bindings are
+    judged by the universal `name-binding` utility, embedded as each rule's local
+    utility.
+  - Effect: one `from <package> import ...` line is inserted after the module's
+    first import, carrying every name the package resolves in that scope. The
+    `import-fix` stage prunes the unused names.
+  - Package choice: a module inside a declaring package imports from the deepest
+    declaring package that contains it. Any other module imports from the unique
+    shallowest declaring package. A name declared by more than one
+    shallowest package is never inserted.
+- `codemod_module_member_rules` emits the `module-member--<package>` rules.
+  - Effect: `<child>.<Name>` is rewritten to `Name` when `<child>` is a child
+    package bound by `from <package> import <child>`. The `<child>` package must
+    publish `Name`, and the header must resolve it.
+  - Skip: a module that binds `<child>` or `Name` outside an import keeps the
+    attribute access unchanged.
+  - Follow-up: the header stage then imports `Name`, and Ruff removes the
+    module-object import.
+
+A renderer without `facts` receives only the project root:
+
+- `codemod_type_set_rules` emits one `type-set--<constant path>` rule per
+  tuple-of-classes constant of the project's constants facade.
+  - Election: by value, with no naming filter and no list. Two constants holding
+    the same set fail generation with both paths.
+  - Trigger: `isinstance(value, <set>)` outside the constants family, when the
+    second argument is exactly that set as a tuple or a `|` union, in any
+    operand order.
+  - Spellings: a builtin by its bare name, a stdlib class through its top-level
+    module (`ast.FunctionDef`), and any class through each constants-facade
+    alias that binds it (`c.Infra.Cst.ClassDef`). A set with a member that has
+    no admitted spelling gets no rule.
+  - Effect: the set is replaced by the constant (`c.Infra.AST_FUNCTION_TYPES`).
+  - Partner: `ban-inline-type-set-outside-constants` detects every inline set,
+    including those no constant declares yet; declaring the constant makes the
+    generated rule repair it.
+
+A package initializer never publishes a child package object. Consumers import a
+child's names from the child package (ADR-028).
 
 The predicates (`stdlib-module`, `own-package`, `runtime-alias`, `emitted-symbol`,
 `member-relocation` and the rest) and their argument contracts are declared in

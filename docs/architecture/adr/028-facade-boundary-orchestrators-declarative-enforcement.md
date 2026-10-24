@@ -171,7 +171,18 @@ outside the facades across 12 repositories.
     1. The canonical import header, generated from SSOT: the dependency namespace
        singletons, the project's own aliases, and the facade-module letter taken from
        the upstream facade, with reverse-layer letters under `if TYPE_CHECKING:`.
-       Insertion is per name, only for names a module uses but does not bind.
+       Insertion fires only for names a module uses but binds nowhere. Its native
+       form is one generated `import-header--<package>` rule per declaring package
+       and scope: it inserts one `from <package> import ...` line with every name
+       that package resolves there. A module inside a declaring package imports
+       from the deepest declaring package containing it; any other module imports
+       from the unique shallowest one. Step 3 prunes the unused names. ast-grep
+       applies one insertion per anchor and run, so a per-name insertion would
+       need a pass per name; a per-package insertion converges within the pass cap.
+       In step 2, the generated `module-member--<package>` rules rewrite
+       `<child>.<Name>` to `Name` when `<child>` is a child package bound by
+       `from <package> import <child>`. The next pass's step 1 imports `Name`,
+       and step 3 removes the module-object import.
     2. The whole codemod catalog, repeated until nothing changes.
     3. Last, ruff `--fix --select` over the import families declared in the tooling
        SSOT.
