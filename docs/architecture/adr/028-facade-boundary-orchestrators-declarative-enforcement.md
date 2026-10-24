@@ -89,7 +89,14 @@ outside the facades across 12 repositories.
    tests-tier delta (pytest fixture and hook functions, scenario data bound by
    fixtures), declared once in the catalog as that tier's exception data. Every other
    Python folder (`examples/`, `scripts/`, and any other) follows exactly the `src/`
-   rules.
+   rules. Scenario trees (`tests/fixtures/<scenario>/**`, root
+   `c.Tests.FIXTURE_TREES_PARTS`) are input data for the engines under test, not code
+   under test: they may hold deliberately violating sources, carry no generated
+   `__init__.py`, and are excluded from lint, generation and the rule catalog through
+   flext-infra's single exclude owner. Modules directly under `tests/fixtures/` stay
+   fully governed. Tests receive a tree through `fixture_tree("<scenario>")`, or
+   `pytester.copy_example("<scenario>")` with `pytester_example_dir` set by the
+   generated pytest configuration.
 7. **Marked compatibility fails its users, not its declaration.** An old,
    compatibility or fallback path that must survive a rewiring window carries the
    stdlib `warnings.deprecated` marker with `compat: <old> -> <new owner>; fix: <exact
