@@ -99,6 +99,14 @@ outside the facades across 12 repositories.
 8. **One standard, automated.** The rules are identical for every project, applied by
    flext-infra's engines and the code-review graph as automatically as possible;
    duplicated code and domain violations are rejected, never accepted as debt.
+9. **No embedded code or long text constants.** Operator order 2026-10-24 (verbatim):
+   "código de constnats longos tipo esse a seguir em constatns ou inline (até mesmo em
+   testgs) são violacoes gravíssimas". Source code or long text built as string
+   literals (multi-line literals, implicit concatenation of statement lines, scripts
+   handed to a subprocess or `exec`) is forbidden in every tier, constants modules and
+   tests included. Behavior is exercised by calling the public API directly with
+   fixture data; templates live in the generator's template files; long data lives in
+   typed configuration owners.
 
 ## Definitions
 

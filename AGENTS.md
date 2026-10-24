@@ -686,6 +686,10 @@ CLI + pytest plugin, **never imported at runtime**.
   - The rules are identical in every project, applied as automatically as possible by
     flext-infra and the code-review graph; duplication and domain violations are
     rejected.
+  - No source code or long text embedded as string literals (multi-line or
+    concatenated scripts for `exec`/subprocess, long text constants), in any tier,
+    tests and constants included: tests call the public API with fixture data;
+    templates live in template files; long data lives in typed configuration.
 - **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No
   `dict`/`TypedDict`/`dataclass`/`NamedTuple`/`m.Dict` as a data contract.
 - **Pydantic law:** every model extends an `m.*` preset (never a raw base at consumers);
