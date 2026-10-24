@@ -82,7 +82,14 @@ outside the facades across 12 repositories.
    class (ADR-018 point 11). The few exceptions (an executable `main()`, pytest
    fixtures and hooks in `conftest.py`, generator-emitted dunders) are declared once,
    documented, and validated automatically by the declarative catalog; anything else
-   is a violation.
+   is a violation. Operator order 2026-10-24 (verbatim): "os tests sempre seguem as
+   mesmas regras de felxt, mas com conftest e fixtures/ a mais com um pouco mais de
+   liberdade, de resto é igual, as outras pasta python sempre igual a src". So
+   `tests/` follows every rule here; only `conftest.py` and `tests/fixtures/` carry the
+   tests-tier delta (pytest fixture and hook functions, scenario data bound by
+   fixtures), declared once in the catalog as that tier's exception data. Every other
+   Python folder (`examples/`, `scripts/`, and any other) follows exactly the `src/`
+   rules.
 7. **Marked compatibility fails its users, not its declaration.** An old,
    compatibility or fallback path that must survive a rewiring window carries the
    stdlib `warnings.deprecated` marker with `compat: <old> -> <new owner>; fix: <exact

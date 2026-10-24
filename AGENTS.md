@@ -675,7 +675,10 @@ CLI + pytest plugin, **never imported at runtime**.
     flext-core keeps none. Violations are banned and fixed, never waived.
   - Every module keeps all its declarations inside its single top-level nested class,
     in every tier of the repository (not only `src/`); the few exceptions are declared
-    once, documented and validated automatically.
+    once, documented and validated automatically. `tests/` follows the same rules, with
+    only `conftest.py` and `tests/fixtures/` allowed the tests-tier delta (fixtures,
+    hooks, scenario data); `examples/`, `scripts/` and every other Python folder follow
+    the `src/` rules exactly.
   - A compatibility path surviving a rewiring window carries stdlib
     `warnings.deprecated` (`compat: <old> -> <new owner>; fix: <rewire>`): the marked
     declaration does not fail CI, every use of it does, until it dies with its last
