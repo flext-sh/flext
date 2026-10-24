@@ -106,6 +106,16 @@ outside the facades across 12 repositories.
 8. **One standard, automated.** The rules are identical for every project, applied by
    flext-infra's engines and the code-review graph as automatically as possible;
    duplicated code and domain violations are rejected, never accepted as debt.
+   Operator order 2026-10-24 (verbatim): "EXTREMAMENTE IMPORTANTE , LEI EXTREMA vc tem
+   que fazer as correcoes de violacoes ser ao maximo possível automatizadas por
+   flext-infra gen,upg,mod,fix,fmt !!!!!!!!!!!!!!!! correções manuais tem que ser A
+   EXCESSÃO DA EXCESSÃO, E tem que propagar globalmente sem gerar erros, lints, fmts,
+   outras violacoes". Every violation class is corrected by a flext-infra engine
+   reached through `make gen`, `make upg`, `make mod`, `make fix` or `make fmt` (a
+   generator source, a codemod rule with fixtures, a fixer), applied to every project,
+   and its output is itself clean: a fix that leaves a lint, format, type or rule
+   finding anywhere is a defective fix. A manual edit is allowed only for a genuinely
+   unique case that no rule can express, and its reason is stated.
 9. **No embedded code or long text constants.** Operator order 2026-10-24 (verbatim):
    "código de constnats longos tipo esse a seguir em constatns ou inline (até mesmo em
    testgs) são violacoes gravíssimas". Source code or long text built as string

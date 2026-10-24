@@ -726,7 +726,8 @@ CLI + pytest plugin, **never imported at runtime**.
   for a genuinely unique case that no rule, generator or fixer can express, and the
   reason is stated in the commit. A recurring shape fixed by hand is a defect: write
   the rule and re-apply it. Never fix a violation with another violation; fix the
-  root cause at its owner.
+  root cause at its owner. The fix propagates to every project without leaving any
+  error, lint, format or rule finding behind (ADR-028 Decision 8).
 - **Exterminate without fear** (global `zero-residue` rule, operator order 2026-10-24):
   Git history is the recovery for tracked code, so delete superseded, excessive, wrong
   or duplicated code and executions wherever found — for example a `setup` that
