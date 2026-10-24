@@ -281,7 +281,7 @@ fi; \
 printf '%s\n' "$${project_root}" )"; \
 scope="$$(git -C "$${reader_root}" rev-parse --show-toplevel)"; \
 scope="$$(cd "$${scope}" && pwd -P)"; \
-unset MISE_SYSTEM_CONFIG_FILE MISE_ENV MISE_ENV_FILE UV_PROJECT UV_WORKING_DIR UV_CONFIG_FILE UV_PROJECT_ENVIRONMENT UV_PYTHON UV_PYTHON_DOWNLOADS UV_NO_CONFIG UV_NO_SOURCES UV_FROZEN UV_LOCKED VIRTUAL_ENV PYTHONHOME PYTHONPATH; \
+unset MISE_SYSTEM_CONFIG_FILE MISE_ENV MISE_ENV_FILE MISE_PYTHON_UV_VENV_AUTO UV_PROJECT UV_WORKING_DIR UV_CONFIG_FILE UV_PROJECT_ENVIRONMENT UV_PYTHON UV_PYTHON_DOWNLOADS UV_NO_CONFIG UV_NO_SOURCES UV_FROZEN UV_LOCKED VIRTUAL_ENV PYTHONHOME PYTHONPATH; \
 MISE_CONFIG_DIR="$${reader_root}/.mise"; \
 MISE_SYSTEM_CONFIG_DIR="$${MISE_CONFIG_DIR}"; \
 MISE_GLOBAL_CONFIG_FILE="$${MISE_CONFIG_DIR}/config.toml"; \
@@ -461,7 +461,7 @@ override FLEXT_INFRA_PYTHON := $(RUNTIME_PYTHON)
 override UV_PROJECT_ENVIRONMENT := $(RUNTIME_VENV)
 override VIRTUAL_ENV := $(RUNTIME_VENV)
 override PATH := $(RUNTIME_BIN):$(SANITIZED_CALLER_PATH)
-unexport UV MYPYPATH UV_PROJECT UV_WORKING_DIR UV_CONFIG_FILE UV_PROJECT_ENVIRONMENT UV_PYTHON UV_PYTHON_DOWNLOADS UV_NO_CONFIG UV_NO_SOURCES UV_FROZEN UV_LOCKED VIRTUAL_ENV PYTHONHOME PYTHONPATH
+unexport UV MYPYPATH MISE_PYTHON_UV_VENV_AUTO UV_PROJECT UV_WORKING_DIR UV_CONFIG_FILE UV_PROJECT_ENVIRONMENT UV_PYTHON UV_PYTHON_DOWNLOADS UV_NO_CONFIG UV_NO_SOURCES UV_FROZEN UV_LOCKED VIRTUAL_ENV PYTHONHOME PYTHONPATH
 export FLEXT_INFRA_PYTHON UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH RUNTIME_ROOT
 
 # Tool provisioning belongs to setup, never to upgrade or generation.
@@ -520,7 +520,7 @@ _bootstrap_setup_tools:
 	fi; \
 	bootstrap_stage=acquisition; \
 	mkdir -p "$(PROJECT_ROOT)/.bin"; \
-	export MISE_INSTALL_FROM_GITHUB=1 MISE_INSTALL_SKIP_IF_EXISTS=1 MISE_INSTALL_MODIFY_PATH=0 MISE_INSTALL_HELP=0; \
+	export MISE_INSTALL_FROM_GITHUB=1 MISE_INSTALL_SKIP_IF_EXISTS=1 MISE_INSTALL_HELP=0; \
 	export MISE_VERSION="2026.10.3"; \
 	case "$${OS:-}" in \
 		(Windows_NT) \
@@ -534,7 +534,7 @@ _bootstrap_setup_tools:
 	esac; \
 	export MISE_SHIMS_DIR="$(PROJECT_ROOT)/.bin/shims"; \
 	bootstrap_stage=tool-install; \
-	"$(BOOTSTRAP_MISE)" -C "$(PROJECT_ROOT)" install --locked --yes "python" "github:jdx/mise" "uv" "github:direnv/direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "node" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"; \
+	"$(BOOTSTRAP_MISE)" -C "$(PROJECT_ROOT)" install --yes "python" "github:jdx/mise" "uv" "github:direnv/direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "node" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"; \
 	mise_active="$$("$(BOOTSTRAP_MISE)" -C "$(PROJECT_ROOT)" tool "github:jdx/mise" --active)"; \
 	mise_binary="$$("$(BOOTSTRAP_MISE)" -C "$(PROJECT_ROOT)" which mise)"; \
 	if [ "$${OS:-}" = Windows_NT ]; then mise_binary="$$(cygpath --unix "$${mise_binary}")"; fi; \
@@ -544,7 +544,7 @@ _bootstrap_setup_tools:
 	printf 'setup: mise %s provisioning complete\n' "$${mise_active}"; \
 	printf 'setup: entering lifecycle (submodules, environment, hooks) make=%s\n' "$(SELF_MAKE_EXECUTABLE)"; \
 	bootstrap_stage=lifecycle; \
-	MISE_AUTO_INSTALL=0 "$${mise_binary}" -C "$(PROJECT_ROOT)" exec -- env "PATH=$$(dirname "$${mise_binary}"):$${MISE_SHIMS_DIR}:$${PATH}" "CI=$(CI)" $(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE); \
+	MISE_AUTO_INSTALL=0 "$${mise_binary}" -C "$(PROJECT_ROOT)" exec -- env "CI=$(CI)" $(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE); \
 	bootstrap_stage=complete; bootstrap_completed=true
 _bootstrap_setup_tools: _builtin_require_workspace
 
@@ -553,7 +553,10 @@ _bootstrap_setup_tools: _builtin_require_workspace
 # repository. Locally, the mutating verbs fmt/fix/mod then carry that same
 # member-own verb to every governed member (fleet_fanout); CI never fans out.
 # Local and CI consume the same native project/workspace declarations and lock.
-# Only installation mode changes in CI; no resolver or source is substituted.
+# Setup always bootstraps: `uv sync --frozen` installs exactly the committed
+# uv.lock without re-resolving or rewriting it, so manifest drift never blocks
+# provisioning. Check reports drift through `uv lock --check`; only `make upg`
+# writes the lock.
 INSTALL_RUNTIME_RECIPE = set -eu; \
 	$(REQUIRE_WORKSPACE_ENVIRONMENT); \
 	desired_python="$$($(MISE) -C "$(RUNTIME_ROOT)" which python)"; \
@@ -562,7 +565,7 @@ INSTALL_RUNTIME_RECIPE = set -eu; \
 		printf 'ERROR[setup] Mise-resolved Python is not executable: %s\n' "$$desired_python" >&2; \
 		exit 2; \
 	fi; \
-	UV_PROJECT_ENVIRONMENT="$(RUNTIME_VENV)" timeout --signal=TERM --kill-after=5s 118s $(UV) sync --locked --project "$(RUNTIME_ROOT)" --python "$$desired_python" --no-python-downloads $(SETUP_SYNC_ARGS)
+	UV_PROJECT_ENVIRONMENT="$(RUNTIME_VENV)" timeout --signal=TERM --kill-after=5s 118s $(UV) sync --frozen --project "$(RUNTIME_ROOT)" --python "$$desired_python" --no-python-downloads $(SETUP_SYNC_ARGS)
 
 # Reject borrowed environments before bootstrap, activation or custom hooks.
 # Members may use their containing workspace, never an unrelated checkout.
@@ -584,7 +587,7 @@ _builtin_require_workspace:
 # workspace or creating a dependency-resolution file during a runtime command.
 override UV_RUN = env -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u PROJECT_ROOT PATH="$(RUNTIME_BIN):$$PATH" PYTHONPATH="$(PROJECT_ROOT)/src" $(UV) run --directory "$(PROJECT_ROOT)" --no-project --python "$(RUNTIME_PYTHON)"
 # Native locked workspace membership owns control imports, never caller overlays.
-override PROJECT_INFRA_RUN = env -u MYPYPATH -u UV_PROJECT -u UV_WORKING_DIR -u UV_CONFIG_FILE -u UV_PROJECT_ENVIRONMENT -u UV_PYTHON -u UV_PYTHON_DOWNLOADS -u UV_NO_CONFIG -u UV_NO_SOURCES -u UV_FROZEN -u UV_LOCKED -u VIRTUAL_ENV -u PYTHONHOME -u PYTHONPATH "$(FLEXT_INFRA_PYTHON)"
+override PROJECT_INFRA_RUN = env -u MYPYPATH -u MISE_PYTHON_UV_VENV_AUTO -u UV_PROJECT -u UV_WORKING_DIR -u UV_CONFIG_FILE -u UV_PROJECT_ENVIRONMENT -u UV_PYTHON -u UV_PYTHON_DOWNLOADS -u UV_NO_CONFIG -u UV_NO_SOURCES -u UV_FROZEN -u UV_LOCKED -u VIRTUAL_ENV -u PYTHONHOME -u PYTHONPATH "$(FLEXT_INFRA_PYTHON)"
 override PROJECT_FLEXT_INFRA := $(PROJECT_INFRA_RUN) -m flext_infra
 
 # Setup checks native lock freshness without writing the lock. Native uv selects
@@ -624,10 +627,6 @@ $(call RUN_PUBLIC_POST,$(1))
 endef
 
 
-
-# `make upg` is the only verb that writes uv.lock (`uv lock --upgrade
-# --refresh`, then `uv lock` of the manifest `gen` projected and `uv lock
-# --check`). Setup never writes it (lock law above).
 
 .PHONY: $(PUBLIC_VERBS) $(addprefix _builtin-,$(PUBLIC_VERBS))
 .PHONY: _builtin_gen_all
@@ -765,23 +764,22 @@ _setup_native_prepare: _builtin_setup_submodules
 	+@$(SELF_MAKE) _setup_lifecycle
 
 _setup_lifecycle: _builtin_require_workspace
-	@$(INSTALL_RUNTIME_RECIPE); \
-	$(PROJECT_FLEXT_INFRA) workspace verify-environment --repository-root "$(PROJECT_ROOT)"; \
+	+@$(INSTALL_RUNTIME_RECIPE); \
 	case "$(strip $(CI)): $(CUSTOM_DECLARED_TARGETS) " in \
 		Y:*) ;; \
 		*" pre-setup "*) $(SELF_MAKE) pre-setup ;; \
 	esac; \
-	$(PROJECT_FLEXT_INFRA) workspace sync-environment --repository-root "$(PROJECT_ROOT)" --scope self $(if $(filter Y,$(CI)),--no-allow-direnv,--allow-direnv); \
+	$(if $(filter Y,$(CI)),,direnv allow "$(PROJECT_ROOT)";) \
 	$(if $(filter Y,$(CI)),$(SELF_MAKE) _setup_activated,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _setup_activated)
 
-# Setup consumes the native locked inputs without resolving versions. Required
-# input and native installation failures terminate immediately;
+# Setup installs the committed locks as they are and never rewrites them.
+# Required input and native installation failures terminate immediately;
 # generation and explicit upgrade own their respective repairs. Quality gates
 # remain separate operations and no failure selects another producer or source.
 .PHONY: _setup_activated
 # Check owns quality verdicts after provisioning.
 _setup_activated:
-	@set -eu; \
+	+@set -eu; \
 	case "$(strip $(CI)): $(CUSTOM_DECLARED_TARGETS) " in \
 		Y:*) ;; \
 		*" post-setup "*) $(SELF_MAKE) post-setup ;; \
@@ -1057,7 +1055,7 @@ _builtin_require_environment: _builtin_require_interpreter
 # generating projections, or auditing the running environment.
 .PHONY: _upg_lifecycle
 _upg_lifecycle:
-	@set -eu; \
+	+@set -eu; \
 	bootstrap_stage=network-auth; \
 	if git config --global --get-regexp '^url\.https?://[^ /]+:[^ /]+@.*\.insteadof$$' >/dev/null; then \
 		printf 'ERROR: Global Git URL rewrite configuration embeds credentials and shadows the fleet SSH route; correct that configuration at its owner\n' >&2; \
