@@ -735,6 +735,11 @@ CLI + pytest plugin, **never imported at runtime**.
   project config) and isolated probes that skip the real rules are fake evidence,
   never proof. Never simplify to prove a point; fix root causes and their violators
   under the complete rule set.
+- **No hardcoded lists** (operator order 2026-10-24): hand-kept block, allow,
+  registry or catalog lists are banned everywhere. Every fact is derived from its
+  owner (rule metadata, configuration, package exports); only genuine exceptions are
+  declared, by standardized rule and SSOT. A check that only accepts entries from a
+  hand-kept list is removed at its source, never extended.
 - **Tools are used natively and fully** (operator order 2026-10-24): not using a
   tool's own capability the correct way because of a local defect is an extremely
   grave violation, equivalent to a bypass or fallback. The fix is to our wrapper,
