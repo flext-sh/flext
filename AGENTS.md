@@ -673,6 +673,16 @@ CLI + pytest plugin, **never imported at runtime**.
     one another.
   - Static violation detection lives only in flext-infra's declarative rule catalog;
     flext-core keeps none. Violations are banned and fixed, never waived.
+  - Every module keeps all its declarations inside its single top-level nested class,
+    in every tier of the repository (not only `src/`); the few exceptions are declared
+    once, documented and validated automatically.
+  - A compatibility path surviving a rewiring window carries stdlib
+    `warnings.deprecated` (`compat: <old> -> <new owner>; fix: <rewire>`): the marked
+    declaration does not fail CI, every use of it does, until it dies with its last
+    consumer.
+  - The rules are identical in every project, applied as automatically as possible by
+    flext-infra and the code-review graph; duplication and domain violations are
+    rejected.
 - **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No
   `dict`/`TypedDict`/`dataclass`/`NamedTuple`/`m.Dict` as a data contract.
 - **Pydantic law:** every model extends an `m.*` preset (never a raw base at consumers);

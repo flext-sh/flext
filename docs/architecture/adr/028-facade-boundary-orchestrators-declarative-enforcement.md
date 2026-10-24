@@ -13,8 +13,9 @@
 
 - **Status:** ACCEPTED — operator orders 2026-10-24 (verbatim below)
 - **Date:** 2026-10-24
-- **Scope:** every internal FLEXT project (`internal_flext`), its `src/` packages and its
-  internal tiers (`tests/`, `examples/`, `scripts/`)
+- **Scope:** every internal FLEXT project (`internal_flext`) and all code tracked in its
+  repository — `src/` packages and every other tier (`tests/`, `examples/`, `scripts/`,
+  docs code) — with the same standardized rules in every project
 - **Complements:** ADR-005 (config/settings SSOT), ADR-014 (family shape), ADR-018
   (generator declarations: derive, never list), ADR-027 (facade single-owner law)
 
@@ -24,23 +25,23 @@ Operator orders, 2026-10-24, verbatim:
 
 > "vc nao pode usar griffe assim direto tem que usar via c,t,p,m,u !!!!! , nada fora
 > deles pode usar bibliotecas externas (fora as de flext e c,t,p,m,u e as internas de
-> python)  é a regra de flext"
-
+> python) é a regra de flext"
+>
 > "precisa coloca as rules em agents, AGENTS.md, skills, ADRs e bans e fixes, nao pode
 > permitir deixar isso voltar a acontecer em todos os lugares e vá sempre corrigindo"
-
+>
 > "esses modulos fora de c,t,p,m,u e api tem que ser sempre orchestradores (fora de
-> c,t,p,m,u nao pode ter declaracoes dos objetos deles  nem mesmo em declaracoes
+> c,t,p,m,u nao pode ter declaracoes dos objetos deles nem mesmo em declaracoes
 > implicitas (e delas sem permitir que elas violem as das outras tb), tem que banir,
 > impor e fazer logo ) começando logo agora em seu trabalho em flext-infra e nela em
 > geral e depois em todas as outras"
-
+>
 > (quoting a `_utilities` body that narrows `griffe.ExprTuple | griffe.ExprList |
 > griffe.ExprSet` with `isinstance` and re-parses elements with `ast.literal_eval`)
 > "violacao !!!!"
-
+>
 > "as violacoes estatiscas de flext-core tem que ser todas migradas para flext-infra de
-> forma declarativa  !!!!!!!!!!!!!!!!11 e removida dele"
+> forma declarativa !!!!!!!!!!!!!!!!11 e removida dele"
 
 Trigger: `flext_infra/codegen/python_model.py` imported `griffe` directly from a
 service module, and the follow-up utility still named griffe types inline and re-parsed
@@ -76,6 +77,21 @@ outside the facades across 12 repositories.
    applied by its generic engines (`make mod` fixes, `make check` detection). flext-core
    keeps no static enforcement catalog, predicate data or source-analysis engine; the
    existing ones migrate to flext-infra in one cutover with zero residue.
+6. **Every module is one nested class.** All declarations of every module — in every
+   tier of the repository, not only `src/` — live inside its single top-level nested
+   class (ADR-018 point 11). The few exceptions (an executable `main()`, pytest
+   fixtures and hooks in `conftest.py`, generator-emitted dunders) are declared once,
+   documented, and validated automatically by the declarative catalog; anything else
+   is a violation.
+7. **Marked compatibility fails its users, not its declaration.** An old,
+   compatibility or fallback path that must survive a rewiring window carries the
+   stdlib `warnings.deprecated` marker with `compat: <old> -> <new owner>; fix: <exact
+   rewire>`. The marked declaration does not fail CI; every remaining use of it does
+   (type checkers report deprecated use as an error), so the rewire is forced and the
+   path dies with its last consumer.
+8. **One standard, automated.** The rules are identical for every project, applied by
+   flext-infra's engines and the code-review graph as automatically as possible;
+   duplicated code and domain violations are rejected, never accepted as debt.
 
 ## Definitions
 
