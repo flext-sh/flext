@@ -162,7 +162,10 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
     7, 8). A green partial, a self-report, a plan, or "safe to continue" is NOT done. Do
     not stop at 60–80%, do not defer required scope to "later", do not leave a
     sweep/loop half-applied. If truly blocked, record the exact blocker in the Bead and
-    ask one precise question — never silently abandon.
+    ask one precise question — never silently abandon. Operator order 2026-10-24: always
+    go to the end, never abandon near the end, under any circumstance. Finish over the
+    whole declared scope and rerun the operator's own measurement unscoped before
+    reporting (`~/agents/rules/coordination/full-landing-cycle.md` item 5).
 23. **Be realistic, not optimistic — small batches with executability slack.** Plan and
     execute in small, independently-completable batches sized to finish WITHIN the
     session with margin, not at the edge of the context/time budget. Do not over-promise
