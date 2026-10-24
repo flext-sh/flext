@@ -189,20 +189,16 @@ export FLEXT_PYTEST_TARGET_RAW := tests
 # or member, uses the workspace runtime. A member resolves the Git superproject
 # that checks it out as a submodule; a checkout without one (a standalone clone,
 # a linked worktree) owns its runtime.
-ifneq ($(GEN_INIT_ONLY),)
-override REPOSITORY_ROOT := $(MAKEFILE_ROOT)
-else
 override REPOSITORY_ROOT := $(shell cd "$(MAKEFILE_ROOT)" && if root=$$(git rev-parse --show-superproject-working-tree); then if [ -n "$$root" ]; then cd "$$root" && pwd -P; else pwd -P; fi; else status=$$?; if [ "$$status" -ne 1 ]; then exit "$$status"; fi; pwd -P; fi)
 ifneq ($(.SHELLSTATUS),0)
 $(error Cannot resolve the physical workspace for $(MAKEFILE_ROOT))
-endif
 endif
 # End SECTION: REPOSITORY_ROOT isolation
 # === SECTION: verb dispatch (managed) ===
 # Source: config:make.verbs and the canonical gate vocabulary. A verb exists
 # only in the profiles it declares (make.verbs[].profiles).
-PUBLIC_VERBS := help setup pre-commit upg validate-lifecycle propagate build examples check census census-constants smells test test-full test-file file-gate profile-test profile-test-report profile-mod profile-mod-report profile-mod-rules profile-mod-rules-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint initialize mod mod-rules mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
-BUILTIN_VERBS := help setup pre-commit upg validate-lifecycle propagate build examples check census census-constants smells test test-full test-file file-gate profile-test profile-test-report profile-mod profile-mod-report profile-mod-rules profile-mod-rules-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint initialize mod mod-rules mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
+PUBLIC_VERBS := help setup pre-commit upg upg-sources validate-lifecycle propagate build examples check census census-constants smells test test-full test-file file-gate profile-test profile-test-report profile-mod profile-mod-report profile-mod-rules profile-mod-rules-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint initialize mod mod-rules mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
+BUILTIN_VERBS := help setup pre-commit upg upg-sources validate-lifecycle propagate build examples check census census-constants smells test test-full test-file file-gate profile-test profile-test-report profile-mod profile-mod-report profile-mod-rules profile-mod-rules-report fmt fix fix-namespace fix-accessors audit status verify-clean docs clean bootstrap-candidate release-plan release-version release-tag release-build publication gen gen-footprint initialize mod mod-rules mod-text mod-text-candidate mod-snapshots waza duplication sonarcloud-sync sonarcloud-issues
 SCRIPT_VERBS :=
 
 CUSTOM_MAKEFILE := $(MAKEFILE_ROOT)/custom.mk
@@ -350,11 +346,54 @@ TOOL_BOOTSTRAP_RESOLVE :=
 _bootstrap_setup_tools:
 	# The lifecycle invokes recursive make through mise, so preserve jobserver FDs.
 	+@set -eu; \
+	bootstrap_stage=host-mise; bootstrap_completed=false; bootstrap_sha=null; bootstrap_git_status=null; \
+	bootstrap_report="$(PROJECT_ROOT)/.reports/setup-operations/tool-bootstrap.json"; \
+	bootstrap_publish_report() { \
+		if mkdir -p "$$(dirname "$$bootstrap_report")"; then :; else return $$?; fi; \
+		if printf '%s\n' '{"root":".","operation":"tool-bootstrap","scope":["."],"candidate_sha":@@SHA@@,"candidate_read_exit_code":@@GIT_EXIT@@,"receipts":[{"root":".","executed":true,"outcome":null,"native_exit_code":@@EXIT@@,"stage":"@@STAGE@@","completed":@@COMPLETE@@,"applicability":"","files":[],"issues":[]}]}' | sed \
+			-e "s/@@SHA@@/$$bootstrap_sha/" \
+			-e "s/@@GIT_EXIT@@/$$bootstrap_git_status/" \
+			-e "s/@@EXIT@@/$$bootstrap_status/" \
+			-e "s/@@STAGE@@/$$bootstrap_stage/" \
+			-e "s/@@COMPLETE@@/$$bootstrap_completed/" > "$$bootstrap_report.pending"; then :; else return $$?; fi; \
+		mv "$$bootstrap_report.pending" "$$bootstrap_report"; \
+	}; \
+	trap 'bootstrap_status=$$?; trap - EXIT; \
+		if bootstrap_publish_report; then :; else \
+			bootstrap_report_status=$$?; \
+			printf "ERROR: bootstrap evidence publication failed (exit %s); original exit %s\n" "$$bootstrap_report_status" "$$bootstrap_status" >&2; \
+			if [ "$$bootstrap_status" -eq 0 ]; then bootstrap_status=$$bootstrap_report_status; fi; \
+		fi; \
+		exit "$$bootstrap_status"' EXIT; \
+	if bootstrap_candidate="$$(git -C "$(PROJECT_ROOT)" rev-parse --verify HEAD)"; then \
+		bootstrap_git_status=0; \
+		case "$$bootstrap_candidate" in \
+			*[!0-9a-f]*) printf 'ERROR: bootstrap candidate is not a Git object ID\n' >&2; exit 2 ;; \
+		esac; \
+		case "$${#bootstrap_candidate}" in \
+			40|64) bootstrap_sha="\"$$bootstrap_candidate\"" ;; \
+			*) printf 'ERROR: bootstrap candidate has an invalid object ID length\n' >&2; exit 2 ;; \
+		esac; \
+	else bootstrap_git_status=$$?; fi; \
+	bootstrap_stage=network-auth; \
+	$(GITHUB_AUTH_DIAGNOSTICS); \
+	if [ "$(GITHUB_AUTH_SOURCE)" = gh ]; then \
+		if [ "$(GITHUB_AUTH_STATUS)" != 0 ]; then \
+			printf 'ERROR: selected gh auth token failed (exit %s); refusing anonymous provisioning\n' '$(GITHUB_AUTH_STATUS)' >&2; \
+			exit "$(GITHUB_AUTH_STATUS)"; \
+		fi; \
+		if [ "$(GITHUB_AUTH_PRESENT)" != yes ]; then \
+			printf 'ERROR: selected gh auth token returned no credential; refusing anonymous provisioning\n' >&2; \
+			exit 2; \
+		fi; \
+	fi; \
+	bootstrap_stage=host-mise; \
 	if ! command -v mise >/dev/null 2>&1; then \
 		printf 'ERROR: mise is not installed; install it (https://mise.run) and retry\n' >&2; \
 		exit 2; \
 	fi; \
 	mise_pin=; mise_resolved=0; \
+	bootstrap_stage=lock-pin; \
 	if [ -f "$(PROJECT_ROOT)/mise.lock" ]; then \
 		mise_pin="$$( awk 'index($$0, "[[tools.\"github:jdx/mise\"]]") == 1 { inside = 1; next } inside && substr($$0, 1, 1) == "[" { exit } inside && $$1 == "version" { gsub(/[",]/, "", $$3); print $$3; exit }' "$(PROJECT_ROOT)/mise.lock" )"; \
 	fi; \
@@ -367,6 +406,7 @@ _bootstrap_setup_tools:
 		printf 'ERROR: mise.lock pins no github:jdx/mise release; run make upg\n' >&2; \
 		exit 2; \
 	fi; \
+	bootstrap_stage=platform; \
 	case "$$(uname -s)/$$(uname -m)" in \
 		Linux/x86_64) mise_platform=linux-x64 ;; \
 		Linux/aarch64) mise_platform=linux-arm64 ;; \
@@ -375,6 +415,7 @@ _bootstrap_setup_tools:
 		Windows/AMD64) mise_platform=windows-x64 ;; \
 		*) printf 'ERROR: no github:jdx/mise lock platform maps to %s/%s; install mise %s (https://mise.run) and retry\n' "$$(uname -s)" "$$(uname -m)" "$$mise_pin" >&2; exit 2 ;; \
 	esac; \
+	bootstrap_stage=release-asset; \
 	mise_key=url; \
 	mise_url="$$( awk -v section="[tools.\"github:jdx/mise\".\"platforms.$${mise_platform}\"]" -v key="$${mise_key}" \
 	'$$0 == section { inside = 1; next } inside && substr($$0, 1, 1) == "[" { exit } inside && $$1 == key { gsub(/"/, "", $$3); print $$3; exit }' "$(PROJECT_ROOT)/mise.lock" )"; \
@@ -407,21 +448,26 @@ _bootstrap_setup_tools:
 		chmod +x "$$mise_bootstrap_bin"; \
 		rm -rf "$$mise_stage"; \
 	fi; \
+	bootstrap_stage=release-verification; \
 	mise_receipt="$$("$$mise_bootstrap_bin" --version | cut -d ' ' -f1)"; \
 	if [ "$$mise_receipt" != "$$mise_pin" ]; then \
 		printf 'ERROR: recovered Mise %s differs from the mise.lock pin %s; delete %s and run make setup\n' "$$mise_receipt" "$$mise_pin" "$$mise_bootstrap_bin" >&2; \
 		exit 2; \
 	fi; \
 	export MISE_SHIMS_DIR="$$mise_bootstrap_root/$$mise_receipt/shims"; \
+	bootstrap_stage=tool-lock; \
 	if [ "$(TOOL_BOOTSTRAP_RESOLVE)" = "1" ] && [ "$$mise_resolved" = "0" ]; then \
 		"$$mise_bootstrap_bin" -C "$(PROJECT_ROOT)" lock --upgrade --bump; \
 	fi; \
+	bootstrap_stage=tool-install; \
 	"$$mise_bootstrap_bin" -C "$(PROJECT_ROOT)" install --locked --yes "python" "github:jdx/mise" "uv" "direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "node" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"; \
+	bootstrap_stage=shims; \
 	"$$mise_bootstrap_bin" reshim; \
 	printf 'setup: mise %s provisioned from mise.lock\n' "$$mise_receipt"; \
 	printf 'setup: entering lifecycle (submodules, environment, hooks) make=%s\n' "$(SELF_MAKE_EXECUTABLE)"; \
-	"$$mise_bootstrap_bin" -C "$(PROJECT_ROOT)" exec -- env "PATH=$$(dirname "$$mise_bootstrap_bin"):$${MISE_SHIMS_DIR}:$${PATH}" "CI=$(CI)" $(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE)
-_bootstrap_setup_tools: _builtin_require_network_auth
+	bootstrap_stage=lifecycle; \
+	"$$mise_bootstrap_bin" -C "$(PROJECT_ROOT)" exec -- env "PATH=$$(dirname "$$mise_bootstrap_bin"):$${MISE_SHIMS_DIR}:$${PATH}" "CI=$(CI)" $(SELF_MAKE) $(TOOL_BOOTSTRAP_LIFECYCLE); \
+	bootstrap_stage=complete; bootstrap_completed=true
 
 # UV, not Git attachment or runtime environment selection, owns lock discovery.
 .PHONY: _builtin_require_upg_lock_owner
@@ -430,20 +476,6 @@ _builtin_require_upg_lock_owner:
 	if [ "$$owner" != "$(PROJECT_ROOT)" ]; then \
 		printf 'ERROR[upg] UV lock owner is %s, not %s; regenerate the independent-project topology before upgrading.\n' "$$owner" "$(PROJECT_ROOT)" >&2; \
 		exit 2; \
-	fi
-
-.PHONY: _builtin_require_network_auth
-_builtin_require_network_auth:
-	@$(GITHUB_AUTH_DIAGNOSTICS)
-	@if [ "$(GITHUB_AUTH_SOURCE)" = gh ]; then \
-		if [ "$(GITHUB_AUTH_STATUS)" != 0 ]; then \
-			printf 'ERROR: selected gh auth token failed (exit %s); refusing anonymous provisioning\n' '$(GITHUB_AUTH_STATUS)' >&2; \
-			exit "$(GITHUB_AUTH_STATUS)"; \
-		fi; \
-		if [ "$(GITHUB_AUTH_PRESENT)" != yes ]; then \
-			printf 'ERROR: selected gh auth token returned no credential; refusing anonymous provisioning\n' >&2; \
-			exit 2; \
-		fi; \
 	fi
 
 # Every repository evaluates only itself: a workspace root consumes its members
@@ -455,7 +487,8 @@ _builtin_require_network_auth:
 # 2026-10-06: a commit never influences dev behavior — the worktree is the
 # behavior): the root dev group requests every declared package, member group
 # and extra; local setup binds declared members to their live editable sources,
-# while CI's --no-editable keeps the frozen builds. Each project owns its lock.
+# while CI's --no-editable keeps the frozen builds. Attached projects inherit
+# this root's locks. Native UV source entries retain the declared editable policy.
 SETUP_ENVIRONMENT_RECIPE = set -eu; \
 	trap 'if [ -n "$${FLEXT_SETUP_CREDENTIAL_STORE:-}" ]; then rm -f "$$FLEXT_SETUP_CREDENTIAL_STORE"; fi' EXIT; \
 	$(REQUIRE_WORKSPACE_ENVIRONMENT); \
@@ -472,10 +505,7 @@ SETUP_ENVIRONMENT_RECIPE = set -eu; \
 		printf 'ERROR[setup] uv.lock is missing: %s/uv.lock\n  Right way: only `make upg` writes uv.lock; setup installs the committed lock and never creates one.\n  How: run `make upg` in %s, then commit uv.lock.\n' "$(UV_PROJECT)" "$(PROJECT_ROOT)" >&2; \
 		exit 2; \
 	fi; \
-	mise -C "$(PROJECT_ROOT)" config ls --json; \
-	for member in $(WORKSPACE_SUBPROJECTS); do \
-		mise -C "$(PROJECT_ROOT)/$$member" config ls --json; \
-	done; \
+	mise -C "$(RUNTIME_ROOT)" config ls --json; \
 	$$credential_env $(UV) sync --project "$(UV_PROJECT)" --python "$$desired_python" $(UV_SYNC_FLAGS) --frozen --link-mode "$(UV_LINK_MODE)"; \
 	$(UV) pip check --python "$(RUNTIME_PYTHON)"; \
 	$(PROJECT_FLEXT_INFRA) workspace verify-environment --repository-root "$(RUNTIME_ROOT)"; \
@@ -609,6 +639,20 @@ _activated-pre-commit: _builtin_require_environment
 
 
 	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-pre-commit,$(call RUN_PUBLIC,pre-commit))
+
+
+
+
+upg-sources: _builtin_require_workspace
+
+	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _activated-upg-sources,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _activated-upg-sources)
+
+.PHONY: _activated-upg-sources
+
+_activated-upg-sources: _builtin_require_environment
+
+
+	$(if $(filter Y,$(CI)),+@$(SELF_MAKE) _builtin-upg-sources,$(call RUN_PUBLIC,upg-sources))
 
 
 
@@ -1236,7 +1280,12 @@ _activated-sonarcloud-issues: _builtin_require_environment
 # `setup` keeps its own recipe (it must not require the environment it is about
 # to build), but it still runs the pre-/post-setup lifecycle hooks so a project
 # declaring them in the custom handler surface is actually honoured.
+ifeq ($(PROJECT_ROOT),$(RUNTIME_ROOT))
 setup: _bootstrap_setup_tools
+else
+setup: _builtin_require_workspace
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(RUNTIME_ROOT)" -f "$(RUNTIME_ROOT)/Makefile" setup
+endif
 
 _builtin-pre-commit: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gates "lint,format,security,markdown,markdown-format,markdown-code,duplication,pyrefly,conflict-markers,loc-cap,runtime-census,fresh-import,index-declarations,layout"
@@ -1247,11 +1296,16 @@ _builtin-pre-commit: _builtin_require_environment
 # not require a satisfied committed mise.lock either. Its bootstrap half runs
 # `mise lock --bump` first (native resolution; no stage and no prior install),
 # then installs from the fresh lock. The lifecycle verifies native UV ownership
-# before resolving its physical uv.lock; attachment selects the environment,
-# not the lock. A converged attached member then aligns its containing root once.
+# before resolving its physical uv.lock. Attached members delegate to their
+# containing root, which owns both the shared environment and its locks.
+ifeq ($(PROJECT_ROOT),$(RUNTIME_ROOT))
 upg: TOOL_BOOTSTRAP_LIFECYCLE := _upg_lifecycle
 upg: TOOL_BOOTSTRAP_RESOLVE := 1
 upg: _bootstrap_setup_tools
+else
+upg: _builtin_require_workspace
+	+@"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(RUNTIME_ROOT)" -f "$(RUNTIME_ROOT)/Makefile" upg
+endif
 else
 
 help:
@@ -1269,6 +1323,10 @@ pre-commit:
 upg:
 	@printf '  %-16s %s\n' 'upg' 'Resolve the newest declared releases, write the uv and mise locks, then prove the upgraded tree still converges; gates stay with make check.'
 	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make upg to execute it.'
+
+upg-sources:
+	@printf '  %-16s %s\n' 'upg-sources' 'Migrate an explicitly selected dependency Git reference through the current tool owner before the consumer resolves its own locks.'
+	@printf '%s\n' 'OPTIONS=Y displays this contract without effects; run make upg-sources to execute it.'
 
 validate-lifecycle:
 	@printf '  %-16s %s\n' 'validate-lifecycle' 'Serially run setup, gen, upg, setup, gen, gen in the root and every governed member, publishing typed receipts and stopping at the first failure.'
@@ -1492,6 +1550,8 @@ _builtin-help:
 	@printf '  %-16s %s\n' 'pre-commit' 'Approve a commit through the CI check partition and incremental tests with the persistent testmon database.';
 
 	@printf '  %-16s %s\n' 'upg' 'Resolve the newest declared releases, write the uv and mise locks, then prove the upgraded tree still converges; gates stay with make check.';
+
+	@printf '  %-16s %s\n' 'upg-sources' 'Migrate an explicitly selected dependency Git reference through the current tool owner before the consumer resolves its own locks.';
 
 	@printf '  %-16s %s\n' 'validate-lifecycle' 'Serially run setup, gen, upg, setup, gen, gen in the root and every governed member, publishing typed receipts and stopping at the first failure.';
 
@@ -1852,11 +1912,8 @@ endif
 # Setup installs the committed uv.lock and never writes it (lock law: only
 # `make upg` writes locks); uv owns the venv: `uv sync --python` creates or
 # replaces it against the declared interpreter.
-# Governed gitlinks are provisioned in every context, GitHub Actions included:
-# the workspace projections (Makefile, pyproject, .gitignore, dependabot, docs)
-# derive from the member checkouts, so a member-less CI checkout would render a
-# different workspace and break the gen fixed point. Provisioned
-# members are read as libraries; no verb gates them from here.
+# Local setup provisions declared gitlinks. CI consumes the committed lock
+# without initializing member checkouts.
 _builtin_setup_environment: $(if $(filter Y,$(CI)),,_builtin_setup_submodules)
 	+@if [ "$(PROJECT_ROOT)" != "$(RUNTIME_ROOT)" ]; then \
 		"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -f "$(RUNTIME_ROOT)/Makefile" setup; \
@@ -1870,8 +1927,8 @@ endif
 
 # `upg` is the only recipe that resolves. Its bootstrap half ran
 # `mise lock --bump` (native resolution into the committed mise.lock) and
-# installed exactly that lock; this lifecycle upgrades every uv.lock (which
-# carries the generator itself), provisions the environment frozen from it,
+# installed exactly that lock; this lifecycle upgrades the owned uv.lock (which
+# carries the generator itself), provisions its environment frozen from it,
 # and conforms dependency floors. The floors land in the codegen SSOT, so
 # `gen` projects them into every pyproject and renders the managed tool
 # manifests (.mise.toml) of the upgraded generator. Only the producer half of
@@ -1894,13 +1951,10 @@ endif
 # metadata so a stale cached requires-dist can never block or skew the
 # resolution. Like `setup`, it runs the declared pre-/post-upg lifecycle
 # hooks, post-upg inside the activated environment.
-# Attached members retain independent locks but observe the physical root
-# environment. Resolve that root before frozen setup and floor observation,
-# then reconcile it again after member generation before activating hooks.
-# Final generation is followed by native reconciliation of every governed
-# independent lock from a fresh Make parse of the generated topology. The root
-# owns the shared install; attached-member hooks follow root convergence, never
-# precede another root generation that could invalidate their lock receipt.
+# Attached members delegate before this lifecycle starts: only their containing
+# root resolves locks or provisions the shared environment. Standalone checkouts
+# resolve their own declared branches. Native editable selection stays with
+# the declared UV sources; this lifecycle adds no second installer.
 # The producer half of `gen` publishes this Makefile. A recipe never names a
 # target after that point from a file it did not parse: when publication
 # changed the Makefile, the upgrade hands off to a fresh `make upg` that
@@ -1909,6 +1963,33 @@ endif
 # finishes it. A second change inside the hand-off is a gen fixed-point
 # defect and fails loud.
 .PHONY: _upg_lifecycle _upg_converge
+
+_builtin-upg-sources: _builtin_require_environment
+
+	@if [ -z "$(strip $(SOURCE_ROOT))" ]; then \
+		printf 'ERROR[upg-sources]: SOURCE_ROOT is required\n' >&2; \
+		exit 2; \
+	fi
+
+	@if [ -z "$(strip $(SOURCE_URL_PREFIX))" ]; then \
+		printf 'ERROR[upg-sources]: SOURCE_URL_PREFIX is required\n' >&2; \
+		exit 2; \
+	fi
+
+	@if [ -z "$(strip $(SOURCE_REF_FROM))" ]; then \
+		printf 'ERROR[upg-sources]: SOURCE_REF_FROM is required\n' >&2; \
+		exit 2; \
+	fi
+
+	@if [ -z "$(strip $(SOURCE_REF_TO))" ]; then \
+		printf 'ERROR[upg-sources]: SOURCE_REF_TO is required\n' >&2; \
+		exit 2; \
+	fi
+
+	@$(PROJECT_FLEXT_INFRA) deps modernize --repository-root "$(SOURCE_ROOT)" \
+		--projects . --apply --git-source-url-prefix "$(SOURCE_URL_PREFIX)" \
+		--git-source-ref-from "$(SOURCE_REF_FROM)" --git-source-ref-to "$(SOURCE_REF_TO)"
+
 _upg_lifecycle: _builtin_setup_submodules
 	@$(SELF_MAKE) _builtin_require_upg_lock_owner
 	@set -eu; \
@@ -1916,9 +1997,6 @@ _upg_lifecycle: _builtin_setup_submodules
 		*" pre-upg "*) $(SELF_MAKE) pre-upg ;; \
 	esac
 	@$(UV) lock --project "$(PROJECT_ROOT)" --upgrade --refresh
-	@if [ "$(PROJECT_ROOT)" != "$(RUNTIME_ROOT)" ]; then \
-		$(UV) lock --project "$(RUNTIME_ROOT)" --upgrade --refresh; \
-	fi
 	@$(SELF_MAKE) _builtin_setup_environment
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --what mise-config --scope self --mode apply
 	@mise -C "$(PROJECT_ROOT)" lock --bump
@@ -1942,38 +2020,15 @@ _upg_lifecycle: _builtin_setup_submodules
 _upg_converge:
 	@$(UV) lock --project "$(PROJECT_ROOT)"
 	@$(UV) lock --check --project "$(PROJECT_ROOT)"
-	@set -eu; if [ "$(PROJECT_ROOT)" != "$(RUNTIME_ROOT)" ]; then \
-		$(UV) lock --project "$(RUNTIME_ROOT)"; \
-		$(UV) lock --check --project "$(RUNTIME_ROOT)"; \
-	fi
 	@$(SELF_MAKE) _builtin_setup_environment
 	@mise -C "$(PROJECT_ROOT)" install --locked --yes "python" "github:jdx/mise" "uv" "direnv" "taplo" "aqua:ast-grep/ast-grep" "gitleaks" "aqua:boyter/scc" "node" "github:qltysh/qlty" "github:kucherenko/jscpd" "github:microsoft/waza"
 	@$(SELF_MAKE) _builtin_require_mise
 	$(call RUN_PUBLIC_ACTIVATE,gen)
 	@$(SELF_MAKE) gen
-	@$(SELF_MAKE) _upg_reconcile_locks
 	@$(SELF_MAKE) _builtin_setup_environment
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --mode check
 	@$(PROJECT_FLEXT_INFRA) deps verify-locks --repository-root "$(PROJECT_ROOT)"
-	+@if [ "$(PROJECT_ROOT)" != "$(RUNTIME_ROOT)" ]; then \
-		"$(SELF_MAKE_EXECUTABLE)" --no-print-directory -C "$(RUNTIME_ROOT)" -f "$(RUNTIME_ROOT)/Makefile" upg UPG_HANDOFF=; \
-	fi
 	+@$(if $(filter Y,$(CI)),$(SELF_MAKE) _upg_activated,direnv exec "$(PROJECT_ROOT)" $(SELF_MAKE) _upg_activated)
-
-.PHONY: _upg_reconcile_locks
-_upg_reconcile_locks:
-	@set -eu; \
-	for project in "$(PROJECT_ROOT)" $(if $(filter workspace,$(MAKE_PROFILE)),$(foreach member,$(WORKSPACE_SUBPROJECTS),"$(PROJECT_ROOT)/$(member)")); do \
-		owner="$$($(UV) workspace dir --project "$$project")"; \
-		if [ "$$owner" != "$$project" ]; then \
-			printf 'ERROR[upg] UV lock owner is %s, not %s; regenerate the independent-project topology before upgrading.\n' "$$owner" "$$project" >&2; \
-			exit 2; \
-		fi; \
-		printf 'upg: reconciling independent lock %s\n' "$$project"; \
-		$(UV) lock --project "$$project"; \
-		$(UV) lock --check --project "$$project"; \
-		printf 'upg: native lock satisfied %s\n' "$$project"; \
-	done
 
 .PHONY: _upg_activated
 _upg_activated:
@@ -1987,7 +2042,7 @@ _upg_activated:
 # in every profile: a workspace root evaluates itself exactly as CI does.
 _builtin_build_artifacts:
 
-	@printf '%s\n' 'INFO: build: repository declares package=false (content-only root); no distribution to build'
+	@$(UV) build --project "$(PROJECT_ROOT)"
 
 
 # Check is read-only: it runs the gates without --apply, so the tree is left
@@ -2227,7 +2282,7 @@ _builtin-profile-test-report: _builtin_require_environment
 
 _builtin_status_import_observation: _builtin_require_interpreter
 	@$(RUNTIME_PYTHON) -c 'import json, sys; exec(json.loads(sys.argv[1]))' \
-		'"\nimport importlib\nimport inspect\nimport json\nimport sys\n\ndeclared = json.loads(sys.argv[2])\nnames = tuple(name for name, root in declared)\nprint(f\"runtime-import-observation executable={sys.executable!r} prefix={sys.prefix!r}\", flush=True)\ntry:\n    for name, root in declared:\n        print(f\"runtime-import-declaration module={name!r} source={root!r}\", flush=True)\n        importlib.import_module(name)\nfinally:\n    for name, module in tuple(sys.modules.items()):\n        if not any(name == package or name.startswith(package + \".\") for package in names):\n            continue\n        spec = getattr(module, \"__spec__\", None)\n        print(\n            f\"runtime-import-module name={name!r} \"\n            f\"origin={getattr(spec, \u0027origin\u0027, None)!r} \"\n            f\"file={getattr(module, \u0027__file__\u0027, None)!r} \"\n            f\"path={getattr(module, \u0027__path__\u0027, None)!r} \"\n            f\"cached={getattr(module, \u0027__cached__\u0027, None)!r}\",\n            flush=True,\n        )\n        for symbol, value in tuple(vars(module).items()):\n            function = value.__func__ if inspect.ismethod(value) else value\n            if inspect.isfunction(function):\n                print(\n                    f\"runtime-import-code module={name!r} symbol={symbol!r} \"\n                    f\"co_filename={function.__code__.co_filename!r}\",\n                    flush=True,\n                )\n"' '[["flext_api", "flext-api"], ["flext_auth", "flext-auth"], ["flext_cli", "flext-cli"], ["flext_core", "flext-core"], ["flext_db_oracle", "flext-db-oracle"], ["flext_dbt_ldap", "flext-dbt-ldap"], ["flext_dbt_ldif", "flext-dbt-ldif"], ["flext_dbt_oracle", "flext-dbt-oracle"], ["flext_dbt_oracle_wms", "flext-dbt-oracle-wms"], ["flext_grpc", "flext-grpc"], ["flext_infra", "flext-infra"], ["flext_ldap", "flext-ldap"], ["flext_ldif", "flext-ldif"], ["flext_meltano", "flext-meltano"], ["flext_observability", "flext-observability"], ["flext_oracle_oic", "flext-oracle-oic"], ["flext_oracle_wms", "flext-oracle-wms"], ["flext_plugin", "flext-plugin"], ["flext_quality", "flext-quality"], ["flext_tap_ldap", "flext-tap-ldap"], ["flext_tap_ldif", "flext-tap-ldif"], ["flext_tap_oracle", "flext-tap-oracle"], ["flext_tap_oracle_oic", "flext-tap-oracle-oic"], ["flext_tap_oracle_wms", "flext-tap-oracle-wms"], ["flext_target_ldap", "flext-target-ldap"], ["flext_target_ldif", "flext-target-ldif"], ["flext_target_oracle", "flext-target-oracle"], ["flext_target_oracle_oic", "flext-target-oracle-oic"], ["flext_target_oracle_wms", "flext-target-oracle-wms"], ["flext_tests", "flext-tests"], ["flext_web", "flext-web"]]'
+		'"\nimport importlib\nimport inspect\nimport json\nimport sys\n\ndeclared = json.loads(sys.argv[2])\nnames = tuple(name for name, root in declared)\nprint(f\"runtime-import-observation executable={sys.executable!r} prefix={sys.prefix!r}\", flush=True)\ntry:\n    for name, root in declared:\n        print(f\"runtime-import-declaration module={name!r} source={root!r}\", flush=True)\n        importlib.import_module(name)\nfinally:\n    for name, module in tuple(sys.modules.items()):\n        if not any(name == package or name.startswith(package + \".\") for package in names):\n            continue\n        spec = getattr(module, \"__spec__\", None)\n        print(\n            f\"runtime-import-module name={name!r} \"\n            f\"origin={getattr(spec, \u0027origin\u0027, None)!r} \"\n            f\"file={getattr(module, \u0027__file__\u0027, None)!r} \"\n            f\"path={getattr(module, \u0027__path__\u0027, None)!r} \"\n            f\"cached={getattr(module, \u0027__cached__\u0027, None)!r}\",\n            flush=True,\n        )\n        for symbol, value in tuple(vars(module).items()):\n            function = value.__func__ if inspect.ismethod(value) else value\n            if inspect.isfunction(function):\n                print(\n                    f\"runtime-import-code module={name!r} symbol={symbol!r} \"\n                    f\"co_filename={function.__code__.co_filename!r}\",\n                    flush=True,\n                )\n"' '[["flext", "."], ["flext_api", "flext-api"], ["flext_auth", "flext-auth"], ["flext_cli", "flext-cli"], ["flext_core", "flext-core"], ["flext_db_oracle", "flext-db-oracle"], ["flext_dbt_ldap", "flext-dbt-ldap"], ["flext_dbt_ldif", "flext-dbt-ldif"], ["flext_dbt_oracle", "flext-dbt-oracle"], ["flext_dbt_oracle_wms", "flext-dbt-oracle-wms"], ["flext_grpc", "flext-grpc"], ["flext_infra", "flext-infra"], ["flext_ldap", "flext-ldap"], ["flext_ldif", "flext-ldif"], ["flext_meltano", "flext-meltano"], ["flext_observability", "flext-observability"], ["flext_oracle_oic", "flext-oracle-oic"], ["flext_oracle_wms", "flext-oracle-wms"], ["flext_plugin", "flext-plugin"], ["flext_quality", "flext-quality"], ["flext_tap_ldap", "flext-tap-ldap"], ["flext_tap_ldif", "flext-tap-ldif"], ["flext_tap_oracle", "flext-tap-oracle"], ["flext_tap_oracle_oic", "flext-tap-oracle-oic"], ["flext_tap_oracle_wms", "flext-tap-oracle-wms"], ["flext_target_ldap", "flext-target-ldap"], ["flext_target_ldif", "flext-target-ldif"], ["flext_target_oracle", "flext-target-oracle"], ["flext_target_oracle_oic", "flext-target-oracle-oic"], ["flext_target_oracle_wms", "flext-target-oracle-wms"], ["flext_tests", "flext-tests"], ["flext_web", "flext-web"]]'
 
 _builtin_status_diagnostics: _builtin_require_environment
 	@$(GITHUB_AUTH_DIAGNOSTICS)
