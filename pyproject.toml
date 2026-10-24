@@ -57,6 +57,7 @@ Repository = "https://github.com/flext-sh/flext"
 
 [dependency-groups]
 dev = [
+  "types-networkx",                                                                                   # flext: derived member environment
   "actionlint-py>=1.7.12.24",
   "aiohttp>=3.14.5",
   "annotated-types>=0.8.0",
@@ -220,7 +221,6 @@ dev = [
   "types-jsonschema>=4.26.0.20260518",
   "types-ldap3>=2.9.13.20260827",
   "types-Markdown",
-  "types-networkx",                                                                                   # flext: derived member environment
   "types-openpyxl>=3.1.5.20260827",
   "types-paramiko>=5.0.0.20260724",
   "types-protobuf>=7.35.1.20260827",
@@ -431,6 +431,7 @@ project-excludes = [
   "**/site-packages/**",
   "**/site/**",
   "**/target/**",
+  "**/tests/fixtures/*/**",
   "**/venv/**",
 ]
 project-includes = [
@@ -579,6 +580,7 @@ exclude = [
   "**/site-packages/**",
   "**/site/**",
   "**/target/**",
+  "**/tests/fixtures/*/**",
   "**/venv/**",
 ]
 extraPaths = ["src", "."]
@@ -1436,6 +1438,8 @@ filterwarnings = [
   "module::flext_core._constants.enforcement.FlextMroViolation",
   "once::pytest.PytestAssertRewriteWarning",
 ]
+flext_make_ci_value = "Y"
+flext_make_ci_variable = "CI"
 flext_slow_timeout_seconds = "30"
 markers = [
   "smoke: public-interface smoke tests",
@@ -1456,6 +1460,7 @@ markers = [
   "requires_engine: native check engine required by this test",
 ]
 minversion = "8.0"
+pytester_example_dir = "tests/fixtures"
 python_classes = ["Test*"]
 python_files = ["*_test.py", "*_tests.py", "test_*.py"]
 testpaths = ["tests"]
@@ -1513,6 +1518,7 @@ extend-exclude = [
   "**/site-packages/**",
   "**/site/**",
   "**/target/**",
+  "**/tests/fixtures/*/**",
   "**/venv/**",
 ]
 fix = false
