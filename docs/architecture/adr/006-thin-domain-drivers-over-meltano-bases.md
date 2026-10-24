@@ -33,6 +33,13 @@ declarative pilot: **flext-tap-ldap**, landed). Rollout to the remaining
 | `flext-tap-oracle`    | **Not converted**                  | Still has hand-rolled `tap.py` (`:26/:91/:167/:220`) and `streams.py` (`:40/:268`); bypasses the meltano base entirely |
 | `flext-target-oracle` | **Not converted**                  | 3211 src LOC; `create_sink()` raises `TypeError` (`:api.py:30-37`)                                                     |
 | `flext-dbt-*` (all)   | **Not converted**                  | Each pilot re-declares Oracle connection scalars from `settings.DbOracle`                                              |
+| `flext-tap-oracle-oic` | **Runtime-broken** (measured 2026-10-24) | Both console scripts exit 1 for any argv: `api.py:29-44` raises `TypeError`, `tap_service_base.py:78` turns it into `SystemExit(1)` (bead `flext-ceqsw`) |
+
+**Transport amendment (2026-10-24):** the Singer and dbt adapters are part of the single
+transport contract of ADR-019 Decision 5 and epic `flext-itpd1.11.8`. Measured defects
+it removes: both adapters call Click `main()` and swallow `SystemExit`, the tap instance
+is discarded, targets drain stdin and ignore their arguments, and
+`executor_base.py:261-275` converts 11 exception types into exit 1 (bead `flext-pa35g`).
 
 **Depends:** builds on ADR-005 (config/settings SSOT) and the repository FLEXT law —
 
@@ -235,6 +242,8 @@ data, never machinery. New inviolable rules (bind every `flext-(tap|target|dbt)-
 1. **Only `flext-meltano` imports `singer_sdk`/`dbt`.** Each `flext-<domain>` library
 
    imports its own external lib; integration projects import ONLY flext-\* libraries.
+   Inside `flext-meltano` the import belongs to its `c/t/p/m/u` facades (ADR-028); the
+   import in `services/declarative_tap.py:18` violates it (bead `flext-3jsmb`).
 
 2. **Consumers compose the base via `meltano.Tap` / `meltano.Target` / `meltano.Dbt`**
 
@@ -278,9 +287,11 @@ data, never machinery. New inviolable rules (bind every `flext-(tap|target|dbt)-
 
    `settings.<Ns>.*` = every adjustable param (`.env`/env/local/CLI/API parametrize it),
 
-   reusing the action library's `settings.<Domain>.*` by MRO. Console entry always
-
-   `<pkg>.cli:main` → `Service().cli_main(args)`.
+   reusing the action library's `settings.<Domain>.*` by MRO. Console entry (amended
+   2026-10-24): `<pkg>.api:main`, declared as `main = cli.entry(<facade>)`; the
+   meltano base drives `singer_sdk` through `Tap.invoke`/`Target.invoke`, discovery
+   and sync, never through Click `main()`. `<pkg>.cli:main` and `Service().cli_main`
+   stay as deprecated pass-throughs until their census reaches zero.
 
 **Pilot result (flext-tap-ldap):** src 3276 → 914 LOC (−72%); deleted
 
