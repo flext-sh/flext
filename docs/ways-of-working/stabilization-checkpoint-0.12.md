@@ -31,117 +31,53 @@ the canonical cycle.
 
 ## (a) Canonical cycle
 
-After provisioning and applying the changed slice, exercise its real public consumer
-before static gates and tests. Complete the applicable native cycle on that candidate:
+The [FLEXT router](../../.agents/commands/flext-law.md) selects the execution
+owners; [root AGENTS.md](../../AGENTS.md) supplies member command routing and
+connectivity applicability. Apply those owners to the current slice. Reuse a
+valid, exclusively owned environment; provisioning is conditional on its actual
+state. Source generation and structural migration are required when the change
+reaches their owned surfaces, not as a speculative rewrite of unrelated code.
 
-```bash
-make setup
-make gen
-make mod
-make gen
-make gen
-make fix
-make fmt
-make docs
-make check
-make smells
-make test
-make build
-```
+Establish the changed public behavior, validate the complete affected contract
+through native gates and prove the required generation fixed point. A later
+source edit or integration merge invalidates affected receipts. Each bounded
+slice can progress with its own truthful evidence; final fleet closure requires
+the declared root/member population green on the integrated composition. A slice
+receipt never supplies a fleet receipt.
 
-One failure → fix the verb owner; no timeout inflation; no testmon removal. Run the
-verbs without selectors at the active workspace root. Documentation corrections follow
-this same cycle. Validate changed behavior through the applicable real public consumer
-before tests, and complete native documentation, executable-example, and link
-validation; a docs-only receipt does not replace the required gates. Prove that
-repeated `make gen`, `make fix`, and `make fmt` leave the same final candidate unchanged
-and exit zero. An overlapping edit, regeneration, or
-integration-base change invalidates the affected receipts and requires renewed
-convergence and validation. Generation convergence alone does not prove convergence of
-the complete configured docs lifecycle. Residual warnings and findings block closure.
-Do not start another cycle before proving the whole fleet green on the integrated and
-published SHAs.
-
-Pydantic 2 and the Mypy `pydantic.mypy` plugin are mandatory. The operator's scoped
-exception suspends only `prop-decorator` and `call-arg`; it does not waive the remaining
-lint or type gates. Code changes made to work around either diagnostic are regressions
-and must be reverted surgically after causal-hunk review and real-consumer validation,
-by the existing policy and regression owners. The source contract and authorization
-are recorded in `flext-2guq8`; generated configurations
-must reflect their canonical policy owner rather than being patched at consumers.
+Protected analyzer policy remains at the fleet tooling owner. The recorded
+`prop-decorator` and `call-arg` ruling is resolved with its current specific
+authorization; it never grants another exception. Repair a regression by
+preserving current work and fixing its cause forward, rather than restoring a
+historical source tree.
 
 ## (b) Central Beads contract
 
-- Rig-store commands run through the selected repository's generated environment:
-  `direnv exec <repo> bd ...`. City-store commands use the configured city scope
-  through `direnv exec <city-root> gc bd --city <city-root> ...`; never infer an endpoint
-  from another rig.
-- Activation comes from the generated `.envrc`/`.envrc.local` (AGENTS_GAS_CITY_ROOT +
-  the city publication port + the rig metadata database)
-- Inspect configured identity with `direnv exec <repo> bd context --json`. Before
-  effects, verify access to the assigned Bead through that same selected environment,
-  for example `direnv exec <repo> bd show <assigned-bead> --json`. Configuration
-  discovery alone does not prove database connectivity or current task ownership.
-- Endpoint identity repair belongs to the city owner for the selected rig through its
-  authorized native route; it is not a routine worker action.
-- Never initialize an embedded database/manual port (source:
-  `flext-infra/docs/guides/execution-context.md`)
-- Resolve orchestration activation from its current owner; invoke `gc status` only when
-  that surface is selected and permitted. Orchestration suspension and tracker suspension
-  are independent: do not invoke suspended or unselected orchestration to establish
-  tracker availability, reactivate it, or create a substitute ledger.
+The selected tracker owns identity, current work and evidence. Use its native
+route in the declared environment and verify access to the assigned item before
+mutation. A central store does not require a local replacement database.
+[Execution context](../../flext-infra/docs/guides/execution-context.md) describes
+the generated activation boundary. Gas City orchestration and tracker suspension
+are separate facts; this runbook does not activate either service.
 
 ## (c) Integration
 
-**Top priority: the working branch tracks current integration.** Every increment must
-deliver working behavior and keep the root, the 31 members, and the shared environment
-green. Preserving WIP means adopting it and fixing its defects; no failure is accepted
-as pre-existing or hidden behind exclusions.
+Follow the global Git and phase-admission owners for review, gates, fast-forward
+publication, non-rewriting integration and post-merge proof. Administrative merge
+is used only under current explicit authorization; an example in an old runbook
+does not grant it. Current assignment determines worker/coordinator permissions.
 
-Before starting an increment and before publishing it, resolve each repository's
-integration branch from its current canonical declaration and branch-matched law,
-including `.gitmodules` for attached members. Refresh remote references and absorb the
-verified integration ref through `git merge --no-ff`, resolving each conflict with
-review of both sides' features. A base change invalidates the affected receipts. Do not
-accumulate features on a branch far from integration.
-
-The coordinator mandatorily performs the integration of every increment: complete
-implementation, real runtime, applicable native lint, type, test, documentation and
-build gates, green required CI on the exact PR head, a GitHub PR merged administratively
-into the verified integration branch, and post-merge proof. A local merge, pushed branch,
-draft PR, or source-only report is not delivery. The next increment only starts after that
-composition is green. Administrative authorization replaces only the independent
-approval; it keeps every gate. While the tracker runtime is suspended, do not create
-another tracker and do not declare phase closure.
-
-For cross-repository changes, order the commits by the producer/consumer contract and
-validate every intermediate composition before landing it. Do not rely on simultaneous
-merges. Publish member commits before the root gitlinks; prove the final composition on
-the published integrated SHA as well.
-
-1. Workers deliver bounded repairs and evidence; they do not merge or close Beads. The
-   coordinator maintains dependencies, integration decisions, and the serialized window
-   of generation, environment, and gates.
-2. Preserve WIP and review scoped commits (explicit paths, never `git add -A`);
-   deliver through a GitHub PR merged with an administrative merge commit into the
-   repository-specific integration branch, with the applicable review and green CI.
-3. Publish members before updating the root gitlinks. Push fast-forward; divergence
-   requires absorption through merge and revalidation, never rebase or force-push.
-4. Revalidate gates, generation convergence, and runtime on the published integrated
-   SHA; a local checkpoint or test does not prove fleet stability.
-5. The coordinator records in the Bead the command, cwd, exit, decisive output, SHAs,
-   and review/CI/runtime receipts; it closes only obligations with delivered proof.
-
-Delivery of a validated slice does not establish global fleet stabilization or close
-unrelated phase obligations.
+Land producer and consumer slices in their dependency order, validating each
+supported intermediate composition. Publish member commits on their configured
+integration branches before advancing superproject gitlinks. The selected Bead
+retains exact source, integration and runtime receipts; none implies another.
 
 ## (d) Active exterminations
 
-Retired selectors and substitute local Beads databases remain prohibited. The former
-lockfile-extermination instruction is historical, not permission to delete current
-managed locks. Toolchain and dependency locks change through `make upg` at their
-canonical owner; `make setup` consumes and reconciles the declared toolchain. Never
-hand-edit or discard locks, replace the selected tracker, or bypass a failing owner.
+Resolve current defects from the active Bead and native findings. The dated
+checkpoints below retain historical measurements, paths and interventions only.
+Their selectors, rollback language, version pins and task assignments are not
+current instructions. The command owner governs today's operations and locks.
 
 ## (e) Checkpoint 2026-09-20 — engine, cli floor and fleet (flext-v4fmn)
 

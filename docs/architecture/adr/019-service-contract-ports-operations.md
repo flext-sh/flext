@@ -101,9 +101,13 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
    `--help` builds no adapter; invalid input leaves as `e.fail_validation` with the
    original cause and a non-zero exit. Routes execute the catalogued method by
    identity, not by a second name lookup or a per-route service wrapper.
-6. **No fake facades (operator decision D1 = A).** The kernel has no `api.py`, `cli.py`,
-   `base.py` or console script; NS-LAYOUT derives when a project must provide `api.py`
-   (it composes services) and `cli.py` (it declares a console script and operations).
+6. **No fake facades (operator decision D1 = A).** NS-LAYOUT derives when a
+   project needs `api.py` (it composes services), `base.py` (it specializes a
+   service foundation) and `cli.py` (it declares a real transport). Empty files
+   and no-op console scripts are not layout compliance. This excludes the
+   historical skeletons described in Context; it does not prohibit a real
+   kernel API that owns the registry and dispatcher in decision 10, or authorize
+   deleting its consumers to match the old census.
 7. **Consumers first.** A base contract contracts only after every consumer declared
    what it uses; every base slice revalidates its consumers before merge.
 8. **Execution law for every slice.** Modules stay within 200 logical lines, with
@@ -113,8 +117,10 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
    A red has no "foreign" category: every red in a slice's blast radius is fixed at its
    owner (in its own small PR when it lives in another repository) before the slice
    lands; it is never narrowed, skipped or suppressed.
-9. **Services are Pydantic consumers by MRO.** Each project's `base.py` specializes
-   `s`; domain services inherit it and their model-owned port options. Requests,
+9. **Services are Pydantic consumers by MRO.** A consuming project's declared
+   `base.py` specializes `s`; the kernel owns `s` itself rather than specializing
+   its own public facade. Domain services inherit their foundation and their
+   model-owned port options. Requests,
    outputs, state and port fields belong to `m`, capabilities to `p`, aliases to
    `t`, and pure helpers to `u`. Services do not duplicate constructors, singleton
    logic, settings cloning or validation. Port-bearing services are constructed at

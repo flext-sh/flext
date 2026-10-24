@@ -12,14 +12,16 @@ FLEXT law without duplicating universal execution governance.
 
 ## Required composition
 
-1. Read `~/.agents/AGENTS.md`.
+1. Read the selected governance bundle's universal entry point.
 2. Before build, generation, docs, checks, tests, or diagnosis, read
-   `~/.agents/skills/project-wide/shell/make-check/SKILL.md`.
+   its `project-wide/shell/make-check` skill.
 3. For every FLEXT task, read the exact local `.agents/skills/flext-law/SKILL.md`.
 4. At every completion boundary, read
-   `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`.
+   its `agent-wide/verification/verification-loop` skill.
 
-Fail closed if a required file is absent. Never resolve `flext-law` by an unqualified
+Resolve global identities from the selected public bundle inventory and installed
+projection, not a hardcoded provider directory layout. Fail closed if a required
+selected identity or local file is absent. Never resolve `flext-law` by an unqualified
 catalog name, from `main`, or from another checkout.
 
 At resumption, recover intent, scope and exclusions, the last validated candidate, and
@@ -40,4 +42,4 @@ not copy its state into a second tracker.
 - In standalone mode, use the FLEXT root law pinned to the same branch or release; never
   fall back to `main`.
 - Load only local surfaces declared in `.agents/provider.toml`. Global skills remain
-  owned by `~/.agents` and are not copied into the local provider.
+  owned by the selected governance bundle and are not copied into the local provider.

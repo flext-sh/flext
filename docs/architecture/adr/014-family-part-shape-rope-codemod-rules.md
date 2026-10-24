@@ -12,7 +12,7 @@
   - [2. Declarative Rope rules (one YAML file per rule)](#2-declarative-rope-rules-one-yaml-file-per-rule)
   - [3. Shared change cycle (Rope replication)](#3-shared-change-cycle-rope-replication)
   - [3b. rope-in-gen (one engine, two modes)](#3b-rope-in-gen-one-engine-two-modes)
-  - [4. Centralized backup cycle](#4-centralized-backup-cycle)
+  - [4. Authenticated publication cycle](#4-authenticated-publication-cycle)
   - [5. Gate alignment (one law, two engines)](#5-gate-alignment-one-law-two-engines)
   - [6. Three instruments and the mod/ast/gen verb taxonomy (2026-09-15)](#6-three-instruments-and-the-modastgen-verb-taxonomy-2026-09-15)
 - [Consequences](#consequences)
@@ -21,7 +21,7 @@
 
 <!-- TOC END -->
 
-- **Status:** CURRENT IMPLEMENTATION
+- **Status:** ACCEPTED TARGET; implementation requires current native receipts
 - **Date:** 2026-09-09
 - **Target line:** FLEXT `0.12.0-dev`, with `0.13.0` as the forward baseline.
 - **Scope:** Every internal FLEXT package with the five private families (`_constants/`,
@@ -35,7 +35,8 @@
 - **Operator basis:** operator directives of 2026-09-09 (this session): flat part
   declarations, no pure namespace wrappers, hoist-not-alias, rules in dedicated folders
   as one YAML file per rule driving the dedicated Rope engine, changes replicated
-  through the common Rope cycle, and the centralized workspace backup cycle.
+  through the common Rope cycle. The 2026-10-20 governance reconciliation below
+  replaces the historical backup-based publication contract.
 
 ## Context
 
@@ -157,20 +158,25 @@ writer of generated projections (operator ruling 2026-09-15, plan-of-record
 6. **Render purity.** `render = f(SSOT, templates, PINS)` and nothing else: any
    environment input (filesystem probing, wall clock, dependency resolution, worktree
    WIP state) reaching the render is a P0 engine defect.
-7. **Transactional loop.** Per repository: authenticated input snapshot (CAS) → plan
-   everything with one Rope project per repo → publish in one transactional batch →
-   single receipt (findings + timings). A mid-publication failure reverse-applies only
-   the effects of its own invocation (empty diff post-rollback is the criterion), for
-   gen and fix alike.
-8. **Gate before the fleet.** The engine touches no fleet member before the external
-   standalone cobaias prove it green ×2 (cosmos-docgen first, then `agents_governance`).
+7. **Transactional loop.** Per repository: authenticated original inputs → complete
+   candidate plan → publication through the existing atomic owner → durable receipt.
+   The native journal owns an active invocation's recovery; a consumed journal
+   is not a durable receipt. Do not restore source snapshots or overwrite
+   shared work. After committed effects, reconcile forward from the owner's
+   receipt. A failed or interrupted invocation is never a successful publication.
+8. **Gate before propagation.** Validate the selected producer and complete
+   affected consumer group before propagation. The active authorized scope selects
+   pilot repositories; historical private repository names are not standing targets.
 
-### 4. Centralized backup cycle
+### 4. Authenticated publication cycle
 
-Every mutating family-shape execution wraps its file set in the centralized workspace
-cycle `FlextInfraUtilitiesSafety.execute_safely` (backup → transform → validate →
-cleanup | rollback). Ad-hoc write paths, private backup schemes, and repository-wide
-rollback remain forbidden.
+Family-shape changes reuse the native candidate and authenticated publication
+owners described in decision 3b. The earlier `execute_safely` backup/rollback
+description records the implementation at authoring; it is superseded by this
+2026-10-20 reconciliation and grants no alternative publication route.
+Preserve current source identity and shared WIP, use the owner's active journal
+only within its lifecycle, and retain durable publication evidence afterward.
+No private backup, second writer or repository rollback is permitted.
 
 ### 5. Gate alignment (one law, two engines)
 

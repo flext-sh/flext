@@ -20,10 +20,9 @@
 > **Authority**: This document is the canonical R1-R6 consumption standard for the FLEXT
 > fleet. All enforcement derives from this law; no parallel rules or bypass lists exist.
 >
-> **Status**: ADR-015 ratified. Enforcement delivered: ENFORCE-099
-> (consumer_import_violations). Catalog rows for R2 duplication and R4 budget are
-> **pending their next free IDs** (100, 101 — not yet registered in the enforcement
-> catalog; landing them is part of WS-F2/F4 validation waves).
+> **Status**: Accepted target. Conformance requires current native evidence;
+> historical gate IDs and implementation counts are not acceptance receipts.
+> Generator declarations follow ADR-018 and service composition follows ADR-019.
 >
 > **Version**: 0.12.x line; forward baseline 0.13.0.
 
@@ -60,35 +59,13 @@ long name maps to its canonical single-letter alias (`c,t,p,m,u,r,e,x,h,d,s`).
 
 ### R1a — Lazy-Init Re-Export Derivation (how `pkg.__all__` is built)
 
-The published lazy contract (`__all__` + `_LAZY_IMPORTS`) is generated, never
-hand-written. The root `__init__.py` derives it in this fixed order:
-
-1. **Local facade letters win.** Files present in the package directory map to
-   single-letter aliases: `constants.py→c`, `typings.py→t`, `protocols.py→p`,
-   `models.py→m`, `utilities.py→u`, `config.py→config`, `settings.py→settings`
-   (`NAMESPACE_LAYER_BY_FILE`).
-2. **Operational letters are inherited from the highest upstream flext library.** `r`,
-   `d`, `e`, `h`, `s`, `x` are re-exported from the immediate upstream (`flext_cli`,
-   which sources them from `flext_core`) via
-   `FlextInfraCodegenLazyInitPlannerAliasesMixin._resolve_aliases` /
-   `_resolve_inherited_alias_source`. The full canonical set is
-   `ALIAS_NAMES = {c, t, m, p, u, r, d, e, h, s, x, tc}`.
-3. **A local redeclaration published in `__all__` overrides the ancestor.** If the
-   namespace redeclares any letter (e.g. `c`, `d`, `e`) and publishes it in its own
-   `__all__`, the local declaration is used instead of the inherited upstream one.
-4. **Module exports come from the current directory only.** `Flext*` long-name classes
-   are re-exported from the current directory's modules' `__all__` — never from
-   subdirectories, parent directories, or sibling packages.
-
-**Determinism (flext-b3xmn)**: the facade-letter set derives from the statically indexed
-workspace source (`_export_names_for_package`), never from the ambient
-installed/editable venv surface. A local venv (branch tips) and a pinned CI checkout
-(gitlink SHAs) must render the identical root facade set; the prior ambient union of
-`installed_package_exports` caused environment-dependent drift.
-
-**Canonical source**: `flext_infra.codegen._lazy_init_planner_aliases` (owner
-`_resolve_aliases`) + `flext_infra._constants.validate.ALIAS_NAMES` +
-`flext_infra._constants.namespace.NAMESPACE_LAYER_BY_FILE`.
+The published lazy contract is generated from original source declarations and
+MRO, never authored at its consumer. [ADR-018](../architecture/adr/018-generator-declarations.md)
+owns the detailed derivation and supersedes the historical filename-to-letter,
+closed folder and ALIAS_NAMES tables. A remaining implementation table is a
+migration finding, not a second rule. Local explicit exports override inherited
+ones according to that declaration contract. Ambient installed exports never
+replace the authenticated source input to generation.
 
 ---
 
@@ -109,8 +86,8 @@ referenced the new name).
 `flext_api.m.Api` carries no web members; `flext_api.m.Web` resolves the web namespace
 through the chain; `flext_web.m.Web.FastAPIAppConfig` resolves.
 
-**Canonical source**: this law (R1a/R1b); ADR-015; skill `flext-law` ("Architecture and
-imports").
+**Canonical source**: this section owns namespace-matched composition; ADR-015
+ratifies it and local flext-law routes here.
 
 ---
 
@@ -120,30 +97,26 @@ imports").
 that spans **consumer+family scope** must be eliminated at its owner — no per-site
 allowlists.
 
-**Scope**: Configured via `[tool.flext.project]` keys:
-
-```toml
-[tool.flext.project]
-duplication.scope = ["src", "tests", "scripts", "examples", "templates"]
-duplication.min-lines = 10
-duplication.min-tokens = 62
-duplication.threshold-percent = 0.0
-```
+**Scope and thresholds**: derive them from the selected gate's typed configuration
+owner. Do not duplicate current scalar defaults or invent a configuration table in
+this standard. Tests, scripts and examples retain their declared gate coverage.
 
 **Semantic classifier**: Only executable behavior counts (module licenses, docstrings,
 imports, TYPE_CHECKING blocks, class shells, function signatures, declaration-only
 assignments are excluded).
 
-**Enforcement**: `FlextInfraDuplicationGate` extended with consumer+family scope (config
-reader delivered); catalog row pending its next free ID (100) — registration belongs to
-WS-F2 validation.
+**Enforcement**: the current duplication gate and its typed declaration; completion
+requires a native receipt for the complete declared scope.
 
 ---
 
 ## R3 — Layer Law (Declaration vs Behavior)
 
-**Rule**: Declaration layers (`c,t,p,m,u` + `r,e,x,h,d,s`) carry **zero methods** — only
-Pydantic `Field`/`validators`/`computed_field`. Behavior lives **only** in:
+**Rule**: c/t/p/m own constants, type aliases, protocol signatures and models.
+Protocol method signatures and supported Pydantic validation metadata are
+declarations. They do not authorize use-case behavior in those layers.
+Utilities and operational r/e/x/h/d/s families own their declared behavior.
+Domain behavior belongs in:
 
 - `u` (utilities)
 - `base.py` (services)
@@ -153,7 +126,8 @@ Pydantic `Field`/`validators`/`computed_field`. Behavior lives **only** in:
 
 **Reverse imports**: `TYPE_CHECKING`-only. `c` never imports `m` at runtime.
 
-**One public `api.py` per package** as composition root; thin `cli.py`.
+**Real facades only**: ADR-019 decision 6 derives the API, service foundation and
+transport requirements from the project role. No-op files are not conformance.
 
 **Internals**: under `_[module]/*.py` starting with `base.py`.
 
@@ -175,22 +149,17 @@ enforced by the `loc-cap` gate.
 
 ## R4 — Gates as Products (Budget + Primitives)
 
-**Rule**: Every gate is a **product** with:
+**Rule**: the selected typed gate declaration owns its configuration, execution,
+diagnostics and reporting. Reuse the existing atomic primitive where the operation
+requires it. Do not copy a registry, parser, append helper or reporting engine
+into the consumer.
 
-1. Typed config via `[tool.flext.project]` (SSOT, never hardcoded)
-2. Budget gate (time/memory/token limits) — non-optional
-3. Atomic `O_APPEND` append primitive in `flext-core.u` (generic domain)
-4. Fixed-point exposure via conform check (regenerated config matches running config)
-
-**Budget gate**: New gate class + `_gate_classes` registry + `SARIF_TOOL_INFO` row +
-`codegen.yaml` entry. Registry divergence = hard error.
-
-**Primitives**: `u.append_atomic(path, data)` — generic, reusable across fleet.
-
-**Enforcement**: budget gate delivered (`FlextInfraBudgetGate`, validates one declared
-budget row per `c.Infra.ALLOWED_GATES` gate); catalog row pending its next free ID (101)
-— WS-F4 validation. Runtime budget telemetry (measured time/memory in reports) remains
-open.
+The historical standalone budget-gate namespace and its proposed registration
+rows are retired implementation guidance. This standard does not reinstate them
+or invent a generic append API. Applicable invocation deadlines remain owned by
+universal command governance; product-specific limits come from their current
+typed owner. Prove the actual gate and generated configuration through native
+verbs and fixed-point evidence.
 
 ---
 
@@ -200,7 +169,8 @@ open.
 
 - Tags on green tips after gates pass
 - `AI_HUB_CONSUMER.md` versioned with each release (consumer-facing changelog)
-- Dependencies: F1 (grammar), F4 (budget), F7 (doc hardening)
+- Acceptance comes from the current release owner; historical WS-F labels do
+  not create another gate or restore a retired budget namespace.
 
 **AI_HUB_CONSUMER.md**: Machine-readable consumer contract — what changed, what's legal,
 migration path.
@@ -232,18 +202,11 @@ never carry-over.
 
 ## Canonical Sources
 
-| Concern        | SSOT Location                                                         |
-| -------------- | --------------------------------------------------------------------- |
-| R1 Grammar     | `flext_core._utilities.family_surface.FlextUtilitiesFamilySurface`    |
-| R1a Lazy-Init  | `flext_infra.codegen._lazy_init_planner_aliases` (`_resolve_aliases`) |
-| R1 Enforcement | `flext_infra.detectors.consumer_import_violations_detector`           |
-| R2 Duplication | `flext_infra.gates.duplication.FlextInfraDuplicationGate`             |
-| R3 Layer Law   | `flext_infra.gates.namespace.FlextInfraNamespaceGate`                 |
-| R4 Config      | `config/codegen.yaml` → `codegen.yaml` scaffold.project.dev           |
-| R4 Budget Gate | `flext_infra.gates.budget` (new)                                      |
-| R4 Primitives  | `flext_core._utilities.files` (new)                                   |
-| R5 Versioning  | `config/codegen.yaml` scaffold.project.dev                            |
-| R6 Workflow    | `docs/GOVERNANCE.md`, Gas City contracts                              |
+This standard owns R1-R6 consumption; ADR-018 owns generator declarations and
+ADR-019 owns service contracts. The selected flext-infra typed gate catalog and
+implementation own enforcement. Resolve their current identities there rather
+than maintaining another symbol/path registry here. A historical implementation
+name does not prove that a current gate exists or passed.
 
 ---
 
@@ -253,7 +216,7 @@ never carry-over.
 
 - Bypass/leniency lists (e.g., `BOUNDARY_SKIP_PROJECTS`, `CLICK_FILES`, `TOML_ALLOWED`)
 - Fixed enumerated lists for facts derivable from SSOT/code
-- Absolute paths or out-of-repo references
+- Hardcoded host paths or private cross-repository identities in portable policy
 - Tests with frozen fixture lists — synthetic runtime-derived violations only
 
 **Required**:

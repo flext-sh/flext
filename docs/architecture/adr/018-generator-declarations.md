@@ -20,10 +20,10 @@
 - **Complements:** ADR-010 (standardization via codegen), ADR-014 (family shape +
   codemod rules), ADR-017 (parametrized rule surfaces). Supersedes every filename→letter
   table, closed folder list and advisory-gate list those ADRs tolerated.
-- **Rule owner:** global governance rule `flext/generator-declarations` in the
-  `agents-governance` catalog (projected to every provider; referenced by governance
-  identity, never by a machine-local path). This ADR records the decision; the rule is
-  the binding text.
+- **Rule owner:** this branch-matched ADR, composed by the local `flext-law`.
+  The duplicate global `flext/generator-declarations` rule is retired by the
+  2026-10-20 governance consolidation. AI Hub distributes the selected source;
+  it does not own another definition of generator law.
 - **Tracking:** epic `flext-0in0k` (a phased bead set, each carrying the full rule text;
   live membership and counts on the epic, never frozen here); superseded `flext-exbwv`,
   `flext-crd1y`, `flext-b3xmn`, `flext-szjre`, `flext-fdoah`, `flext-s9bxq` (closed,
@@ -50,7 +50,7 @@ the permission that tolerated it, one by one, at the source.
 
 ## Decision
 
-The fourteen points of `generator-declarations.md` are law. In one line each:
+The following fourteen points are the generator declaration contract:
 
 1. A facade letter belongs to the module that declares it in its explicit `__all__`.
 2. An `__init__.py` propagates; it never declares.
