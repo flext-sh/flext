@@ -199,7 +199,13 @@ outside the facades across 12 repositories.
   derives them from the entry points, and nothing else is allowed there.
 - **Allowed roots outside the facades:** stdlib (derived from `sys.stdlib_module_names`),
   `__future__`, the module's own package root, and FLEXT-family roots (derived from
-  installed distribution metadata). No library list exists anywhere.
+  installed distribution metadata). No library list exists anywhere. The one declared
+  exception is the stdlib backports in tooling `lazy-init.stdlib-backports`
+  (`typing_extensions`, operator decision 2026-10-24), which import like the standard
+  library. Type checkers recognize the PEP 747 `TypeForm` special form only through its
+  own name binding, so a type expression is passed to a `TypeForm[T]` parameter as
+  `TypeForm(X)` with `from typing_extensions import TypeForm`; `t.TypeForm` is the
+  facade's annotation alias and is never called (rule `ban-typeform-alias-call`).
 - **Runtime import:** a top-level import statement. Imports under `if TYPE_CHECKING:`
   never run and are outside the boundary.
 

@@ -663,7 +663,10 @@ CLI + pytest plugin, **never imported at runtime**.
   operator orders 2026-10-24):
   - External libraries are imported at runtime only by the owning domain's
     `c/t/p/m/u` modules (and layer-0 config/settings for their foundation libraries).
-    Everywhere else, only stdlib and FLEXT packages.
+    Everywhere else, only stdlib and FLEXT packages; the declared stdlib backports
+    (tooling `lazy-init.stdlib-backports`: `typing_extensions`, operator decision
+    2026-10-24) count as stdlib. PEP 747 calls use `TypeForm(X)` from
+    typing_extensions; `t.TypeForm` is an annotation alias, never called.
   - Inside the facades too, an external library's types are named only through `t`
     aliases or `p` protocols; `u` never re-narrows or re-parses (`isinstance` chains,
     `ast.literal_eval`) what a `t`/`m` declaration validates once.
