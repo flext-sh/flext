@@ -58,12 +58,6 @@ SETUP_BOOTSTRAP_ONLY := Y
 export SETUP_BOOTSTRAP_ONLY
 endif
 endif
-ifeq ($(filter command line override,$(origin GEN_INIT_ONLY)),)
-ifneq ($(filter initialize,$(MAKECMDGOALS)),)
-GEN_INIT_ONLY := Y
-export GEN_INIT_ONLY
-endif
-endif
 
 # One GitHub credential for every verb (operator 2026-10-03): the first
 # non-empty of the caller's GITHUB_TOKEN, GH_TOKEN, MISE_GITHUB_TOKEN, then the
@@ -189,13 +183,9 @@ export FLEXT_PYTEST_TARGET_RAW := tests
 # or member, uses the workspace runtime. A member resolves the Git superproject
 # that checks it out as a submodule; a checkout without one (a standalone clone,
 # a linked worktree) owns its runtime.
-ifneq ($(GEN_INIT_ONLY),)
-override REPOSITORY_ROOT := $(MAKEFILE_ROOT)
-else
 override REPOSITORY_ROOT := $(shell cd "$(MAKEFILE_ROOT)" && if root=$$(git rev-parse --show-superproject-working-tree); then if [ -n "$$root" ]; then cd "$$root" && pwd -P; else pwd -P; fi; else status=$$?; if [ "$$status" -ne 1 ]; then exit "$$status"; fi; pwd -P; fi)
 ifneq ($(.SHELLSTATUS),0)
 $(error Cannot resolve the physical workspace for $(MAKEFILE_ROOT))
-endif
 endif
 # End SECTION: REPOSITORY_ROOT isolation
 # === SECTION: verb dispatch (managed) ===
@@ -552,10 +542,8 @@ ifeq ($(strip $(CI)),Y)
 override UV_SYNC_FLAGS := $(UV_SYNC_FLAGS) --no-editable
 endif
 
-ifeq ($(GEN_INIT_ONLY),)
 ifneq ($(strip $(CI)),Y)
 -include custom.mk
-endif
 endif
 ifeq ($(APPROVAL_CONTEXT),Y)
 override CI := Y
@@ -2139,7 +2127,7 @@ _builtin-profile-test-report: _builtin_require_environment
 
 _builtin_status_import_observation: _builtin_require_interpreter
 	@$(RUNTIME_PYTHON) -c 'import json, sys; exec(json.loads(sys.argv[1]))' \
-		'"\nimport importlib\nimport inspect\nimport json\nimport sys\n\ndeclared = json.loads(sys.argv[2])\nnames = tuple(name for name, root in declared)\nprint(f\"runtime-import-observation executable={sys.executable!r} prefix={sys.prefix!r}\", flush=True)\ntry:\n    for name, root in declared:\n        print(f\"runtime-import-declaration module={name!r} source={root!r}\", flush=True)\n        importlib.import_module(name)\nfinally:\n    for name, module in tuple(sys.modules.items()):\n        if not any(name == package or name.startswith(package + \".\") for package in names):\n            continue\n        spec = getattr(module, \"__spec__\", None)\n        print(\n            f\"runtime-import-module name={name!r} \"\n            f\"origin={getattr(spec, \u0027origin\u0027, None)!r} \"\n            f\"file={getattr(module, \u0027__file__\u0027, None)!r} \"\n            f\"path={getattr(module, \u0027__path__\u0027, None)!r} \"\n            f\"cached={getattr(module, \u0027__cached__\u0027, None)!r}\",\n            flush=True,\n        )\n        for symbol, value in tuple(vars(module).items()):\n            function = value.__func__ if inspect.ismethod(value) else value\n            if inspect.isfunction(function):\n                print(\n                    f\"runtime-import-code module={name!r} symbol={symbol!r} \"\n                    f\"co_filename={function.__code__.co_filename!r}\",\n                    flush=True,\n                )\n"' '[["flext_api", "/home/marlonsc/flext/flext-api"], ["flext_auth", "/home/marlonsc/flext/flext-auth"], ["flext_cli", "/home/marlonsc/flext/flext-cli"], ["flext_core", "/home/marlonsc/flext/flext-core"], ["flext_db_oracle", "/home/marlonsc/flext/flext-db-oracle"], ["flext_dbt_ldap", "/home/marlonsc/flext/flext-dbt-ldap"], ["flext_dbt_ldif", "/home/marlonsc/flext/flext-dbt-ldif"], ["flext_dbt_oracle", "/home/marlonsc/flext/flext-dbt-oracle"], ["flext_dbt_oracle_wms", "/home/marlonsc/flext/flext-dbt-oracle-wms"], ["flext_grpc", "/home/marlonsc/flext/flext-grpc"], ["flext_infra", "/home/marlonsc/flext/flext-infra"], ["flext_ldap", "/home/marlonsc/flext/flext-ldap"], ["flext_ldif", "/home/marlonsc/flext/flext-ldif"], ["flext_meltano", "/home/marlonsc/flext/flext-meltano"], ["flext_observability", "/home/marlonsc/flext/flext-observability"], ["flext_oracle_oic", "/home/marlonsc/flext/flext-oracle-oic"], ["flext_oracle_wms", "/home/marlonsc/flext/flext-oracle-wms"], ["flext_plugin", "/home/marlonsc/flext/flext-plugin"], ["flext_quality", "/home/marlonsc/flext/flext-quality"], ["flext_tap_ldap", "/home/marlonsc/flext/flext-tap-ldap"], ["flext_tap_ldif", "/home/marlonsc/flext/flext-tap-ldif"], ["flext_tap_oracle", "/home/marlonsc/flext/flext-tap-oracle"], ["flext_tap_oracle_oic", "/home/marlonsc/flext/flext-tap-oracle-oic"], ["flext_tap_oracle_wms", "/home/marlonsc/flext/flext-tap-oracle-wms"], ["flext_target_ldap", "/home/marlonsc/flext/flext-target-ldap"], ["flext_target_ldif", "/home/marlonsc/flext/flext-target-ldif"], ["flext_target_oracle", "/home/marlonsc/flext/flext-target-oracle"], ["flext_target_oracle_oic", "/home/marlonsc/flext/flext-target-oracle-oic"], ["flext_target_oracle_wms", "/home/marlonsc/flext/flext-target-oracle-wms"], ["flext_tests", "/home/marlonsc/flext/flext-tests"], ["flext_web", "/home/marlonsc/flext/flext-web"]]'
+		'"\nimport importlib\nimport inspect\nimport json\nimport sys\n\ndeclared = json.loads(sys.argv[2])\nnames = tuple(name for name, root in declared)\nprint(f\"runtime-import-observation executable={sys.executable!r} prefix={sys.prefix!r}\", flush=True)\ntry:\n    for name, root in declared:\n        print(f\"runtime-import-declaration module={name!r} source={root!r}\", flush=True)\n        importlib.import_module(name)\nfinally:\n    for name, module in tuple(sys.modules.items()):\n        if not any(name == package or name.startswith(package + \".\") for package in names):\n            continue\n        spec = getattr(module, \"__spec__\", None)\n        print(\n            f\"runtime-import-module name={name!r} \"\n            f\"origin={getattr(spec, \u0027origin\u0027, None)!r} \"\n            f\"file={getattr(module, \u0027__file__\u0027, None)!r} \"\n            f\"path={getattr(module, \u0027__path__\u0027, None)!r} \"\n            f\"cached={getattr(module, \u0027__cached__\u0027, None)!r}\",\n            flush=True,\n        )\n        for symbol, value in tuple(vars(module).items()):\n            function = value.__func__ if inspect.ismethod(value) else value\n            if inspect.isfunction(function):\n                print(\n                    f\"runtime-import-code module={name!r} symbol={symbol!r} \"\n                    f\"co_filename={function.__code__.co_filename!r}\",\n                    flush=True,\n                )\n"' '[["flext_api", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-api"], ["flext_auth", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-auth"], ["flext_cli", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-cli"], ["flext_core", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-core"], ["flext_db_oracle", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-db-oracle"], ["flext_dbt_ldap", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-dbt-ldap"], ["flext_dbt_ldif", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-dbt-ldif"], ["flext_dbt_oracle", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-dbt-oracle"], ["flext_dbt_oracle_wms", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-dbt-oracle-wms"], ["flext_grpc", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-grpc"], ["flext_infra", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-infra"], ["flext_ldap", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-ldap"], ["flext_ldif", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-ldif"], ["flext_meltano", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-meltano"], ["flext_observability", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-observability"], ["flext_oracle_oic", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-oracle-oic"], ["flext_oracle_wms", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-oracle-wms"], ["flext_plugin", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-plugin"], ["flext_quality", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-quality"], ["flext_tap_ldap", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-tap-ldap"], ["flext_tap_ldif", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-tap-ldif"], ["flext_tap_oracle", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-tap-oracle"], ["flext_tap_oracle_oic", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-tap-oracle-oic"], ["flext_tap_oracle_wms", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-tap-oracle-wms"], ["flext_target_ldap", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-target-ldap"], ["flext_target_ldif", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-target-ldif"], ["flext_target_oracle", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-target-oracle"], ["flext_target_oracle_oic", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-target-oracle-oic"], ["flext_target_oracle_wms", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-target-oracle-wms"], ["flext_tests", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-tests"], ["flext_web", "/home/marlonsc/worktrees/flext/projections-4pt43/flext-web"]]'
 
 _builtin_status_diagnostics: _builtin_require_environment
 	@$(GITHUB_AUTH_DIAGNOSTICS)
@@ -2215,8 +2203,8 @@ _builtin_release_publish: _builtin_require_environment
 # one fixed point. Only `upg` resolves and rewrites the locks; gen installs
 # nothing and never runs another writer before or after conform's journal.
 _builtin_gen_init:
-	@$(PROJECT_FLEXT_INFRA) codegen init --repository-root "$(PROJECT_ROOT)"
-	@$(PROJECT_FLEXT_INFRA) codegen init --repository-root "$(PROJECT_ROOT)" --check-only
+	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope self --what lazy-init --mode apply
+	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope self --what lazy-init --mode check
 
 _builtin_gen_all:
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope all --mode apply
