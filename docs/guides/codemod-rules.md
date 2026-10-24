@@ -92,6 +92,20 @@ ABC and implemented overload declarations without a spelling-based exemption.
 Ordinary type-only imports, type aliases and productive method bodies are not
 shells. Generated headers do not exempt candidates.
 
+The single-nested-class family (`ban-loose-module-object`, `require-module-class`,
+`declare-single-class-export`, `ban-pytest-hook-outside-conftest`) binds every
+Python file of the repository: src, tests, scripts, examples and docs code. A
+module holds one top-level class, its canonical published bindings, `__all__` and
+imports. The exception data is closed and each entry has a fixture: an
+executable module's guarded `main()` entry point and generator-emitted dunders
+(generator law p.11), plus the tests-tier delta of ADR-028 p.6 — pytest
+fixtures, `pytest_*` hooks and `pytest_plugins` at module level, admitted only in
+`conftest.py` and `tests/fixtures/**`. Ordinary test modules are not exempt.
+Test-suite modules under `tests/{unit,integration,e2e,performance,benchmark}`
+publish no `__all__` (`ban-test-suite-module-all`), so
+`declare-single-class-export` does not ask them for one. Any further exception
+needs the operator.
+
 `ban-stub-file` is also admitted by owned path, independently of ast-grep matches.
 Both `mod` and the codemod `check` gate consume `discover_python_files` through the
 same source inventory and common admission. Empty, invalid, generated-header and
@@ -140,8 +154,9 @@ rule whenever the target has syntax.
   snapshot under `tests/__snapshots__/<id>-snapshot.yml` for each invalid case.
 - `make mod` verifies them and fails on a changed fix output, a missing snapshot, or a
   snapshot of a removed rule or case.
-- `make mod-snapshots` is the only regeneration. Review its diff in the same commit as
-  the rule.
+- `flext-infra refactor mod-snapshots --apply` is the only regeneration; its default
+  dry run fails while any snapshot differs. Review its diff in the same commit as the
+  rule.
 
 ## Workflow
 
