@@ -117,7 +117,8 @@ do ecossistema FLEXT para identificar e corrigir **TODOS os usos de funções de
 
 ```python
 from flext_core import m, p
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
 tm.ok(isinstance(document, p.Model))
@@ -128,7 +129,8 @@ tm.that(document.model_dump(mode="json"), keys=["data"])
 
 ```python
 from flext_core import m
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
 tm.that(document.data, keys=["name"], length=len(document.data))
@@ -138,7 +140,8 @@ tm.that(document.data, keys=["name"], length=len(document.data))
 
 ```python
 from flext_core import t, u
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 items: t.StrSequence = ("first", "second")
 converted = u.to_str_list(items)
@@ -151,10 +154,10 @@ tm.that(converted, has=items[0], length=len(items))
 
 | Método Deprecado                | Método Público Atual            | Exemplo de Migração                                                 |
 | ------------------------------- | ------------------------------- | ------------------------------------------------------------------- |
-| `tt.create_user(...)`           | `tt.model("user", ...)`         | `tt.create_user(name="John")` → `tt.model("user", name="John")`     |
+| `tt.create_user(...)`           | `tt.model(c.ContextScope.USER, ...)`         | `tt.create_user(name="John")` → `tt.model(c.ContextScope.USER, name="John")`     |
 | `tt.create_config(...)`         | `tt.model("settings", ...)`     | `tt.create_config(debug=True)` → `tt.model("settings", debug=True)` |
 | `tt.create_service(...)`        | `tt.model("service", ...)`      | `tt.create_service(type="api")` → `tt.model("service", type="api")` |
-| `tt.batch_users(count)`         | `tt.batch("user", count=count)` | `tt.batch_users(5)` → `tt.batch("user", count=5)`                   |
+| `tt.batch_users(count)`         | `tt.batch(c.ContextScope.USER, count=count)` | `tt.batch_users(5)` → `tt.batch(c.ContextScope.USER, count=5)`                   |
 | `tt.create_test_operation(...)` | `tt.op(kind, ...)`              | `tt.create_test_operation("simple")` → `tt.op("simple")`            |
 | `tt.create_test_service(...)`   | `tt.svc(...)`                   | `tt.create_test_service(type="test")` → `tt.svc(type="test")`       |
 
@@ -164,9 +167,9 @@ tm.that(converted, has=items[0], length=len(items))
 | ----------------------------------- | ------------------------------- | -------------------------------------------------------------------------- |
 | `tb.Tests.Result.ok(value)`         | `tt.res("ok", value=value)`     | `tb.Tests.Result.ok("data")` → `tt.res("ok", value="data")`                |
 | `tb.Tests.Result.fail(error)`       | `tt.res("fail", error=error)`   | `tb.Tests.Result.fail("err")` → `tt.res("fail", error="err")`              |
-| `tb.Tests.Model.user(...)`          | `tt.model("user", ...)`         | `tb.Tests.Model.user(name="John")` → `tt.model("user", name="John")`       |
+| `tb.Tests.Model.user(...)`          | `tt.model(c.ContextScope.USER, ...)`         | `tb.Tests.Model.user(name="John")` → `tt.model(c.ContextScope.USER, name="John")`       |
 | `tb.Tests.Model.settings(...)`      | `tt.model("settings", ...)`     | `tb.Tests.Model.settings(debug=True)` → `tt.model("settings", debug=True)` |
-| `tb.Tests.Model.batch_users(count)` | `tt.batch("user", count=count)` | `tb.Tests.Model.batch_users(5)` → `tt.batch("user", count=5)`              |
+| `tb.Tests.Model.batch_users(count)` | `tt.batch(c.ContextScope.USER, count=count)` | `tb.Tests.Model.batch_users(5)` → `tt.batch(c.ContextScope.USER, count=5)`              |
 
 ### 3. tf (TestsFlextFiles) - Métodos Deprecados
 
@@ -229,7 +232,8 @@ with tf.files({"example.txt": "example"}) as paths:
 
 ```python
 from flext_core import r
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 payload = "example"
 tm.that(tm.ok(r[str].ok(payload)), eq=payload)
@@ -239,7 +243,8 @@ tm.that(tm.ok(r[str].ok(payload)), eq=payload)
 
 ```python
 from flext_core import r, settings
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 result = r[bool].ok(settings.debug)
 tm.that(tm.ok(result), eq=settings.debug)
@@ -249,7 +254,8 @@ tm.that(tm.ok(result), eq=settings.debug)
 
 ```python
 from flext_core import m, p, r
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
 result: p.Result[p.Model] = r[p.Model].ok(document)
@@ -262,7 +268,8 @@ Alguns métodos podem aceitar parâmetros legacy que devem ser migrados:
 
 ```python
 from flext_core import m, t, u
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
 items: t.StrSequence = ("first", "second")
@@ -441,7 +448,8 @@ input; it does not claim to test a retired method's warning contract:
 ```python
 import warnings
 
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 with warnings.catch_warnings(record=True) as recorded:
     warnings.simplefilter("always")
@@ -532,7 +540,8 @@ Todos os testes devem ser marcados explicitamente:
 import pytest
 
 from flext_core import m
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 
 @pytest.mark.unit
@@ -694,7 +703,8 @@ find . -name "conftest.py" | wc -l # Deve retornar 1 (apenas em ~/flext)
 
 ```python
 from flext_core import m
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 
 class TestsDocument:
@@ -729,7 +739,8 @@ not a following list item or its Markdown delimiter as part of the program.
 
 ```python
 from flext_core import m, r, settings
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 
 class TestsDocument:
@@ -787,7 +798,8 @@ TestsDocument.test_settings_input()
 
 ```python
 from flext_core import m, p, t
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 
 def generate_documents(count: int) -> t.SequenceOf[p.Model]:

@@ -120,7 +120,7 @@ fixture committada. Sem caminhos absolutos; config keys apenas.
   `project_alias_owners()` + `compatibility_alias_renames()` (33 derivados vs 22 da
   tabela congelada); constantes `c.NAMESPACE_FAMILY_PREFIX` e
   `FAMILY_SURFACE_MIN_PUBLISHED` em
-  `_constants/_enforcement_parts/flextconstantsenforcement_part_03.py`.
+  `_constants/_enforcement/flextconstantsenforcement_part_03.py`.
 - R1 infra:
   `flext-infra/src/flext_infra/detectors/consumer_import_violations_detector.py` — AST
   com `node.lineno` real; raio de família de `core_u.project_alias_owners()`;
@@ -128,7 +128,7 @@ fixture committada. Sem caminhos absolutos; config keys apenas.
   derivado. Model `ConsumerImportViolation` em `_models/refactor_namespace_enforcer.py`;
   wiring declarativo `declarative_enforcement.py` (`_INFRA_VIOLATION_FIELDS`); catálogo
   ENFORCE-099 em
-  `flext-core/.../_enforcement_catalog_rows_parts/_parts/flextconstantsenforcementcatalogrows_part_01_b.py`.
+  `flext-core/.../_enforcement_catalog_rows/_parts/flextconstantsenforcementcatalogrows_part_01_b.py`.
 
 **Lacunas de qualidade** (owner explícito, fecham antes de pousar):
 
@@ -324,4 +324,4 @@ nenhum rollout hard sem aprovação nova.
   `flext_infra/gates/budget.py`; duplicação `flext_infra/gates/duplication.py`;
   primitivas `flext_core/_utilities/files.py`; family surface
   `flext_core/_utilities/family_surface.py`; catálogo ENFORCE-099
-  `flext_core/_constants/_enforcement_catalog_rows_parts/_parts/flextconstantsenforcementcatalogrows_part_01_b.py`.
+  `flext_core/_constants/_enforcement_catalog_rows/_parts/flextconstantsenforcementcatalogrows_part_01_b.py`.
