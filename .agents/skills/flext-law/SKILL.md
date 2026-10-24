@@ -71,12 +71,12 @@ installed delivery remain separate evidence. Global governance is authored under
   `models.py→m`, `utilities.py→u`, `config.py→config`, `settings.py→settings`); (2) the
   **operational letters** (`r`, `d`, `e`, `h`, `s`, `x`) are inherited from the highest
   upstream flext library (`flext_cli`, which sources them from `flext_core`) through
-  `FlextInfraCodegenLazyInit._resolve_aliases`
+  `u.Infra.lazy_init_resolve_aliases`
   (nearest declaring, then nearest serving parent); (3) a **local redeclaration published in `__all__`
   overrides the inherited ancestor**; (4) `Flext*` long-name classes re-export only
   modules from the **current directory** — never subdirectories, parents, or siblings.
   The facade-letter set derives from the statically indexed workspace source
-  (`_package_names`), never the ambient installed/editable venv surface (the
+  (`u.Infra` `_lazy_init_package_names`), never the ambient installed/editable venv surface (the
   flext-b3xmn divergence fix: local venv and pinned CI checkout must render
   identically). Consumers import only `from <namespace> import <symbol>` with
   `<symbol> ∈ pkg.__all__` (R1).

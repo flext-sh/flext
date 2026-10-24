@@ -70,7 +70,7 @@ hand-written. The root `__init__.py` derives it in this fixed order:
 2. **Operational letters are inherited from the highest upstream flext library.** `r`,
    `d`, `e`, `h`, `s`, `x` are re-exported from the immediate upstream (`flext_cli`,
    which sources them from `flext_core`) via
-   `FlextInfraCodegenLazyInit._resolve_aliases`
+   `u.Infra.lazy_init_resolve_aliases`
    (nearest declaring, then nearest serving parent). The full canonical set is
    `ALIAS_NAMES = {c, t, m, p, u, r, d, e, h, s, x, tc}`.
 3. **A local redeclaration published in `__all__` overrides the ancestor.** If the
@@ -81,13 +81,13 @@ hand-written. The root `__init__.py` derives it in this fixed order:
    subdirectories, parent directories, or sibling packages.
 
 **Determinism (flext-b3xmn)**: the facade-letter set derives from the statically indexed
-workspace source (`_package_names`), never from the ambient
+workspace source (`u.Infra` `_lazy_init_package_names`), never from the ambient
 installed/editable venv surface. A local venv (branch tips) and a pinned CI checkout
 (gitlink SHAs) must render the identical root facade set; the prior ambient union of
 `installed_package_exports` caused environment-dependent drift.
 
-**Canonical source**: `flext_infra.codegen.lazy_init` (owner
-`_resolve_aliases`) + `flext_infra._constants.validate.ALIAS_NAMES` +
+**Canonical source**: `flext_infra._utilities.lazy_init_letters` (owner
+`u.Infra.lazy_init_resolve_aliases`) + `flext_infra._constants.validate.ALIAS_NAMES` +
 `flext_infra._constants.namespace.NAMESPACE_LAYER_BY_FILE`.
 
 ---
@@ -235,7 +235,7 @@ never carry-over.
 | Concern        | SSOT Location                                                         |
 | -------------- | --------------------------------------------------------------------- |
 | R1 Grammar     | `flext_core._utilities.family_surface.FlextUtilitiesFamilySurface`    |
-| R1a Lazy-Init  | `flext_infra.codegen.lazy_init` (`_resolve_aliases`)               |
+| R1a Lazy-Init  | `flext_infra._utilities.lazy_init_letters` (`lazy_init_resolve_aliases`) |
 | R1 Enforcement | `flext_infra.detectors.consumer_import_violations_detector`           |
 | R2 Duplication | `flext_infra.gates.duplication.FlextInfraDuplicationGate`             |
 | R3 Layer Law   | `flext_infra.gates.namespace.FlextInfraNamespaceGate`                 |
