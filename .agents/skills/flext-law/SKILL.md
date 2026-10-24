@@ -50,6 +50,9 @@ installed delivery remain separate evidence. Global governance is authored under
   explicit or implicit; static enforcement lives only in flext-infra's declarative
   catalog. Before writing any import or module-level name outside a facade, place it in
   its family first.
+  The same ADR owns automated correction (Decision 8), native tool use (11), validation
+  in the real tree (12), the `make mod` pipeline order (13) and Pydantic completeness
+  (14); this skill restates none of them.
 - Family part shape (ADR-014, `$flext-family-shape`): the five private families each
   begin with `base.py`; a part file nests entities directly
   (models/enums/protocols/behavior, one level) — top-level orphan classes and pure
@@ -72,12 +75,13 @@ installed delivery remain separate evidence. Global governance is authored under
   **operational letters** (`r`, `d`, `e`, `h`, `s`, `x`) are inherited from the highest
   upstream flext library (`flext_cli`, which sources them from `flext_core`) through
   `u.Infra.lazy_init_resolve_aliases`
-  (nearest declaring, then nearest serving parent); (3) a **local redeclaration published in `__all__`
-  overrides the inherited ancestor**; (4) `Flext*` long-name classes re-export only
-  modules from the **current directory** — never subdirectories, parents, or siblings.
+  (nearest declaring, then nearest serving parent); (3) a **local redeclaration
+  published in `__all__` overrides the inherited ancestor**; (4) `Flext*` long-name
+  classes re-export only modules from the **current directory** — never
+  subdirectories, parents, or siblings.
   The facade-letter set derives from the statically indexed workspace source
-  (`u.Infra` `_lazy_init_package_names`), never the ambient installed/editable venv surface (the
-  flext-b3xmn divergence fix: local venv and pinned CI checkout must render
+  (`u.Infra` `_lazy_init_package_names`), never the ambient installed/editable venv
+  surface (the flext-b3xmn divergence fix: local venv and pinned CI checkout must render
   identically). Consumers import only `from <namespace> import <symbol>` with
   `<symbol> ∈ pkg.__all__` (R1).
 - Service exposure follows the canonical short alias: `base.py` imports `s` from
@@ -85,13 +89,15 @@ installed delivery remain separate evidence. Global governance is authored under
   `from <namespace> import s`. Never rename it to `core_s` or substitute an alternative
   service-base import.
 - Declaration layers are pure data. Behavior belongs in `u`; services, bases, facades
-  and CLI layers orchestrate it. Owned data crosses boundaries through typed Pydantic v2 models
+  and CLI layers orchestrate it. Owned data crosses boundaries through typed Pydantic v2
+  models
   and project `t.*`/`p.*` contracts. Pydantic practice — model MRO presets, `p`/`r`
   contracts, conversions, validation, serialization, and the removal catalog — follows
   the `pydantic-development` skill; symbols reach consumers only through `m`/`t`/`u`.
 - Model annotations must resolve at their declaring owner through runtime-safe imports.
   Preserve generated lazy exports and facade direction; `model_rebuild`, eager-export
-  rewrites, and compatibility aliases are not import-cycle repairs.
+  rewrites, and compatibility aliases are not import-cycle repairs. Completeness at
+  import is ADR-028 Decision 14.
 
 ## Runtime and language floor
 

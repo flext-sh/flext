@@ -45,8 +45,10 @@ Declared in `flext-infra/src/flext_infra/config/codegen.yaml` (`make.verbs`):
 `make mod` is the only common Make verb; the rest are `flext-infra refactor`
 subcommands (`flext-infra refactor --help`).
 
-Raw `ast-grep scan --update-all`, `sg -U` or engine modules never apply a rule to a
-tree. `ast-grep scan --rule <draft> <scratch-copy>` is for prototyping a draft only.
+The catalog applies through ast-grep's own `scan --update-all`; the pipeline order,
+native tool use and validation in the real tree are ADR-028 Decisions 11-13. A draft
+rule is prototyped with `ast-grep scan --rule <draft> <scratch-copy>`, and its proof is
+the real tree under `make mod`.
 
 ## ast-grep rules
 

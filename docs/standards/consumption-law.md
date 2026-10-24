@@ -48,8 +48,10 @@ where `<symbol>` ∈ `pkg.__all__` (the published lazy export contract).
 - `from flext_core import lazy` (internal machinery)
 - Any `pkg.<submodule>` path — zero exceptions
 
-**Intra-family exemption**: Facade assembly _within the same package_ remains legal
-(e.g., `flext_cli` importing `flext_cli._models`).
+**Intra-family exemption**: Facade assembly _within the same package_ imports from the
+family package's generated lazy exports (e.g., `flext_cli` importing from
+`flext_cli._models`), never from a module path below it or a module object reached by
+attribute (ADR-028 Decision 10).
 
 **Fix hints**: Derived by inverting the published `_LAZY_IMPORTS` map — every `Flext*`
 long name maps to its canonical single-letter alias (`c,t,p,m,u,r,e,x,h,d,s`).
@@ -161,6 +163,10 @@ Pydantic `Field`/`validators`/`computed_field`. Behavior lives **only** in:
 enforced by the `loc-cap` gate.
 
 **No local redeclarations**, aliases, or competing long-name layers.
+
+**Boundaries and completeness**: external libraries, orchestrator modules and Pydantic
+completeness at import are owned by ADR-028 (Decisions 1-4 and 14); this law restates
+none of them.
 
 **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No
 `dict`/`TypedDict`/`dataclass`/`NamedTuple`/`m.Dict` as data contract.
@@ -276,6 +282,7 @@ never carry-over.
 | ADR-010     | Codegen Standardization              | Accepted     |
 | ADR-014     | Codemod Governance                   | Accepted     |
 | **ADR-015** | **Consumer Consumption Law (R1-R6)** | **Accepted** |
+| ADR-028     | Facade boundary, automated correction | Accepted     |
 
 ---
 

@@ -115,13 +115,8 @@ outside the facades across 12 repositories.
    generator source, a codemod rule with fixtures, a fixer), applied to every project,
    and its output is itself clean: a fix that leaves a lint, format, type or rule
    finding anywhere is a defective fix. A manual edit is allowed only for a genuinely
-   unique case that no rule can express, and its reason is stated. Operator order
-   2026-10-24 (verbatim): "nao usar funcionaldiade de ferramentas da melhor forma por
-   causa de probleams nossos é VIOLAÇÃO EXTREMAMEMENTE GRAVE, CONSIDERANDO ISSO UM BYPASS
-   OU FALLBACK, CORRIJA TUDO PARA FUNCIONAR SEMPRE FUNCIONAR DA FORMA CORRETA". When an
-   owner verb or engine is broken, it is repaired at once so the tool's full capability
-   runs through it; deferring, narrowing or degrading the tool's use meanwhile is a
-   bypass.
+   unique case that no rule can express (the exception of the exception), and its
+   reason is stated in the commit.
 9. **No embedded code or long text constants.** Operator order 2026-10-24 (verbatim):
    "código de constnats longos tipo esse a seguir em constatns ou inline (até mesmo em
    testgs) são violacoes gravíssimas". Source code or long text built as string
@@ -147,6 +142,46 @@ outside the facades across 12 repositories.
     `p`, `m`, `u`, `s`, …) is declared once in its owning module and listed in that
     module's `__all__`; an `__init__.py` only re-exports it (or inherits it from the
     parent namespace) and never assigns it.
+11. **Tools are used natively and fully.** Operator order 2026-10-24 (verbatim): "nao
+    usar funcionaldiade de ferramentas da melhor forma por causa de probleams nossos é
+    VIOLAÇÃO EXTREMAMEMENTE GRAVE, CONSIDERANDO ISSO UM BYPASS OU FALLBACK, CORRIJA TUDO
+    PARA FUNCIONAR SEMPRE FUNCIONAR DA FORMA CORRETA". A local defect never justifies
+    reduced use of a tool: that is a bypass. When an owner verb or engine is broken, it
+    is repaired at once so the tool's full capability runs through it; deferring,
+    narrowing or degrading its use meanwhile is the same bypass. For the codemod
+    catalog this means:
+    - rules apply through `ast-grep scan --update-all`, and rule semantics are native
+      ast-grep (`utils`, `constraints`, `transforms`), with SSOT-derived data generated
+      by `make gen` (class-A producers registered in `Infra.codegen.ast_grep`);
+    - per-finding Python admission is retired;
+    - the staged scan configuration is reproducible with native ast-grep, so a native
+      scan and `make mod` agree.
+12. **Validation applies every FLEXT rule in the real tree.** Operator order 2026-10-24:
+    a concept, design or fix is validated in the real tree under the full FLEXT law
+    and the project's own tool configuration, through the canonical gates. Scratch
+    files, loose classes, default tool presets and isolated probes that skip the real
+    rules are fake evidence, never proof. A type-checker proof uses the gate's exact
+    interpreter binding.
+13. **The `make mod` pipeline has a fixed order.**
+    1. The canonical import header, generated from SSOT: the dependency namespace
+       singletons, the project's own aliases, and the facade-module letter taken from
+       the upstream facade, with reverse-layer letters under `if TYPE_CHECKING:`.
+       Insertion is per name, only for names a module uses but does not bind.
+    2. The whole codemod catalog, repeated until nothing changes.
+    3. Last, ruff `--fix --select` over the import families declared in the tooling
+       SSOT.
+14. **Pydantic declarations are complete at import.** Every model, settings, config and
+    service class is complete when its module is imported (`__pydantic_complete__`),
+    with no `model_rebuild`.
+    - A protocol-typed model field uses `t.Port[p.X]`, Pydantic's official field-level
+      marker. A protocol metaclass is not FLEXT-conformant because the metaclass is
+      private API.
+    - `arbitrary_types_allowed` is banned.
+    - A field naming a sibling through its own enclosing family class is banned
+      (`ban-enclosing-family-field-reference`): the enclosing class is unbound while
+      its body runs, so the model stays incomplete. The fix extracts the nested member
+      into its own family module.
+    - Facade roots (`c`, `t`, `p`, `m`, `u`) never inherit a model.
 
 ## Definitions
 
@@ -190,6 +225,9 @@ All in flext-infra's declarative catalog, propagated to every consumer:
   `u.Cli.template_*`; test source moves to files under `tests/fixtures/<scenario>`, which
   a test receives through the `fixture_tree` fixture (owner `u.Tests.materialize`,
   flext-tests).
+
+- **Pydantic completeness** (Decision 14): `ban-enclosing-family-field-reference`,
+  `ban-arbitrary-types-allowed` and `ban-model-rebuild`.
 
 A violation is RED in `make check`; a diagnostic is guidance, never a waiver.
 
