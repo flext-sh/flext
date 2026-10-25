@@ -67,6 +67,12 @@ installed delivery remain separate evidence. Global governance is authored under
 - Each package has one thin `api.py` MRO facade and one simple generated root
   `__init__.py` with automatic lazy public exports. Custom import routers, eager
   alternatives, compatibility aliases, and duplicate facades are forbidden.
+- The project and its runtime work 100% of the time: one active slice completes
+  `gen` → `fmt` → `fix` → `mod` → `check` → `tests` in every touched repository,
+  runtime proof and the integration merge before anything else starts; nothing is
+  skipped, deferred or parked; red or incomplete work is never committed, tested or
+  pushed except to a preservation ref outside the working and integration branches
+  (ADR-029; root `AGENTS.md` contract item 9).
 - A removed or renamed public signature that still has consumers follows the
   deprecated-signature window (ADR-028 Decision 7; tracker memory
   `operator-ruling-2026-10-24-deprecated-signature-window`). It stays a marked
