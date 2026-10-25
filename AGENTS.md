@@ -748,8 +748,10 @@ CLI + pytest plugin, **never imported at runtime**.
     - Current gaps (2026-10-25):
       - `defer_build` is not implemented in the flext-core presets;
       - the generator still imports the target package;
-      - some generated inits come out empty for consumed packages;
-      - a codemod pass hoisted imports into real cycles.
+      - a codemod pass hoisted imports into real cycles;
+      - a module that declares a public class but publishes an empty `__all__` is
+        not yet reported. The generator correctly propagates nothing, so the
+        consumers silently lose the class; this was measured on 28 ai-hub modules.
 
       Each gap is fixed at its owner under the stabilization task force.
   - No source code or long text embedded as string literals (multi-line or
