@@ -102,6 +102,10 @@ candidate; acceptance never proves fleet stability.
   — **PROPOSED** (operator order 2026-10-24; one owner family per exported object,
   derived from its kind; detected by `make gen`, rewired by a `make mod` Rope phase;
   tracked in `flext-vjj1s.11`)
+- [ADR-029: Always Working — One Complete Cycle Per Slice](029-always-working-one-complete-cycle.md)
+  — **ACCEPTED** (operator orders 2026-10-24; the project and its runtime work 100% of
+  the time; one active slice completes gen → fmt → fix → mod → check → tests, runtime
+  proof and integration merge before anything else starts; nothing skipped or parked)
 
 > **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance
