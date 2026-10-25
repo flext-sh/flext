@@ -239,6 +239,17 @@ These standards override conflicting completion shortcuts.
    before introducing new behavior or strategy; never implement an unaligned rule
    change autonomously. FLEXT-specific documentation and constraints apply with
    additional rigor and must not diverge from this contract.
+9. **Always working; one complete cycle at a time** (operator order 2026-10-24,
+   tracker memories `operator-order-2026-10-24-always-working-never-skip-phase`
+   and `operator-order-2026-10-24-no-incomplete-pushes`). The project and its
+   runtime work 100% of the time. Only one slice is active. It completes the full
+   cycle before anything else starts: `gen` → `fmt` → `fix` → `mod` → `check` →
+   `tests` in every repository it touches, real runtime proof, commit, push, and
+   merge to the integration branch. A phase never begins while another is
+   incomplete. Nothing is skipped, deferred or parked "for a later wave", and a red
+   found is fixed immediately at its owner. Incomplete or red code is never
+   committed, tested or pushed. An explanation of why something was not finished
+   does not replace finishing it.
 
 Apply these standards through fix, forward, adopt, and collaborate. The shared
 worktree contract remains mandatory: dirty or changing Git state is not a defect
