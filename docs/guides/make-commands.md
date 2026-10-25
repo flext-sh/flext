@@ -84,9 +84,15 @@ checks are not fleet proof; failures and unexecuted gates remain explicit.
 
 ## Canonical workflow
 
-The approved `flext-0029c` native-bootstrap target uses one root uv workspace and
-lock in local execution and root CI; CI checks out declared submodules and installs
-noneditable. Suppliers use native pyproject sources, not environment selection,
+The approved `flext-0029c` native-bootstrap target uses one root uv workspace in
+local execution and root CI; CI checks out declared submodules and installs
+noneditable. Locks follow
+[ADR-030](../architecture/adr/030-member-locks-composition-upg-guard.md) (tracker
+memory `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`, superseding the
+earlier root-only lock decision): member `uv.lock` and `mise.lock` are kept and
+formed by each member, the workspace lock is their composition, only `make upg`
+writes locks behind its guard, and exact SHAs pin the hierarchy. The guard's
+implementation is pending. Suppliers use native pyproject sources, not environment selection,
 persisted state or synthetic resolvers. Official Mise acquisition and native locked
 tool provisioning precede `uv sync --frozen` into the owned physical `.venv`.
 No custom Python or AWK/shell lock/installer parser, copied admission resource or
@@ -351,6 +357,14 @@ second lint-repair path, and a repair does not repeat formatting.
 The repair selection derives from the existing repair-capable catalog minus those
 formatters; a gate's reusable mutating implementation does not elect it for both
 public operations.
+Outside CI, a workspace root's `fmt` and `fix` run one checker process with
+`check run --scope all`: the root plus every governed member declared in
+`.gitmodules`, never one member Makefile after another (operator ruling
+2026-10-25). A gate whose tool natively accepts several project roots
+(`union_capable`, today Ruff format) runs once over the union of every project's
+targets and its findings are split back per project for the report; the other
+gates still run per project inside that single process. CI (`CI=Y`) keeps
+`--scope self` and evaluates only its own repository.
 `fix` also consumes the existing documentation repair owner for authored links,
 table-of-contents projections and fenced-code lint repairs. It prepares one selected
 docs bundle only to reuse its captured inputs and exact generated-output ownership;
@@ -364,6 +378,13 @@ checks remain necessary; they do not authorize a hidden global gate pass. Repeat
 after relevant inputs change or to prove a fixed point. Normalizing bytes owned by a
 generator remains part of its single publisher, not another formatter over authored
 sources.
+
+`make check` runs as one `flext-infra workspace check` process. The read-only
+projection verdict (`codegen conform --mode check`) runs first, so projection or lock
+skew fails as drift. The captured gates follow, keeping their own attested checker
+process, then the lane census (skipped in CI) and the documentation validation and
+audit. The first failure stops the verb. Under the commit-hook token the verb runs
+only the commit-stage gates. A dirty or changing tree is never a check condition.
 
 The checker owns runtime integrity as a registered gate alongside the other checks.
 It invokes the existing dependency, lock, environment-provenance and toolchain
@@ -542,8 +563,8 @@ generation or environment mutation. Read the native generation operation receipt
 their journal-backed artifact batches, including unchanged outputs, actual effect
 targets, pending effects and source/output identities. Repeated generation must have no
 relevant artifact effects; routine receipt/archive publication is evidence, not source
-drift. An exit-zero invocation or unchanged `lifecycle_observed_files` is insufficient:
-those bounded observations do not cover every generated artifact. Repeated `mod`, `fix`
+drift. An exit-zero invocation or a sample of unchanged files is insufficient: bounded
+observations do not cover every generated artifact. Repeated `mod`, `fix`
 and `fmt` also require zero relevant effects. A later effective change invalidates the
 affected runtime and gate receipts and requires their renewed validation, never a hidden
 retry or a whole-workspace quiet window.

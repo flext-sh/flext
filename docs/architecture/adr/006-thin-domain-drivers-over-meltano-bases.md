@@ -31,7 +31,7 @@ declarative pilot: **flext-tap-ldap**, landed). Rollout to the remaining
 | --------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | `flext-tap-ldap`      | **Converted** (declarative driver) | Pilot realized 2026-07-17: src 3276 → 914 LOC (−72%)                                                                   |
 | `flext-tap-oracle`    | **Not converted**                  | Still has hand-rolled `tap.py` (`:26/:91/:167/:220`) and `streams.py` (`:40/:268`); bypasses the meltano base entirely |
-| `flext-target-oracle` | **Not converted**                  | 3211 src LOC; `create_sink()` raises `TypeError` (`:api.py:30-37`)                                                     |
+| `flext-target-oracle` | **Not converted**                  | 3211 src LOC; Loader pattern, declares no `sink_factory` (the former `create_sink()` stub raising `TypeError` was deleted 2026-10-25) |
 | `flext-dbt-*` (all)   | **Not converted**                  | Each pilot re-declares Oracle connection scalars from `settings.DbOracle`                                              |
 | `flext-tap-oracle-oic` | **Runtime-broken** (measured 2026-10-24) | Both console scripts exit 1 for any argv: `api.py:29-44` raises `TypeError`, `tap_service_base.py:78` turns it into `SystemExit(1)` (bead `flext-ceqsw`) |
 
@@ -40,6 +40,18 @@ transport contract of ADR-019 Decision 5 and epic `flext-itpd1.11.8`. Measured d
 it removes: both adapters call Click `main()` and swallow `SystemExit`, the tap instance
 is discarded, targets drain stdin and ignore their arguments, and
 `executor_base.py:261-275` converts 11 exception types into exit 1 (bead `flext-pa35g`).
+
+**Facade-boundary amendment (2026-10-25):** ADR-028 makes `api.py` a pure MRO facade
+with no local methods, so a driver no longer overrides an abstract hook in `api.py`. The
+base declares a typed capability and the driver binds it to its stateless
+`u.<Namespace>` function:
+
+- target: `sink_factory: ClassVar[p.Meltano.SinkFactory]`, bound to
+  `u.<Namespace>.create_sink`; `fetch_or_create_sink` calls it with
+  `target_config=settings_overrides or {}`. Applied to target-ldif, target-oracle-oic and
+  target-oracle-wms; target-oracle (Loader pattern) binds none.
+- tap (`create_tap_instance`) and dbt (`connection_profile`) move to the same declared
+  capability mechanism in the next slice.
 
 **Depends:** builds on ADR-005 (config/settings SSOT) and the repository FLEXT law —
 
@@ -147,15 +159,16 @@ project. Three layers, each with one owner:
 | -------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Integration interfaces** (dbt/tap/target/singer machinery in FLEXT form) | `flext-meltano`                           | the 3 consumer bases + `c/t/p/m/u` for meltano; 100% domain-agnostic (never references oracle/ldap/…)                                                              |
 | **Action library** (real connection + execution)                           | `flext-<domain>` (e.g. `flext-db-oracle`) | connection SSOT (`settings.<Domain>.*`), runtime API (`FlextDbOracleApi`), `p.<Domain>.Connection`, type/Singer maps                                               |
-| **Thin driver**                                                            | `flext-(dbt\|tap\|target)-{domain}`       | implements ONLY the base's one abstract hook; reuses `c/t/p/m/u` from BOTH flext-meltano and the action library; declares no connection settings/models of its own |
+| **Thin driver**                                                            | `flext-(dbt\|tap\|target)-{domain}`       | declares ONLY the base's one capability (bound to its `u`); reuses `c/t/p/m/u` from BOTH flext-meltano and the action library; declares no connection settings/models of its own |
 
 ### Rules (inviolable for these projects)
 
-1. **A thin driver subclasses its meltano base and implements only the abstract hook** —
+1. **A thin driver subclasses its meltano base and declares only its capability** —
 
    dbt: `dbt_project_name` + `connection_profile`; tap: `tap_name` +
 
-   `create_tap_instance`; target: `target_name` + `create_sink`. No hand-rolled
+   `create_tap_instance`; target: `target_name` + `sink_factory` (amended 2026-10-25:
+   declared, never overridden in `api.py`; tap and dbt follow). No hand-rolled
 
    CLI/commands/streams when the base already provides them.
 
@@ -199,7 +212,7 @@ returns its own `m.<Ns>.DbtConnectionProfile` model that adds the domain fields 
 
 structurally satisfies the protocol. tap/target keep their factory seams (
 
-`create_tap_instance` / `create_sink` ).
+`create_tap_instance` / `sink_factory` ).
 
 ## Consequences
 

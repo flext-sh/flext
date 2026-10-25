@@ -39,7 +39,9 @@ candidate; acceptance never proves fleet stability.
 - [ADR-002: v0.13.0 Platform Baseline](002-v0-13-0-platform-baseline.md) —
   **ACCEPTED TARGET** (forward baseline `0.13.0`)
 - [ADR-003: Manifest-owned topology, root workspace, and autonomous Git libraries](003-workspace-tooling-hub-distribution.md)
-  — **CURRENT IMPLEMENTATION** (§1 superseded by ADR-024: `.gitmodules` owns composition)
+  — **CURRENT IMPLEMENTATION** (§1 superseded by ADR-024: `.gitmodules` owns composition;
+  lock ownership in §3 and the verification contract superseded by ADR-030: member
+  locks are kept and the workspace lock composes them)
 - [ADR-004: Generated Make and codegen SSOT owned by `flext-infra`](004-generated-make-codegen-ssot-flext-infra.md)
   — **CURRENT IMPLEMENTATION**
 - [ADR-005: Config, settings, constants, templates, and schemas SSOT](005-config-settings-constants-templates-schemas-ssot.md)
@@ -106,6 +108,13 @@ candidate; acceptance never proves fleet stability.
   — **ACCEPTED** (operator orders 2026-10-24; the project and its runtime work 100% of
   the time; one active slice completes gen → fmt → fix → mod → check → tests, runtime
   proof and integration merge before anything else starts; nothing skipped or parked)
+- [ADR-030: Member Locks, Workspace Lock Composition, and the Upgrade Guard](030-member-locks-composition-upg-guard.md)
+  — **ACCEPTED** (operator ruling 2026-10-25, tracker memory
+  `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`; member `uv.lock` and
+  `mise.lock` kept and formed by each member; the workspace lock is their
+  composition; only `make upg` writes locks; exact SHA pinning; the upgrade guard is
+  the target contract, implementation pending; supersedes the same-day root-only lock
+  statements)
 
 > **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance

@@ -52,9 +52,9 @@ the real tree under `make mod`.
 
 `make mod` runs the native cascade first. The owner is
 `flext_infra/_utilities/codemod_native_cascade.py`, called from
-`codemod/batch_apply.py`. The cascade covers every fixable rule without
-`metadata.context`, plus the generated rules, and runs the `mod.phases.stages`
-declared in `tooling.yaml`:
+`codemod/batch_apply.py`. The cascade covers every fixable rule that is neither
+an owned-path rule nor a Rope relocation, plus the generated rules, and runs the
+`mod.phases.stages` declared in `tooling.yaml`:
 
 1. `header`: the generated `import-header` rules.
 2. `catalog`: every other native rule.
@@ -64,16 +64,27 @@ The stages repeat over one staged preview until no byte changes. Each stage's
 staged `sgconfig.yml` lives under `.reports/codemod/native/<stage>`, so
 `ast-grep scan -c` reproduces the stage by hand.
 
-The cascade renders the generated utilities and rules in memory, through
-`codemod_native_generated`, from the producers and renderers registered in
-`Infra.codegen.ast_grep`, and reads no projection from disk. Generated rules are
-rendered in memory only. Current state (2026-10-24): `make gen` still writes an
-unread per-rule projection under `config/rules/ast-grep/{utils,rules/generated}`,
-which bead `flext-13s6n` deletes, together with consolidating each shape into one
-document with native `rewriters`.
+The producers and renderers registered in `Infra.codegen.ast_grep` render each
+governed project's generated utilities and rules (`codemod_native_generated`).
+`u.Infra.codemod_rule_plan` materializes them as one native provider,
+`generated`, under `.reports/codemod/native/generated/<content digest>/`
+(`sgconfig.yml`, `ruleDirs/`, `utilDirs/`). It then elects that provider after the
+catalogs, like any other provider. Generated rule ids are package-qualified
+(`<shape>--<package>`). The scan, the `check` codemod gate and the cascade therefore
+consume rendered rules through the same plan as authored ones, and
+`ast-grep scan -c` on that directory reproduces them by hand. Generated rules carry
+no fixtures: renderer tests own their proof. Current state (2026-10-24): `make gen`
+still writes an unread per-rule projection under
+`config/rules/ast-grep/{utils,rules/generated}`, which bead `flext-13s6n` deletes.
 
-The engine applies replacements only for rules that carry `metadata.context`. A
-native rule that still reports an actionable finding after the cascade fails `make mod`.
+Every finding is the native match; no Python admission runs after the scan. A
+project fact a catalog rule needs is a stable generated utility (`own-package`,
+`stdlib-module`, `runtime-package`, `facade-package`, `local-alias`,
+`runtime-alias`, `package-export`, `compose-module`, ...) that the rule references
+through `matches:`, or a file scope the generated provider publishes in its
+`scopes.yml`. Catalog fixtures resolve those identities through
+`config/rules/ast-grep/fixture-utils/`, which only the fixture stage reads. A native
+rule that still reports an actionable finding after the cascade fails `make mod`.
 
 ## ast-grep rules
 
@@ -98,12 +109,51 @@ The engine reads these `metadata` keys, declared in
 
 | Key | Meaning |
 |---|---|
-| `context` | Per captured metavariable, a predicate the finding must satisfy: `{VAR: {is: <predicate>}}` or `{VAR: {not: <predicate>}}`, with optional `of`, `arg` and `as`. |
+| `scope` | File scopes the generated provider publishes: `{in: [selector], not-in: [selector]}` narrows the rule's `files`/`ignores`; `partition` renders one generated rule `<id>--<package>[--<key>]` per file group, and selecting the catalog id selects every partition. |
 | `owner` | The distribution that owns the law; that project's own plan drops the rule. |
 | `consumers_of` | The rule applies only to projects whose runtime closure includes that distribution. |
 | `relocation` | A detection-only rule names the Rope relocation that repairs it and captures the symbol as `$NAME`. |
 | `expected` | The exact finding count receipt; any other count fails. |
-| `owned_path_suffix` | Reject owned `.pyi` paths from discovery even without a syntax tree; detection-only, with no context exemption. |
+| `owned_path_suffix` | Reject owned `.pyi` paths from discovery even without a syntax tree; detection-only, with no exemption. |
+
+### One rule per law
+
+Operator order of 2026-10-25, verbatim (tracker memory
+`operator-order-2026-10-25-rules-generalized-min-count`; ADR-028 Decision 18):
+"o sed, rope e ast-grep rules tem que estar sempre alinhados com as regras
+corretas de forma generalizada e automaticas usando sempre máximo de
+funcionalidades padrões das ferrametnas que as embasam e reduzir ao máximo ao
+número de rules que são executadas". sed, Rope and ast-grep rules stay aligned
+with the governing rules. They are generalized and automatic, use as much of each
+tool's standard functionality as possible, and keep the number of executed rules
+as small as possible. Renames and moves that Rope's refactorings express run
+through them, not through a custom planner (ADR-028 Decision 17), and a rename of
+library-named exports to capability names follows ADR-028 Decision 15.
+
+- **One document per law.** Facts that vary per package, letter or namespace
+  are rendered into the values of a single document, never into one document
+  per value. Those values are the regex of `constraints` on metavariables,
+  `any` branches, rule-local `utils`, and `rewriters` selected by a `rewrite`
+  transform. `relocate-facade-component--<package>` is the pattern: one
+  document with one `any` branch and one rewriter per facade namespace.
+- **Partitions only where the file scope differs.** ast-grep scopes a whole
+  document by `files`/`ignores`; one branch cannot have its own file scope. A
+  `partition` is used only when the verdict depends on which file group holds
+  the match. When the law can be stated from the code itself, state it there
+  and use `scope: {not-in: [...]}`, which renders as plain native `ignores`.
+  `ban-foreign-namespace-source`, `ban-foreign-canonical-alias-import` and
+  `ban-foreign-namespace-annotation-source` are single documents that way:
+  facade modules compose upstream letters by design, so they are scoped out
+  rather than partitioned per letter.
+- **One law, one rule, every library.** A law that applies to many libraries,
+  packages or letters derives the set from its facts (installed distributions,
+  facade exports, the import law). It never ships one clone per member.
+- **Retired migrations leave.** A one-shot migration rule (`retire-*`,
+  `rewire-*`, `remove-*`, `rename-*`) whose fleet census is zero is deleted with
+  its test and snapshot.
+- **Executed rules are a gate metric.** The number of rules a `make mod` run
+  executes per project is reported from `mod-findings.json` (`totals_by_rule`).
+  Its budget is a typed configuration key, never a number in code.
 
 Generated rules come from renderers registered in `Infra.codegen.ast_grep.renderers`.
 Each renderer receives one facts model.

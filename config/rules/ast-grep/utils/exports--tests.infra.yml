@@ -1,5 +1,0 @@
-# AUTO-GENERATED FILE — Regenerate with: make gen
-id: exports--tests.infra
-language: Python
-rule:
-  regex: ^(?:TestsFlextRootConstants|TestsFlextRootModels|TestsFlextRootProtocols|TestsFlextRootResult|TestsFlextRootTypes|TestsFlextRootUtilities|r|u)$

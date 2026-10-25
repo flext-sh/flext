@@ -100,7 +100,7 @@ src/flext_target_oracle/
   `FlextMeltanoTargetServiceBase` from `flext-meltano`, which provides the public Singer
   runtime via MRO. The package overrides only Oracle-specific command verbs; every other
   concern (buffering, batch lifecycle, connection management) is inherited.
-- **CQRS loader pattern**: `create_sink` intentionally raises — this target uses a
+- **CQRS loader pattern**: the service declares no `sink_factory` — this target uses a
   loader pattern via `FlextTargetOracleLoader` in `_utilities/loader.py`, which
   delegates Oracle access exclusively to `flext-db-oracle`. Command models in
   `_models/commands.py` are pure data; execution lives in the service and loader.

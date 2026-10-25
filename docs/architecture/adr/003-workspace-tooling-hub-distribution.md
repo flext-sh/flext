@@ -17,7 +17,11 @@
 
 - **Status:** Accepted (amended 2026-07-16); §1 SUPERSEDED (2026-10-08) by
   [ADR-024](024-di-config-contract-derived-defaults-minimal-overrides.md) — composition
-  is owned by the workspace's `.gitmodules`, not by a manifest member list
+  is owned by the workspace's `.gitmodules`, not by a manifest member list; lock
+  ownership in §3 and the verification contract SUPERSEDED (2026-10-25) by
+  [ADR-030](030-member-locks-composition-upg-guard.md) — member `uv.lock` and
+  `mise.lock` are kept and formed by each member, and the workspace lock is their
+  composition (tracker memory `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`)
 - **Date:** 2026-06-24
 - **Scope:** FLEXT, Cosmos, and standalone repository topology, dependency provenance,
   and development environments.
@@ -109,17 +113,21 @@ The generated root `setup` handler:
 5. runs the package consistency check and validates `direct_url.json` for every member.
 
 This local selection is an environment operation, never a metadata rewrite. An attached
-member delegates `setup` to the root. The same member in an independent clone uses its
-own environment and its declared dependency origins.
+member delegates `setup` to the root. Superseded by
+[ADR-030](030-member-locks-composition-upg-guard.md) (2026-10-25): a member checked out
+without its workspace installs from its own committed `uv.lock`; the earlier "no lock
+to install, fails setup loudly" statement no longer holds.
 
 All other commands execute with `uv run --project <environment-owner> --no-sync`. Checks
 and tests therefore cannot synchronize, relock, rewrite metadata, or replace the
 editable overlay implicitly. Dependency upgrades are the explicit `make upg` verb,
 which performs its operation directly with no apply selector (the `APPLY` flag stays
 removed). An attached member delegates `make upg` to the
-root, which relocks the root lock and then every governed member's own lock in
-dependency waves (see the verification contract); the first failure stops the
-remaining members. A standalone upgrade runs only itself. `gen` writes managed projections,
+root. Superseded in part by [ADR-030](030-member-locks-composition-upg-guard.md)
+(2026-10-25): the root forms each member's own lock from that member's declarations
+and composes the workspace lock from them, behind the upgrade guard (committed code
+and gitlinks for editable setups, exact SHA pinning). A standalone upgrade runs only
+itself. `gen` writes managed projections,
 and `setup` synchronizes the environment without writing locks.
 
 ### 4. Generated profiles define attachment behavior
@@ -151,16 +159,18 @@ No profile depends on files outside its repository checkout.
 - Generated manifests are byte-idempotent; no native workspace table or member
   `workspace = true` routing survives. Only the packaged root's self-only implicit
   source override remains; local editability never rewrites published requirements.
-- Every member tracks its own `uv.lock`, which its standalone CI installs frozen
-  and never relocks (tracker memory
-  `operator-ruling-2026-10-24-ci-frozen-homologated-locks`). Native uv elects the
-  superproject for an attached member, so one root `make upg` relocks the root,
-  then each governed member in runtime-dependency waves inside a short-lived
-  native worktree of that member's repository at its fetched branch tip, outside
-  the superproject (`make.member_lock`). A changed lock is committed path-limited,
-  pushed fast-forward, proven reachable from the fresh remote ref, adopted by the
-  primary checkout and the worktree retired. The check gate runs `uv lock --check`
-  against each checkout's own committed lock through the same owner.
+- Historical (superseded the same day by
+  [ADR-030](030-member-locks-composition-upg-guard.md)): an earlier 2026-10-25
+  decision made the workspace root lock the only lock of a member, with members
+  tracking no `uv.lock` and a member checked out without its workspace failing
+  setup. The live contract is ADR-030 (tracker memory
+  `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`): member `uv.lock`
+  and `mise.lock` are kept and formed by each member, the workspace lock is their
+  composition, only `make upg` writes locks behind the upgrade guard, and the
+  dependency hierarchy is pinned by exact SHA. Workspace `make upg` still
+  processes every member in one pass (operator ruling 2026-10-25), and CI still
+  installs frozen and never relocks (tracker memory
+  `operator-ruling-2026-10-24-ci-frozen-homologated-locks`).
 
 ## References
 

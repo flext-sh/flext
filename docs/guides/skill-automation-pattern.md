@@ -56,7 +56,6 @@ make fmt
 make check
 make tests
 make gen
-make waza
 ```
 
 The final generation run proves the fixed point. `make mod` owns structural

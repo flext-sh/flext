@@ -48,5 +48,4 @@ class FlextRootProtocols(
 
 
 p = FlextRootProtocols
-
-__all__ = ("FlextRootProtocols", "p")
+__all__: list[str] = ["FlextRootProtocols", "p"]

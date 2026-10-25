@@ -1,4 +1,4 @@
-# flext_target_ldap.target
+# flext_core.flextlazy_native_export
 
 <!-- TOC START -->
 
@@ -6,7 +6,7 @@
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-::: flext_target_ldap.target
+::: flext_core.flextlazy_native_export
 
     options:
       show_root_heading: true

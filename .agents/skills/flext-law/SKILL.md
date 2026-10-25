@@ -21,11 +21,15 @@ completion gates remain owned by:
 - `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`
 
 Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
-Before code changes, consult and update affected docs, README, AGENTS, ADRs, Beads
-and applicable local and global skills at their canonical owners; repeat consultation
-at phase and context boundaries. The global engineering and observable-runtime rules
-own the order: documentation first, implementation and exercised real public runtime
-next, test changes last. Their prohibitions on mocks, patches, fakes, tautologies,
+Before code changes, consult, align and adjust memory (tracker memories), `AGENTS.md`,
+docs, README, ADRs, rules, applicable local and global skills and Beads at their
+canonical owners, in root `AGENTS.md` contract item 8's order (operator order
+2026-10-25, tracker memory `operator-order-2026-10-25-docs-first-before-code`);
+repeat consultation at phase and context boundaries. Code inside docstrings and
+Markdown is held to the same rules, kept current, tested and formatted (tracker
+memory `operator-order-2026-10-25-embedded-code-same-rules`, ADR-028 Decision 9).
+The global engineering and observable-runtime rules own the order: documentation
+first, implementation and exercised real public runtime next, test changes last. Their prohibitions on mocks, patches, fakes, tautologies,
 mutable config/settings hardcodes and fallbacks apply; immutable external protocol
 literals and SSOT-owned defaults remain legitimate. Source changes and AI Hub's
 installed delivery remain separate evidence. Global governance is authored under
@@ -50,9 +54,15 @@ installed delivery remain separate evidence. Global governance is authored under
   explicit or implicit; static enforcement lives only in flext-infra's declarative
   catalog. Before writing any import or module-level name outside a facade, place it in
   its family first.
-  The same ADR owns automated correction (Decision 8), native tool use (11), validation
-  in the real tree (12), the `make mod` pipeline order (13) and Pydantic completeness
-  (14); this skill restates none of them.
+  The same ADR owns automated correction (Decision 8), governed code examples (9),
+  native tool use (11), validation in the real tree (12), the `make mod` pipeline
+  order (13), Pydantic completeness and entity equality (14), capability-named
+  exports with no library name outside the facades (15), maximum CA/DI decoupling
+  with jscpd and qlty at zero (16), rope as the workspace model and refactoring
+  engine (17), generalized minimal rules (18) and the two allowed `u` imports in
+  models with `_models/pydantic.py` (19); this skill restates none of them. Each of
+  Decisions 15–19 and the examples clause of 9 quotes its 2026-10-25 operator order
+  verbatim with its tracker key.
 - Family part shape (ADR-014, `$flext-family-shape`): the five private families each
   begin with `base.py`; a part file nests entities directly
   (models/enums/protocols/behavior, one level) — top-level orphan classes and pure
@@ -63,7 +73,15 @@ installed delivery remain separate evidence. Global governance is authored under
   explicitly by `api`. A service may not construct infrastructure, read process-global
   configuration, or resolve a dependency by string, reflection, service locator, hidden
   singleton, or module global. A container owned by `flext-core` may wire the graph only
-  at the composition root.
+  at the composition root. Pluggable implementations (LDIF/LDAP servers and their
+  equivalents) are injected only by DI, never chosen from a registry, priority list or
+  ready-made list, and their users never know which one they hold (root `AGENTS.md`
+  "Pluggable capabilities arrive only by DI"; tracker memory
+  `operator-order-2026-10-25-servers-di-never-registry`). The shared `c/t/p/m/u`
+  families and services understand only the RFC, its extensions and metadata, never a
+  dialect name, and no dialect knows another (tracker memories
+  `operator-order-2026-10-25-facades-rfc-extensions-metadata-only` and
+  `operator-order-2026-10-25-dialects-never-know-each-other`).
 - Each package has one thin `api.py` MRO facade and one simple generated root
   `__init__.py` with automatic lazy public exports. Custom import routers, eager
   alternatives, compatibility aliases, and duplicate facades are forbidden.
@@ -152,8 +170,13 @@ sequence. Implementation approval is separate from this documentation slice,
 which executes no runtime, gates or distribution and proves no runtime readiness.
 Universal rules and skills remain authored in `~/agents/`, not installed projections.
 
-The approved native-bootstrap target uses one root uv workspace and lock, with
-declared submodules checked out in root CI and noneditable installation there.
+The approved native-bootstrap target uses one root uv workspace, with declared
+submodules checked out in root CI and noneditable installation there. Locks follow
+ADR-030 (tracker memory `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`,
+superseding the earlier root-only lock decision): member `uv.lock` and `mise.lock`
+are kept and formed by each member, the workspace lock is their composition, only
+`make upg` writes locks behind its guard (committed code and gitlinks for editable
+setups; guard implementation pending), and exact SHAs pin the dependency hierarchy.
 Independent checkouts retain native project contracts; external suppliers use native
 pyproject sources, never environment-selected suppliers, persisted selection or
 synthetic resolver views. A consumer (external project or standalone FLEXT checkout)

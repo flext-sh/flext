@@ -48,5 +48,4 @@ class FlextRootUtilities(
 
 
 u = FlextRootUtilities
-
-__all__ = ("FlextRootUtilities", "u")
+__all__: list[str] = ["FlextRootUtilities", "u"]

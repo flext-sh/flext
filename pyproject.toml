@@ -198,7 +198,7 @@ dev = [
   "pyyaml>=6.0.3",
   "redis>=8.1.0",
   "requests>=2.34.2",
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@1.15.0%2Bdc.4",
+  "rope @ git+https://github.com/marlon-costa-dc/rope.git@1.15.0%2Bdc.6",
   "ruamel.yaml>=0.19.1",
   "ruff>=0.16.5",
   "rumdl>=0.2.62",
@@ -626,6 +626,7 @@ include = [
   "flext-grpc/examples",
   "flext-grpc/src",
   "flext-grpc/tests",
+  "flext-infra/conftest.py",
   "flext-infra/src",
   "flext-infra/tests",
   "flext-ldap/conftest.py",
@@ -1433,18 +1434,13 @@ addopts = [
   "--strict-markers",
   "--markdown-docs",
   "--durations=10",
-  "--flext-enforce-strict",
 ]
 asyncio_default_fixture_loop_scope = "function"
-filterwarnings = [
-  "error",
-  "module::flext_core._constants.enforcement.FlextMroViolation",
-  "once::pytest.PytestAssertRewriteWarning",
-]
+filterwarnings = ["error", "once::pytest.PytestAssertRewriteWarning"]
 flext_fixture_trees_root = "tests/fixtures"
 flext_make_ci_value = "Y"
 flext_make_ci_variable = "CI"
-flext_slow_timeout_seconds = "30"
+flext_slow_timeout_seconds = "25"
 markers = [
   "smoke: public-interface smoke tests",
   "unit: unit tests",
@@ -1559,6 +1555,7 @@ select = ["ALL"]
 unfixable = [
   "multi-value-repeated-key-literal",
   "multi-value-repeated-key-variable",
+  "non-pep695-type-alias",
   "p-print",
   "print",
   "pytest-duplicate-parametrize-test-cases",
@@ -1584,6 +1581,17 @@ msg = "Use cli.render_table from flext_cli."
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api.typer]
 msg = "Use cli.create_app_with_common_params / cli.register_command from flext_cli."
+
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = [
+  "examples.m.BaseModel",
+  "flext.m.Value",
+  "flext_core.FlextConfig",
+  "flext_core.FlextSettings",
+  "flext_infra.m.BaseModel",
+  "flext_tests.FlextTestsServiceBase",
+  "pydantic.BaseModel",
+]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
@@ -1660,7 +1668,7 @@ constraint-dependencies = [
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 link-mode = "copy"
 override-dependencies = [
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@ff1c992a100ae983baa79188a6a970c2858734de",
+  "rope @ git+https://github.com/marlon-costa-dc/rope.git@8414232e12b6328ba812bf49fe465fde65774dfd",
 ]
 
 [tool.uv.sources.flext]

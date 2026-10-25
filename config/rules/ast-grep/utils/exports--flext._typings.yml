@@ -1,5 +1,0 @@
-# AUTO-GENERATED FILE — Regenerate with: make gen
-id: exports--flext._typings
-language: Python
-rule:
-  regex: ^(?:FlextRootTypingsBase|FlextRootTypingsConfig)$

@@ -47,5 +47,4 @@ class FlextRootConstants(
 
 
 c = FlextRootConstants
-
-__all__ = ("FlextRootConstants", "c")
+__all__: list[str] = ["FlextRootConstants", "c"]

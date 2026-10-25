@@ -16,10 +16,9 @@
 FLEXT Target LDAP (`flext-target-ldap`) is the Singer target that loads records into
 LDAP directories. It consumes Singer JSONL messages on stdin, resolves distinguished
 names, and writes entries through `flext-ldap`, composing the FLEXT facades with
-`flext-meltano` (Singer target base) behind `r[T]` contracts. The package is a thin
-driver (ADR-006): all Singer runtime plumbing comes from `flext-meltano`'s public
-`FlextMeltanoTargetServiceBase` and `FlextMeltanoTargetAbstractions`; this package owns
-only the LDAP-specific sink and DN-construction logic.
+`flext-meltano` behind `r[T]` contracts. It is a thin driver (ADR-006, amended
+2026-10-25): `FlextTargetLdap` subclasses `FlextMeltanoTargetServiceBase` and declares
+only `target_name` and `sink_factory`.
 
 ## Status & health
 
@@ -29,7 +28,7 @@ only the LDAP-specific sink and DN-construction logic.
 - **Location in this repo**: `flext-target-ldap/` at the workspace root
 - **Description** (from `pyproject.toml`): "FLEXT Target for LDAP directory loading"
 - **Dependencies**: `flext-core`, `flext-cli`, `flext-ldap`, `flext-meltano`
-- **Console scripts**: `flext-target-ldap` (bound to `flext_target_ldap.target:main`)
+- **Console scripts**: `flext-target-ldap` (bound to `flext_target_ldap.cli:main`)
 
 ### Quality signals
 
@@ -56,29 +55,28 @@ make -C flext-target-ldap check
 make -C flext-target-ldap test
 ```
 
-The target consumes Singer JSONL on stdin and echoes STATE lines to stdout. Run it from
-a Singer pipeline (for example via Meltano) or programmatically:
+The target consumes Singer JSONL on stdin through the `flext-meltano` router. Run it
+from a Singer pipeline (for example via Meltano) or programmatically:
 
 ```python
-# target_ldap is the operational alias for FlextTargetLdap;
-# config_class is FlextTargetLdapSettings.
-# FlextTargetLdap.run_cli(settings_path) reads Singer JSONL from stdin.
+# FlextTargetLdap().cli_main() drains Singer JSONL from stdin and returns 0;
+# any failed message raises SystemExit(1).
 ```
 
 ## Architecture & modules
 
 ```text
 src/flext_target_ldap/
-├── api.py                # FlextTargetLdap target (target_ldap alias) + run_cli
-├── target.py             # CLI entry point → FlextTargetLdap.run_cli()
-├── application/          # FlextTargetLdapOrchestrator
+├── api.py                # FlextTargetLdap: target_name + sink_factory binding
+├── cli.py                # console entry point → FlextTargetLdap().cli_main()
+├── services/client.py    # FlextTargetLdapClient: concrete flext-ldap adapter
+├── services/sinks.py     # FlextTargetLdapSinks: profile-driven sink + create_sink
 ├── _settings.py          # FlextTargetLdapSettings + settings singleton
-├── config/               # Execution parametrization (YAML)
+├── config/               # Stream entry profiles (YAML business rules)
 ├── _constants/           # Private constants
-├── _models/              # Private models incl. FlextTargetLdapSink
-├── _utilities/           # Private utilities (client, etc.)
-├── singer/               # Singer message parsing helpers
-├── patterns/             # Processing patterns
+├── _models/              # Private models incl. stream entry profiles
+├── _protocols/           # p.TargetLdap.Directory and sink contracts
+├── _utilities/           # u.TargetLdap: profile, entry and value mapping
 ├── constants.py          # c facade
 ├── models.py             # m facade
 ├── protocols.py          # p facade
@@ -88,18 +86,26 @@ src/flext_target_ldap/
 
 ### Key architectural patterns
 
-- **Thin-driver contract (ADR-006)**: `FlextTargetLdap` extends
-  `FlextMeltanoTargetAbstractions` from `flext-meltano`, which provides the public
-  Singer runtime. The package overrides only LDAP-specific sink selection and DN
-  construction; every other concern (buffering, batch lifecycle, STATE/RECORD/SCHEMA
-  dispatch) is inherited via MRO.
-- **Singer target contract**: `FlextTargetLdap` binds
-  `config_class = FlextTargetLdapSettings` and processes SCHEMA/RECORD/STATE messages
-  through `run_cli` (bound as the `cli` class attribute), reading JSONL from stdin.
-- **Orchestration**: `FlextTargetLdapOrchestrator` in `application/orchestrator.py`
-  coordinates the load flow; sink classes in `_models/sinks.py` model sink state.
-- **DN construction**: record messages are normalized into LDAP distinguished names
-  before being handed to the `flext- ldap` client.
+- **Thin driver (ADR-006)**: `FlextTargetLdap` declares `target_name` and binds
+  `sink_factory` to `FlextTargetLdapSinks.create_sink` with the concrete directory
+  client. The base provides `cli_main`, SCHEMA/RECORD/STATE dispatch through
+  `u.Meltano.process_stdin`, the sink registry, and flushing.
+- **Directory injection**: sinks consume the `p.TargetLdap.Directory` protocol
+  (add, modify, delete). `api.py` is the only module that names
+  `FlextTargetLdapClient` (operator order 2026-10-25, tracker key
+  `operator-order-2026-10-25-servers-di-never-registry`).
+- **One profile-driven sink**: every stream uses the same sink class. The stream's
+  entry profile in `config/target-ldap.yaml` declares the RDN attribute, identity
+  fields, object classes, and field mapping; undeclared streams use the declared
+  default profile.
+- **Write semantics**: an explicit `dn` wins; the sink adds the entry, modifies it on a
+  DN repeated in the run, and deletes it when `_sdc_deleted_at` is set. A failed add is
+  modified only when `update_existing_entries` is true.
+- **Failure behavior (changed 2026-10-25)**: a RECORD without `stream`, a line that is
+  not valid JSON, and a RECORD whose `record` is not a mapping all fail. Failures
+  surface as `r.fail` through the base drain and `cli_main` exits with status 1. STATE
+  flushes every sink. Blank lines and non-object JSON lines are skipped by the
+  `flext-meltano` router. The console script reads no configuration-file argument.
 - **Facade exports**: the package root lazily exports the canonical aliases `c`, `m`,
   `p`, `t`, `u`, and `settings`, plus `d/e/h/r/s/x` re-exported from `flext_ldap`.
 

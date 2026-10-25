@@ -29,9 +29,6 @@ jobs:
       - name: make setup
         run: make setup
 
-      - name: make gen
-        run: make gen
-
       - name: make check
         run: make check
 

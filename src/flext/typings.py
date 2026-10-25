@@ -48,5 +48,4 @@ class FlextRootTypes(
 
 
 t = FlextRootTypes
-
-__all__ = ("FlextRootTypes", "t")
+__all__: list[str] = ["FlextRootTypes", "t"]
