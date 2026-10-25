@@ -725,6 +725,33 @@ CLI + pytest plugin, **never imported at runtime**.
     reached by attribute, own package and generated facades included. Short aliases
     (`c`, `t`, `p`, `m`, `u`, `s`, …) are declared in their owning module and its
     `__all__`; an `__init__.py` re-exports or inherits them and never assigns them.
+  - **Imports are lazy, maximally and without exception: nothing loads until it is
+    used.** This consolidates standing operator rulings, cited by tracker key:
+    `flext-strict-lazy-imports-generated-inits`, `lazy-init-all-from-lazy-imports`,
+    `operator-ruling-2026-10-02-lazy-heavy-capabilities`,
+    `operator-ruling-2026-10-08-import-law`,
+    `operator-ruling-2026-10-08-lazy-init-direct-imports`, and
+    `operator-order-2026-10-25-lazy-imports-max`.
+    - Every package exposes its declarations only through its generated lazy
+      `__init__.py` (`_LAZY_IMPORTS`, `__all__ = tuple(_LAZY_IMPORTS)`,
+      `install_lazy_exports` last). That init re-exports exactly what its folder's
+      modules declare and is never empty while its members have consumers.
+    - Heavy capabilities (spreadsheet and document libraries and their models, for
+      example) load only on first use, never as a side effect of importing a facade.
+    - The `m.*` presets build Pydantic models lazily (`defer_build`), and a check
+      gate builds every model so annotation errors still fail `make check`.
+    - The lazy-init generator derives exports from source (AST over each module's
+      `__all__`) and imports its own dependencies directly. It never imports the
+      package it regenerates, so a stale init can never block its own repair.
+    - Rewrites that move imports must never create an import-time cycle. A
+      reverse-direction import goes under `if TYPE_CHECKING:`.
+    - Current gaps (2026-10-25):
+      - `defer_build` is not implemented in the flext-core presets;
+      - the generator still imports the target package;
+      - some generated inits come out empty for consumed packages;
+      - a codemod pass hoisted imports into real cycles.
+
+      Each gap is fixed at its owner under the stabilization task force.
   - No source code or long text embedded as string literals (multi-line or
     concatenated scripts for `exec`/subprocess, long text constants), in any tier,
     tests and constants included: tests call the public API with fixture data;
