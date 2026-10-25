@@ -150,7 +150,11 @@ The approved native-bootstrap target uses one root uv workspace and lock, with
 declared submodules checked out in root CI and noneditable installation there.
 Independent checkouts retain native project contracts; external suppliers use native
 pyproject sources, never environment-selected suppliers, persisted selection or
-synthetic resolver views. Official Mise acquisition and native locked tool installation
+synthetic resolver views. A consumer (external project or standalone FLEXT checkout)
+develops against a local FLEXT tree only through `make setup FLEXT=<path>`, which
+installs the locked FLEXT distributions `<path>` provides as editable into its own
+`.venv` (tracker memory `operator-ruling-2026-10-24-setup-flext-editable-param`).
+Official Mise acquisition and native locked tool installation
 precede `uv sync --locked` into the owned physical `.venv`. No custom Python or
 AWK/shell lock/installer parser, copied setup admission or installed Infra check runs
 before provision succeeds. Native declarations and lock consistency replace the
