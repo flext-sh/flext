@@ -133,21 +133,36 @@ directory, and its child modules and packages. Two renderers consume it:
 
 A renderer without `facts` receives only the project root:
 
-- `codemod_type_set_rules` emits one `type-set--<constant path>` rule per
-  tuple-of-classes constant of the project's constants facade.
-  - Election: by value, with no naming filter and no list. Two constants holding
-    the same set fail generation with both paths.
+- `codemod_type_set_rules` emits the single `type-set` rule for the project's
+  constants facade.
+  - Shape: one rule, `isinstance($VALUE, $SET)`. Each tuple-of-classes constant
+    contributes one rule-local util that matches its exact set, and one
+    rewriter that replaces the set with the constant. A `rewrite` transform
+    selects the rewriter whose util matched.
+  - Election: by value, with no naming filter and no list. Two unmarked
+    constants holding the same set fail generation with both paths. A
+    compat-marked alias (below) is not elected.
   - Trigger: `isinstance(value, <set>)` outside the constants family, when the
-    second argument is exactly that set as a tuple or a `|` union, in any
+    second argument is exactly a declared set as a tuple or a `|` union, in any
     operand order.
   - Spellings: a builtin by its bare name, a stdlib class through its top-level
     module (`ast.FunctionDef`), and any class through each constants-facade
     alias that binds it (`c.Infra.Cst.ClassDef`). A set with a member that has
-    no admitted spelling gets no rule.
+    no admitted spelling gets no util.
   - Effect: the set is replaced by the constant (`c.Infra.AST_FUNCTION_TYPES`).
   - Partner: `ban-inline-type-set-outside-constants` detects every inline set,
     including those no constant declares yet; declaring the constant makes the
     generated rule repair it.
+- `codemod_compat_rules` emits the single `compat-read` rule for constants kept
+  through a deprecation window.
+  - Marker: the constant's annotation carries the stdlib marker as metadata,
+    `X: Annotated[ClassVar[...], warnings.deprecated("compat: <old> -> <new>;
+    fix: <rewire>")] = <new owner>`. The message grammar is enforced; a
+    malformed marker fails generation.
+  - Trigger: every read of the old facade path. The declaration itself is never
+    matched, so the alias does not fail CI and every use of it does.
+  - Effect: each read is rewritten to the new owner named in the marker. The
+    alias is deleted when no read remains in the fleet or external consumers.
 
 A package initializer never publishes a child package object. Consumers import a
 child's names from the child package (ADR-028).
