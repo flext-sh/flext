@@ -379,12 +379,28 @@ after relevant inputs change or to prove a fixed point. Normalizing bytes owned 
 generator remains part of its single publisher, not another formatter over authored
 sources.
 
-`make check` runs as one `flext-infra workspace check` process. The read-only
-projection verdict (`codegen conform --mode check`) runs first, so projection or lock
-skew fails as drift. The captured gates follow, keeping their own attested checker
-process, then the lane census (skipped in CI) and the documentation validation and
-audit. The first failure stops the verb. Under the commit-hook token the verb runs
-only the commit-stage gates. A dirty or changing tree is never a check condition.
+`make check` runs as one `flext-infra workspace check` process. Its captured checker
+first executes the declared `make.check_prerequisite_gates` across the complete
+selected composition. Ruff and Pyrefly are the prerequisites: every selected
+repository must finish both without errors before any remaining gate runs.
+An interrupted or incomplete prerequisite inventory remains red. The checker retains
+each native result and runs each requested gate once; it never substitutes a sampled
+check or a separate implementation. Strict typing is repaired at the declaring owner,
+with the generated lazy `__init__.py` and explicit `__all__` contract preserved.
+Read-only prerequisites share the existing bounded CLI signal wave across repositories;
+each native tool retains its own project configuration, report directory and result.
+Repairs retain their serial publication order.
+A repository with no applicable prerequisite still runs its remaining applicable
+gates. An empty execution never proves that repository's complete check passed.
+The typed report retains the requested inventory and explicitly records pending
+applicability. Later gates elect their applicability after the prerequisites finish;
+that planning cannot delay the initial lint/type diagnostics or imply approval.
+
+The remaining captured gates follow, then the read-only projection verdict
+(`codegen conform --mode check`), lane census (outside CI), and documentation
+validation and audit. All remain mandatory. Under the commit-hook token only its
+declared commit-stage gates participate. A dirty or changing tree is never a check
+condition.
 
 The checker owns runtime integrity as a registered gate alongside the other checks.
 It invokes the existing dependency, lock, environment-provenance and toolchain
@@ -414,13 +430,21 @@ or checking; `upg` owns changes to the resolved release.
 The markdown standard lives once in `flext-infra/src/flext_infra/config/tooling.yaml`
 (`Infra.tooling.tools.markdown`) and is projected to every repository by `make gen`:
 
-- `rumdl` is the linter (markdownlint-compatible `MD*` rules through the generated
-  `.markdownlint.json` / `.markdownlintignore`); syntax findings inside embedded code
-  belong to the flext-tests markdown validator, not to a second linter.
-- `rumdl fmt` is the formatter and reads the same `.markdownlint.json`:
+- Common `MD*` rules generate the markdownlint-compatible `.markdownlint.json`.
+  Native rumdl options and its additional rules are declared separately in the same
+  policy, never copied into the markdownlint projection. `.markdownlintignore`
+  and the native exclusions derive from the same governed scope.
+- `rumdl` is the command-line linter and reads generated `.rumdl.toml`, including
+  the MkDocs dialect used by the documentation renderer. `make fix` applies its
+  supported repairs; unresolved findings remain failures, not accepted exceptions.
+- `rumdl fmt` is the formatter and reads the same `.rumdl.toml`:
   `rumdl fmt --check` in `make check`, `rumdl fmt` in `make fmt`. rumdl is locked in
   `uv.lock`; the Mise npm backend remains retired (ADR-025). The amended Bun
   project contract for distributed JavaScript tools does not change this formatter.
+- `make check` validates without rewriting. Run generation before repair and
+  formatting, then repeat repair and formatting to prove a fixed point. Remaining
+  authored prose, link and heading defects are corrected at their source; generated
+  Markdown is corrected at its renderer, never by editing the projection.
 - `markdown-code` holds parseable embedded Python and doctest examples to the
   ruff-format contract; unparseable documentation fragments are prose and stay with the
   validator. Generated and provider-projected trees (`.agents`, `.claude`, `.gemini`,
@@ -492,8 +516,9 @@ not overwritten; no shared latest writer is published. Consumers of
 `u.Infra.check_report_findings` pass the explicit invocation directory printed by
 the CLI, never the shared base or an implicitly selected latest run.
 
-Root `make check` currently checks only the root project; it is not a fleet-wide
-receipt. Run a member's standard verb from the workspace root with
+Root `make check` checks the root and governed members through the existing
+`--scope all` checker selection. A standalone checkout selects its own repository.
+Run a member's standard verb from the workspace root with
 `make -f <member>/Makefile <verb>`, for example:
 
 ```bash

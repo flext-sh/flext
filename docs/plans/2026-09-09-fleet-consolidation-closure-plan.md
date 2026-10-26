@@ -68,7 +68,7 @@
 
 1. `HookClientContract` projetar `fail_closed_events` (builder
    `AiHub.hook_client_contract`
-   - degradação visível no daemon).
+    - degradação visível no daemon).
 2. `foreign_groups`: reconciliar skip-vs-fail de grupos não-mapeados com evidência
    runtime.
 3. Fixture-leaker (`mod-rule-fixtures-*` no HOME) → `tmp_path` + seam `state_path`.

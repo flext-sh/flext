@@ -43,6 +43,8 @@ the reconciliation delivery.
 | Inject generic capabilities and isolate dialects | Operator DI/dialect and maximum-decoupling orders, 2026-10-25 | Replaces server-name registries, concrete client construction in services and library-named consumer contracts. Preserve the validated external ACL receiver exception until semantic/golden proof. | [ADR-028 Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15), [Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16), composition roots and the receiver's scoped law |
 | Reuse native analysis and refactoring through existing adapters | Operator native-tool and generalized-rule orders, reaffirmed 2026-10-25 | Replaces duplicate parses, indexes and walkers where native equivalence is proven. Native model availability alone proves neither dynamic identity nor Python C3 correctness. Count and consolidate rules without narrowing coverage. | [ADR-028 Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17); implementation and proof remain in [Infra execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine) and `flext-1engx.15`. [Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) is implemented through the shared rule guide. ADR-014 and ADR-017 are subordinate where their older implementation text conflicts. |
 | Align authorities before code and validate embedded code | Operator docs-first/embedded-code orders, 2026-10-25 | Read memory, AGENTS, docs, ADRs, rules, skills and Beads before implementation. Markdown/docstring code receives the same applicable native source gates. Proposed ADRs remain proposals. | Canonical global documentation owners and each project's documentation generator |
+| Prove global Ruff, Pyrefly and Pytest acceptance before advancing | Direct operator order extended to Pytest, 2026-10-26 | No advance with any Ruff, Pyrefly or Pytest error. Evaluate the complete declared scope, preserve strict typing from its origin, and repair the causal owner. Pytest always uses Testmon and its persistent external database; repeated whole-suite runs and deadline inflation do not repair slowness. A configured project result, filtered input set or interrupted evaluation does not prove global acceptance. | Current native checker, Testmon and scope owners; execution evidence in `flext-itpd1.17` and consumer Beads |
+| Preserve derived lazy package exports on every Python edit | Direct operator order, 2026-10-26 | Inspect the module's `__all__`, its owning `__init__.py` and the canonical generator before changing Python. Keep lazy imports derived from those exports; do not hand-maintain a competing index. Unit-test modules are exempt from this package-export requirement, not from lint or typing. | Topic-owning accepted facade/generation ADRs, each package's export declarations and the existing generator |
 
 ### ADR-028 Decision Links
 
@@ -59,6 +61,30 @@ its 60-second verb deadline and subsecond loading contract are not global defaul
 The stabilization owner supplies the integrated runtime/toolchain/CI matrix before the
 long refactor is admitted. Consumer evidence supplements that matrix; it cannot replace
 the producer handoff or close the neutral ACL epic `flext-ejsdr`.
+
+The 2026-10-26 Ruff, Pyrefly and Pytest prerequisite covers the workspace root,
+declared members and consumers in the active scope, each under its own native
+configuration and dependency origins. Record the elected universe and account for
+exclusions before claiming global acceptance. Missing project rows or hidden
+first-party fixtures leave this prerequisite unproven even when the completed rows
+report zero diagnostics. Keep Mypy, setup changes and the deferred refactor pending
+until this first prerequisite is satisfied.
+Keep each tool's raw exit and findings distinct from its gate verdict. An
+authenticated, identity-specific exception is recorded as that explicit
+disposition; a gate that accepts it does not establish zero native findings.
+Do not broaden or remove the exception policy to manufacture a zero count.
+Reuse the originating strict contracts. Extend, improve or generalize them at their
+canonical owner when needed, then propagate the change to consumers; do not create
+local replacement contracts to obtain a passing checker result.
+Pytest retains the same canonical external Testmon database across successful and
+failed runs. Record collection, selection, execution and deselection separately;
+an integrity-checked cache hit with complete accounting is a cache hit, not a
+claim that tests ran and passed. Incremental dependency selection preserves the
+global declared inventory, including its applicable external and slow tests;
+it does not authorize narrowing markers or dropping the check admission guard.
+Profile slow collection, fixtures and execution before changing their owners;
+never remove Testmon, reset its database or raise
+the deadline to obtain acceptance.
 
 > **Status (2026-09-20):** `make gen` reaches a green fixed point across the fleet
 > (32/32; landed fixes: 31 `config/workspace.yaml` identity manifests, bare-deps render

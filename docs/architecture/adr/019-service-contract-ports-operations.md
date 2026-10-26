@@ -86,8 +86,11 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
 1. **Ports.** A dependency is a `@runtime_checkable` Protocol in `p` (extending
    `p.Base`, minimal capability). A service field declares it as
    `name: t.Port[p.X] = m.Field(exclude=True, description=…)`, where
-   `t.Port[P] = Annotated[P, SkipJsonSchema()]`. Pydantic validates it by `isinstance`
-   on construction and assignment. The port type must be a plain Protocol class.
+   `t.Port[P]` supplies an instance-validation schema excluded from JSON Schema.
+   Pydantic validates it by `isinstance` on construction and assignment, preserving
+   the supplied instance. Current annotation support also resolves aliases, generic
+   origins and concrete classes; it does not recursively validate generic arguments.
+   This runtime support does not replace Protocol-based dependency declarations.
 2. **Composition root — pure DI, definitive.** `api.py` is the only place that
    constructs adapters and port-bearing services, by constructor injection.
    `fetch_global()` remains only for port-free services. There is no Protocol-keyed
@@ -116,19 +119,19 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
 5. **One transport contract (amended 2026-10-24).** Operations are the only public
    surface a transport serves. Adapters derive everything from
    `u.service_operations` and never take a hand-kept route, command or option list:
-   - CLI: `flext-cli` exposes `cli.run(source)` and `cli.entry(source)`; a member's
-     console script is `main = cli.entry(<facade>)` in `api.py`. Typer and Click are
-     private to `flext-cli`.
-   - HTTP: `flext-web` exposes `web.application(source)` and
-     `web.serve(source, request)`; queries map to GET with query-parameter models,
-     commands to POST bodies. FastAPI, Starlette and uvicorn are private to
-     `u.Web`/`t.Web`.
-   - Singer/dbt: `flext-meltano` bases drive `singer_sdk` through its programmatic API
-     (`Tap.invoke`, `Target.invoke`, discovery, sync), never through Click `main()`;
-     connectors keep only `api.py`.
-   - Input is parsed once (`u.invoke_operation`), `--help` and schema rendering build no
-     adapter, and failures leave with their original cause, mapped to an exit status or
-     HTTP status by one table per transport over `c.ErrorCode`.
+    - CLI: `flext-cli` exposes `cli.run(source)` and `cli.entry(source)`; a member's
+      console script is `main = cli.entry(<facade>)` in `api.py`. Typer and Click are
+      private to `flext-cli`.
+    - HTTP: `flext-web` exposes `web.application(source)` and
+      `web.serve(source, request)`; queries map to GET with query-parameter models,
+      commands to POST bodies. FastAPI, Starlette and uvicorn are private to
+      `u.Web`/`t.Web`.
+    - Singer/dbt: `flext-meltano` bases drive `singer_sdk` through its programmatic API
+      (`Tap.invoke`, `Target.invoke`, discovery, sync), never through Click `main()`;
+      connectors keep only `api.py`.
+    - Input is parsed once (`u.invoke_operation`), `--help` and schema rendering build no
+      adapter, and failures leave with their original cause, mapped to an exit status or
+      HTTP status by one table per transport over `c.ErrorCode`.
    `cli.service_routes` and the route models stay as deprecated pass-throughs until
    their census reaches zero.
 6. **No fake facades (operator decision D1 = A).** The kernel has no `api.py`, `cli.py`,

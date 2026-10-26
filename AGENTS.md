@@ -460,14 +460,14 @@ connectors. Every package follows one canonical Clean-Architecture shape built o
 ## Structure
 
 ```text
-flext/                                                        # superproject: workspace manager + governance + docs
-├── src/flext/                                               # root facade package (FlextRoot* facades + FlextRootCli) — AUTO-GENERATED facets
-├── config/                                                  # this repository's own deltas only (ADR-024); composition lives in .gitmodules
-├── docs/architecture/adr/                                   # ADR-001..024 (011-013 absent) — architectural decisions (see below)
-├── Makefile + *.mk                                          # root verb dispatcher (all work runs from here)
-├── flext-core/                                              # foundation: c/t/p/m/u + r/e/x/h/d/s facades (every pkg depends on it)
-├── flext-infra/                                             # build automation, codegen, enforcement (tooling; not a runtime dep)
-├── flext-tests/                                             # shared test infra (tm/tv/tt fixtures)
+flext/ # superproject: workspace manager + governance + docs ├── src/flext/ # root
+facade package (FlextRoot* facades + FlextRootCli) — AUTO-GENERATED facets ├── config/ #
+this repository's own deltas only (ADR-024); composition lives in .gitmodules ├──
+docs/architecture/adr/ # ADR-001..024 (011-013 absent) — architectural decisions (see
+below) ├── Makefile + *.mk # root verb dispatcher (all work runs from here) ├──
+flext-core/ # foundation: c/t/p/m/u + r/e/x/h/d/s facades (every pkg depends on it) ├──
+flext-infra/ # build automation, codegen, enforcement (tooling; not a runtime dep) ├──
+flext-tests/ # shared test infra (tm/tv/tt fixtures)
 ├── flext-cli|api|auth|web|grpc|observability|plugin|meltano/ # platform capabilities
 ├── flext-ldap|ldif|db-oracle|oracle-wms|oracle-oic|quality/  # domain libraries
 └── flext-{tap,target,dbt}-*/                                # Singer ecosystem: 5 taps, 5 targets, 4 dbt (built on flext-meltano)
@@ -516,6 +516,18 @@ exclusions; it never copies or replaces either parent or ADR.
 | A Singer connector               | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006)                                                                                                                              |
 
 ## Build & Test
+
+Operator prerequisite (2026-10-26): before advancing any phase, Ruff and Pyrefly
+must report zero errors across the entire governed workspace. Validate through
+the canonical global check scope, without file filters; a green member or changed
+subset does not satisfy this prerequisite. Correct failures at their typed origin
+without suppressions, loose replacement contracts, or compatibility aliases. This
+prerequisite does not waive any other applicable gate.
+
+Every edited Python module must preserve its declared `__all__` and the owning
+package's generated lazy exports; change their source and regenerate rather than
+patching `__init__.py`. Unit-test modules are exempt from this export requirement,
+not from strict typing or the other FLEXT rules.
 
 Task-scoped exception: `flext-0029c` uses the direct public `flext-infra` CLI
 for native-bootstrap diagnosis, runtime, refactoring and gates; Make integration
@@ -597,8 +609,11 @@ semantic engines and publisher for dependent projections; neither invokes anothe
 public verb recursively. Run `upg` explicitly to change resolution metadata and locks,
 then `setup` explicitly to install them. Generation does not install dependencies.
 `check` owns read-only validation, including documentation and integrity checks.
-`tests` runs the complete applicable suite once with the same persistent Testmon
-database; it does not run an incremental suite first or accept a file selector.
+`tests` uses native incremental Testmon selection over the complete applicable
+population with the same persistent database. It does not force a repeated full
+run, add a second execution pass, or accept a manual file selector. The operator
+order of 2026-10-26 requires global Ruff, Pyrefly and pytest evidence before
+advancing; preserve the green-check prerequisite and fix performance at its owner.
 
 Consult and align the affected README, guides, AGENTS, ADRs, Beads and canonical skills
 before code. Establish real public behavior before changing tests, then run the
@@ -722,13 +737,13 @@ CLI + pytest plugin, **never imported at runtime**.
     sets/tables, aliases, `TypeVar`s, inline `Literal` domains, protocols, models,
     payload dicts or reusable helpers, explicit or implicit. The families never violate
     one another.
-   - <a id="adr-028-decision-15"></a>**Library names never leave the facades** ([ADR-028 Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15); operator order 2026-10-25, tracker
+  - <a id="adr-028-decision-15"></a>**Library names never leave the facades** ([ADR-028 Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15); operator order 2026-10-25, tracker
     keys `operator-order-2026-10-25-library-names-only-in-facades` and
     `operator-rulings-2026-10-25-libnames-locks-ldif-rope`, verbatim: "os modulos
     fora c,t,p,m,u como services e outros moduloes, e projetos externos, nao podem
     ficar sabendo nem do nome da biblioteca, eles usam interface genéricas" and
     "bibliotecas externas só em C,T,P,M,U e a exportação tem que ser prefixada pela
-    funcionalidade e não pela biblioteca, por exemplo git_ , refactor_ ,
+    funcionalidade e não pela biblioteca, por exemplo git_, refactor_ ,
     workspace_"). Only `c/t/p/m/u` implementation modules name or import a library
     (rope, griffe, networkx, libcst, ast-grep). Every outward surface (protocols, `u`
     methods, model fields, `t` aliases, CLI options) carries a capability name
@@ -737,7 +752,7 @@ CLI + pytest plugin, **never imported at runtime**.
     library name. The mass rename runs by rule through sed, ast-grep and rope via
     `make mod`, with the deprecated-signature window below, and then reaches ai-hub
     and every other consumer of flext-infra (ADR-028 Decision 15).
-   - <a id="adr-028-decision-16"></a>**Maximum CA/DI decoupling; jscpd and qlty at zero** ([ADR-028 Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16); operator order 2026-10-25,
+  - <a id="adr-028-decision-16"></a>**Maximum CA/DI decoupling; jscpd and qlty at zero** ([ADR-028 Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16); operator order 2026-10-25,
     tracker key `operator-order-2026-10-25-max-decoupling-ca-di`, verbatim:
     "lembre-se que tudo tem que ser o máximo desacoplado com as regras ca/di de
     flext-core e sempre corrija as duplicatas por jscpd e smells de qlty com as
@@ -772,7 +787,7 @@ CLI + pytest plugin, **never imported at runtime**.
     the operator cited `flext-ldif/src/flext_ldif/_constants/servers_oud.py` as a
     violation "por simplesmente existir neste lugar". Each dialect lives in its own
     injected implementation, and no dialect references another.
-   - <a id="adr-028-decision-17"></a>**Rope owns the workspace model and its refactorings** ([ADR-028 Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17); operator order
+  - <a id="adr-028-decision-17"></a>**Rope owns the workspace model and its refactorings** ([ADR-028 Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17); operator order
     2026-10-25, tracker key `operator-order-2026-10-25-rope-owns-model-refactors`,
     verbatim: "rope nao tem referencia de todos os objetos em memória da workspace ?
     e ele tem metodos de refatoração, isso tem que ser usado ao inves de custom").
@@ -784,7 +799,7 @@ CLI + pytest plugin, **never imported at runtime**.
     and import rewrites use the native capabilities (including documentation
     occurrences, move, restructure and multi-project refactoring). Custom parse,
      discovery, import-graph and rename duplicates are deleted ([Infra execution-context section](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); Bead `flext-1engx.15`).
-   - <a id="adr-028-decision-18"></a>**Rules are generalized and few** ([ADR-028 Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18); operator order 2026-10-25, tracker key
+  - <a id="adr-028-decision-18"></a>**Rules are generalized and few** ([ADR-028 Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18); operator order 2026-10-25, tracker key
     `operator-order-2026-10-25-rules-generalized-min-count`, verbatim: "o sed, rope e
     ast-grep rules tem que estar sempre alinhados com as regras corretas de forma
     generalizada e automaticas usando sempre máximo de funcionalidades padrões das
@@ -1270,7 +1285,7 @@ Overall average: **60-90% token reduction** on common development operations.
 ## Learned Workspace Facts
 
 - Makefile commands share one place that sets `GITHUB_TOKEN`, `GH_TOKEN`, and `MISE_GITHUB_TOKEN` from `gh auth token` when GitHub auth is available.
-- `make tests` executes the complete applicable suite once and retains the persistent Testmon database.
+- `make tests` executes the native incremental Testmon selection and retains the persistent database; it does not force a full rerun on every invocation.
 - FLEXT and flext-infra integrate on `0.12.0-dev`. Resolve every member's integration target from its current branch-matched authority and freshly fetched refs; never select `develop` from a stale workspace summary.
 - Land the submodule commit first, then move the umbrella gitlink in a separate commit.
 - Gas City placement, preservation and retirement follow its currently selected runtime owner and `~/agents/rules/coordination/gascity.md`. A historical sweep marker never authorizes resetting a checkout or retiring another actor's work.

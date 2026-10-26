@@ -82,7 +82,7 @@ outside the facades across 12 repositories.
 
 ### Decision 2
 
-2. **Library types only through declarations.** Inside the facades too, an external
+1. **Library types only through declarations.** Inside the facades too, an external
    library's types are named only through `t` aliases (and `p` protocols where the
    contract is structural). `u` behavior consumes those names. `u` never re-narrows or
    re-parses (`isinstance` chains, `ast.literal_eval`, manual dict walking) what a `t`/`m`
@@ -91,24 +91,24 @@ outside the facades across 12 repositories.
 
 ### Decision 3
 
-3. **Modules outside `c/t/p/m/u` and `api` are orchestrators.** They compose calls to
+1. **Modules outside `c/t/p/m/u` and `api` are orchestrators.** They compose calls to
    the facades and hold no declaration of a facade kind, explicit or implicit:
-   - no constants, literal name sets or lookup tables (→ `c`);
-   - no type aliases, `TypeVar`s, inline `Literal[...]` domains or ad hoc unions (→ `t`);
-   - no `Protocol` classes (→ `p`);
-   - no models, `dict`/`TypedDict` payload contracts or settings (→ `m`);
-   - no reusable helper functions or nested helpers (→ `u`).
+    - no constants, literal name sets or lookup tables (→ `c`);
+    - no type aliases, `TypeVar`s, inline `Literal[...]` domains or ad hoc unions (→ `t`);
+    - no `Protocol` classes (→ `p`);
+    - no models, `dict`/`TypedDict` payload contracts or settings (→ `m`);
+    - no reusable helper functions or nested helpers (→ `u`).
 
 ### Decision 4
 
-4. **The families do not violate one another.** `c` holds constants only, `t` types only,
+1. **The families do not violate one another.** `c` holds constants only, `t` types only,
    `p` protocols only, `m` models only, `u` behavior only, each in the import order
    `c → t → p → m → u` (reverse imports `TYPE_CHECKING`-only) and with one owner per
    object (ADR-027).
 
 ### Decision 5
 
-5. **Static enforcement lives only in flext-infra, declaratively.** Every static
+1. **Static enforcement lives only in flext-infra, declaratively.** Every static
    (source-shape) violation check is a declarative rule in flext-infra's catalog,
    applied by its generic engines (`make mod` fixes, `make check` detection). flext-core
    keeps no static enforcement catalog, predicate data or source-analysis engine; the
@@ -116,7 +116,7 @@ outside the facades across 12 repositories.
 
 ### Decision 6
 
-6. **Every module is one nested class.** All declarations of every
+1. **Every module is one nested class.** All declarations of every
    tier of the repository, not only `src/` — live inside its single top-level nested
    class (ADR-018 point 11). The few exceptions (an executable `main()`, pytest
    fixtures and hooks in `conftest.py`, generator-emitted dunders) are declared once,
@@ -144,7 +144,7 @@ outside the facades across 12 repositories.
 
 ### Decision 7
 
-7. **The deprecated-signature window is the standard route to zero compatibility
+1. **The deprecated-signature window is the standard route to zero compatibility
    code without breakage.** Operator order 2026-10-24 (verbatim): "toda a assinatura
    antiga fica marcada com warning indicando o caminho novo até migrarmos tudo e daí
    exterminamos o código antigo (isso tem que incluir os projetos externos mais
@@ -164,7 +164,7 @@ outside the facades across 12 repositories.
 
 ### Decision 8
 
-8. **One standard, automated.** The rules are identical for every project, applied by
+1. **One standard, automated.** The rules are identical for every project, applied by
    flext-infra's engines and the code-review graph as automatically as possible;
    duplicated code and domain violations are rejected, never accepted as debt.
    Operator order 2026-10-24 (verbatim): "EXTREMAMENTE IMPORTANTE , LEI EXTREMA vc tem
@@ -181,7 +181,7 @@ outside the facades across 12 repositories.
 
 ### Decision 9
 
-9. **No embedded code or long text constants.** Operator order 2026-10-24 (verbatim):
+1. **No embedded code or long text constants.** Operator order 2026-10-24 (verbatim):
    "código de constnats longos tipo esse a seguir em constatns ou inline (até mesmo em
    testgs) são violacoes gravíssimas". Source code or long text built as string
    literals (multi-line literals, implicit concatenation of statement lines, scripts
@@ -199,7 +199,7 @@ outside the facades across 12 repositories.
 
 ### Decision 10
 
-10. **Imports go through package lazy exports, never module paths or module objects.**
+ 1. **Imports go through package lazy exports, never module paths or module objects.**
     Operator orders 2026-10-24 (verbatim): "violacao gravissima -> from
     flext_infra.validate.testmon_db import FlextInfraTestmonDbInspector <<<< import por
     modulo ao inves de usar `__init__.py` lazy import" and "violacao gravissima import do
@@ -226,20 +226,20 @@ outside the facades across 12 repositories.
     facades are being composed, the letters of the upstream packages it composes
     (`from flext_cli import c, t, p, m, u`) are the canonical binding: each own family
     composes the upstream same-letter class by MRO. The boundaries around it:
-    - the package's own letter inside its own family is forbidden in every form,
-      including `<pkg>.u` reached through the package module object (ENFORCE-051);
-    - a same-family sibling is imported from the family package;
-    - modules outside the families read every letter from their own package root
-      (ENFORCE-003, which also owns `if TYPE_CHECKING:` imports);
-    - a later layer stays TYPE_CHECKING-only from any package
-      (`ban-reverse-runtime-import`).
+     - the package's own letter inside its own family is forbidden in every form,
+       including `<pkg>.u` reached through the package module object (ENFORCE-051);
+     - a same-family sibling is imported from the family package;
+     - modules outside the families read every letter from their own package root
+       (ENFORCE-003, which also owns `if TYPE_CHECKING:` imports);
+     - a later layer stays TYPE_CHECKING-only from any package
+       (`ban-reverse-runtime-import`).
 
     A letter of any facade package read through its module object (`import pkg`,
     then `pkg.u.X`) is detected by the single rule `ban-letter-module-object`.
 
 ### Decision 11
 
-11. **Tools are used natively and fully.** Operator order 2026-10-24 (verbatim): "nao
+ 1. **Tools are used natively and fully.** Operator order 2026-10-24 (verbatim): "nao
     usar funcionaldiade de ferramentas da melhor forma por causa de probleams nossos é
     VIOLAÇÃO EXTREMAMEMENTE GRAVE, CONSIDERANDO ISSO UM BYPASS OU FALLBACK, CORRIJA TUDO
     PARA FUNCIONAR SEMPRE FUNCIONAR DA FORMA CORRETA". A local defect never justifies
@@ -247,25 +247,25 @@ outside the facades across 12 repositories.
     is repaired at once so the tool's full capability runs through it; deferring,
     narrowing or degrading its use meanwhile is the same bypass. For the codemod
     catalog this means:
-    - rules apply through `ast-grep scan --update-all`, and rule semantics are native
-      ast-grep (`utils`, `constraints`, `transforms`, `rewriters`). SSOT-derived rules
-      come from the class-A producers and renderers registered in
-      `Infra.codegen.ast_grep`. They are rendered in memory by the `make mod` cascade,
-      one document per shape, and are not projected into repositories (bead
-      `flext-13s6n` removes the current per-rule projection);
-    - no per-finding Python admission exists: every finding is the native match. A
-      project fact a catalog rule needs is a stable generated utility (`own-package`,
-      `facade-package`, `runtime-alias`, ...) referenced through `matches:`, or a file
-      scope the generated provider publishes and the stage applies through
-      `metadata.scope` (`in`/`not-in`, or `partition` for one generated rule
-      `<id>--<package>[--<key>]` per file group). Runtime import cycles are the
-      whole-graph `ban-cyclic-import` gate, not a rule;
-    - the staged scan configuration is reproducible with native ast-grep, so a native
-      scan and `make mod` agree.
+     - rules apply through `ast-grep scan --update-all`, and rule semantics are native
+       ast-grep (`utils`, `constraints`, `transforms`, `rewriters`). SSOT-derived rules
+       come from the class-A producers and renderers registered in
+       `Infra.codegen.ast_grep`. They are rendered in memory by the `make mod` cascade,
+       one document per shape, and are not projected into repositories (bead
+       `flext-13s6n` removes the current per-rule projection);
+     - no per-finding Python admission exists: every finding is the native match. A
+       project fact a catalog rule needs is a stable generated utility (`own-package`,
+       `facade-package`, `runtime-alias`, ...) referenced through `matches:`, or a file
+       scope the generated provider publishes and the stage applies through
+       `metadata.scope` (`in`/`not-in`, or `partition` for one generated rule
+       `<id>--<package>[--<key>]` per file group). Runtime import cycles are the
+       whole-graph `ban-cyclic-import` gate, not a rule;
+     - the staged scan configuration is reproducible with native ast-grep, so a native
+       scan and `make mod` agree.
 
 ### Decision 12
 
-12. **Validation applies every FLEXT rule in the real tree.** Operator order 2026-10-24:
+ 1. **Validation applies every FLEXT rule in the real tree.** Operator order 2026-10-24:
     a concept, design or fix is validated in the real tree under the full FLEXT law
     and the project's own tool configuration, through the canonical gates. Scratch
     files, loose classes, default tool presets and isolated probes that skip the real
@@ -274,7 +274,7 @@ outside the facades across 12 repositories.
 
 ### Decision 13
 
-13. **The `make mod` pipeline has a fixed order.**
+ 1. **The `make mod` pipeline has a fixed order.**
     1. The canonical import header, generated from SSOT: the dependency namespace
        singletons, the project's own aliases, and the facade-module letter taken from
        the upstream facade, with reverse-layer letters under `if TYPE_CHECKING:`.
@@ -296,108 +296,114 @@ outside the facades across 12 repositories.
 
 ### Decision 14
 
-14. **Pydantic declarations are complete at import.** Every model, settings, config and
+ 1. **Pydantic declarations are complete at import.** Every model, settings, config and
     service class is complete when its module is imported (`__pydantic_complete__`),
     with no `model_rebuild`.
-    - A protocol-typed model field uses `t.Port[p.X]`, Pydantic's official field-level
-      marker. A protocol metaclass is not FLEXT-conformant because the metaclass is
-      private API.
-    - `arbitrary_types_allowed` is banned.
-    - A field naming a sibling through its own enclosing family class is banned
-      (`ban-enclosing-family-field-reference`): the enclosing class is unbound while
-      its body runs, so the model stays incomplete. The fix extracts the nested member
-      into its own family module.
-    - Facade roots (`c`, `t`, `p`, `m`, `u`) never inherit a model.
-    - Entity equality follows Pydantic (operator ruling 2026-10-25, tracker memory
-      `operator-ruling-2026-10-25-entity-equality-pydantic-way`, verbatim: "o que
-      pydantic recomenda em relação a isso, o que fazer, qual a forma mais pydantic
-      way, é a que precisa ser feito mesmo que precise refatorar o uso
-      globalmente"). `m.Entity` and `m.AggregateRoot` define no custom
-      `__eq__`/`__hash__`: equality is value-based (same type and field values),
-      identity is compared explicitly by id, entity collections are keyed by id, a
-      mutable entity is unhashable, and only frozen models hash, by value. Consumers
-      relying on identity equality are rewired fleet-wide by rule.
+     - A protocol-typed model field uses `t.Port[p.X]`, Pydantic's official field-level
+       marker. A protocol metaclass is not FLEXT-conformant because the metaclass is
+       private API.
+     - `arbitrary_types_allowed` is banned.
+     - A field naming a sibling through its own enclosing family class is banned
+       (`ban-enclosing-family-field-reference`): the enclosing class is unbound while
+       its body runs, so the model stays incomplete. The fix extracts the nested member
+       into its own family module.
+     - Facade roots (`c`, `t`, `p`, `m`, `u`) never inherit a model.
+     - Entity equality follows Pydantic (operator ruling 2026-10-25, tracker memory
+       `operator-ruling-2026-10-25-entity-equality-pydantic-way`, verbatim: "o que
+       pydantic recomenda em relação a isso, o que fazer, qual a forma mais pydantic
+       way, é a que precisa ser feito mesmo que precise refatorar o uso
+       globalmente"). `m.Entity` and `m.AggregateRoot` define no custom
+       `__eq__`/`__hash__`: equality is value-based (same type and field values),
+       identity is compared explicitly by id, entity collections are keyed by id, a
+       mutable entity is unhashable, and only frozen models hash, by value. Consumers
+       relying on identity equality are rewired fleet-wide by rule.
 
 ### Decision 15
 
-15. **Library names never leave the facades; exports are named by capability.**
+ 1. **Library names never leave the facades; exports are named by capability.**
     Operator orders 2026-10-25, verbatim (tracker memories
     `operator-order-2026-10-25-library-names-only-in-facades` and
     `operator-rulings-2026-10-25-libnames-locks-ldif-rope`): "lembre de ser CA/DI, os
     modulos fora c,t,p,m,u como services e outros moduloes, e projetos externos, nao
     podem ficar sabendo nem do nome da biblioteca, eles usam interface genéricas" and
     "bibliotecas externas só em C,T,P,M,U e a exportação tem que ser prefixada pela
-    funcionalidade e não pela biblioteca, por exemplo git_ , refactor_ , workspace_ ,
+    funcionalidade e não pela biblioteca, por exemplo git_, refactor_ , workspace_ ,
     , ..... use refatoração em massa por sed, ast-grep e rope para automatizar isso ,
     pois depois vc tem que aplicar essa refatoração em massa em ai-hub e outros
     projetos flext que usam flext-infra". Decision 1 keeps the import inside the
     facade; this decision keeps the name there too:
-    - only `c/t/p/m/u` implementation modules name a library (rope, griffe,
-      networkx, libcst, ast-grep), in their private module and class names;
-    - every outward surface — `p` protocols, `u` methods, `m` fields, `t` aliases,
-      CLI options and documentation — uses a capability name prefixed by
-      functionality (`git_`, `refactor_`, `workspace_`; `p.Infra.WorkspaceSnapshot`,
-      `module_ast`, `rename`, `move`, `extract`), never `rope_*`, `Rope*`, `griffe_*`
-      or any other library name;
-    - the rename is a mass refactoring by rule (sed, ast-grep and rope through
-      `make mod`), keeps the deprecated-signature window (Decision 7) for external
-      consumers, and is then applied to ai-hub and every other project that uses
-      flext-infra (census under bead `flext-1engx.11`).
+     - only `c/t/p/m/u` implementation modules name a library (rope, griffe,
+       networkx, libcst, ast-grep), in their private module and class names;
+     - every outward surface — `p` protocols, `u` methods, `m` fields, `t` aliases,
+       CLI options and documentation — uses a capability name prefixed by
+       functionality (`git_`, `refactor_`, `workspace_`; `p.Infra.WorkspaceSnapshot`,
+       `module_ast`, `rename`, `move`, `extract`), never `rope_*`, `Rope*`, `griffe_*`
+       or any other library name;
+     - the rename is a mass refactoring by rule (sed, ast-grep and rope through
+       `make mod`), keeps the deprecated-signature window (Decision 7) for external
+       consumers, and is then applied to ai-hub and every other project that uses
+       flext-infra (census under bead `flext-1engx.11`).
 
 ### Decision 16
 
-16. **Maximum CA/DI decoupling; duplication and smells at zero.** Operator order
+ 1. **Maximum CA/DI decoupling; duplication and smells at zero.** Operator order
     2026-10-25, verbatim (tracker memory
     `operator-order-2026-10-25-max-decoupling-ca-di`): "lembre-se que tudo tem que ser
     o máximo desacoplado com as regras ca/di de flext-core e sempre corrija as
     duplicatas por jscpd e smells de qlty com as regras strict de flext".
-    - Dependencies are `p` protocols injected at the composition root; dependencies
-      point inward.
-    - `ContextVar`, `lru_cache` and `ClassVar` holders used as service locators are
-      forbidden; a dependency arrives through its port.
-    - Pluggable implementations (LDIF and LDAP servers and their equivalents) are
-      injected only by DI. Registries, priority lists and ready-made lists are
-      forbidden, and their users — services and the `c/t/p/m/u` families — never
-      know which implementation they hold. Operator order 2026-10-25, verbatim
-      (tracker memory `operator-order-2026-10-25-servers-di-never-registry`): "os
-      servers em ldif, ldap sao sempre usados por DI, nunca, never jamais por
-      registry ou listas prontas, os usuários (services) nunca podem saber que
-      server eles estão usando e e c,t,p,m,u a mesma coisa, a interface deles tem
-      que ser sempre descoplada 100% do tempo e sempre, qq coisa fora isso é violação
-      gravíssima".
-    - Library access happens only in the owning `c/t/p/m/u` modules (Decisions 1 and
-      15).
-    - Every change leaves jscpd duplication and qlty smells at zero under the strict
-      FLEXT configuration. The fix is extraction to the canonical owner, never an
-      ignore, a raised threshold or a narrowed scope. The only authorized jscpd
-      exception is the license header.
+     - Dependencies are `p` protocols injected at the composition root; dependencies
+       point inward.
+     - `ContextVar`, `lru_cache` and `ClassVar` holders used as service locators are
+       forbidden; a dependency arrives through its port.
+     - Pluggable implementations (LDIF and LDAP servers and their equivalents) are
+       injected only by DI. Registries, priority lists and ready-made lists are
+       forbidden, and their users — services and the `c/t/p/m/u` families — never
+       know which implementation they hold. Operator order 2026-10-25, verbatim
+       (tracker memory `operator-order-2026-10-25-servers-di-never-registry`): "os
+       servers em ldif, ldap sao sempre usados por DI, nunca, never jamais por
+       registry ou listas prontas, os usuários (services) nunca podem saber que
+       server eles estão usando e e c,t,p,m,u a mesma coisa, a interface deles tem
+       que ser sempre descoplada 100% do tempo e sempre, qq coisa fora isso é violação
+       gravíssima".
+     - Library access happens only in the owning `c/t/p/m/u` modules (Decisions 1 and
+       15).
+     - Every change leaves jscpd duplication and qlty smells at zero under the strict
+       FLEXT configuration. The fix is extraction to the canonical owner, never an
+       ignore, a raised threshold or a narrowed scope. The only authorized jscpd
+       exception is the license header.
 
 ### Decision 17
 
-17. **Rope owns the workspace model and its refactorings.** Operator order
+ 1. **Rope owns the workspace model and its refactorings.** Operator order
     2026-10-25, verbatim (tracker memory
     `operator-order-2026-10-25-rope-owns-model-refactors`): "lembre-se que tudo tem que
     ser o máximo desacoplado com as regras ca/di de flext-core, exemplo, rope nao tem
     referencia de todos os objetos em memória da workspace ? e ele tem metodos de
     refatoração, isso tem que ser usado ao inves de custom".
-    - Each governed repository invocation reuses exactly one workspace project as its
-      in-memory model (module cache, parsed modules, file listing, import tools, and
-      change validation), exposed only through `p.Infra.WorkspaceSnapshot`; the
-      `u.Infra` owner is the only module that names it (Decision 15). A workspace-level
-      command uses its declared repository loop and creates one project per repository;
-      it does not model sibling repositories as one project or open redundant projects
-      for the same repository during that invocation.
-    - Renames, moves and import rewrites use rope's native refactorings (rename with
-      documentation occurrences, move, restructure, multi-project refactoring).
-    - Custom parse, discovery, import-graph and rename/move planners that duplicate
-      that model are deleted in the cutover that rewires their consumers (bead
-      `flext-1engx.15`). What rope cannot express (format-preserving LibCST
-      transforms, ast-grep rules, YAML and Markdown text renames, admission policy)
-      keeps its own owner.
+     - Each governed repository invocation reuses exactly one workspace project as its
+       in-memory model (module cache, parsed modules, file listing, import tools, and
+       change validation), exposed only through `p.Infra.WorkspaceSnapshot`; the
+       `u.Infra` owner is the only module that names it (Decision 15). A workspace-level
+       command uses its declared repository loop and creates one project per repository;
+       it does not model sibling repositories as one project or open redundant projects
+       for the same repository during that invocation.
+     - Renames, moves and import rewrites use rope's native refactorings (rename with
+       documentation occurrences, move, restructure, multi-project refactoring).
+     - Custom parse, discovery, import-graph and rename/move planners that duplicate
+       that model are deleted in the cutover that rewires their consumers (bead
+       `flext-1engx.15`). What rope cannot express (format-preserving LibCST
+       transforms, ast-grep rules, YAML and Markdown text renames, admission policy)
+       keeps its own owner.
+     - Numbered inheritance fragments implementing the same capability do not gain
+       artificial responsibilities to evade a destination collision. Their methods
+       consolidate at one implementation owner while the public facade retains its
+       contract
+       ([Core failure-factory declaration](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/AGENTS.md#failure-factory-responsibility)).
+       Native refactorings handle every part of that cutover they can express.
 
 ### Decision 18
 
-18. **Rules are generalized and few.** Operator order 2026-10-25, verbatim (tracker
+ 1. **Rules are generalized and few.** Operator order 2026-10-25, verbatim (tracker
     memory `operator-order-2026-10-25-rules-generalized-min-count`): "o sed, rope e
     ast-grep rules tem que estar sempre alinhados com as regras corretas de forma
     generalizada e automaticas usando sempre máximo de funcionalidades padrões das
@@ -411,23 +417,23 @@ outside the facades across 12 repositories.
 
 ### Decision 19
 
-19. **Models import `u` only two ways; each family owns its Pydantic surface.**
+ 1. **Models import `u` only two ways; each family owns its Pydantic surface.**
     Operator ruling 2026-10-25, verbatim (tracker memory
     `operator-ruling-2026-10-25-models-u-imports-pydantic-home`): "models podem import
     u apenas de 2 formas, u do projeto flext maiis alto que ela importa, ou classe
     privada _utilities de seu namespace por casos bem restritos, veja que mdoels nao
     pode exportar metodos, ele precisa pydantic best practices sempre, anliase o caso
-    com cuidado e arrume para evitar problemas, temos _utilities/pydantic.py que se
+    com cuidado e arrume para evitar problemas, temos_utilities/pydantic.py que se
     estiver exportando pydantic que models precisa, ele precisa ser migrado para
     _models/pydantic.py e seu uso atualizado em todos os repos global wide, isso vale
     para c,t,p,m, e u de forma equivalente".
-    - A `_models` module imports either the upstream FLEXT project's `u` (the
-      hierarchical binding of Decision 10) or, in very restricted cases, a private
-      `_utilities` class of its own namespace.
-    - Models export no methods; they follow Pydantic best practices.
-    - The Pydantic surface that models need lives in `_models/pydantic.py`, not
-      `_utilities/pydantic.py`; it is migrated and every use is rewired in every
-      repository. The same principle holds per family for `c`, `t`, `p`, `m` and `u`.
+     - A `_models` module imports either the upstream FLEXT project's `u` (the
+       hierarchical binding of Decision 10) or, in very restricted cases, a private
+       `_utilities` class of its own namespace.
+     - Models export no methods; they follow Pydantic best practices.
+     - The Pydantic surface that models need lives in `_models/pydantic.py`, not
+       `_utilities/pydantic.py`; it is migrated and every use is rewired in every
+       repository. The same principle holds per family for `c`, `t`, `p`, `m` and `u`.
 
 ## Bidirectional Traceability
 
@@ -442,7 +448,7 @@ architecture link.
 | [5 — static enforcement](#decision-5) | [Governance decision map](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decision-map) | [Infra, ADR-028 Decision 5: Declarative enforcement](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-5-declarative-enforcement); Bead `flext-43iz8` |
 | [15 — capability names](#decision-15) | [Root `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); [public core guide, What flext-core must not absorb](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/using-flext-core.md#what-flext-core-must-not-absorb); [Governance decision map](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); external consumer census: `flext-1engx.11` |
 | [16 — CA/DI and zero findings](#decision-16) | [Root `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [consumer law, R2](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/standards/consumption-law.md#r2-no-duplication-structural-scan); [Governance decision map](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [Target LDAP CA/DI declaration](https://github.com/flext-sh/flext-target-ldap/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16-ca-di-and-quality); implementation and quality gates: `flext-1engx.15`, `flext-pawp5` |
-| [17 — workspace model and native refactorings](#decision-17) | [Root `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [Governance decision map](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decision-map); [stabilization decision-link section](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links); [Core family-shape declaration](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/AGENTS.md#conventions-specific-to-this-package) | [Infra `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); implementation: `flext-1engx.15` |
+| [17 — workspace model and native refactorings](#decision-17) | [Root `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [Governance decision map](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decision-map); [stabilization decision-link section](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links); [Core failure-factory declaration](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/AGENTS.md#failure-factory-responsibility) | [Infra `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); implementation: `flext-1engx.15` |
 | [18 — generalized rules](#decision-18) | [Root `AGENTS.md`, Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-18); [Governance decision map](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decision-map); [codemod guide, One rule per law](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/codemod-rules.md#one-rule-per-law); [stabilization decision-link section](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links) | [Infra `AGENTS.md`, Decision 18](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-18); projection cleanup: `flext-13s6n` |
 | AI Hub consumer route | [AI Hub ADR-0039](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/adr/0039-universal-law-references-in-governed-docs.md); [ADR catalog](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/adr/README.md#fleet-canon); [engineering-law routing](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/engineering-laws.md); [FLEXT development skill](https://github.com/datacosmos-br/agents/blob/dev/skills/framework/flext-development/SKILL.md) | Consumer Bead `aihub-9qdu6`; reciprocal-link Bead `flext-1engx.16` |
 | [9 — governed embedded examples](#decision-9) | [Root `AGENTS.md`, embedded-code rule](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-9); [documentation standard](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/standards/documentation.md#command-and-test-examples) | The docs Bead `flext-0exhi` records authoring and executable-doc validation. |

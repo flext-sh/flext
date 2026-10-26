@@ -219,8 +219,11 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   `tests`, `help`, `build` and `clean`. Repository-owned product commands remain
   explicit extensions. Former subverbs are absorbed into their operation owner,
   never retained as aliases or a second pipeline.
-- `tests` executes the complete applicable suite once with the persistent
-  Testmon database. It has no incremental prepass or file/full public aliases.
+- `tests` executes native incremental Testmon selection over the complete
+  applicable population with the persistent database. It never forces a repeated
+  full run or adds a second execution pass; no file/full public aliases are added.
+  The 2026-10-26 operator order requires global Ruff, Pyrefly and pytest evidence
+  before advancement, without weakening the same-scope green-check prerequisite.
   Generation and modification complete their own coherent changes, including
   required dependent projections, through the same typed plans and semantic
   publication engine; neither recursively runs another public operation.

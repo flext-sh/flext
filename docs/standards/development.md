@@ -60,6 +60,27 @@ Treat code changes motivated by those diagnostics as regressions. Establish the
 causal commit and prior public contract, restore only the affected hunks, and preserve
 independent runtime and architecture fixes. Source findings are not runtime proof.
 
+All generated tooling surfaces derive their scope from the typed
+`codegen.artifacts` and `codegen.exclusions` owners. `.gitignore`, editor settings,
+Python tool configuration, Markdown configuration and documentation publication
+must not maintain competing copies of those facts. Repository overrides compose at
+that owner; renderers translate the resulting policy into each consumer's native
+syntax and path root. Rule configuration remains with its declared tooling owner.
+
+Tracking, diagnostic eligibility, formatter ownership, editor visibility and site
+publication are distinct purposes of the same declarations, not interchangeable
+ignore lists. Git-ignored tracked source remains governed unless the typed scope
+explicitly excludes it. An excluded generated projection still receives its owning
+generator's integrity check. Generated API pages may be published without becoming
+formatter-owned input. Authored tests, scripts, examples and documentation remain
+subject to strict gates; scope corrections never suppress legitimate findings.
+
+Markdown lint, repair, format and embedded-code discovery consume the same effective
+scope. MkDocs publication and physical-copy exclusions derive from declared purpose
+views, rebased to its documentation root. Validators do not read generated ignore
+files back as policy, approximate native ignore matching, or override native excludes
+with a separately maintained command-line list.
+
 ## Imports and modules
 
 - Ordinary Python module filenames have no leading underscore. Preserve Python
@@ -115,24 +136,31 @@ Start at the workspace root:
 make setup
 make help
 make gen
-make mod
-make gen
-make gen
-make fix
 make fmt
+make fix
+make mod
 make check
-make test
-make gen
-make waza
+make tests
+make build
 ```
 
-A final generation pass alone does not prove a fixed point. Prove convergence of the
-same final candidate as required by the stabilization runbook's
+Run `setup` when the declared environment needs provisioning, and `build` when a built
+artifact is in scope. `tests` runs only after the same scope's `check` is green. A
+generation pass alone does not prove a fixed point: prove convergence of the same final
+candidate as required by the stabilization runbook's
 [canonical cycle](../ways-of-working/stabilization-checkpoint-0.12.md#a-canonical-cycle).
 Use declared canonical verbs and their documented inputs. Do not attach effect
 selectors or retired execution toggles to standard lifecycle verbs, or invoke
 underlying tools directly. A scoped verb does not replace required full-lifecycle
 gates.
+
+The provisioned Waza binary does not add a `make waza` verb. Its native semantic
+verification matches skill requirements against evaluation tasks, not Markdown prose
+or a repository search. A future selected Waza capability needs a declared Make route,
+an available judge model through the public host interface, and its own runtime proof;
+installation alone enables none of those. [ADR-025's toolchain decision](../architecture/adr/025-npm-free-fleet-toolchain.md#decision)
+owns provisioning, while [ADR-028 Decision 15](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15)
+owns the capability-named external boundary.
 
 All known defects in the applicable scope must be corrected before phase closure.
 Recording a Bead, passing selected tests, or preparing an unapplied patch is not

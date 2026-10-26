@@ -81,7 +81,10 @@ has already passed its runtime and native validation gates.
    existing public contracts.
 4. MRO composition joins meaningful, self-contained facades. A numbered fragment
    relying on undeclared members of a sibling is not a facade. Do not force extra
-   bases or wrappers merely to satisfy a count.
+   bases or wrappers merely to satisfy a count. Fragments implementing the same
+   capability consolidate at one owner rather than receiving invented names to evade
+   a destination collision. The [Core failure-factory declaration](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/AGENTS.md#failure-factory-responsibility)
+   is one such case, linked back to [ADR-028 Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17).
 5. Only an owning facade imports its internal modules. Other production modules,
    tests, scripts, and examples consume that facade. Preserve declared dependency
    direction and use explicit protocol injection where a runtime back-import

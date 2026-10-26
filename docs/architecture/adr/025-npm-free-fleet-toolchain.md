@@ -61,7 +61,13 @@ the operator's global Mise registry.
    glibc-only binaries; no channel ships a musl build.
 3. **rumdl formats markdown.** The `markdown-format` gate runs
    `rumdl fmt --check` in `make check` and `rumdl fmt` in `make fmt`, reading
-   the same generated `.markdownlint.json` as the `markdown` gate. rumdl is
+   the same generated `.rumdl.toml` as the `markdown` gate. Both native rumdl
+   settings and the compatible `.markdownlint.json` editor projection derive
+   from `tooling.yaml`; rumdl-only rules and options never enter the latter.
+   The native configuration declares the MkDocs dialect used by the docs
+   renderer. This configuration amendment follows the October 26 operator
+   request, tracked by `flext-5nmph`; runtime acceptance is recorded separately.
+   rumdl is
    locked in `uv.lock`. The generated `.prettierrc` and `.prettierignore` are
    retired projections that `make gen` deletes. MD077, disabled only because
    prettier contradicted it, is enabled again. The two exclusions that hid the
