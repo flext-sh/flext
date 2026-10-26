@@ -62,7 +62,10 @@ The fourteen points of `generator-declarations.md` are law. In one line each:
    declares no short alias.
 6. The generator propagates, never compensates; the validator reports.
 7. Violations are fixed at the source; recurrence makes a catalog rule with a fixture.
-8. Verdict and count derive from one classification; `error` fails, warning does not.
+8. Verdict and count derive from one classification and the current
+   [phase-completion contract](../../../AGENTS.md#engineering-and-phase-completion-contract).
+   The former blanket statement that warnings do not fail is superseded by that
+   contract; a warning, missing execution or partial result never proves acceptance.
 9. Every rule is computed from an existing source and proven fleet-wide before commit.
 10. Declaration adjustment is automatic; deriving beats listing; unnecessary lists die.
 11. Every module is one nested class; nothing loose, no alias outside `__all__`; the

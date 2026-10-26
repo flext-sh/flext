@@ -82,6 +82,15 @@ but cannot read the composite `c` facade while that facade is being assembled.
 Such bootstrap dependencies use the explicit leaf producer; importing the facade
 back into its own parts or substituting an empty/default value is not a repair.
 
+Layer-zero `_config`/`_settings` and their source helpers may import an identity-proven
+helper of the same package **only within layer zero**, when the complete proposed
+source/import graph is acyclic. Each schema has one owner and reads values from its
+declared configuration source; helpers do not copy business rules or depend on a
+project `c/t/p/m/u` facade, even under `TYPE_CHECKING`. Both the native import-law
+validator and its generated declarative rule consume this same typed decision;
+neither a filename prefix nor a package-specific allowlist proves helper ownership.
+This is the layer-zero boundary applied by [ADR-028 Decision 1](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-1).
+
 Generated facade imports, declaration references and codemod contexts preserve the
 complete package identity elected by the project-discovery owner, including nested
 namespace packages. A directory basename is not an import identity. An unresolved

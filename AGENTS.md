@@ -703,7 +703,9 @@ config.<Namespace>.*      settings.<Namespace>.*
 
 Config = business rules (`config/*.yaml`, validated); settings = env/CLI-tunable knobs.
 Facades never hardcode values the SSOT holds. Config/settings modules import only
-stdlib/pydantic/upstream base — never a project facade (zero-cycle).
+stdlib/pydantic/upstream base or source-proven, acyclic layer-zero helpers of their
+own package ([ADR-005 §2](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#2-facade-and-layer-direction-is-strict)) — never a project
+`c/t/p/m/u` facade, including under `TYPE_CHECKING`.
 
 **Dependency direction:** `flext-core` ← everything. `flext-cli` owns CLI domains
 (Toml/Yaml/Csv/Json/Cli/Tui/Run/Dag/Templates/Workflow). Singer connectors are thin
@@ -860,6 +862,11 @@ CLI + pytest plugin, **never imported at runtime**.
     are being composed, importing the letters of the upstream packages it composes
     (`from flext_cli import c, t, p, m, u`, `from flext_core import …`) is the
     canonical form. Each own family composes the upstream same-letter class by MRO.
+    [ADR-028 Decision 10](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)
+    elects one import binding from actual header references: a used bare upstream
+    letter remains bare; a used, source-proven alias remains aliased, and an unused
+    bare duplicate from that provider is removed. The package's own letter declared
+    later in the module does not by itself require an upstream alias.
     - The package's own letter is forbidden inside its own family, in every form:
       `from <pkg> import u`, a function-local import, or `<pkg>.u` reached through
       the package module object. It is the facade under assembly (ENFORCE-051).

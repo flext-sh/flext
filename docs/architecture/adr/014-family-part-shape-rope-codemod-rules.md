@@ -166,20 +166,29 @@ unrelated homonyms retain their names.
 
 ### 3b. rope-in-gen (one engine, two modes)
 
-The Rope engine is a single engine with two invocation modes, and `make gen` is the only
-writer of generated projections (operator ruling 2026-09-15, plan-of-record
-`rope-gen engine strict/total init`, Bead `flext-crd1y`):
+The 2026-09-15 operator ruling (plan-of-record `rope-gen engine strict/total init`,
+Bead `flext-crd1y`) established one shared engine. Its gen-only projection-writer
+restriction is superseded by the current root
+[operation-ownership contract](../../../AGENTS.md#build--test) and
+[Make guide](../../guides/make-commands.md#operation-ownership), reconciled here on
+2026-10-26: `gen` and `mod` complete their own dependent projections through the
+same typed planner and publisher, without recursively invoking another public verb.
+This alignment records the target contract, not completed implementation, runtime
+acceptance or fleet rollout.
 
 1. **One engine.** The Rope change primitives (`FlextInfraUtilitiesRopeRuntime` /
    refactor / `_utilities/rope_*`) are the shared motor. There is no second engine and
    no reimplemented lazy-init.
-2. **Two modes.** `codegen init` (strict/total package init) and `conform` (structural
-   family repair) both drive the same engine; `make mod` remains the ad-hoc structural
-   circuit that consumes the same primitives.
-3. **gen is the projection owner.** lazy-init re-generation lives INSIDE `make gen`.
-   Every generated facet export surface is authored exclusively by gen; hand-written
-   split output is adoption input, never authority — when gen renders a divergent
-   result, gen wins and the render is re-proven.
+2. **Shared engine, distinct operations.** The historical `codegen init` and `conform`
+   modes do not establish a second public lifecycle. Generation renders current
+   declarations; `make mod` owns semantic and structural rewiring. Each uses the
+   existing shared primitives within its declared operation.
+3. **One projection owner and publisher.** Generated facets and lazy exports remain
+   owned by their generator declarations and templates. Both `gen` and `mod` use
+   that owner to publish the projections required by their own coherent change;
+   neither calls the other public verb. Hand-written split output is adoption
+   input, never authority. Divergence is repaired at the canonical source and
+   re-proven, not patched by a competing projection writer.
 4. **Strict/total init.** Generated `__init__` exports are the ordered union of the
    sibling parts' `__all__`: a sibling without `__all__` emits warning `GEN-W001`; a
    stale `__all__` (export listed but absent from the sibling) is an error (`GEN-E001`)
@@ -197,8 +206,12 @@ writer of generated projections (operator ruling 2026-09-15, plan-of-record
    single receipt (findings + timings). A mid-publication failure reverse-applies only
    the effects of its own invocation (empty diff post-rollback is the criterion), for
    gen and fix alike.
-8. **Gate before the fleet.** The engine touches no fleet member before the external
-   standalone cobaias prove it green ×2 (cosmos-docgen first, then `agents_governance`).
+8. **Runtime admission before rollout.** The approved campaign selects its real
+   consumers and dependency-closed batches. The 2026-10-26 convergence plan
+   (`flext-ag9fw`, related `flext-s9r3a`) supersedes the historical fixed external
+   pilot order: prove each exact candidate through its selected public consumer,
+   required gates and unchanged-input fixed point before dependent rollout.
+   Discovering another external consumer does not authorize modifying it.
 
 ### 4. Centralized backup cycle
 

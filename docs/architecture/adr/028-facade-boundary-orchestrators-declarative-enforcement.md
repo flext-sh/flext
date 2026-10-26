@@ -33,7 +33,8 @@
 
 - **Status:** ACCEPTED — operator orders 2026-10-24 (verbatim below); amended by
   operator orders and rulings of 2026-10-25 (Decision 9 examples, Decision 14 entity
-  equality, Decisions 15–19)
+  equality, Decisions 15–19) and the 2026-10-26 artifact-only fixture contract
+  (Decision 6)
 - **Date:** 2026-10-24
 - **Scope:** every internal FLEXT project (`internal_flext`) and all code tracked in its
   repository — `src/` packages and every other tier (`tests/`, `examples/`, `scripts/`,
@@ -75,24 +76,27 @@ outside the facades across 12 repositories.
 
 ### Decision 1
 
-1. **External libraries only inside the facades.** A third-party library is imported at
-   runtime only by a `c`/`t`/`p`/`m`/`u` family module of the owning domain, or by a
-   layer-0 config/settings module for its foundation libraries. Every other module
-   imports only the Python standard library and FLEXT packages.
+  1. **External libraries only inside the facades.** A third-party library is imported at
+    runtime only by a `c`/`t`/`p`/`m`/`u` family module of the owning domain, or by a
+    layer-0 config/settings module for its foundation libraries. Layer-zero source
+    helpers of the same package may depend on one another only when their native
+    ownership and acyclic proposed graph are proven under [ADR-005 §2](005-config-settings-constants-templates-schemas-ssot.md#2-facade-and-layer-direction-is-strict);
+    none imports its own `c/t/p/m/u` family. Every other module imports only the
+    Python standard library and FLEXT packages.
 
 ### Decision 2
 
-1. **Library types only through declarations.** Inside the facades too, an external
-   library's types are named only through `t` aliases (and `p` protocols where the
-   contract is structural). `u` behavior consumes those names. `u` never re-narrows or
-   re-parses (`isinstance` chains, `ast.literal_eval`, manual dict walking) what a `t`/`m`
-   declaration validates once at the owner boundary; it uses the library's native
-   typed primitives.
+  1. **Library types only through declarations.** Inside the facades too, an external
+    library's types are named only through `t` aliases (and `p` protocols where the
+    contract is structural). `u` behavior consumes those names. `u` never re-narrows or
+    re-parses (`isinstance` chains, `ast.literal_eval`, manual dict walking) what a `t`/`m`
+    declaration validates once at the owner boundary; it uses the library's native
+    typed primitives.
 
 ### Decision 3
 
-1. **Modules outside `c/t/p/m/u` and `api` are orchestrators.** They compose calls to
-   the facades and hold no declaration of a facade kind, explicit or implicit:
+  1. **Modules outside `c/t/p/m/u` and `api` are orchestrators.** They compose calls to
+    the facades and hold no declaration of a facade kind, explicit or implicit:
     - no constants, literal name sets or lookup tables (→ `c`);
     - no type aliases, `TypeVar`s, inline `Literal[...]` domains or ad hoc unions (→ `t`);
     - no `Protocol` classes (→ `p`);
@@ -101,10 +105,10 @@ outside the facades across 12 repositories.
 
 ### Decision 4
 
-1. **The families do not violate one another.** `c` holds constants only, `t` types only,
-   `p` protocols only, `m` models only, `u` behavior only, each in the import order
-   `c → t → p → m → u` (reverse imports `TYPE_CHECKING`-only) and with one owner per
-   object (ADR-027).
+  1. **The families do not violate one another.** `c` holds constants only, `t` types only,
+    `p` protocols only, `m` models only, `u` behavior only, each in the import order
+    `c → t → p → m → u` (reverse imports `TYPE_CHECKING`-only) and with one owner per
+    object (ADR-027).
 
 ### Decision 5
 
@@ -116,90 +120,101 @@ outside the facades across 12 repositories.
 
 ### Decision 6
 
-1. **Every module is one nested class.** All declarations of every
-   tier of the repository, not only `src/` — live inside its single top-level nested
-   class (ADR-018 point 11). The few exceptions (an executable `main()`, pytest
-   fixtures and hooks in `conftest.py`, generator-emitted dunders) are declared once,
-   documented, and validated automatically by the declarative catalog; anything else
-   is a violation. Operator order 2026-10-24 (verbatim): "os tests sempre seguem as
-   mesmas regras de felxt, mas com conftest e fixtures/ a mais com um pouco mais de
-   liberdade, de resto é igual, as outras pasta python sempre igual a src". So
-   `tests/` follows every rule here; only `conftest.py` and `tests/fixtures/` carry the
-   tests-tier delta (pytest fixture and hook functions, scenario data bound by
-   fixtures), declared once in the catalog as that tier's exception data. Every other
-   Python folder (`examples/`, `scripts/`, and any other) follows exactly the `src/`
-   rules. Scenario trees (`tests/fixtures/<scenario>/**`) are input data for the
-   engines under test, not code under test: they may hold deliberately violating
-   sources, carry no generated `__init__.py`, and are excluded from lint, generation
-   and the rule catalog through flext-infra's single exclude owner. Modules directly
-   under `tests/fixtures/` stay fully governed. The scenario root is the
-   `flext_fixture_trees_root` pytest ini key: flext-infra projects it into every
-   generated pytest configuration from `scenario_data_roots`, and the flext-tests
-   fixture-tree plugin registers and reads it (`c.Tests.FIXTURE_TREES_INI`). That
-   plugin keeps every scenario directory out of live collection and hands tests
-   `fixture_tree("<scenario>")` (`p.Tests.FixtureTree`), which copies the tree into
-   the test's `tmp_path` or into a given `destination` such as a pytester consumer.
-   Tests never use pytester's `copy_example`, whose `pytester_example_dir` key exists
-   only while the pytester plugin is active.
+  1. **Every module is one nested class.** All declarations of every
+    tier of the repository, not only `src/` — live inside its single top-level nested
+    class (ADR-018 point 11). The few exceptions (an executable `main()`, pytest
+    fixtures and hooks in `conftest.py`, generator-emitted dunders) are declared once,
+    documented, and validated automatically by the declarative catalog; anything else
+    is a violation. Operator order 2026-10-24 (verbatim): "os tests sempre seguem as
+    mesmas regras de felxt, mas com conftest e fixtures/ a mais com um pouco mais de
+    liberdade, de resto é igual, as outras pasta python sempre igual a src". So
+    `tests/` follows every rule here. The canonical global
+    `testing/observable-runtime` rule's artifact-only amendment of 2026-10-26
+    supersedes permission for executable fixture modules under `tests/fixtures/`.
+
+    That root contains artifacts and data only, including source-shaped bytes used
+    as engine inputs. It contains no executable test classes, builders, aliases,
+    models, package initializers or `conftest.py`, at any depth. File extension
+    alone does not establish executable ownership; artifacts are never imported
+    or executed in the suite process.
+
+    Executable declarations and builders belong to the test-code `c/t/p/m/u`
+    families, pytest wiring to `conftest.py` outside the artifact root, and behavior
+    to the declared test layers. Every other executable Python folder follows the
+    same rules as `src/`. The shared inventory owner keeps artifact bytes outside
+    live collection, lint, types, refactoring and generation, without inspecting
+    their content to decide applicability. These boundaries are declared once and
+    propagated; a local exclusion is not another enforcement owner.
+
+    The existing scenario-root declaration is the
+    `flext_fixture_trees_root` pytest ini key: flext-infra projects it into every
+    generated pytest configuration from `scenario_data_roots`, and the flext-tests
+    fixture-tree plugin registers and reads it (`c.Tests.FIXTURE_TREES_INI`). That
+    plugin keeps every scenario directory out of live collection and hands tests
+    `fixture_tree("<scenario>")` (`p.Tests.FixtureTree`), which copies the tree into
+    the test's `tmp_path` or into a declared consumer destination.
+    Tests never use pytester's `copy_example`, whose `pytester_example_dir` key exists
+    only while the pytester plugin is active.
 
 ### Decision 7
 
-1. **The deprecated-signature window is the standard route to zero compatibility
-   code without breakage.** Operator order 2026-10-24 (verbatim): "toda a assinatura
-   antiga fica marcada com warning indicando o caminho novo até migrarmos tudo e daí
-   exterminamos o código antigo (isso tem que incluir os projetos externos mais
-   tarde)" and "não é contradição, é garantir que não vamos manter ABSOLUTAMENTE NADA
-   DE CÓDIGO ANTIGO DE COMPATIBILIDADE E SEM QUEBRAR O PROJETO" (tracker memory
-   `operator-ruling-2026-10-24-deprecated-signature-window`). Every removed or renamed
-   public signature stays as a thin pass-through to its new owner, marked with the
-   stdlib `warnings.deprecated` marker `compat: <old> -> <new owner>; fix: <exact
-   rewire>`. A constant carries the equivalent PEP 593 marker (bead `flext-1engx.12`).
-   The marked declaration does not fail CI. Every remaining use of it does: type
-   checkers report deprecated use as an error, and that report is the census. The
-   rewire is applied by rule in each consumer's wave. The pass-through is deleted when
-   the census reaches zero, external projects included (bead `flext-1engx.11`). An
-   unmarked old path, or a zero-use marked path still present, is a defect. Current
-   state: rule `report-compat-deprecated-marker.yml` still flags declarations; it is
-   corrected under bead `flext-xws5d`.
+  1. **The deprecated-signature window is the standard route to zero compatibility
+    code without breakage.** Operator order 2026-10-24 (verbatim): "toda a assinatura
+    antiga fica marcada com warning indicando o caminho novo até migrarmos tudo e daí
+    exterminamos o código antigo (isso tem que incluir os projetos externos mais
+    tarde)" and "não é contradição, é garantir que não vamos manter ABSOLUTAMENTE NADA
+    DE CÓDIGO ANTIGO DE COMPATIBILIDADE E SEM QUEBRAR O PROJETO" (tracker memory
+    `operator-ruling-2026-10-24-deprecated-signature-window`). Every removed or renamed
+    public signature stays as a thin pass-through to its new owner, marked with the
+    stdlib `warnings.deprecated` marker `compat: <old> -> <new owner>; fix: <exact
+    rewire>`. A constant carries the equivalent PEP 593 marker (bead `flext-1engx.12`).
+
+    The marked declaration does not fail CI. Every remaining use of it does: type
+    checkers report deprecated use as an error, and that report is the census. The
+    rewire is applied by rule in each consumer's wave. The pass-through is deleted when
+    the census reaches zero, external projects included (bead `flext-1engx.11`). An
+    unmarked old path, or a zero-use marked path still present, is a defect. Current
+    state: rule `report-compat-deprecated-marker.yml` still flags declarations; it is
+    corrected under bead `flext-xws5d`.
 
 ### Decision 8
 
-1. **One standard, automated.** The rules are identical for every project, applied by
-   flext-infra's engines and the code-review graph as automatically as possible;
-   duplicated code and domain violations are rejected, never accepted as debt.
-   Operator order 2026-10-24 (verbatim): "EXTREMAMENTE IMPORTANTE , LEI EXTREMA vc tem
-   que fazer as correcoes de violacoes ser ao maximo possível automatizadas por
-   flext-infra gen,upg,mod,fix,fmt !!!!!!!!!!!!!!!! correções manuais tem que ser A
-   EXCESSÃO DA EXCESSÃO, E tem que propagar globalmente sem gerar erros, lints, fmts,
-   outras violacoes". Every violation class is corrected by a flext-infra engine
-   reached through `make gen`, `make upg`, `make mod`, `make fix` or `make fmt` (a
-   generator source, a codemod rule with fixtures, a fixer), applied to every project,
-   and its output is itself clean: a fix that leaves a lint, format, type or rule
-   finding anywhere is a defective fix. A manual edit is allowed only for a genuinely
-   unique case that no rule can express (the exception of the exception), and its
-   reason is stated in the commit.
+  1. **One standard, automated.** The rules are identical for every project, applied by
+    flext-infra's engines and the code-review graph as automatically as possible;
+    duplicated code and domain violations are rejected, never accepted as debt.
+    Operator order 2026-10-24 (verbatim): "EXTREMAMENTE IMPORTANTE , LEI EXTREMA vc tem
+    que fazer as correcoes de violacoes ser ao maximo possível automatizadas por
+    flext-infra gen,upg,mod,fix,fmt !!!!!!!!!!!!!!!! correções manuais tem que ser A
+    EXCESSÃO DA EXCESSÃO, E tem que propagar globalmente sem gerar erros, lints, fmts,
+    outras violacoes". Every violation class is corrected by a flext-infra engine
+    reached through `make gen`, `make upg`, `make mod`, `make fix` or `make fmt` (a
+    generator source, a codemod rule with fixtures, a fixer), applied to every project,
+    and its output is itself clean: a fix that leaves a lint, format, type or rule
+    finding anywhere is a defective fix. A manual edit is allowed only for a genuinely
+    unique case that no rule can express (the exception of the exception), and its
+    reason is stated in the commit.
 
 ### Decision 9
 
-1. **No embedded code or long text constants.** Operator order 2026-10-24 (verbatim):
-   "código de constnats longos tipo esse a seguir em constatns ou inline (até mesmo em
-   testgs) são violacoes gravíssimas". Source code or long text built as string
-   literals (multi-line literals, implicit concatenation of statement lines, scripts
-   handed to a subprocess or `exec`) is forbidden in every tier, constants modules and
-   tests included. Behavior is exercised by calling the public API directly with
-   fixture data; templates live in the generator's template files; long data lives in
-   typed configuration owners. Code examples are the inverse case and are governed,
-   not exempt: operator order 2026-10-25, verbatim (tracker memory
-   `operator-order-2026-10-25-embedded-code-same-rules`): "até mesmo o código dentro
-   docstring e markdown tem que sempre atualizado, testado, formatado e atender as
-   mesmas regras flext que o projeto". Every example in a docstring or Markdown file
-   tracks the current API, runs under the documentation tests, is formatted, and
-   follows every decision of this ADR (root-letter imports, no library names
-   outside the facades, the Pydantic way).
+  1. **No embedded code or long text constants.** Operator order 2026-10-24 (verbatim):
+    "código de constnats longos tipo esse a seguir em constatns ou inline (até mesmo em
+    testgs) são violacoes gravíssimas". Source code or long text built as string
+    literals (multi-line literals, implicit concatenation of statement lines, scripts
+    handed to a subprocess or `exec`) is forbidden in every tier, constants modules and
+    tests included. Behavior is exercised by calling the public API directly with
+    fixture data; templates live in the generator's template files; long data lives in
+    typed configuration owners. Code examples are the inverse case and are governed,
+    not exempt: operator order 2026-10-25, verbatim (tracker memory
+    `operator-order-2026-10-25-embedded-code-same-rules`): "até mesmo o código dentro
+    docstring e markdown tem que sempre atualizado, testado, formatado e atender as
+    mesmas regras flext que o projeto". Every example in a docstring or Markdown file
+    tracks the current API, runs under the documentation tests, is formatted, and
+    follows every decision of this ADR (root-letter imports, no library names
+    outside the facades, the Pydantic way).
 
 ### Decision 10
 
- 1. **Imports go through package lazy exports, never module paths or module objects.**
+  1. **Imports go through package lazy exports, never module paths or module objects.**
     Operator orders 2026-10-24 (verbatim): "violacao gravissima -> from
     flext_infra.validate.testmon_db import FlextInfraTestmonDbInspector <<<< import por
     modulo ao inves de usar `__init__.py` lazy import" and "violacao gravissima import do
@@ -208,14 +223,14 @@ outside the facades across 12 repositories.
     whose generated lazy `__init__` publishes its direct declaring module: the
     declared facade surface at the package root, or the owning family package
     (`_models`, `_utilities`, …) for family declarations and composition.
-     Descendant exports are not automatically lifted into ancestor initializers.
-     A child's `__all__` describes that child's surface; it does not authorize an
-     ancestor to publish every internal subclass. Preserve declared facade letters
-     and child-package metadata without flattening directory boundaries. Methods of
-     a component subclass are reached only through the nearest composed MRO facade
-     at each nested family stage, not by a sibling calling the leaf class directly
-     ([ADR-014 §1](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership),
-     [ADR-018 nested projection](018-generator-declarations.md#nested-facade-projection)).
+    Descendant exports are not automatically lifted into ancestor initializers.
+    A child's `__all__` describes that child's surface; it does not authorize an
+    ancestor to publish every internal subclass. Preserve declared facade letters
+    and child-package metadata without flattening directory boundaries. Methods of
+    a component subclass are reached only through the nearest composed MRO facade
+    at each nested family stage, not by a sibling calling the leaf class directly
+    ([ADR-014 §1](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership),
+    [ADR-018 nested projection](018-generator-declarations.md#nested-facade-projection)).
     Importing from a module path below that package, or importing a module object and
     reaching its classes by attribute, is forbidden in every tier, own package included,
     and in generated facades too. Operator order 2026-10-24 (verbatim): "mesmo em
@@ -235,13 +250,20 @@ outside the facades across 12 repositories.
     facades are being composed, the letters of the upstream packages it composes
     (`from flext_cli import c, t, p, m, u`) are the canonical binding: each own family
     composes the upstream same-letter class by MRO. The boundaries around it:
-     - the package's own letter inside its own family is forbidden in every form,
-       including `<pkg>.u` reached through the package module object (ENFORCE-051);
-     - a same-family sibling is imported from the family package;
-     - modules outside the families read every letter from their own package root
-       (ENFORCE-003, which also owns `if TYPE_CHECKING:` imports);
-     - a later layer stays TYPE_CHECKING-only from any package
-       (`ban-reverse-runtime-import`).
+      - Elect the spelling from native references at the class header. Retain a bare
+        upstream letter when its identity is used there; when an existing verified
+        alias is the used binding, retain only that alias. A later publication of the
+        package's own letter does not make an earlier bare binding occupied. Never
+        emit both `u` and `u as provider_u` from one provider when the bare binding
+        has no independent reference. This applies equally to nested namespaces;
+        it does not create a per-library alias list or change the MRO identity.
+      - the package's own letter inside its own family is forbidden in every form,
+        including `<pkg>.u` reached through the package module object (ENFORCE-051);
+      - a same-family sibling is imported from the family package;
+      - modules outside the families read every letter from their own package root
+        (ENFORCE-003, which also owns `if TYPE_CHECKING:` imports);
+      - a later layer stays TYPE_CHECKING-only from any package
+        (`ban-reverse-runtime-import`).
 
     A letter of any facade package read through its module object (`import pkg`,
     then `pkg.u.X`) is detected by the single rule `ban-letter-module-object`.
@@ -311,13 +333,13 @@ outside the facades across 12 repositories.
      - A protocol-typed model field uses `t.Port[p.X]`, Pydantic's official field-level
        marker. A protocol metaclass is not FLEXT-conformant because the metaclass is
        private API.
-      - `arbitrary_types_allowed` is banned.
-      - A strict contract declaring an Enum field retains the member's type during
-        Python validation and handoff by reference. Pydantic's `use_enum_values=True`
-        extracts its primitive value during validation, so it cannot be inherited by
-        the [Core `ContractModel` preset](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/src/flext_core/_models/_base/flextmodelsbase_part_02.py#L133-L143).
-        Serialize primitive values at the outward JSON boundary, not between strict
-        contracts.
+     - `arbitrary_types_allowed` is banned.
+     - A strict contract declaring an Enum field retains the member's type during
+       Python validation and handoff by reference. Pydantic's `use_enum_values=True`
+       extracts its primitive value during validation, so it cannot be inherited by
+       the [Core `ContractModel` preset](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/src/flext_core/_models/_base/flextmodelsbase_part_02.py#L133-L143).
+       Serialize primitive values at the outward JSON boundary, not between strict
+       contracts.
      - A field naming a sibling through its own enclosing family class is banned
        (`ban-enclosing-family-field-reference`): the enclosing class is unbound while
        its body runs, so the model stays incomplete. The fix extracts the nested member

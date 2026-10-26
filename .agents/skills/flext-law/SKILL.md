@@ -46,7 +46,9 @@ installed delivery remain separate evidence. Global governance is authored under
   external inputs, `config` owns validated derivation, `base` owns reusable foundations,
   `services` orchestrate use cases, `api` is the sole composition root, and `cli` is a
   thin transport adapter when the project declares a CLI. Do not create competing
-  long-name or alias layers.
+  long-name or alias layers. [ADR-005 §2](../../../docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#2-facade-and-layer-direction-is-strict)
+  owns the narrow acyclic layer-zero helper allowance; it never admits a dependency
+  from config/settings into their own `c/t/p/m/u` families.
 - Facade boundary (ADR-028; law text in root `AGENTS.md` "Facade boundary"): external
   libraries enter only through the owning domain's `c/t/p/m/u` (layer-0 config/settings
   for their foundation libraries); their types are named only through `t`/`p`; modules
@@ -63,12 +65,17 @@ installed delivery remain separate evidence. Global governance is authored under
   models with `_models/pydantic.py` (19); this skill restates none of them. Each of
   Decisions 15–19 and the examples clause of 9 quotes its 2026-10-25 operator order
   verbatim with its tracker key.
-- Family part shape (ADR-014, `$flext-family-shape`): the five private families each
-  begin with `base.py`; a part file nests entities directly
-  (models/enums/protocols/behavior, one level) — top-level orphan classes and pure
-  namespace-wrapper children are forbidden and repaired only through `make mod` Rope
-  rules (one YAML per rule) replicating changes via the shared `do(changes)` cycle
-  wrapped in `FlextInfraUtilitiesSafety`.
+- Semantic family shape follows [ADR-014 §1](../../../docs/architecture/adr/014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership)
+  and [ADR-018 nested projection](../../../docs/architecture/adr/018-generator-declarations.md#nested-facade-projection).
+  ADR-014's 2026-10-23 amendment supersedes the flat, one-level numbered-part and
+  mixin prescription. The five private families retain `base.py`; meaningful domain
+  facades compose their owned subclasses or subfacades recursively by MRO, not by
+  forwarding bodies or arbitrary namespace wrappers. Ordinary module names have no
+  leading `_`; facade directories do. Only the owning facade imports its internal
+  modules, and callers access methods through the nearest composed facade at every
+  stage. Structural repair and dependent lazy exports share one authenticated
+  candidate and publisher through `make mod`. This is the target contract, not
+  evidence that fleet migration or runtime validation is complete.
 - Dependencies cross use-case boundaries through `p` protocols and are provided
   explicitly by `api`. A service may not construct infrastructure, read process-global
   configuration, or resolve a dependency by string, reflection, service locator, hidden
@@ -97,27 +104,21 @@ installed delivery remain separate evidence. Global governance is authored under
   pass-through to its new owner until the fleet and external census is zero, and is
   then deleted. This window is the route to zero compatibility code, not an alias
   exception.
-- Lazy-init re-export (generated root `__init__.py`, PEP 562): the root re-exports the
-  canonical facade letters `ALIAS_NAMES = {c, t, m, p, u, r, d, e, h, s, x, tc}` (owner
-  `flext_infra._constants.validate`) resolved in this order — (1) **local facade files**
-  present in the directory win (`constants.py→c`, `typings.py→t`, `protocols.py→p`,
-  `models.py→m`, `utilities.py→u`, `config.py→config`, `settings.py→settings`); (2) the
-  **operational letters** (`r`, `d`, `e`, `h`, `s`, `x`) are inherited from the highest
-  upstream flext library (`flext_cli`, which sources them from `flext_core`) through
-  `u.Infra.lazy_init_resolve_aliases`
-  (nearest declaring, then nearest serving parent); (3) a **local redeclaration
-  published in `__all__` overrides the inherited ancestor**; (4) `Flext*` long-name
-  classes re-export only modules from the **current directory** — never
-  subdirectories, parents, or siblings.
-  A child package's export map is never merged into an ancestor's export map.
-  Its own generated initializer publishes its direct modules; consumers use that
-  owning package. Declared facade letters and child-package metadata retain their
-  existing owners without promoting internal subclasses.
-  The facade-letter set derives from the statically indexed workspace source
-  (`u.Infra` `_lazy_init_package_names`), never the ambient installed/editable venv
-  surface (the flext-b3xmn divergence fix: local venv and pinned CI checkout must render
-  identically). Consumers import only `from <namespace> import <symbol>` with
-  `<symbol> ∈ pkg.__all__` (R1).
+- Lazy-init re-export (generated `__init__.py`, PEP 562) follows
+  [ADR-018](../../../docs/architecture/adr/018-generator-declarations.md#decision)
+  and [ADR-028 Decision 10](../../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10).
+  ADR-018's 2026-09-20 decision supersedes the former filename-to-letter table,
+  `ALIAS_NAMES` existence list and fixed upstream-provider prescription. A letter
+  belongs to the module declaring it in explicit `__all__`; the initializer
+  propagates declarations, never invents or assigns them. Inherited exports derive
+  from source-authenticated native class MRO and explicit declarations, not provider
+  names or the ambient installed/editable environment. The root inherits from its
+  main module; its explicit `__all__` overrides inherited exports. Each initializer
+  publishes only its immediate modules' explicit exports; child maps are not merged
+  into ancestors or used to promote internal subclasses. Recursive subfacades retain
+  their owning class boundary. Consumers import from the nearest owning package's
+  generated lazy surface, with the symbol in that package's `__all__`. These
+  declarations govern generation; they do not attest completed runtime convergence.
 - Service exposure follows the canonical short alias: `base.py` imports `s` from
   `flext_core`, the package root lazily re-exports `s`, and consumers use
   `from <namespace> import s`. Never rename it to `core_s` or substitute an alternative
@@ -188,7 +189,7 @@ develops against a local FLEXT tree only through `make setup FLEXT=<path>`, whic
 installs the locked FLEXT distributions `<path>` provides as editable into its own
 `.venv` (tracker memory `operator-ruling-2026-10-24-setup-flext-editable-param`).
 Official Mise acquisition and native locked tool installation
-precede `uv sync --locked` into the owned physical `.venv`. No custom Python or
+precede `uv sync --frozen` into the owned physical `.venv`. No custom Python or
 AWK/shell lock/installer parser, copied setup admission or installed Infra check runs
 before provision succeeds. Native declarations and lock consistency replace the
 stronger independent pre-install supplier admission; post-provision provenance does
