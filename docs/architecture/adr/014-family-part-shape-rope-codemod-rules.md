@@ -8,7 +8,7 @@
 
 - [Context](#context)
 - [Decision](#decision)
-  - [1. Family directory and part-class law](#1-family-directory-and-part-class-law)
+  - [1. Semantic facade ownership](#1-semantic-facade-ownership)
   - [2. Declarative Rope rules (one YAML file per rule)](#2-declarative-rope-rules-one-yaml-file-per-rule)
   - [3. Shared change cycle (Rope replication)](#3-shared-change-cycle-rope-replication)
   - [3b. rope-in-gen (one engine, two modes)](#3b-rope-in-gen-one-engine-two-modes)

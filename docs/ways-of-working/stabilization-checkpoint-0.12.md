@@ -2,6 +2,8 @@
 
 <!-- TOC START -->
 
+- [Current authoritative decisions](#current-authoritative-decisions)
+  - [ADR-028 Decision Links](#adr-028-decision-links)
 - [(a) Canonical cycle](#a-canonical-cycle)
 - [(b) Central Beads contract](#b-central-beads-contract)
 - [(c) Integration](#c-integration)
@@ -16,21 +18,40 @@ queue, ownership, or gate receipts. Current execution follows the branch-matched
 and the active Bead; historical selectors and manual repair approaches do not override
 the canonical cycle.
 
+## Current authoritative decisions
+
 The common contract reconciled on 2026-10-25 is recorded in `flext-itpd1.17`.
 The three recovered Claude plans and 327 private memory files are dated evidence;
 their old execution recipes do not override the decisions below. The consulted Codex
 memory store contained no prior entries. Private transcripts and raw memory payloads
 remain outside published documentation.
 
+The Bead now records the original session identifiers, captured plan locators,
+interaction boundaries and UTF-8 text digests recovered from the preserved initial
+analysis. Two captured plan files differ from their last `ExitPlanMode` payload;
+those revisions remain distinct, and the later copies are not presumed approved.
+This historical capture has no receipt from the currently required authenticated
+session adapter. Identified provenance does not certify a new extraction or close
+the reconciliation delivery.
+
 | Current decision | Origin and date | Scope and superseded instruction | Canonical owner |
 | --- | --- | --- | --- |
 | Preserve member dependency and tool locks; compose the workspace lock | Operator ruling `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`, 2026-10-25 | Replaces root-only lock deletion. Only `upg` has the editable-checkout/gitlink consistency guard; ordinary work accepts shared WIP. The guard is an accepted target until implementation is proven. | [ADR-030](../architecture/adr/030-member-locks-composition-upg-guard.md) |
-| <a id="adr-028-decision-7"></a>Mark deprecated signatures until all consumers migrate | Operator ruling `operator-ruling-2026-10-24-deprecated-signature-window`, 2026-10-24 | Replaces immediate public-signature deletion. Delegation retains no old implementation; removal requires the complete external and fleet census. New DI-only boundaries still apply. | [ADR-028 Decision 7](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7) and the canonical global zero-residue rule |
+| Mark deprecated signatures until all consumers migrate | Operator ruling `operator-ruling-2026-10-24-deprecated-signature-window`, 2026-10-24 | Replaces immediate public-signature deletion. Delegation retains no old implementation; removal requires the complete external and fleet census. New DI-only boundaries still apply. | [ADR-028 Decision 7](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7) and the canonical global zero-residue rule |
 | Preserve shared work and publish complete green slices | Current operator shared-worktree contract and no-incomplete-pushes order, 2026-10-24/25 | Replaces clean-tree admission, rollback and incomplete working-branch publication. Only the ADR-030 upgrade guard requires its scoped committed state. | Root [AGENTS.md](../../AGENTS.md), [ADR-029](../architecture/adr/029-always-working-one-complete-cycle.md), and global fix-forward/Git owners |
-| <a id="adr-028-decision-5"></a>Static enforcement belongs to Infra | Operator order `operator-order-2026-10-25-core-static-enforce-off`, 2026-10-25 | Replaces import/definition-time static enforcement in Core. This is the required boundary, not a claim that migration is complete. | [ADR-028 Decision 5](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-5); Infra enforcement owner, tracked by `flext-43iz8` |
-| <a id="adr-028-decision-15"></a><a id="adr-028-decision-16"></a>Inject generic capabilities and isolate dialects | Operator DI/dialect and maximum-decoupling orders, 2026-10-25 | Replaces server-name registries, concrete client construction in services and library-named consumer contracts. Preserve the validated external ACL receiver exception until semantic/golden proof. | [ADR-028 Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15), [Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16), composition roots and the receiver's scoped law |
-| <a id="adr-028-decision-17"></a><a id="adr-028-decision-18"></a>Reuse native analysis and refactoring through existing adapters | Operator native-tool and generalized-rule orders, reaffirmed 2026-10-25 | Replaces duplicate parses, indexes and walkers where native equivalence is proven. Native model availability alone proves neither dynamic identity nor Python C3 correctness. Count and consolidate rules without narrowing coverage. | [ADR-028 Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17); implementation and proof remain in [Infra execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine) and `flext-1engx.15`. [Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) is implemented through the shared rule guide. ADR-014 and ADR-017 are subordinate where their older implementation text conflicts. |
+| Static enforcement belongs to Infra | Operator order `operator-order-2026-10-25-core-static-enforce-off`, 2026-10-25 | Replaces import/definition-time static enforcement in Core. This is the required boundary, not a claim that migration is complete. | [ADR-028 Decision 5](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-5); Infra enforcement owner, tracked by `flext-43iz8` |
+| Inject generic capabilities and isolate dialects | Operator DI/dialect and maximum-decoupling orders, 2026-10-25 | Replaces server-name registries, concrete client construction in services and library-named consumer contracts. Preserve the validated external ACL receiver exception until semantic/golden proof. | [ADR-028 Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15), [Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16), composition roots and the receiver's scoped law |
+| Reuse native analysis and refactoring through existing adapters | Operator native-tool and generalized-rule orders, reaffirmed 2026-10-25 | Replaces duplicate parses, indexes and walkers where native equivalence is proven. Native model availability alone proves neither dynamic identity nor Python C3 correctness. Count and consolidate rules without narrowing coverage. | [ADR-028 Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17); implementation and proof remain in [Infra execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine) and `flext-1engx.15`. [Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) is implemented through the shared rule guide. ADR-014 and ADR-017 are subordinate where their older implementation text conflicts. |
 | Align authorities before code and validate embedded code | Operator docs-first/embedded-code orders, 2026-10-25 | Read memory, AGENTS, docs, ADRs, rules, skills and Beads before implementation. Markdown/docstring code receives the same applicable native source gates. Proposed ADRs remain proposals. | Canonical global documentation owners and each project's documentation generator |
+
+### ADR-028 Decision Links
+
+| Decision | Corresponding current-decision ledger section |
+| --- | --- |
+| [ADR-028 Decision 5](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-5) | [Current authoritative decisions](#current-authoritative-decisions): Static enforcement belongs to Infra |
+| [ADR-028 Decision 7](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7) | [Current authoritative decisions](#current-authoritative-decisions): Mark deprecated signatures until all consumers migrate |
+| [ADR-028 Decisions 15–16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15) | [Current authoritative decisions](#current-authoritative-decisions): Inject generic capabilities and isolate dialects |
+| [ADR-028 Decisions 17–18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17) | [Current authoritative decisions](#current-authoritative-decisions): Reuse native analysis and refactoring through existing adapters |
 
 Provider-neutral skills, roles, rules and evaluations are authored in `~/agents/`
 and projected through the existing publisher. FLEXT contributes its local delta;

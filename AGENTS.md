@@ -970,7 +970,7 @@ CLI + pytest plugin, **never imported at runtime**.
   project-owned values, or internal-construction assertions; one unified `conftest.py`,
   typed fixtures in `tests/fixtures/`, canonical testmon cache in every run, layout
   `tests/{unit,integration,e2e}/`, thin single nested `Tests<Unit>` class.
-- **Code in docstrings and Markdown follows the project's rules** (operator order
+  - <a id="adr-028-decision-9"></a>**Code in docstrings and Markdown follows the project's rules** ([ADR-028 Decision 9](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-9); operator order
   2026-10-25, tracker key `operator-order-2026-10-25-embedded-code-same-rules`,
   verbatim: "até mesmo o código dentro docstring e markdown tem que sempre
   atualizado, testado, formatado e atender as mesmas regras flext que o projeto").

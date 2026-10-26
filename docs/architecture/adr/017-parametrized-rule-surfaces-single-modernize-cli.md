@@ -5,11 +5,11 @@
 > [ADR-018](018-generator-declarations.md).
 <!-- TOC START -->
 
+- [ADR-028 Supersession](#adr-028-supersession)
 - [Context](#context)
 - [Decision](#decision)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
-- [ADR-028 Supersession](#adr-028-supersession)
 - [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->

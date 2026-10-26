@@ -50,9 +50,16 @@ Test examples exercise public facades with `tm`, the unified `conftest.py`, and 
 shared fixtures. They contain no mocks, fakes, stubs, patching, monkeypatch mutation,
 private construction, or hardcoded project-owned values.
 
-Markdown and docstring examples obey the same FLEXT import, typing, formatting, and
+Markdown and docstring examples follow the same FLEXT import, typing, formatting, and
 behavior rules as source code. The documentation auditor recursively enforces this
-contract over live `docs/guides/` and `docs/standards/` sources. Historical exclusions
+contract over live `docs/guides/` and `docs/standards/` sources. The accepted embedded-
+code decision is linked here:
+
+| Documentation declaration | Accepted decision |
+| --- | --- |
+| Examples receive the same rules and validation as source code. | [FLEXT ADR-028 Decision 9](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-9) |
+
+Historical exclusions
 come only from the typed docs scope owner; no local allowlist may bypass the audit.
 
 ## Authoring

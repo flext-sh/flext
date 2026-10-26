@@ -4,6 +4,26 @@
 
 - [Context](#context)
 - [Decision](#decision)
+  - [Decision 1](#decision-1)
+  - [Decision 2](#decision-2)
+  - [Decision 3](#decision-3)
+  - [Decision 4](#decision-4)
+  - [Decision 5](#decision-5)
+  - [Decision 6](#decision-6)
+  - [Decision 7](#decision-7)
+  - [Decision 8](#decision-8)
+  - [Decision 9](#decision-9)
+  - [Decision 10](#decision-10)
+  - [Decision 11](#decision-11)
+  - [Decision 12](#decision-12)
+  - [Decision 13](#decision-13)
+  - [Decision 14](#decision-14)
+  - [Decision 15](#decision-15)
+  - [Decision 16](#decision-16)
+  - [Decision 17](#decision-17)
+  - [Decision 18](#decision-18)
+  - [Decision 19](#decision-19)
+- [Bidirectional Traceability](#bidirectional-traceability)
 - [Definitions](#definitions)
 - [Enforcement](#enforcement)
 - [Consequences](#consequences)
@@ -419,11 +439,13 @@ architecture link.
 
 | Decision | Workspace declaration | Subproject declaration and execution |
 | --- | --- | --- |
-| [15 — capability names](#decision-15) | [Root `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); [public core guide, What flext-core must not absorb](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/using-flext-core.md#what-flext-core-must-not-absorb); [Governance DI row](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decisions-15-16) | [Infra `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); external consumer census: `flext-1engx.11` |
-| [16 — CA/DI and zero findings](#decision-16) | [Root `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [consumer law, R2](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/standards/consumption-law.md#r2-no-duplication-structural-scan); [Governance DI row](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decisions-15-16) | [Infra `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); implementation and quality exit: `flext-1engx.15` |
-| [17 — workspace model and native refactorings](#decision-17) | [Root `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [Governance structural-codemod row](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decisions-17-18); [stabilization decision row](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-17) | [Infra `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); implementation: `flext-1engx.15` |
-| [18 — generalized rules](#decision-18) | [Root `AGENTS.md`, Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-18); [Governance structural-codemod row](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decisions-17-18); [codemod guide, One rule per law](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/codemod-rules.md#one-rule-per-law) | [Infra `AGENTS.md`, Decision 18](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-18); projection cleanup: `flext-13s6n` |
-| AI Hub consumer route | [AI Hub ADR-0039](https://github.com/flext-sh/ai-hub/blob/dev/docs/adr/0039-universal-law-references-in-governed-docs.md); [AI Hub ADR index](https://github.com/flext-sh/ai-hub/blob/dev/docs/adr/README.md#fleet-canon); [engineering-law routing](https://github.com/flext-sh/ai-hub/blob/dev/docs/engineering-laws.md) | Consumer documentation Bead `aihub-9qdu6`; source backlink Bead `flext-1engx.16` |
+| [5 — static enforcement](#decision-5) | [Governance decision map](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decision-map) | [Infra, ADR-028 Decision 5: Declarative enforcement](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-5-declarative-enforcement); Bead `flext-43iz8` |
+| [15 — capability names](#decision-15) | [Root `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); [public core guide, What flext-core must not absorb](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/using-flext-core.md#what-flext-core-must-not-absorb); [Governance decision map](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); external consumer census: `flext-1engx.11` |
+| [16 — CA/DI and zero findings](#decision-16) | [Root `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [consumer law, R2](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/standards/consumption-law.md#r2-no-duplication-structural-scan); [Governance decision map](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [Target LDAP CA/DI declaration](https://github.com/flext-sh/flext-target-ldap/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16-ca-di-and-quality); implementation and quality gates: `flext-1engx.15`, `flext-pawp5` |
+| [17 — workspace model and native refactorings](#decision-17) | [Root `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [Governance decision map](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decision-map); [stabilization decision-link section](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links); [Core family-shape declaration](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/AGENTS.md#conventions-specific-to-this-package) | [Infra `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); implementation: `flext-1engx.15` |
+| [18 — generalized rules](#decision-18) | [Root `AGENTS.md`, Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-18); [Governance decision map](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decision-map); [codemod guide, One rule per law](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/codemod-rules.md#one-rule-per-law); [stabilization decision-link section](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links) | [Infra `AGENTS.md`, Decision 18](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-18); projection cleanup: `flext-13s6n` |
+| AI Hub consumer route | [AI Hub ADR-0039](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/adr/0039-universal-law-references-in-governed-docs.md); [ADR catalog](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/adr/README.md#fleet-canon); [engineering-law routing](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/engineering-laws.md); [FLEXT development skill](https://github.com/datacosmos-br/agents/blob/dev/skills/framework/flext-development/SKILL.md) | Consumer Bead `aihub-9qdu6`; reciprocal-link Bead `flext-1engx.16` |
+| [9 — governed embedded examples](#decision-9) | [Root `AGENTS.md`, embedded-code rule](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-9); [documentation standard](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/standards/documentation.md#command-and-test-examples) | The docs Bead `flext-0exhi` records authoring and executable-doc validation. |
 | Prior codemod ADR sections | [ADR-014 §5, Gate alignment](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/014-family-part-shape-rope-codemod-rules.md#5-gate-alignment-one-law-shared-consumers); [ADR-014 §6, Native tool responsibilities](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/014-family-part-shape-rope-codemod-rules.md#6-native-tool-responsibilities-amended-by-adr-028); [ADR-017, ADR-028 Supersession](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/017-parametrized-rule-surfaces-single-modernize-cli.md#adr-028-supersession) | These sections link back to the superseding decisions above. |
 
 ## Definitions
