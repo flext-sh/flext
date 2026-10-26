@@ -53,16 +53,24 @@ outside the facades across 12 repositories.
 
 ## Decision
 
+### Decision 1
+
 1. **External libraries only inside the facades.** A third-party library is imported at
    runtime only by a `c`/`t`/`p`/`m`/`u` family module of the owning domain, or by a
    layer-0 config/settings module for its foundation libraries. Every other module
    imports only the Python standard library and FLEXT packages.
+
+### Decision 2
+
 2. **Library types only through declarations.** Inside the facades too, an external
    library's types are named only through `t` aliases (and `p` protocols where the
    contract is structural). `u` behavior consumes those names. `u` never re-narrows or
    re-parses (`isinstance` chains, `ast.literal_eval`, manual dict walking) what a `t`/`m`
    declaration validates once at the owner boundary; it uses the library's native
    typed primitives.
+
+### Decision 3
+
 3. **Modules outside `c/t/p/m/u` and `api` are orchestrators.** They compose calls to
    the facades and hold no declaration of a facade kind, explicit or implicit:
    - no constants, literal name sets or lookup tables (→ `c`);
@@ -70,16 +78,25 @@ outside the facades across 12 repositories.
    - no `Protocol` classes (→ `p`);
    - no models, `dict`/`TypedDict` payload contracts or settings (→ `m`);
    - no reusable helper functions or nested helpers (→ `u`).
+
+### Decision 4
+
 4. **The families do not violate one another.** `c` holds constants only, `t` types only,
    `p` protocols only, `m` models only, `u` behavior only, each in the import order
    `c → t → p → m → u` (reverse imports `TYPE_CHECKING`-only) and with one owner per
    object (ADR-027).
+
+### Decision 5
+
 5. **Static enforcement lives only in flext-infra, declaratively.** Every static
    (source-shape) violation check is a declarative rule in flext-infra's catalog,
    applied by its generic engines (`make mod` fixes, `make check` detection). flext-core
    keeps no static enforcement catalog, predicate data or source-analysis engine; the
    existing ones migrate to flext-infra in one cutover with zero residue.
-6. **Every module is one nested class.** All declarations of every module — in every
+
+### Decision 6
+
+6. **Every module is one nested class.** All declarations of every
    tier of the repository, not only `src/` — live inside its single top-level nested
    class (ADR-018 point 11). The few exceptions (an executable `main()`, pytest
    fixtures and hooks in `conftest.py`, generator-emitted dunders) are declared once,
@@ -104,6 +121,9 @@ outside the facades across 12 repositories.
    the test's `tmp_path` or into a given `destination` such as a pytester consumer.
    Tests never use pytester's `copy_example`, whose `pytester_example_dir` key exists
    only while the pytester plugin is active.
+
+### Decision 7
+
 7. **The deprecated-signature window is the standard route to zero compatibility
    code without breakage.** Operator order 2026-10-24 (verbatim): "toda a assinatura
    antiga fica marcada com warning indicando o caminho novo até migrarmos tudo e daí
@@ -121,6 +141,9 @@ outside the facades across 12 repositories.
    unmarked old path, or a zero-use marked path still present, is a defect. Current
    state: rule `report-compat-deprecated-marker.yml` still flags declarations; it is
    corrected under bead `flext-xws5d`.
+
+### Decision 8
+
 8. **One standard, automated.** The rules are identical for every project, applied by
    flext-infra's engines and the code-review graph as automatically as possible;
    duplicated code and domain violations are rejected, never accepted as debt.
@@ -135,6 +158,9 @@ outside the facades across 12 repositories.
    finding anywhere is a defective fix. A manual edit is allowed only for a genuinely
    unique case that no rule can express (the exception of the exception), and its
    reason is stated in the commit.
+
+### Decision 9
+
 9. **No embedded code or long text constants.** Operator order 2026-10-24 (verbatim):
    "código de constnats longos tipo esse a seguir em constatns ou inline (até mesmo em
    testgs) são violacoes gravíssimas". Source code or long text built as string
@@ -150,6 +176,9 @@ outside the facades across 12 repositories.
    tracks the current API, runs under the documentation tests, is formatted, and
    follows every decision of this ADR (root-letter imports, no library names
    outside the facades, the Pydantic way).
+
+### Decision 10
+
 10. **Imports go through package lazy exports, never module paths or module objects.**
     Operator orders 2026-10-24 (verbatim): "violacao gravissima -> from
     flext_infra.validate.testmon_db import FlextInfraTestmonDbInspector <<<< import por
@@ -187,6 +216,9 @@ outside the facades across 12 repositories.
 
     A letter of any facade package read through its module object (`import pkg`,
     then `pkg.u.X`) is detected by the single rule `ban-letter-module-object`.
+
+### Decision 11
+
 11. **Tools are used natively and fully.** Operator order 2026-10-24 (verbatim): "nao
     usar funcionaldiade de ferramentas da melhor forma por causa de probleams nossos é
     VIOLAÇÃO EXTREMAMEMENTE GRAVE, CONSIDERANDO ISSO UM BYPASS OU FALLBACK, CORRIJA TUDO
@@ -210,12 +242,18 @@ outside the facades across 12 repositories.
       whole-graph `ban-cyclic-import` gate, not a rule;
     - the staged scan configuration is reproducible with native ast-grep, so a native
       scan and `make mod` agree.
+
+### Decision 12
+
 12. **Validation applies every FLEXT rule in the real tree.** Operator order 2026-10-24:
     a concept, design or fix is validated in the real tree under the full FLEXT law
     and the project's own tool configuration, through the canonical gates. Scratch
     files, loose classes, default tool presets and isolated probes that skip the real
     rules are fake evidence, never proof. A type-checker proof uses the gate's exact
     interpreter binding.
+
+### Decision 13
+
 13. **The `make mod` pipeline has a fixed order.**
     1. The canonical import header, generated from SSOT: the dependency namespace
        singletons, the project's own aliases, and the facade-module letter taken from
@@ -235,6 +273,9 @@ outside the facades across 12 repositories.
     2. The whole codemod catalog, repeated until nothing changes.
     3. Last, ruff `--fix --select` over the import families declared in the tooling
        SSOT.
+
+### Decision 14
+
 14. **Pydantic declarations are complete at import.** Every model, settings, config and
     service class is complete when its module is imported (`__pydantic_complete__`),
     with no `model_rebuild`.
@@ -256,6 +297,9 @@ outside the facades across 12 repositories.
       identity is compared explicitly by id, entity collections are keyed by id, a
       mutable entity is unhashable, and only frozen models hash, by value. Consumers
       relying on identity equality are rewired fleet-wide by rule.
+
+### Decision 15
+
 15. **Library names never leave the facades; exports are named by capability.**
     Operator orders 2026-10-25, verbatim (tracker memories
     `operator-order-2026-10-25-library-names-only-in-facades` and
@@ -279,6 +323,9 @@ outside the facades across 12 repositories.
       `make mod`), keeps the deprecated-signature window (Decision 7) for external
       consumers, and is then applied to ai-hub and every other project that uses
       flext-infra (census under bead `flext-1engx.11`).
+
+### Decision 16
+
 16. **Maximum CA/DI decoupling; duplication and smells at zero.** Operator order
     2026-10-25, verbatim (tracker memory
     `operator-order-2026-10-25-max-decoupling-ca-di`): "lembre-se que tudo tem que ser
@@ -304,16 +351,22 @@ outside the facades across 12 repositories.
       FLEXT configuration. The fix is extraction to the canonical owner, never an
       ignore, a raised threshold or a narrowed scope. The only authorized jscpd
       exception is the license header.
+
+### Decision 17
+
 17. **Rope owns the workspace model and its refactorings.** Operator order
     2026-10-25, verbatim (tracker memory
     `operator-order-2026-10-25-rope-owns-model-refactors`): "lembre-se que tudo tem que
     ser o máximo desacoplado com as regras ca/di de flext-core, exemplo, rope nao tem
     referencia de todos os objetos em memória da workspace ? e ele tem metodos de
     refatoração, isso tem que ser usado ao inves de custom".
-    - One workspace rope project per run is the in-memory model (module cache, parsed
-      modules, file listing, import tools, change validation), exposed only through
-      `p.Infra.WorkspaceSnapshot`; the `u.Infra` owner is the only module that names
-      it (Decision 15).
+    - Each governed repository invocation reuses exactly one workspace project as its
+      in-memory model (module cache, parsed modules, file listing, import tools, and
+      change validation), exposed only through `p.Infra.WorkspaceSnapshot`; the
+      `u.Infra` owner is the only module that names it (Decision 15). A workspace-level
+      command uses its declared repository loop and creates one project per repository;
+      it does not model sibling repositories as one project or open redundant projects
+      for the same repository during that invocation.
     - Renames, moves and import rewrites use rope's native refactorings (rename with
       documentation occurrences, move, restructure, multi-project refactoring).
     - Custom parse, discovery, import-graph and rename/move planners that duplicate
@@ -321,6 +374,9 @@ outside the facades across 12 repositories.
       `flext-1engx.15`). What rope cannot express (format-preserving LibCST
       transforms, ast-grep rules, YAML and Markdown text renames, admission policy)
       keeps its own owner.
+
+### Decision 18
+
 18. **Rules are generalized and few.** Operator order 2026-10-25, verbatim (tracker
     memory `operator-order-2026-10-25-rules-generalized-min-count`): "o sed, rope e
     ast-grep rules tem que estar sempre alinhados com as regras corretas de forma
@@ -330,8 +386,11 @@ outside the facades across 12 repositories.
     features (ast-grep `constraints`, `utils`, `transform`, `rewriters`; rope
     refactorings); no per-package or per-library clones; a one-shot migration rule
     with a zero fleet census is deleted with its test and snapshot; the number of
-    executed rules is tracked against a typed budget. The authoring contract is
-    [Codemod Rules](../../guides/codemod-rules.md#one-rule-per-law).
+    executed rules is tracked against a typed budget. The authoring declaration is
+    [Codemod Rules, One rule per law](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/codemod-rules.md#one-rule-per-law).
+
+### Decision 19
+
 19. **Models import `u` only two ways; each family owns its Pydantic surface.**
     Operator ruling 2026-10-25, verbatim (tracker memory
     `operator-ruling-2026-10-25-models-u-imports-pydantic-home`): "models podem import
@@ -349,6 +408,23 @@ outside the facades across 12 repositories.
     - The Pydantic surface that models need lives in `_models/pydantic.py`, not
       `_utilities/pydantic.py`; it is migrated and every use is rewired in every
       repository. The same principle holds per family for `c`, `t`, `p`, `m` and `u`.
+
+## Bidirectional Traceability
+
+Each accepted decision links to its nearest workspace declaration and subproject
+contract; those declarations link back to the exact decision anchor below. Project URLs
+are pinned to the same `0.12.0-dev` release line used by their branch-matched law. Beads
+record execution, status, and evidence; they do not replace either direction of the
+architecture link.
+
+| Decision | Workspace declaration | Subproject declaration and execution |
+| --- | --- | --- |
+| [15 — capability names](#decision-15) | [Root `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); [public core guide, What flext-core must not absorb](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/using-flext-core.md#what-flext-core-must-not-absorb); [Governance DI row](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decisions-15-16) | [Infra `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); external consumer census: `flext-1engx.11` |
+| [16 — CA/DI and zero findings](#decision-16) | [Root `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [consumer law, R2](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/standards/consumption-law.md#r2-no-duplication-structural-scan); [Governance DI row](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decisions-15-16) | [Infra `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); implementation and quality exit: `flext-1engx.15` |
+| [17 — workspace model and native refactorings](#decision-17) | [Root `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [Governance structural-codemod row](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decisions-17-18); [stabilization decision row](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-17) | [Infra `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); implementation: `flext-1engx.15` |
+| [18 — generalized rules](#decision-18) | [Root `AGENTS.md`, Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md#adr-028-decision-18); [Governance structural-codemod row](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/GOVERNANCE.md#adr-028-decisions-17-18); [codemod guide, One rule per law](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/codemod-rules.md#one-rule-per-law) | [Infra `AGENTS.md`, Decision 18](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-18); projection cleanup: `flext-13s6n` |
+| AI Hub consumer route | [AI Hub ADR-0039](https://github.com/flext-sh/ai-hub/blob/dev/docs/adr/0039-universal-law-references-in-governed-docs.md); [AI Hub ADR index](https://github.com/flext-sh/ai-hub/blob/dev/docs/adr/README.md#fleet-canon); [engineering-law routing](https://github.com/flext-sh/ai-hub/blob/dev/docs/engineering-laws.md) | Consumer documentation Bead `aihub-9qdu6`; source backlink Bead `flext-1engx.16` |
+| Prior codemod ADR sections | [ADR-014 §5, Gate alignment](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/014-family-part-shape-rope-codemod-rules.md#5-gate-alignment-one-law-shared-consumers); [ADR-014 §6, Native tool responsibilities](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/014-family-part-shape-rope-codemod-rules.md#6-native-tool-responsibilities-amended-by-adr-028); [ADR-017, ADR-028 Supersession](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/017-parametrized-rule-surfaces-single-modernize-cli.md#adr-028-supersession) | These sections link back to the superseding decisions above. |
 
 ## Definitions
 

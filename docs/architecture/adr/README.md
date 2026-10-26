@@ -14,8 +14,14 @@ published in the root FLEXT portal.
 
 Read the [governance authority route](../../GOVERNANCE.md#authority) and
 [engineering conformance review](../../GOVERNANCE.md#engineering-conformance-review)
-before applying an ADR. Proposed designs do not replace the branch-matched law or
-prove implemented behavior; record owner boundaries and acceptance evidence in Beads.
+before applying an ADR. Operator and universal governance remain higher authority. For
+technical design, the accepted ADR that owns the topic is the precise decision source;
+root and member `AGENTS.md` files route and enforce that decision, while skills and
+supporting docs consume it without creating a competing design. Beads own work scope,
+ownership, status, and evidence, not architecture. Proposed ADRs are not accepted
+contracts, and an accepted ADR is not proof that its implementation is complete. Record
+implementation and acceptance evidence in Beads. `TODO.md` is a generated Beads
+projection; update its owner, never the projection by hand.
 
 Catalog classifications describe recorded decision maturity, not fresh runtime receipts.
 Historical implementation labels require revalidation on the current integrated
@@ -100,10 +106,19 @@ candidate; acceptance never proves fleet stability.
   amendments do not override authority; acceptance requires full inventory provenance,
   actual runtime and canonical gate evidence, not campaign closure)
 - [ADR-027: Facade Single-Owner Law](027-facade-single-owner-law.md)
+  — **PROPOSED** (implementation tracking: `flext-vjj1s.11`; no acceptance or rollout
+  evidence is implied)
 - [ADR-028: Facade Boundary — External Libraries, Orchestrators, Declarative Enforcement](028-facade-boundary-orchestrators-declarative-enforcement.md)
-  — **PROPOSED** (operator order 2026-10-24; one owner family per exported object,
-  derived from its kind; detected by `make gen`, rewired by a `make mod` Rope phase;
-  tracked in `flext-vjj1s.11`)
+  — **ACCEPTED** (operator orders 2026-10-24/25; Decisions 15–19 are accepted technical
+  contracts: [Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15),
+  [Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16),
+  [Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17),
+  and [Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18).
+  Implementation tracking: `flext-43iz8` for Decision 5 static-enforcement migration,
+  `flext-1engx.15` for Decisions 16–17 and zero-quality exit, `flext-13s6n` for Decision
+  18 rule projection. The external deprecation census `flext-1engx.11` applies to the
+  Decision 7 compatibility window. These Beads track work; they do not establish
+  completion.)
 - [ADR-029: Always Working — One Complete Cycle Per Slice](029-always-working-one-complete-cycle.md)
   — **ACCEPTED** (operator orders 2026-10-24; the project and its runtime work 100% of
   the time; one active slice completes gen → fmt → fix → mod → check → tests, runtime

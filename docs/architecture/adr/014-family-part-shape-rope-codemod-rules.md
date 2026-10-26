@@ -13,8 +13,8 @@
   - [3. Shared change cycle (Rope replication)](#3-shared-change-cycle-rope-replication)
   - [3b. rope-in-gen (one engine, two modes)](#3b-rope-in-gen-one-engine-two-modes)
   - [4. Centralized backup cycle](#4-centralized-backup-cycle)
-  - [5. Gate alignment (one law, two engines)](#5-gate-alignment-one-law-two-engines)
-  - [6. Three instruments and the mod/ast/gen verb taxonomy (2026-09-15)](#6-three-instruments-and-the-modastgen-verb-taxonomy-2026-09-15)
+  - [5. Gate alignment (one law, shared consumers)](#5-gate-alignment-one-law-shared-consumers)
+  - [6. Native tool responsibilities (amended by ADR-028)](#6-native-tool-responsibilities-amended-by-adr-028)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
@@ -185,28 +185,32 @@ cycle `FlextInfraUtilitiesSafety.execute_safely` (backup → transform → valid
 cleanup | rollback). Ad-hoc write paths, private backup schemes, and repository-wide
 rollback remain forbidden.
 
-### 5. Gate alignment (one law, two engines)
+### 5. Gate alignment (one law, shared consumers)
 
-The namespace validator (`validate/_namespace_rules`) enforces the same two laws at
-`make check` time — orphan top-level classes and pure namespace wrappers in family part
-files — with message text consistent with the rule files, so detection-only and
-check-time findings never diverge. Canonical platform exceptions stay encoded once
-(`NAMESPACE_PLATFORM_FACADE_SINGLETONS`, `cli.py` `main` entrypoint, `api.py`
-composition-root singleton).
+> **Amended by [ADR-028 Decision 5](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-5)
+> and [Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18)
+> (2026-10-25):** this section's former
+> "one law, two engines" description is superseded. A static law has one declarative
+> owner in flext-infra's rule catalog; apply and detection routes consume that owner.
+> Independently maintained detector logic for the same law is a duplicate to retire.
+> This accepted target does not claim that the migration from every legacy source is
+> complete; the current owner-claim census and cutover evidence remain in Bead
+> `flext-43iz8`.
 
-### 6. Three instruments and the mod/ast/gen verb taxonomy (2026-09-15)
+### 6. Native tool responsibilities (amended by ADR-028)
 
-Only three instruments impose structural law: **rope** (semantic), **make mod**
-(ast-grep YAML + parameterized sed-by-list), and **config rows** (detection and policy).
-Python rewrite engines (`re`/`ast`/`libcst`/`tokenize`) are exterminated, never
-encapsulated; consumers rewire to the three instruments. Verb taxonomy: `mod` is the
-single modernize surface; `ast` is the ast-grep engine (phase 1 of `mod`; a standalone
-`ast` verb is planned, not yet public); `gen` is the template generator sharing the same
-rope planners. Rules and parameters live as data under `config/rules/{mod,ast,rope}/`
-(ADR-017). Execution runs in a dedicated complete-superproject worktree aligned to the
-integration tip; every sync is a `--no-ff` merge in each touched project (never
-rebase/reset/stash); landing is a scoped commit -> fast-forward push -> PR -> `--no-ff`
-integration merge. The extermination ledger is tracked by the program beads (W-waves).
+> **Amended by [ADR-028 Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15),
+> [Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17),
+> and [Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18)
+> (2026-10-25):** the 2026-09-15
+> "three instruments" taxonomy and its blanket ban on Python parsing/rewriting
+> mechanisms are historical, not current policy. Use the repository-scoped native
+> workspace model and its refactorings wherever they express the operation; use one
+> generalized declarative rule per law; retain separate tools only for distinct
+> capabilities that the workspace model does not provide. Remove duplicated custom
+> analysis and refactoring, not unrelated native functionality. The current cutover and
+> zero-residue evidence are tracked by `flext-1engx.15`; this amendment is not proof of
+> implementation completion.
 
 **Execution authority (2026-09-17):** Gas City Bead `flext-itpd1.2` owns the live
 structural-rewrite state; the versioned recovery contract is this ADR plus
@@ -229,7 +233,7 @@ evidence, not published authority.
 - `make mod` reaches the guarded fixed point with zero pending findings on the target
   member.
 - `make check` passes the namespace and codemod gates on the member with the family law
-  active; `make test` stays green through the canonical testmon cache.
+  active; `make tests` stays green through the canonical testmon cache.
 - `make gen` proves the generation fixed point after any export-affecting move; zero
   residue (no `.bak`, no orphan files) remains in the tree.
 

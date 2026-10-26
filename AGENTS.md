@@ -273,20 +273,23 @@ and never becomes a clean-tree or quiet-workspace prerequisite.
 
 ## Canonical Governance Composition
 
-The newest operator instruction has highest authority. Below it, FLEXT composes four
-non-competing layers:
+The newest operator instruction has highest authority. Below it, FLEXT composes five
+non-competing layers. Within technical architecture, the accepted ADR that owns a topic
+is its precise decision source; root and member instructions route and enforce that
+decision rather than establishing a competing rationale.
 
 `~/agents/` is the single writable source of truth for provider-neutral project and
 agent governance. Installed skills and generated instruction surfaces, including
 those under `~/.agents/`, consume that authority; they are not independent writable
 owners. Project law contributes only its documented scope-specific delta.
 
-| Layer     | Canonical owner                                                                                        | Permitted content                                                                                             |
-| --------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| Global    | `~/agents/AGENTS.md` and its canonical rules and skills, consumed through installed projections | universal conduct, execution safety, command selection, evidence, and completion                              |
-| FLEXT     | this root file and `.agents/skills/flext-law/SKILL.md`                                                 | FLEXT architecture, imports, MRO/lazy exports, workspace Make control plane, generation, and fleet boundaries |
-| Scope     | the nearest member or standalone `AGENTS.md`                                                           | only narrower domain facts, public surfaces, and explicit exclusions                                          |
-| Execution | the active Bead                                                                                        | current intent, ownership, dependencies, phase, evidence, and stop condition                                  |
+| Layer        | Canonical owner                                                                                              | Permitted content                                                                                                   |
+| ------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| Global       | `~/agents/AGENTS.md` and its canonical rules and skills, consumed through installed projections              | universal conduct, execution safety, command selection, evidence, and completion                                    |
+| Architecture | the accepted, topic-owning record in `docs/architecture/adr/`                                                 | precise technical decisions, their scope, consequences, and supersession links                                      |
+| FLEXT        | this root file and `.agents/skills/flext-law/SKILL.md`                                                        | workspace routing, FLEXT-wide application and enforcement of accepted decisions, Make control plane, and fleet law |
+| Scope        | the nearest member or standalone `AGENTS.md`                                                                  | only narrower domain facts, public surfaces, and explicit exclusions                                                |
+| Execution    | the active Bead                                                                                                | current intent, ownership, dependencies, phase, evidence, and stop condition; never a conflicting design decision   |
 
 AI Hub distributes and validates managed projections; it does not become the authority
 for global or FLEXT law. The local provider exposes the exact branch-matched
@@ -495,10 +498,11 @@ Always pin `<branch-or-tag>` to the SAME branch/release the package is built fro
 `0.12.0-dev`, or the release tag), never `main`/`master` — the governance law is
 versioned with the code.
 
-Composition is identical in both modes: global authority → this branch-matched root and
-its local `flext-law` → the member's scope-only delta → the active Bead. AI Hub only
-projects the managed sections. A member file adds domain specifics and exclusions; it
-never copies or replaces either parent.
+Composition is identical in both modes: global authority → applicable accepted ADR for
+technical decisions → this branch-matched root and its local `flext-law` for application
+and enforcement → the member's scope-only delta → the active Bead for execution state.
+AI Hub only projects the managed sections. A member file adds domain specifics and
+exclusions; it never copies or replaces either parent or ADR.
 
 ## Where to Look
 
@@ -507,7 +511,7 @@ never copies or replaces either parent.
 | Foundation facades / result / DI | `flext-core/src/flext_core/`       | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base                                                                                                                                 |
 | Build/codegen/enforcement        | `flext-infra/src/flext_infra/`     | drives standard Make generation, conform, and lint rules                                                                                                                      |
 | Test fixtures & builders         | `flext-tests/src/flext_tests/`     | public test facades and typed fixtures; unified `conftest.py` pattern                                                                                                         |
-| Architectural decisions          | `docs/architecture/adr/`           | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization), ADR-014 (family shape + rope codemod), ADR-017 (parametrized rule surfaces + modernize CLI), ADR-018 (generator declarations), ADR-019 (service ports + single transport contract, PROPOSED), ADR-024 (DI config contract), ADR-028 (facade boundary + deprecated-signature window) |
+| Architectural decisions          | `docs/architecture/adr/`           | Topic-owning accepted ADRs are the technical source of truth; [ADR-028 Decisions 15–18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15) cover capability boundaries, CA/DI, native workspace/refactoring ownership, and generalized rules. The ADR index records maturity; Beads record implementation state. |
 | Workspace composition            | `.gitmodules`                      | sole member-list owner (ADR-024); each repository's `config/codegen.yaml` holds its own declarations and deltas                                                             |
 | A Singer connector               | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006)                                                                                                                              |
 
@@ -718,7 +722,7 @@ CLI + pytest plugin, **never imported at runtime**.
     sets/tables, aliases, `TypeVar`s, inline `Literal` domains, protocols, models,
     payload dicts or reusable helpers, explicit or implicit. The families never violate
     one another.
-  - **Library names never leave the facades** (operator order 2026-10-25, tracker
+   - <a id="adr-028-decision-15"></a>**Library names never leave the facades** ([ADR-028 Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15); operator order 2026-10-25, tracker
     keys `operator-order-2026-10-25-library-names-only-in-facades` and
     `operator-rulings-2026-10-25-libnames-locks-ldif-rope`, verbatim: "os modulos
     fora c,t,p,m,u como services e outros moduloes, e projetos externos, nao podem
@@ -733,7 +737,7 @@ CLI + pytest plugin, **never imported at runtime**.
     library name. The mass rename runs by rule through sed, ast-grep and rope via
     `make mod`, with the deprecated-signature window below, and then reaches ai-hub
     and every other consumer of flext-infra (ADR-028 Decision 15).
-  - **Maximum CA/DI decoupling; jscpd and qlty at zero** (operator order 2026-10-25,
+   - <a id="adr-028-decision-16"></a>**Maximum CA/DI decoupling; jscpd and qlty at zero** ([ADR-028 Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16); operator order 2026-10-25,
     tracker key `operator-order-2026-10-25-max-decoupling-ca-di`, verbatim:
     "lembre-se que tudo tem que ser o máximo desacoplado com as regras ca/di de
     flext-core e sempre corrija as duplicatas por jscpd e smells de qlty com as
@@ -768,17 +772,19 @@ CLI + pytest plugin, **never imported at runtime**.
     the operator cited `flext-ldif/src/flext_ldif/_constants/servers_oud.py` as a
     violation "por simplesmente existir neste lugar". Each dialect lives in its own
     injected implementation, and no dialect references another.
-  - **Rope owns the workspace model and its refactorings** (operator order
+   - <a id="adr-028-decision-17"></a>**Rope owns the workspace model and its refactorings** ([ADR-028 Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17); operator order
     2026-10-25, tracker key `operator-order-2026-10-25-rope-owns-model-refactors`,
     verbatim: "rope nao tem referencia de todos os objetos em memória da workspace ?
     e ele tem metodos de refatoração, isso tem que ser usado ao inves de custom").
-    One workspace analysis engine, behind `p.Infra.WorkspaceSnapshot`, is the
-    in-memory model (module cache, ASTs, file listing, import tools); renames, moves
-    and import rewrites use its native refactorings (rename with documentation,
-    move, restructure, multi-project refactoring). Custom parse, discovery, import
-    graph and rename duplicates are deleted (bead `flext-1engx.15`, ADR-028
-    Decision 17).
-  - **Rules are generalized and few** (operator order 2026-10-25, tracker key
+    The workspace organizer loops through governed repositories, with one native
+    workspace model and planner per repository invocation behind
+    `p.Infra.WorkspaceSnapshot`. Each model owns that repository's module cache,
+    parsed modules, file listing and import tools; cross-repository operations pass
+    the selected native projects to native multi-project refactorings. Renames, moves
+    and import rewrites use the native capabilities (including documentation
+    occurrences, move, restructure and multi-project refactoring). Custom parse,
+     discovery, import-graph and rename duplicates are deleted ([Infra execution-context section](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); Bead `flext-1engx.15`).
+   - <a id="adr-028-decision-18"></a>**Rules are generalized and few** ([ADR-028 Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18); operator order 2026-10-25, tracker key
     `operator-order-2026-10-25-rules-generalized-min-count`, verbatim: "o sed, rope e
     ast-grep rules tem que estar sempre alinhados com as regras corretas de forma
     generalizada e automaticas usando sempre máximo de funcionalidades padrões das
@@ -786,9 +792,8 @@ CLI + pytest plugin, **never imported at runtime**.
     executadas"). One generalized rule per law through the tool's native features
     (ast-grep constraints, utils, transforms and rewriters; rope refactorings), no
     per-package or per-library clones, zero-finding one-shot migrations deleted after
-    a fleet census, and the executed-rule count tracked against a typed budget
-    ([codemod rules](docs/guides/codemod-rules.md#one-rule-per-law), ADR-028
-    Decision 18).
+     a fleet census, and the executed-rule count tracked against a typed budget
+     ([codemod rules, One rule per law](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/codemod-rules.md#one-rule-per-law)).
   - Static violation detection lives only in flext-infra's declarative rule catalog.
     Violations are banned and fixed, never waived. Current state (2026-10-24): flext-core
     still carries its ENFORCE catalog and static Beartype visitors until slice S
@@ -1254,13 +1259,13 @@ Overall average: **60-90% token reduction** on common development operations.
 
 ## Learned User Preferences
 
-- Before changing code, search libraries, the project, worktrees, local and remote branches, and pull requests; adopt or cherry-pick existing lanes onto a branch cut from the latest integration tip, and fix-forward with `git merge --no-ff`. Do not rebase or force-push.
-- Dependency locks change only through `make upg`. `make setup` must still run when mise or uv has drifted, and must reconcile that drift inside setup.
+- Before changing code, search libraries, the project, worktrees, local and remote branches, and pull requests. Preserve the operator-selected shared checkout and adopt compatible work through the declared Git route; a new task never implies a new lane. Integrate divergence with `git merge --no-ff`, without rebase or force-push.
+- Dependency locks change only through `make upg`, under ADR-030. `make setup` installs the declared locked environment; it does not resolve or rewrite a drifted lock. The uv upgrade guard is the sole committed-state exception to the shared-worktree contract.
 - New code is accepted only after the declared formatting, repair, structural and read-only checks are clean and its real public behavior is proven. Smell and other applicable audits belong to check, not extra common Make verbs. Do not close while required gates fail or the diff introduces violations.
 - Reassess beads one at a time: one `val<YYYYMMDDTHHMM>` label per remeasured bead, with evidence of command, working directory, exit status, and decisive output. Do not bulk-relabel.
-- Keep the project and CI green at every step. `gh pr merge --admin` is authorized for a locally green slice without waiting on remote CI; fix any integration-tip breakage through flext-infra automation.
+- Keep the project and CI green at every step. Integration requires the declared native gates, current-head CI, applicable review and post-merge proof. Administrative merge authority never waives those requirements; repair a red at its owner in the same cycle.
 - Reuse functions and owners that already exist in the imported projects and libraries; apply DI, DRY, YAGNI, and SSOT — invert dependencies, respect domain interfaces, and decouple instead of patching around a problem (no gambiarra).
-- Parallelize with multiple background agents and avoid heavy local processing; let CI do the heavy work and act on what it reports.
+- Follow the current operator's division of work and the canonical coordination rules. Serialized heavy operations and required local proof remain mandatory; remote CI does not replace them.
 
 ## Learned Workspace Facts
 
@@ -1268,5 +1273,5 @@ Overall average: **60-90% token reduction** on common development operations.
 - `make tests` executes the complete applicable suite once and retains the persistent Testmon database.
 - FLEXT and flext-infra integrate on `0.12.0-dev`. Resolve every member's integration target from its current branch-matched authority and freshly fetched refs; never select `develop` from a stale workspace summary.
 - Land the submodule commit first, then move the umbrella gitlink in a separate commit.
-- Gas City owns its worktrees: a sweep only preserves (commits and pushes) anything under `<city>/.gc/worktrees/`; `.worktree-stale` means gc resets and keeps the tree, and `gc-*`/`polecat/*` branches are pushed but never deleted by a sweep.
+- Gas City placement, preservation and retirement follow its currently selected runtime owner and `~/agents/rules/coordination/gascity.md`. A historical sweep marker never authorizes resetting a checkout or retiring another actor's work.
 - Fleet WIP may never be lost. Existing stashes are recovery incidents, not an allowed workflow. Preserve and reconcile their complete contents on the authorized maintained lane; a pushed preservation branch is not integration. Retire references only after fresh ancestry proof and explicit retirement authorization. Never create, apply blindly, clear, or drop stashes to hide WIP.

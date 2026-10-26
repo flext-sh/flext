@@ -17,13 +17,13 @@
 
 <!-- TOC END -->
 
-> **Authority**: This document is the canonical R1-R6 consumption standard for the FLEXT
-> fleet. All enforcement derives from this law; no parallel rules or bypass lists exist.
+> **Authority**: [ADR-015](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/015-consumer-consumption-law.md) owns the R1-R6 consumer contract. For an architectural concern,
+> the accepted topic ADR is the precise technical source; this standard links to it and
+> does not create a competing architecture rule. Typed configuration owns tool settings.
 >
-> **Status**: ADR-015 ratified. Enforcement delivered: ENFORCE-099
-> (consumer_import_violations). Catalog rows for R2 duplication and R4 budget are
-> **pending their next free IDs** (100, 101 — not yet registered in the enforcement
-> catalog; landing them is part of WS-F2/F4 validation waves).
+> **Status**: See the [ADR index](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/README.md) for decision maturity.
+> This page is not a rollout receipt; current enforcement and gate evidence belong to
+> the typed owners and active Beads.
 >
 > **Version**: 0.12.x line; forward baseline 0.13.0.
 
@@ -51,7 +51,7 @@ where `<symbol>` ∈ `pkg.__all__` (the published lazy export contract).
 **Intra-family exemption**: Facade assembly _within the same package_ imports from the
 family package's generated lazy exports (e.g., `flext_cli` importing from
 `flext_cli._models`), never from a module path below it or a module object reached by
-attribute (ADR-028 Decision 10).
+attribute ([ADR-028 Decision 10](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
 
 **Fix hints**: Derived by inverting the published `_LAZY_IMPORTS` map — every `Flext*`
 long name maps to its canonical single-letter alias (`c,t,p,m,u,r,e,x,h,d,s`).
@@ -111,34 +111,28 @@ referenced the new name).
 `flext_api.m.Api` carries no web members; `flext_api.m.Web` resolves the web namespace
 through the chain; `flext_web.m.Web.FastAPIAppConfig` resolves.
 
-**Canonical source**: this law (R1a/R1b); ADR-015; skill `flext-law` ("Architecture and
-imports").
+**Canonical source**: this law (R1a/R1b); ADR-015; the accepted topic ADR; skill
+`flext-law` ("Architecture and imports").
 
 ---
 
 ## R2 — No Duplication (Structural Scan)
 
-**Rule**: Every clone detected by the duplication gate (jscpd + semantic classifier)
-that spans **consumer+family scope** must be eliminated at its owner — no per-site
-allowlists.
+**Rule**: Every change leaves zero jscpd duplication findings and zero qlty smells under
+the strict FLEXT policy. The rule applies to the affected repository's governed source;
+it is not limited to consumer+family pairs.
 
-**Scope**: Configured via `[tool.flext.project]` keys:
+**Canonical decision**: [ADR-028 Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16)
+owns the zero-finding requirement and prohibits hiding clones or smells with ignored
+paths, raised thresholds, or narrowed scope. The sole authorized jscpd exception is the
+mandated license header, declared by its typed owner.
 
-```toml
-[tool.flext.project]
-duplication.scope = ["src", "tests", "scripts", "examples", "templates"]
-duplication.min-lines = 10
-duplication.min-tokens = 62
-duplication.threshold-percent = 0.0
-```
-
-**Semantic classifier**: Only executable behavior counts (module licenses, docstrings,
-imports, TYPE_CHECKING blocks, class shells, function signatures, declaration-only
-assignments are excluded).
-
-**Enforcement**: `FlextInfraDuplicationGate` extended with consumer+family scope (config
-reader delivered); catalog row pending its next free ID (100) — registration belongs to
-WS-F2 validation.
+**Configuration and execution**: typed flext-infra tooling configuration owns jscpd
+settings and qlty repair guidance; qlty owns its smell thresholds. Do not copy mutable
+settings or gate IDs into this standard. The jscpd semantic pass requires its declared
+embeddings host; if it is unavailable, that pass is `NOT EXECUTED`, not a successful
+zero-finding result. Use the affected project's declared command surface and report the
+exact gate evidence in its active Bead.
 
 ---
 
@@ -164,9 +158,13 @@ enforced by the `loc-cap` gate.
 
 **No local redeclarations**, aliases, or competing long-name layers.
 
-**Boundaries and completeness**: external libraries, orchestrator modules and Pydantic
-completeness at import are owned by ADR-028 (Decisions 1-4 and 14); this law restates
-none of them.
+**Boundaries and completeness**: external libraries and orchestrators follow [ADR-028
+Decisions 1–4](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-1),
+capability names follow [Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15),
+CA/DI and quality follow [Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16),
+native workspace refactoring follows [Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17),
+generalized rules follow [Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18),
+and Pydantic completeness follows [Decision 14](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-14). This law restates none of them.
 
 **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No
 `dict`/`TypedDict`/`dataclass`/`NamedTuple`/`m.Dict` as data contract.
@@ -243,7 +241,7 @@ never carry-over.
 | R1 Grammar     | `flext_core._utilities.family_surface.FlextUtilitiesFamilySurface`    |
 | R1a Lazy-Init  | `flext_infra._utilities.lazy_init_letters` (`lazy_init_resolve_aliases`) |
 | R1 Enforcement | `flext_infra.detectors.consumer_import_violations_detector`           |
-| R2 Duplication | `flext_infra.gates.duplication.FlextInfraDuplicationGate`             |
+| R2 Duplication | [ADR-028 Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16); typed Infra tooling declaration and the declared duplication/smells gates |
 | R3 Layer Law   | `flext_infra.gates.namespace.FlextInfraNamespaceGate`                 |
 | R4 Config      | `config/codegen.yaml` → `codegen.yaml` scaffold.project.dev           |
 | R4 Budget Gate | `flext_infra.gates.budget` (new)                                      |
@@ -282,7 +280,10 @@ never carry-over.
 | ADR-010     | Codegen Standardization              | Accepted     |
 | ADR-014     | Codemod Governance                   | Accepted     |
 | **ADR-015** | **Consumer Consumption Law (R1-R6)** | **Accepted** |
-| ADR-028     | Facade boundary, automated correction | Accepted     |
+| [ADR-028 Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15) | Capability-named boundaries | Accepted |
+| [ADR-028 Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16) | CA/DI and zero quality findings | Accepted |
+| [ADR-028 Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17) | Native workspace model and refactorings | Accepted |
+| [ADR-028 Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) | Generalized rules | Accepted |
 
 ---
 

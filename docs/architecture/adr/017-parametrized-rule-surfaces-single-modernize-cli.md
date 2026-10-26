@@ -3,16 +3,23 @@
 > **Amended by ADR-018** (generator declarations): its filename-to-letter tables, closed
 > folder lists and advisory-gate lists are superseded; see
 > [ADR-018](018-generator-declarations.md).
-
 <!-- TOC START -->
 
 - [Context](#context)
 - [Decision](#decision)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
+- [ADR-028 Supersession](#adr-028-supersession)
 - [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
+
+## ADR-028 Supersession
+
+For overlapping tool selection, accepted [ADR-028 Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)
+and [Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18)
+duplicate analysis model or blanket removal of distinct native transformation
+capabilities; remove only competing behavior that duplicates the canonical owner.
 
 - **Status:** ACCEPTED TARGET — implementation in progress
 - **Date:** 2026-09-15
@@ -80,8 +87,12 @@ cannot inherit fleet rules.
 
 ## Consequences
 
-- The accepted target removes competing rewrite engines through a complete
-  owner/consumer cutover; this ADR does not certify that removal has happened.
+- The accepted target removes duplicated analysis and rewrite implementations only where
+  the canonical native owner expresses the behavior. Distinct syntax-preserving,
+  structural-search, text-resource, and policy capabilities retain their own owner, as
+  required by [ADR-028 Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)
+  and [Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18). This ADR does not certify that any cutover has
+  happened.
 - Discovery must be proven from a foreign project root (tmp project with local sgconfig)
   and from a built wheel before each landing cycle closes.
 - Any new detector/transformer with embedded policy is a review defect.
