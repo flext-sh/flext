@@ -208,10 +208,14 @@ outside the facades across 12 repositories.
     whose generated lazy `__init__` publishes its direct declaring module: the
     declared facade surface at the package root, or the owning family package
     (`_models`, `_utilities`, …) for family declarations and composition.
-    Descendant exports are not automatically lifted into ancestor initializers.
-    A child's `__all__` describes that child's surface; it does not authorize an
-    ancestor to publish every internal subclass. Preserve declared facade letters
-    and child-package metadata without flattening directory boundaries.
+     Descendant exports are not automatically lifted into ancestor initializers.
+     A child's `__all__` describes that child's surface; it does not authorize an
+     ancestor to publish every internal subclass. Preserve declared facade letters
+     and child-package metadata without flattening directory boundaries. Methods of
+     a component subclass are reached only through the nearest composed MRO facade
+     at each nested family stage, not by a sibling calling the leaf class directly
+     ([ADR-014 §1](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership),
+     [ADR-018 nested projection](018-generator-declarations.md#nested-facade-projection)).
     Importing from a module path below that package, or importing a module object and
     reaching its classes by attribute, is forbidden in every tier, own package included,
     and in generated facades too. Operator order 2026-10-24 (verbatim): "mesmo em

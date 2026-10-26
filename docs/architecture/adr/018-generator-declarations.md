@@ -72,6 +72,17 @@ The fourteen points of `generator-declarations.md` are law. In one line each:
 14. Every module obeys every rule (FLEXT, SOLID, DRY, YAGNI, CA, SSOT, DI); strict
     compliance is the dedup mechanism expected to free 60–80% of the code.
 
+<a id="nested-facade-projection"></a>
+The generator applies [ADR-014's semantic ownership](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership)
+recursively: a direct family domain facade composes the declarations in its private
+`_domain/` directory by MRO, and nested private directories repeat that pattern.
+Each generated lazy `__init__.py` reflects only its immediate modules' explicit
+`__all__`; a subdirectory declares no short alias and an ancestor never republishes
+leaf implementations around their owner. A source move and the affected subfacade and
+ancestor lazy exports are planned and published as one authenticated candidate, from
+source without importing the stale package being repaired. Callers use the nearest
+composed facade at every stage (ADR-028 [Decision 10](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
+
 The [repository declaration](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_models/_config/repository.py#L457-L466)
 makes `project` optional. An absent subsection declares no additional manifest-only
 inherited facets: the generator still uses source-authenticated MRO and explicit

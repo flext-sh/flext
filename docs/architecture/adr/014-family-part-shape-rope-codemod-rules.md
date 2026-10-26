@@ -74,11 +74,23 @@ has already passed its runtime and native validation gates.
    responsibility-based modules such as `behavioral.py`, `comparator.py`,
    `converter.py`, `events.py`, and `runtime.py`. Do not emit `_part`, `_parts`,
    numeric chunk identities, or arbitrary collision suffixes as module owners.
+   At every nested domain level, the module basename states the remaining
+   responsibility without repeating a directory-owned prefix. For example,
+   `_rope/rope_source_bases_runtime.py` becomes `_rope/source_bases_runtime.py`;
+   `_rope/_analysis/rope_analysis_workspace.py` becomes `_rope/_analysis/workspace.py`
+   only when native identity proves one unoccupied destination. Preserve a repeated
+   word when it names a distinct domain responsibility; ambiguity fails before
+   effects rather than manufacturing another suffix.
 3. A facade imports its owned concrete subclasses or subfacades and reexports
    only those through its canonical base-class namespace. Implementations remain
    in their declaration owners; the facade does not duplicate their bodies or
-   introduce forwarding boilerplate. Library-owned native exports keep their
-   existing public contracts.
+   introduce forwarding boilerplate. At each nested stage, callers invoke methods
+   through the nearest composed MRO facade, never through a component subclass or
+   its implementation module. A domain facade such as `_utilities/rope.py` owns
+   `_utilities/_rope/`; `utilities.py` composes that domain facade, and external
+   consumers use `u.Infra`. The [nested lazy projection](018-generator-declarations.md#nested-facade-projection)
+   preserves this boundary without lifting leaf exports into ancestors.
+   Library-owned native exports keep their existing public contracts.
 4. MRO composition joins meaningful, self-contained facades. A numbered fragment
    relying on undeclared members of a sibling is not a facade. Do not force extra
    bases or wrappers merely to satisfy a count. Fragments implementing the same
@@ -97,6 +109,13 @@ has already passed its runtime and native validation gates.
 The refactor and generator owners enforce this contract together. Existing symbol
 names are not renamed merely to decorate a file move; any required symbol change
 must have a semantic owner and preserve the observable consumer contract.
+Recursive generated subfacades apply to all five configured families. The native
+source identity elects an existing domain composition before deriving a missing
+sibling declaration; a meaningful MRO owner is not duplicated merely to match a
+directory's spelling. Children are planned before their owning facade, and their
+lazy projections, native source moves and dependent imports share one authenticated
+candidate and publisher. Convergence is a source fixed point, not a limit derived
+from the number of facade families.
 
 ### 2. Declarative Rope rules (one YAML file per rule)
 
