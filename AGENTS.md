@@ -211,6 +211,20 @@ with an external editable install, the external checkout is clean and the
 consumer's committed gitlink or locked SHA equals its HEAD. No other verb inherits
 this requirement. The guard is the target contract; its implementation is pending.
 
+## Causal Repair Admission
+
+Every FLEXT session and package must apply the canonical
+`workflow/runtime-is-reality` causal-diagnosis rule before any repair, composed
+through `architecture/engineering-core`. Bind the cause to the actual failing
+Make/CLI entrypoint, executed artifact and revision, branch-matched ADR and strict
+typed origin contract. Use debug, diagnostics, tracing and profiling to establish
+the mechanism before editing; hypotheses guide investigation, never trial patches.
+No guessed API, invented rule or exception, guard relaxation, or changed strategy
+is authorized merely to obtain green. Missing causal proof requires further
+investigation. Re-exercise the original failing boundary after each adjustment;
+a different error, smaller finding count or isolated passing check is not resolution.
+This applies equally to source, generators, lazy exports, tests and documentation.
+
 ## Engineering And Phase Completion Contract
 
 These operator standards govern every current and future internal project phase
@@ -798,7 +812,7 @@ CLI + pytest plugin, **never imported at runtime**.
     the selected native projects to native multi-project refactorings. Renames, moves
     and import rewrites use the native capabilities (including documentation
     occurrences, move, restructure and multi-project refactoring). Custom parse,
-     discovery, import-graph and rename duplicates are deleted ([Infra execution-context section](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); Bead `flext-1engx.15`).
+    discovery, import-graph and rename duplicates are deleted ([Infra execution-context section](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); Bead `flext-1engx.15`).
   - <a id="adr-028-decision-18"></a>**Rules are generalized and few** ([ADR-028 Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18); operator order 2026-10-25, tracker key
     `operator-order-2026-10-25-rules-generalized-min-count`, verbatim: "o sed, rope e
     ast-grep rules tem que estar sempre alinhados com as regras corretas de forma
@@ -807,8 +821,8 @@ CLI + pytest plugin, **never imported at runtime**.
     executadas"). One generalized rule per law through the tool's native features
     (ast-grep constraints, utils, transforms and rewriters; rope refactorings), no
     per-package or per-library clones, zero-finding one-shot migrations deleted after
-     a fleet census, and the executed-rule count tracked against a typed budget
-     ([codemod rules, One rule per law](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/codemod-rules.md#one-rule-per-law)).
+    a fleet census, and the executed-rule count tracked against a typed budget
+    ([codemod rules, One rule per law](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/codemod-rules.md#one-rule-per-law)).
   - Static violation detection lives only in flext-infra's declarative rule catalog.
     Violations are banned and fixed, never waived. Current state (2026-10-24): flext-core
     still carries its ENFORCE catalog and static Beartype visitors until slice S
@@ -954,13 +968,17 @@ CLI + pytest plugin, **never imported at runtime**.
   project config) and isolated probes that skip the real rules are fake evidence,
   never proof. Never simplify to prove a point; fix root causes and their violators
   under the complete rule set.
-- **Tests run only on a green check** (operator order 2026-10-24, "lei extrema"):
-  running tests while the CI gates (lint, format, type, rule catalog) fail is
-  prohibited. `make tests` must refuse to run until the same scope's `make check` is
-  green, enforced by the tests verb itself from the check receipt, never by
-  convention. Fix the gate findings first, then run tests. Current state
-  (2026-10-24): only the generated CI enforces this (`requires: [check]`); the local
-  check-receipt refusal is missing and tracked by bead `flext-p4lve`.
+- **Global source and behavioral admission first** (operator order 2026-10-26):
+  run Ruff and Pyrefly over every governed repository and fix every error before
+  pytest. Then execute native incremental Testmon across the governed test
+  population and repair every failure before any later phase. The public
+  `flext-infra workspace tests --repository-root <root> --scope all` owner performs
+  global source admission before reaching the native per-repository test engines;
+  it is not permission for raw pytest, manual file selectors, stale receipts or
+  forced full reruns. This priority order supersedes the earlier requirement to
+  complete every composite check gate before this initial behavioral admission.
+  All other applicable checks remain mandatory for completion and integration;
+  existing receipt-based operations keep their declared admission contracts.
 - **No hardcoded lists** (operator order 2026-10-24): hand-kept block, allow,
   registry or catalog lists are banned everywhere. Every fact is derived from its
   owner (rule metadata, configuration, package exports); only genuine exceptions are

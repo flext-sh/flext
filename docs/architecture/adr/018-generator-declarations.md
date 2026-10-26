@@ -72,6 +72,15 @@ The fourteen points of `generator-declarations.md` are law. In one line each:
 14. Every module obeys every rule (FLEXT, SOLID, DRY, YAGNI, CA, SSOT, DI); strict
     compliance is the dedup mechanism expected to free 60–80% of the code.
 
+The [repository declaration](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_models/_config/repository.py#L457-L466)
+makes `project` optional. An absent subsection declares no additional manifest-only
+inherited facets: the generator still uses source-authenticated MRO and explicit
+`__all__` for ordinary lazy exports, but must neither invent a manifest nor reject
+the public root for lacking one. An explicitly declared facet is still verified
+against its upstream native identity before publication. The
+[lazy-init owner](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_utilities/lazy_init_letters.py#L148-L207)
+consumes this contract and links back to this decision.
+
 Order of execution (operator): law → extermination of lists, manual declarations and
 their permissions → generator/detector/fix repair → census by the validator → automatic
 correction (`make mod`) → consumers → strict compliance → close. One bead per phase;

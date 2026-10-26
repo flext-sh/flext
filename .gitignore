@@ -78,7 +78,6 @@ scripts/maintenance/
 !README.md
 !AGENTS.md
 !codex.md
-!.markdownlint.json
 !.rumdl.toml
 !.markdownlintignore
 !.shellcheckrc

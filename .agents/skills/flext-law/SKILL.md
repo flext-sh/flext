@@ -109,6 +109,10 @@ installed delivery remain separate evidence. Global governance is authored under
   published in `__all__` overrides the inherited ancestor**; (4) `Flext*` long-name
   classes re-export only modules from the **current directory** — never
   subdirectories, parents, or siblings.
+  A child package's export map is never merged into an ancestor's export map.
+  Its own generated initializer publishes its direct modules; consumers use that
+  owning package. Declared facade letters and child-package metadata retain their
+  existing owners without promoting internal subclasses.
   The facade-letter set derives from the statically indexed workspace source
   (`u.Infra` `_lazy_init_package_names`), never the ambient installed/editable venv
   surface (the flext-b3xmn divergence fix: local venv and pinned CI checkout must render
@@ -223,7 +227,9 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   applicable population with the persistent database. It never forces a repeated
   full run or adds a second execution pass; no file/full public aliases are added.
   The 2026-10-26 operator order requires global Ruff, Pyrefly and pytest evidence
-  before advancement, without weakening the same-scope green-check prerequisite.
+  before advancement. Global source admission precedes native incremental pytest;
+  the full applicable checks still precede completion and integration. Existing
+  receipt-based operations retain their declared admission contracts.
   Generation and modification complete their own coherent changes, including
   required dependent projections, through the same typed plans and semantic
   publication engine; neither recursively runs another public operation.
@@ -237,8 +243,9 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   checking inside a different operation. A missing initial input is prepared through
   its explicit owner; it never selects a fallback producer.
 - Generators emit only what is declared (ADR-018, rule
-  `~/agents/rules/flext/generator-declarations.md`): a facade letter belongs to the
-  module that declares it in its explicit `__all__`; an `__init__.py` propagates and
+  `~/agents/rules/workflow/generators-not-projections.md`): a facade letter belongs to the
+  module that declares it in its explicit `__all__`; an `__init__.py` re-exports its
+  direct modules and
   never declares; internal tiers (`tests/`, `examples/`, `scripts/`, any root folder
   with Python) are detected, inherit by class MRO and declare their own letter; `src/`
   is public, the rest internal. No filename→letter table, closed folder list,

@@ -73,7 +73,7 @@ codegraph blast-radius on `connection_profile` ):
 
 - **flext-meltano exposes exactly 3 consumer bases** (no separate "singer" base —
 
-  singer = tap + target), all subclassing `FlextMeltanoServiceBase(s[t.JsonMapping])`:
+    singer = tap + target), all subclassing `FlextMeltanoServiceBase(s[t.JsonMapping])`:
 
   - `FlextMeltanoDbtServiceBase` — `services/consumer_bases/dbt_service_base.py:32`;
 
@@ -95,59 +95,59 @@ codegraph blast-radius on `connection_profile` ):
 
 - **flext-db-oracle is the Oracle action library** (deps: flext-cli + flext-core only).
 
-  Connection SSOT = `settings.DbOracle.*` (`_settings.py:33-93`), env prefix `ORACLE_`.
+    Connection SSOT = `settings.DbOracle.*` (`_settings.py:33-93`), env prefix `ORACLE_`.
 
-  Runtime I/O = `FlextDbOracleApi` / `db_oracle` (`api.py`). Connection lifecycle
+    Runtime I/O = `FlextDbOracleApi` / `db_oracle` (`api.py`). Connection lifecycle
 
-  contract = `p.DbOracle.Connection` (`protocols.py:48`). Reusable maps
+    contract = `p.DbOracle.Connection` (`protocols.py:48`). Reusable maps
 
-  `c.DbOracle.SINGER_TYPE_MAP` + `c.DbOracle.ENV_MAPPING`. There is
+    `c.DbOracle.SINGER_TYPE_MAP` + `c.DbOracle.ENV_MAPPING`. There is
 
-  **no reusable connection-config model** upstream — `m.DbOracle.ConnectionStatus` is
+    **no reusable connection-config model** upstream — `m.DbOracle.ConnectionStatus` is
 
-  runtime _status_, not config.
+    runtime _status_, not config.
 
 ### The duplication / anti-patterns (verified, file:line)
 
 1. **`connection_profile` returns a raw dict in every dbt-\* impl** and the base
 
-   docstring literally says "returns dbt connection profile dict". This violates
+    docstring literally says "returns dbt connection profile dict". This violates
 
-   flext-law §1.2/§3a (structured data must be a Pydantic-2 model; JSON only at the
+    flext-law §1.2/§3a (structured data must be a Pydantic-2 model; JSON only at the
 
-   edge). Blast radius (codegraph): the base is extended by `FlextDbtOracleServiceBase`,
+    edge). Blast radius (codegraph): the base is extended by `FlextDbtOracleServiceBase`,
 
-   `FlextDbtLdapServiceBase`, `FlextDbtLdifServiceBase`, `FlextDbtOracleWmsServiceBase`;
+    `FlextDbtLdapServiceBase`, `FlextDbtLdifServiceBase`, `FlextDbtOracleWmsServiceBase`;
 
-   `connection_profile` has **zero real consumers** — safe to change.
+    `connection_profile` has **zero real consumers** — safe to change.
 
 2. **Each pilot re-declares the Oracle connection scalars** that `settings.DbOracle`
 
-   already owns: dbt-oracle `_settings.py:34-40`; tap-oracle `_settings.py:33-37`;
+    already owns: dbt-oracle `_settings.py:34-40`; tap-oracle `_settings.py:33-37`;
 
-   target-oracle `_settings.py:34-38` (and subclasses `FlextSettings` instead of
+    target-oracle `_settings.py:34-38` (and subclasses `FlextSettings` instead of
 
-   `FlextMeltanoSettings` — base drift).
+    `FlextMeltanoSettings` — base drift).
 
 3. **Each pilot re-declares a connection-shaped model**: dbt-oracle
 
-   `m.DbtOracle.OracleConnectionConfig` (`models.py:84`) + `DbtConnectionProfile`
+    `m.DbtOracle.OracleConnectionConfig` (`models.py:84`) + `DbtConnectionProfile`
 
-   (`:145`); target-oracle `_models/settings.py:13` `OracleConnectionConfig` +
+    (`:145`); target-oracle `_models/settings.py:13` `OracleConnectionConfig` +
 
-   `OracleConnectionModel`.
+    `OracleConnectionModel`.
 
 4. **tap-oracle bypasses its base entirely**: no `base.py`; `tap.py` hand-rolls
 
-   discover/sync commands + `run_cli` (`:26/:91/:167/:220`) and `streams.py` hand-rolls
+    discover/sync commands + `run_cli` (`:26/:91/:167/:220`) and `streams.py` hand-rolls
 
-   `OracleStream/StreamFactory` (`:40/:268`) — ~586 LOC re-doing what
+    `OracleStream/StreamFactory` (`:40/:268`) — ~586 LOC re-doing what
 
-   `FlextMeltanoTapServiceBase` + meltano `singer_tap`/`singer_sdk` already give.
+    `FlextMeltanoTapServiceBase` + meltano `singer_tap`/`singer_sdk` already give.
 
 5. **target-oracle is 3211 src LOC** with an 861-line loader; it neuters the base by
 
-   making `create_sink()` raise `TypeError` (`api.py:30-37`).
+    making `create_sink()` raise `TypeError` (`api.py:30-37`).
 
 ## Decision
 
@@ -165,38 +165,38 @@ project. Three layers, each with one owner:
 
 1. **A thin driver subclasses its meltano base and declares only its capability** —
 
-   dbt: `dbt_project_name` + `connection_profile`; tap: `tap_name` +
+    dbt: `dbt_project_name` + `connection_profile`; tap: `tap_name` +
 
-   `create_tap_instance`; target: `target_name` + `sink_factory` (amended 2026-10-25:
-   declared, never overridden in `api.py`; tap and dbt follow). No hand-rolled
+    `create_tap_instance`; target: `target_name` + `sink_factory` (amended 2026-10-25:
+    declared, never overridden in `api.py`; tap and dbt follow). No hand-rolled
 
-   CLI/commands/streams when the base already provides them.
+    CLI/commands/streams when the base already provides them.
 
 2. **Connection settings come from the action library, never re-declared.** The driver
 
-   reuses `settings.DbOracle.*` (or composes it by MRO). Delete every `oracle_*` scalar
+    reuses `settings.DbOracle.*` (or composes it by MRO). Delete every `oracle_*` scalar
 
-   and every `OracleConnectionConfig`-shaped model in the drivers. Driver settings keep
+    and every `OracleConnectionConfig`-shaped model in the drivers. Driver settings keep
 
-   only domain-runtime knobs.
+    only domain-runtime knobs.
 
 3. **`connection_profile` returns a typed model, not a dict, with no roundtrip.** Its
 
-   declared type is a **protocol** `p.Meltano.DbtConnectionProfile` (minimal,
+    declared type is a **protocol** `p.Meltano.DbtConnectionProfile` (minimal,
 
-   domain-agnostic: `type` + `project` common members). Each driver returns its own
+    domain-agnostic: `type` + `project` common members). Each driver returns its own
 
-   concrete `m.<Ns>.…Profile` model **directly** — no field-by-field copy from settings,
+    concrete `m.<Ns>.…Profile` model **directly** — no field-by-field copy from settings,
 
-   no `model_dump()`. The model is the value; the dict never appears.
+    no `model_dump()`. The model is the value; the dict never appears.
 
 4. **flext-meltano must never gain domain knowledge.** The protocol names only common
 
-   members; oracle/ldap specifics stay in the domain driver + action library.
+    members; oracle/ldap specifics stay in the domain driver + action library.
 
 5. **Net LOC must be strongly negative** for every driver converted. No compat shims, no
 
-   `old+new`.
+    `old+new`.
 
 ### Uniform connection seam
 
@@ -218,33 +218,33 @@ structurally satisfies the protocol. tap/target keep their factory seams (
 
 - **Positive:** every integration project collapses to a few dozen lines; connection
 
-  facts have one home (`settings.DbOracle`); `connection_profile` becomes a typed model
+    facts have one home (`settings.DbOracle`); `connection_profile` becomes a typed model
 
-  consistent with flext-law; flext-meltano stays a clean domain-agnostic hub; ~1000+ LOC
+    consistent with flext-law; flext-meltano stays a clean domain-agnostic hub; ~1000+ LOC
 
-  deleted in the pilot; the pattern generalizes to all integration projects.
+    deleted in the pilot; the pattern generalizes to all integration projects.
 
 - **Negative / risk:** touching the flext-meltano dbt base changes a contract shared by
 
-  4 dbt consumers — must land base + all 4 in the **same batch** (flext-law §4B.4).
+    4 dbt consumers — must land base + all 4 in the **same batch** (flext-law §4B.4).
 
-  target-oracle's 861-line loader is the largest, riskiest cut; staged behind its own
+    target-oracle's 861-line loader is the largest, riskiest cut; staged behind its own
 
-  acceptance gate.
+    acceptance gate.
 
 - **Migration order (pilot):** (1) add `p.Meltano.DbtConnectionProfile` + retype the
 
-  base; (2) dbt-oracle returns a direct model, delete its duplicated settings/model; (3)
+    base; (2) dbt-oracle returns a direct model, delete its duplicated settings/model; (3)
 
-  same for dbt-ldap/ldif/oracle-wms (same-batch consumers of the base); (4) tap-oracle
+    same for dbt-ldap/ldif/oracle-wms (same-batch consumers of the base); (4) tap-oracle
 
-  gains a real base subclass, delete hand-rolled tap/streams **— pending**; (5)
+    gains a real base subclass, delete hand-rolled tap/streams **— pending**; (5)
 
-  target-oracle reuses `settings.DbOracle`, normalize its base, scope the loader cut
+    target-oracle reuses `settings.DbOracle`, normalize its base, scope the loader cut
 
-  separately. Each step: `uv run` per-file gate + `make check`/`make test` per project,
+    separately. Each step: `uv run` per-file gate + `make check`/`make test` per project,
 
-  net-LOC ≤ 0.
+    net-LOC ≤ 0.
 
 ## Realized mechanism — Declarative tap (flext-tap-ldap pilot, 2026-07-17)
 
@@ -254,57 +254,57 @@ data, never machinery. New inviolable rules (bind every `flext-(tap|target|dbt)-
 
 1. **Only `flext-meltano` imports `singer_sdk`/`dbt`.** Each `flext-<domain>` library
 
-   imports its own external lib; integration projects import ONLY flext-\* libraries.
-   Inside `flext-meltano` the import belongs to its `c/t/p/m/u` facades (ADR-028); the
-   import in `services/declarative_tap.py:18` violates it (bead `flext-3jsmb`).
+    imports its own external lib; integration projects import ONLY flext-\* libraries.
+    Inside `flext-meltano` the import belongs to its `c/t/p/m/u` facades (ADR-028); the
+    import in `services/declarative_tap.py:18` violates it (bead `flext-3jsmb`).
 
 2. **Consumers compose the base via `meltano.Tap` / `meltano.Target` / `meltano.Dbt`**
 
-   (MRO facade `services/consumer_bases/facade.py`), never a private `consumer_bases`
+    (MRO facade `services/consumer_bases/facade.py`), never a private `consumer_bases`
 
-   module import.
+    module import.
 
 3. **A tap driver declares a `m.Meltano.TapSpec`** (tap_name + `config_jsonschema` from
 
-   the settings model + a tuple of `m.Meltano.StreamSpec`) and a
+    the settings model + a tuple of `m.Meltano.StreamSpec`) and a
 
-   `p.Meltano.RecordFetcher`. `flext-meltano` (`services/declarative_tap.py`
+    `p.Meltano.RecordFetcher`. `flext-meltano` (`services/declarative_tap.py`
 
-   `FlextMeltanoDeclarativeTap.build`) turns that into a real `singer_sdk` tap with a
+    `FlextMeltanoDeclarativeTap.build`) turns that into a real `singer_sdk` tap with a
 
-   WORKING flat Singer CLI. This fixed a fleet-wide bug: the old `cli_main` pre-built
+    WORKING flat Singer CLI. This fixed a fleet-wide bug: the old `cli_main` pre-built
 
-   the tap with `config=None`, crashing `singer_sdk` before it parsed `--config`.
+    the tap with `config=None`, crashing `singer_sdk` before it parsed `--config`.
 
 4. **Typed transport, packed once** — the consumer receives
 
-   `m.Meltano.FetchRequest(stream_name, config)` and returns
+    `m.Meltano.FetchRequest(stream_name, config)` and returns
 
-   `p.Result[m.Meltano.FetchResult(records)]`. No dict/round-trip across the boundary;
+    `p.Result[m.Meltano.FetchResult(records)]`. No dict/round-trip across the boundary;
 
-   records stay in Singer-native `JsonMapping` (the wire shape).
+    records stay in Singer-native `JsonMapping` (the wire shape).
 
 5. **Layering law:** `services/*` import only `c,t,p,m,u` + `s` from `base.py`; helpers
 
-   live in `_utilities/*`; `utilities.py` is an MRO of `_utilities/*` mixins + composed
+    live in `_utilities/*`; `utilities.py` is an MRO of `_utilities/*` mixins + composed
 
-   library facades; services are thin orchestrators. `base.py`
+    library facades; services are thin orchestrators. `base.py`
 
-   `s = meltano-service-base` with the domain facade injected (`self.ldap`,
+    `s = meltano-service-base` with the domain facade injected (`self.ldap`,
 
-   algar-oud-mig pattern).
+    algar-oud-mig pattern).
 
 6. **Config/settings SSOT:** `config/` at PROJECT ROOT; `config.<Ns>.streams` typed via
 
-   `_models/config.py` (`m.FrozenModel`, validated `cached_property`) = business rules;
+    `_models/config.py` (`m.FrozenModel`, validated `cached_property`) = business rules;
 
-   `settings.<Ns>.*` = every adjustable param (`.env`/env/local/CLI/API parametrize it),
+    `settings.<Ns>.*` = every adjustable param (`.env`/env/local/CLI/API parametrize it),
 
-   reusing the action library's `settings.<Domain>.*` by MRO. Console entry (amended
-   2026-10-24): `<pkg>.api:main`, declared as `main = cli.entry(<facade>)`; the
-   meltano base drives `singer_sdk` through `Tap.invoke`/`Target.invoke`, discovery
-   and sync, never through Click `main()`. `<pkg>.cli:main` and `Service().cli_main`
-   stay as deprecated pass-throughs until their census reaches zero.
+    reusing the action library's `settings.<Domain>.*` by MRO. Console entry (amended
+    2026-10-24): `<pkg>.api:main`, declared as `main = cli.entry(<facade>)`; the
+    meltano base drives `singer_sdk` through `Tap.invoke`/`Target.invoke`, discovery
+    and sync, never through Click `main()`. `<pkg>.cli:main` and `Service().cli_main`
+    stay as deprecated pass-throughs until their census reaches zero.
 
 **Pilot result (flext-tap-ldap):** src 3276 → 914 LOC (−72%); deleted
 

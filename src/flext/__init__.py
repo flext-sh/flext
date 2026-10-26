@@ -21,9 +21,17 @@ if TYPE_CHECKING:
     from flext.settings import FlextRootSettings, settings
     from flext.typings import FlextRootTypes, t
     from flext.utilities import FlextRootUtilities, u
-    from flext_oracle_oic import d, h, r, s, x
-    from flext_oracle_wms import e
-    from flext_tests import api, td, tf, tk, tm
+    from flext_db_oracle import db_oracle
+    from flext_grpc import grpc
+    from flext_infra import infra
+    from flext_ldap import ldap
+    from flext_meltano import meltano
+    from flext_observability import observability
+    from flext_oracle_oic import d, h, oracle_oic, r, s, x
+    from flext_oracle_wms import e, oracle_wms
+    from flext_plugin import cli, plugin
+    from flext_quality import quality
+    from flext_tests import api, install_local_packages, td, tf, tk, tm
 
 
 __all__: tuple[str, ...] = (
@@ -37,13 +45,25 @@ __all__: tuple[str, ...] = (
     "FlextRootUtilities",
     "api",
     "c",
+    "cli",
     "config",
     "d",
+    "db_oracle",
     "e",
+    "grpc",
     "h",
+    "infra",
+    "install_local_packages",
+    "ldap",
     "m",
     "main",
+    "meltano",
+    "observability",
+    "oracle_oic",
+    "oracle_wms",
     "p",
+    "plugin",
+    "quality",
     "r",
     "s",
     "settings",
@@ -70,13 +90,25 @@ install_lazy_exports(
         "FlextRootUtilities": ".utilities",
         "api": "flext_tests",
         "c": ".constants",
+        "cli": "flext_plugin",
         "config": ".config",
         "d": "flext_oracle_oic",
+        "db_oracle": "flext_db_oracle",
         "e": "flext_oracle_wms",
+        "grpc": "flext_grpc",
         "h": "flext_oracle_oic",
+        "infra": "flext_infra",
+        "install_local_packages": "flext_tests",
+        "ldap": "flext_ldap",
         "m": ".models",
         "main": ".cli",
+        "meltano": "flext_meltano",
+        "observability": "flext_observability",
+        "oracle_oic": "flext_oracle_oic",
+        "oracle_wms": "flext_oracle_wms",
         "p": ".protocols",
+        "plugin": "flext_plugin",
+        "quality": "flext_quality",
         "r": "flext_oracle_oic",
         "s": "flext_oracle_oic",
         "settings": ".settings",

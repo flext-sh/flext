@@ -126,7 +126,7 @@ in `flext-core/examples/`
 
 - [Project README](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/README.md)
   (auto-generated module map and operation flow)
-- [Workspace AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md) —
+- [Workspace AGENTS.md](../../AGENTS.md) —
   FLEXT engineering law (U2–U18)
 - `flext-core/examples/` — runnable examples for results, settings, logging, and
   dispatching

@@ -57,7 +57,7 @@ code decision is linked here:
 
 | Documentation declaration | Accepted decision |
 | --- | --- |
-| Examples receive the same rules and validation as source code. | [FLEXT ADR-028 Decision 9](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-9) |
+| Examples receive the same rules and validation as source code. | [FLEXT ADR-028 Decision 9](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-9) |
 
 Historical exclusions
 come only from the typed docs scope owner; no local allowlist may bypass the audit.
