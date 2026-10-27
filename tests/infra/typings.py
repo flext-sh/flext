@@ -6,7 +6,12 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from flext import FlextRootTypes
+
+if TYPE_CHECKING:
+    import pytest
 from flext_tests import FlextTestsTypes
 
 
@@ -15,6 +20,8 @@ class TestsFlextRootTypes(FlextRootTypes):
 
     class Tests(FlextTestsTypes.Tests):
         """Test typings composing shared test + workspace type namespaces."""
+
+        type CapturedOutput = pytest.CaptureFixture[str]
 
 
 t = TestsFlextRootTypes

@@ -9,7 +9,9 @@ from __future__ import annotations
 from json import dumps
 from pathlib import Path
 
-from tests import c, t, tm, u
+import pytest
+
+from tests import c, t, tm
 from tests.infra import TestsFlextRootModels
 
 
@@ -51,7 +53,7 @@ class TestsFlextRootInfraModels:
                     schema["properties"][name]["description"],
                     eq=model.model_fields[name].description,
                 )
-                with u.Infra.Pytest.raises(c.ValidationError) as captured:
+                with pytest.raises(c.ValidationError) as captured:
                     model.model_validate_json(value.model_dump_json(exclude={name}))
                 tm.that(
                     any(
@@ -65,7 +67,10 @@ class TestsFlextRootInfraModels:
             for invalid_path in invalid_paths:
                 payload = value.model_dump(mode="json")
                 payload["anchor_file"] = invalid_path
-                with u.Infra.Pytest.raises(c.ValidationError):
+                with pytest.raises(c.ValidationError):
                     model.model_validate_json(dumps(payload))
-            with u.Infra.Pytest.raises(c.ValidationError):
+            with pytest.raises(c.ValidationError):
                 model.model_validate_json("{")
+
+
+__all__: list[str] = ["TestsFlextRootInfraModels"]

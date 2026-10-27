@@ -1,0 +1,5 @@
+dn: cn=sample,dc=example,dc=com
+objectClass: person
+cn: sample
+sn: Example
+aci: (target="ldap:///cn=sample,dc=example,dc=com")(targetattr="*")(version 3.0; acl "Allow read"; allow (read) userdn="ldap:///anyone";)

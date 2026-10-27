@@ -29,7 +29,7 @@ class FlextRootModelsConfig:
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
-        data: PipelinePayload = m.Field(
+        data: FlextRootModelsConfig.PipelinePayload = m.Field(
             description="Payload produced by the preceding pipeline stage.",
         )
 

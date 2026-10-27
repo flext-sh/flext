@@ -6,6 +6,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import flext_ldif
 from examples import ExamplesFlextRootConstants, c, m
 from examples.acl_processing_example import FlextRootAclProcessingExample
@@ -31,14 +33,8 @@ def main() -> int:
     """
     client = flext_ldif.ldif()
     ldif_content = (
-        "dn: cn=sample,dc=example,dc=com\n"
-        "objectClass: person\n"
-        "cn: sample\n"
-        "sn: Example\n"
-        'aci: (target="ldap:///cn=sample,dc=example,dc=com")'
-        '(targetattr="*")(version 3.0; acl "Allow read"; '
-        'allow (read) userdn="ldap:///anyone";)\n'
-    )
+        Path(__file__).parent / "templates" / "sample_acl.ldif"
+    ).read_text(encoding="utf-8")
     entries = client.parse_ldif(ldif_content).unwrap().entries
     if not entries:
         raise RuntimeError(ExamplesFlextRootConstants.ErrorMessages.LDIF_NO_ENTRIES)

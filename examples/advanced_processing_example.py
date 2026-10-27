@@ -305,3 +305,6 @@ class FlextRootAdvancedProcessingExample:
             }
             for i in range(count)
         ]
+
+
+__all__: list[str] = ["FlextRootAdvancedProcessingExample"]

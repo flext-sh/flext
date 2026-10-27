@@ -612,3 +612,6 @@ class FlextRootCompleteWorkflowExample:
             workflow_settings=workflow_settings,
         )
         return orchestrator.execute()
+
+
+__all__: list[str] = ["FlextRootCompleteWorkflowExample"]

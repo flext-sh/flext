@@ -36,7 +36,7 @@ class TestsFlextRootProtocols(FlextRootProtocols):
             """Protocol for module specifications."""
 
             name: str | None
-            loader: SpecLoader | None
+            loader: TestsFlextRootProtocols.Tests.SpecLoader | None
 
         @runtime_checkable
         class ModuleResolver(Protocol):
