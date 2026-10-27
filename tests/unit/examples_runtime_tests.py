@@ -16,11 +16,10 @@ from examples.advanced_processing_example import FlextRootAdvancedProcessingExam
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
 from scripts.hooks.check_changed_projects import FlextRootCheckChangedProjects
 
-from flext import c, m, p
-from tests.infra import TestsFlextRootTypes
 from flext_cli import cli
 from flext_ldif import FlextLdif
-from tests import c, p, tm, u
+from tests import c, m, p, tm, u
+from tests.infra import TestsFlextRootTypes
 
 
 class TestsFlextRootExamplesRuntime:
@@ -83,9 +82,7 @@ class TestsFlextRootExamplesRuntime:
                     cwd=root,
                 ),
             )
-            tm.that(
-                native.outcome.raw_return_code, ne=c.Cli.EXIT_CODE_SUCCESS
-            )
+            tm.that(native.outcome.raw_return_code, ne=c.Cli.EXIT_CODE_SUCCESS)
             tm.that(native.stdout + native.stderr, has="unknown gate")
             files = [
                 (project / c.PYPROJECT_FILENAME).as_posix() for project in projects
