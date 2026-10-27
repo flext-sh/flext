@@ -530,6 +530,8 @@ variance-mismatch = "error"
 
 [tool.pyright]
 exclude = [
+  "flext-*/**",
+  "**/flext-*/**",
   "**/*.bak",
   "**/*.egg-info/**",
   "**/*.orig",
