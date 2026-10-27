@@ -86,9 +86,7 @@ class FlextRootCompleteWorkflowExample:
             description="List of workflow stages to execute",
         )
         metadata: t.JsonMapping = m.Field(
-            default_factory=lambda: (
-                FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping()
-            ),
+            default_factory=FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping,
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: t.MutableJsonMapping = m.Field(
@@ -118,9 +116,7 @@ class FlextRootCompleteWorkflowExample:
             description="List of warnings encountered",
         )
         stage_metadata: t.JsonMapping = m.Field(
-            default_factory=lambda: (
-                FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping()
-            ),
+            default_factory=FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping,
             description="Stage-specific metadata",
         )
 
@@ -144,9 +140,7 @@ class FlextRootCompleteWorkflowExample:
         )
 
         aggregated_metrics: t.JsonMapping = m.Field(
-            default_factory=lambda: (
-                FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping()
-            ),
+            default_factory=FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping,
             description="Aggregated metrics across all stages",
         )
 
@@ -175,9 +169,7 @@ class FlextRootCompleteWorkflowExample:
             default_factory=tuple,
         )
         workflow_settings: t.ScalarMapping = m.Field(
-            default_factory=lambda: (
-                FlextRootCompleteWorkflowExample.ImmutableMappings.scalar_mapping()
-            ),
+            default_factory=FlextRootCompleteWorkflowExample.ImmutableMappings.scalar_mapping,
         )
 
         def execute(self) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
