@@ -11,12 +11,17 @@
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
 - **Status:** Accepted (amended 2026-07-16); §1 SUPERSEDED (2026-10-08) by
   [ADR-024](024-di-config-contract-derived-defaults-minimal-overrides.md) — composition
-  is owned by the workspace's `.gitmodules`, not by a manifest member list
+  is owned by the workspace's `.gitmodules`, not by a manifest member list; lock
+  ownership in §3 and the verification contract SUPERSEDED (2026-10-25) by
+  [ADR-030](030-member-locks-composition-upg-guard.md) — member `uv.lock` and
+  `mise.lock` are kept and formed by each member, and the workspace lock is their
+  composition (tracker memory `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`)
 - **Date:** 2026-06-24
 - **Scope:** FLEXT, Cosmos, and standalone repository topology, dependency provenance,
   and development environments.
@@ -56,11 +61,15 @@ from that manifest. No other file may independently declare workspace membership
 ### 2. Root workspace and library metadata have distinct responsibilities
 
 Operator amendment (2026-10-10): the root and every member are independent UV
-projects, each owning its physical `uv.lock` and Mise lock. Clarification (2026-10-13),
-not a change to the editable standard: no `tool.uv.workspace` table or parallel
-`workspace = true` dependency routing. The existing generator retains only a packaged
-root's self-only implicit `workspace = true` source override, never member routing.
-Composition remains owned by `.gitmodules` (ADR-024).
+projects, each owning its physical `uv.lock` and `mise.lock` (both written only by
+`make upg`; bead `flext-vjj1s.5` reconciles the older mise-lock extermination premise).
+Superseded in part: the 2026-10-13
+clarification ("no `tool.uv.workspace` table") no longer holds. The approved
+`flext-0029c` target is one native root uv workspace, and the generated root
+`pyproject.toml` now carries `[tool.uv.workspace] members` and per-member
+`[tool.uv.sources.<member>] workspace = true`, both derived from `.gitmodules`
+(ADR-024). That derivation is the only route. Each member still tracks its own
+`uv.lock` for independent installs and frozen CI (see the verification contract).
 
 The root's existing `dev` group requests every declared package member, including
 its declared extras and development groups. Local editable bindings select checkouts
@@ -81,6 +90,14 @@ remain registry-backed; explicit Git requirements retain their declared URL and 
 Both preserve declared constraints, extras and markers. Local editables are environment
 bindings, not published requirement rewrites. Git and `pyproject.toml` own repository
 identity; locks record resolved provenance, not a replacement dependency origin.
+Internal requirements stay Git URLs in `pyproject.toml` and each lock pins their exact
+SHA (tracker memory `operator-ruling-2026-10-24-lock-sha-pyproject-url-waves`). Because
+an internal dependency can require the locking project back by its own Git URL, which
+native uv cannot reconcile with the local project, the generator emits in each member
+one scoped `[tool.uv] exclude-dependencies` entry per internal distribution derived
+from that member's declared internal Git URL requirements (flext-infra 23e07c5dbf),
+removing only the requirement on the member itself.
+An entry does nothing where that distribution does not require the member.
 
 Mise and generated profiles consume the toolchain SSOT rather than versions copied into
 this ADR.
@@ -96,16 +113,21 @@ The generated root `setup` handler:
 5. runs the package consistency check and validates `direct_url.json` for every member.
 
 This local selection is an environment operation, never a metadata rewrite. An attached
-member delegates `setup` to the root. The same member in an independent clone uses its
-own environment and its declared dependency origins.
+member delegates `setup` to the root. Superseded by
+[ADR-030](030-member-locks-composition-upg-guard.md) (2026-10-25): a member checked out
+without its workspace installs from its own committed `uv.lock`; the earlier "no lock
+to install, fails setup loudly" statement no longer holds.
 
 All other commands execute with `uv run --project <environment-owner> --no-sync`. Checks
 and tests therefore cannot synchronize, relock, rewrite metadata, or replace the
-editable overlay implicitly. Dependency upgrades are an explicit, apply-gated `deps`
-operation that updates the SSOT. `make upg` updates a member's own locks and
-completes its convergence before invoking one root workspace upgrade for alignment.
-Failure in the member prevents root alignment; a standalone upgrade runs only itself,
-and a root upgrade never calls member upgrades back. `gen` writes managed projections,
+editable overlay implicitly. Dependency upgrades are the explicit `make upg` verb,
+which performs its operation directly with no apply selector (the `APPLY` flag stays
+removed). An attached member delegates `make upg` to the
+root. Superseded in part by [ADR-030](030-member-locks-composition-upg-guard.md)
+(2026-10-25): the root forms each member's own lock from that member's declarations
+and composes the workspace lock from them, behind the upgrade guard (committed code
+and gitlinks for editable setups, exact SHA pinning). A standalone upgrade runs only
+itself. `gen` writes managed projections,
 and `setup` synchronizes the environment without writing locks.
 
 ### 4. Generated profiles define attachment behavior
@@ -137,10 +159,31 @@ No profile depends on files outside its repository checkout.
 - Generated manifests are byte-idempotent; no native workspace table or member
   `workspace = true` routing survives. Only the packaged root's self-only implicit
   source override remains; local editability never rewrites published requirements.
-- An attached member writes its own lock in the primary checkout, then aligns the
-  root once. The native lock-owner guard rejects any remaining shared-lock topology.
+- Historical (superseded the same day by
+  [ADR-030](030-member-locks-composition-upg-guard.md)): an earlier 2026-10-25
+  decision made the workspace root lock the only lock of a member, with members
+  tracking no `uv.lock` and a member checked out without its workspace failing
+  setup. The live contract is ADR-030 (tracker memory
+  `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`): member `uv.lock`
+  and `mise.lock` are kept and formed by each member, the workspace lock is their
+  composition, only `make upg` writes locks behind the upgrade guard, and the
+  dependency hierarchy is pinned by exact SHA. Workspace `make upg` still
+  processes every member in one pass (operator ruling 2026-10-25), and CI still
+  installs frozen and never relocks (tracker memory
+  `operator-ruling-2026-10-24-ci-frozen-homologated-locks`).
 
 ## References
 
 - [ADR-004 — Generated Make and codegen SSOT owned by `flext-infra`](./004-generated-make-codegen-ssot-flext-infra.md)
 - [ADR-005 — Config, settings, constants, templates, and schemas SSOT](./005-config-settings-constants-templates-schemas-ssot.md)
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Reconcile `.gitmodules`, environments and locks;
+  preserve superseded text.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

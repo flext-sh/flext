@@ -33,7 +33,9 @@ fix, or phase selectors to narrow a standard verb.
 1. Read the canonical config, settings, generator, public facade, consumers, tests, and
    docs for the bounded change.
 2. Use the semantic refactoring owner instead of manually rewiring consumers.
-3. Remove the superseded owner in the same change and prove zero residue.
+3. Remove the superseded owner in the same change and prove zero residue. Delete
+   without fear: Git history recovers tracked code, and excessive, wrong or duplicated
+   code and executions are defects wherever they are found (global `zero-residue` rule).
 4. Regenerate every managed projection from its source.
 5. Run the native gates without bypassing their orchestration.
 
@@ -45,7 +47,7 @@ make gen
 make fix
 make fmt
 make check
-make test
+make tests
 make gen
 ```
 

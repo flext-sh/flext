@@ -162,7 +162,10 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
     7, 8). A green partial, a self-report, a plan, or "safe to continue" is NOT done. Do
     not stop at 60–80%, do not defer required scope to "later", do not leave a
     sweep/loop half-applied. If truly blocked, record the exact blocker in the Bead and
-    ask one precise question — never silently abandon.
+    ask one precise question — never silently abandon. Operator order 2026-10-24: always
+    go to the end, never abandon near the end, under any circumstance. Finish over the
+    whole declared scope and rerun the operator's own measurement unscoped before
+    reporting (`~/agents/rules/coordination/full-landing-cycle.md` item 5).
 23. **Be realistic, not optimistic — small batches with executability slack.** Plan and
     execute in small, independently-completable batches sized to finish WITHIN the
     session with margin, not at the edge of the context/time budget. Do not over-promise
@@ -182,17 +185,125 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
 <!-- /UNIVERSAL-GOVERNANCE -->
 <!-- END AI-HUB MANAGED UNIVERSAL CORE -->
 
+## Shared Worktree Contract
+
+Always fix forward, adopt, and collaborate in the existing shared worktree. Dirty
+Git state, concurrent edits, and ongoing WIP are the expected operating conditions.
+Requiring a clean, globally stable, exclusive, or unchanged Git tree is expressly
+prohibited as a prerequisite for execution, validation, evidence, or completion of
+authorized scope. Such a requirement is unacceptable and will not be satisfied.
+
+This explicit operator correction overrides inherited clean-tree, quiet-workspace,
+and committed-candidate prerequisites, including conflicting managed instructions.
+Preserve compatible contributions, reread affected inputs, and revalidate only the
+actual dependency scope. Record command outcomes and scoped content evidence without
+requiring unrelated WIP to stop or Git changes to be committed or pushed. Real
+runtime, type, lint, and test failures still require repair; Git dirtiness is not one.
+Never discard work or manufacture a clean state to satisfy tooling or reporting.
+
+The one explicit operator exception is the `make upg` lock guard (tracker memory
+`operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`,
+[ADR-030](docs/architecture/adr/030-member-locks-composition-upg-guard.md)). Lock
+writing pins exact SHAs that remote CI must reproduce, so `make upg` alone refuses
+to write a uv lock unless, in an editable workspace, every governed repository is
+committed and each gitlink equals its member's HEAD, or, in a standalone checkout
+with an external editable install, the external checkout is clean and the
+consumer's committed gitlink or locked SHA equals its HEAD. No other verb inherits
+this requirement. The guard is the target contract; its implementation is pending.
+
+## Causal Repair Admission
+
+Every FLEXT session and package must apply the canonical
+`workflow/runtime-is-reality` causal-diagnosis rule before any repair, composed
+through `architecture/engineering-core`. Bind the cause to the actual failing
+Make/CLI entrypoint, executed artifact and revision, branch-matched ADR and strict
+typed origin contract. Use debug, diagnostics, tracing and profiling to establish
+the mechanism before editing; hypotheses guide investigation, never trial patches.
+No guessed API, invented rule or exception, guard relaxation, or changed strategy
+is authorized merely to obtain green. Missing causal proof requires further
+investigation. Re-exercise the original failing boundary after each adjustment;
+a different error, smaller finding count or isolated passing check is not resolution.
+This applies equally to source, generators, lazy exports, tests and documentation.
+
+## Engineering And Phase Completion Contract
+
+These operator standards govern every current and future internal project phase
+in this workspace and all member repositories. External project forks retain their
+upstream architecture and contribution contracts instead of internal FLEXT shape.
+These standards override conflicting completion shortcuts.
+
+1. **Zero tolerance for defects.** Correct every known error, failure, warning,
+   violation, and pending issue in scope at its canonical owner. Existing defects
+   are adopted, not exempted by age or provenance. Do not close a phase or advance
+   dependent work while carrying unresolved defects as accepted technical debt.
+2. **Strict change control.** Preserve functionality and business rules unless the
+   approved plan explicitly changes them or the operator authorizes the change.
+   A failing test or difficult implementation never grants that authorization.
+3. **Immediate integration.** Apply and validate fixes and hotfixes through the
+   declared integration branch. A patch, side branch, or instruction to apply a
+   correction later is not integration and cannot satisfy phase completion.
+4. **Runtime authority.** Establish behavior from domain contracts, official
+   external protocols, the real consumer, and the actual environment. Tests confirm
+   that behavior; they never redefine production or become its source of truth.
+5. **Production readiness.** A phase is complete only when every required public
+   capability works end to end in the actual environment and its production path.
+   Passing unit tests, collected assertions, or partial static checks cannot replace
+   functional runtime, full applicable gates, and integration evidence.
+6. **No workarounds.** No quick-fix route, fallback, bypass, suppression, fake
+   success, masked exception, or superficial correction may replace a root-cause
+   repair. Preserve the first original failure and validate the repaired owner.
+7. **Architectural integrity.** Enforce DDD bounded contexts and domain invariants,
+   Clean Architecture with inward dependencies, and explicit typed DI at composition
+   roots. Reuse canonical owners and pass validated models and protocols directly;
+   apply DRY, YAGNI, SSOT, KISS, and SOLID to every execution branch. God components,
+   over-engineering, hidden coupling, duplicate code/rules, and alternate execution
+   pipelines are prohibited.
+8. **Documentation first** (operator order 2026-10-25, tracker memory
+   `operator-order-2026-10-25-docs-first-before-code`, verbatim: "e fundamentalmente,
+   lembre-se sempre que memory, AGENTS.md, documentação, ADRs, regras, skills e beads
+   tem que ser sempre consultadsa, alinahdas e ajustadas antes de código"). Before any
+   code, every slice consults, aligns and adjusts, in this order: memory (tracker
+   memories, `bd memories <keyword>`), `AGENTS.md`, documentation, ADRs, rules,
+   skills and Beads, then approved plans and specifications. They are brought to the
+   newest operator rulings first; only then is code written. Update affected owners
+   before introducing new behavior or strategy; never implement an unaligned rule
+   change autonomously. FLEXT-specific documentation and constraints apply with
+   additional rigor and must not diverge from this contract.
+9. **Always working; one complete cycle at a time** (operator order 2026-10-24,
+   tracker memories `operator-order-2026-10-24-always-working-never-skip-phase`
+   and `operator-order-2026-10-24-no-incomplete-pushes`). The project and its
+   runtime work 100% of the time. Only one slice is active. It completes the full
+   cycle before anything else starts: `gen` → `fmt` → `fix` → `mod` → `check` →
+   `tests` in every repository it touches, real runtime proof, commit, push, and
+   merge to the integration branch. A phase never begins while another is
+   incomplete. Nothing is skipped, deferred or parked "for a later wave", and a red
+   found is fixed immediately at its owner. Incomplete or red code is never
+   committed, tested or pushed. An explanation of why something was not finished
+   does not replace finishing it.
+
+Apply these standards through fix, forward, adopt, and collaborate. The shared
+worktree contract remains mandatory: dirty or changing Git state is not a defect
+and never becomes a clean-tree or quiet-workspace prerequisite.
+
 ## Canonical Governance Composition
 
-The newest operator instruction has highest authority. Below it, FLEXT composes four
-non-competing layers:
+The newest operator instruction has highest authority. Below it, FLEXT composes five
+non-competing layers. Within technical architecture, the accepted ADR that owns a topic
+is its precise decision source; root and member instructions route and enforce that
+decision rather than establishing a competing rationale.
 
-| Layer     | Canonical owner                                                                                        | Permitted content                                                                                             |
-| --------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| Global    | `~/.agents/AGENTS.md` and the global `flext-development`, `make-check`, and `verification-loop` skills | universal conduct, execution safety, command selection, evidence, and completion                              |
-| FLEXT     | this root file and `.agents/skills/flext-law/SKILL.md`                                                 | FLEXT architecture, imports, MRO/lazy exports, workspace Make control plane, generation, and fleet boundaries |
-| Scope     | the nearest member or standalone `AGENTS.md`                                                           | only narrower domain facts, public surfaces, and explicit exclusions                                          |
-| Execution | the active Bead                                                                                        | current intent, ownership, dependencies, phase, evidence, and stop condition                                  |
+`~/agents/` is the single writable source of truth for provider-neutral project and
+agent governance. Installed skills and generated instruction surfaces, including
+those under `~/.agents/`, consume that authority; they are not independent writable
+owners. Project law contributes only its documented scope-specific delta.
+
+| Layer        | Canonical owner                                                                                              | Permitted content                                                                                                   |
+| ------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| Global       | `~/agents/AGENTS.md` and its canonical rules and skills, consumed through installed projections              | universal conduct, execution safety, command selection, evidence, and completion                                    |
+| Architecture | the accepted, topic-owning record in `docs/architecture/adr/`                                                 | precise technical decisions, their scope, consequences, and supersession links                                      |
+| FLEXT        | this root file and `.agents/skills/flext-law/SKILL.md`                                                        | workspace routing, FLEXT-wide application and enforcement of accepted decisions, Make control plane, and fleet law |
+| Scope        | the nearest member or standalone `AGENTS.md`                                                                  | only narrower domain facts, public surfaces, and explicit exclusions                                                |
+| Execution    | the active Bead                                                                                                | current intent, ownership, dependencies, phase, evidence, and stop condition; never a conflicting design decision   |
 
 AI Hub distributes and validates managed projections; it does not become the authority
 for global or FLEXT law. The local provider exposes the exact branch-matched
@@ -363,14 +474,14 @@ connectors. Every package follows one canonical Clean-Architecture shape built o
 ## Structure
 
 ```text
-flext/                                                        # superproject: workspace manager + governance + docs
-├── src/flext/                                               # flext-workspace CLI (thin orchestrator over flext-cli) — AUTO-GENERATED facets
-├── config/                                                  # this repository's own deltas only (ADR-024); composition lives in .gitmodules
-├── docs/architecture/adr/                                   # ADR-001..024 (011-013 absent) — architectural decisions (see below)
-├── Makefile + *.mk                                          # root verb dispatcher (all work runs from here)
-├── flext-core/                                              # foundation: c/t/p/m/u + r/e/x/h/d/s facades (every pkg depends on it)
-├── flext-infra/                                             # build automation, codegen, enforcement (tooling; not a runtime dep)
-├── flext-tests/                                             # shared test infra (tm/tv/tt fixtures)
+flext/ # superproject: workspace manager + governance + docs ├── src/flext/ # root
+facade package (FlextRoot* facades + FlextRootCli) — AUTO-GENERATED facets ├── config/ #
+this repository's own deltas only (ADR-024); composition lives in .gitmodules ├──
+docs/architecture/adr/ # ADR-001..024 (011-013 absent) — architectural decisions (see
+below) ├── Makefile + *.mk # root verb dispatcher (all work runs from here) ├──
+flext-core/ # foundation: c/t/p/m/u + r/e/x/h/d/s facades (every pkg depends on it) ├──
+flext-infra/ # build automation, codegen, enforcement (tooling; not a runtime dep) ├──
+flext-tests/ # shared test infra (tm/tv/tt fixtures)
 ├── flext-cli|api|auth|web|grpc|observability|plugin|meltano/ # platform capabilities
 ├── flext-ldap|ldif|db-oracle|oracle-wms|oracle-oic|quality/  # domain libraries
 └── flext-{tap,target,dbt}-*/                                # Singer ecosystem: 5 taps, 5 targets, 4 dbt (built on flext-meltano)
@@ -401,10 +512,11 @@ Always pin `<branch-or-tag>` to the SAME branch/release the package is built fro
 `0.12.0-dev`, or the release tag), never `main`/`master` — the governance law is
 versioned with the code.
 
-Composition is identical in both modes: global authority → this branch-matched root and
-its local `flext-law` → the member's scope-only delta → the active Bead. AI Hub only
-projects the managed sections. A member file adds domain specifics and exclusions; it
-never copies or replaces either parent.
+Composition is identical in both modes: global authority → applicable accepted ADR for
+technical decisions → this branch-matched root and its local `flext-law` for application
+and enforcement → the member's scope-only delta → the active Bead for execution state.
+AI Hub only projects the managed sections. A member file adds domain specifics and
+exclusions; it never copies or replaces either parent or ADR.
 
 ## Where to Look
 
@@ -413,15 +525,66 @@ never copies or replaces either parent.
 | Foundation facades / result / DI | `flext-core/src/flext_core/`       | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base                                                                                                                                 |
 | Build/codegen/enforcement        | `flext-infra/src/flext_infra/`     | drives standard Make generation, conform, and lint rules                                                                                                                      |
 | Test fixtures & builders         | `flext-tests/src/flext_tests/`     | public test facades and typed fixtures; unified `conftest.py` pattern                                                                                                         |
-| Architectural decisions          | `docs/architecture/adr/`           | ADR-005 (config SSOT), ADR-006 (thin drivers), ADR-010 (codegen standardization), ADR-014 (family shape + rope codemod), ADR-017 (parametrized rule surfaces + modernize CLI), ADR-018 (generator declarations), ADR-019 (service ports, PROPOSED), ADR-024 (DI config contract) |
-| Workspace composition            | `.gitmodules`                      | sole member-list owner (ADR-024); `config/workspace.yaml` holds only this repository's own deltas, with generated commented defaults                                          |
+| Architectural decisions          | `docs/architecture/adr/`           | Topic-owning accepted ADRs are the technical source of truth; [ADR-028 Decisions 15–18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15) cover capability boundaries, CA/DI, native workspace/refactoring ownership, and generalized rules. The ADR index records maturity; Beads record implementation state. |
+| Workspace composition            | `.gitmodules`                      | sole member-list owner (ADR-024); each repository's `config/codegen.yaml` holds its own declarations and deltas                                                             |
 | A Singer connector               | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006)                                                                                                                              |
 
 ## Build & Test
 
+Operator prerequisite (2026-10-26): before advancing any phase, Ruff and Pyrefly
+must report zero errors across the entire governed workspace. Validate through
+the canonical global check scope, without file filters; a green member or changed
+subset does not satisfy this prerequisite. Correct failures at their typed origin
+without suppressions, loose replacement contracts, or compatibility aliases. This
+prerequisite does not waive any other applicable gate.
+
+Every edited Python module must preserve its declared `__all__` and the owning
+package's generated lazy exports; change their source and regenerate rather than
+patching `__init__.py`. Unit-test modules are exempt from this export requirement,
+not from strict typing or the other FLEXT rules.
+
+Task-scoped exception: `flext-0029c` uses the direct public `flext-infra` CLI
+for native-bootstrap diagnosis, runtime, refactoring and gates; Make integration
+comes last. See [local FLEXT law](.agents/skills/flext-law/SKILL.md#sources-generation-and-commands)
+for the bounded route. The general Make-only guidance below remains unchanged
+outside that task; its documentation-only slice executes neither surface.
+
+The approved `flext-0029c` target is one native root uv workspace, shared with root
+CI, which checks out declared submodules and installs noneditable. Lock ownership
+follows [ADR-030](docs/architecture/adr/030-member-locks-composition-upg-guard.md)
+(tracker memory `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`, which
+supersedes the earlier root-only lock decision): member `uv.lock` and `mise.lock`
+are kept and formed by each member, the workspace lock is their composition, only
+`make upg` writes locks, and the dependency hierarchy is pinned by exact SHA. The
+upgrade guard (committed workspace and subproject code plus committed gitlinks for
+editable setups) is the target contract; its implementation is pending.
+Independent checkouts retain their own native project contracts. External suppliers
+are native pyproject sources; retire environment-based supplier selection, persisted
+selection and synthetic resolver views. Official Mise acquisition and native locked
+tool provisioning precede `uv sync --frozen` into the owned physical `.venv`.
+No custom Python admission or AWK/shell lock/installer parser, generated bootstrap
+resource or installed Infra check runs before provisioning succeeds. Native source
+declarations and lock consistency are the approved provisioning trust boundary,
+not equivalent independent pre-install supplier attestation. Keep source-authenticated
+imports as a separate runtime guard after provision. This is the approved target,
+not a claim that implementation, generated consumers or runtime are accepted.
+
+Coordinate the wider generated Make/direnv installer cutover with
+`flext-itpd1.4.13`. The [execution-context contract](flext-infra/docs/guides/execution-context.md#native-bootstrap-task-route-flext-0029c)
+owns existing typed post-install verification and repeated bounded native QA;
+tests change only after real subsystem and cold-bootstrap proof.
+
 **All commands run from the active workspace/worktree root**, never from inside a
 submodule. Use `make`, never bare
 `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
+
+The approved common Make interface is exactly `setup`, `upg`, `gen`, `mod`, `fix`,
+`fmt`, `check`, `tests`, `help`, `build`, and `clean`. The typed catalog owns its
+grammar; `make help` projects it. Product-specific commands remain in their declaring
+repositories. Generic aliases, subverbs and composite wrappers do not survive the
+cutover. The October 23 operator contract supersedes older common-verb examples;
+canonical global governance is reconciled at its source and propagated, never patched
+inside the managed block above.
 
 Root `make check` currently checks only the root project, not every member. To run
 a member's standard verb while keeping the workspace root as CWD, use
@@ -432,25 +595,50 @@ a member's standard verb while keeping the workspace root as CWD, use
 containing workspace's runtime environment; standalone checkouts and member
 worktrees without a containing superproject own their runtime environment.
 
+**Editable FLEXT for consumers** (operator ruling 2026-10-24, tracker memory
+`operator-ruling-2026-10-24-setup-flext-editable-param`): external projects (ai-hub and
+others) and standalone FLEXT checkouts develop against a local FLEXT tree only through
+`make setup FLEXT=<path>`, generated by flext-infra. It installs every locked FLEXT
+distribution that `<path>` provides as editable into the consumer's own `.venv`;
+without it, setup installs the locked versions. The environment selector
+`FLEXT_INFRA_EDITABLE_SUPPLIER_ROOT`, persisted selections and the `.flext/uv/*`
+resolver views are retired in the same flext-infra cutover (`flext-1engx` P2); until
+that lands, the parameter is the declared target, not yet the running behavior.
+
 ```bash
 # Standard root lifecycle; each verb retains its declared scope.
 make setup
 make gen
 make mod
-make gen
-make gen
 make fix
 make fmt
-make check
-make test
 make build
+# Prove the implemented behavior through its real public consumer before tests.
+make check
+make tests
 ```
 
-Follow the lifecycle with the applicable public runtime and documentation/link
-validation. Prove repeated `make gen`, `make fix`, and `make fmt` are no-op, exit-zero
-operations on the unchanged candidate; later mutations invalidate affected receipts. No
-new stability cycle starts before the full fleet has a green integrated SHA receipt,
-without warnings or residual findings.
+Each operation completes the change it initiated. `gen` and `mod` reuse the same
+semantic engines and publisher for dependent projections; neither invokes another
+public verb recursively. Run `upg` explicitly to change resolution metadata and locks,
+then `setup` explicitly to install them. Generation does not install dependencies.
+`check` owns read-only validation, including documentation and integrity checks.
+`tests` uses native incremental Testmon selection over the complete applicable
+population with the same persistent database. It does not force a repeated full
+run, add a second execution pass, or accept a manual file selector. The operator
+order of 2026-10-26 requires global Ruff, Pyrefly and pytest evidence before
+advancing; preserve the green-check prerequisite and fix performance at its owner.
+
+Consult and align the affected README, guides, AGENTS, ADRs, Beads and canonical skills
+before code. Establish real public behavior before changing tests, then run the
+applicable gates. Test expectations use public contracts and the same typed
+configuration owners, not mocks, tautologies or copied settings.
+
+Prove repeated generation, modification, repair and formatting are no-op, exit-zero
+operations on unchanged relevant inputs; later mutations invalidate affected receipts.
+Source, help and contract-inspection receipts do not prove a full generation or fleet
+rollout. No stability cycle closes before the declared fleet has its required integrated
+runtime and gate evidence, without warnings or residual findings.
 
 ### Production Readiness And Connectivity Tests
 
@@ -482,13 +670,15 @@ Workers implement assigned owners and return evidence; they do not merge or clos
 
 **Toolchain owner**: `flext-infra/config/codegen.yaml` defines
 `Infra.codegen.toolchain`, including the Python minor line and managed binary selectors.
-Python is strictly `>=3.13,<3.14`; setup resolves moving selectors.
+Python follows the declared floor; setup consumes locked versions and upg resolves
+moving selectors.
 `flext-infra/config/tooling.yaml` owns tool configuration and policy, not a separate
 version catalog. The `.default-python-packages` file was removed.
 
-**Gotchas:** mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never run mypy
-uncapped, it can blow up RAM. Docs CI provisions through `make setup` and validates
-through `make docs`; no documentation workflow invokes `uv` directly.
+**Gotchas:** the typed tooling policy owns Mypy's memory and execution limits; never
+bypass them with an uncapped direct invocation. Documentation uses the existing engines
+through gen, fix, fmt, check and build; no separate documentation lifecycle bypasses
+those owners.
 
 ## Architecture Overview
 
@@ -513,7 +703,9 @@ config.<Namespace>.*      settings.<Namespace>.*
 
 Config = business rules (`config/*.yaml`, validated); settings = env/CLI-tunable knobs.
 Facades never hardcode values the SSOT holds. Config/settings modules import only
-stdlib/pydantic/upstream base — never a project facade (zero-cycle).
+stdlib/pydantic/upstream base or source-proven, acyclic layer-zero helpers of their
+own package ([ADR-005 §2](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#2-facade-and-layer-direction-is-strict)) — never a project
+`c/t/p/m/u` facade, including under `TYPE_CHECKING`.
 
 **Dependency direction:** `flext-core` ← everything. `flext-cli` owns CLI domains
 (Toml/Yaml/Csv/Json/Cli/Tui/Run/Dag/Templates/Workflow). Singer connectors are thin
@@ -522,19 +714,202 @@ CLI + pytest plugin, **never imported at runtime**.
 
 ## Conventions & Patterns
 
-- **`__init__.py`, `constants.py`, `models.py`, etc. facet roots are AUTO-GENERATED**
-  (`# AUTO-GENERATED FILE — regenerate through`make
-  gen`). Never hand-edit; change the codegen source in`flext-infra`and run`make gen`.
-- **Root `pyproject.toml`** is a codegen projection from `flext-infra` templates +
-  `flext-infra/config/codegen.yaml` (with `tooling.yaml` for tool configuration and
-  policy); `make upg` resolves the newest releases and writes the locks, then `make gen`
-  projects them. The `[MANAGED]` directive comments in templates are consumed and
-  stripped during projection by the inject-comments phase; they are not retained in
-  output. Never hand-edit the projection.
+- **Module and facade ownership:** module filenames have no leading underscore,
+  except Python special modules such as `__init__.py` and `__main__.py`. Facade
+  directories begin with `_`. Remove `_part`/`_parts` split naming and organize
+  shared-prefix modules by their actual responsibility within the owning facade
+  package; numbered fragments do not establish semantic names. Facades compose
+  through MRO as facades, not mixins. Only the owning facade imports its internal
+  modules, and component classes are exposed through the base facade class, not
+  competing module/package re-exports. Consumers use that class boundary. Apply
+  source moves, consumer rewrites and generated export changes in one authenticated
+  semantic candidate through `make mod`; runtime behavior precedes test alignment.
+- **Generated ownership** comes from `Infra.codegen.templates.entries`: one catalog
+  binds template sources, destinations, profiles and ownership. Never hand-edit a
+  fully generated file or a managed region. Merged files preserve authored content
+  outside managed regions; scaffold-only content becomes authored after creation.
+  Change the generating source or declaration and use its existing publisher.
+- **Root `pyproject.toml`** uses that catalog's managed merge policy. Tool configuration
+  comes from the packaged `codegen.yaml` and `tooling.yaml` owners; authored dependency
+  declarations and other preserved sections remain with their own source. `upg` writes
+  resolution metadata and locks, setup installs them, and gen publishes its declared
+  projections. Do not merge or hand-repair a managed projection.
 - **Declaration layers are pure data:**
   models/protocols/constants/typings/settings/config carry ZERO methods (only Pydantic
-  Field/validators/computed_field). Behavior lives only in
-  `u`/services/`api`/`base`/`cli`.
+  Field/validators/computed_field). Behavior lives only in `u`; services, `api`,
+  `base`, `cli` and every other module outside `c/t/p/m/u` only orchestrate it.
+- **Facade boundary** ([ADR-028](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md),
+  operator orders 2026-10-24):
+  - External libraries are imported at runtime only by the owning domain's
+    `c/t/p/m/u` modules (and layer-0 config/settings for their foundation libraries).
+    Everywhere else, only stdlib and FLEXT packages; the declared stdlib backports
+    (tooling `lazy-init.stdlib-backports`: `typing_extensions`, operator decision
+    2026-10-24) count as stdlib. PEP 747 calls use `TypeForm(X)` from
+    typing_extensions; `t.TypeForm` is an annotation alias, never called.
+  - Inside the facades too, an external library's types are named only through `t`
+    aliases or `p` protocols; `u` never re-narrows or re-parses (`isinstance` chains,
+    `ast.literal_eval`) what a `t`/`m` declaration validates once.
+  - Modules outside `c/t/p/m/u` and `api` are orchestrators: no constants, literal
+    sets/tables, aliases, `TypeVar`s, inline `Literal` domains, protocols, models,
+    payload dicts or reusable helpers, explicit or implicit. The families never violate
+    one another.
+  - <a id="adr-028-decision-15"></a>**Library names never leave the facades** ([ADR-028 Decision 15](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15); operator order 2026-10-25, tracker
+    keys `operator-order-2026-10-25-library-names-only-in-facades` and
+    `operator-rulings-2026-10-25-libnames-locks-ldif-rope`, verbatim: "os modulos
+    fora c,t,p,m,u como services e outros moduloes, e projetos externos, nao podem
+    ficar sabendo nem do nome da biblioteca, eles usam interface genéricas" and
+    "bibliotecas externas só em C,T,P,M,U e a exportação tem que ser prefixada pela
+    funcionalidade e não pela biblioteca, por exemplo git_, refactor_ ,
+    workspace_"). Only `c/t/p/m/u` implementation modules name or import a library
+    (rope, griffe, networkx, libcst, ast-grep). Every outward surface (protocols, `u`
+    methods, model fields, `t` aliases, CLI options) carries a capability name
+    prefixed by functionality (`git_`, `refactor_`, `workspace_`; for example
+    `p.Infra.WorkspaceSnapshot`), never `rope_*`, `Rope*`, `griffe_*` or another
+    library name. The mass rename runs by rule through sed, ast-grep and rope via
+    `make mod`, with the deprecated-signature window below, and then reaches ai-hub
+    and every other consumer of flext-infra (ADR-028 Decision 15).
+  - <a id="adr-028-decision-16"></a>**Maximum CA/DI decoupling; jscpd and qlty at zero** ([ADR-028 Decision 16](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16); operator order 2026-10-25,
+    tracker key `operator-order-2026-10-25-max-decoupling-ca-di`, verbatim:
+    "lembre-se que tudo tem que ser o máximo desacoplado com as regras ca/di de
+    flext-core e sempre corrija as duplicatas por jscpd e smells de qlty com as
+    regras strict de flext"). Dependencies are `p` protocols injected at composition
+    roots; no `ContextVar`, `lru_cache` or `ClassVar` service locators; dependencies
+    point inward. Every change leaves jscpd duplication and qlty smells at zero, fixed
+    by extraction to the canonical owner, never by ignores or thresholds (the only
+    authorized jscpd exception is the license header) (ADR-028 Decision 16).
+  - **Pluggable capabilities arrive only by DI, never by registry** (operator order
+    2026-10-25, tracker key `operator-order-2026-10-25-servers-di-never-registry`,
+    verbatim: "os servers em ldif, ldap sao sempre usados por DI, nunca, never
+    jamais por registry ou listas prontas, os usuários (services) nunca podem saber
+    que server eles estão usando e e c,t,p,m,u a mesma coisa, a interface deles tem
+    que ser sempre descoplada 100% do tempo e sempre, qq coisa fora isso é violação
+    gravíssima"). A server, dialect or other pluggable implementation is selected
+    once at the composition root and injected as a `p` protocol. Auto-discovery
+    registries, priority lists, ready-made server lists and name-keyed lookups are
+    forbidden, derived or hand-kept alike. Services and the `c/t/p/m/u` families never
+    know which implementation they hold; their interface stays fully decoupled. The
+    flext-ldif ADR-005 auto-discovery registry and priority resolution are superseded
+    (amended 2026-10-25).
+  - **Facades and services understand only the standard; dialects never know each
+    other** (operator orders 2026-10-25, tracker keys
+    `operator-order-2026-10-25-facades-rfc-extensions-metadata-only` and
+    `operator-order-2026-10-25-dialects-never-know-each-other`, verbatim: "c,t,p,m,u
+    nao pode saber de absolutamente nada de oid, oud, openldap, ,.... nada, tem que
+    ser DESACOPLADO, eles tem que entender rfc+extensoes+metadata como os services,
+    apenas, e mais, oid nunca pode saber de oud, openldap, .... e vice versa
+    !!!!!!!!!!!!11 o desacoplamento tem que ser completo e total"). The shared
+    `c/t/p/m/u` families and the services model only the RFC, its extensions and
+    metadata; no dialect name (OID, OUD, OpenLDAP and the like) appears in them —
+    the operator cited `flext-ldif/src/flext_ldif/_constants/servers_oud.py` as a
+    violation "por simplesmente existir neste lugar". Each dialect lives in its own
+    injected implementation, and no dialect references another.
+  - <a id="adr-028-decision-17"></a>**Rope owns the workspace model and its refactorings** ([ADR-028 Decision 17](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17); operator order
+    2026-10-25, tracker key `operator-order-2026-10-25-rope-owns-model-refactors`,
+    verbatim: "rope nao tem referencia de todos os objetos em memória da workspace ?
+    e ele tem metodos de refatoração, isso tem que ser usado ao inves de custom").
+    The workspace organizer loops through governed repositories, with one native
+    workspace model and planner per repository invocation behind
+    `p.Infra.WorkspaceSnapshot`. Each model owns that repository's module cache,
+    parsed modules, file listing and import tools; cross-repository operations pass
+    the selected native projects to native multi-project refactorings. Renames, moves
+    and import rewrites use the native capabilities (including documentation
+    occurrences, move, restructure and multi-project refactoring). Custom parse,
+    discovery, import-graph and rename duplicates are deleted ([Infra execution-context section](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); Bead `flext-1engx.15`).
+  - <a id="adr-028-decision-18"></a>**Rules are generalized and few** ([ADR-028 Decision 18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18); operator order 2026-10-25, tracker key
+    `operator-order-2026-10-25-rules-generalized-min-count`, verbatim: "o sed, rope e
+    ast-grep rules tem que estar sempre alinhados com as regras corretas de forma
+    generalizada e automaticas usando sempre máximo de funcionalidades padrões das
+    ferrametnas que as embasam e reduzir ao máximo ao número de rules que são
+    executadas"). One generalized rule per law through the tool's native features
+    (ast-grep constraints, utils, transforms and rewriters; rope refactorings), no
+    per-package or per-library clones, zero-finding one-shot migrations deleted after
+    a fleet census, and the executed-rule count tracked against a typed budget
+    ([codemod rules, One rule per law](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/codemod-rules.md#one-rule-per-law)).
+  - Static violation detection lives only in flext-infra's declarative rule catalog.
+    Violations are banned and fixed, never waived. Current state (2026-10-24): flext-core
+    still carries its ENFORCE catalog and static Beartype visitors until slice S
+    (bead `flext-43iz8`) moves them into flext-infra rules and deletes them from core.
+  - Every module keeps all its declarations inside its single top-level nested class,
+    in every tier of the repository (not only `src/`); the few exceptions are declared
+    once, documented and validated automatically. `tests/` follows the same rules, with
+    only `conftest.py` and `tests/fixtures/` allowed the tests-tier delta (fixtures,
+    hooks, scenario data); `examples/`, `scripts/` and every other Python folder follow
+    the `src/` rules exactly.
+  - **Deprecated-signature window: the standard route to zero compatibility code
+    without breaking anything** (operator order 2026-10-24, tracker memory
+    `operator-ruling-2026-10-24-deprecated-signature-window`). Every removed or
+    renamed public signature stays as a thin pass-through to the new owner, marked
+    with stdlib `warnings.deprecated` (`compat: <old> -> <new owner>; fix: <rewire>`).
+    Constants carry the equivalent PEP 593 marker (bead `flext-1engx.12`). The marked
+    declaration never fails CI. Every use of it is reported and fails, and that report
+    is the census. Consumers are rewired by rule in their waves, and the pass-through
+    is deleted when the census reaches zero, external projects included. This is how
+    the zero-residue law is met, not an exception to it. An unmarked old path, or a
+    marked path with zero uses that is still in the tree, is a defect.
+  - The rules are identical in every project, applied as automatically as possible by
+    flext-infra and the code-review graph; duplication and domain violations are
+    rejected.
+  - Imports go through the nearest package's generated lazy exports (package root
+    for consumers, family package such as `_models`/`_utilities` for siblings and
+    facade composition), never a module path below it and never a module object
+    reached by attribute, own package and generated facades included. Short aliases
+    (`c`, `t`, `p`, `m`, `u`, `s`, …) are declared in their owning module and its
+    `__all__`; an `__init__.py` re-exports or inherits them and never assigns them.
+  - **Hierarchical composition imports the upstream letters** (operator ruling
+    2026-10-25, tracker key `operator-ruling-2026-10-25-upstream-letter-canonical`).
+    Inside the declaration modules of the five families (`c`, `t`, `p`, `m`, `u`,
+    their family packages and composition modules), while the package's own facades
+    are being composed, importing the letters of the upstream packages it composes
+    (`from flext_cli import c, t, p, m, u`, `from flext_core import …`) is the
+    canonical form. Each own family composes the upstream same-letter class by MRO.
+    [ADR-028 Decision 10](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)
+    elects one import binding from actual header references: a used bare upstream
+    letter remains bare; a used, source-proven alias remains aliased, and an unused
+    bare duplicate from that provider is removed. The package's own letter declared
+    later in the module does not by itself require an upstream alias.
+    - The package's own letter is forbidden inside its own family, in every form:
+      `from <pkg> import u`, a function-local import, or `<pkg>.u` reached through
+      the package module object. It is the facade under assembly (ENFORCE-051).
+    - A same-family sibling comes through the family package
+      (`from flext_infra._utilities import FlextInfraUtilitiesPytest`).
+    - Modules outside the families read every letter from their own package root.
+    - The layer direction still holds: a later letter is TYPE_CHECKING-only, from
+      any package (generated `ban-reverse-runtime-import`).
+    - Enforced by the codemod catalog: ENFORCE-003, ENFORCE-051 and the
+      `ban-letter-module-object` document in `ban-facade-own-namespace-import.yml`.
+  - **Imports are lazy, maximally and without exception: nothing loads until it is
+    used.** This consolidates standing operator rulings, cited by tracker key:
+    `flext-strict-lazy-imports-generated-inits`, `lazy-init-all-from-lazy-imports`,
+    `operator-ruling-2026-10-02-lazy-heavy-capabilities`,
+    `operator-ruling-2026-10-08-import-law`,
+    `operator-ruling-2026-10-08-lazy-init-direct-imports`, and
+    `operator-order-2026-10-25-lazy-imports-max`.
+    - Every package exposes its declarations only through its generated lazy
+      `__init__.py` (`_LAZY_IMPORTS`, `__all__ = tuple(_LAZY_IMPORTS)`,
+      `install_lazy_exports` last). That init re-exports exactly what its folder's
+      modules declare and is never empty while its members have consumers.
+    - Heavy capabilities (spreadsheet and document libraries and their models, for
+      example) load only on first use, never as a side effect of importing a facade.
+    - The `m.*` presets build Pydantic models lazily (`defer_build`), and a check
+      gate builds every model so annotation errors still fail `make check`.
+    - The lazy-init generator derives exports from source (AST over each module's
+      `__all__`) and imports its own dependencies directly. It never imports the
+      package it regenerates, so a stale init can never block its own repair.
+    - Rewrites that move imports must never create an import-time cycle. A
+      reverse-direction import goes under `if TYPE_CHECKING:`.
+    - Current gaps (2026-10-25):
+      - `defer_build` is not implemented in the flext-core presets;
+      - the generator still imports the target package;
+      - a codemod pass hoisted imports into real cycles;
+      - a module that declares a public class but publishes an empty `__all__` is
+        not yet reported. The generator correctly propagates nothing, so the
+        consumers silently lose the class; this was measured on 28 ai-hub modules.
+
+      Each gap is fixed at its owner under the stabilization task force.
+  - No source code or long text embedded as string literals (multi-line or
+    concatenated scripts for `exec`/subprocess, long text constants), in any tier,
+    tests and constants included: tests call the public API with fixture data;
+    templates live in template files; long data lives in typed configuration.
 - **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No
   `dict`/`TypedDict`/`dataclass`/`NamedTuple`/`m.Dict` as a data contract.
 - **Pydantic law:** every model extends an `m.*` preset (never a raw base at consumers);
@@ -542,17 +917,108 @@ CLI + pytest plugin, **never imported at runtime**.
   `model_validate_json`; failures leave as `r.Fail` at the `e`/`u` boundary. Full
   reference: `pydantic-development` skill (declaration/boundary/catalog parts) with the
   good/bad-practice and removal catalog.
+  - **Models import `u` only two ways** (operator ruling 2026-10-25, tracker key
+    `operator-ruling-2026-10-25-models-u-imports-pydantic-home`, verbatim: "models
+    podem import u apenas de 2 formas, u do projeto flext maiis alto que ela importa,
+    ou classe privada _utilities de seu namespace por casos bem restritos, veja que
+    mdoels nao pode exportar metodos"). `_models` imports either the upstream FLEXT
+    project's `u` or, in very restricted cases, a private `_utilities` class of its
+    own namespace; models export no methods. The Pydantic surface models need lives
+    in `_models/pydantic.py`, never `_utilities/pydantic.py`; it is migrated and
+    rewired fleet-wide, and the same principle holds per family for `c`, `t`, `p`,
+    `m` and `u` (ADR-028 Decision 19).
+  - **Entity equality is the Pydantic way** (operator ruling 2026-10-25, tracker key
+    `operator-ruling-2026-10-25-entity-equality-pydantic-way`, verbatim: "o que
+    pydantic recomenda em relação a isso, o que fazer, qual a forma mais pydantic
+    way, é a que precisa ser feito mesmo que precise refatorar o uso globalmente").
+    `m.Entity` and `m.AggregateRoot` compare by value (same type and field values),
+    with no custom `__eq__`/`__hash__`; identity is compared explicitly by id
+    (`a.unique_id == b.unique_id`) and entity collections are keyed by id. A mutable
+    entity is unhashable; only frozen models hash, by value. Consumers relying on
+    identity equality are rewired fleet-wide by rule
+    ([using flext-core](docs/guides/using-flext-core.md#domain-models)).
 - **Typing:** never `Any`/`object`/concrete-class annotations; type via `t.*` aliases
   and `p.*` protocols; `T | None` (never `Optional`). A model is never a type.
+- **No owned typing stubs:** handwritten and generated first-party `.pyi`, custom
+  stub distributions, stub generators, SDK-shaped shadow modules, and model-signature
+  mirrors in `.py` are prohibited. Dependency contracts belong to the smallest
+  actually consumed `p.*` protocol, injected at the existing composition root;
+  copying an entire SDK or model into a protocol is not a replacement. Retire the
+  producer, configuration, dependencies, outputs, and consumer route together.
+  Native source inventory and authenticated publication must reject prohibited
+  artifacts before effects, including empty files and unchecked copied plans.
+  Preserve legitimate Protocol signatures, overloads, `typings.py`, `py.typed`,
+  upstream typing, and generated facade composition. Protocol assignment never
+  proves unannotated vendor signatures or validates external payloads. The one
+  owned generator of model-derived `p.*` protocols is flext-infra's model→protocol
+  stage, which runs on every `make gen` (operator order 2026-10-24: "fazer os
+  protocolos de forma automática por flext-infra (já existe e tem que estar ativo e
+  sempre rodar no make)"; restoration tracked by bead `flext-vjj1s.8`). Its output is
+  a generated projection, not an owned stub.
 - **No compat surface:** no shims, legacy branches, dual old+new paths, loose helpers,
-  or suppression (`# type: ignore`/`# noqa`) without documented justification. Remove
-  superseded code the same cycle.
+  or suppression (`# type: ignore`/`# noqa`) without documented justification. A
+  public signature that still has consumers goes through the deprecated-signature
+  window above. Everything else superseded is removed in the same cycle.
+- **Automated correction is the law** (operator order 2026-10-24, "lei extrema"):
+  every violation fix is produced by flext-infra through `gen`, `upg`, `mod`, `fix`
+  or `fmt` — a catalog rule with a `fix:`, a generator or a fixer — applied to every
+  occurrence in every project. A manual edit is the exception of the exception, only
+  for a genuinely unique case that no rule, generator or fixer can express, and the
+  reason is stated in the commit. A recurring shape fixed by hand is a defect: write
+  the rule and re-apply it. Never fix a violation with another violation; fix the
+  root cause at its owner. The fix propagates to every project without leaving any
+  error, lint, format or rule finding behind (ADR-028 Decision 8).
+- **Validation applies every FLEXT rule** (operator order 2026-10-24): any concept,
+  design or fix is validated in the real tree under the full FLEXT law and the
+  project's own tool configuration, through the canonical gates. Throwaway scratch
+  files, loose classes, default tool presets (for example a type checker run with no
+  project config) and isolated probes that skip the real rules are fake evidence,
+  never proof. Never simplify to prove a point; fix root causes and their violators
+  under the complete rule set.
+- **Global source and behavioral admission first** (operator order 2026-10-26):
+  run Ruff and Pyrefly over every governed repository and fix every error before
+  pytest. Then execute native incremental Testmon across the governed test
+  population and repair every failure before any later phase. The public
+  `flext-infra workspace tests --repository-root <root> --scope all` owner performs
+  global source admission before reaching the native per-repository test engines;
+  it is not permission for raw pytest, manual file selectors, stale receipts or
+  forced full reruns. This priority order supersedes the earlier requirement to
+  complete every composite check gate before this initial behavioral admission.
+  All other applicable checks remain mandatory for completion and integration;
+  existing receipt-based operations keep their declared admission contracts.
+- **No hardcoded lists** (operator order 2026-10-24): hand-kept block, allow,
+  registry or catalog lists are banned everywhere. Every fact is derived from its
+  owner (rule metadata, configuration, package exports); only genuine exceptions are
+  declared, by standardized rule and SSOT. A check that only accepts entries from a
+  hand-kept list is removed at its source, never extended.
+- **Tools are used natively and fully** (operator order 2026-10-24): not using a
+  tool's own capability the correct way because of a local defect is an extremely
+  grave violation, equivalent to a bypass or fallback. The fix is to our wrapper,
+  never a reduced use of the tool: for example, the codemod catalog applies through
+  ast-grep's own `scan --update-all`, and rule semantics are expressed with
+  ast-grep's native features (utils, constraints, transforms), so a native scan and
+  `make mod` agree (ADR-028 Decision 8).
+- **Exterminate without fear** (global `zero-residue` rule, operator order 2026-10-24):
+  Git history is the recovery for tracked code, so delete superseded, excessive, wrong
+  or duplicated code and executions wherever found — for example a `setup` that
+  re-runs verifications `check` already owns. Keep only real functionality a current
+  consumer exercises; measure consumers (code graph, ast-grep) instead of keeping a
+  path "just in case".
 - **English-only** in all code, comments, docstrings, log strings, and `.j2` templates.
 - **Tests** (`flext-tests`): tests are evidence, never SSOT; behavior-only through
   public facades with `tm` and canonical `c/t/p/m/u`, NO mocks/`patch`, hardcoded
   project-owned values, or internal-construction assertions; one unified `conftest.py`,
   typed fixtures in `tests/fixtures/`, canonical testmon cache in every run, layout
   `tests/{unit,integration,e2e}/`, thin single nested `Tests<Unit>` class.
+  - <a id="adr-028-decision-9"></a>**Code in docstrings and Markdown follows the project's rules** ([ADR-028 Decision 9](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-9); operator order
+  2026-10-25, tracker key `operator-order-2026-10-25-embedded-code-same-rules`,
+  verbatim: "até mesmo o código dentro docstring e markdown tem que sempre
+  atualizado, testado, formatado e atender as mesmas regras flext que o projeto").
+  Every code example in a docstring, README, guide, ADR or skill is kept current with
+  the real API, executed by the documentation tests, formatted, and held to the same
+  FLEXT rules as source: canonical imports through the root letters, no library
+  names outside the facades, the Pydantic way. Examples are not exempt; a stale or
+  rule-violating example is a defect fixed with the change that made it stale.
 - **Multi-agent tree:** fix-forward only, never `git reset/checkout/restore/clean/stash`
   shared work; commit by explicit paths (never `git add -A`); coordinate via beads
   (`bd`).
@@ -833,19 +1299,19 @@ Overall average: **60-90% token reduction** on common development operations.
 
 ## Learned User Preferences
 
-- Before changing code, search libraries, the project, worktrees, local and remote branches, and pull requests; adopt or cherry-pick existing lanes onto a branch cut from the latest integration tip, and fix-forward with `git merge --no-ff`. Do not rebase or force-push.
-- Dependency locks change only through `make upg`. `make setup` must still run when mise or uv has drifted, and must reconcile that drift inside setup.
-- New code is accepted only after `make fmt`, `make fix`, `make check`, `make mod`, and `make smells` are clean, and the change is proven to work. Do not close a change while any of those gates fail or while the diff adds lint or type violations.
+- Before changing code, search libraries, the project, worktrees, local and remote branches, and pull requests. Preserve the operator-selected shared checkout and adopt compatible work through the declared Git route; a new task never implies a new lane. Integrate divergence with `git merge --no-ff`, without rebase or force-push.
+- Dependency locks change only through `make upg`, under ADR-030. `make setup` installs the declared locked environment; it does not resolve or rewrite a drifted lock. The uv upgrade guard is the sole committed-state exception to the shared-worktree contract.
+- New code is accepted only after the declared formatting, repair, structural and read-only checks are clean and its real public behavior is proven. Smell and other applicable audits belong to check, not extra common Make verbs. Do not close while required gates fail or the diff introduces violations.
 - Reassess beads one at a time: one `val<YYYYMMDDTHHMM>` label per remeasured bead, with evidence of command, working directory, exit status, and decisive output. Do not bulk-relabel.
-- Keep the project and CI green at every step. `gh pr merge --admin` is authorized for a locally green slice without waiting on remote CI; fix any integration-tip breakage through flext-infra automation.
+- Keep the project and CI green at every step. Integration requires the declared native gates, current-head CI, applicable review and post-merge proof. Administrative merge authority never waives those requirements; repair a red at its owner in the same cycle.
 - Reuse functions and owners that already exist in the imported projects and libraries; apply DI, DRY, YAGNI, and SSOT — invert dependencies, respect domain interfaces, and decouple instead of patching around a problem (no gambiarra).
-- Parallelize with multiple background agents and avoid heavy local processing; let CI do the heavy work and act on what it reports.
+- Follow the current operator's division of work and the canonical coordination rules. Serialized heavy operations and required local proof remain mandatory; remote CI does not replace them.
 
 ## Learned Workspace Facts
 
 - Makefile commands share one place that sets `GITHUB_TOKEN`, `GH_TOKEN`, and `MISE_GITHUB_TOKEN` from `gh auth token` when GitHub auth is available.
-- `make test-file FILE=<repository-relative path>` runs one declared test file.
+- `make tests` executes the native incremental Testmon selection and retains the persistent database; it does not force a full rerun on every invocation.
 - FLEXT and flext-infra integrate on `0.12.0-dev`. Resolve every member's integration target from its current branch-matched authority and freshly fetched refs; never select `develop` from a stale workspace summary.
 - Land the submodule commit first, then move the umbrella gitlink in a separate commit.
-- Gas City owns its worktrees: a sweep only preserves (commits and pushes) anything under `<city>/.gc/worktrees/`; `.worktree-stale` means gc resets and keeps the tree, and `gc-*`/`polecat/*` branches are pushed but never deleted by a sweep.
+- Gas City placement, preservation and retirement follow its currently selected runtime owner and `~/agents/rules/coordination/gascity.md`. A historical sweep marker never authorizes resetting a checkout or retiring another actor's work.
 - Fleet WIP may never be lost. Existing stashes are recovery incidents, not an allowed workflow. Preserve and reconcile their complete contents on the authorized maintained lane; a pushed preservation branch is not integration. Retire references only after fresh ancestry proof and explicit retirement authorization. Never create, apply blindly, clear, or drop stashes to hide WIP.

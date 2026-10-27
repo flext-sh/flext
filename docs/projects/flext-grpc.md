@@ -101,7 +101,7 @@ all return `r[T]`.
 
 - [Project README](https://github.com/flext-sh/flext-grpc/blob/0.12.0-dev/README.md)
   (auto-generated module map and operation flow)
-- [Workspace AGENTS.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md) —
+- [Workspace AGENTS.md](../../AGENTS.md) —
   layering and zero-tolerance rules
 - `flext-grpc/docs/api-reference/` — generated API documentation
 - Related projects: `flext-core`, `flext-cli`, `flext-auth`

@@ -45,7 +45,7 @@ five read-only survey agents, runtime spikes in the workspace environment (Pytho
   `validate_business_rules`, `ok`, `fail_op`; `FlextService` implements none.
 - `_result/unwrap.py:18-22` raises `RuntimeError(msg)` without `from`.
 - `p.RuntimeBootstrapOptions` exists
-  (`_protocols/_context_parts/flextprotocolscontext_part_03.py:21`); `t.InstanceOf` and
+  (`_protocols/_context/flextprotocolscontext_part_03.py:21`); `t.InstanceOf` and
   `t.SkipValidation` exist; there is no `Port` symbol.
 
 Runtime measurements:

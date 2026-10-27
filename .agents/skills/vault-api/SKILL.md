@@ -111,7 +111,7 @@ curl -s http://vault.vault:8200/v1/secret/metadata/myapp \
 curl -s http://vault.vault:8200/v1/sys/policies/acl/myapp \
   -X PUT \
   -H "X-Vault-Token: $VAULT_TOKEN" \
-  -d '{"policy":"path \"secret/data/myapp/*\" {capabilities=[\"read\",\"list\"]}"}'
+  -d '{"policy":"path \"secret/data/myapp/*\" {capabilities=[\"read\",\c.Action.LIST\"]}"}'
 ```
 
 ### Token

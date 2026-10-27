@@ -7,6 +7,7 @@
 - [Consequences](#consequences)
 - [Rejected alternatives](#rejected-alternatives)
 - [Verification contract](#verification-contract)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -105,3 +106,14 @@ imposing fleet governance or touching what must never be automated.
   entry, log, or lane diff.
 - Manifest round-trip: `make gen` accepts the declared section unchanged and rejects a
   spec missing `name`, `root`, or carrying a relative root.
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Remain superseded by 024; do not use its external
+  list as SSOT.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

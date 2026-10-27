@@ -18,12 +18,18 @@
   - [Negative](#negative)
 - [Implementation](#implementation)
 - [References](#references)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
 ## Status
 
 CURRENT IMPLEMENTATION (accepted 2026-09-11)
+
+Declaration derivation is amended by ADR-018; family and lazy-export boundaries by
+ADR-028; execution admission and landing by ADR-029. Those topic decisions supersede
+the older tables and workflow prescriptions recorded here. Historical implementation
+rows below are dated context, not current runtime acceptance.
 
 ## Context
 
@@ -58,20 +64,16 @@ through the following mechanisms:
 
 ### R1a — Lazy-Init Re-Export Derivation
 
-How the generated root `__init__.py` builds `pkg.__all__` (see
-`docs/standards/consumption-law.md` R1a for the full rule):
+[ADR-018](018-generator-declarations.md) supersedes filename-to-letter tables and
+closed alias lists. Explicit module `__all__` declarations and authenticated source
+MRO determine owned and inherited letters. An initializer propagates its immediate
+modules' declarations; it never declares aliases or lifts descendants into ancestors.
+[ADR-028 Decision 10](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)
+owns the nearest-package and hierarchical composition boundary.
 
-- `ALIAS_NAMES = {c, t, m, p, u, r, d, e, h, s, x, tc}` is the complete facade-letter
-  set.
-- Local facade files win (`constants.py→c`, `typings.py→t`, `protocols.py→p`,
-  `models.py→m`, `utilities.py→u`).
-- Operational letters (`r, d, e, h, s, x`) are inherited from the highest upstream flext
-  library (`flext_cli`, sourced from `flext_core`) via
-  `_resolve_inherited_alias_source`.
-- A local redeclaration published in `__all__` overrides the inherited ancestor.
-- `Flext*` module exports come from the current directory only.
-- Determinism (flext-b3xmn): the facade-letter set derives from the statically indexed
-  workspace source, never the ambient installed surface.
+Determinism (flext-b3xmn): source declarations determine the rendered surface, never
+an ambient installed export union. The consumer explanation in
+`docs/standards/consumption-law.md` R1a links to these decision owners.
 
 ### R2 — No Duplication (Structural Scan)
 
@@ -82,10 +84,13 @@ How the generated root `__init__.py` builds `pkg.__all__` (see
 
 ### R3 — Layer Law (Declaration vs Behavior)
 
-- Declaration layers (`c,t,p,m,u,r,e,x,h,d,s`) = pure data, zero methods
-- Behavior only in `u`, `base.py`, `services/*.py`, `api.py`, `cli.py`
-- Reverse imports `TYPE_CHECKING`-only; `c` never imports `m` at runtime
-- One class per module, ≤200 LOC, Pydantic-2-way only
+[ADR-028 Decisions 3–4](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-3)
+own placement: constants in `c`, type aliases in `t`, protocols in `p`, Pydantic
+models in `m`, and reusable behavior in `u`. Protocol declarations and Pydantic
+validators retain their native responsibilities. Operational facades are not
+methodless data. Bases, services, API and CLI compose the capabilities they consume.
+Reverse imports remain `TYPE_CHECKING`-only; module shape follows Decision 6 and
+module-size budgets come from typed configuration, never a frozen number in this ADR.
 
 Runtime alias inspection refinement (`flext-edcqq`).
 **State at 0.12.0-dev (2026-09-27):** the flext-core side exists
@@ -128,9 +133,16 @@ runtime-census consumer cutover is still pending:
 
 ### R6 — Contribution Path Law
 
-- Bead → formula lane → canonical Make verbs → WIP commits → PR → `--no-ff` merge →
-  gates on merged SHA → roll-up gitlinks → bead closure with 4 evidences
-- Zero residue: dead code/compat shims are defects
+Follow root `AGENTS.md` for current workspace/orchestration ownership and
+[ADR-029](029-always-working-one-complete-cycle.md) for admission, the complete
+cycle and integrated proof. Global Git governance owns preservation and reviewed
+non-rewriting landing. Close Beads only with registered state, integration history,
+measured reality and integrated code.
+
+Zero residue follows
+[ADR-028 Decision 7](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7):
+deprecated signatures disappear after their complete consumer census reaches zero,
+without breaking active consumers.
 
 ## Anti-Hardcode Law (Binding)
 
@@ -138,7 +150,9 @@ runtime-census consumer cutover is still pending:
   `BOUNDARY_FLEXT_CLI_CONCRETE_RE`, `startswith("flext_")` — all exterminated
 - **No frozen enumerations**: facts derivable from SSOT/code are never fixed
 - **No absolute paths**: config keys only
-- **Tests**: synthetic runtime-derived violations only; no committed fixtures
+- **Tests**: never freeze mutable configuration. Rule fixtures follow
+  [ADR-028 Decision 6](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-6);
+  tests confirm real runtime behavior and do not define it.
 
 ## Consequences
 
@@ -180,3 +194,14 @@ runtime-census consumer cutover is still pending:
 - `flext_infra.gates.duplication` (R2 enforcement)
 - `flext-infra/config/codegen.yaml` (R4/R5 config SSOT)
 - `docs/GOVERNANCE.md` (R6 router)
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Update public consumption and exports; do not
+  confuse Protocol signatures with behavior.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

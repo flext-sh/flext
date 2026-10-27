@@ -8,31 +8,31 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext._utilities import FlextRootUtilitiesBase, FlextRootUtilitiesConfig
-from flext_db_oracle import FlextDbOracleUtilities
-from flext_grpc import FlextGrpcUtilities
-from flext_infra import FlextInfraUtilities
-from flext_ldap import FlextLdapUtilities
-from flext_meltano import FlextMeltanoUtilities
-from flext_observability import FlextObservabilityUtilities
-from flext_oracle_oic import FlextOracleOicUtilities
-from flext_oracle_wms import FlextOracleWmsUtilities
-from flext_plugin import FlextPluginUtilities
-from flext_quality import FlextQualityUtilities
-from flext_tests import FlextTestsUtilities
+from flext_db_oracle import u
+from flext_grpc import u as flext_grpc_u
+from flext_infra import u as flext_infra_u
+from flext_ldap import u as flext_ldap_u
+from flext_meltano import u as flext_meltano_u
+from flext_observability import u as flext_observability_u
+from flext_oracle_oic import u as flext_oracle_oic_u
+from flext_oracle_wms import u as flext_oracle_wms_u
+from flext_plugin import u as flext_plugin_u
+from flext_quality import u as flext_quality_u
+from flext_tests import u as flext_tests_u
 
 
 class FlextRootUtilities(
-    FlextOracleOicUtilities,
-    FlextOracleWmsUtilities,
-    FlextQualityUtilities,
-    FlextLdapUtilities,
-    FlextInfraUtilities,
-    FlextMeltanoUtilities,
-    FlextObservabilityUtilities,
-    FlextPluginUtilities,
-    FlextTestsUtilities,
-    FlextDbOracleUtilities,
-    FlextGrpcUtilities,
+    flext_oracle_oic_u,
+    flext_oracle_wms_u,
+    flext_quality_u,
+    flext_ldap_u,
+    flext_infra_u,
+    flext_meltano_u,
+    flext_observability_u,
+    flext_plugin_u,
+    flext_tests_u,
+    u,
+    flext_grpc_u,
 ):
     """Workspace root utilities facade — access via u.Root.*.
 
@@ -48,5 +48,4 @@ class FlextRootUtilities(
 
 
 u = FlextRootUtilities
-
-__all__ = ("FlextRootUtilities", "u")
+__all__: list[str] = ["FlextRootUtilities", "u"]

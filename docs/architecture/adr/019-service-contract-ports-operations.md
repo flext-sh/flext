@@ -7,6 +7,7 @@
 - [Consequences](#consequences)
 - [Rejected alternatives](#rejected-alternatives)
 - [Verification contract](#verification-contract)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -21,7 +22,8 @@
 - **Integrated so far (verified census 2026-09-30, code-level):** S1 — `flext-core` #499,
   merge `d65ba487f`, with the kernel fixes #502 `5ce5919a6` (enforcement), #503
   `2401cb21b` (lazy initialization), #504 `8de52fa6b` (`u.process` fail-loud).
-  S2–S7 are also in the code: truthful container (one `_registrations` bookkeeping, one
+  S2–S6 are also in the code (S7–S10 open, per epic `flext-itpd1.11`): truthful
+  container (one `_registrations` bookkeeping, one
   private write path, empty/duplicate/reserved names raise `e.ValidationError`, reserved
   names out of `has`/`names`/`drop`, caller-unresolved `shared` raises, no
   `provide`/`wire` bridge — `src/flext_core/container.py`); lazy operations
@@ -42,8 +44,14 @@
   declarations).
 - **Plan:**
   [`docs/plans/2026-09-25-v8-flext-service-base/`](../../plans/2026-09-25-v8-flext-service-base/00-index.md)
-- **Tracking:** epic `flext-4jtcb` (slices `flext-4jtcb.1`–`.12`; `.9`, the former S2b,
-  is superseded by the 2026-09-26 pure-DI ruling).
+- **Tracking:** epic `flext-itpd1.11`, which absorbed epic `flext-4jtcb` (slices
+  `flext-4jtcb.1`–`.12`; `.9`, the former S2b, is superseded by the 2026-09-26 pure-DI
+  ruling). The transport surface (Decision 13) is epic `flext-itpd1.11.8`.
+- **Amendment, 2026-10-24 (operator orders):** Decision 5 becomes the single transport
+  contract (CLI, HTTP, Singer) derived from core operations. Decision 6 follows the
+  ruling "core = composition root without a locator". Decision 13 is new. Old public
+  signatures follow the deprecated-signature window (root `AGENTS.md`, tracker memory
+  `operator-ruling-2026-10-24-deprecated-signature-window`).
 
 ## Context
 
@@ -65,7 +73,10 @@ contract was not true:
   into defaults;
 - `FlextContainer.bind/factory/resource` silently ignored duplicates and empty names;
 - the kernel carried hand-written `api.py`/`cli.py`/`base.py` skeletons and a no-op
-  console script only to satisfy the NS-LAYOUT gate; 15 members carry no-op `main()`.
+  console script only to satisfy the NS-LAYOUT gate. Measured 2026-10-24: 10 members
+  carry a placeholder `main()` that returns 0 (api, auth, core, db-oracle, grpc, ldap,
+  ldif, observability, oracle-wms, plugin), and 76 hand-written `ResultCommandRoute`
+  constructions in 7 repositories duplicate what operation discovery derives.
 
 The operator asked for `FlextService` to be the essential base that provides a typed API
 and an automatic CLI for every member (plan V7), with fakes removed and real wiring.
@@ -75,8 +86,11 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
 1. **Ports.** A dependency is a `@runtime_checkable` Protocol in `p` (extending
    `p.Base`, minimal capability). A service field declares it as
    `name: t.Port[p.X] = m.Field(exclude=True, description=…)`, where
-   `t.Port[P] = Annotated[P, SkipJsonSchema()]`. Pydantic validates it by `isinstance`
-   on construction and assignment. The port type must be a plain Protocol class.
+   `t.Port[P]` supplies an instance-validation schema excluded from JSON Schema.
+   Pydantic validates it by `isinstance` on construction and assignment, preserving
+   the supplied instance. Current annotation support also resolves aliases, generic
+   origins and concrete classes; it does not recursively validate generic arguments.
+   This runtime support does not replace Protocol-based dependency declarations.
 2. **Composition root — pure DI, definitive.** `api.py` is the only place that
    constructs adapters and port-bearing services, by constructor injection.
    `fetch_global()` remains only for port-free services. There is no Protocol-keyed
@@ -96,14 +110,36 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
    `u.service_operations(Service)` discovers the original callable and its model
    metadata lazily, without `eval` or class-creation checks. Missing, ambiguous or
    incompatible metadata fails; there is no fallback to concrete annotations.
-5. **Derived CLI.** `flext-cli` turns operations into commands with
-   `cli.service_routes(Service, provide=…)` over the existing `register_result_routes`;
-   `--help` builds no adapter; invalid input leaves as `e.fail_validation` with the
-   original cause and a non-zero exit. Routes execute the catalogued method by
-   identity, not by a second name lookup or a per-route service wrapper.
+   Amendment 2026-10-24: an input-less operation may carry metadata
+   (`@h.handler(command=None, default=True)`); `@h.query` marks a read-only
+   operation; `m.ServiceOperation` records `public_name`, `kind`, `default` and the
+   `output` type derived from `p.Result[X]`. The request Protocols are generated from
+   the models by the flext-infra model-to-`p` generator (operator decision recorded on
+   `flext-vjj1s.8`), never hand-mirrored.
+5. **One transport contract (amended 2026-10-24).** Operations are the only public
+   surface a transport serves. Adapters derive everything from
+   `u.service_operations` and never take a hand-kept route, command or option list:
+    - CLI: `flext-cli` exposes `cli.run(source)` and `cli.entry(source)`; a member's
+      console script is `main = cli.entry(<facade>)` in `api.py`. Typer and Click are
+      private to `flext-cli`.
+    - HTTP: `flext-web` exposes `web.application(source)` and
+      `web.serve(source, request)`; queries map to GET with query-parameter models,
+      commands to POST bodies. FastAPI, Starlette and uvicorn are private to
+      `u.Web`/`t.Web`.
+    - Singer/dbt: `flext-meltano` bases drive `singer_sdk` through its programmatic API
+      (`Tap.invoke`, `Target.invoke`, discovery, sync), never through Click `main()`;
+      connectors keep only `api.py`.
+    - Input is parsed once (`u.invoke_operation`), `--help` and schema rendering build no
+      adapter, and failures leave with their original cause, mapped to an exit status or
+      HTTP status by one table per transport over `c.ErrorCode`.
+   `cli.service_routes` and the route models stay as deprecated pass-throughs until
+   their census reaches zero.
 6. **No fake facades (operator decision D1 = A).** The kernel has no `api.py`, `cli.py`,
    `base.py` or console script; NS-LAYOUT derives when a project must provide `api.py`
    (it composes services) and `cli.py` (it declares a console script and operations).
+   Amendment 2026-10-24: core is the composition root without a locator (bead
+   `flext-itpd1.11.3`); a transport receives the composed facade, never resolves
+   services by name.
 7. **Consumers first.** A base contract contracts only after every consumer declared
    what it uses; every base slice revalidates its consumers before merge.
 8. **Execution law for every slice.** Modules stay within 200 logical lines, with
@@ -141,6 +177,13 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
     control flow when a combinator's exception behavior differs from the boundary.
     Do not stringify failures or turn them into defaults. Parse once at ingress and
     serialize once at transport egress; owned models remain models between services.
+13. **Transport surface (2026-10-24).** `m.ServiceSurface` describes a facade as
+    operations plus sub-service groups, which are model fields with `exclude=True`, so
+    there is no registry or list of groups. `u.provide_service` builds the facade at
+    the `api.py` root with its injected infrastructure. Consumers never import a
+    transport library (Typer, Click, FastAPI, Starlette, uvicorn, singer_sdk); a
+    flext-infra catalog rule reports every such import. Work is tracked in epic
+    `flext-itpd1.11.8`.
 
 ## Consequences
 
@@ -177,4 +220,19 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
   `service_routes` builds a real Typer app, a valid command exits 0 and renders the
   result, an invalid one exits non-zero with the validation cause, `--help` needs no
   adapter, and a non-conforming adapter fails at composition.
+- Transport (Decision 13): golden argv and `--help` through `cli.run`; real HTTP through
+  the flext-tests client; Singer goldens for `--about`, `--discover`, `--catalog`,
+  `--state`, `--test` and stdin; every installed console script runs outside the
+  checkout; importing a facade loads no transport library.
 - Closure: this ADR moves to ACCEPTED with the merged SHAs and receipts of S1–S10.
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Keep proposed; reconcile current API/base, pure
+  DI, metadata and namespace.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

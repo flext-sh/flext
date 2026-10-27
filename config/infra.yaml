@@ -1,0 +1,4 @@
+Infra:
+  release:
+    maintenance_line: [0, 12]
+    finalize_maintenance: true

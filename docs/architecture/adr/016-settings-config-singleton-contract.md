@@ -8,6 +8,7 @@
   - [Performance and SSOT debt](#performance-and-ssot-debt)
 - [Decision](#decision)
 - [Consequences](#consequences)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -93,3 +94,14 @@ between module-level `settings` export and `fetch_global()`.
 - The dedicated session must prove: flext-core contract tests, fleet pytest across
   randomized seeds (≥8 consecutive green), gates ×2 idempotent, and runtime import
   identity checks in each external consumer.
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Keep proposed; close lifecycle/reload/isolation
+  and correct stale defect narrative.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

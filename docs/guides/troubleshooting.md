@@ -45,11 +45,11 @@ make gen
 make fix
 make fmt
 make check
-make test
+make tests
 make gen
 ```
 
-Test diagnosis still runs through `make test`, with the retained Testmon cache. Direct
+Test diagnosis still runs through `make tests`, with the retained Testmon cache. Direct
 or cache-clearing test runs do not count as evidence.
 
 ## Documentation failures

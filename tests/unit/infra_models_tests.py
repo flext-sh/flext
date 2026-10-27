@@ -11,7 +11,8 @@ from pathlib import Path
 
 import pytest
 
-from tests import c, infra, t, tm
+from tests import c, t, tm
+from tests.infra import TestsFlextRootModels
 
 
 class TestsFlextRootInfraModels:
@@ -23,7 +24,7 @@ class TestsFlextRootInfraModels:
         @staticmethod
         def test_module_ref_json_contract(tmp_path: Path) -> None:
             """Preserve supplied values, schema metadata and validation failures."""
-            model = infra.TestsFlextRootModels.Tests.ModuleRef
+            model = TestsFlextRootModels.Tests.ModuleRef
             anchor_file = tmp_path / "module.py"
             module_name = __name__
             relative_path = "module.py"
@@ -38,7 +39,7 @@ class TestsFlextRootInfraModels:
                 tm.that(current.module_name, eq=module_name)
                 tm.that(current.relative_path, eq=relative_path)
             tm.that(restored.model_dump(), eq=value.model_dump())
-            tm.that(type(restored) is model, eq=True)
+            tm.ok(type(restored) is model)
 
             schema = model.model_json_schema()
             required = {

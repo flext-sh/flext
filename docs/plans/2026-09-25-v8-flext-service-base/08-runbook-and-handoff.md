@@ -57,13 +57,13 @@ Every command runs in the lane worktree:
 3. **Propagation round** (owner: the superproject's `make propagate`, #883; the scripts
    `~/flext-work/v8-wave/wave*.sh` are residue and must be safe-deleted after it).
    1. Consumers of #504 (`on_error` was removed from `u.process`):
-      - flext-ldif, lane `~/flext-work/v8-process-consumers/flext-ldif`, branch
-        `fix/process-fail-loud-consumer`. Changes `services/processing.py` (no
-        `on_error`, no `default_batch_error` fallback) and
-        `examples/04_server_migration.py` (`unwrap` and plain loops). Runtime proven:
-        success, and failure with the original `ValueError` cause. State: see section 4.
-      - flext-cli: subagent on lane `~/flext-work/v8-process-consumers/flext-cli`.
-        State: see section 4.
+       - flext-ldif, lane `~/flext-work/v8-process-consumers/flext-ldif`, branch
+         `fix/process-fail-loud-consumer`. Changes `services/processing.py` (no
+         `on_error`, no `default_batch_error` fallback) and
+         `examples/04_server_migration.py` (`unwrap` and plain loops). Runtime proven:
+         success, and failure with the original `ValueError` cause. State: see section 4.
+       - flext-cli: subagent on lane `~/flext-work/v8-process-consumers/flext-cli`.
+         State: see section 4.
    2. Bump the superproject pins: core ≥ `8de52fa6`, infra ≥ `a4898b561`, cli, ldif,
       then `make gen` ×2, `make check` and PR.
    3. `make upg` at the root: clears the `mise WARN ... not in the lockfile` notice and
@@ -85,12 +85,12 @@ Every command runs in the lane worktree:
    `tests/unit/codegen/layout_tests.py`, flext-quality
    `tests/unit/test_docs_dashboard.py`, flext-target-oracle-oic `tests/constants.py`,
    auth/grpc/tap-oracle-wms and target-oracle docs).
-   - The committed pins are not at the current tool's fmt fixed point. Suspected: isort
-     differs between workspace and standalone mode.
-   - Owner: flext-infra (formatter config and template). A fmt fixed-point step in CI is
-     also missing.
-   - The files remain dirty in `~/flext-work/v8-fleet/flext/<member>`; they were not
-     discarded.
+    - The committed pins are not at the current tool's fmt fixed point. Suspected: isort
+      differs between workspace and standalone mode.
+    - Owner: flext-infra (formatter config and template). A fmt fixed-point step in CI is
+      also missing.
+    - The files remain dirty in `~/flext-work/v8-fleet/flext/<member>`; they were not
+      discarded.
 2. **Superproject SonarCloud fails** (non-required check): `text:S8564` in
    `.mise/locks/npm-prettier/3.5.3/package.json`. The mise npm backend writes
    `aube-lock.yaml`, which Sonar does not recognize. The same file exists in every
@@ -106,16 +106,16 @@ Every command runs in the lane worktree:
    `c.ERR_COLLECTION_PROCESSING_FAILED_FOR_ITEM`.
 5. **flext-infra `make test-full` is still red** (the slow-tier subagent report; the
    last complete run had 18 failures under ~22 host load):
-   - `test_codegen_gen_activation` (3): the infra `make gen` takes ~54 s and the
-     per-test limit is 60 s. Decision: speed up gen, or give the test a smaller subject.
-   - `test_invalid_explicit_token_fails_at_the_native_mise_backend`: with a warm cache,
-     `upg` skips the backend. Decision: should `upg` ignore the remote version cache
-     (honoring the "newest release" contract)?
-   - `hostile_env[standalone]` (2): fixed with copy-checkout (d5c1be04a), but the
-     full-tier proof is missing.
-   - `tests/unit/codemod/test_apply_renames.py` (2): `make mod` in check mode returns 1
-     after the infra-dedup campaign. Possibly fixed by #890; re-run.
-   - Load timeouts on tests outside the original 28. Re-run with an idle host.
+    - `test_codegen_gen_activation` (3): the infra `make gen` takes ~54 s and the
+      per-test limit is 60 s. Decision: speed up gen, or give the test a smaller subject.
+    - `test_invalid_explicit_token_fails_at_the_native_mise_backend`: with a warm cache,
+      `upg` skips the backend. Decision: should `upg` ignore the remote version cache
+      (honoring the "newest release" contract)?
+    - `hostile_env[standalone]` (2): fixed with copy-checkout (d5c1be04a), but the
+      full-tier proof is missing.
+    - `tests/unit/codemod/test_apply_renames.py` (2): `make mod` in check mode returns 1
+      after the infra-dedup campaign. Possibly fixed by #890; re-run.
+    - Load timeouts on tests outside the original 28. Re-run with an idle host.
 6. **Gate gap: CI runs no tests.** 2026-09-23 operator decision (commit 9214012ee,
    `config/codegen.yaml`, the test verb's `make.workflow`). Reverting is one line:
    `{verb: test, contexts: [local, ci, pre_push]}` then `make gen`. That needs a new
@@ -123,29 +123,29 @@ Every command runs in the lane worktree:
 7. **`make fix` red on 13 members (141 blocks).** The flext-infra `markdown-code` gate
    (`a0df83a52`, 2026-09-18) requires every ` ```python ` block to compile. The wave
    validated `gen`/`check`/`test` but never `fix`, so it went unnoticed.
-   - Root cause: fences mangled by an older fixer (indented closing fence,
-     ` ````python `).
-   - Discovery: `~/tmp/v8/md_fence_scan.py <lane>` and, for the fleet,
-     `~/tmp/v8/md_fence_scan_fleet.sh`.
-   - Count: plugin 29, meltano 24, ldap 21, observability 20, ldif 17, quality 9, grpc
-     8, target-oracle 4, tap-oracle-wms 3, oracle-wms 3, web 1, oracle-oic 1, core 1.
-   - Fix: `fix/markdown-fences-compile` PRs per member (section 4).
-   - Gate gap to close: CI and the wave must run `make fix` in verification mode; owner:
-     the flext-infra template.
-   - The gate traceback prints the markdown line relative to the block, which is
-     misleading. Owner: `markdown_code_sources.py`, which must report
-     `md_path:fence_start+lineno`.
+    - Root cause: fences mangled by an older fixer (indented closing fence,
+      ` ````python `).
+    - Discovery: `~/tmp/v8/md_fence_scan.py <lane>` and, for the fleet,
+      `~/tmp/v8/md_fence_scan_fleet.sh`.
+    - Count: plugin 29, meltano 24, ldap 21, observability 20, ldif 17, quality 9, grpc
+      8, target-oracle 4, tap-oracle-wms 3, oracle-wms 3, web 1, oracle-oic 1, core 1.
+    - Fix: `fix/markdown-fences-compile` PRs per member (section 4).
+    - Gate gap to close: CI and the wave must run `make fix` in verification mode; owner:
+      the flext-infra template.
+    - The gate traceback prints the markdown line relative to the block, which is
+      misleading. Owner: `markdown_code_sources.py`, which must report
+      `md_path:fence_start+lineno`.
 8. Inherited pendings:
-   - The root `make docs` fails: `docs/projects/generated/catalog.md` is missing.
-   - The markdown fixer ignores MD077/MD013.
-   - flext-quality: gap in the generic webhook allowlist.
-   - `FlextTestsDocker` writes to `~/.flext`.
-   - The docker compose plugin is missing on the host.
-   - Every facade derived from `flext_cli` yields "ambiguous public facade base
-     identity".
-   - `ProjectSpec.flext_source` is dead.
-   - `_cprofile_entry.py` must be safe-deleted.
-   - Fleet test reds per member: plugin 10, ldap 9, others.
+    - The root `make docs` fails: `docs/projects/generated/catalog.md` is missing.
+    - The markdown fixer ignores MD077/MD013.
+    - flext-quality: gap in the generic webhook allowlist.
+    - `FlextTestsDocker` writes to `~/.flext`.
+    - The docker compose plugin is missing on the host.
+    - Every facade derived from `flext_cli` yields "ambiguous public facade base
+      identity".
+    - `ProjectSpec.flext_source` is dead.
+    - `_cprofile_entry.py` must be safe-deleted.
+    - Fleet test reds per member: plugin 10, ldap 9, others.
 
 ## 4. Work in flight at session end
 

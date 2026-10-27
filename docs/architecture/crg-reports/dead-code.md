@@ -39,13 +39,13 @@
 - ScriptsFlextTypes (`~/flext/flext-core/scripts/typings.py`:8)
 - ScriptsFlextUtilities (`~/flext/flext-core/scripts/utilities.py`:9)
 - FlextConstantsEnforcementCatalogInfraRowsExtended
-  (`~/flext/flext-core/src/flext_core/_constants/_enforcement_catalog_rows_parts/flextconstantsenforcementcatalogrows_part_05.py`:12)
+  (`~/flext/flext-core/src/flext_core/_constants/_enforcement_catalog_rows/flextconstantsenforcementcatalogrows_part_05.py`:12)
 - FlextSmellViolation (`~/flext/flext-core/src/flext_core/_constants/enforcement.py`:43)
 - FlextDecorators (`~/flext/flext-core/src/flext_core/_decorators/__init__.py`:12)
 - IdentifiableMixin
-  (`~/flext/flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_02.py`:153)
+  (`~/flext/flext-core/src/flext_core/_models/_base/flextmodelsbase_part_02.py`:153)
 - VersionableMixin
-  (`~/flext/flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_03.py`:65)
+  (`~/flext/flext-core/src/flext_core/_models/_base/flextmodelsbase_part_03.py`:65)
 - FlextResultBehavior (`~/flext/flext-core/src/flext_core/_result/behavior.py`:10)
 - FlextResultUnwrap (`~/flext/flext-core/src/flext_core/_result/unwrap.py`:15)
 - DependencyIntegration (`~/flext/flext-core/src/flext_core/_runtime/_dependency.py`:15)
@@ -254,11 +254,11 @@
   },
   {
     "name": "FlextConstantsEnforcementCatalogInfraRowsExtended",
-    "qualified_name": "~/flext/flext-core/src/flext_core/_constants/_enforcement_catalog_rows_parts/flextconstantsenforcementcatalogrows_part_05.py::FlextConstantsEnforcementCatalogInfraRowsExtended",
+    "qualified_name": "~/flext/flext-core/src/flext_core/_constants/_enforcement_catalog_rows/flextconstantsenforcementcatalogrows_part_05.py::FlextConstantsEnforcementCatalogInfraRowsExtended",
     "kind": "Class",
-    "file": "~/flext/flext-core/src/flext_core/_constants/_enforcement_catalog_rows_parts/flextconstantsenforcementcatalogrows_part_05.py",
-    "file_path": "~/flext/flext-core/src/flext_core/_constants/_enforcement_catalog_rows_parts/flextconstantsenforcementcatalogrows_part_05.py",
-    "relative_path": "flext-core/src/flext_core/_constants/_enforcement_catalog_rows_parts/flextconstantsenforcementcatalogrows_part_05.py",
+    "file": "~/flext/flext-core/src/flext_core/_constants/_enforcement_catalog_rows/flextconstantsenforcementcatalogrows_part_05.py",
+    "file_path": "~/flext/flext-core/src/flext_core/_constants/_enforcement_catalog_rows/flextconstantsenforcementcatalogrows_part_05.py",
+    "relative_path": "flext-core/src/flext_core/_constants/_enforcement_catalog_rows/flextconstantsenforcementcatalogrows_part_05.py",
     "line": 12,
     "language": "python"
   },
@@ -284,21 +284,21 @@
   },
   {
     "name": "IdentifiableMixin",
-    "qualified_name": "~/flext/flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_02.py::FlextModelsBase.IdentifiableMixin",
+    "qualified_name": "~/flext/flext-core/src/flext_core/_models/_base/flextmodelsbase_part_02.py::FlextModelsBase.IdentifiableMixin",
     "kind": "Class",
-    "file": "~/flext/flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_02.py",
-    "file_path": "~/flext/flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_02.py",
-    "relative_path": "flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_02.py",
+    "file": "~/flext/flext-core/src/flext_core/_models/_base/flextmodelsbase_part_02.py",
+    "file_path": "~/flext/flext-core/src/flext_core/_models/_base/flextmodelsbase_part_02.py",
+    "relative_path": "flext-core/src/flext_core/_models/_base/flextmodelsbase_part_02.py",
     "line": 153,
     "language": "python"
   },
   {
     "name": "VersionableMixin",
-    "qualified_name": "~/flext/flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_03.py::FlextModelsBase.VersionableMixin",
+    "qualified_name": "~/flext/flext-core/src/flext_core/_models/_base/flextmodelsbase_part_03.py::FlextModelsBase.VersionableMixin",
     "kind": "Class",
-    "file": "~/flext/flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_03.py",
-    "file_path": "~/flext/flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_03.py",
-    "relative_path": "flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_03.py",
+    "file": "~/flext/flext-core/src/flext_core/_models/_base/flextmodelsbase_part_03.py",
+    "file_path": "~/flext/flext-core/src/flext_core/_models/_base/flextmodelsbase_part_03.py",
+    "relative_path": "flext-core/src/flext_core/_models/_base/flextmodelsbase_part_03.py",
     "line": 65,
     "language": "python"
   },

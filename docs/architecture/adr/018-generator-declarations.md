@@ -6,6 +6,7 @@
 - [Decision](#decision)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -61,7 +62,10 @@ The fourteen points of `generator-declarations.md` are law. In one line each:
    declares no short alias.
 6. The generator propagates, never compensates; the validator reports.
 7. Violations are fixed at the source; recurrence makes a catalog rule with a fixture.
-8. Verdict and count derive from one classification; `error` fails, warning does not.
+8. Verdict and count derive from one classification and the current
+   [phase-completion contract](../../../AGENTS.md#engineering-and-phase-completion-contract).
+   The former blanket statement that warnings do not fail is superseded by that
+   contract; a warning, missing execution or partial result never proves acceptance.
 9. Every rule is computed from an existing source and proven fleet-wide before commit.
 10. Declaration adjustment is automatic; deriving beats listing; unnecessary lists die.
 11. Every module is one nested class; nothing loose, no alias outside `__all__`; the
@@ -70,6 +74,26 @@ The fourteen points of `generator-declarations.md` are law. In one line each:
 13. A hack's permission dies in the same commit as the hack.
 14. Every module obeys every rule (FLEXT, SOLID, DRY, YAGNI, CA, SSOT, DI); strict
     compliance is the dedup mechanism expected to free 60–80% of the code.
+
+<a id="nested-facade-projection"></a>
+The generator applies [ADR-014's semantic ownership](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership)
+recursively: a direct family domain facade composes the declarations in its private
+`_domain/` directory by MRO, and nested private directories repeat that pattern.
+Each generated lazy `__init__.py` reflects only its immediate modules' explicit
+`__all__`; a subdirectory declares no short alias and an ancestor never republishes
+leaf implementations around their owner. A source move and the affected subfacade and
+ancestor lazy exports are planned and published as one authenticated candidate, from
+source without importing the stale package being repaired. Callers use the nearest
+composed facade at every stage (ADR-028 [Decision 10](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
+
+The [repository declaration](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_models/_config/repository.py#L457-L466)
+makes `project` optional. An absent subsection declares no additional manifest-only
+inherited facets: the generator still uses source-authenticated MRO and explicit
+`__all__` for ordinary lazy exports, but must neither invent a manifest nor reject
+the public root for lacking one. An explicitly declared facet is still verified
+against its upstream native identity before publication. The
+[lazy-init owner](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_utilities/lazy_init_letters.py#L148-L207)
+consumes this contract and links back to this decision.
 
 Order of execution (operator): law → extermination of lists, manual declarations and
 their permissions → generator/detector/fix repair → census by the validator → automatic
@@ -103,3 +127,14 @@ manual mass fix.
   the delta is recorded on `flext-0in0k`.
 - `bd lint --json` clean for every bead of the epic; each closes with SHA, command and
   exit code.
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Reaffirm declarations as export source and
+  generation; update API examples.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

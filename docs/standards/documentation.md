@@ -37,10 +37,11 @@ Every generated document carries a header naming its source, adjustment point, a
 ## Command and test examples
 
 All executable examples use declared root Make verbs. Direct generators, linters,
-formatters, type checkers, test runners, and ad-hoc scripts are prohibited. Use only
-parameters declared by `make help`; a declared verb parameter, such as `FILE` on
-`make test-file`, is not a selector. Do not attach undeclared project, file, pattern,
-action, phase, fix, or changed-only selectors.
+formatters, type checkers, test runners, and ad-hoc scripts are prohibited. `make help`
+owns the common command grammar; use only declared repository-specific extensions. Do
+not attach undeclared project, file, pattern, action, phase, fix, or changed-only
+selectors. The common `tests` verb runs the complete applicable suite once with the
+persistent Testmon database; it has no file selector or incremental prepass.
 
 Documentation hooks reuse the public Infra CLI and the interpreter provisioned by
 Make. They never resolve dependencies or create a second environment during collection.
@@ -49,9 +50,17 @@ Test examples exercise public facades with `tm`, the unified `conftest.py`, and 
 shared fixtures. They contain no mocks, fakes, stubs, patching, monkeypatch mutation,
 private construction, or hardcoded project-owned values.
 
-The documentation auditor recursively enforces this contract over live `docs/guides/`
-and `docs/standards/` sources. Historical exclusions come only from the typed docs scope
-owner; no local allowlist may bypass the audit.
+Markdown and docstring examples follow the same FLEXT import, typing, formatting, and
+behavior rules as source code. The documentation auditor recursively enforces this
+contract over live `docs/guides/` and `docs/standards/` sources. The accepted embedded-
+code decision is linked here:
+
+| Documentation declaration | Accepted decision |
+| --- | --- |
+| Examples receive the same rules and validation as source code. | [FLEXT ADR-028 Decision 9](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-9) |
+
+Historical exclusions
+come only from the typed docs scope owner; no local allowlist may bypass the audit.
 
 ## Authoring
 
@@ -74,24 +83,48 @@ See [Python docstring standards](docstrings/PEP257-GOOGLE-RUFF.md).
 
 ## Generation and validation
 
-Run the complete documentation propagation through the root dispatcher:
+There is no common `docs` verb. For authored documentation, use the canonical root
+lifecycle and its documentation checks:
 
 ```bash
-make setup
-make gen
-make mod
-make gen
-make gen
 make fix
 make fmt
 make check
-make test
+make tests
+```
+
+Run `make gen` before these gates only when an owned generator source or generated
+projection changed. Use `make build` when a built documentation artifact is in scope.
+`make tests` runs only after the same scope's `make check` is green. To check a member
+while remaining at the workspace root, select that member's Makefile:
+
+```bash
+make -f flext-core/Makefile check
+```
+
+The documentation audit does not substitute for executable-example behavior. The full
+`tests` verb exercises applicable documentation examples with the same public contract
+as project source. A member receipt proves only that member, not whole-workspace
+acceptance.
+
+When source, generation policy or shared projections also change, run the
+applicable full engineering lifecycle through the same dispatcher:
+
+```bash
+make gen
+make fmt
+make fix
+make mod
+make check
+make tests
 make build
 ```
 
-The consecutive post-rewrite generation passes must reach a fixed point. Test validation
-retains the canonical Testmon cache. A missing docs workflow is repaired at the Make or
-flext-infra owner before this sequence is rerun.
+Each operation runs explicitly through its declared owner. Prove the applicable
+generation fixed point using the existing owner; do not add repeated generation passes
+or a replacement docs verb. A missing or broken canonical operation is repaired at its
+owner before the same command is rerun. Test validation retains the canonical Testmon
+cache.
 
 ## Publication
 

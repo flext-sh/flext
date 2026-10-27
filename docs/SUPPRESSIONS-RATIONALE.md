@@ -59,10 +59,10 @@
     extraindo a construção do record para `build_record_from_lines()` com tipagem forte;
     sem supressão inline e sem promover fronteiras genéricas.
 
-- **typings**
-  - Corrigido stub `typings/generated/sqlalchemy/sql/visitors.pyi`: parâmetros
-    duplicados `self` em `**call**` substituídos por nomes únicos (`visitable`,
-    `target`) para mypy não falhar ao analisar dependentes.
+- **Stubs de terceiros**: a projeção `typings/generated` foi retirada. Bibliotecas
+  sem tipagem são consumidas por protocolos `p.*` na fronteira (como `ldap3`); o
+  `[tool.pyright]` projetado de `config/tooling.yaml` declara
+  `reportMissingTypeStubs = "none"`. Nenhum stub `.pyi` próprio é mantido.
 
 ---
 
@@ -84,9 +84,7 @@
 - **flext-tap-ldif**
   - **Unreachable**: removido `return` inalcançável em `ldif_processor.py`. **tests**:
     `t` em `**all**` de `tests/typings.py`. **Singer\*Message**: `model_validate({...})`
-    em `utilities.py`. **Stub**: `typings/generated/singer_sdk/**init**.pyi` com
-    `Stream`, `Tap` e `Tap.cli`. **Check script**: `MYPYPATH` com
-    `ROOT/typings/generated` para o stub ser usado. Check passa sem override adicional.
+    em `utilities.py`. Check passa sem override adicional.
 
 Regra: qualquer novo override deve seguir o padrão (módulo específico, comentário de
 fronteira, registro aqui).

@@ -34,9 +34,9 @@ class TestsFlextRootDockerQualityDockerfiles:
         repository_root = Path(__file__).resolve().parents[2]
         for dockerfile in self.QUALITY_DOCKERFILES:
             content = (repository_root / dockerfile).read_text(encoding="utf-8")
-            tm.that("WORKDIR /app/flext-quality" in content, eq=True)
+            tm.ok("WORKDIR /app/flext-quality" in content)
             for install_target in self.REQUIRED_WORKSPACE_INSTALLS:
-                tm.that(install_target in content, eq=True)
+                tm.ok(install_target in content)
 
     def test_quality_dockerfiles_do_not_copy_mock_packages(self) -> None:
         """Test quality dockerfiles do not copy mock packages."""
@@ -44,4 +44,4 @@ class TestsFlextRootDockerQualityDockerfiles:
         for dockerfile in self.QUALITY_DOCKERFILES:
             content = (repository_root / dockerfile).read_text(encoding="utf-8")
             for forbidden_copy in self.FORBIDDEN_MOCK_COPIES:
-                tm.that(forbidden_copy not in content, eq=True)
+                tm.ok(forbidden_copy not in content)

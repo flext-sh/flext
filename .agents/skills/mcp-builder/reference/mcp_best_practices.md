@@ -150,7 +150,7 @@ Example pagination response structure:
 ```json
 {
   "total": 150,
-  "count": 20,
+  c.Aggregation.COUNT: 20,
   "offset": 0,
   "items": [...],
   "has_more": true,
@@ -576,7 +576,6 @@ Here's an example of implementing a basic tool in an MCP server:
     ```python
     app = Server("example-server")
 
-
     @app.list_tools()
     async def list_tools() -> list[types.Tool]:
         return [
@@ -663,7 +662,7 @@ Tools that transform or analyze data:
       operations: {
         type: "array",
         items: {
-          enum: ["sum", "average", "count"]
+          enum: [c.Aggregation.SUM, "average", c.Aggregation.COUNT]
         }
       }
     }
@@ -845,7 +844,7 @@ Here's how to define tools with annotations for different scenarios:
     properties: {
       query: { type: "string" }
     },
-    required: ["query"]
+    required: [c.HandlerMode.QUERY]
   },
   annotations: {
     title: "Web Search",

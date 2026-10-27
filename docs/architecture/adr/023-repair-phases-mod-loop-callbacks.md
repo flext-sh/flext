@@ -7,6 +7,7 @@
 - [Consequences](#consequences)
 - [Rejected alternatives](#rejected-alternatives)
 - [Verification contract](#verification-contract)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -104,3 +105,14 @@ standalone verbs.
   propagation lane (ADR-022) exercises the identical verbs in a consumer.
 - `make gen` twice is no-op on the verb projections; `make fix`, `make fmt`,
   `make check`, `make mod`, `make test` green on the changed fleet.
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Update plan/apply port and same-candidate phase
+  composition.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

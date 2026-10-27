@@ -186,9 +186,9 @@ document B to document A where it makes sense contextually.
 2. **Natural Flow**: Add reciprocal links only when they add value to the reader
 3. **Avoid Circular References**: Don't create circular link chains
 4. **Focus on Key Relationships**: Prioritize bidirectional links for:
-   - Core foundation patterns (flext-core ↔ project-specific implementations)
-   - Complementary services (flext-ldap ↔ flext-ldif)
-   - Integration patterns (flext-meltano ↔ flext-plugin)
+    - Core foundation patterns (flext-core ↔ project-specific implementations)
+    - Complementary services (flext-ldap ↔ flext-ldif)
+    - Integration patterns (flext-meltano ↔ flext-plugin)
 
 ### Example
 

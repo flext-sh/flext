@@ -7,6 +7,7 @@
 - [Consequences](#consequences)
 - [Evidence](#evidence)
 - [References](#references)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -60,7 +61,13 @@ the operator's global Mise registry.
    glibc-only binaries; no channel ships a musl build.
 3. **rumdl formats markdown.** The `markdown-format` gate runs
    `rumdl fmt --check` in `make check` and `rumdl fmt` in `make fmt`, reading
-   the same generated `.markdownlint.json` as the `markdown` gate. rumdl is
+   the same generated `.rumdl.toml` as the `markdown` gate. Both native rumdl
+   settings and the compatible `.markdownlint.json` editor projection derive
+   from `tooling.yaml`; rumdl-only rules and options never enter the latter.
+   The native configuration declares the MkDocs dialect used by the docs
+   renderer. This configuration amendment follows the October 26 operator
+   request, tracked by `flext-5nmph`; runtime acceptance is recorded separately.
+   rumdl is
    locked in `uv.lock`. The generated `.prettierrc` and `.prettierignore` are
    retired projections that `make gen` deletes. MD077, disabled only because
    prettier contradicted it, is enabled again. The two exclusions that hid the
@@ -124,3 +131,14 @@ These are dated October 8 observations, not receipts for the amended contract.
 - ADR-020 (superseded)
 - ai-hub ADR-0037 (user registry ownership)
 - [mise npm backend](https://mise.jdx.dev/dev-tools/backends/npm.html)
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Reaffirm amended contract; separate setup, locks
+  and audit.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

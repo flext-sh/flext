@@ -10,6 +10,7 @@
   - [4. No optimization may bypass gates or suppress diagnostics](#4-no-optimization-may-bypass-gates-or-suppress-diagnostics)
   - [5. Generated-artifact linting is a single batched stage, not per template](#5-generated-artifact-linting-is-a-single-batched-stage-not-per-template)
 - [Consequences](#consequences)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -125,3 +126,14 @@ generation; only the subprocess count drops.
   and plain-output fast paths automatically.
 - Future regressions in transaction time can be caught by comparing profiles using the
   protocol in `docs/standards/performance-profiling.md`.
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Preserve profile-first work and distinguish
+  publication, compensation and activation.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

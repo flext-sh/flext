@@ -23,6 +23,14 @@ environment. Do not assume another city's activation or connection settings.
 
 - Exercise only public `api.py` surfaces and canonical `c`, `t`, `p`, `m`, and `u`
   facades.
+- Follow the current source-owned signatures and return contracts. A sequence return
+  does not promise a mutable list, and a structural port exposes only its declared
+  properties. Update stale callers instead of widening production parameters.
+- Construct canonical models directly with their declared fields and collection
+  types. Keep serialization round-trips for serialization tests; do not use them,
+  unchecked copies, casts, or local conversion helpers to adapt an outdated fixture.
+- Exercise malformed external data through the public validation boundary. Keep valid
+  service calls typed, and retain their failure scenarios through real providers.
 - Project-owned helpers, including decorators, belong to the single `u` surface;
   do not introduce a competing `d`/`de` helper facade or compatibility shim.
 - Put shared setup in the unified `conftest.py` and typed fixtures under
@@ -74,14 +82,15 @@ mapping, cast, or alternate model to satisfy the checker.
 Run tests only through the dispatcher at the workspace root:
 
 ```bash
-make test
+make tests
 ```
 
-`make test` owns incremental impact selection and the project's persistent Testmon
-database, whose location the flext-infra generated configuration owns. Its collection
-inventory uses the same marker scope as execution. The runner accounts for every
-selected and deselected test; it never infers selection from console output. Never clear
-or bypass the database, or invoke the underlying runner directly.
+`make tests` executes the complete applicable suite once and retains the project's
+persistent Testmon database. It does not run an incremental suite first. The generated
+Make boundary fixes the target to the typed configuration's complete test directory;
+caller variables cannot replace it with a file or narrower directory. The runner
+accounts for collection, execution and declared exclusions through its existing typed
+receipts. Never clear or bypass the database, or invoke the underlying runner directly.
 
 The supported Testmon environment combines installed toolchain provenance with current
 `config/*.yaml` content. Declare additional template and resource directories in the
@@ -96,29 +105,15 @@ inventory contract: symbolic links and multiply linked files fail explicitly. Th
 not an unrestricted filesystem dependency scanner; declare physical source inputs and
 repair the inventory owner if a legitimate native consumer requires another shape.
 
-Run the complete suite locally through its declared verb:
+The approved Make consolidation contract supersedes the older incremental/full verb
+split. CI and pre-push also call `make tests`; pre-commit runs no tests. No compatibility
+aliases or file selectors belong to the common Make interface.
 
-```bash
-make test-full
-```
-
-The canonical test-verb law is `~/agents/rules/workflow/canonical-commands.md`.
-`make test-full` runs incremental selection and then the complete suite, including
-external and CI-excluded markers, through the same persistent Testmon cache. CI and
-pre-push use `make test`; pre-commit runs no tests. Any preceding incremental phase
-retains a separate receipt and cannot stand in for complete-suite execution. A runner
-that violates this contract is repaired at its owner, not bypassed with raw pytest.
-
-The full phase includes both configured `external-gate-markers` and
-`ci-excluded-markers`. External tests retain their declared services, network access,
-and authentication requirements. The first failure stops the sequence.
-
-Incremental execution excludes `tooling.tools.pytest.external-gate-markers`. CI uses
-the configured `make.ci.value` token and also excludes
-`ci-excluded-markers`, consistently in collection, execution, and coverage. The runner
-records these as `not_executed_external_gates` and `not_executed_ci_markers`; exclusions
-are not passed tests. Both fields are empty for the full phase. Marker policy belongs to
-the typed tooling configuration, not a separate command-line expression.
+The complete suite retains its declared services, network access and authentication
+requirements. Connectivity prerequisite skips follow root `AGENTS.md`; they never
+prove the omitted service works. Marker applicability belongs to typed configuration,
+and the runner records every excluded item. An exclusion is never a passed test. A
+runner that violates this contract is repaired at its owner and rerun through Make.
 
 Each phase retains its mode, database, raw process outcome, collection manifest, and
 diagnostics. The latest receipt names the current attempt even when collection fails.
@@ -128,10 +123,9 @@ enforcement suspension remains visible in those receipts. Unexpected skips block
 acceptance; connectivity prerequisite skips retain their explicit unavailable reason
 and never establish production readiness.
 
-Zero execution is accepted only as a typed incremental `cache_hit`: the database must
-pass integrity checks, a complete nonempty inventory must be entirely deselected, and
-there must be no failures, blocking warnings, or skips. A cache hit is never reported as
-tests passed. Empty collection or zero execution in the full phase fails.
+The persistent database remains available for impact analysis and later runs. A cache
+hit cannot replace the complete execution required by `make tests`. Empty collection
+or zero execution fails this verb.
 
 A receipt used for acceptance must identify the exact source candidate, local changes,
 installed dependencies and checker policy, command, working directory, declared scope,
@@ -170,10 +164,9 @@ scan to include submodules. A module target must resolve in exactly one selected
 Missing or ambiguous targets fail before publication, and repeated generation verifies
 the complete selected set.
 
-The root exposes `make test-file FILE=<repository-relative-path>` for one declared test
-file and `make file-gate FILE=<repository-relative-path>` for that file's static gates.
-Do not add unsupported selectors to the standard verbs. If a required workflow is
-missing, repair the root Make owner and rerun its declared verb.
+Run the declared operation without selectors. If a required workflow is missing,
+repair its existing owner and rerun the standard verb; do not introduce a parallel
+diagnostic command or revive retired aliases.
 
 ## Generated documentation
 

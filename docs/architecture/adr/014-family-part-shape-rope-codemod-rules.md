@@ -8,16 +8,17 @@
 
 - [Context](#context)
 - [Decision](#decision)
-  - [1. Family directory and part-class law](#1-family-directory-and-part-class-law)
+  - [1. Semantic facade ownership](#1-semantic-facade-ownership)
   - [2. Declarative Rope rules (one YAML file per rule)](#2-declarative-rope-rules-one-yaml-file-per-rule)
   - [3. Shared change cycle (Rope replication)](#3-shared-change-cycle-rope-replication)
   - [3b. rope-in-gen (one engine, two modes)](#3b-rope-in-gen-one-engine-two-modes)
   - [4. Centralized backup cycle](#4-centralized-backup-cycle)
-  - [5. Gate alignment (one law, two engines)](#5-gate-alignment-one-law-two-engines)
-  - [6. Three instruments and the mod/ast/gen verb taxonomy (2026-09-15)](#6-three-instruments-and-the-modastgen-verb-taxonomy-2026-09-15)
+  - [5. Gate alignment (one law, shared consumers)](#5-gate-alignment-one-law-shared-consumers)
+  - [6. Native tool responsibilities (amended by ADR-028)](#6-native-tool-responsibilities-amended-by-adr-028)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
@@ -60,27 +61,61 @@ workspace timestamped `.bak` artifacts).
 
 ## Decision
 
-### 1. Family directory and part-class law
+### 1. Semantic facade ownership
 
-1. Each package declares the five private families, each family begins with `base.py`
-   (namespace-gate law, unchanged).
-2. A family part file (any module inside a family directory) declares its part class — a
-   top-level class named `<FlextStem><FamilySuffix><Part>` — and nests its content
-   **directly**: entities only, one level deep. Entities are Pydantic models (`m.*Model`
-   presets), enums (StrEnum/Enum), protocols (`Protocol`), and behavior classes (bodies
-   containing function definitions, such as `Service`/`Transformer` helper classes).
-3. A top-level class other than the part class in a family part file is an **orphan**
-   and is forbidden: it is hoisted into the part class as a public nested entity
-   (PascalCase, underscore stripped), never kept beside an alias.
-4. A direct child of the part class that has no entity base and no function definitions
-   — a base-less, data-only or class-only grouping — is a **pure namespace wrapper** and
-   is forbidden. Its members are flattened one level up (prefix-merge on collision), and
-   the wrapper is deleted. Consumer attribute chains (`X.Wrapper.Y` → `X.Y`) are rewired
-   package-wide.
-5. Facade roots (`constants.py`, `typings.py`, `protocols.py`, `models.py`,
-   `utilities.py`) keep the canonical shape: inherit the canonical layer letter(s), nest
-   exactly one domain namespace composing at least two part classes through multiple
-   inheritance, and end with the canonical bottom alias (`c`/`t`/`p`/`m`/`u`).
+The operator's 2026-10-23 amendment replaces the numbered-part and mixin
+prescription. This is the target contract, not a claim that the fleet migration
+has already passed its runtime and native validation gates.
+
+1. Each package retains its canonical private families and `base.py` entry points.
+   Ordinary module filenames do not begin with `_`; facade-owned directories do.
+   Python protocol files retain their required names.
+2. Related declarations form a meaningful domain directory, such as `_acl`, with
+   responsibility-based modules such as `behavioral.py`, `comparator.py`,
+   `converter.py`, `events.py`, and `runtime.py`. Do not emit `_part`, `_parts`,
+   numeric chunk identities, or arbitrary collision suffixes as module owners.
+   At every nested domain level, the module basename states the remaining
+   responsibility without repeating a directory-owned prefix. For example,
+   `_rope/rope_source_bases_runtime.py` becomes `_rope/source_bases_runtime.py`;
+   `_rope/_analysis/rope_analysis_workspace.py` becomes `_rope/_analysis/workspace.py`
+   only when native identity proves one unoccupied destination. Preserve a repeated
+   word when it names a distinct domain responsibility; ambiguity fails before
+   effects rather than manufacturing another suffix.
+3. A facade imports its owned concrete subclasses or subfacades and reexports
+   only those through its canonical base-class namespace. Implementations remain
+   in their declaration owners; the facade does not duplicate their bodies or
+   introduce forwarding boilerplate. At each nested stage, callers invoke methods
+   through the nearest composed MRO facade, never through a component subclass or
+   its implementation module. A domain facade such as `_utilities/rope.py` owns
+   `_utilities/_rope/`; `utilities.py` composes that domain facade, and external
+   consumers use `u.Infra`. The [nested lazy projection](018-generator-declarations.md#nested-facade-projection)
+   preserves this boundary without lifting leaf exports into ancestors.
+   Library-owned native exports keep their existing public contracts.
+4. MRO composition joins meaningful, self-contained facades. A numbered fragment
+   relying on undeclared members of a sibling is not a facade. Do not force extra
+   bases or wrappers merely to satisfy a count. Fragments implementing the same
+   capability consolidate at one owner rather than receiving invented names to evade
+   a destination collision. The [Core failure-factory declaration](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/AGENTS.md#failure-factory-responsibility)
+   is one such case, linked back to [ADR-028 Decision 17](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17).
+5. Only an owning facade imports its internal modules. Other production modules,
+   tests, scripts, and examples consume that facade. Preserve declared dependency
+   direction and use explicit protocol injection where a runtime back-import
+   would otherwise create a cycle.
+6. Semantic rewiring updates inheritance, annotations, imports, quoted references,
+   exports, and generated surfaces together. Preserve payload behavior and intended
+   MRO; reject unresolved ownership and occupied destinations before publication.
+   Compatibility aliases and duplicate old/new owners are not migration results.
+
+The refactor and generator owners enforce this contract together. Existing symbol
+names are not renamed merely to decorate a file move; any required symbol change
+must have a semantic owner and preserve the observable consumer contract.
+Recursive generated subfacades apply to all five configured families. The native
+source identity elects an existing domain composition before deriving a missing
+sibling declaration; a meaningful MRO owner is not duplicated merely to match a
+directory's spelling. Children are planned before their owning facade, and their
+lazy projections, native source moves and dependent imports share one authenticated
+candidate and publisher. Convergence is a source fixed point, not a limit derived
+from the number of facade families.
 
 ### 2. Declarative Rope rules (one YAML file per rule)
 
@@ -131,20 +166,29 @@ unrelated homonyms retain their names.
 
 ### 3b. rope-in-gen (one engine, two modes)
 
-The Rope engine is a single engine with two invocation modes, and `make gen` is the only
-writer of generated projections (operator ruling 2026-09-15, plan-of-record
-`rope-gen engine strict/total init`, Bead `flext-crd1y`):
+The 2026-09-15 operator ruling (plan-of-record `rope-gen engine strict/total init`,
+Bead `flext-crd1y`) established one shared engine. Its gen-only projection-writer
+restriction is superseded by the current root
+[operation-ownership contract](../../../AGENTS.md#build--test) and
+[Make guide](../../guides/make-commands.md#operation-ownership), reconciled here on
+2026-10-26: `gen` and `mod` complete their own dependent projections through the
+same typed planner and publisher, without recursively invoking another public verb.
+This alignment records the target contract, not completed implementation, runtime
+acceptance or fleet rollout.
 
 1. **One engine.** The Rope change primitives (`FlextInfraUtilitiesRopeRuntime` /
    refactor / `_utilities/rope_*`) are the shared motor. There is no second engine and
    no reimplemented lazy-init.
-2. **Two modes.** `codegen init` (strict/total package init) and `conform` (structural
-   family repair) both drive the same engine; `make mod` remains the ad-hoc structural
-   circuit that consumes the same primitives.
-3. **gen is the projection owner.** lazy-init re-generation lives INSIDE `make gen`.
-   Every generated facet export surface is authored exclusively by gen; hand-written
-   split output is adoption input, never authority — when gen renders a divergent
-   result, gen wins and the render is re-proven.
+2. **Shared engine, distinct operations.** The historical `codegen init` and `conform`
+   modes do not establish a second public lifecycle. Generation renders current
+   declarations; `make mod` owns semantic and structural rewiring. Each uses the
+   existing shared primitives within its declared operation.
+3. **One projection owner and publisher.** Generated facets and lazy exports remain
+   owned by their generator declarations and templates. Both `gen` and `mod` use
+   that owner to publish the projections required by their own coherent change;
+   neither calls the other public verb. Hand-written split output is adoption
+   input, never authority. Divergence is repaired at the canonical source and
+   re-proven, not patched by a competing projection writer.
 4. **Strict/total init.** Generated `__init__` exports are the ordered union of the
    sibling parts' `__all__`: a sibling without `__all__` emits warning `GEN-W001`; a
    stale `__all__` (export listed but absent from the sibling) is an error (`GEN-E001`)
@@ -162,8 +206,12 @@ writer of generated projections (operator ruling 2026-09-15, plan-of-record
    single receipt (findings + timings). A mid-publication failure reverse-applies only
    the effects of its own invocation (empty diff post-rollback is the criterion), for
    gen and fix alike.
-8. **Gate before the fleet.** The engine touches no fleet member before the external
-   standalone cobaias prove it green ×2 (cosmos-docgen first, then `agents_governance`).
+8. **Runtime admission before rollout.** The approved campaign selects its real
+   consumers and dependency-closed batches. The 2026-10-26 convergence plan
+   (`flext-ag9fw`, related `flext-s9r3a`) supersedes the historical fixed external
+   pilot order: prove each exact candidate through its selected public consumer,
+   required gates and unchanged-input fixed point before dependent rollout.
+   Discovering another external consumer does not authorize modifying it.
 
 ### 4. Centralized backup cycle
 
@@ -172,28 +220,32 @@ cycle `FlextInfraUtilitiesSafety.execute_safely` (backup → transform → valid
 cleanup | rollback). Ad-hoc write paths, private backup schemes, and repository-wide
 rollback remain forbidden.
 
-### 5. Gate alignment (one law, two engines)
+### 5. Gate alignment (one law, shared consumers)
 
-The namespace validator (`validate/_namespace_rules`) enforces the same two laws at
-`make check` time — orphan top-level classes and pure namespace wrappers in family part
-files — with message text consistent with the rule files, so detection-only and
-check-time findings never diverge. Canonical platform exceptions stay encoded once
-(`NAMESPACE_PLATFORM_FACADE_SINGLETONS`, `cli.py` `main` entrypoint, `api.py`
-composition-root singleton).
+> **Amended by [ADR-028 Decision 5](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-5)
+> and [Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18)
+> (2026-10-25):** this section's former
+> "one law, two engines" description is superseded. A static law has one declarative
+> owner in flext-infra's rule catalog; apply and detection routes consume that owner.
+> Independently maintained detector logic for the same law is a duplicate to retire.
+> This accepted target does not claim that the migration from every legacy source is
+> complete; the current owner-claim census and cutover evidence remain in Bead
+> `flext-43iz8`.
 
-### 6. Three instruments and the mod/ast/gen verb taxonomy (2026-09-15)
+### 6. Native tool responsibilities (amended by ADR-028)
 
-Only three instruments impose structural law: **rope** (semantic), **make mod**
-(ast-grep YAML + parameterized sed-by-list), and **config rows** (detection and policy).
-Python rewrite engines (`re`/`ast`/`libcst`/`tokenize`) are exterminated, never
-encapsulated; consumers rewire to the three instruments. Verb taxonomy: `mod` is the
-single modernize surface; `ast` is the ast-grep engine (phase 1 of `mod`; a standalone
-`ast` verb is planned, not yet public); `gen` is the template generator sharing the same
-rope planners. Rules and parameters live as data under `config/rules/{mod,ast,rope}/`
-(ADR-017). Execution runs in a dedicated complete-superproject worktree aligned to the
-integration tip; every sync is a `--no-ff` merge in each touched project (never
-rebase/reset/stash); landing is a scoped commit -> fast-forward push -> PR -> `--no-ff`
-integration merge. The extermination ledger is tracked by the program beads (W-waves).
+> **Amended by [ADR-028 Decision 15](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15),
+> [Decision 17](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17),
+> and [Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18)
+> (2026-10-25):** the 2026-09-15
+> "three instruments" taxonomy and its blanket ban on Python parsing/rewriting
+> mechanisms are historical, not current policy. Use the repository-scoped native
+> workspace model and its refactorings wherever they express the operation; use one
+> generalized declarative rule per law; retain separate tools only for distinct
+> capabilities that the workspace model does not provide. Remove duplicated custom
+> analysis and refactoring, not unrelated native functionality. The current cutover and
+> zero-residue evidence are tracked by `flext-1engx.15`; this amendment is not proof of
+> implementation completion.
 
 **Execution authority (2026-09-17):** Gas City Bead `flext-itpd1.2` owns the live
 structural-rewrite state; the versioned recovery contract is this ADR plus
@@ -216,7 +268,7 @@ evidence, not published authority.
 - `make mod` reaches the guarded fixed point with zero pending findings on the target
   member.
 - `make check` passes the namespace and codemod gates on the member with the family law
-  active; `make test` stays green through the canonical testmon cache.
+  active; `make tests` stays green through the canonical testmon cache.
 - `make gen` proves the generation fixed point after any export-affecting move; zero
   residue (no `.bak`, no orphan files) remains in the tree.
 
@@ -230,3 +282,14 @@ evidence, not published authority.
   `codemod/batch_apply.py`, `codemod/semantic_apply.py`, `codemod/sgconfig.yml`,
   `_utilities/safety.py`, `_utilities/rope_core.py`, `_utilities/rope_class_move.py`,
   `_utilities/namespace_moves.py`.
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition for the unified 0.13 plan: Preserve MRO/families and unique names; correct
+  atomicity and manual-catalog promises.
+- This note records planning reconciliation only. It does not change the ADR's recorded
+  maturity, implementation status, or acceptance evidence.
+- Future 0.13 API/ecosystem migration remains gated by `flext-ik359` (publication
+  `flext-1wjg1` plus separate authorization) and approval of the documented contracts
+  and consumer migration matrix. Current 0.12 validation, bug fixes and documentation
+  continue under their owners; the ADR's proposal/status is unchanged.

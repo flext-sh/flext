@@ -17,20 +17,27 @@ external projects
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
+- [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
 
 <!-- TOC END -->
 
-- **Status:** ACCEPTED TARGET — planning, targets the `0.20.0-dev` line
+- **Status:** ACCEPTED TARGET — planning, retargeted to the unified `0.13.0` plan;
+  not an implementation receipt
 - **Date:** 2026-07-18
-- **Target line:** FLEXT `0.20.0-dev`, an early development and planning branch. This
-  coordination contract is the forward target for `0.20.0-dev`; it does not retro-fit
-  the `0.12.0-dev` release line, whose critical fixes stay separate.
+- **Planning reconciliation:** 2026-10-20 (documentation only).
+- **Target line:** FLEXT `0.13.0`. This coordination contract is forward work, not a
+  retrofit or acceptance prerequisite for the `0.12.0-dev` release line.
+- **Historical origin:** Accepted planning for `0.20.0-dev`. That original target is
+  retained as provenance, not a second active delivery line or proof of implementation.
 - **Scope:** Coordination contract for the whole Cosmos ecosystem: FLEXT packages
   (`flext-core`, `flext-cli`, `flext-infra`, and the rest) plus the independent external
   applications `cosmos-docgen`/`dcdoc`, DataOP, and DcBackup, and the external platforms
   they integrate with.
-- **Tracking:** `mro-ib6t` (FLEXT boundaries) plus the ecosystem-coordination epic and
-  children created for this ADR, all labelled `branch:0.20.0-dev`.
+- **Tracking:** The supplied 2026-10-20 tracker evidence identifies `flext-ik359` as the
+  open 0.13 gate epic, waiting for `flext-1wjg1` publication and separate authorization.
+  Historical boundary references (`mro-ib6t` and its children) remain traceability
+  pointers; their current status, labels and canonical-store mapping are not revalidated
+  by this edit. No tracker records are changed here.
 - **Complements:** ADR-002 (v0.13.0 baseline), ADR-003 (topology), ADR-004
   (Make/codegen), ADR-005 (config/settings SSOT), ADR-008 (neutral consumer boundaries).
 
@@ -56,10 +63,13 @@ ADR-008 already fixed the neutral-boundary rules FLEXT itself must honor. This A
 the coordination view: which project owns what, in which order actions run, how the
 still-open libraries are evaluated, and the gate any new `flext-*` package must pass.
 
-Timing: `0.20.0-dev` is at the start of development and planning. This ADR is therefore
-a forward planning contract. Coordination targets, the static-consumer docs mode, the
-Office boundary completion, and every open-library evaluation are implemented on the
-`0.20.0-dev` line; nothing here forces changes onto the `0.12.0-dev` release line.
+Timing: the original `0.20.0-dev` planning is now reconciled into the single 0.13 target.
+Coordination flow, static-consumer docs mode and Office boundary completion remain
+forward contracts until their individual acceptance evidence exists. Retargeting does
+not establish that they are implemented, deployed or published, and does not reset the
+rejected/deferred library verdicts below. Existing Office adapters or docs tooling do
+not by themselves prove the completion capability described here. The 0.12 release
+continues to validate its existing public surface and runtime separately.
 
 ## Decision
 
@@ -74,12 +84,15 @@ Office boundary completion, and every open-library evaluation are implemented on
 
 ### 2. Dependency direction is one-way and enforced
 
+This is the required dependency contract, not a fresh claim that every consumer passes
+its enforcement gates.
+
 ```text
 dcdoc / DataOP / DcBackup ---> flext-cli ---> flext-core
 flext-infra --------------------> flext-cli / flext-core
 ```
 
-Forbidden, and verified by the ADR-008 gates:
+Forbidden; acceptance requires evidence from the ADR-008 gates:
 
 ```text
 any flext-* -X-> dcdoc / cosmos-docgen / dataop / dc_backup
@@ -105,6 +118,10 @@ manifests, APIs, events, and an external orchestrator.
 | Portal/DMS/catalog                                                          | Backstage, XWiki, PipesHub, Drive (external) | Consume static output/artifacts by contract |
 
 ### 4. Coordination flow across all projects
+
+The following is the target process composition, not a deployment or end-to-end runtime
+receipt. Each owner must prove its step and the exchanged artifact before the complete
+chain can be described as working.
 
 ```text
 Airflow / operator / CI
@@ -183,12 +200,21 @@ create a package.
 
 ## Verification contract
 
-1. ADR-008 reverse-dependency gate stays green across every `flext-*` package.
+These are required receipts, not results produced by this documentation reconciliation:
+
+1. ADR-008 reverse-dependency gates pass across every in-scope `flext-*` package on the
+   identified integrated candidate, with commands, working directories, exits and scope.
 2. The coordination document `docs/architecture/ecosystem-coordination.md` stays
    consistent with this ADR and each owner-local ADR.
 3. Each open-library candidate has a Bead recording its verdict and trigger.
 4. No new `flext-*` package lands without a recorded two-consumer, deletion-positive
    extraction proof.
+5. Static-consumer docs mode has a real non-FLEXT consumer receipt; Office completion
+   has real plan-to-byte and consumer-open/read evidence for the claimed formats.
+   Existing implementations are inventoried before any completion or removal claim.
+6. Target flow, deployment and publication claims identify the producer/consumer
+   versions, artifact identities, authorization and observed outcomes. Current CI or
+   0.12 publication cannot be inferred from this ADR or historical receipts.
 
 ## References
 
@@ -197,3 +223,20 @@ create a package.
 - Cosmos ADR-020 (`dcdoc-bhg1`)
 - DataOP ADR-001 (`data-organization-pipeline-4dt`)
 - DcBackup ADR-001 (`datacosmos-backup-o6w`)
+
+## 0.13 unified planning reconciliation (documentation only)
+
+- Disposition: explicit historical 0.20 -> single 0.13 retargeting, preserving
+  ACCEPTED TARGET maturity and every accepted-to-build, rejected, conditional or
+  deferred verdict. No capability is promoted to implemented by this edit.
+- Static-consumer docs mode and Office-byte completion are accepted future features;
+  the proposed core namespace/root-alias migration is a separate 0.13 contract decision,
+  not an additional 0.12 prerequisite or a feature delivered by this ADR.
+- The reported forward gate `flext-ik359` remains open, awaiting the 0.12 publication
+  dependency and separate authorization. Approval of the applicable 0.13 contracts and
+  consumer migration matrix is required before that migration; this is not a blanket
+  ban on authorized 0.12 fixes or documentation reconciliation.
+- The companion [ecosystem coordination document](../ecosystem-coordination.md) still
+  records the historical 0.20 target and branch-label assertion. Those statements are
+  unreconciled historical text, not evidence of a second active target or current
+  tracker labels; its owner must align it before claiming cross-document consistency.

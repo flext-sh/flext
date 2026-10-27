@@ -2,6 +2,8 @@
 
 <!-- TOC START -->
 
+- [Current authoritative decisions](#current-authoritative-decisions)
+  - [ADR-028 Decision Links](#adr-028-decision-links)
 - [(a) Canonical cycle](#a-canonical-cycle)
 - [(b) Central Beads contract](#b-central-beads-contract)
 - [(c) Integration](#c-integration)
@@ -15,6 +17,78 @@ The dated status and checkpoints below are historical evidence, not current runt
 queue, ownership, or gate receipts. Current execution follows the branch-matched law
 and the active Bead; historical selectors and manual repair approaches do not override
 the canonical cycle.
+
+## Current authoritative decisions
+
+The common contract reconciled on 2026-10-25 is recorded in `flext-itpd1.17`.
+The three recovered Claude plans and 327 private memory files are dated evidence;
+their old execution recipes do not override the decisions below. The consulted Codex
+memory store contained no prior entries. Private transcripts and raw memory payloads
+remain outside published documentation.
+
+The Bead now records the original session identifiers, captured plan locators,
+interaction boundaries and UTF-8 text digests recovered from the preserved initial
+analysis. Two captured plan files differ from their last `ExitPlanMode` payload;
+those revisions remain distinct, and the later copies are not presumed approved.
+This historical capture has no receipt from the currently required authenticated
+session adapter. Identified provenance does not certify a new extraction or close
+the reconciliation delivery.
+
+| Current decision | Origin and date | Scope and superseded instruction | Canonical owner |
+| --- | --- | --- | --- |
+| Preserve member dependency and tool locks; compose the workspace lock | Operator ruling `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`, 2026-10-25 | Replaces root-only lock deletion. Only `upg` has the editable-checkout/gitlink consistency guard; ordinary work accepts shared WIP. The guard is an accepted target until implementation is proven. | [ADR-030](../architecture/adr/030-member-locks-composition-upg-guard.md) |
+| Mark deprecated signatures until all consumers migrate | Operator ruling `operator-ruling-2026-10-24-deprecated-signature-window`, 2026-10-24 | Replaces immediate public-signature deletion. Delegation retains no old implementation; removal requires the complete external and fleet census. New DI-only boundaries still apply. | [ADR-028 Decision 7](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7) and the canonical global zero-residue rule |
+| Preserve shared work and publish complete green slices | Current operator shared-worktree contract and no-incomplete-pushes order, 2026-10-24/25 | Replaces clean-tree admission, rollback and incomplete working-branch publication. Only the ADR-030 upgrade guard requires its scoped committed state. | Root [AGENTS.md](../../AGENTS.md), [ADR-029](../architecture/adr/029-always-working-one-complete-cycle.md), and global fix-forward/Git owners |
+| Static enforcement belongs to Infra | Operator order `operator-order-2026-10-25-core-static-enforce-off`, 2026-10-25 | Replaces import/definition-time static enforcement in Core. This is the required boundary, not a claim that migration is complete. | [ADR-028 Decision 5](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-5); Infra enforcement owner, tracked by `flext-43iz8` |
+| Inject generic capabilities and isolate dialects | Operator DI/dialect and maximum-decoupling orders, 2026-10-25 | Replaces server-name registries, concrete client construction in services and library-named consumer contracts. Preserve the validated external ACL receiver exception until semantic/golden proof. | [ADR-028 Decision 15](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15), [Decision 16](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16), composition roots and the receiver's scoped law |
+| Reuse native analysis and refactoring through existing adapters | Operator native-tool and generalized-rule orders, reaffirmed 2026-10-25 | Replaces duplicate parses, indexes and walkers where native equivalence is proven. Native model availability alone proves neither dynamic identity nor Python C3 correctness. Count and consolidate rules without narrowing coverage. | [ADR-028 Decision 17](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17); implementation and proof remain in [Infra execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine) and `flext-1engx.15`. [Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) is implemented through the shared rule guide. ADR-014 and ADR-017 are subordinate where their older implementation text conflicts. |
+| Align authorities before code and validate embedded code | Operator docs-first/embedded-code orders, 2026-10-25 | Read memory, AGENTS, docs, ADRs, rules, skills and Beads before implementation. Markdown/docstring code receives the same applicable native source gates. Proposed ADRs remain proposals. | Canonical global documentation owners and each project's documentation generator |
+| Prove global Ruff, Pyrefly and Pytest acceptance before advancing | Direct operator order extended to Pytest, 2026-10-26 | No advance with any Ruff, Pyrefly or Pytest error. Evaluate the complete declared scope, preserve strict typing from its origin, and repair the causal owner. Pytest always uses Testmon and its persistent external database; repeated whole-suite runs and deadline inflation do not repair slowness. A configured project result, filtered input set or interrupted evaluation does not prove global acceptance. | Current native checker, Testmon and scope owners; execution evidence in `flext-itpd1.17` and consumer Beads |
+| Preserve derived lazy package exports on every Python edit | Direct operator order, 2026-10-26 | Inspect the module's `__all__`, its owning `__init__.py` and the canonical generator before changing Python. Keep lazy imports derived from those exports; do not hand-maintain a competing index. Unit-test modules are exempt from this package-export requirement, not from lint or typing. | Topic-owning accepted facade/generation ADRs, each package's export declarations and the existing generator |
+
+### ADR-028 Decision Links
+
+| Decision | Corresponding current-decision ledger section |
+| --- | --- |
+| [ADR-028 Decision 5](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-5) | [Current authoritative decisions](#current-authoritative-decisions): Static enforcement belongs to Infra |
+| [ADR-028 Decision 7](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7) | [Current authoritative decisions](#current-authoritative-decisions): Mark deprecated signatures until all consumers migrate |
+| [ADR-028 Decisions 15–16](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15) | [Current authoritative decisions](#current-authoritative-decisions): Inject generic capabilities and isolate dialects |
+| [ADR-028 Decisions 17–18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17) | [Current authoritative decisions](#current-authoritative-decisions): Reuse native analysis and refactoring through existing adapters |
+
+Provider-neutral skills, roles, rules and evaluations are authored in `~/agents/`
+and projected through the existing publisher. FLEXT contributes its local delta;
+its 60-second verb deadline and subsecond loading contract are not global defaults.
+The stabilization owner supplies the integrated runtime/toolchain/CI matrix before the
+long refactor is admitted. Consumer evidence supplements that matrix; it cannot replace
+the producer handoff or close the neutral ACL epic `flext-ejsdr`.
+
+The 2026-10-26 Ruff, Pyrefly and Pytest prerequisite covers the workspace root,
+declared members and consumers in the active scope, each under its own native
+configuration and dependency origins. Record the elected universe and account for
+exclusions before claiming global acceptance. Missing project rows or hidden
+first-party fixtures leave this prerequisite unproven even when the completed rows
+report zero diagnostics. Evaluate Ruff and Pyrefly first, then complete the
+remaining required `check` gates, including Mypy, before admitting Pytest through
+its same-scope green-check receipt. Those checks and their repairs belong to this
+prerequisite; they are not a later phase blocked by the tests they must admit.
+Keep setup changes and the deferred refactor pending until the global prerequisite
+is satisfied.
+Keep each tool's raw exit and findings distinct from its gate verdict. An
+authenticated, identity-specific exception is recorded as that explicit
+disposition; a gate that accepts it does not establish zero native findings.
+Do not broaden or remove the exception policy to manufacture a zero count.
+Reuse the originating strict contracts. Extend, improve or generalize them at their
+canonical owner when needed, then propagate the change to consumers; do not create
+local replacement contracts to obtain a passing checker result.
+Pytest retains the same canonical external Testmon database across successful and
+failed runs. Record collection, selection, execution and deselection separately;
+an integrity-checked cache hit with complete accounting is a cache hit, not a
+claim that tests ran and passed. Incremental dependency selection preserves the
+global declared inventory, including its applicable external and slow tests;
+it does not authorize narrowing markers or dropping the check admission guard.
+Profile slow collection, fixtures and execution before changing their owners;
+never remove Testmon, reset its database or raise
+the deadline to obtain acceptance.
 
 > **Status (2026-09-20):** `make gen` reaches a green fixed point across the fleet
 > (32/32; landed fixes: 31 `config/workspace.yaml` identity manifests, bare-deps render
@@ -31,23 +105,13 @@ the canonical cycle.
 
 ## (a) Canonical cycle
 
-After provisioning and applying the changed slice, exercise its real public consumer
-before static gates and tests. Complete the applicable native cycle on that candidate:
-
-```bash
-make setup
-make gen
-make mod
-make gen
-make gen
-make fix
-make fmt
-make docs
-make check
-make smells
-make test
-make build
-```
+Align the authorities above, provision only when required, and exercise the real public
+consumer before static gates and tests. Resolve operations from the current native
+root Make catalog. The approved slice sequence is `gen` → `fmt` → `fix` → `mod` →
+`check` → `tests`, followed by applicable build and integrated consumer proof. Explicit
+generation convergence and documentation operations use their current declared owner;
+historical `test`, `docs` or selector spellings do not establish an available command.
+The bounded `flext-0029c` public-CLI route follows the exception in root AGENTS.md.
 
 One failure → fix the verb owner; no timeout inflation; no testmon removal. Run the
 verbs without selectors at the active workspace root. Documentation corrections follow
@@ -64,9 +128,9 @@ published SHAs.
 
 Pydantic 2 and the Mypy `pydantic.mypy` plugin are mandatory. The operator's scoped
 exception suspends only `prop-decorator` and `call-arg`; it does not waive the remaining
-lint or type gates. Code changes made to work around either diagnostic are regressions
-and must be reverted surgically after causal-hunk review and real-consumer validation,
-by the existing policy and regression owners. The source contract and authorization
+lint or type gates. Code changes made to work around either diagnostic are regressions.
+Review their causal hunks and correct them through the existing policy and regression
+owners, preserving shared work and proving the real consumer. The source contract and authorization
 are recorded in `flext-2guq8`; generated configurations
 must reflect their canonical policy owner rather than being patched at consumers.
 

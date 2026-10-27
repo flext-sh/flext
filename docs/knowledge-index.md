@@ -49,7 +49,7 @@ standards. These are hand-written and reviewed.
 | Code Communities   | [architecture/communities/index.md](architecture/communities/index.md)       | CRG community wiki index                          |
 | Guides Index       | [guides/README.md](guides/README.md)                                         | Workflow, migration, day-to-day guides            |
 | Standards          | [standards/README.md](standards/README.md)                                   | Cross-workspace authoring standards               |
-| Governance         | [GOVERNANCE.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md) | Active rule routing and validation surfaces       |
+| Governance         | [GOVERNANCE.md](../../AGENTS.md) | Active rule routing and validation surfaces       |
 | Version Policy     | [version-policy.md](version-policy.md)                                       | Versioning and release policy                     |
 
 ### 2. Community Wiki (CRG)

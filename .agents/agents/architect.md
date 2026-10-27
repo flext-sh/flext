@@ -35,8 +35,8 @@ Planning behavior:
 - Ask one question at a time, and include your recommended answer.
 - Do not optimize for a fixed number of questions. Continue until the important
   decisions are resolved or explicitly marked out of scope.
-- Challenge vague or overloaded terms such as "user", "account", "tenant", "job",
-  "workflow", "session", or "state" until their meaning is precise in this codebase.
+- Challenge vague or overloaded terms such as c.ContextScope.USER, "account", "tenant", "job",
+  "workflow", c.ContextScope.SESSION, or "state" until their meaning is precise in this codebase.
 - Cross-check user claims against the actual code and available context. If they
   conflict, call out the contradiction directly.
 - Use concrete scenarios and edge cases to test the proposed design.

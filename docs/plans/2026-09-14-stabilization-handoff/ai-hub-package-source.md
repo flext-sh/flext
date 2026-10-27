@@ -61,39 +61,39 @@ ai-hub.
    `supported_events`, mas nenhum adapter o assina. Trocar de repositório dentro da
    sessão nunca recarrega o ambiente.
 3. **Ninguém grava o ambiente da sessão:**
-   - O Claude Code expõe `CLAUDE_ENV_FILE` apenas a processos de hook
-     `SessionStart`/`Setup`/ `CwdChanged`/`FileChanged` e aplica esse arquivo aos
-     comandos Bash seguintes (confirmado no binário instalado 2.1.269).
-   - A cadeia `SessionStart` em `config/hooks.yaml:1636-1638`
-     (`ccg_hooks.session_start_with_core`, `governance_capsule.session_start`) só injeta
-     contexto.
+    - O Claude Code expõe `CLAUDE_ENV_FILE` apenas a processos de hook
+      `SessionStart`/`Setup`/ `CwdChanged`/`FileChanged` e aplica esse arquivo aos
+      comandos Bash seguintes (confirmado no binário instalado 2.1.269).
+    - A cadeia `SessionStart` em `config/hooks.yaml:1636-1638`
+      (`ccg_hooks.session_start_with_core`, `governance_capsule.session_start`) só injeta
+      contexto.
 4. **A fronteira certa já existe:** `AiHubHookClient.run_cli`
    (`src/ai_hub/services/hook_client.py:88-149`) roda **dentro do processo do cliente**
    lançado pelo Claude, com `payload.cwd` e o ambiente do agente.
-   - O daemon (socket `settings.AiHub.hooks.socket_path`) não enxerga `CLAUDE_ENV_FILE`.
-   - Precedente de leitura de ambiente nativo nessa mesma fronteira:
-     `hook_client.py:111-125` (`hook_project_root_env`).
+    - O daemon (socket `settings.AiHub.hooks.socket_path`) não enxerga `CLAUDE_ENV_FILE`.
+    - Precedente de leitura de ambiente nativo nessa mesma fronteira:
+      `hook_client.py:111-125` (`hook_project_root_env`).
 5. **opencode:** `config/opencode.yaml:10` instala `@simonwjackson/opencode-direnv`, que
    é fail-open.
-   - Um `.envrc` bloqueado vira só um toast; os demais erros são engolidos.
-   - Roda uma única vez por `session.created`.
+    - Um `.envrc` bloqueado vira só um toast; os demais erros são engolidos.
+    - Roda uma única vez por `session.created`.
 6. **Kilo:** não tem mecanismo. **Codex:** nenhum mecanismo documentado confirmado
    localmente (`shell_environment_policy` é estático).
 
 ## 3. Mudança (um dono, sem daemon)
 
 1. **`config/agents.yaml`, engine do Claude:**
-   - Declarar a variável do arquivo de ambiente, por exemplo
-     `engine.hook_env_file_var: CLAUDE_ENV_FILE`, tipada no modelo do engine de agente
-     (mesmo padrão de `hook_project_root_env`).
-   - Adicionar o adapter `cwd-changed` (`events: [CwdChanged]`,
-     `command_template: ai-hub-hook`, `protocol: json`) ao lado de `session-start`.
+    - Declarar a variável do arquivo de ambiente, por exemplo
+      `engine.hook_env_file_var: CLAUDE_ENV_FILE`, tipada no modelo do engine de agente
+      (mesmo padrão de `hook_project_root_env`).
+    - Adicionar o adapter `cwd-changed` (`events: [CwdChanged]`,
+      `command_template: ai-hub-hook`, `protocol: json`) ao lado de `session-start`.
 2. **`hook_client.run_cli`:** para `SessionStart` e `CwdChanged`, quando o engine
    declara `hook_env_file_var` e a variável está definida, antes do dispatch ao daemon:
-   - Executar o `direnv` instalado (binário do dono `host_runtime`) como
-     `direnv export bash` com `cwd=payload.cwd`.
-   - Anexar o stdout ao arquivo apontado pela variável.
-   - Usar o dono de subprocesso existente (`u.AiHub`/`u.Cli`); nenhum helper novo.
+    - Executar o `direnv` instalado (binário do dono `host_runtime`) como
+      `direnv export bash` com `cwd=payload.cwd`.
+    - Anexar o stdout ao arquivo apontado pela variável.
+    - Usar o dono de subprocesso existente (`u.AiHub`/`u.Cli`); nenhum helper novo.
 3. **Falha declarada, nunca silenciosa:** `.envrc` bloqueado ou `direnv` com erro vira
    `system_message` no `HookDecision`, com o caminho e o stderr. Sem skip e sem
    fallback.
@@ -101,14 +101,14 @@ ai-hub.
    fato os hooks gerenciados (SessionStart e CwdChanged incluídos). A segunda execução
    não pode mudar bytes.
 5. **Demais provedores:**
-   - opencode/Kilo: substituir o plugin fail-open por um mecanismo do dono ai-hub com a
-     mesma semântica (recarrega no cwd da sessão, falha visível).
-   - Codex: só se houver mecanismo documentado; senão registrar `NOT SUPPORTED` com a
-     referência da documentação.
+    - opencode/Kilo: substituir o plugin fail-open por um mecanismo do dono ai-hub com a
+      mesma semântica (recarrega no cwd da sessão, falha visível).
+    - Codex: só se houver mecanismo documentado; senão registrar `NOT SUPPORTED` com a
+      referência da documentação.
 6. **Fora deste pacote:** a confiança `direnv allow` de worktrees novas pertence ao
    caminho que cria a worktree.
-   - A parte do flext-infra (`.envrc.j2` e bootstrap) está sendo feita na sessão flext
-     (P-1b/P-1c).
+    - A parte do flext-infra (`.envrc.j2` e bootstrap) está sendo feita na sessão flext
+      (P-1b/P-1c).
 
 ## 3b. Defeito adicional encontrado: projeções de governança commitadas com marcadores
 

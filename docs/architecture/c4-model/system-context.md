@@ -104,57 +104,57 @@ graph TB
 
 1. **Data Engineers**
 
-   - Configure and manage data pipelines
-   - Monitor data quality and processing
-   - Troubleshoot integration issues
+    - Configure and manage data pipelines
+    - Monitor data quality and processing
+    - Troubleshoot integration issues
 
 2. **System Administrators**
 
-   - Deploy and maintain FLEXT infrastructure
-   - Manage security and access controls
-   - Monitor system health and performance
+    - Deploy and maintain FLEXT infrastructure
+    - Manage security and access controls
+    - Monitor system health and performance
 
 3. **Business Users**
 
-   - Access integrated data through APIs
-   - View data quality reports
-   - Request new data sources
+    - Access integrated data through APIs
+    - View data quality reports
+    - Request new data sources
 
 4. **Developers**
-   - Extend FLEXT with custom plugins
-   - Integrate FLEXT with existing systems
-   - Develop custom data transformations
+    - Extend FLEXT with custom plugins
+    - Integrate FLEXT with existing systems
+    - Develop custom data transformations
 
 ### External Systems
 
 1. **LDAP Systems**
 
-   - Active Directory
-   - OpenLDAP
-   - Other LDAP-compliant directories
+    - Active Directory
+    - OpenLDAP
+    - Other LDAP-compliant directories
 
 2. **Oracle Systems**
 
-   - Oracle Database
-   - Oracle WMS (Warehouse Management)
-   - Oracle OIC (Integration Cloud)
+    - Oracle Database
+    - Oracle WMS (Warehouse Management)
+    - Oracle OIC (Integration Cloud)
 
 3. **File Systems**
 
-   - LDIF files for LDAP data
-   - CSV/JSON files for data exchange
-   - Configuration files
+    - LDIF files for LDAP data
+    - CSV/JSON files for data exchange
+    - Configuration files
 
 4. **Monitoring Systems**
 
-   - Prometheus for metrics collection
-   - Grafana for visualization
-   - Alerting systems
+    - Prometheus for metrics collection
+    - Grafana for visualization
+    - Alerting systems
 
 5. **Security Systems**
-   - OAuth2/OIDC providers
-   - SAML identity providers
-   - Certificate authorities
+    - OAuth2/OIDC providers
+    - SAML identity providers
+    - Certificate authorities
 
 ## System Responsibilities
 
@@ -162,37 +162,37 @@ graph TB
 
 1. **Data Integration**
 
-   - Extract data from multiple sources
-   - Transform data according to business rules
-   - Load data into target systems
-   - Ensure data quality and consistency
+    - Extract data from multiple sources
+    - Transform data according to business rules
+    - Load data into target systems
+    - Ensure data quality and consistency
 
 2. **Pipeline Orchestration**
 
-   - Schedule and execute data pipelines
-   - Handle dependencies between tasks
-   - Provide retry and error handling
-   - Monitor pipeline execution
+    - Schedule and execute data pipelines
+    - Handle dependencies between tasks
+    - Provide retry and error handling
+    - Monitor pipeline execution
 
 3. **Data Quality Management**
 
-   - Validate data against schemas
-   - Detect and report data anomalies
-   - Provide data lineage tracking
-   - Generate quality reports
+    - Validate data against schemas
+    - Detect and report data anomalies
+    - Provide data lineage tracking
+    - Generate quality reports
 
 4. **Security and Compliance**
 
-   - Authenticate users and systems
-   - Authorize access to data and functions
-   - Encrypt data in transit and at rest
-   - Audit all data access and modifications
+    - Authenticate users and systems
+    - Authorize access to data and functions
+    - Encrypt data in transit and at rest
+    - Audit all data access and modifications
 
 5. **Monitoring and Observability**
-   - Collect metrics and logs
-   - Provide health checks and status
-   - Generate alerts for issues
-   - Support distributed tracing
+    - Collect metrics and logs
+    - Provide health checks and status
+    - Generate alerts for issues
+    - Support distributed tracing
 
 ## Quality Attributes
 
