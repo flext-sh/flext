@@ -74,8 +74,8 @@ candidate; acceptance never proves fleet stability.
   — **ACCEPTED TARGET** (`make mod` wired; `flext-infra/config/rules/mod/` exists;
   distribution/migration acceptance remains unproved)
 - [ADR-018: Generator Declarations Law](018-generator-declarations.md) — **ACCEPTED**
-  (operator law 2026-09-20; rule owner: global governance rule
-  `flext/generator-declarations` in the `agents-governance` catalog; phased under
+  (operator law 2026-09-20; authority routing reconciled 2026-10-26: branch-matched
+  ADR-018 and local FLEXT law, not the retired global copy; phased under
   `flext-0in0k`)
 - [ADR-019: Service Contract — Protocol Ports, Explicit Composition Root, Typed Operations](019-service-contract-ports-operations.md)
   — **PROPOSED** (operator-approved plan V8, 2026-09-25; phased under `flext-4jtcb`)

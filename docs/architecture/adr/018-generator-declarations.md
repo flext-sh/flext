@@ -21,10 +21,13 @@
 - **Complements:** ADR-010 (standardization via codegen), ADR-014 (family shape +
   codemod rules), ADR-017 (parametrized rule surfaces). Supersedes every filename→letter
   table, closed folder list and advisory-gate list those ADRs tolerated.
-- **Rule owner:** global governance rule `flext/generator-declarations` in the
-  `agents-governance` catalog (projected to every provider; referenced by governance
-  identity, never by a machine-local path). This ADR records the decision; the rule is
-  the binding text.
+- **Rule owner (routing reconciled 2026-10-26):** this branch-matched ADR and the
+  local `flext-law` own FLEXT generator declarations. Global governance ADR-0024
+  retires the copied `flext/generator-declarations` rule; it is not a second
+  binding text to restore or distribute. Universal source/projection and command
+  conduct remain with `workflow/generators-not-projections` and
+  `workflow/canonical-commands` in the canonical governance catalog. This routing
+  correction is not implementation, integration or installed-delivery evidence.
 - **Tracking:** epic `flext-0in0k` (a phased bead set, each carrying the full rule text;
   live membership and counts on the epic, never frozen here); superseded `flext-exbwv`,
   `flext-crd1y`, `flext-b3xmn`, `flext-szjre`, `flext-fdoah`, `flext-s9bxq` (closed,
@@ -51,7 +54,7 @@ the permission that tolerated it, one by one, at the source.
 
 ## Decision
 
-The fourteen points of `generator-declarations.md` are law. In one line each:
+This ADR owns the following fourteen generator declaration requirements:
 
 1. A facade letter belongs to the module that declares it in its explicit `__all__`.
 2. An `__init__.py` propagates; it never declares.
@@ -75,7 +78,8 @@ The fourteen points of `generator-declarations.md` are law. In one line each:
 14. Every module obeys every rule (FLEXT, SOLID, DRY, YAGNI, CA, SSOT, DI); strict
     compliance is the dedup mechanism expected to free 60–80% of the code.
 
-<a id="nested-facade-projection"></a>
+### Nested facade projection
+
 The generator applies [ADR-014's semantic ownership](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership)
 recursively: a direct family domain facade composes the declarations in its private
 `_domain/` directory by MRO, and nested private directories repeat that pattern.

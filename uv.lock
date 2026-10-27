@@ -1472,6 +1472,7 @@ dependencies = [
     { name = "bcrypt" },
     { name = "flext-api" },
     { name = "flext-core" },
+    { name = "pydantic" },
     { name = "pyjwt" },
 ]
 
@@ -1548,6 +1549,7 @@ requires-dist = [
     { name = "bcrypt", specifier = ">=5.0.0" },
     { name = "flext-api", editable = "flext-api" },
     { name = "flext-core", editable = "flext-core" },
+    { name = "pydantic", specifier = ">=2.14.1,<3" },
     { name = "pyjwt", specifier = ">=2.15.1" },
 ]
 
@@ -1963,6 +1965,7 @@ dependencies = [
     { name = "flext-cli" },
     { name = "flext-core" },
     { name = "oracledb" },
+    { name = "pydantic" },
     { name = "sqlalchemy" },
 ]
 
@@ -2039,6 +2042,7 @@ requires-dist = [
     { name = "flext-cli", editable = "flext-cli" },
     { name = "flext-core", editable = "flext-core" },
     { name = "oracledb", specifier = ">=26.0.1" },
+    { name = "pydantic", specifier = ">=2.14.1,<3" },
     { name = "sqlalchemy", specifier = ">=2.0.54" },
 ]
 
@@ -2118,6 +2122,7 @@ dependencies = [
     { name = "flext-ldap" },
     { name = "flext-ldif" },
     { name = "flext-meltano" },
+    { name = "pydantic" },
 ]
 
 [package.dev-dependencies]
@@ -2195,6 +2200,7 @@ requires-dist = [
     { name = "flext-ldap", editable = "flext-ldap" },
     { name = "flext-ldif", editable = "flext-ldif" },
     { name = "flext-meltano", editable = "flext-meltano" },
+    { name = "pydantic", specifier = ">=2.14.1,<3" },
 ]
 
 [package.metadata.requires-dev]
@@ -2725,11 +2731,13 @@ dependencies = [
     { name = "flext-core" },
     { name = "grpcio" },
     { name = "protobuf" },
+    { name = "pydantic" },
 ]
 
 [package.dev-dependencies]
 codegen = [
     { name = "flext-infra" },
+    { name = "grpcio-tools" },
 ]
 dev = [
     { name = "actionlint-py" },
@@ -2801,10 +2809,14 @@ requires-dist = [
     { name = "flext-core", editable = "flext-core" },
     { name = "grpcio", specifier = ">=1.84.0" },
     { name = "protobuf", specifier = ">=7.36.2" },
+    { name = "pydantic", specifier = ">=2.14.1,<3" },
 ]
 
 [package.metadata.requires-dev]
-codegen = [{ name = "flext-infra", editable = "flext-infra" }]
+codegen = [
+    { name = "flext-infra", editable = "flext-infra" },
+    { name = "grpcio-tools", specifier = ">=1.84.0" },
+]
 dev = [
     { name = "actionlint-py", specifier = ">=1.7.12.24" },
     { name = "bandit", specifier = ">=1.9.4" },
@@ -3052,6 +3064,7 @@ dependencies = [
     { name = "flext-core" },
     { name = "flext-ldif" },
     { name = "ldap3" },
+    { name = "pydantic" },
 ]
 
 [package.dev-dependencies]
@@ -3127,6 +3140,7 @@ requires-dist = [
     { name = "flext-core", editable = "flext-core" },
     { name = "flext-ldif", editable = "flext-ldif" },
     { name = "ldap3", specifier = ">=2.10.2rc4" },
+    { name = "pydantic", specifier = ">=2.14.1,<3" },
 ]
 
 [package.metadata.requires-dev]
@@ -3506,6 +3520,7 @@ dependencies = [
     { name = "flext-cli" },
     { name = "flext-core" },
     { name = "psutil" },
+    { name = "pydantic" },
     { name = "starlette" },
 ]
 
@@ -3583,6 +3598,7 @@ requires-dist = [
     { name = "flext-cli", editable = "flext-cli" },
     { name = "flext-core", editable = "flext-core" },
     { name = "psutil", specifier = ">=7.2.2" },
+    { name = "pydantic", specifier = ">=2.14.1,<3" },
     { name = "starlette", specifier = ">=1.8.0" },
 ]
 
@@ -3813,6 +3829,7 @@ dependencies = [
     { name = "flext-api" },
     { name = "flext-cli" },
     { name = "flext-core" },
+    { name = "pydantic" },
 ]
 
 [package.dev-dependencies]
@@ -3888,6 +3905,7 @@ requires-dist = [
     { name = "flext-api", editable = "flext-api" },
     { name = "flext-cli", editable = "flext-cli" },
     { name = "flext-core", editable = "flext-core" },
+    { name = "pydantic", specifier = ">=2.14.1,<3" },
 ]
 
 [package.metadata.requires-dev]
@@ -3963,6 +3981,7 @@ source = { editable = "flext-plugin" }
 dependencies = [
     { name = "flext-cli" },
     { name = "flext-core" },
+    { name = "pydantic" },
 ]
 
 [package.dev-dependencies]
@@ -4037,6 +4056,7 @@ dev = [
 requires-dist = [
     { name = "flext-cli", editable = "flext-cli" },
     { name = "flext-core", editable = "flext-core" },
+    { name = "pydantic", specifier = ">=2.14.1,<3" },
 ]
 
 [package.metadata.requires-dev]
@@ -4118,6 +4138,7 @@ dependencies = [
     { name = "flext-core" },
     { name = "flext-infra" },
     { name = "flext-web" },
+    { name = "pydantic" },
     { name = "pytest" },
     { name = "requests" },
     { name = "schedule" },
@@ -4201,6 +4222,7 @@ requires-dist = [
     { name = "flext-core", editable = "flext-core" },
     { name = "flext-infra", editable = "flext-infra" },
     { name = "flext-web", editable = "flext-web" },
+    { name = "pydantic", specifier = ">=2.14.1,<3" },
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "requests", specifier = ">=2.34.2" },
     { name = "schedule", specifier = ">=1.2.2" },
@@ -6250,6 +6272,27 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/0e/cc/7354ebd3d4c1bef08b062b9f07d154141c2b9043f677a219bc7943070867/grpcio-1.84.1-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:c6e9be93efe763bb2b12a4c0d5fc13082f24de6cbb53a9d11078c9d0c8cdb2b8", size = 7675985, upload-time = "2026-10-22T14:58:44.564Z" },
     { url = "https://files.pythonhosted.org/packages/9b/67/37ccd26e1f7a7576f53627b45e222ac89ea3465b3f02836f480ac26e4dce/grpcio-1.84.1-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:f216832aa84ad7e697ae1ed993c33905d27e27cd1b02016af1441be2091e287d", size = 8726955, upload-time = "2026-10-22T14:58:47.051Z" },
     { url = "https://files.pythonhosted.org/packages/88/cf/4887c033734182cecd12d3a1f6f9e7f84e9a5589a1ca2f564ff2ce8f2a29/grpcio-1.84.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:6a4a06d757e7ea5ddf636a4c40914aa36fb4f7e2a03abf727a16e61822331343", size = 8086854, upload-time = "2026-10-22T14:58:49.831Z" },
+]
+
+[[package]]
+name = "grpcio-tools"
+version = "1.84.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "grpcio" },
+    { name = "protobuf" },
+    { name = "setuptools" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/aa/f8/d23cf09b5a05684958152412d1bf7e61e9fe1938f1cf90959ae291498a1b/grpcio_tools-1.84.1.tar.gz", hash = "sha256:ca8a326df3441127d6709d992774844bb496db30b08f76ed5d1a912089e03f2c", size = 6401360, upload-time = "2026-10-22T15:02:03.559Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2c/bc/58f99ec2dde41fd8094fcea1cbae70449e56dbc281bdba4081ca12434c64/grpcio_tools-1.84.1-cp313-cp313-linux_armv7l.whl", hash = "sha256:7d5abfce4e46870222922591f74648a4017007eb2ed0030094bd1b94df779036", size = 2652847, upload-time = "2026-10-22T15:00:57.813Z" },
+    { url = "https://files.pythonhosted.org/packages/7a/0f/c4d01ef72a5515915fa5d72f2fc482576533048f8e9f0409d78e13865d10/grpcio_tools-1.84.1-cp313-cp313-macosx_11_0_universal2.whl", hash = "sha256:61e623ba62c36d3ce5747feafbac702f808c590304924e706fbe80b5520d4526", size = 5963832, upload-time = "2026-10-22T15:01:00.065Z" },
+    { url = "https://files.pythonhosted.org/packages/cc/4a/3c6d08c1dc3cbdd16b2dea58430907d1dedca8312a629afacb46763fadaf/grpcio_tools-1.84.1-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:114a2045140fdf93eda5e6c73022d0bdc4cf328fcf4dbf03fbfab31ff1c2c364", size = 2705098, upload-time = "2026-10-22T15:01:02.508Z" },
+    { url = "https://files.pythonhosted.org/packages/c8/3e/eb8143ab40ee3e969bd4c2ebf7c68678919e7f3fd68ebfe59239a7d74c8f/grpcio_tools-1.84.1-cp313-cp313-manylinux2014_i686.manylinux_2_17_i686.whl", hash = "sha256:849e60f34adbce7471c7f542891334ab7aed392a78f373f3d63d7cbf83267959", size = 3033066, upload-time = "2026-10-22T15:01:04.633Z" },
+    { url = "https://files.pythonhosted.org/packages/df/13/08a33fcf457f4a29c891a4f0a524f1c6152e906ad21db037eda289a1612f/grpcio_tools-1.84.1-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:0747ea030e47a8843c55156ec613efb7564c9567cfffbd8d704d89536c913f03", size = 2773653, upload-time = "2026-10-22T15:01:06.939Z" },
+    { url = "https://files.pythonhosted.org/packages/f0/01/48a35105e2228cdd1a4fc266afb2a6817b65108e72cbcbc08d2c936be570/grpcio_tools-1.84.1-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:f663a88bac731d47a6ac0d9c4484a1c60a04728ec97169c6e1c009b6e8162d17", size = 3229790, upload-time = "2026-10-22T15:01:09.076Z" },
+    { url = "https://files.pythonhosted.org/packages/83/d9/d3522a7c2837553c2a94819a239d4f4fc6bc6ed0abb803449ccf0ff0a6cd/grpcio_tools-1.84.1-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:6fd18c48140711affdaf0bcd610c6466839d746d817bf1ce46a7e3faa1dc3678", size = 3802535, upload-time = "2026-10-22T15:01:11.072Z" },
+    { url = "https://files.pythonhosted.org/packages/b5/20/8653efef395abdde3084cec161ac85d6434e01b4506e5ca2eba8b2437e47/grpcio_tools-1.84.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:e2dd80c6483c8e63bb0f1b51c1c199ed7bad8dfd82aa78888b43fb118d391916", size = 3461037, upload-time = "2026-10-22T15:01:13Z" },
 ]
 
 [[package]]

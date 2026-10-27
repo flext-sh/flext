@@ -50,14 +50,12 @@ whose body only groups constants or classes, such as a `class Dbt:` layer inside
 part). Hand-fixing such shapes member by member is unscalable and produces one-off
 rewrites that do not replicate to consumers.
 
-The fleet already owns the required machinery: the ADR-010 codemod cascade (detection
-rules shipped one per file, applied through `make mod` until a guarded fixed point), the
-shared Rope change cycle (`FlextInfraUtilitiesRopeRuntime` change primitives plus
-`rope_project.do(changes)` in `_utilities/rope_class_move.py` and
-`_utilities/namespace_moves.py`, which replicate every change to all referencing
-modules), and the centralized execution pipeline `FlextInfraUtilitiesSafety`
-(`backup_files → transform → validate → cleanup | rollback`, the same cycle behind the
-workspace timestamped `.bak` artifacts).
+The 2026-09-09 implementation description named the ADR-010 codemod cascade, the
+shared Rope change cycle (`FlextInfraUtilitiesRopeRuntime`,
+`rope_project.do(changes)`, `_utilities/rope_class_move.py` and
+`_utilities/namespace_moves.py`), and `FlextInfraUtilitiesSafety`. Those identifiers
+preserve historical context, not a current recovery API or permission to restore
+published files. The current publication and recovery contract is in §4.
 
 ## Decision
 
@@ -201,11 +199,13 @@ acceptance or fleet rollout.
 6. **Render purity.** `render = f(SSOT, templates, PINS)` and nothing else: any
    environment input (filesystem probing, wall clock, dependency resolution, worktree
    WIP state) reaching the render is a P0 engine defect.
-7. **Transactional loop.** Per repository: authenticated input snapshot (CAS) → plan
-   everything with one Rope project per repo → publish in one transactional batch →
-   single receipt (findings + timings). A mid-publication failure reverse-applies only
-   the effects of its own invocation (empty diff post-rollback is the criterion), for
-   gen and fix alike.
+7. **Authenticated publication loop.** Per repository: authenticated input snapshot
+   (CAS) → plan the dependency-closed candidate with one Rope project per repo →
+   publish through the existing owner → record actual effects, findings, timings
+   and the first native failure. Admission and publication must prove the owner's
+   actual guarantees; this sequence promises no implicit repository-wide or
+   multi-file atomicity. Input drift invalidates the affected candidate for
+   rereading and reconciliation. Recovery follows §4 for gen and fix alike.
 8. **Runtime admission before rollout.** The approved campaign selects its real
    consumers and dependency-closed batches. The 2026-10-26 convergence plan
    (`flext-ag9fw`, related `flext-s9r3a`) supersedes the historical fixed external
@@ -215,10 +215,17 @@ acceptance or fleet rollout.
 
 ### 4. Centralized backup cycle
 
-Every mutating family-shape execution wraps its file set in the centralized workspace
-cycle `FlextInfraUtilitiesSafety.execute_safely` (backup → transform → validate →
-cleanup | rollback). Ad-hoc write paths, private backup schemes, and repository-wide
-rollback remain forbidden.
+**Recovery contract amended 2026-10-26.** The canonical governance rule
+`coordination/fix-forward-collaboration` owns recovery and supersedes the former
+backup/rollback prescription, including the `execute_safely` requirement.
+Before publication, cleanup may discard only the invocation's own unpublished
+staging objects and release its own locks. Published effects are not restored,
+including effects of the failing invocation: preserve the original native failure
+and valid concurrent work, then correct the canonical owner forward within the
+authorized scope. Use the existing publication owner and prove its actual failure
+and recovery behavior; do not add a private backup, inverse-write path or journal.
+This amendment changes the normative contract, not the implementation's acceptance
+status.
 
 ### 5. Gate alignment (one law, shared consumers)
 

@@ -11,8 +11,10 @@
 
 <!-- TOC END -->
 
-- **Status:** Active, versioned runbook; recovery ownership updated 2026-09-17. Fleet
-  stability is unproved; this document is not a green runtime receipt.
+- **Status:** Active, versioned runbook; recovery ownership updated 2026-09-17,
+  publication recovery aligned with ADR-014 §4 on 2026-10-26, and execution
+  consolidation reconciled on 2026-10-27. Fleet stability is
+  unproved; this document is not a green runtime receipt.
 - **Date:** 2026-09-15
 - **Tracking:** Gas City Bead `flext-itpd1.3` coordinates the current recovery cycle
   under `flext-itpd1`. Sibling owners are `flext-itpd1.2` (documentation) and
@@ -32,7 +34,7 @@
 | Auto-fixable findings (rel-import self-import, etc.)          | `make fix` (rope via engine)                                                                                                            | fix corrects, never suppresses                                                    |
 | Reporting of remaining findings                               | `make check`                                                                                                                            | detectors never disabled; no silent success                                       |
 | Ad-hoc structural moves                                       | `make mod`                                                                                                                              | consumes the same Rope primitives; one engine                                     |
-| Config/rules surface                                          | `flext-infra/config/codegen.yaml` and the owning typed rule configuration                                                               | rules-as-data; no exception that hides an in-scope defect                         |
+| Config/rules surface                                          | `flext-infra/src/flext_infra/config/codegen.yaml` and the owning typed rule configuration                                                | rules-as-data; no exception that hides an in-scope defect                         |
 | Render inputs                                                 | SSOT + templates + PINS only                                                                                                            | any environment input in render = P0 defect                                       |
 | Landing                                                       | coordinator: reviewed merge commits into the verified integration branch, expected `0.12.0-dev`; members published before root gitlinks | no administrative bypass; local green or mergeability is not integrated proof     |
 
@@ -52,8 +54,10 @@
 
 1. Engine stages read typed rules (Pydantic models parsed once via `u.Cli.yaml_*`).
 2. `gen` emits warnings into the single per-repo receipt (findings + timings).
-3. `fix` consumes only fixable codes from the same table; re-runs gen to prove the fixed
-   point.
+3. `fix` consumes the declared fixable findings through their existing native owners.
+   Dependent projections reuse the owning semantic engine and publisher; no public
+   verb invokes another public verb recursively. A separate canonical generation
+   run proves the resulting fixed point.
 4. `check` reports the remainder; the invocation stays red while findings remain.
 5. New rule = typed section in `config/codegen.yaml` / `rules/*.yaml` — never an ad-hoc
    detector class.
@@ -64,14 +68,16 @@
 snapshot (input-CAS, authenticated)
  → plan EVERYTHING (pyproject, templates, mise, lazy-init, docs) — ONE rope project per
  repo
- → publish in one transactional batch (Journal CAS: full authenticated file state)
- → single receipt (findings + timings)
+ → publish through the existing owner, with its actual authenticated guarantees
+  → single receipt (findings + timings)
 ```
 
-- Failure mid-publication (gen **and** fix): recovery may undo only authenticated
-  effects owned by that invocation; preserve pre-existing and concurrent WIP. Prove
-  preservation through the public transaction contract, not an empty-tree assumption.
-  The journal owner remains `flext-fkfmu` pending reconciliation.
+- Failure mid-publication (gen **and** fix): follow ADR-014 §4, which supersedes the
+  former permission to undo an invocation's published effects. Preserve the first
+  failure, authenticated inputs and actual effect receipt for authorized forward
+  correction. Prove recovery through the real public publication contract.
+  The historical journal reference `flext-fkfmu` remains pending reconciliation;
+  it does not authorize another journal or recovery path.
 - Race handling: preserve the first failed receipt, coordinate writers, adopt compatible
   input changes and rerun only after reconciliation. Never hide a CAS failure through
   retry or proceed with unresolved findings. Reset, restore, stash, rebase and
@@ -95,17 +101,37 @@ snapshot (input-CAS, authenticated)
    output and candidate identity.
 4. Preserve all WIP; implement only the explicitly assigned owner paths after fresh
    inspection. Coordinate overlapping changes instead of discarding them.
-5. In the coordinator's serialized window, run the selector-free root lifecycle:
-   `make setup` → `make gen` → `make mod` → `make gen` → `make gen` → `make fix` →
-   `make fmt` → `make check` → `make test` → `make build`, followed by applicable public
-   runtime and native documentation/link validation. Prove repeated gen/fix/fmt are
-   no-op, exit-zero runs on the unchanged candidate.
+5. In the coordinator's serialized window, follow the current root lifecycle:
+   `make setup` → `make gen` → `make fmt` → `make fix` → `make mod` → `make check` →
+   `make tests`, plus applicable build, public runtime and native documentation/link
+   validation. Source admission covers every governed repository and code tier before
+   native incremental Testmon admission. Prove repeated gen/fix/fmt are no-op,
+   exit-zero runs after the final relevant mutation; do not force a second full test
+   pass or substitute historical receipts.
 6. Stay in the current recovery cycle until the entire fleet has warning-free,
    finding-free integrated receipts. Owner repairs remain in that cycle; no historical
    exception or successful partial gate authorizes closure.
 7. Publish members before root gitlinks and revalidate on the integrated SHAs. Later
    mutations invalidate affected receipts. The recovery does not authorize an unrelated
    release or tag; closure belongs to the coordinator after proof.
+
+### Implementation reconciliation
+
+Older plans and receipts are evidence, not parallel implementation contracts. Resolve
+each topic through its newest accepted ADR and active source owner before changing
+code. A documented target is not proof that the running implementation meets it.
+
+For each repair, inventory the actual entry point, implementation, consumers and
+generated projections. Keep one productive implementation and one publication route.
+Remove superseded zero-consumer branches rather than adding another detector,
+compatibility facade, parser, source cache or recovery path. Distinct required
+operations may share a helper, but moving duplicate behavior behind two names does
+not complete consolidation. Preserve source identity, intended MRO, native failure
+propagation and authenticated publication while completing the consumer cutover.
+
+Re-exercise the original failing boundary after consolidation, then the complete
+declared workspace scope. Record unresolved findings in the active Bead; neither a
+smaller finding count nor an isolated successful project closes the fleet cycle.
 
 ## 5b. Historical resume context (2026-09-15, proven — preserved as evidence)
 
