@@ -20,7 +20,7 @@ import time
 from collections.abc import MutableSequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Annotated, ClassVar, cast
+from typing import TYPE_CHECKING, Annotated, ClassVar
 
 from examples import ExamplesFlextRootConstants, c, m, p, r, t, u
 
@@ -86,7 +86,9 @@ class FlextRootCompleteWorkflowExample:
             description="List of workflow stages to execute",
         )
         metadata: t.JsonMapping = m.Field(
-            default_factory=lambda: FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping(),
+            default_factory=lambda: (
+                FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping()
+            ),
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: t.MutableJsonMapping = m.Field(
@@ -116,7 +118,9 @@ class FlextRootCompleteWorkflowExample:
             description="List of warnings encountered",
         )
         stage_metadata: t.JsonMapping = m.Field(
-            default_factory=lambda: FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping(),
+            default_factory=lambda: (
+                FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping()
+            ),
             description="Stage-specific metadata",
         )
 
@@ -140,7 +144,9 @@ class FlextRootCompleteWorkflowExample:
         )
 
         aggregated_metrics: t.JsonMapping = m.Field(
-            default_factory=lambda: FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping(),
+            default_factory=lambda: (
+                FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping()
+            ),
             description="Aggregated metrics across all stages",
         )
 
@@ -169,7 +175,9 @@ class FlextRootCompleteWorkflowExample:
             default_factory=tuple,
         )
         workflow_settings: t.ScalarMapping = m.Field(
-            default_factory=lambda: FlextRootCompleteWorkflowExample.ImmutableMappings.scalar_mapping(),
+            default_factory=lambda: (
+                FlextRootCompleteWorkflowExample.ImmutableMappings.scalar_mapping()
+            ),
         )
 
         def execute(self) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
@@ -201,7 +209,9 @@ class FlextRootCompleteWorkflowExample:
             complexity_score_raw = item.get("complexity_score", 0)
             complexity_score = (
                 float(complexity_score_raw)
-                if isinstance(complexity_score_raw, ExamplesFlextRootConstants.NUMERIC_TYPES)
+                if isinstance(
+                    complexity_score_raw, ExamplesFlextRootConstants.NUMERIC_TYPES
+                )
                 else 0.0
             )
             final_score = complexity_score + (
@@ -317,7 +327,9 @@ class FlextRootCompleteWorkflowExample:
             max_workers_raw = context.metadata.get("max_workers", 4)
             max_workers = (
                 int(max_workers_raw)
-                if isinstance(max_workers_raw, ExamplesFlextRootConstants.SCALAR_VALUE_TYPES)
+                if isinstance(
+                    max_workers_raw, ExamplesFlextRootConstants.SCALAR_VALUE_TYPES
+                )
                 else 4
             )
 

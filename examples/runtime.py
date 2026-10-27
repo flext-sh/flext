@@ -32,9 +32,9 @@ def main() -> int:
 
     """
     client = flext_ldif.ldif()
-    ldif_content = (
-        Path(__file__).parent / "templates" / "sample_acl.ldif"
-    ).read_text(encoding="utf-8")
+    ldif_content = (Path(__file__).parent / "templates" / "sample_acl.ldif").read_text(
+        encoding="utf-8"
+    )
     entries = client.parse_ldif(ldif_content).unwrap().entries
     if not entries:
         raise RuntimeError(ExamplesFlextRootConstants.ErrorMessages.LDIF_NO_ENTRIES)
