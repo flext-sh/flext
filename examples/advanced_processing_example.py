@@ -29,9 +29,7 @@ class FlextRootAdvancedProcessingExample:
     class ValidationResult(m.BaseModel):
         """Result of validation operation."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
-        )
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
         item_id: str = m.Field(description="Unique item identifier")
         valid: bool = m.Field(description="Whether the item is valid")
@@ -50,6 +48,8 @@ class FlextRootAdvancedProcessingExample:
 
     class FlextLdifProcessingPipeline(m.BaseModel):
         """Declarative processing pipeline with automatic parallel execution."""
+
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
         auto_execute: bool = True
         items: t.SequenceOf[t.JsonMapping]
@@ -117,7 +117,9 @@ class FlextRootAdvancedProcessingExample:
             success_rate_data = data.get("success_rate", 0)
             processing_efficiency = (
                 float(success_rate_data)
-                if isinstance(success_rate_data, (int, float))
+                if isinstance(
+                    success_rate_data, ExamplesFlextRootConstants.NUMERIC_TYPES
+                )
                 else 0.0
             )
             validation_summary = {

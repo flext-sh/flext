@@ -21,6 +21,8 @@ class ExamplesFlextRootConstants:
     EXPECTED_OID_ACL_COUNT: int = 2
     MAX_VALUE_LENGTH: int = 100
     SCALAR_SEQUENCE_TYPES: tuple[type, ...] = (str, bytes, bytearray)
+    NUMERIC_TYPES: tuple[type, ...] = (int, float)
+    SCALAR_VALUE_TYPES: tuple[type, ...] = (bool, int, float, str)
 
     class Stage(StrEnum):
         """Processing stage enumeration used across pipeline examples."""
