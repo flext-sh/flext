@@ -22,4 +22,5 @@ class TestsFlextRootConstants(FlextRootConstants):
         DEFAULT_BRANCH: ClassVar[str] = "main"
 
 
-__all__: list[str] = ["TestsFlextRootConstants"]
+c = TestsFlextRootConstants
+__all__: list[str] = ["TestsFlextRootConstants", "c"]

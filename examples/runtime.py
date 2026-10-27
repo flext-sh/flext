@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import flext_ldif
-from examples import ExamplesFlextRootConstants, c
+from examples import ExamplesFlextRootConstants, c, m
 from examples.acl_processing_example import FlextRootAclProcessingExample
 from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
 from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
@@ -46,8 +46,8 @@ def main() -> int:
         FlextRootAclProcessingExample(service=client)
         .process_acls_with_pipeline(
             entry=entries[0],
-            server_type=flext_ldif.c.Ldif.ServerTypes.OUD,
-            required_permissions=flext_ldif.m.Ldif.AclPermissions(read=True),
+            server_type=c.Ldif.ServerTypes.OUD,
+            required_permissions=m.Ldif.AclPermissions(read=True),
         )
         .unwrap()
     )
@@ -57,7 +57,7 @@ def main() -> int:
         )
 
     oid_attributes = (
-        client.acl(flext_ldif.c.Ldif.ServerTypes.OID).unwrap().resolve_acl_attributes()
+        client.acl(c.Ldif.ServerTypes.OID).unwrap().resolve_acl_attributes()
     )
     first_attribute, last_attribute = oid_attributes[0], oid_attributes[-1]
     if first_attribute.lower() == last_attribute.lower():
@@ -65,16 +65,16 @@ def main() -> int:
             ExamplesFlextRootConstants.ErrorMessages.OID_INSUFFICIENT_ATTRIBUTES,
         )
     oid_acl = "access to entry by * (browse)"
-    oid_entry = flext_ldif.m.Ldif.Entry(
+    oid_entry = m.Ldif.Entry(
         domain_events=[],
-        dn=flext_ldif.m.Ldif.DN(value="cn=sample,dc=example,dc=com"),
-        attributes=flext_ldif.m.Ldif.Attributes(
+        dn=m.Ldif.DN(value="cn=sample,dc=example,dc=com"),
+        attributes=m.Ldif.Attributes(
             attributes={first_attribute: [oid_acl], last_attribute: [oid_acl]},
         ),
     )
     oid_response = client.extract_acls_from_entry(
         oid_entry,
-        flext_ldif.c.Ldif.ServerTypes.OID,
+        c.Ldif.ServerTypes.OID,
     ).unwrap()
     if len(oid_response.acls) != ExamplesFlextRootConstants.EXPECTED_OID_ACL_COUNT:
         raise RuntimeError(

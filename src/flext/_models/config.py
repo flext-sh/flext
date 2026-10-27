@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import ClassVar, cast
+from typing import ClassVar
 
 from flext_infra import m, t
 
@@ -17,25 +17,19 @@ class FlextRootModelsConfig:
     class PipelinePayload(m.BaseModel):
         """Pipeline payload container."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
-            extra="allow",
-        )
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
         values: t.MutableJsonMapping = m.Field(
-            default_factory=lambda: cast("t.MutableJsonMapping", {}),
+            default_factory=dict,
             description="Processed item values carried across pipeline stages.",
         )
 
     class PipelineStageData(m.BaseModel):
         """Data container for pipeline stage processing."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
-            extra="allow",
-        )
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
-        data: FlextRootModelsConfig.PipelinePayload = m.Field(
+        data: PipelinePayload = m.Field(
             description="Payload produced by the preceding pipeline stage.",
         )
 

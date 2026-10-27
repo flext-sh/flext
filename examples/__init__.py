@@ -13,7 +13,6 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import install_lazy_exports
 
 if TYPE_CHECKING:
-    from examples._constants import ExamplesFlextRootConstants
     from flext import (
         auth,
         build_lazy_import_map,

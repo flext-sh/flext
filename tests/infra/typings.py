@@ -17,4 +17,5 @@ class TestsFlextRootTypes(FlextRootTypes):
         """Test typings composing shared test + workspace type namespaces."""
 
 
-__all__: list[str] = ["TestsFlextRootTypes"]
+t = TestsFlextRootTypes
+__all__: list[str] = ["TestsFlextRootTypes", "t"]

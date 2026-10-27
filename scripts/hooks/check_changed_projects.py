@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 from flext_cli import cli
-from flext_infra import u
+from flext import u
 
 
 class FlextRootCheckChangedProjects:

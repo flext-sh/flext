@@ -6,10 +6,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from collections.abc import Mapping, MutableSequence, Sequence
 from enum import StrEnum, unique
 
-from examples import t
+if TYPE_CHECKING:
+    from examples import t
 
 
 class ExamplesFlextRootConstants:
@@ -18,6 +21,7 @@ class ExamplesFlextRootConstants:
     MIN_OID_ACL_ATTRIBUTES: int = 2
     EXPECTED_OID_ACL_COUNT: int = 2
     MAX_VALUE_LENGTH: int = 100
+    SCALAR_SEQUENCE_TYPES: tuple[type, ...] = (str, bytes, bytearray)
 
     class Stage(StrEnum):
         """Processing stage enumeration used across pipeline examples."""
@@ -58,7 +62,7 @@ class ExamplesFlextRootConstants:
         def extract(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
             if not isinstance(value, Sequence) or isinstance(
                 value,
-                (str, bytes, bytearray),
+                ExamplesFlextRootConstants.SCALAR_SEQUENCE_TYPES,
             ):
                 return ()
             mappings: MutableSequence[t.JsonMapping] = []
@@ -74,7 +78,7 @@ class ExamplesFlextRootConstants:
         def extract(value: t.JsonValue) -> t.StrSequence:
             if not isinstance(value, Sequence) or isinstance(
                 value,
-                (str, bytes, bytearray),
+                ExamplesFlextRootConstants.SCALAR_SEQUENCE_TYPES,
             ):
                 return ()
             strings: MutableSequence[str] = []

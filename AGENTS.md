@@ -261,7 +261,8 @@ These standards override conflicting completion shortcuts.
 8. **Documentation first** (operator order 2026-10-25, tracker memory
    `operator-order-2026-10-25-docs-first-before-code`, translated from Portuguese:
    "Fundamentally, always remember that memory, AGENTS.md, documentation, ADRs, rules,
-   skills and Beads must always be consulted, aligned and adjusted before code"). Before any
+   skills and Beads must always be consulted, aligned and adjusted before code").
+   Before any
    code, every slice consults, aligns and adjusts, in this order: memory (tracker
    memories, `bd memories <keyword>`), `AGENTS.md`, documentation, ADRs, rules,
    skills and Beads, then approved plans and specifications. They are brought to the
@@ -339,7 +340,8 @@ bd ready --json
 **Create new issues:**
 
 ```bash
-bd create "Issue title" --description="Detailed context" -t bug | feature | task -p 0-4 --json
+bd create "Issue title" --description="Detailed context" \
+  -t bug | feature | task -p 0-4 --json
 bd create "Issue title" --description="What this issue is about" -p 1 --deps
 discovered-from:bd-123 --json
 ```
@@ -936,7 +938,8 @@ CLI + pytest plugin, **never imported at runtime**.
     `operator-ruling-2026-10-25-models-u-imports-pydantic-home`, translated from Portuguese:
     "Models may import u in only two ways: u from the upstream FLEXT project they
     import, or a private _utilities class in their own namespace in very restricted
-    cases. Note that models cannot export methods"). `_models` imports either the upstream FLEXT
+    cases. Note that models cannot export methods"). `_models` imports either the
+    upstream FLEXT
     project's `u` or, in very restricted cases, a private `_utilities` class of its
     own namespace; models export no methods. The Pydantic surface models need lives
     in `_models/pydantic.py`, never `_utilities/pydantic.py`; it is migrated and

@@ -73,3 +73,6 @@ class TestsFlextRootReleasePackaging:
                 msg = "pyproject project.version must be a string"
                 raise TypeError(msg)
             tm.that(importlib.metadata.version("flext"), eq=version)
+
+
+__all__: list[str] = ["TestsFlextRootReleasePackaging"]

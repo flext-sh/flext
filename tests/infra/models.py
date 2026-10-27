@@ -9,41 +9,55 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated
 
-from flext import m
+from flext.models import FlextRootModels
 from flext_tests import FlextTestsModels
 
 
-class TestsFlextRootModels(m, FlextTestsModels):
+class TestsFlextRootModels(FlextRootModels, FlextTestsModels):
     """Infrastructure test models facade — extends flext workspace models."""
 
     class Tests(FlextTestsModels.Tests):
         """Test infrastructure model definitions."""
 
-        class ModuleRef(m.Value):
+        class ModuleRef(FlextRootModels.Value):
             """Module reference with path and name information."""
 
-            anchor_file: Path = m.Field(
+            anchor_file: Path = FlextRootModels.Field(
                 description="Absolute path to the module's anchor file.",
             )
-            module_name: str = m.Field(description="Fully qualified module name.")
-            relative_path: str = m.Field(
+            module_name: str = FlextRootModels.Field(
+                description="Fully qualified module name.",
+            )
+            relative_path: str = FlextRootModels.Field(
                 description="Module path relative to the workspace root.",
             )
 
-        class SyncCall(m.Value):
+        class SyncCall(FlextRootModels.Value):
             """Workspace synchronization call record."""
 
             action: Annotated[
                 str,
-                m.Field(description="Sync action performed (e.g. pull, push)."),
+                FlextRootModels.Field(
+                    description="Sync action performed (e.g. pull, push).",
+                ),
             ]
-            repo: Annotated[Path, m.Field(description="Target repository root.")]
+            repo: Annotated[
+                Path,
+                FlextRootModels.Field(description="Target repository root."),
+            ]
 
-        class RepoState(m.Value):
+        class RepoState(FlextRootModels.Value):
             """Repository state snapshot."""
 
-            branch: Annotated[str, m.Field(description="Current branch name.")]
-            commit_sha: Annotated[str, m.Field(description="Current commit SHA.")]
+            branch: Annotated[
+                str,
+                FlextRootModels.Field(description="Current branch name."),
+            ]
+            commit_sha: Annotated[
+                str,
+                FlextRootModels.Field(description="Current commit SHA."),
+            ]
 
 
-__all__: list[str] = ["TestsFlextRootModels"]
+m = TestsFlextRootModels
+__all__: list[str] = ["TestsFlextRootModels", "m"]
