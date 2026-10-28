@@ -585,7 +585,7 @@ Here's an example of implementing a basic tool in an MCP server:
                 inputSchema={
                     "type": "object",
                     "properties": {"a": {"type": "number"}, "b": {"type": "number"}},
-                    "required": ["a", "b"],
+                    "required": ["a", ...]
                 },
             )
         ]

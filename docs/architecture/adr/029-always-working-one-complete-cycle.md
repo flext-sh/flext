@@ -12,7 +12,7 @@
 
 <!-- TOC END -->
 
-- **Status:** ACCEPTED — operator orders 2026-10-24, amended 2026-10-26
+- **Status:** ACCEPTED — operator orders 2026-10-24, amended 2026-10-28
 - **Date:** 2026-10-24
 - **Amended:** 2026-10-26 — global primary admission, native Testmon selection and
   serial peripheral-first modification
@@ -21,7 +21,8 @@
   such as ai-hub) and every agent or session working in them
 - **Tracker memories:** `operator-order-2026-10-24-always-working-never-skip-phase`,
   `operator-order-2026-10-24-no-incomplete-pushes`,
-  `operator-order-2026-10-26-global-ruff-pyrefly-strict-lazy-exports`
+  `operator-order-2026-10-26-global-ruff-pyrefly-strict-lazy-exports`,
+  `operator-ruling-2026-10-28-tests-testmon-full-native`
 - **Complements:** root `AGENTS.md` contract item 9, the global
   `phase-admission-protocol` rule, ADR-028
 

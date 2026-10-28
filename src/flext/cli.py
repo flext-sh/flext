@@ -6,12 +6,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from flext_cli import cli
-
-if TYPE_CHECKING:
-    from flext import t
 
 
 class FlextRootCli:
@@ -32,4 +27,4 @@ if __name__ == "__main__":
     main()
 
 
-__all__: t.VariadicTuple[str] = ("FlextRootCli", "main")
+__all__: tuple[str, ...] = ("FlextRootCli", "main")

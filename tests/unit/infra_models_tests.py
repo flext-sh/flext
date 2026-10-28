@@ -63,7 +63,7 @@ class TestsFlextRootInfraModels:
                     eq=True,
                 )
 
-            invalid_paths: t.VariadicTuple[t.JsonValue] = (None, {}, [])
+            invalid_paths: tuple[t.JsonValue, ...] = (None, {}, [])
             for invalid_path in invalid_paths:
                 payload = value.model_dump(mode="json")
                 payload["anchor_file"] = invalid_path
