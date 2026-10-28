@@ -11,9 +11,11 @@ from collections.abc import Mapping
 from pathlib import Path
 
 import pytest
-from examples.acl_processing_example import FlextRootAclProcessingExample
-from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
-from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
+from examples import (
+    FlextRootAclProcessingExample,
+    FlextRootAdvancedProcessingExample,
+    FlextRootCompleteWorkflowExample,
+)
 from scripts.hooks.check_changed_projects import FlextRootCheckChangedProjects
 
 from flext_cli import cli

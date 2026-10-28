@@ -8,31 +8,31 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext._protocols import FlextRootProtocolsBase, FlextRootProtocolsConfig
-from flext_db_oracle import FlextDbOracleProtocols
-from flext_grpc import FlextGrpcProtocols
-from flext_infra import FlextInfraProtocols
-from flext_ldap import FlextLdapProtocols
-from flext_meltano import FlextMeltanoProtocols
-from flext_observability import FlextObservabilityProtocols
-from flext_oracle_oic import FlextOracleOicProtocols
-from flext_oracle_wms import FlextOracleWmsProtocols
-from flext_plugin import FlextPluginProtocols
-from flext_quality import FlextQualityProtocols
-from flext_tests import FlextTestsProtocols
+from flext_db_oracle import p
+from flext_grpc import p as flext_grpc_p
+from flext_infra import p as flext_infra_p
+from flext_ldap import p as flext_ldap_p
+from flext_meltano import p as flext_meltano_p
+from flext_observability import p as flext_observability_p
+from flext_oracle_oic import p as flext_oracle_oic_p
+from flext_oracle_wms import p as flext_oracle_wms_p
+from flext_plugin import p as flext_plugin_p
+from flext_quality import p as flext_quality_p
+from flext_tests import p as flext_tests_p
 
 
 class FlextRootProtocols(
-    FlextOracleOicProtocols,
-    FlextOracleWmsProtocols,
-    FlextQualityProtocols,
-    FlextLdapProtocols,
-    FlextInfraProtocols,
-    FlextMeltanoProtocols,
-    FlextObservabilityProtocols,
-    FlextPluginProtocols,
-    FlextTestsProtocols,
-    FlextDbOracleProtocols,
-    FlextGrpcProtocols,
+    flext_oracle_oic_p,
+    flext_oracle_wms_p,
+    flext_quality_p,
+    flext_ldap_p,
+    flext_infra_p,
+    flext_meltano_p,
+    flext_observability_p,
+    flext_plugin_p,
+    flext_tests_p,
+    p,
+    flext_grpc_p,
 ):
     """Workspace root protocols facade — access via p.Root.*.
 

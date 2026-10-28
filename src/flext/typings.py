@@ -8,31 +8,31 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext._typings import FlextRootTypingsBase, FlextRootTypingsConfig
-from flext_db_oracle import FlextDbOracleTypes
-from flext_grpc import FlextGrpcTypes
-from flext_infra import FlextInfraTypes
-from flext_ldap import FlextLdapTypes
-from flext_meltano import FlextMeltanoTypes
-from flext_observability import FlextObservabilityTypes
-from flext_oracle_oic import FlextOracleOicTypes
-from flext_oracle_wms import FlextOracleWmsTypes
-from flext_plugin import FlextPluginTypes
-from flext_quality import FlextQualityTypes
-from flext_tests import FlextTestsTypes
+from flext_db_oracle import t
+from flext_grpc import t as flext_grpc_t
+from flext_infra import t as flext_infra_t
+from flext_ldap import t as flext_ldap_t
+from flext_meltano import t as flext_meltano_t
+from flext_observability import t as flext_observability_t
+from flext_oracle_oic import t as flext_oracle_oic_t
+from flext_oracle_wms import t as flext_oracle_wms_t
+from flext_plugin import t as flext_plugin_t
+from flext_quality import t as flext_quality_t
+from flext_tests import t as flext_tests_t
 
 
 class FlextRootTypes(
-    FlextOracleOicTypes,
-    FlextOracleWmsTypes,
-    FlextQualityTypes,
-    FlextLdapTypes,
-    FlextInfraTypes,
-    FlextMeltanoTypes,
-    FlextObservabilityTypes,
-    FlextPluginTypes,
-    FlextTestsTypes,
-    FlextDbOracleTypes,
-    FlextGrpcTypes,
+    flext_oracle_oic_t,
+    flext_oracle_wms_t,
+    flext_quality_t,
+    flext_ldap_t,
+    flext_infra_t,
+    flext_meltano_t,
+    flext_observability_t,
+    flext_plugin_t,
+    flext_tests_t,
+    t,
+    flext_grpc_t,
 ):
     """Workspace root typings facade — access via t.Root.*.
 

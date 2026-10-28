@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated
 
-from flext.models import FlextRootModels
+from flext import FlextRootModels
 from flext_tests import FlextTestsModels
 
 

@@ -9,10 +9,14 @@ from __future__ import annotations
 from pathlib import Path
 
 import flext_ldif
-from examples import ExamplesFlextRootConstants, c, m
-from examples.acl_processing_example import FlextRootAclProcessingExample
-from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
-from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
+from examples import (
+    ExamplesFlextRootConstants,
+    FlextRootAclProcessingExample,
+    FlextRootAdvancedProcessingExample,
+    FlextRootCompleteWorkflowExample,
+    c,
+    m,
+)
 from flext_cli import cli
 
 

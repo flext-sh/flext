@@ -8,7 +8,8 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from flext_infra import m, t
+from flext import t
+from flext_infra import m
 
 
 class FlextRootModelsConfig:
