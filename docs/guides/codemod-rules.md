@@ -172,6 +172,42 @@ terminating public matcher without rebinding a referenced name or changing the
 exception category. Runtime comparisons against the original snippets validate
 these properties; snapshot text alone does not prove them.
 
+### Pyrefly strict-typing cures (campaign flext-osru9, census 2026-10-28)
+
+Fleet pyrefly findings reduce to a small set of root causes; each has one
+canonical cure, applied at the origin and never by suppression or rule change
+(the lint-rule SSOT stays frozen):
+
+- **`implicit-any-lambda`** — Pyrefly cannot infer a lambda parameter from a
+  generic `Callable[[SubjectT], bool]` parameter (`tm.that(..., where=...)`,
+  `tm.ok(..., where=...)`, `Result.map(...)`). Cure: replace the lambda with a
+  local typed function (`def pred(value: <concrete subject type>) -> bool`)
+  and pass it by name. Lambdas cannot carry parameter annotations in Python,
+  so no call-site annotation exists; the typed def is the strict form.
+- **`missing-attribute` / `missing-module-attribute` on consumed APIs** — a
+  consumer names an attribute that a refactor removed or moved (for example
+  `u.chk`, `cli.ensure_dir`). Cure: rewire the consumer to the current owner
+  found by source search; never recreate the removed attribute.
+- **`missing-module-attribute` / `missing-import` on generated packages** — a
+  stale generated lazy `__init__.py` re-exports modules or letters that moved.
+  Cure: regenerate at the owner (`make gen`); hand-editing a managed
+  projection is prohibited.
+- **`invalid-annotation` on test fixtures** — a fixture declares
+  `self: SomeSettings` while its test class does not subclass that settings
+  type. Cure: drop the false self-type and inject legitimate settings
+  (conftest fixture or the canonical settings constructor).
+- **Bare generic containers** (`list[dict]`, `dict` literals as data
+  contracts) — cure with a Pydantic model per payload shape (see the root
+  `scripts/modularize_*` FleetMove/ModularizationMove repair) plus explicit
+  element-type annotations on every empty container.
+- **AST optionality** — `node.end_lineno`, `node.end_col_offset` and friends
+  are `int | None`; guard with an explicit `if ... is None: continue` before
+  arithmetic instead of asserting or casting.
+
+The railway-result and rewire-test-assert families above remain the model for
+turning each cure into one generalized, budgeted rule once the census reaches
+zero; detection-only candidates first, with `expected` receipts.
+
 The universal `railroad-result.yml` rule family implements Railway-Oriented
 Programming (ROP) normalization over `FlextResult` (`r`): terminal `if res.failure:
 return ...` passthrough guards collapse to `return res`, single-argument transform

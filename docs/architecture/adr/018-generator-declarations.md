@@ -172,12 +172,13 @@ record remains unresolved until recovery is proved. Earlier committed
 transactions remain intact; the containing operation is still failed and
 unreached work is not successful.
 
-The fast candidate/publication validation budget is at most five seconds per
-transaction, declared through the existing performance policy owner; the whole
-Make invocation, including waits, staging and recovery, remains within sixty
-seconds. Transaction sizing must leave recovery margin. Fast validation never
-weakens the frozen analyzer rules or replaces the complete gates and real
-consumer proof required for the slice. Exhausting either budget remains a
+The entire incremental transaction takes at most five seconds, including staged
+validation, publication, native refresh and bounded rollback. The existing
+performance policy owner declares that budget; the whole Make invocation,
+including lock waits, staging and recovery, remains within sixty seconds.
+Transaction sizing must leave recovery margin inside these limits. Fast
+validation never weakens the frozen analyzer rules or replaces the complete
+gates and real consumer proof required for the slice. Exhausting either budget remains a
 failure. Superseded planning/publication routes are removed in the same cutover.
 
 The [repository declaration](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_models/_config/repository.py#L457-L466)

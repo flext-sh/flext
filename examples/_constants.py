@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, MutableSequence, Sequence
 from enum import StrEnum, unique
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Final
 
 if TYPE_CHECKING:
     from examples import t
@@ -20,9 +20,9 @@ class ExamplesFlextRootConstants:
     MIN_OID_ACL_ATTRIBUTES: int = 2
     EXPECTED_OID_ACL_COUNT: int = 2
     MAX_VALUE_LENGTH: int = 100
-    SCALAR_SEQUENCE_TYPES: tuple[type, ...] = (str, bytes, bytearray)
-    NUMERIC_TYPES: tuple[type, ...] = (int, float)
-    SCALAR_VALUE_TYPES: tuple[type, ...] = (bool, int, float, str)
+    SCALAR_SEQUENCE_TYPES: Final = (str, bytes, bytearray)
+    NUMERIC_TYPES: Final = (int, float)
+    SCALAR_VALUE_TYPES: Final = (bool, int, float, str)
 
     class Stage(StrEnum):
         """Processing stage enumeration used across pipeline examples."""

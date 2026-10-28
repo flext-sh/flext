@@ -19,7 +19,9 @@
 
 - **Status:** Accepted
 - **Implementation status:** CURRENT IMPLEMENTATION (§§1–5); ACCEPTED TARGET (§6
-  enforcement migration to rope-semantic)
+  enforcement migration to rope-semantic). The 2026-10-28 collection and
+  transaction amendments are accepted contracts pending implementation and
+  runtime proof; the earlier status label does not attest those amendments.
 - **Date:** 2026-07-11
 - **Scope:** runtime configuration, declarative generation inputs, schemas, templates,
   and enforcement across FLEXT consumers. §§1–5 are CURRENT IMPLEMENTATION; §6 is
@@ -64,8 +66,21 @@ print(config.Cli.name, config.Cli.version, settings.debug)
 ```
 
 Owned payloads cross boundaries as Pydantic v2 models, validated on input and dumped on
-output. Raw mappings, untyped values, direct environment access in a leaf module, and
-model-less configuration consumption are invalid.
+output. Unvalidated raw mappings, untyped values, direct environment access in a
+leaf module, and model-less configuration consumption are invalid.
+
+**Amendment 2026-10-28 — accepted contract, implementation pending.** An
+extensible catalog is a validated sequence of domain records or a mapping
+from validated identity keys to those records, declared once by its existing
+typed owner. Adding or changing valid entries and values propagates through
+that collection without a property, protocol member, helper or orchestrator
+branch for every entry. Preserve each record's domain DTO and strict field
+validation; this does not permit `dict[str, Any]`, arbitrary attribute access,
+untyped payload transport or a parallel registry. Configuration/settings
+values retain their existing source ownership, singleton identity and layer
+precedence. A genuinely new semantic capability still requires an explicit
+contract and implementation at its existing owner; an unknown behavior is
+rejected rather than synthesized from data.
 
 ### 2. Facade and layer direction is strict
 
@@ -162,8 +177,16 @@ Conformance performs these stages in order:
 6. compare managed-file provenance and block unrecognized edits;
 7. write the complete selection only in apply mode.
 
-Check mode never writes. Apply mode never writes a partial selection. Repeated
-application of unchanged input is byte-idempotent and produces no diff.
+Check mode never writes. Repeated application of unchanged input is
+byte-idempotent and produces no diff.
+
+**Amendment 2026-10-28 — accepted contract, implementation pending.**
+[ADR-018's small-transaction contract](018-generator-declarations.md#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol)
+defines the publication unit, cooperative-reader visibility, interruption
+record and guarded reversal of owned effects. The complete dependency closure
+of a transaction is admitted together; this is not invocation-wide physical
+atomicity across files. Completed independent transactions remain intact
+when a later transaction fails, and the containing operation remains failed.
 
 File mutation uses the existing FilePlan/publication/journal owner and CLI atomic-I/O
 primitives. Compare both content and mode for CAS; never add a parallel writer or weaken
@@ -237,6 +260,10 @@ path; migration to rope-only is in progress and tracked by beads `mro-wkii.4`,
   without mocking the unit under test.
 - New-versus-existing equivalence compares complete generated trees byte for byte.
 - A second apply produces an empty plan and check mode preserves all filesystem hashes.
+- Alternative valid scalar values and collection entries propagate through the
+  same typed public contracts without per-entry Python declarations. Invalid
+  records and unknown semantic capabilities fail at origin. Tests derive
+  configuration-owned expectations from that same validated owner.
 
 ## References
 

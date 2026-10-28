@@ -15,8 +15,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from flext import u
 from flext_cli import cli
+from flext_infra import u
 
 
 class FlextRootCheckChangedProjects:

@@ -53,10 +53,12 @@ Pyrefly and Pytest evidence and required, verbatim, "pytests sempre com testmon
 para nao repetir todos toda hora e lentidão é problema gravíssimo". The tracker
 memory above retains the complete order. The later approved execution plan
 requires global Ruff/Pyrefly admission first, then global native incremental
-pytest admission, before dependent work. It also requires one peripheral `mod`
-pilot before modification reaches foundational consumers. These requirements
-supersede the older full-check-before-initial-pytest and foundation-first-mod
-ordering, not the complete quality contract required for publication.
+pytest admission, before dependent work. The latest 2026-10-28 approval requires
+three peripheral `mod` pilots in order: `flext-dbt-ldif`, `flext-tap-ldif`,
+`flext-target-ldif`. All three complete before modification reaches foundational
+consumers. These requirements supersede the older full-check-before-initial-pytest
+and foundation-first-mod ordering, not the complete quality contract required
+for publication.
 
 ## Decision
 
@@ -96,9 +98,10 @@ ordering, not the complete quality contract required for publication.
 8. **Small transactions preserve cooperative runtime visibility.** Amendment
    2026-10-28, accepted contract pending implementation: use
    [ADR-018's common barrier and owned-effect recovery](018-generator-declarations.md#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol)
-   for live Make/Rope readers and publication. The fast validation inside each
-   transaction takes at most five seconds; the public Make operation retains
-   its sixty-second deadline, including lock waits, staging, publication,
+   for live Make/Rope readers and publication. Each entire incremental
+   transaction takes at most five seconds, including staged validation,
+   publication, native refresh and bounded rollback; the public Make operation
+   retains its sixty-second deadline, including lock waits, staging, publication,
    incremental refresh and recovery. The existing performance policy owns
    those budgets; frozen analyzer rules are unchanged. Full gates and real
    runtime proof remain mandatory for every slice. Neither a committed small
@@ -179,10 +182,12 @@ authorize a structural migration or a later phase.
 
 1. Restore global source and native incremental behavioral admission. Correct
    command, rule, generator and runtime owners without weakening contracts.
-2. Repair toolchain implementations at their canonical owners, but do not apply
-   `mod` to foundational consumers before peripheral proof. Elect one declared
-   peripheral project through native dependency topology and validate behavior,
-   complete gates and an unchanged second modification before selecting the next.
+2. Repair toolchain implementations at their canonical owners, then complete
+   `flext-dbt-ldif`, `flext-tap-ldif` and `flext-target-ldif` in that approved
+   order. Each pilot requires behavior, complete gates, unchanged-input
+   convergence and integration before the next. Do not apply `mod` to
+   foundational consumers until all three pilots are accepted, or silently
+   substitute a different pilot after a failure.
 3. Continue serially from validated peripheral consumers inward. A new source
    shape extends the same generalized rule and regression corpus, never a
    package-specific exception or a fleet-wide mutation sweep.

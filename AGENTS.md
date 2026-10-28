@@ -617,14 +617,13 @@ cutover. The October 23 operator contract supersedes older common-verb examples;
 canonical global governance is reconciled at its source and propagated, never patched
 inside the managed block above.
 
-Root `make check` currently checks only the root project, not every member. To run
-a member's standard verb while keeping the workspace root as CWD, use
-`make -f <member>/Makefile <verb>` (for example,
-`make -f flext-meltano/Makefile check`). The source template
-`flext-infra/src/flext_infra/templates/project/base/Makefile.j2` derives
-`PROJECT_ROOT` from the selected Makefile, not CWD. Attached members share their
-containing workspace's runtime environment; standalone checkouts and member
-worktrees without a containing superproject own their runtime environment.
+Use the active root's selector-free public verbs for the declared workspace
+population; derive actual coverage from their current native receipts, not an
+assumption that the root checks only itself. Missing member coverage is repaired
+at the dispatcher and Make-template owner, never by manually dispatching member
+Makefiles. Attached members share their containing workspace's runtime environment;
+standalone checkouts and member worktrees without a containing superproject own
+their runtime environment.
 
 **Editable FLEXT for consumers** (operator ruling 2026-10-24, tracker memory
 `operator-ruling-2026-10-24-setup-flext-editable-param`): external projects (ai-hub and
@@ -777,6 +776,17 @@ CLI + pytest plugin, **never imported at runtime**.
   competing module/package re-exports. Consumers use that class boundary. Apply
   source moves, consumer rewrites and generated export changes in one authenticated
   semantic candidate through `make mod`; runtime behavior precedes test alignment.
+  **Composed-part publication is single-owner** (operator order 2026-10-28, tracker
+  key `operator-order-2026-10-28-facade-mro-single-owner`, bead `flext-4bsbj`): a
+  split part module declares its own uniquely named class (for example
+  `...ComparisonParsing`) and stays private inside the `_` package; the composed
+  public name is published by exactly one module — the one that composes the parts
+  by native MRO extension (exemplar: `flext-tests/src/flext_tests/files.py`). Two
+  modules publishing the same public name is a defect (lazy-init ownership
+  collision), never resolved by relaxing the generator. A module composing
+  sibling classes imports them through the family package (the sibling's own `_`
+  directory), never through the parent package root — parent lazy inits are
+  projections and must never be the resolution path for base classes.
 - **Generated ownership** comes from `Infra.codegen.templates.entries`: one catalog
   binds template sources, destinations, profiles and ownership. Never hand-edit a
   fully generated file or a managed region. Merged files preserve authored content
@@ -969,18 +979,13 @@ CLI + pytest plugin, **never imported at runtime**.
       package it regenerates, so a stale init can never block its own repair.
     - Rewrites that move imports must never create an import-time cycle. A
       reverse-direction import goes under `if TYPE_CHECKING:`.
-    - Current gaps (2026-10-25; in cure under campaign `flext-pipol`, slice
-      `flext-wcr07`, 2026-10-28):
-      - `defer_build` is not implemented in the flext-core presets;
-      - the generator still imports the target package;
-      - a codemod pass hoisted imports into real cycles;
-      - a module that declares a public class but publishes an empty `__all__` is
-        not yet reported. The generator correctly propagates nothing, so the
-        consumers silently lose the class; this was measured on 28 ai-hub modules.
-
-      Each gap is fixed at its owner under campaign `flext-pipol` (the
-      stabilization task force successor for these items); their closure carries
-      command evidence on the campaign beads.
+    - Revalidate historical gap reports at the current owners before repair:
+      effective `defer_build` coverage, dependencies before native lazy planning,
+      cycle validation after import movement, and declaration/export mismatch
+      diagnostics. Importing generator dependencies alone does not prove that the
+      planner executes its target package. Historical counts do not establish
+      current scope or a causal mechanism. Campaign `flext-pipol`, within
+      `flext-brr3y`, retains investigation and closure evidence in Beads.
   - No source code or long text embedded as string literals (multi-line or
     concatenated scripts for `exec`/subprocess, long text constants), in any tier,
     tests and constants included: tests call the public API with fixture data;

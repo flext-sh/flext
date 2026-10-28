@@ -106,6 +106,17 @@ lookup and no ordering by file name. A config singleton reads only its own names
 section (the flext-core `YAML_CONFIG_SECTION` hook, derived per subclass), so files of
 other owners in the same directory never enter it.
 
+**Amendment 2026-10-28 — accepted contract, implementation pending.** Extensible
+entries use the validated collection contract at
+[ADR-005 §1](005-config-settings-constants-templates-schemas-ssot.md#1-each-concern-has-exactly-one-owner).
+The three layers above apply identically to typed lists and maps. An entry is
+configuration data, not a new model field or protocol property. Reuse the
+same domain record contract across consumers without adding an accessor,
+helper, orchestrator branch or second catalog per entry. Preserve the
+existing singleton identity and validation boundary. This changes neither
+merge precedence nor the requirement to implement a genuinely new semantic
+capability at its canonical owner.
+
 ### D4. Derive, never redeclare
 
 A value the typed owner can derive from the repository's own tracked content is never
@@ -189,6 +200,10 @@ delta, an unknown key, or a stale block.
   configuration, and no project name in its packaged configuration.
 - A local-layer scalar beats the committed layer, which beats the library default,
   observed through the public read with an injected repository root.
+- Valid typed map entries and list entries follow the same layered public read
+  without per-entry Python changes. Validate their domain records and origin,
+  preserve namespace/singleton identity, and reject unknown behavior; no test
+  freezes today's catalog population or configured scalar.
 - `make fix` removes a redundant declaration; re-adding it turns `make check` red.
 - Zero occurrences fleet-wide of redundant config keys `checkout:`, `members:`,
   `external_consumers`,

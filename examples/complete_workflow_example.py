@@ -31,29 +31,6 @@ if TYPE_CHECKING:
 class FlextRootCompleteWorkflowExample:
     """Demonstrate an end-to-end enterprise integration workflow."""
 
-    class ImmutableMappings:
-        """Typed immutable mapping factories shared by the workflow models."""
-
-        @staticmethod
-        def json_mapping() -> t.JsonMapping:
-            """Return a typed immutable empty JSON mapping.
-
-            Returns:
-                A typed immutable empty JSON mapping.
-
-            """
-            return MappingProxyType[str, t.JsonValue]({})
-
-        @staticmethod
-        def scalar_mapping() -> t.ScalarMapping:
-            """Return a typed immutable empty scalar mapping.
-
-            Returns:
-                A typed immutable empty scalar mapping.
-
-            """
-            return MappingProxyType[str, t.Scalar]({})
-
     ProcessingDict = t.JsonMapping
     WorkflowContent = t.JsonMapping
 
@@ -86,7 +63,7 @@ class FlextRootCompleteWorkflowExample:
             description="List of workflow stages to execute",
         )
         metadata: t.JsonMapping = m.Field(
-            default_factory=FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping,
+            default_factory=lambda: MappingProxyType[str, t.JsonValue]({}),
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: t.MutableJsonMapping = m.Field(
@@ -116,7 +93,7 @@ class FlextRootCompleteWorkflowExample:
             description="List of warnings encountered",
         )
         stage_metadata: t.JsonMapping = m.Field(
-            default_factory=FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping,
+            default_factory=lambda: MappingProxyType[str, t.JsonValue]({}),
             description="Stage-specific metadata",
         )
 
@@ -142,7 +119,7 @@ class FlextRootCompleteWorkflowExample:
         )
 
         aggregated_metrics: t.JsonMapping = m.Field(
-            default_factory=FlextRootCompleteWorkflowExample.ImmutableMappings.json_mapping,
+            default_factory=lambda: MappingProxyType[str, t.JsonValue]({}),
             description="Aggregated metrics across all stages",
         )
 
@@ -171,7 +148,7 @@ class FlextRootCompleteWorkflowExample:
             default_factory=tuple,
         )
         workflow_settings: t.ScalarMapping = m.Field(
-            default_factory=FlextRootCompleteWorkflowExample.ImmutableMappings.scalar_mapping,
+            default_factory=lambda: MappingProxyType[str, t.Scalar]({}),
         )
 
         def execute(self) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
