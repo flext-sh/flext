@@ -1582,7 +1582,7 @@ msg = "Use cli.create_app_with_common_params / cli.register_command from flext_c
 [tool.ruff.lint.flake8-type-checking]
 runtime-evaluated-base-classes = [
   "examples.m.BaseModel",
-  "flext.FlextRootModels.Value",
+  "flext.FlextModelsRoot.Value",
   "flext_core.FlextConfig",
   "flext_core.FlextSettings",
   "flext_infra.m.BaseModel",

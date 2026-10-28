@@ -215,7 +215,7 @@ State verified after the dedicated agent cycle (evidence: bead `flext-v4fmn`,
 - **Codegen engine**: conform execute composes `FlextInfraCodegenConformPlan` + roles
   mixin; `misc.py` defers the `execute` import to `TYPE_CHECKING` (breaking the
   execute→plan→misc→execute cycle); `.state` cleanup tolerates persistent residents
-  (lease lock + lazy-init receipts); direct `FlextInfraConfigModels` import in
+  (lease lock + lazy-init receipts); direct `FlextInfraModelsConfig` import in
   `workspace.py`.
 - **cli**: floor `click>=8.3.3,<8.4` restored (meltano cap; sources: codegen SSOT +
   projection + root `constraint-dependencies` where applicable).

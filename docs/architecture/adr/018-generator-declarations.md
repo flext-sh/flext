@@ -114,6 +114,129 @@ contract belongs to
 `flext-s9r3a` and `flext-1engx.15` retain implementation ownership under the
 `flext-brr3y` campaign.
 
+### Model and service protocol projection
+
+**Amendment 2026-10-28 — accepted operator target, implementation and runtime
+acceptance pending.** `flext-vjj1s.8` owns the existing model-to-`p` restoration;
+the operator's newer instruction extends that owner to first-party service
+contracts, source-module layout, automatic consumer rewiring and pilot coverage.
+The MRO/Pydantic analyzer and environment acceptance tracked by
+`flext-itpd1.13.11` remains incomplete and is not replaced by this amendment.
+
+Every `make gen` derives model and service structural protocols through the
+existing flext-infra projection owner. Its input is the complete authenticated
+native Python inventory of the elected repository/workspace, including `src`,
+`tests`, `examples`, `scripts` and every other discovered Python module. These
+examples are not a closed tier list. Discovery and classification follow native
+declaration identities, inheritance, nested facade ownership and specialization;
+neither filename spelling nor an existing consumer reference limits coverage.
+Every discovered model and service receives an accounted classification and
+projection disposition. Unresolved identities fail with their original cause;
+they are not omitted or normalized into an empty successful projection.
+
+The output describes the first-party declaration's actual structural contract.
+Model protocols preserve effective field and computed-property types,
+inheritance, generic specialization and read/write capability. Service protocols
+preserve their own public callable contracts, including sync/async behavior,
+parameter kinds, defaults in signatures, overloads, generics and return types.
+This does not copy an external SDK into a local typing surface. Existing authored
+DI ports remain their declared capability owners; generation neither replaces
+them with a service implementation nor weakens an originating contract.
+Constructors, validation, field defaults/factories, schema, model configuration,
+validators, serializers and handler metadata retain their real runtime owners.
+A structural projection never becomes a second runtime model, validation engine
+or operation/schema registry.
+
+Projection modules correspond to the semantic source-module owners of the
+models and services and group the declarations owned by those modules. They live
+in the canonical protocol family under [ADR-014](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership),
+without a `generated` directory/prefix or one file per model. Existing names and
+ownership are resolved through the native inventory. Ambiguous ownership or an
+incompatible occupied destination fails explicitly before effects; no numbered
+suffix, guessed basename or per-symbol mapping table resolves a collision.
+Generated protocols, authored ports, composed facades and lazy exports preserve
+their distinct owners and public identities.
+
+The existing native Rope workspace model and reference graph drive discovery,
+annotation resolution and automatic rewiring through flext-infra. `make gen`
+derives the projection on every invocation; `make check` compares its drift
+without mutation. Authored annotation and layout cutover, structural consumer
+rewiring and obsolete-owner retirement belong to `make mod`, under
+[ADR-010's operation ownership](010-unified-project-standardization-via-codegen.md#3b-semantic-discovery-and-automated-rewiring).
+Generation does not execute an authored codemod or invoke `make mod`. The existing
+modification candidate includes dependent protocols, facades and lazy exports
+through their existing projection owner as coherent migration effects; it neither
+invokes `make gen` nor implements another generator.
+
+Every structural cutover candidate closes all actual affected workspace consumers:
+imports, annotations, inheritance, quoted references, facades and lazy exports
+move together. Generation must fail before effects when publication would require
+an unplanned authored cutover or leave a consumer pointing to a retired identity.
+It reports that original ownership/consumer failure rather than omitting the
+projection, publishing a partial replacement or retaining an old/new compatibility
+route. A legacy projection is retired only when its generated ownership and
+preimage are authenticated and native reference accounting proves that the same
+coherent candidate rewires every affected consumer. A filename prefix or generated
+header alone never authorizes deletion. Do not publish a protocol and leave its
+callers for a later transaction.
+
+Both operations reuse the existing rule catalog, candidate, publisher and read-only
+drift comparison; no new public composite verb, parallel scanner, semantic database,
+publication engine or manual call-site sweep is introduced. Unchanged observations
+reuse native caches and changed resources refresh incrementally under the
+transaction contract below.
+
+Complete this entire pattern before extending the same native mechanism to other
+expensive ast-grep patterns. Profile the real path with cProfile, tune
+the measured owner through CA/DI and existing native capabilities, and preserve
+all detection and runtime behavior. The first pilots are distant from core;
+`flext-dbt-ldif`, `flext-tap-ldif` and `flext-target-ldif` are initial candidates,
+not proof of sufficient coverage. Derive a variation/coverage matrix from the
+complete inventory and cover every actual variation before scaling to the fleet.
+Every pilot transaction still includes all of its affected workspace consumers.
+
+**Proposed phase-admission mechanism — awaiting an explicit operator decision.**
+The accepted protocol/pilot target above does not authorize changing the drift
+gate's scope. The current root operations do not expose live-pilot phase admission.
+One proposed implementation extends the existing transaction/admission owner
+with typed, declarative enrollment, phase prerequisites and coverage policy.
+Discovery and generation planning would remain complete across the workspace;
+only coherent admitted pilot effects would be published before fleet rollout,
+including every affected caller outside the initial pilot projects.
+
+The pending decision is whether drift admission may evaluate those admitted
+cohorts while the fleet remains explicitly incomplete and all Python checker
+scopes remain unchanged, or whether pilots must be qualified in staged candidates
+before a global rollout under the existing drift contract. These alternatives
+are not equivalent live-publication evidence. Neither is selected by this ADR,
+elapsed time, an unanswered question or the accepted high-level pilot target.
+No phase/drift policy change or implementation is authorized by this proposal.
+
+If cohort admission is approved, fleet effects would require complete pilot
+variation coverage, published-pilot runtime, applicable native gates and integration
+proof; staged validation alone would not replace those receipts. Unelected work
+would remain explicitly unexecuted and incomplete, never full-workspace success
+or an accepted skip. Any approved mechanism must retain the selector-free root
+Make interface and unchanged checker includes/excludes, CI mode, file filters and
+diagnostic rules. No public selector, project-name allowlist, parallel projector
+or orchestration pipeline is proposed. Existing typed configuration would own the
+policy grammar, with native inventory/source identities binding cohort coverage.
+Beads remains the execution-state owner and publisher receipts remain evidence,
+not another tracker. The small-transaction interface and runtime proof below
+remain prerequisites where implementation is pending; this proposal certifies
+neither their readiness nor a completed pilot.
+
+Successful pilot proof admits only the fleet rollout of this same pattern.
+Finish its fleet-wide definitions, uses and complete consumer rewiring, real
+runtime proof, applicable native gates and integration closure before beginning
+another pattern. A passing pilot never authorizes switching patterns while that
+rollout or any affected consumer remains incomplete.
+The existing five-second transaction and sixty-second Make budgets, source
+authentication, own-effects rollback and frozen analyzer rules remain unchanged.
+Acceptance requires real public runtime and invalid-case detection, native
+gates, complete coverage accounting, repeated generation/refactoring fixed point
+and integrated evidence; a source restoration or sampled pilot is not completion.
+
 ### Single-read, single-batch publication (amended 2026-10-28, campaign `flext-pipol`)
 
 **Amendment 2026-10-28 — accepted contract, implementation pending.** The

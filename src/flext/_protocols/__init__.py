@@ -16,14 +16,14 @@ if TYPE_CHECKING:
     from flext._protocols.base import FlextRootProtocolsBase
     from flext._protocols.config import FlextRootProtocolsConfig
     from flext._protocols.generated_models_value import (
-        FlextRootProtocolsGeneratedModelsValue,
+        FlextModelsRootProtocolsGeneratedValue,
     )
 
 
 __all__: tuple[str, ...] = (
+    "FlextModelsRootProtocolsGeneratedValue",
     "FlextRootProtocolsBase",
     "FlextRootProtocolsConfig",
-    "FlextRootProtocolsGeneratedModelsValue",
 )
 
 install_lazy_exports(
@@ -32,7 +32,7 @@ install_lazy_exports(
     MappingProxyType({
         "FlextRootProtocolsBase": ".base",
         "FlextRootProtocolsConfig": ".config",
-        "FlextRootProtocolsGeneratedModelsValue": ".generated_models_value",
+        "FlextModelsRootProtocolsGeneratedValue": ".generated_models_value",
     }),
     public_exports=__all__,
 )

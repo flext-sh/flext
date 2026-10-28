@@ -12,7 +12,7 @@ from flext import t
 from flext_infra import m
 
 
-class FlextRootModelsConfig:
+class FlextModelsRootConfig:
     """Config models for flext-workspace."""
 
     class PipelinePayload(m.BaseModel):
@@ -30,9 +30,9 @@ class FlextRootModelsConfig:
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
-        data: FlextRootModelsConfig.PipelinePayload = m.Field(
+        data: FlextModelsRootConfig.PipelinePayload = m.Field(
             description="Payload produced by the preceding pipeline stage.",
         )
 
 
-__all__ = ("FlextRootModelsConfig",)
+__all__ = ("FlextModelsRootConfig",)

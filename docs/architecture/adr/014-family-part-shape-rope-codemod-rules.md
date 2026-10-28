@@ -104,6 +104,12 @@ has already passed its runtime and native validation gates.
    MRO; reject unresolved ownership and occupied destinations before publication.
    Compatibility aliases and duplicate old/new owners are not migration results.
 
+The accepted 2026-10-28 [model and service protocol projection](018-generator-declarations.md#model-and-service-protocol-projection)
+contract owns the corresponding protocol-module layout and its complete semantic
+consumer cutover. Apply the family ownership rules above to that projection;
+neither a `generated` namespace nor per-model files create a separate family shape.
+This is the target layout, not a claim that current projections or pilots conform.
+
 The refactor and generator owners enforce this contract together. Existing symbol
 names are not renamed merely to decorate a file move; any required symbol change
 must have a semantic owner and preserve the observable consumer contract.

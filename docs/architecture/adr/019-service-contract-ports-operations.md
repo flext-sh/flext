@@ -114,8 +114,12 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
    (`@h.handler(command=None, default=True)`); `@h.query` marks a read-only
    operation; `m.ServiceOperation` records `public_name`, `kind`, `default` and the
    `output` type derived from `p.Result[X]`. The request Protocols are generated from
-   the models by the flext-infra model-to-`p` generator (operator decision recorded on
-   `flext-vjj1s.8`), never hand-mirrored.
+   the models by flext-infra, never hand-mirrored. The accepted 2026-10-28
+   [model and service protocol projection](018-generator-declarations.md#model-and-service-protocol-projection)
+   contract owns generation of the service's own structural callable surface and
+   its request protocols, tracked by `flext-vjj1s.8`. It preserves the runtime
+   operation metadata, schema binding and authored DI ports described here;
+   projection is not a substitute for their real runtime acceptance.
 5. **One transport contract (amended 2026-10-24).** Operations are the only public
    surface a transport serves. Adapters derive everything from
    `u.service_operations` and never take a hand-kept route, command or option list:

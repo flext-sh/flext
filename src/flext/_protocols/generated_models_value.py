@@ -11,10 +11,10 @@ from __future__ import annotations
 from typing import Protocol, runtime_checkable
 
 
-class FlextRootProtocolsGeneratedModelsValue:
+class FlextModelsRootProtocolsGeneratedValue:
     @runtime_checkable
     class Value(Protocol):
         pass
 
 
-__all__ = ["FlextRootProtocolsGeneratedModelsValue"]
+__all__ = ["FlextModelsRootProtocolsGeneratedValue"]

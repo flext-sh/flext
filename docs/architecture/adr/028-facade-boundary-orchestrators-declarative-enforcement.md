@@ -356,7 +356,7 @@ outside the facades across 12 repositories.
      - A strict contract declaring an Enum field retains the member's type during
        Python validation and handoff by reference. Pydantic's `use_enum_values=True`
        extracts its primitive value during validation, so it cannot be inherited by
-       the [Core `ContractModel` preset](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/src/flext_core/_models/_base/flextmodelsbase_part_02.py#L133-L143).
+       the [Core `ContractModel` preset](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/src/flext_core/_models/_base/Flextmodelsbase_part_02.py#L133-L143).
        Serialize primitive values at the outward JSON boundary, not between strict
        contracts.
      - A field naming a sibling through its own enclosing family class is banned

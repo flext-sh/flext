@@ -29,6 +29,20 @@ incremental. The active Bead records implementation and verification separately.
 Source validation, generated publication and installed consumption remain separate
 receipts under the existing verification owner.
 
+For source-derived model/service protocols, compose
+[ADR-018](../../docs/architecture/adr/018-generator-declarations.md#model-and-service-protocol-projection)
+and the
+[Pydantic consumer guide](../../docs/guides/using-pydantic.md#source-derived-protocol-contracts).
+Its current protocol amendment owns projection shape, all-Python consumer scope,
+native Rope migration and pilot-before-rollout proof. Cover every pilot variation,
+then complete that same pattern's fleet declarations and consumer rewires, real
+runtime, native gates and integration closure before beginning another pattern.
+The older protocol/stub
+plan's supersession notice distinguishes this authorized first-party generation
+from the retained SDK and local-stub prohibition. Preserve the MRO/environment
+plan's acceptance while following the operator's protocol-first sequence; the
+active Bead records receipts and does not redefine the architecture.
+
 For structural cleanup, also compose the canonical global `search-first`, `yagni`,
 `ssot`, `solid`, `simplify`, and `dry` skills in that order. Execute rewires through
 root `make mod`; its FLEXT-owned ast-grep, Rope, and LSP pipeline discovers hierarchy

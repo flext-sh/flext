@@ -106,6 +106,16 @@ installed delivery remain separate evidence. Global governance is authored under
   dialect name, and no dialect knows another (tracker memories
   `operator-order-2026-10-25-facades-rfc-extensions-metadata-only` and
   `operator-order-2026-10-25-dialects-never-know-each-other`).
+- Source-derived model and service protocols follow
+  [ADR-018's protocol contract](../../../docs/architecture/adr/018-generator-declarations.md#model-and-service-protocol-projection).
+  That owner defines module correspondence, complete Python-consumer migration,
+  native semantic discovery and pilot acceptance. Apply its 2026-10-28 amendment
+  before the older model-mirror retirement plan; the separate SDK/local-stub ban
+  remains in force. Pilot coverage of every variation admits the same pattern's
+  fleet rollout, including all definitions and affected consumers. Complete that
+  entire pattern's runtime, native gates and integration closure before beginning
+  another pattern. Do not restore historical branch
+  implementations or edit installed global skills as an execution shortcut.
 - Each package has one thin `api.py` MRO facade and one simple generated root
   `__init__.py` with automatic lazy public exports. Custom import routers, eager
   alternatives, compatibility aliases, and duplicate facades are forbidden.

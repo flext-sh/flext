@@ -149,8 +149,8 @@ warning(s)
         "~/flext/flext-core/src/flext_core/_decorators/_logging.py::FlextDecoratorsLogging._resolve_correlation_id",
         "~/flext/flext-core/src/flext_core/_decorators/_logging.py::FlextDecoratorsLogging._execute_logged_call",
         "~/flext/flext-core/src/flext_core/_decorators/_logging.py::FlextDecoratorsLogging.with_correlation",
-        "~/flext/flext-core/src/flext_core/_models/_context/_scope/flextmodelscontextscope_part_02.py::FlextModelsContextScope.ContextRuntimeState",
-        "~/flext/flext-core/src/flext_core/_models/_context/_scope/flextmodelscontextscope_part_02.py::FlextModelsContextScope.ContextRuntimeState.create_default"
+        "~/flext/flext-core/src/flext_core/_models/_context/_scope/Flextmodelscontextscope_part_02.py::FlextModelsContextScope.ContextRuntimeState",
+        "~/flext/flext-core/src/flext_core/_models/_context/_scope/Flextmodelscontextscope_part_02.py::FlextModelsContextScope.ContextRuntimeState.create_default"
       ],
       "members_total": 590,
       "members_truncated": true
@@ -164,16 +164,16 @@ warning(s)
       "dominant_language": "python",
       "description": "Community of 345 nodes",
       "members": [
-        "~/flext/flext-infra/src/flext_infra/codegen/_fixer_results.py::FlextInfraCodegenFixerResultsMixin",
-        "~/flext/flext-infra/src/flext_infra/codegen/_fixer_results.py::FlextInfraCodegenFixerResultsMixin._empty_result",
-        "~/flext/flext-infra/src/flext_infra/codegen/_fixer_results.py::FlextInfraCodegenFixerResultsMixin._build_result",
-        "~/flext/flext-infra/src/flext_infra/codegen/_fixer_results.py::FlextInfraCodegenFixerResultsMixin._load_initial_violations",
-        "~/flext/flext-infra/src/flext_infra/codegen/_fixer_results.py::FlextInfraCodegenFixerResultsMixin._classify_remaining_violations",
-        "~/flext/flext-infra/src/flext_infra/codegen/_pipeline_stages.py::FlextInfraCodegenPipelineStagesMixin",
-        "~/flext/flext-infra/src/flext_infra/codegen/_pipeline_stages.py::FlextInfraCodegenPipelineStagesMixin._run_stage",
-        "~/flext/flext-infra/src/flext_infra/codegen/_pipeline_stages.py::FlextInfraCodegenPipelineStagesMixin._stage_discover",
-        "~/flext/flext-infra/src/flext_infra/codegen/_pipeline_stages.py::FlextInfraCodegenPipelineStagesMixin._action",
-        "~/flext/flext-infra/src/flext_infra/codegen/_pipeline_stages.py::FlextInfraCodegenPipelineStagesMixin._emit"
+        "~/flext/flext-infra/src/flext_infra/codegen/_fixer_results.py::FlextInfraCodegenFixerResults",
+        "~/flext/flext-infra/src/flext_infra/codegen/_fixer_results.py::FlextInfraCodegenFixerResults._empty_result",
+        "~/flext/flext-infra/src/flext_infra/codegen/_fixer_results.py::FlextInfraCodegenFixerResults._build_result",
+        "~/flext/flext-infra/src/flext_infra/codegen/_fixer_results.py::FlextInfraCodegenFixerResults._load_initial_violations",
+        "~/flext/flext-infra/src/flext_infra/codegen/_fixer_results.py::FlextInfraCodegenFixerResults._classify_remaining_violations",
+        "~/flext/flext-infra/src/flext_infra/codegen/_pipeline_stages.py::FlextInfraCodegenPipelineStages",
+        "~/flext/flext-infra/src/flext_infra/codegen/_pipeline_stages.py::FlextInfraCodegenPipelineStages._run_stage",
+        "~/flext/flext-infra/src/flext_infra/codegen/_pipeline_stages.py::FlextInfraCodegenPipelineStages._stage_discover",
+        "~/flext/flext-infra/src/flext_infra/codegen/_pipeline_stages.py::FlextInfraCodegenPipelineStages._action",
+        "~/flext/flext-infra/src/flext_infra/codegen/_pipeline_stages.py::FlextInfraCodegenPipelineStages._emit"
       ],
       "members_total": 345,
       "members_truncated": true
@@ -239,10 +239,10 @@ warning(s)
         "~/flext/flext-infra/src/flext_infra/check/workspace_check_gates.py::FlextInfraGateRegistry.get",
         "~/flext/flext-infra/src/flext_infra/check/workspace_check_gates.py::FlextInfraGateRegistry.create",
         "~/flext/flext-infra/src/flext_infra/check/workspace_check_gates.py::FlextInfraGateRegistry.default",
-        "~/flext/flext-infra/src/flext_infra/check/workspace_check_gates.py::FlextInfraWorkspaceCheckGatesMixin",
-        "~/flext/flext-infra/src/flext_infra/check/workspace_check_gates.py::FlextInfraWorkspaceCheckGatesMixin._isolate_context",
-        "~/flext/flext-infra/src/flext_infra/check/workspace_check_gates.py::FlextInfraWorkspaceCheckGatesMixin._run_single_project",
-        "~/flext/flext-infra/src/flext_infra/check/workspace_check_gates.py::FlextInfraWorkspaceCheckGatesMixin._run_project_loop"
+        "~/flext/flext-infra/src/flext_infra/check/workspace_check_gates.py::FlextInfraWorkspaceCheckGates",
+        "~/flext/flext-infra/src/flext_infra/check/workspace_check_gates.py::FlextInfraWorkspaceCheckGates._isolate_context",
+        "~/flext/flext-infra/src/flext_infra/check/workspace_check_gates.py::FlextInfraWorkspaceCheckGates._run_single_project",
+        "~/flext/flext-infra/src/flext_infra/check/workspace_check_gates.py::FlextInfraWorkspaceCheckGates._run_project_loop"
       ],
       "members_total": 290,
       "members_truncated": true
@@ -302,11 +302,11 @@ warning(s)
       "dominant_language": "python",
       "description": "Community of 206 nodes",
       "members": [
-        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py::FlextCliUtilitiesFileTestHelpersMixin",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py::FlextCliUtilitiesFileTestHelpersMixin.files_context",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py::FlextCliUtilitiesFileTestHelpersMixin._files_write_structured",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_04.py::FlextCliUtilitiesFileTestHelpersMixin",
-        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_04.py::FlextCliUtilitiesFileTestHelpersMixin.files_parse_content",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py::FlextCliUtilitiesFileTestHelpers",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py::FlextCliUtilitiesFileTestHelpers.files_context",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py::FlextCliUtilitiesFileTestHelpers._files_write_structured",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_04.py::FlextCliUtilitiesFileTestHelpers",
+        "~/flext/flext-cli/src/flext_cli/_utilities/_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_04.py::FlextCliUtilitiesFileTestHelpers.files_parse_content",
         "~/flext/flext-cli/src/flext_cli/_utilities/_files/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles",
         "~/flext/flext-cli/src/flext_cli/_utilities/_files/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles.files_delete",
         "~/flext/flext-cli/src/flext_cli/_utilities/_files/flextcliutilitiesfiles_part_01.py::FlextCliUtilitiesFiles._delete",
@@ -420,10 +420,10 @@ warning(s)
         "~/flext/flext-cli/tests/unit/test_base.py::TestsFlextCliBase.test_canonical_settings_satisfies_cli_protocol",
         "~/flext/flext-cli/tests/unit/test_runtime_streamed_process.py::TestsFlextCliRuntimeStreamedProcess.test_legacy_timeout_contract_remains_a_failure",
         "~/flext/flext-cli/tests/unit/test_runtime_streamed_process.py::TestsFlextCliRuntimeStreamedProcess.test_broken_live_sink_fails_after_complete_durable_log",
-        "~/flext/flext-cli/tests/unit/test_runtime_utilities_extra.py::TestsFlextCliRuntimeUtilitiesExtra.test_run_checked_fails_with_error_naming_failure",
-        "~/flext/flext-cli/tests/unit/test_runtime_utilities_extra.py::TestsFlextCliRuntimeUtilitiesExtra.test_run_to_file_fails_with_timeout_error_on_slow_command",
-        "~/flext/flext-cli/tests/unit/test_runtime_utilities_extra.py::TestsFlextCliRuntimeUtilitiesExtra.test_run_to_file_fails_with_execution_error_on_unwritable_target",
-        "~/flext/flext-cli/tests/unit/test_runtime_utilities_extra.py::TestsFlextCliRuntimeUtilitiesExtra.test_run_to_file_fails_with_execution_error_on_invalid_env",
+        "~/flext/flext-cli/tests/unit/test_runtime_utilities_extra.py::TestsFlextCliUtilitiesRuntimeExtra.test_run_checked_fails_with_error_naming_failure",
+        "~/flext/flext-cli/tests/unit/test_runtime_utilities_extra.py::TestsFlextCliUtilitiesRuntimeExtra.test_run_to_file_fails_with_timeout_error_on_slow_command",
+        "~/flext/flext-cli/tests/unit/test_runtime_utilities_extra.py::TestsFlextCliUtilitiesRuntimeExtra.test_run_to_file_fails_with_execution_error_on_unwritable_target",
+        "~/flext/flext-cli/tests/unit/test_runtime_utilities_extra.py::TestsFlextCliUtilitiesRuntimeExtra.test_run_to_file_fails_with_execution_error_on_invalid_env",
         "~/flext/flext-cli/tests/unit/test_settings.py::TestsFlextCliSettingsUnit.test_settings_singleton_satisfies_contract",
         "~/flext/flext-cli/tests/unit/test_settings.py::TestsFlextCliSettingsUnit.test_reset_for_testing_restores_usable_defaults",
         "~/flext/flext-core/tests/integration/service_lifecycle_cases.py::TestsFlextFlextServiceLifecycleCases.test_lifecycle_service_initialization"

@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext._models import FlextRootModelsBase, FlextRootModelsConfig
+from flext._models import FlextModelsRootBase, FlextModelsRootConfig
 from flext_db_oracle import m
 from flext_grpc import m as flext_grpc_m
 from flext_infra import m as flext_infra_m
@@ -21,7 +21,7 @@ from flext_quality import m as flext_quality_m
 from flext_tests import m as flext_tests_m
 
 
-class FlextRootModels(
+class FlextModelsRoot(
     flext_oracle_oic_m,
     flext_oracle_wms_m,
     flext_quality_m,
@@ -37,15 +37,15 @@ class FlextRootModels(
     """Workspace root models facade — access via m.Root.*.
 
     MRO ordered by inheritance depth (deepest first) to satisfy C3 linearization.
-    FlextAuthModels is inherited via FlextOracleOicModels.
+    FlextAuthModels is inherited via FlextModelsOracleOic.
     FlextApiModels, FlextWebModels, FlextCliModels are inherited via
     the OracleOic/OracleWms/Quality paths.
     FlextLdifModels is inherited via FlextLdapModels.
     """
 
-    class Root(FlextRootModelsBase, FlextRootModelsConfig):
+    class Root(FlextModelsRootBase, FlextModelsRootConfig):
         """Workspace root models MRO composition."""
 
 
-m = FlextRootModels
-__all__: list[str] = ["FlextRootModels", "m"]
+m = FlextModelsRoot
+__all__: list[str] = ["FlextModelsRoot", "m"]
