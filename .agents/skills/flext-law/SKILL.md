@@ -256,12 +256,17 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   add `WHAT=` or `PROJECT=` to setup, generation, repair, formatting, checking, or
   testing.
 - The common Make surface is `setup`, `upg`, `gen`, `mod`, `fix`, `fmt`, `check`,
-  `tests`, `help`, `build` and `clean`. Repository-owned product commands remain
+  `tests`, `tests-full`, `help`, `build` and `clean`. Repository-owned product commands remain
   explicit extensions. Former subverbs are absorbed into their operation owner,
   never retained as aliases or a second pipeline.
 - `tests` executes native incremental Testmon selection over the complete
   applicable population with the persistent database. It never forces a repeated
-  full run or adds a second execution pass; no file/full public aliases are added.
+  full run or adds a second execution pass. The explicit `tests-full` operation
+  executes the complete applicable population once without Testmon or a preliminary
+  incremental run; it preserves the database untouched and uses no cache lease or
+  publication. This 2026-10-28 operator clarification supersedes the no-full-verb
+  prescription; [ADR-029](../../../docs/architecture/adr/029-always-working-one-complete-cycle.md)
+  owns the distinction. No file/full compatibility aliases are added.
   The 2026-10-26 operator order requires global Ruff, Pyrefly and pytest evidence
   before advancement. Global source admission precedes native incremental pytest;
   the full applicable checks still precede completion and integration. Existing

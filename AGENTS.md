@@ -609,8 +609,10 @@ tests change only after real subsystem and cold-bootstrap proof.
 submodule. Use `make`, never bare
 `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
 
-The approved common Make interface is exactly `setup`, `upg`, `gen`, `mod`, `fix`,
-`fmt`, `check`, `tests`, `help`, `build`, and `clean`. The typed catalog owns its
+The approved common Make interface is `setup`, `upg`, `gen`, `mod`, `fix`,
+`fmt`, `check`, `tests`, `tests-full`, `help`, `build`, and `clean`. The operator's
+2026-10-28 clarification adds the explicit full-suite operation (ADR-029),
+superseding the earlier eleven-verb limit. The typed catalog owns its
 grammar; `make help` projects it. Product-specific commands remain in their declaring
 repositories. Generic aliases, subverbs and composite wrappers do not survive the
 cutover. The October 23 operator contract supersedes older common-verb examples;
@@ -672,7 +674,11 @@ then `setup` explicitly to install them. Generation does not install dependencie
 `check` owns read-only validation, including documentation and integrity checks.
 `tests` uses native incremental Testmon selection over the complete applicable
 population with the same persistent database. It does not force a repeated full
-run, add a second execution pass, or accept a manual file selector. The operator
+run, add a second execution pass, or accept a manual file selector.
+`tests-full` executes the complete applicable population once without Testmon,
+without first running `tests`, and without reading, leasing or changing the
+Testmon database. Both retain the same admission and deadline requirements
+([ADR-029](docs/architecture/adr/029-always-working-one-complete-cycle.md)). The operator
 order of 2026-10-26 requires global Ruff, Pyrefly and pytest evidence before
 advancing; preserve the green-check prerequisite and fix performance at its owner.
 

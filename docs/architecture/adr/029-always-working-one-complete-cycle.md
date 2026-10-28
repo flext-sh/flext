@@ -16,6 +16,7 @@
 - **Date:** 2026-10-24
 - **Amended:** 2026-10-26 — global primary admission, native Testmon selection and
   serial peripheral-first modification
+- **Amended:** 2026-10-28 — explicit full-suite operation without Testmon
 - **Scope:** every FLEXT repository (superproject, every member, external consumers
   such as ai-hub) and every agent or session working in them
 - **Tracker memories:** `operator-order-2026-10-24-always-working-never-skip-phase`,
@@ -61,6 +62,20 @@ and foundation-first-mod ordering, not the complete quality contract required
 for publication.
 
 ## Decision
+
+The operator clarified the test operations on 2026-10-28 in the active root
+conversation, verbatim: "make tests (usa tetmon )  make tests-fulll nao usa,
+simples assim". The canonical existing spelling is `tests-full`; no typo alias
+is introduced. Tracker memory
+`operator-ruling-2026-10-28-tests-testmon-full-native` records the decision.
+`tests` retains native incremental Testmon selection. `tests-full` executes the
+complete applicable population once without Testmon and without a preliminary
+incremental execution. It neither loads the Testmon plugin nor reads, leases,
+checks, updates or publishes its database. The existing database remains untouched.
+Both operations retain original source admission, applicability, failure accounting
+and the active Make deadline. This supersedes the older no-full-verb and
+incremental-then-full prescriptions; it does not grant an unlimited-time exception.
+Source, generated consumers, runtime proof and integration remain separate states.
 
 1. **The project and its runtime work 100% of the time.** No integration tip and no
    published branch is left with a red gate, a failing test or a broken runtime.
@@ -134,6 +149,9 @@ admission; do not replace it with a green member or a stale whole-workspace run.
    A typed cache hit requires database integrity and complete accounting; report
    it as a cache hit, never as tests executed and passed. No repeated full pass is
    added to the normal invocation.
+   When explicitly requested, `make tests-full` runs that complete applicable
+   population once without Testmon or an incremental pre-run. It requires actual
+   execution accounting; a cache hit cannot admit the full-suite operation.
 6. Real runtime proof through the public consumer (CLI from a neutral directory,
    installed artifact, real service), not only tests.
 7. Commit by explicit paths, fast-forward push, pull request to the integration

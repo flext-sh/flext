@@ -62,7 +62,7 @@ Community of 110 nodes
 | test_success                                            | Test     | flext-infra/tests/unit/deps/test_detection_discover.py              | 19-29   |
 | test_failure                                            | Test     | flext-infra/tests/unit/deps/test_detection_discover.py              | 31-35   |
 | test_filters_without_pyproject                          | Test     | flext-infra/tests/unit/deps/test_detection_discover.py              | 37-48   |
-| TestsFlextInfraDepsDetectionModels                      | Class    | flext-infra/tests/unit/deps/test_detection_models.py                | 15-163  |
+| TestsFlextInfraModelsDepsDetection                      | Class    | flext-infra/tests/unit/deps/test_detection_models.py                | 15-163  |
 | test_service_initialization                             | Test     | flext-infra/tests/unit/deps/test_detection_models.py                | 65-67   |
 | test_default_module_to_types_package_mapping            | Test     | flext-infra/tests/unit/deps/test_detection_models.py                | 69-81   |
 | TestsFlextInfraDepsDetectionPipCheck                    | Class    | flext-infra/tests/unit/deps/test_detection_pip_check.py             | 18-62   |
@@ -70,7 +70,7 @@ Community of 110 nodes
 | \_StubToml                                              | Class    | flext-infra/tests/unit/deps/test_detection_typings.py               | 15-25   |
 | **init**                                                | Function | flext-infra/tests/unit/deps/test_detection_typings.py               | 16-18   |
 | read_plain                                              | Function | flext-infra/tests/unit/deps/test_detection_typings.py               | 20-25   |
-| TestsFlextInfraDepsDetectionTypings                     | Class    | flext-infra/tests/unit/deps/test_detection_typings.py               | 28-79   |
+| TestsFlextInfraTypingsDepsDetection                     | Class    | flext-infra/tests/unit/deps/test_detection_typings.py               | 28-79   |
 | test_success                                            | Test     | flext-infra/tests/unit/deps/test_detection_typings.py               | 31-37   |
 | test_failure_fails_loud                                 | Test     | flext-infra/tests/unit/deps/test_detection_typings.py               | 39-44   |
 
