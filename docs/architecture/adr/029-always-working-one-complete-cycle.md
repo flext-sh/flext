@@ -93,6 +93,22 @@ ordering, not the complete quality contract required for publication.
    digests, newest same-phase evidence and first-failure semantics. A source-only
    receipt never proves full `check`, integration or release acceptance. An invalid
    or incomplete receipt never falls back to an older successful one.
+8. **Small transactions preserve cooperative runtime visibility.** Amendment
+   2026-10-28, accepted contract pending implementation: use
+   [ADR-018's common barrier and owned-effect recovery](018-generator-declarations.md#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol)
+   for live Make/Rope readers and publication. The fast validation inside each
+   transaction takes at most five seconds; the public Make operation retains
+   its sixty-second deadline, including lock waits, staging, publication,
+   incremental refresh and recovery. The existing performance policy owns
+   those budgets; frozen analyzer rules are unchanged. Full gates and real
+   runtime proof remain mandatory for every slice. Neither a committed small
+   transaction nor its fast gate closes a slice or authorizes advancement.
+
+   The narrow authorization to reverse an unsuccessful transaction's own
+   authenticated effects supersedes the older blanket rollback prohibition
+   only at this boundary. It never authorizes discarding shared WIP or undoing
+   an independently completed transaction. An interrupted transaction or
+   conflicting external edit keeps recovery and the containing slice open.
 
 ## The cycle
 
@@ -151,6 +167,15 @@ admission; do not replace it with a green member or a stale whole-workspace run.
 
 The dated failures above are recovery evidence, not a substitute for current Beads,
 refs, runtime or native receipts. Recover one slice at a time:
+
+The operator-approved 2026-10-28 campaign (`flext-brr3y`) starts with complete
+alignment of memories, instructions, documentation, topic ADRs, rules, skills,
+commands, existing plan files and Beads before structural reorganization. If a
+public command cannot
+reach the documentation gates, that first slice includes only the causally
+necessary command-bootstrap repair after the documentation alignment. It stays
+open until those gates execute successfully; the blocked documentation does not
+authorize a structural migration or a later phase.
 
 1. Restore global source and native incremental behavioral admission. Correct
    command, rule, generator and runtime owners without weakening contracts.

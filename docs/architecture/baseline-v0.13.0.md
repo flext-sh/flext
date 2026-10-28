@@ -10,7 +10,7 @@
   - [Core Class Matrix](#core-class-matrix)
   - [Namespace Composition Classes](#namespace-composition-classes)
 - [Core Class Contracts](#core-class-contracts)
-  - [u](#u)
+  - [FlextRuntime retirement target](#flextruntime-retirement-target)
   - [FlextDi](#flextdi)
   - [FlextLogger](#flextlogger)
   - [FlextContext](#flextcontext)
@@ -37,7 +37,7 @@
 ## Status
 
 - Version: `0.13.0`
-- Status: Accepted baseline for implementation
+- Status: Forward planning baseline; implementation follows the accepted topic ADRs
 - Scope: Workspace-wide platform baseline
 
 ## Purpose
@@ -54,9 +54,9 @@ It replaces vague or stale architecture narratives with direct rules for:
 - workspace taxonomy
 - migration direction
 
-If this document conflicts with older architecture overviews, project-level architecture
-notes, or legacy refactoring plans, this baseline wins until the conflicting document is
-migrated.
+This document records forward vocabulary and migration proposals. The accepted
+topic-owning ADRs and current operator instructions determine executable contracts.
+The STRICT campaign does not activate the proposed 0.13 API by editing this document.
 
 ## Governed Scope
 
@@ -82,7 +82,9 @@ This baseline governs:
 - the vocabulary used in migration work
 - the taxonomy of `tests/`, `examples/`, and `scripts/`
 
-Per-project docs are subordinate to this baseline until each project is migrated.
+Per-project docs consume accepted decisions and distinguish current runtime from
+forward targets. The ADR index owns maturity and the active Beads own implementation
+and acceptance evidence; this baseline does not supersede either.
 
 ## Forward Public Surface
 
@@ -98,7 +100,7 @@ Per-project docs are subordinate to this baseline until each project is migrated
 | `FlextSettings`   | `FlextSettings`   | `settings.py`                    | Typed configuration root               | `shared`, `build`, `add`, `load`                                                                                             | Keep and narrow                      |
 | `r`               | `r`               | `result.py`                      | Success and failure contract           | existing result surface                                                                                                      | Keep                                 |
 | `e`               | none              | `exceptions.py`                  | Boundary exception classes (`ADR-028`) | error codes in `c`, structured payloads in `m`, expected errors in `r[T]`                                                    | Retire `e` single-letter alias       |
-| `u`    | none              | retired (`_runtime` removed)     | Replaced by `u`, `m`, and `FlextDi`    | serialization in `u`, field validators in `m`, DI in `FlextContainer`/`FlextDi`                                              | Retire from public platform          |
+| `FlextRuntime` | none | historical runtime owner | Migrate to existing utility, model and composition owners | Governed by ADR-028 Decision 7 | Retire after consumer migration |
 | none              | `FlextDi`         | `di.py`                          | Bridge to `dependency_injector`        | `build`, `add_service`, `add_factory`, `add_resource`, `bind_config`, `wire`, `unwire`                                       | Add                                  |
 | `FlextLogger`     | `FlextLogger`     | `logger.py`                      | Structured logging and context binding | `get`, `bind`, `unbind`, `scope`, `clear_scope`, `from_context`                                                              | Keep, move from `loggings.py`        |
 | `FlextContext`    | `FlextContext`    | `context.py`                     | Execution context only                 | `get`, `set`, `has`, `remove`, `clear`, `clone`, `merge`, `export`, `get_meta`, `set_meta`                                   | Keep and narrow                      |
@@ -138,14 +140,17 @@ Application and orchestration code should target:
 
 ## Core Class Contracts
 
-### u (Retired)
+### FlextRuntime retirement target
 
-- Status: **Retired** alongside `_runtime` (aligned with [`migration-to-v0.13.0.md`](../guides/migration-to-v0.13.0.md) and [`ADR-028`](adr/028-facade-boundary-orchestrators-declarative-enforcement.md)).
+- Status: **Migration target**. Preserve consumed signatures until the governed
+  consumer census reaches zero under
+  [ADR-028 Decision 7](adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7).
+  The public `u` utility facade remains an owner; it is not the retired runtime class.
 - Ownership migration:
   - value and container normalization → `u` (`FlextUtilities`) and native Pydantic v2 serialization
   - metadata and UTC timestamp validation → `m` (`FlextModels`) field validators
-  - dependency wiring and container creation → `FlextDi` and `FlextContainer` (`ADR-024`)
-  - logger creation → `FlextLogger`
+  - dependency wiring and container creation → explicit composition under ADR-019
+  - logger creation → the existing public logging utility
   - service bootstrap → `s` (`FlextService`)
 
 ### FlextDi

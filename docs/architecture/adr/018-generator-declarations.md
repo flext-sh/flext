@@ -32,7 +32,10 @@
   live membership and counts on the epic, never frozen here); superseded `flext-exbwv`,
   `flext-crd1y`, `flext-b3xmn`, `flext-szjre`, `flext-fdoah`, `flext-s9bxq` (closed,
   linked); `flext-ssnc7` and `flext-mbowt` linked, kept open for their unrelated live
-  children.
+  children. Campaign `flext-pipol` (2026-10-28) owns the single-read, single-batch
+  publication and gate-clean projection amendments and their implementation evidence.
+  The small-transaction amendment below is an accepted contract pending
+  implementation and runtime validation, not a claim about the current publisher.
 
 ## Context
 
@@ -90,6 +93,93 @@ ancestor lazy exports are planned and published as one authenticated candidate, 
 source without importing the stale package being repaired. Callers use the nearest
 composed facade at every stage (ADR-028 [Decision 10](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
 
+Planning and runtime acceptance are different boundaries. Planning consumes the
+source-authenticated native workspace model, including candidate overlays,
+without executing the target package. Acceptance exercises the generated public
+surface in a fresh process. A source move must not require its obsolete export
+map to import successfully before the replacement can be planned.
+
+The existing lazy-map freshness validator remains the owner of drift reporting.
+Its source comparison is necessary but not independent proof of correct exports:
+runtime acceptance must also resolve declared exports, their native identities
+and consumed MRO capabilities. Static and lazy bindings account for declared
+eager metadata without lifting child exports into ancestors. Missing targets,
+colliding identities and invalid ownership fail explicitly.
+
+Generation retains the first causal failure and the publisher's confirmed
+effects. It does not catch an import failure and continue publishing other
+repositories. Unreached work remains unexecuted. The bootstrap consolidation
+contract belongs to
+[ADR-014](014-family-part-shape-rope-codemod-rules.md#core-lazy-bootstrap);
+`flext-s9r3a` and `flext-1engx.15` retain implementation ownership under the
+`flext-brr3y` campaign.
+
+### Single-read, single-batch publication (amended 2026-10-28, campaign `flext-pipol`)
+
+**Amendment 2026-10-28 — accepted contract, implementation pending.** The
+operator-approved small-transaction and cooperative-reader boundary supersedes
+the earlier invocation-wide, physically atomic batch interpretation. It also
+authorizes the narrowly scoped rollback below instead of the historical blanket
+rollback prohibition; no unrelated WIP or completed independent transaction is
+rolled back.
+
+Within one repository invocation, an unchanged source observation is read and
+parsed once. One native workspace model per repository (ADR-028
+[Decision 17](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17))
+feeds generation, lazy planning, model→protocol and docs. Changed observations
+refresh incrementally in that same engine, invalidating only affected native
+resources and dependent snapshot facts; no phase rebuilds the repository model
+or repeats unchanged discovery. Each small transaction contains a complete
+dependency closure, including moved sources, consumers, facades and lazy exports.
+Its candidate is staged beside the existing mutation lock on the destination
+filesystem, outside the working tree, and validated before live publication.
+
+The existing publication owner extends its common mutation barrier to
+cooperating Make and Rope readers. A reader enters before bootstrap imports,
+configuration reads, discovery or any other live observation of the affected
+scope. It retains protection for every later lazy read, or consumes a pinned,
+independent candidate that requires no further live reads. A writer holds the
+same barrier through source verification, file effects, Git-index retirement,
+modes, directory creation/prune, incremental cache/model refresh, bounded
+validation and durable completion. Multiple scope locks are acquired in one
+canonical physical-root order, never with an inverted nested acquisition.
+Subprocess validators consume the staged candidate and must not reacquire a
+barrier their parent holds.
+
+This guarantees atomic visibility of each transaction to those cooperating
+readers, not an operating-system atomic replacement of several paths. An
+uncooperative editor or raw reader is outside that visibility guarantee; its
+changes remain protected by identity checks. Waiting for the barrier consumes
+the same public Make deadline; it never creates an extra timeout budget.
+
+Before the first effect, the publisher durably records the transaction identity,
+scope, original observations and owned intended effects in its operational
+record. It records completion only after validation and model refresh. Every
+cooperating reader inspects that record while holding the barrier. An
+interrupted or inconsistent transaction rejects live reads even when process
+death has released the lock. Recovery reconciles that same record and its
+authenticated effects before admitting readers; it never treats an absent
+process or an expired lock as successful publication. The record belongs to
+the publisher, not a substitute Beads tracker, semantic index or global cache.
+
+On failure, preserve the first cause and undo only this transaction's proven
+effects in reverse order, guarded by compare-and-swap against authenticated
+published states. This includes index entries, file modes and owned directory
+effects. A conflicting external edit is preserved and keeps recovery explicit;
+no global reset, historical restore or blind overwrite is permitted. Cleanup or
+rollback failures remain attached to the primary failure and the operational
+record remains unresolved until recovery is proved. Earlier committed
+transactions remain intact; the containing operation is still failed and
+unreached work is not successful.
+
+The fast candidate/publication validation budget is at most five seconds per
+transaction, declared through the existing performance policy owner; the whole
+Make invocation, including waits, staging and recovery, remains within sixty
+seconds. Transaction sizing must leave recovery margin. Fast validation never
+weakens the frozen analyzer rules or replaces the complete gates and real
+consumer proof required for the slice. Exhausting either budget remains a
+failure. Superseded planning/publication routes are removed in the same cutover.
+
 The [repository declaration](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_models/_config/repository.py#L457-L466)
 makes `project` optional. An absent subsection declares no additional manifest-only
 inherited facets: the generator still uses source-authenticated MRO and explicit
@@ -102,8 +192,9 @@ consumes this contract and links back to this decision.
 Order of execution (operator): law → extermination of lists, manual declarations and
 their permissions → generator/detector/fix repair → census by the validator → automatic
 correction (`make mod`) → consumers → strict compliance → close. One bead per phase;
-work in worktrees on the freshly fetched integration tip; never a rollback; never a
-manual mass fix.
+work in the authorized shared-workspace boundary; never roll back unrelated work;
+never a manual mass fix. The amendment above alone authorizes guarded reversal
+of an unsuccessful transaction's own effects.
 
 ## Consequences
 
@@ -127,6 +218,28 @@ manual mass fix.
   commit of the epic — before the commit is pushed.
 - `make mod` twice is idempotent; the validator's counts above reach 0.
 - `make check` and `make test` green in 32/32 and in every consumer; no new exclusion.
+- One unchanged observation, one read (campaign `flext-pipol`): profiling receipts
+  (`make.generation_profile_path`, `modification_profile_path`) show no repeated
+  parse of unchanged source across phases. Changed paths refresh incrementally
+  in the same engine; a second consecutive `make gen` has zero artifact effects.
+- No partial transaction (campaign `flext-pipol`): a planning failure leaves
+  that transaction's live destinations untouched. A publication/validation
+  failure reverses only its authenticated owned effects before readers are
+  admitted; completed earlier transactions remain intact and the invocation
+  remains failed.
+- Cooperative visibility and recovery (accepted contract, implementation
+  pending): concurrent Make/Rope readers observe only a committed transaction
+  or a proven preimage. A crash between file/index/directory effects leaves a
+  durable interruption that blocks readers until guarded recovery. Injected
+  failure restores only owned effects; conflicting external WIP is preserved.
+- Bounded admission (accepted contract, implementation pending): prove the
+  five-second transaction and sixty-second Make budgets, including barrier
+  waits, staged validation, incremental refresh and recovery. Full slice gates
+  remain separately mandatory.
+- Gate-clean by construction (campaign `flext-pipol`, ADR-028
+  [Decision 8](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-8)):
+  `make gen` followed directly by `make check` is green, and `make fmt` /
+  `make fix` are no-ops, on every repository.
 - Logical LOC measured by the canonical verb before the first commit and after the last;
   the delta is recorded on `flext-0in0k`.
 - `bd lint --json` clean for every bead of the epic; each closes with SHA, command and

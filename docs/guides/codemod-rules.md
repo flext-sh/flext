@@ -26,7 +26,9 @@ producer captures the complete workspace sources and asks that owner to authenti
 each imported helper and its dependency closure, including type-checking imports.
 
 Only proven exact module identities enter the generated constraint; a regex does
-not establish ownership or acyclicity. Own root and family imports remain forbidden.
+not establish ownership or acyclicity. For those layer-zero owners, own root and
+family imports remain forbidden. Family declarations composing upstream same-letter
+facades follow ADR-028 Decision 10; they are not layer-zero self-imports.
 Generation and native-scan agreement require runtime validation after source changes.
 
 | Layer | ast-grep rules | Text rules |

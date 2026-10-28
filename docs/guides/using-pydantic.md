@@ -7,6 +7,8 @@
 - [Library boundaries](#library-boundaries)
 - [What consumers never do](#what-consumers-never-do)
 - [Enforcement](#enforcement)
+- [Static and runtime typing evidence](#static-and-runtime-typing-evidence)
+  - [Analyzer rule review](#analyzer-rule-review)
 
 <!-- TOC END -->
 
@@ -73,3 +75,54 @@ Each banned form has an ast-grep rule with fixtures in
 `flext-infra/src/flext_infra/config/rules/ast-grep/rules/`. `make mod` applies the
 rewrites, `make check` fails on any remaining finding, and tests exercise models only
 through the public facades (no mocks, private access or tautologies).
+
+## Static and runtime typing evidence
+
+The approved investigation is `flext-itpd1.13.11`; analyzer environment ownership
+is [ADR-003, Decision 5](../architecture/adr/003-workspace-tooling-hub-distribution.md#5-analyzers-use-the-environment-owned-by-the-checkout-topology).
+The canonical `pydantic-development` procedure owns the diagnosis sequence.
+Keep runtime validation and static constructor checking distinct: typed
+constructors remain enabled, and external data enters through public validation.
+
+Compare the real public facade with the upstream declaration before calling a
+diagnostic a false positive. Record the checker version, loaded configuration,
+resolved imports, inferred type and runtime result. Cover inherited and nested
+models, generic specialization, defaults, aliases, validators, computed fields
+and settings. A descriptor returning the original callable at runtime does not,
+by itself, prove that a checker recognizes its field-specifier identity.
+
+Pydantic documents that static constructor synthesis does not interpret
+`default`, `default_factory` and `alias` inside `Annotated`. Keep constraints as
+metadata and expose constructor-relevant declarations in a statically
+recognized form, preserving runtime behavior. Multiple-base configuration
+composition also needs observed runtime evidence; ordinary Python MRO is not a
+substitute for inspecting the effective model configuration.
+
+References: [Pydantic fields](https://docs.pydantic.dev/latest/concepts/fields/),
+[configuration inheritance](https://docs.pydantic.dev/latest/concepts/config/),
+and [dataclass transforms](https://typing.python.org/en/latest/spec/dataclasses.html).
+
+### Analyzer rule review
+
+The effective policy is read from Infra's native tooling declarations and the
+selected checker's own strict-mode defaults. The following review groups the
+diagnostics relevant to this investigation; it is not another configuration
+catalog. No row authorizes a severity change.
+
+| Rule family | What it establishes | Required diagnosis and disposition |
+| --- | --- | --- |
+| Missing imports and module sources | The analyzer can resolve a declaration | Verify interpreter, environment parent, editable origins and execution-environment order before investigating MRO |
+| Missing third-party stubs | Availability of an external typing contract | Preserve the existing approved policy; source inference does not make every external API precise |
+| Unknown types and untyped bases/decorators | Type information survived the boundary | Follow the first unknown symbol through its declaring export; retaining an overload at runtime does not prove static field/decorator identity |
+| Constructor calls and argument types | Requiredness, aliases and declared input types | Compare required/default/factory/alias forms with actual validation; preserve typed constructors and public field semantics |
+| Assignment, generic arguments and overrides | Substitution and mutability contracts | Inspect inherited specialization, variance and effective model configuration; a successful coercion is not proof of substitutability |
+| Optional and unbound access | A value is present before use | Prove the public invariant and narrow at its owner; do not silence these checks because a model validates other fields |
+| Unnecessary operations and unused declarations | Reachability and redundant/dead code | Inspect the inferred type first; fix lost precision before interpreting a cascade as redundant code |
+| Mypy plugin diagnostics | Pydantic-specific field and model semantics | Keep the plugin and current two-code exception; assess each diagnostic against the native model and the public facade |
+
+Relevant native options include mypy's import-following, package-base, re-export,
+untyped-body, equality, reachability and unused-ignore checks, and Pyright's
+strict inference and `reportUnknown*`, constructor, override and decorator
+diagnostics. Their values remain owned by the selected configuration, not by
+this review table. Lowering strictness can remove evidence without restoring
+inference; it is not a causal repair.

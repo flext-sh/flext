@@ -194,6 +194,25 @@ outside the facades across 12 repositories.
     unique case that no rule can express (the exception of the exception), and its
     reason is stated in the commit.
 
+  2. **Generated projections are gate-clean by construction** (amended 2026-10-28,
+    campaign `flext-pipol`): every projection published by `make gen` or `make mod`
+    passes typing, lint, format and check gates under the frozen rule catalog with
+    zero post-adjustment, manual OR automated. A post-render cleanup pass — the
+    engine running a fixer or formatter over its own output — is prohibited;
+    cleanliness is a property of the template and renderer, and a projection that
+    needs repair is repaired at its generating source. The admission proof is the
+    cycle: `make gen` followed directly by `make check` is green, and `make fmt` /
+    `make fix` are no-ops, on every repository
+    ([ADR-018 verification contract](018-generator-declarations.md#verification-contract)).
+
+    **Implementation status:** this is an accepted contract pending complete
+    engine implementation and runtime proof under `flext-pipol`. Existing
+    post-render repair code is a migration finding, not evidence that the
+    contract is already satisfied. Small publication transactions use
+    [ADR-018's cooperative-reader barrier](018-generator-declarations.md#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol);
+    their fast validation does not reduce any frozen gate policy or replace
+    full slice acceptance.
+
 ### Decision 9
 
   1. **No embedded code or long text constants.** Operator order 2026-10-24 (verbatim):
@@ -432,6 +451,17 @@ outside the facades across 12 repositories.
        command uses its declared repository loop and creates one project per repository;
        it does not model sibling repositories as one project or open redundant projects
        for the same repository during that invocation.
+     - **Amendment 2026-10-28 — accepted contract, implementation pending:**
+       refresh is always incremental within that same native project.
+       After a transaction, invalidate only changed resources, affected
+       inventories and their dependent semantic facts, including moves and
+       retirements; retain unchanged observations and inference. Reopening the
+       project, full rediscovery or global cache clearing is not the refresh
+       strategy. The common publication barrier precedes the first live
+       bootstrap/import/source read and protects later lazy reads; it is not
+       limited to snapshot construction. Staged validators use the independent
+       candidate without reacquiring a parent-held live barrier. ADR-018 owns
+       ordering, crash recovery and guarded rollback of owned effects.
      - Renames, moves and import rewrites use rope's native refactorings (rename with
        documentation occurrences, move, restructure, multi-project refactoring).
      - Custom parse, discovery, import-graph and rename/move planners that duplicate
@@ -490,6 +520,7 @@ architecture link.
 
 | Decision | Workspace declaration | Subproject declaration and execution |
 | --- | --- | --- |
+| [8 — one standard, automated; gate-clean projections](#decision-8) | [Root `AGENTS.md`, automated correction](../../../AGENTS.md#automated-correction-is-the-law); [make commands guide, Convergence](../../guides/make-commands.md#convergence-shared-worktree-and-clean-rules); [ADR-018 verification contract](018-generator-declarations.md#verification-contract) | Campaign `flext-pipol` (gate-clean slice `flext-wznvp`); lazy-init wrapping cure `flext-tlqrw`; engine post-cleanup removal tracked on `flext-pipol` |
 | [5 — static enforcement](#decision-5) | [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra, ADR-028 Decision 5: Declarative enforcement](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-5-declarative-enforcement); Bead `flext-43iz8` |
 | [15 — capability names](#decision-15) | [Root `AGENTS.md`, Decision 15](../../../AGENTS.md#adr-028-decision-15); [public core guide, What flext-core must not absorb](../../guides/using-flext-core.md#what-flext-core-must-not-absorb); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); external consumer census: `flext-1engx.11` |
 | [16 — CA/DI and zero findings](#decision-16) | [Root `AGENTS.md`, Decision 16](../../../AGENTS.md#adr-028-decision-16); [consumer law, R2](../../standards/consumption-law.md#r2-no-duplication-structural-scan); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [Target LDAP CA/DI declaration](https://github.com/flext-sh/flext-target-ldap/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16-ca-di-and-quality); implementation and quality gates: `flext-1engx.15`, `flext-pawp5` |

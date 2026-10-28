@@ -265,11 +265,18 @@ These standards override conflicting completion shortcuts.
    Before any
    code, every slice consults, aligns and adjusts, in this order: memory (tracker
    memories, `bd memories <keyword>`), `AGENTS.md`, documentation, ADRs, rules,
-   skills and Beads, then approved plans and specifications. They are brought to the
+   skills and Beads, then approved plans, specifications and command contracts.
+   The 2026-10-28 operator correction requires completing the affected owner updates,
+   not only consulting them, before code. They are brought to the
    newest operator rulings first; only then is code written. Update affected owners
    before introducing new behavior or strategy; never implement an unaligned rule
    change autonomously. FLEXT-specific documentation and constraints apply with
    additional rigor and must not diverge from this contract.
+   The operator's 2026-10-28 specification-preservation order requires presenting
+   the original requirement, evidence, proposed alternative and impacts to the
+   operator before any simplification, reduction or deviation, and obtaining an
+   explicit decision. A red gate, timeout or implementation difficulty grants no
+   permission to change the specification.
 9. **Always working; one complete cycle at a time** (operator order 2026-10-24,
    tracker memories `operator-order-2026-10-24-always-working-never-skip-phase`
    and `operator-order-2026-10-24-no-incomplete-pushes`). The project and its
@@ -644,7 +651,24 @@ make tests
 
 Each operation completes the change it initiated. `gen` and `mod` reuse the same
 semantic engines and publisher for dependent projections; neither invokes another
-public verb recursively. Run `upg` explicitly to change resolution metadata and locks,
+public verb recursively. Reuse authenticated source reads and native parsed facts
+within each unchanged input state; reauthenticate inputs before publication and
+invalidate only changed resources and their dependent facts. Prepare each smallest
+coherent candidate from the same planned sources, including dependent documentation.
+The approved transaction contract uses the existing mutation barrier for cooperating
+Make/Rope readers and writers, acquired before live reads and held until validated
+publication or guarded rollback of that transaction's own effects. A durable
+interruption record prevents a subsequent participating reader from consuming an
+unfinished publication. Rollback never restores historical Git content or overwrites
+unrelated WIP; source drift remains an explicit failure. Index, mode, directory,
+cache and incremental native-engine effects belong to the same transaction.
+Fast candidate/coherence validation has an initial five-second transaction budget;
+full gates remain mandatory and each Make invocation stays within 60 seconds.
+The first causal failure remains a failure after compensation. These are pending
+implementation and acceptance requirements, not a claim that the current sequential
+publisher already provides batch visibility ([ADR-018 single-read, single-batch
+publication](docs/architecture/adr/018-generator-declarations.md#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol);
+campaign `flext-pipol`). Run `upg` explicitly to change resolution metadata and locks,
 then `setup` explicitly to install them. Generation does not install dependencies.
 `check` owns read-only validation, including documentation and integrity checks.
 `tests` uses native incremental Testmon selection over the complete applicable
@@ -660,6 +684,11 @@ configuration owners, not mocks, tautologies or copied settings.
 
 Prove repeated generation, modification, repair and formatting are no-op, exit-zero
 operations on unchanged relevant inputs; later mutations invalidate affected receipts.
+Generated projections are gate-clean by construction ([ADR-028 Decision
+8](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-8)):
+`make gen` followed directly by `make check` is green and `make fmt`/`make fix` are
+no-ops, with zero post-adjustment, manual or automated — the engine never runs a
+fixer or formatter over its own output.
 Source, help and contract-inspection receipts do not prove a full generation or fleet
 rollout. No stability cycle closes before the declared fleet has its required integrated
 runtime and gate evidence, without warnings or residual findings.
@@ -940,7 +969,8 @@ CLI + pytest plugin, **never imported at runtime**.
       package it regenerates, so a stale init can never block its own repair.
     - Rewrites that move imports must never create an import-time cycle. A
       reverse-direction import goes under `if TYPE_CHECKING:`.
-    - Current gaps (2026-10-25):
+    - Current gaps (2026-10-25; in cure under campaign `flext-pipol`, slice
+      `flext-wcr07`, 2026-10-28):
       - `defer_build` is not implemented in the flext-core presets;
       - the generator still imports the target package;
       - a codemod pass hoisted imports into real cycles;
@@ -948,7 +978,9 @@ CLI + pytest plugin, **never imported at runtime**.
         not yet reported. The generator correctly propagates nothing, so the
         consumers silently lose the class; this was measured on 28 ai-hub modules.
 
-      Each gap is fixed at its owner under the stabilization task force.
+      Each gap is fixed at its owner under campaign `flext-pipol` (the
+      stabilization task force successor for these items); their closure carries
+      command evidence on the campaign beads.
   - No source code or long text embedded as string literals (multi-line or
     concatenated scripts for `exec`/subprocess, long text constants), in any tier,
     tests and constants included: tests call the public API with fixture data;

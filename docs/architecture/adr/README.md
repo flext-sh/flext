@@ -76,7 +76,8 @@ candidate; acceptance never proves fleet stability.
 - [ADR-018: Generator Declarations Law](018-generator-declarations.md) — **ACCEPTED**
   (operator law 2026-09-20; authority routing reconciled 2026-10-26: branch-matched
   ADR-018 and local FLEXT law, not the retired global copy; phased under
-  `flext-0in0k`)
+  `flext-0in0k`; amended 2026-10-28 with single-read, single-batch transactional
+  publication under campaign `flext-pipol`)
 - [ADR-019: Service Contract — Protocol Ports, Explicit Composition Root, Typed Operations](019-service-contract-ports-operations.md)
   — **PROPOSED** (operator-approved plan V8, 2026-09-25; phased under `flext-4jtcb`)
 - [ADR-020: Bun installs the npm-backed mise tools fleet-wide](020-npm-installer-bun.md)
@@ -116,7 +117,9 @@ candidate; acceptance never proves fleet stability.
   and [Decision 18](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18).
   Implementation tracking: `flext-43iz8` for Decision 5 static-enforcement migration,
   `flext-1engx.15` for Decisions 16–17 and zero-quality exit, `flext-13s6n` for Decision
-  18 rule projection. The external deprecation census `flext-1engx.11` applies to the
+  18 rule projection. Decision 8 was amended 2026-10-28 (generated projections are
+  gate-clean by construction, zero manual or automated post-adjustment; campaign
+  `flext-pipol`). The external deprecation census `flext-1engx.11` applies to the
   Decision 7 compatibility window. These Beads track work; they do not establish
   completion.)
 - [ADR-029: Always Working — One Complete Cycle Per Slice](029-always-working-one-complete-cycle.md)

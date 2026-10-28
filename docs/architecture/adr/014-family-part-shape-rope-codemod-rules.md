@@ -115,6 +115,24 @@ lazy projections, native source moves and dependent imports share one authentica
 candidate and publisher. Convergence is a source fixed point, not a limit derived
 from the number of facade families.
 
+#### Core lazy bootstrap
+
+The operator-approved 2026-10-28 fleet plan, recorded on `flext-brr3y` and
+`flext-ir794`, specializes semantic consolidation for the bootstrap owner:
+`FlextLazyPart01` and `FlextLazyPart02` implement one capability and consolidate
+into the existing public `FlextLazy` in `lazy.py`. A private `_lazy/` directory is
+not a required destination. Its initializer would otherwise require the loader
+whose construction depends on that same directory.
+
+Retain independently necessary bootstrap descriptors at semantic owners and
+preserve consumed public signatures through
+[ADR-028 Decision 7](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7).
+The consolidation uses the existing semantic transformation and publication
+owners; no second loader, initializer renderer or hand-maintained move registry
+is introduced. The cold-process public import, export identity and downstream
+consumer proofs precede acceptance. This is an accepted target; these paragraphs
+do not attest implementation, a zero consumer census or integration.
+
 ### 2. Declarative Rope rules (one YAML file per rule)
 
 Structural shape rules for the Rope engine are planned as declarative YAML files (one
