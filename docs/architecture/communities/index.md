@@ -25,8 +25,9 @@ cohesive cluster of symbols that tend to be used together. The wiki pages below 
 member symbols, their locations, and line ranges so readers can navigate the codebase by
 architectural responsibility instead of by directory layout.
 
-Only significant non-test communities (>= 50 nodes) are published here. Smaller clusters
-appear in the full CRG wiki at `.code-review-graph/wiki/`.
+Only significant non-test communities (`>= 50` nodes) are published here. Smaller clusters
+appear in the full CRG wiki at `$CODE_REVIEW_GRAPH_DATA_DIR/wiki/` (defaulting to
+`.code-review-graph/wiki/` when unset).
 
 ## Significant Communities
 
@@ -93,12 +94,13 @@ From the workspace root:
 
 ```bash
 code-review-graph update && code-review-graph wiki
+make gen
 ```
 
 The CRG graph is built by `code-review-graph build` and kept in sync incrementally by
-`code-review-graph watch` (running as a background daemon). Community pages are emitted
-to `.code-review-graph/wiki/`; the significant ones are published into this directory
-from that output (no `make gen` step copies them).
+`code-review-graph watch` (or on-demand via `code-review-graph update`). Community pages
+are emitted to `$CODE_REVIEW_GRAPH_DATA_DIR/wiki/` (or `.code-review-graph/wiki/`), and
+governed workspace projections are synchronized via `make gen`.
 
 ## See Also
 

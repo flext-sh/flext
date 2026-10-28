@@ -417,7 +417,7 @@ exata a partir desses scripts.
 ### Auditoria histórica imutável
 
 A auditoria anterior permanece no
-[commit `81873eeff9`](../../docs/plans/2026-09-14-stabilization-handoff/README.md).
+commit `81873eeff9` (histórico documentado neste README).
 Seus estados, ordens de pausa, ausência de autorização administrativa, resultados
 parciais e comandos futuros descrevem aquele instante; **não são instruções vigentes**.
 

@@ -315,6 +315,27 @@ Before FLEXT work, follow `.agents/commands/flext-law.md`. Missing, ambiguous, o
 branch-mismatched authority fails closed; never fall back to `main`, a historical
 branch, another worktree, or a same-named catalog entry.
 
+## Lint-Rule Change Freeze (inviolable — operator order 2026-10-28)
+
+Lint and type-check RULES are frozen at operator authority. The frozen surface is
+every rule-selection, severity, mode, and scope key of Ruff, Pyrefly, Pyright, Mypy,
+jscpd, and qlty — including `typeCheckingMode`, code-tier includes/excludes
+(`src`, `tests`, `examples`, `scripts`), `extraPaths`, `venv`/`venvPath`/`pythonPath`
+bindings, and their SSOT declarations in `flext-infra/config/tooling.yaml`,
+`config/codegen.yaml`, and every generated `[tool.*]` section of the 32 member
+pyprojects.
+
+No agent may add, remove, relax, tighten, re-scope, suppress, or re-project any of
+these keys on its own account. **Every lint-rule change requires express operator
+authorization naming the key, the old value, the new value, and the reason.** The
+2026-10-28 pyright incident (thousands of false `reportUnknown*` findings fleet-wide
+after unauthorized analyzer-scope changes) is the standing precedent: repair
+resolution at the rule's SSOT owner, never alter the rule to silence findings.
+
+Enforcement: the lint-config freeze gate digests this SSOT and fails on any drift
+from the catalog. Restoring, regenerating, or correcting the projection to match the
+catalog is not a rule change; altering the catalog without the operator is.
+
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f2c52d34 -->
 
 ## Issue Tracking with bd (beads)
@@ -786,6 +807,11 @@ CLI + pytest plugin, **never imported at runtime**.
     point inward. Every change leaves jscpd duplication and qlty smells at zero, fixed
     by extraction to the canonical owner, never by ignores or thresholds (the only
     authorized jscpd exception is the license header) (ADR-028 Decision 16).
+    `FlextResult` (`r`) railway combinators (`.map`, `.flat_map`, `.map_or`,
+    `.unwrap_or`, `r.traverse`, `r.from_validation`, `r.create_from_callable`) and
+    covariant `p.Result[Never]` failure constructors (`r.fail`, `r.fail_op`,
+    `r.from_failure`) replace imperative `if res.failure: return ...` ladders and
+    local `outcome = r[T]` type aliases via `railroad-result.yml` in `make mod`.
   - **Pluggable capabilities arrive only by DI, never by registry** (operator order
     2026-10-25, tracker key `operator-order-2026-10-25-servers-di-never-registry`,
     translated from Portuguese: "Servers in ldif and ldap are always used through DI,

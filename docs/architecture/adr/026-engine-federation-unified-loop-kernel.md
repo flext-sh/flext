@@ -33,8 +33,8 @@
 ## FLEXT Law Anchors (binding for every slice under this ADR)
 
 Every slice follows the [governance authority route](../../GOVERNANCE.md#authority),
-[root law](../../AGENTS.md), [session router](../../.agents/commands/flext-law.md),
-and exact [FLEXT law](../../.agents/skills/flext-law/SKILL.md).
+[root law](../../../AGENTS.md), [session router](../../../.agents/commands/flext-law.md),
+and exact [FLEXT law](../../../.agents/skills/flext-law/SKILL.md).
 The [engineering conformance review](../../GOVERNANCE.md#engineering-conformance-review)
 routes SSOT/YAGNI/DRY/SOLID, Pydantic, DI, and Clean Architecture to their canonical
 owners. The private campaign checklist is execution evidence, not normative law.

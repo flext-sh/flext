@@ -94,7 +94,7 @@ has already passed its runtime and native validation gates.
    bases or wrappers merely to satisfy a count. Fragments implementing the same
    capability consolidate at one owner rather than receiving invented names to evade
    a destination collision. The [Core failure-factory declaration](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/AGENTS.md#failure-factory-responsibility)
-   is one such case, linked back to [ADR-028 Decision 17](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17).
+   is one such case, linked back to [ADR-028 Decision 17](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17).
 5. Only an owning facade imports its internal modules. Other production modules,
    tests, scripts, and examples consume that facade. Preserve declared dependency
    direction and use explicit protocol injection where a runtime back-import
@@ -229,8 +229,8 @@ status.
 
 ### 5. Gate alignment (one law, shared consumers)
 
-> **Amended by [ADR-028 Decision 5](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-5)
-> and [Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18)
+> **Amended by [ADR-028 Decision 5](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-5)
+> and [Decision 18](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18)
 > (2026-10-25):** this section's former
 > "one law, two engines" description is superseded. A static law has one declarative
 > owner in flext-infra's rule catalog; apply and detection routes consume that owner.
@@ -241,9 +241,9 @@ status.
 
 ### 6. Native tool responsibilities (amended by ADR-028)
 
-> **Amended by [ADR-028 Decision 15](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15),
-> [Decision 17](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17),
-> and [Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18)
+> **Amended by [ADR-028 Decision 15](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15),
+> [Decision 17](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17),
+> and [Decision 18](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18)
 > (2026-10-25):** the 2026-09-15
 > "three instruments" taxonomy and its blanket ban on Python parsing/rewriting
 > mechanisms are historical, not current policy. Use the repository-scoped native

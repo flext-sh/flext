@@ -19,8 +19,8 @@ the ADR set that records formal platform decisions.
 - [Governance and engineering conformance](../GOVERNANCE.md) — universal/FLEXT
   authority, domain ownership, namespaces, DI, and inward dependency review.
 - [Baseline v0.13.0](baseline-v0.13.0.md)
-- [ADR Index](adr/README.md)
-- [Ecosystem coordination (internal + external projects, `0.20.0-dev`)](ecosystem-coordination.md)
+- [ADR Index](adr/README.md) — `ADR-001` through `ADR-030`
+- [Ecosystem coordination (internal + external projects, `0.13.0`)](ecosystem-coordination.md)
 - [Migration Guide](../guides/migration-to-v0.13.0.md)
 
 ## Code Communities
@@ -47,14 +47,15 @@ preserved.
 ### Regeneration and Publication
 
 The CRG wiki generator emits community pages and a single `index.md` into
-`.code-review-graph/wiki/`. Its graph must match the intended repository and revision
-before its output can be used to refresh published documentation.
+`$CODE_REVIEW_GRAPH_DATA_DIR/wiki/` (defaulting to `.code-review-graph/wiki/` when unset).
+Its graph must match the intended repository and revision before its output can be used
+to refresh published documentation.
 
-The current FLEXT documentation generator renders API references and project catalogs;
-it does not copy the CRG wiki into `docs/architecture/communities/`. Consequently,
-`make gen` is not a regeneration route for the published community snapshots. Publication
-requires an owned source and generated-file inventory before any existing snapshot is
-replaced or retired. Historical tables and unmanifested pages must remain preserved
+The FLEXT documentation generator (`flext-infra docs generate` / `make gen`) renders API
+references, project catalogs, [`docs/knowledge-index.md`](../knowledge-index.md), and
+governed community projections in [`communities/index.md`](communities/index.md) from the
+active ADR catalog, workspace projects, and the CRG SQLite index (excluding non-governed
+vendor trees such as `.kilo/`). Historical tables and unmanifested pages remain preserved
 until their disposition is authenticated; an auto-generated comment alone is not proof
 that a file can be deleted.
 

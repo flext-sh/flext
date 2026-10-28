@@ -23,7 +23,7 @@ every historical note or every non-FLEXT directory in the repository.
   FLEXT project.
 - [Architecture baseline for v0.13.0](architecture/baseline-v0.13.0.md)
 - [ADR index](architecture/adr/README.md)
-- [Ecosystem coordination (internal + external projects, `0.20.0-dev`)](architecture/ecosystem-coordination.md)
+- [Ecosystem coordination (internal + external projects, `0.13.0`)](architecture/ecosystem-coordination.md)
 - [Migration guide](guides/migration-to-v0.13.0.md)
 - [Workspace project catalog](projects/generated/catalog.md)
 - [Documentation Knowledge Index](knowledge-index.md) — navigate by topic or

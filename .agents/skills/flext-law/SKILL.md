@@ -7,6 +7,17 @@ description:
 
 # FLEXT Law
 
+## Lint-rule change freeze (inviolable)
+
+Lint and type-check rules (ruff, pyrefly, pyright, mypy, jscpd, qlty — rule
+selections, severities, `typeCheckingMode`, code-tier scope, `extraPaths`,
+`venv`/`venvPath` bindings, and their SSOT in `flext-infra/config/tooling.yaml` and
+every generated `[tool.*]` section) change only with express operator authorization.
+Agents never relax, tighten, re-scope, or re-project them on their own account; the
+fix for a lint finding is at the code's owner or the projection's SSOT, never the
+rule. See the root `AGENTS.md` "Lint-Rule Change Freeze" block (operator order
+2026-10-28, pyright incident precedent).
+
 ## Composition
 
 Architecture decisions are recorded under `docs/architecture/adr/`; the ADR records
@@ -259,7 +270,11 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   publication integrity belong to that transformation; independent quality and
   fresh-import diagnostics belong to explicit verification. Repetitive manual
   call-site editing is prohibited; change the codemod or its typed automation owner
-  and let that pipeline propagate the cutover.
+  and let that pipeline propagate the cutover. `FlextResult` (`r`) railway combinators
+  (`.map`, `.flat_map`, `.map_or`, `.unwrap_or`, `r.traverse`, `r.from_validation`,
+  `r.create_from_callable`) and covariant `p.Result[Never]` failure constructors
+  (`r.fail`, `r.fail_op`, `r.from_failure`) replace imperative `if res.failure: return ...`
+  ladders and local `outcome = r[T]` aliases through `railroad-result.yml`.
 - Symbol placement and nesting are discovered from the live typed module path, AST/Rope
   identities, and LSP references. Hand-maintained symbol/class mapping catalogs, copied
   path registries, inert entries, and review-only confidence lists are forbidden;

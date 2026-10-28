@@ -80,7 +80,7 @@ make gen
 make fix
 make fmt
 make check
-make test
+make tests
 make build
 ```
 

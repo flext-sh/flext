@@ -34,7 +34,7 @@ Run documentation and code validation only from the workspace root:
 make fix
 make fmt
 make check
-make test
+make tests
 make gen
 ```
 

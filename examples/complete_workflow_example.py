@@ -134,7 +134,9 @@ class FlextRootCompleteWorkflowExample:
             description="Total workflow processing time"
         )
 
-        stage_results: t.SequenceOf[WorkflowStageResult] = m.Field(
+        stage_results: t.SequenceOf[
+            FlextRootCompleteWorkflowExample.WorkflowStageResult
+        ] = m.Field(
             default_factory=tuple,
             description="Results from each workflow stage",
         )

@@ -195,16 +195,34 @@ open.
 
 ## R5 — Release Consumption (Versioning + AI_HUB_CONSUMER)
 
-**Rule**: Every FLEXT member releases on the **0.12.x line** with:
+**Rule**: Every FLEXT member releases on the **0.12.x line** via per-repository GitHub
+Releases (wheel + sdist artifacts) at per-repository SEMVER (`0.12.x`) determined by
+`make release-plan` with:
 
-- Tags on green tips after gates pass
-- `AI_HUB_CONSUMER.md` versioned with each release (consumer-facing changelog)
+- Committed `.github/workflows/release.yml` and `.github/workflows/release-plan.yml`
+  across all 32 repositories (`publishes_release: true` in `config/codegen.yaml`)
+- Signed tags `@v0.12.x` cut on green tips after `candidate-ci` gates pass; published tags
+  are never deleted or moved (historical local `rc*` tags are pushed to align before cut,
+  and repos where `v0.12.0` already exists advance to `v0.12.1`)
+- `gc-mail` ceremony protocol: `[coord] [@city-hall] gate-window START <repo> release-build`
+  before merge/cut and `[coord] landed <repo> v0.12.x` naming downstream consumers
+  (`ai-hub`, `algar-oud-mig`, `cosmos-*`, `invest`, `dataop`) before `gate-window END`
+- Consumer SSOT projection: external consumers (`ai-hub`) declare `@v0.12.x` tag refs in
+  `config/codegen.yaml` (`branch_policy.integration_branch`, `project.flext_source`, and
+  per-distribution overrides in `toolchain.uv_override_dependencies` + `tools.yaml`
+  `uv-tools`) and project `pyproject.toml` via `make gen` and `uv.lock` via `make upg`
+  (never hand-editing `pyproject.toml`)
+- `AI_HUB_CONSUMER.md` versioned with each release in English (consumer-facing contract
+  and clean-consumer receipt proving fresh `.venv` install and public smoke imports
+  without `FLEXT=`)
 - Dependencies: F1 (grammar), F4 (budget), F7 (doc hardening)
 
-**AI_HUB_CONSUMER.md**: Machine-readable consumer contract — what changed, what's legal,
-migration path.
+**AI_HUB_CONSUMER.md**: Machine-readable and human-auditable English consumer contract
+recording exact per-repository `@v0.12.x` release tags, what changed, what is legal,
+migration path, and clean-consumer verification evidence.
 
-**Enforcement**: Release pipeline + consumer docs gate.
+**Enforcement**: Release pipeline (`release-plan` / `release.yml`), `deps` gate tag-ref
+alignment, and consumer docs gate.
 
 ---
 

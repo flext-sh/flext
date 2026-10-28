@@ -21,6 +21,9 @@ if TYPE_CHECKING:
     from flext.settings import FlextRootSettings, settings
     from flext.typings import FlextRootTypes, t
     from flext.utilities import FlextRootUtilities, u
+    from flext_auth.api import FlextAuth
+
+    auth: FlextAuth
     from flext_db_oracle import db_oracle
     from flext_grpc import grpc
     from flext_infra import infra
@@ -40,7 +43,7 @@ if TYPE_CHECKING:
     )
     from flext_meltano import meltano
     from flext_observability import observability
-    from flext_oracle_oic import auth, cli, d, h, oracle_oic, r, s, web, x
+    from flext_oracle_oic import cli, d, h, oracle_oic, r, s, web, x
     from flext_oracle_wms import e, oracle_wms
     from flext_plugin import plugin
     from flext_quality import quality

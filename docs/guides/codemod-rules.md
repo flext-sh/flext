@@ -129,8 +129,8 @@ declared at the generation owner; authored files are never retired by that decla
 
 | Workspace declaration | Infra implementation |
 | --- | --- |
-| [ADR-028 Decision 17](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17) requires one snapshot/planner per repository. | [Codemod native utilities](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_utilities/codemod_native_utilities.py) |
-| [ADR-028 Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) owns one generalized source rule per law. | Repository plans preserve renderer IDs; the source catalog remains the single rule owner. |
+| [ADR-028 Decision 17](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17) requires one snapshot/planner per repository. | [Codemod native utilities](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_utilities/_codemod/codemod_native_utilities.py) |
+| [ADR-028 Decision 18](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) owns one generalized source rule per law. | Repository plans preserve renderer IDs; the source catalog remains the single rule owner. |
 
 Every finding is the native match; no Python admission runs after the scan. A
 project fact a catalog rule needs is a stable generated utility (`own-package`,
@@ -169,6 +169,17 @@ the `assert` token. In particular, narrowing and lazy-message guards use the
 terminating public matcher without rebinding a referenced name or changing the
 exception category. Runtime comparisons against the original snippets validate
 these properties; snapshot text alone does not prove them.
+
+The universal `railroad-result.yml` rule family implements Railway-Oriented
+Programming (ROP) normalization over `FlextResult` (`r`): terminal `if res.failure:
+return ...` passthrough guards collapse to `return res`, single-argument transform
+and chain tails collapse to `.map(...)` and `.flat_map(...)`, ternary/branch
+unwraps collapse to `.unwrap_or(...)` and `.map_or(...)`, and manual
+`model_validate` `try`/`except` blocks collapse to `r[M].from_validation(...)`.
+Because the native `ast-grep` cascade repeats up to `mod.phases.pass-cap`,
+consecutive failure guards at the end of a function collapse bottom-up across
+passes without custom AST walkers, and unused local `outcome = r[...]` aliases
+and their orphaned imports are pruned automatically.
 
 A rule file holds one or more YAML documents (`---`). Each is standard ast-grep
 (`id`, `language`, `severity`, `message`, `files`, `rule`, `constraints`, `utils`
