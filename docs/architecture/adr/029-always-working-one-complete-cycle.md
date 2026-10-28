@@ -65,7 +65,7 @@ for publication.
 ## Decision
 
 The operator clarified the test operations on 2026-10-28 in the active root
-conversation, verbatim: "make tests (usa tetmon )  make tests-fulll nao usa,
+conversation, verbatim: "make tests (usa tetmon ) make tests-fulll nao usa,
 simples assim". The canonical existing spelling is `tests-full`; no typo alias
 is introduced. Tracker memory
 `operator-ruling-2026-10-28-tests-testmon-full-native` records the decision.

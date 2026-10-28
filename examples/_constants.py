@@ -60,7 +60,7 @@ class ExamplesFlextRootConstants:
         """Helper to extract sequence of JsonMapping from JsonValue."""
 
         @staticmethod
-        def extract(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
+        def extract(value: t.JsonValue) -> Sequence[t.JsonMapping]:
             if not isinstance(value, Sequence) or isinstance(
                 value,
                 ExamplesFlextRootConstants.SCALAR_SEQUENCE_TYPES,
@@ -76,7 +76,7 @@ class ExamplesFlextRootConstants:
         """Helper to extract string sequence from JsonValue."""
 
         @staticmethod
-        def extract(value: t.JsonValue) -> t.StrSequence:
+        def extract(value: t.JsonValue) -> Sequence[str]:
             if not isinstance(value, Sequence) or isinstance(
                 value,
                 ExamplesFlextRootConstants.SCALAR_SEQUENCE_TYPES,

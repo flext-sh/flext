@@ -21,6 +21,14 @@ and [Decision 18](028-facade-boundary-orchestrators-declarative-enforcement.md#d
 duplicate analysis model or blanket removal of distinct native transformation
 capabilities; remove only competing behavior that duplicates the canonical owner.
 
+Reconciled 2026-10-28 with the rope-only interpreter law (operator order
+2026-10-28; [ADR-028 Decision 17 amendment](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)):
+the Python rewrite engines named in the [Context](#context) below (`re`, `ast`,
+`libcst`, `tokenize`) are exterminated under that law, not consolidated as
+parametrized rule surfaces. `make mod` stays the single modernize surface; its
+Python work is ast-grep declarative rules carrying their fix forms where
+mechanical and the single rope index per repository where semantic.
+
 - **Status:** ACCEPTED TARGET — implementation in progress
 - **Date:** 2026-09-15
 - **Target line:** FLEXT `0.12.0-dev`, forward baseline `0.13.0`

@@ -131,6 +131,10 @@ installed delivery remain separate evidence. Global governance is authored under
   pass-through to its new owner until the fleet and external census is zero, and is
   then deleted. This window is the route to zero compatibility code, not an alias
   exception.
+  The operator's 2026-10-28 generic-typing-wrapper cutover in that same ADR requires
+  complete consumer, rule and documentation migration for retired generic wrappers;
+  preserve domain aliases and native collection semantics rather than restoring
+  removed wrappers. Acceptance still requires real runtime and the full gates.
 - Lazy-init re-export (generated `__init__.py`, PEP 562) follows
   [ADR-018](../../../docs/architecture/adr/018-generator-declarations.md#decision)
   and [ADR-028 Decision 10](../../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10).

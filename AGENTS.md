@@ -833,7 +833,7 @@ CLI + pytest plugin, **never imported at runtime**.
     "External libraries belong only in C,T,P,M,U, and exports must be prefixed by
     functionality rather than by library, for example git_, refactor_, workspace_").
     Only `c/t/p/m/u` implementation modules name or import a library
-    (rope, griffe, networkx, libcst, ast-grep). Every outward surface (protocols, `u`
+    (rope, griffe, networkx, jinja2, ast-grep). Every outward surface (protocols, `u`
     methods, model fields, `t` aliases, CLI options) carries a capability name
     prefixed by functionality (`git_`, `refactor_`, `workspace_`; for example
     `p.Infra.WorkspaceSnapshot`), never `rope_*`, `Rope*`, `griffe_*` or another

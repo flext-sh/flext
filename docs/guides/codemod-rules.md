@@ -242,6 +242,14 @@ The engine reads these `metadata` keys, declared in
 | --- | --- |
 | This section, One rule per law; the generated Infra copy links back here. | [FLEXT ADR-028 Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) |
 
+Rope is the only accepted Python interpreter in FLEXT's own code ([ADR-028
+Decision 17, amendment
+2026-10-28](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)):
+the engine never parses, analyzes or rewrites Python source with the `ast`
+module, `libcst`, or `re` applied to code — analysis and transforms go through
+rope's PyModules from the single indexed project. ast-grep (declarative rules),
+sed (text) and the generator (projections) keep their canonical domains.
+
 Operator order of 2026-10-25, verbatim (tracker memory
 `operator-order-2026-10-25-rules-generalized-min-count`; ADR-028 Decision 18):
 "o sed, rope e ast-grep rules tem que estar sempre alinhados com as regras

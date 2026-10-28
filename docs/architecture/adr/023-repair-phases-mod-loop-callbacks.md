@@ -67,6 +67,16 @@ standalone verbs.
    (cross-phase cycle), the loop fails loudly — "changes retained for mandatory owner
    repair" — instead of claiming convergence. A phase failure fails the mod verb with
    its cause; no phase result is swallowed.
+5. **Phase engines obey the rope-only interpreter law** (reconciled 2026-10-28;
+   operator order referenced in
+   [ADR-028 Decision 17](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)).
+   A phase never introduces its own Python parser: mechanical phases drive ast-grep
+   declarative rules that carry their fix forms (ADR-028
+   [Decision 11](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-11)
+   and [Decision 18](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18));
+   semantic phases operate on the single rope index per repository through `p.Infra`
+   surfaces; text phases stay with sed for non-Python files. stdlib `ast`, `libcst`
+   and `re`-on-code rewrite engines are banned from the loop.
 
 ## Consequences
 

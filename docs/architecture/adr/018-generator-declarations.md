@@ -168,6 +168,17 @@ modification candidate includes dependent protocols, facades and lazy exports
 through their existing projection owner as coherent migration effects; it neither
 invokes `make gen` nor implements another generator.
 
+The approved Rope DSL entry is `RopeWorkspaceDsl.protocol_projection()`, returning
+one typed, invocation-local `ProtocolProjectionPlan`: projected sources, native
+source-to-protocol identities, declaration classifications and dependency edges.
+Both operations consume this same projection owner. The modification integration
+uses the existing `ModLoopPhase.plan` callback contract and `CodegenFilePlan`
+composition after structural callbacks, not another loop or fake per-symbol
+`RopeContractRule` pattern. The invocation owns the native session/snapshots and
+injects them across callbacks; changed candidate views refresh incrementally.
+This is the accepted implementation target, not proof that the entry or callback
+has been implemented or validated.
+
 Every structural cutover candidate closes all actual affected workspace consumers:
 imports, annotations, inheritance, quoted references, facades and lazy exports
 move together. Generation must fail before effects when publication would require
@@ -189,41 +200,43 @@ transaction contract below.
 Complete this entire pattern before extending the same native mechanism to other
 expensive ast-grep patterns. Profile the real path with cProfile, tune
 the measured owner through CA/DI and existing native capabilities, and preserve
-all detection and runtime behavior. The first pilots are distant from core;
-`flext-dbt-ldif`, `flext-tap-ldif` and `flext-target-ldif` are initial candidates,
-not proof of sufficient coverage. Derive a variation/coverage matrix from the
-complete inventory and cover every actual variation before scaling to the fleet.
+all detection and runtime behavior. The first pilots are distant from core and
+follow the existing S5 order: `flext-dbt-ldif`, then `flext-tap-ldif`, then
+`flext-target-ldif`. That order is not proof of sufficient coverage; extend the
+pilot cases afterward where the native inventory proves a gap. Derive a
+variation/coverage matrix from the complete inventory and cover every actual
+variation before scaling to the fleet.
 Every pilot transaction still includes all of its affected workspace consumers.
 
-**Proposed phase-admission mechanism — awaiting an explicit operator decision.**
-The accepted protocol/pilot target above does not authorize changing the drift
-gate's scope. The current root operations do not expose live-pilot phase admission.
-One proposed implementation extends the existing transaction/admission owner
-with typed, declarative enrollment, phase prerequisites and coverage policy.
-Discovery and generation planning would remain complete across the workspace;
-only coherent admitted pilot effects would be published before fleet rollout,
+**Phase-admission amendment 2026-10-28 — operator authorized, implementation and
+runtime acceptance pending.** The operator answered the exact drift-admission
+question: "Autorizar admissão por coorte, com pilotos publicados e integrados antes
+da frota (recomendado)". The bounded change is generation drift admission from the
+whole planned fleet to explicitly admitted coherent cohorts during the pilot.
+All Python checker scopes and diagnostic rules remain unchanged. This extends the
+existing transaction/admission owner with typed, declarative enrollment, phase
+prerequisites and coverage policy.
+Discovery and generation planning remain complete across the workspace;
+only coherent admitted pilot effects are published before fleet rollout,
 including every affected caller outside the initial pilot projects.
 
-The pending decision is whether drift admission may evaluate those admitted
-cohorts while the fleet remains explicitly incomplete and all Python checker
-scopes remain unchanged, or whether pilots must be qualified in staged candidates
-before a global rollout under the existing drift contract. These alternatives
-are not equivalent live-publication evidence. Neither is selected by this ADR,
-elapsed time, an unanswered question or the accepted high-level pilot target.
-No phase/drift policy change or implementation is authorized by this proposal.
+Drift admission evaluates the coherent admitted candidate while the fleet remains
+explicitly incomplete. It does not filter a final global file list: shared facades
+and lazy exports must be recomposed for that candidate through the same planners.
+Staged pilot qualification alone is not the selected acceptance strategy.
 
-If cohort admission is approved, fleet effects would require complete pilot
-variation coverage, published-pilot runtime, applicable native gates and integration
-proof; staged validation alone would not replace those receipts. Unelected work
-would remain explicitly unexecuted and incomplete, never full-workspace success
-or an accepted skip. Any approved mechanism must retain the selector-free root
+Fleet effects require complete pilot variation coverage, published-pilot runtime,
+applicable native gates and integration proof; staged validation alone does not
+replace those receipts. Unelected work
+remains explicitly unexecuted and incomplete, never full-workspace success
+or an accepted skip. The mechanism must retain the selector-free root
 Make interface and unchanged checker includes/excludes, CI mode, file filters and
 diagnostic rules. No public selector, project-name allowlist, parallel projector
-or orchestration pipeline is proposed. Existing typed configuration would own the
+or orchestration pipeline is introduced. Existing typed configuration owns the
 policy grammar, with native inventory/source identities binding cohort coverage.
 Beads remains the execution-state owner and publisher receipts remain evidence,
 not another tracker. The small-transaction interface and runtime proof below
-remain prerequisites where implementation is pending; this proposal certifies
+remain prerequisites where implementation is pending; this authorization certifies
 neither their readiness nor a completed pilot.
 
 Successful pilot proof admits only the fleet rollout of this same pattern.

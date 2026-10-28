@@ -44,7 +44,7 @@ chaining so error handling is structural, not scattered `try/except`.
 
 Python 3.13+ typing, modern forms only: builtin generics, `X | Y` unions, `type`
 statements, structural protocols. `Any` and bare `object` are forbidden. Composite types
-use `t.*` aliases (`t.MappingOf[K, V]`, `t.SequenceOf[T]`, …) with `| None` on the
+use `t.*` aliases (`t.MappingOf[K, V]`, `Sequence[T]`, …) with `| None` on the
 outside for nullability. Type-checking is a gate, not a suggestion: Ruff, Pyrefly,
 Pyright, and Mypy all run in CI.
 
