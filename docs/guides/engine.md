@@ -17,6 +17,11 @@ nodes through Rope is also a superseded route. Use native DSL queries, source
 bindings, scopes and refactorings; a missing capability is repaired at its native
 owner, never replaced by a second parser or fallback implementation.
 
+Native module election preserves the first import-resolution exception. A
+failed stdlib spec lookup is not converted to an absent spec followed by a
+second resolver attempt. Source and extension-module selection retain their
+declared native boundaries.
+
 Lint-identity authentication consumes that same governed source inventory and
 native bindings. It must not recursively scan report trees, interpret source
 with AST, infer a settings owner from a class-name suffix, ignore decoding
@@ -29,6 +34,19 @@ revision; its default remains `HEAD`. Historical bytes authenticate the analysis
 candidate only. Keep the live physical witness and current publication source
 separate, and never publish historical providers to make unresolved consumers
 appear valid.
+
+Removal admission consumes the existing census and its explicit `consumer_roots`
+from the typed operation request and semantic source plan. Pass those validated
+inputs through composition by reference. An empty local census does not prove
+that external consumers have migrated; do not discover neighboring checkouts or
+introduce another inventory, receipt protocol or retirement ledger.
+
+Lazy projection consumes those same native modules, source bindings and import
+owners. A second Python syntax model, class-ancestry cache or export/member fact
+cache is not a separate authority. Remove the duplicate parser and derived
+transport mirrors while rewiring the existing planner and renderer; do not
+replace them with another wrapper model or another source scan. Pydantic remains
+the owner of validated input and publication contracts.
 
 ## What stays canonical
 
