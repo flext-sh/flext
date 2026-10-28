@@ -149,8 +149,8 @@ warning(s)
         "~/flext/flext-core/src/flext_core/_decorators/_logging.py::FlextDecoratorsLogging._resolve_correlation_id",
         "~/flext/flext-core/src/flext_core/_decorators/_logging.py::FlextDecoratorsLogging._execute_logged_call",
         "~/flext/flext-core/src/flext_core/_decorators/_logging.py::FlextDecoratorsLogging.with_correlation",
-        "~/flext/flext-core/src/flext_core/_models/_context/__scope/flextmodelscontextscope_part_02.py::FlextModelsContextScope.ContextRuntimeState",
-        "~/flext/flext-core/src/flext_core/_models/_context/__scope/flextmodelscontextscope_part_02.py::FlextModelsContextScope.ContextRuntimeState.create_default"
+        "~/flext/flext-core/src/flext_core/_models/_context/_scope/flextmodelscontextscope_part_02.py::FlextModelsContextScope.ContextRuntimeState",
+        "~/flext/flext-core/src/flext_core/_models/_context/_scope/flextmodelscontextscope_part_02.py::FlextModelsContextScope.ContextRuntimeState.create_default"
       ],
       "members_total": 590,
       "members_truncated": true

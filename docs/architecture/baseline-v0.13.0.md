@@ -10,7 +10,7 @@
   - [Core Class Matrix](#core-class-matrix)
   - [Namespace Composition Classes](#namespace-composition-classes)
 - [Core Class Contracts](#core-class-contracts)
-  - [FlextRuntime](#flextruntime)
+  - [u](#u)
   - [FlextDi](#flextdi)
   - [FlextLogger](#flextlogger)
   - [FlextContext](#flextcontext)
@@ -98,7 +98,7 @@ Per-project docs are subordinate to this baseline until each project is migrated
 | `FlextSettings`   | `FlextSettings`   | `settings.py`                    | Typed configuration root               | `shared`, `build`, `add`, `load`                                                                                             | Keep and narrow                      |
 | `r`               | `r`               | `result.py`                      | Success and failure contract           | existing result surface                                                                                                      | Keep                                 |
 | `e`               | none              | `exceptions.py`                  | Boundary exception classes (`ADR-028`) | error codes in `c`, structured payloads in `m`, expected errors in `r[T]`                                                    | Retire `e` single-letter alias       |
-| `FlextRuntime`    | none              | retired (`_runtime` removed)     | Replaced by `u`, `m`, and `FlextDi`    | serialization in `u`, field validators in `m`, DI in `FlextContainer`/`FlextDi`                                              | Retire from public platform          |
+| `u`    | none              | retired (`_runtime` removed)     | Replaced by `u`, `m`, and `FlextDi`    | serialization in `u`, field validators in `m`, DI in `FlextContainer`/`FlextDi`                                              | Retire from public platform          |
 | none              | `FlextDi`         | `di.py`                          | Bridge to `dependency_injector`        | `build`, `add_service`, `add_factory`, `add_resource`, `bind_config`, `wire`, `unwire`                                       | Add                                  |
 | `FlextLogger`     | `FlextLogger`     | `logger.py`                      | Structured logging and context binding | `get`, `bind`, `unbind`, `scope`, `clear_scope`, `from_context`                                                              | Keep, move from `loggings.py`        |
 | `FlextContext`    | `FlextContext`    | `context.py`                     | Execution context only                 | `get`, `set`, `has`, `remove`, `clear`, `clone`, `merge`, `export`, `get_meta`, `set_meta`                                   | Keep and narrow                      |
@@ -138,7 +138,7 @@ Application and orchestration code should target:
 
 ## Core Class Contracts
 
-### FlextRuntime (Retired)
+### u (Retired)
 
 - Status: **Retired** alongside `_runtime` (aligned with [`migration-to-v0.13.0.md`](../guides/migration-to-v0.13.0.md) and [`ADR-028`](adr/028-facade-boundary-orchestrators-declarative-enforcement.md)).
 - Ownership migration:
@@ -366,7 +366,7 @@ Application code must use:
 - `u.get_*`
 - `u.require_*`
 
-`FlextRuntime` and `_runtime` are retired and are not part of the DI or service bootstrap path.
+`u` and `_runtime` are retired and are not part of the DI or service bootstrap path.
 
 ## Alias Baseline
 
