@@ -380,16 +380,36 @@ outside the facades across 12 repositories.
  1. **Pydantic declarations are complete at import.** Every model, settings, config and
     service class is complete when its module is imported (`__pydantic_complete__`),
     with no `model_rebuild`.
-     - A protocol-typed model field uses `t.Port[p.X]`, Pydantic's official field-level
-       marker. A protocol metaclass is not FLEXT-conformant because the metaclass is
-       private API.
+     - Lazy module imports do not authorize deferred schemas after a declaration's
+       module has loaded. The current Core `defer_build=True` setting is an
+       implementation gap against this accepted contract, pending repair at the
+       preset owner and public fresh-import proof. A later gate-triggered build
+       does not establish completeness at import.
+     - An injected runtime dependency uses `t.Port[p.X]`, the FLEXT field annotation
+       built on native Pydantic schema hooks, under [ADR-019](019-service-contract-ports-operations.md).
+       Its runtime protocol check proves member presence, not signatures or nested
+       payload validity. An unresolved generic parameter fails; an unconstrained
+       schema is not a substitute. A protocol metaclass is not FLEXT-conformant
+       because the metaclass is private API.
+     - A serializable model payload projected to a structural protocol follows
+       [ADR-018](018-generator-declarations.md#model-and-service-protocol-projection):
+       native `GetPydanticSchema` delegates to the original concrete annotation.
+       Preserve validators, serializers, defaults and JSON Schema once; do not
+       substitute the DI port's instance check or excluded schema for that payload.
      - `arbitrary_types_allowed` is banned.
-     - A strict contract declaring an Enum field retains the member's type during
-       Python validation and handoff by reference. Pydantic's `use_enum_values=True`
-       extracts its primitive value during validation, so it cannot be inherited by
-       the [Core `ContractModel` preset](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/src/flext_core/_models/_base/Flextmodelsbase_part_02.py#L133-L143).
-       Serialize primitive values at the outward JSON boundary, not between strict
-       contracts.
+     - **Enum-value contract, amended 2026-10-28:** governed models and presets
+       resolve `use_enum_values=True`, including `ContractModel` (formerly `False`).
+       This supersedes the earlier enum-identity preservation requirement.
+       A complete string domain uses its existing `c.*` `StrEnum`; `Literal`
+       remains for proper subsets and discriminators. Strict Python constructors
+       and assignment receive enum members; validation stores primitive values,
+       including validated defaults. Projected reads expose `str`, while mutable
+       writes retain the enum input type; frozen fields expose no setter.
+       Reuse validated models by reference rather than reconstructing them from
+       stored primitive values. This is the accepted migration target, not proof
+       that every preset, producer and consumer has been migrated. See
+       [ADR-005](005-config-settings-constants-templates-schemas-ssot.md#1-each-concern-has-exactly-one-owner)
+       and [Pydantic's versioned configuration API](https://github.com/pydantic/pydantic/blob/v2.14.1/pydantic/config.py).
      - A field naming a sibling through its own enclosing family class is banned
        (`ban-enclosing-family-field-reference`): the enclosing class is unbound while
        its body runs, so the model stays incomplete. The fix extracts the nested member

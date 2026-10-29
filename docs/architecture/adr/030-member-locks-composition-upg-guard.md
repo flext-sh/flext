@@ -119,6 +119,22 @@ root `AGENTS.md` Shared Worktree Contract, which otherwise prohibits a clean tre
 a prerequisite: lock writing pins SHAs that remote CI must reproduce, so only this
 verb requires committed state. No other verb inherits the requirement.
 
+**One-time Rope exception, 2026-10-28.** The operator answered "Autorizar
+exceção pontual para Rope" to the explicit request to update only the Rope pin
+and corresponding locks through `make upg`, then activate through `make setup`,
+with the current WIP preserved and every gate retained. Tracker memory
+`operator-exception-2026-10-28-rope-only-upg-wip` records the question and answer.
+This exception covers the causal native-SDK cutover only. It changes neither
+the permanent guard nor other dependency resolutions, permits no site-packages
+patch, and does not establish SDK qualification or installation evidence.
+
+Selected source updates cover runtime, optional and development declarations
+through the existing requirement-group traversal. They change only the selected
+direct-reference URL; extras, markers, native inclusion tables, array positions
+and comments retain their owners. Distinct conditional overrides remain native
+UV policy: conflicting source URLs cannot be collapsed into one project
+requirement and must fail before publication.
+
 ## Proposed design (implementation pending)
 
 Agent 11's design for the stabilization task force, recorded 2026-10-25. It is a

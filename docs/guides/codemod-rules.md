@@ -18,6 +18,23 @@ consolidation) is the `codemod` skill. This guide covers the FLEXT engine:
 where rules live, the keys it reads, and the verbs that run it. Every value named here
 is declared by the flext-infra owner cited next to it; that owner wins over this guide.
 
+The exhaustive-enum migration is an accepted target, not a validated rollout.
+An exhaustive `Literal` of members from one `StrEnum` may become that enum's direct
+Pydantic field annotation only after native Rope identities prove its complete
+canonical domain and references prove that it is not a discriminator. Preserve
+`Annotated` metadata, defaults, aliases and proper subsets. Unresolved ownership,
+mixed domains or unproved safety fail before effects, rather than disappearing
+from the accounted migration. The current rule must complete that proof and
+public-boundary coverage before application can establish acceptance.
+
+The operator elected `use_enum_values=True` for all governed model presets,
+superseding the earlier enum-identity contract (ADR-005 and ADR-028 Decision 14).
+Validation retains the input domain and the effective preset's strictness;
+validated `StrEnum` attributes expose `str` in generated protocols. Writable
+properties retain their original accepted input type. Python construction, default
+validation, JSON ingress, output values and consumer migration are separate proofs;
+the annotation alone does not establish any of them.
+
 ## Catalogs and layers
 
 Layer-zero own-helper admission is derived from the same native candidate proof

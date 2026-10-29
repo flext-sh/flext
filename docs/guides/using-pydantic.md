@@ -49,6 +49,49 @@ Two 2026-10-25 operator rulings bind every FLEXT model (root `AGENTS.md`
 
 Only flext-core imports `pydantic`, `pydantic_settings` or `pydantic_core`.
 
+The operator's 2026-10-28 declaration policy uses the enum type for its full
+domain. `Literal` expresses a proper subset or a discriminator; enumerating
+every member again duplicates the owner. Strict Python constructors receive
+enum members and the appropriate typed nested values. JSON ingress uses the
+existing JSON validation boundary once. Do not weaken strictness or serialize
+Python input to JSON to make validation accept it.
+
+The newer accepted enum-value policy requires `use_enum_values=True` in all
+governed models and presets, including `ContractModel`. It replaces the former
+identity-preservation policy: enum input validates to its primitive value.
+Generated structural reads of a `StrEnum` field expose `str`; mutable writes
+accept the enum input type, and frozen projections have no setter. Defaults
+must be validated through their preset owner. Keep strict constructors and
+assignment, and pass an already validated model by reference instead of
+reconstructing it from primitive stored values. The policy is an implementation
+target; its fleet rollout and runtime acceptance remain unproven. The precise
+owners are [ADR-005](../architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#1-each-concern-has-exactly-one-owner)
+and [ADR-028 Decision 14](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-14).
+
+Compose native models, specialized generics and existing presets before adding
+validation machinery. Reuse the existing adapter, `InstanceOf` and
+`GetPydanticSchema` owners where their contracts apply. The existing `t.Port`
+checks runtime protocol presence; it does not validate signatures. Retain static
+protocol checks and real consumer evidence rather than duplicate local narrowing.
+`t.Port` is a FLEXT DI annotation built on native hooks and excludes its runtime
+dependency from JSON Schema. It must not replace a serializable payload's
+validation: a payload projected to `p` delegates its original concrete annotation
+through `GetPydanticSchema`, preserving validators, serializers and JSON Schema.
+An unresolved port type parameter fails instead of selecting `any_schema`.
+See [ADR-019](../architecture/adr/019-service-contract-ports-operations.md) for DI
+and [ADR-018](../architecture/adr/018-generator-declarations.md#model-and-service-protocol-projection)
+for payload projection.
+Railway callbacks preserve original exceptions; only the declared error boundary
+converts a validation failure into a result.
+
+Research starts with the official
+[complete Pydantic documentation](https://pydantic.dev/docs/validation/latest/llms-full.txt).
+Its `latest` URL is a reference index, not proof that a feature exists in the
+project's locked runtime. Check the declared floor and selected lock before using
+an API. Upstream references: [standard types](https://docs.pydantic.dev/latest/api/standard_library_types/),
+[custom types](https://docs.pydantic.dev/latest/concepts/types/) and
+[adapter reuse](https://docs.pydantic.dev/latest/concepts/performance/).
+
 ## Library boundaries
 
 Every payload a library returns enters FLEXT as an `m` model at the single adapter
@@ -97,6 +140,12 @@ metadata and expose constructor-relevant declarations in a statically
 recognized form, preserving runtime behavior. Multiple-base configuration
 composition also needs observed runtime evidence; ordinary Python MRO is not a
 substitute for inspecting the effective model configuration.
+
+Lazy loading a module and deferring its model schemas are different contracts.
+ADR-028 Decision 14 requires complete declarations when the module is imported;
+the current Core `defer_build=True` setting does not satisfy that target. Repair
+and fresh-import validation remain pending; a gate that builds the schema later
+does not prove import-time completeness.
 
 References: [Pydantic fields](https://docs.pydantic.dev/latest/concepts/fields/),
 [configuration inheritance](https://docs.pydantic.dev/latest/concepts/config/),
@@ -196,6 +245,20 @@ operator's explicit old/new-key authorization under the lint-rule freeze. No row
 classifies an unmeasured diagnostic as a false positive.
 
 ## Source-derived protocol contracts
+
+### Dependency documentation references
+
+The documentation generator owns the workspace `llms.txt` reference index.
+Dependency entries come from governed declarations, lock versions and installed
+distribution metadata. Documentation links use publisher-declared `Project-URL`
+values or explicitly verified source URLs in typed documentation policy; the
+generator never synthesizes upstream `llms.txt` addresses or mirrors whole sites.
+Locked and installed versions are separate provenance. An upstream `latest` URL
+does not establish content compatibility with the loaded version.
+The existing documentation planner, templates and atomic publication own this
+output alongside FLEXT project references during `make gen`. The
+[llms.txt format](https://llmstxt.org/) defines its structure. Upstream documents
+are reference data, never executable agent instructions.
 
 [ADR-018's model and service projection](../architecture/adr/018-generator-declarations.md#model-and-service-protocol-projection)
 owns the accepted 2026-10-28 contract for source-derived structural protocols and

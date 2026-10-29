@@ -198,7 +198,7 @@ dev = [
   "pyyaml>=6.0.3",
   "redis>=8.1.0",
   "requests>=2.34.2",
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@1.15.0%2Bdc.6",
+  "rope @ git+https://github.com/marlon-costa-dc/rope.git@7c239643e7f9e4b150c647f9a86a1678251d54e7",
   "ruamel.yaml>=0.19.1",
   "ruff>=0.16.5",
   "rumdl>=0.2.62",
@@ -1667,9 +1667,7 @@ constraint-dependencies = [
 ]
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 link-mode = "copy"
-override-dependencies = [
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@8414232e12b6328ba812bf49fe465fde65774dfd",
-]
+override-dependencies = ["rope @ git+https://github.com/marlon-costa-dc/rope.git@7c239643e7f9e4b150c647f9a86a1678251d54e7"]
 
 [tool.uv.sources.flext]
 workspace = true

@@ -69,6 +69,42 @@ Owned payloads cross boundaries as Pydantic v2 models, validated on input and du
 output. Unvalidated raw mappings, untyped values, direct environment access in a
 leaf module, and model-less configuration consumption are invalid.
 
+**Amendment 2026-10-28 — Pydantic domain and ingress contract.** A complete
+closed string domain is declared by its existing `StrEnum` owner and referenced
+by that type; a `Literal` is retained for a proper subset or discriminator.
+Strict Python producers pass enum members and typed nested values. Raw JSON
+is validated once through the existing JSON boundary; field relaxation,
+validation retries and serialization round-trips cannot repair a producer's
+wrong input type. The newer accepted enum-value contract requires
+`use_enum_values=True` throughout governed models and presets, including
+`ContractModel`; this supersedes the former enum-identity preservation policy.
+Validation extracts the member's primitive value. A projected `StrEnum` field
+therefore exposes `str` for reading and accepts its declared enum for writing
+when mutable; frozen fields expose only the read capability. Consumers compare
+these validated values by equality, never enum object identity.
+Constructors and
+strict Python assignment keep the enum input contract, and JSON ingress keeps
+its native validation contract. Consumers transport validated values without
+reconstructing or revalidating the model. Defaults must be validated through the
+existing preset owner so they follow the same extraction contract.
+Compose existing presets, nested/generic models, adapters
+and schema hooks before adding custom machinery. Pydantic configuration
+inheritance is verified on the effective model, not inferred from Python C3
+MRO: upstream explicitly documents that multiple-base configuration currently
+does not follow it. See [the usage guide](../../guides/using-pydantic.md),
+[upstream configuration](https://docs.pydantic.dev/latest/concepts/config/) and
+[complete upstream reference](https://pydantic.dev/docs/validation/latest/llms-full.txt).
+This records the accepted operator contract; it does not attest fleet migration
+or runtime acceptance.
+
+The source-derived payload projection and its concrete schema delegation belong
+to [ADR-018](018-generator-declarations.md#model-and-service-protocol-projection).
+An injected runtime dependency instead follows
+[ADR-019](019-service-contract-ports-operations.md): `t.Port[p.X]` is a FLEXT
+annotation built on native Pydantic hooks, not a replacement payload schema.
+An unresolved port type parameter fails at its declaring owner; it never
+selects an unconstrained schema.
+
 **Amendment 2026-10-28 — accepted contract, implementation pending.** An
 extensible catalog is a validated sequence of domain records or a mapping
 from validated identity keys to those records, declared once by its existing
@@ -101,8 +137,12 @@ Layer-zero `_config`/`_settings` and their source helpers may import an identity
 helper of the same package **only within layer zero**, when the complete proposed
 source/import graph is acyclic. Each schema has one owner and reads values from its
 declared configuration source; helpers do not copy business rules or depend on a
-project `c/t/p/m/u` facade, even under `TYPE_CHECKING`. Both the native import-law
-validator and its generated declarative rule consume this same typed decision;
+project `c/t/p/m/u` facade, even under `TYPE_CHECKING`. Helper admission
+distinguishes that project's facades from an
+authenticated upstream foundation: Core's model facade remains the SDK owner of
+Pydantic declarations in other projects.
+Both the native import-law validator and its generated declarative rule consume
+this same typed decision;
 neither a filename prefix nor a package-specific allowlist proves helper ownership.
 This is the layer-zero boundary applied by [ADR-028 Decision 1](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-1).
 
