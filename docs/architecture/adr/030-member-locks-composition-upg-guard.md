@@ -95,6 +95,18 @@ Remote CI installs the committed locks frozen and never relocks (tracker memory
 installs from the member's own committed lock, and workspace CI from the composed
 workspace lock.
 
+Local `make setup FLEXT=<workspace>` retains the consumer's mandatory frozen
+installation before source binding. Executor self-hosting must use the native
+declaration owners without forming or writing another lock, followed by the
+existing typed selection owner in the physical consumer environment. That owner
+validates the complete selection and publishes its existing receipt. Local
+override paths are runtime inputs, never captured in generated Makefiles. The
+[execution-context contract](../../../flext-infra/docs/guides/execution-context.md#generation-staging-transaction-journals-and-modernization)
+owns the source-only bootstrap target and its still-pending implementation and
+cold consumer proof; workspace-only export cannot be presumed to include the
+excluded editable path dependencies described below. This clarification does not
+relax the upgrade guard or qualify an SDK release.
+
 ## The upgrade guard
 
 The guard applies to uv only and runs in the `make upg` preflight, before any lock

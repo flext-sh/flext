@@ -290,19 +290,32 @@ runtime proof, applicable native gates and integration closure before beginning
 another pattern. A passing pilot never authorizes switching patterns while that
 rollout or any affected consumer remains incomplete.
 The existing five-second transaction and sixty-second Make budgets, source
-authentication, own-effects rollback and frozen analyzer rules remain unchanged.
+authentication and frozen analyzer rules remain unchanged. Recovery follows the
+2026-10-29 fix-forward supersession below; own-effects rollback is no longer authorized.
 Acceptance requires real public runtime and invalid-case detection, native
 gates, complete coverage accounting, repeated generation/refactoring fixed point
 and integrated evidence; a source restoration or sampled pilot is not completion.
 
 ### Single-read, single-batch publication (amended 2026-10-28, campaign `flext-pipol`)
 
+Read-only planning inputs travel separately from effects in each
+`CodegenFilePlan.inputs`, retaining their original atomic observations by
+reference. The existing publisher verifies those observations under the same
+native file-change lock used for effects before any publication. A YAML or
+dependency manifest consumed only as input never acquires invented destination
+ownership. This transport is an implementation requirement, not a claim of
+completed concurrency or fix-forward recovery validation.
+
 **Amendment 2026-10-28 — accepted contract, implementation pending.** The
 operator-approved small-transaction and cooperative-reader boundary supersedes
-the earlier invocation-wide, physically atomic batch interpretation. It also
-authorizes the narrowly scoped rollback below instead of the historical blanket
-rollback prohibition; no unrelated WIP or completed independent transaction is
-rolled back.
+the earlier invocation-wide, physically atomic batch interpretation.
+
+**Recovery supersession 2026-10-29 — operator order (`ag-ssut`, related
+`aihub-6sls5.2`).** The 2026-10-28 permission for transaction-owned rollback is
+historical and no longer operative. The canonical
+[atomic-effects rule](https://github.com/datacosmos-br/agents/blob/dev/rules/runtime/atomic-effects.md)
+owns preservation of published effects and correction forward. The small-transaction,
+reader-barrier, authentication, scope and deadline contracts remain in force.
 
 Within one repository invocation, an unchanged source observation is read and
 parsed once. One native workspace model per repository (ADR-028
@@ -343,22 +356,24 @@ authenticated effects before admitting readers; it never treats an absent
 process or an expired lock as successful publication. The record belongs to
 the publisher, not a substitute Beads tracker, semantic index or global cache.
 
-On failure, preserve the first cause and undo only this transaction's proven
-effects in reverse order, guarded by compare-and-swap against authenticated
-published states. This includes index entries, file modes and owned directory
-effects. A conflicting external edit is preserved and keeps recovery explicit;
-no global reset, historical restore or blind overwrite is permitted. Cleanup or
-rollback failures remain attached to the primary failure and the operational
-record remains unresolved until recovery is proved. Earlier committed
-transactions remain intact; the containing operation is still failed and
-unreached work is not successful.
+On failure, preserve the first cause and every confirmed published effect,
+including this transaction's index entries, file modes and directory effects.
+Retain authenticated before/after observations and partial-effect evidence in
+the existing operational record; they do not authorize restoration. Reconcile
+drift and correct the canonical owner forward under the same source/target
+authentication, compare-and-swap admission and cooperative barrier. Preserve
+conflicting external edits and earlier transactions. Cleanup discards only
+this invocation's unpublished staging and releases its own locks; its failures
+remain attached to the primary failure. The operational record stays unresolved
+until recovery is proved, the containing operation remains failed, and unreached
+work is not successful.
 
 The entire incremental transaction takes at most five seconds, including staged
-validation, publication, native refresh and bounded rollback. The existing
-performance policy owner declares that budget; the whole Make invocation,
+validation, publication, native refresh and bounded failure recording/cleanup.
+The existing performance policy owner declares that budget; the whole Make invocation,
 including lock waits, staging and recovery, remains within sixty seconds.
-Transaction sizing must leave recovery margin inside these limits. Fast
-validation never weakens the frozen analyzer rules or replaces the complete
+Transaction sizing must leave failure-recording and cleanup margin inside these
+limits. Fast validation never weakens the frozen analyzer rules or replaces the complete
 gates and real consumer proof required for the slice. Exhausting either budget remains a
 failure. Superseded planning/publication routes are removed in the same cutover.
 

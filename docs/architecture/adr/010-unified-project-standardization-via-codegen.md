@@ -25,7 +25,7 @@
 - **Status:** Accepted contract; consolidation and consumer runtime acceptance remain
   in progress under the active Bead.
 - **Date:** 2026-07-18
-- **Last updated:** 2026-10-23
+- **Last updated:** 2026-10-29
 - **Target line:** FLEXT `0.12.0-dev`, with `0.13.0` as the forward baseline.
 - **Scope:** One common, generated base for every project the workspace coordinates —
   root workspace, internal FLEXT packages, loose internal projects (treated as
@@ -92,12 +92,24 @@ with Make integration last. Documentation alignment precedes worker coding and
 real runtime proof precedes test changes. This does not relax the common surface
 below for other work or establish implementation acceptance.
 
-The common interface is exactly `setup`, `upg`, `gen`, `mod`, `fix`, `fmt`, `check`,
-`tests`, `help`, `build` and `clean`, projected by `make help` from the typed catalog.
+The typed catalog supplies the common interface through `make help` and the
+[generated public verb matrix](../../guides/make-commands.md#public-verb-matrix).
+The existing documentation generator owns that section in the canonical guide and
+its member projections; surrounding guide prose remains authored. Original source
+observations stay attached to the same guarded publication. This requirement does
+not establish completed implementation or convergence.
 Each operation retains its own effect; callers do not invent selectors or aliases.
 Product-specific commands stay with their declaring projects. Publication, deployment,
 tags and other external effects remain explicitly triggered. Standalone FLEXT projects
 own only themselves and never inspect neighbors (ADR-003).
+
+For FLEXT, each Make invocation has a 60-second total deadline. The operator's
+2026-10-25 order, recorded in tracker memory
+`operator-order-2026-10-25-make-timeout-60s-cprofile`, requires cProfile diagnosis
+and root-cause repair after a timeout, before repeating the operation for acceptance.
+Profiling uses the same public Make operation; extending the deadline or repeating
+an unchanged invocation is not a repair. This is the required contract, not evidence
+that the current generated defaults or commands already satisfy it.
 
 `setup` provisions the declared toolchain, `.venv` via uv, and environment integration.
 `gen` owns rendering managed `pyproject.toml`, `.mise.toml`, and `.python-version` from
@@ -115,7 +127,7 @@ The active work item records acceptance; this decision alone proves no green rol
 declarations and lock consistency replace independent pre-install Python setup
 admission; they are not claimed equivalent to it. Generation publishes native
 declarations, explicit upgrade resolves and writes locks, and setup uses official
-Mise acquisition, native locked tool provisioning, then `uv sync --locked` into
+Mise acquisition, native locked tool provisioning, then `uv sync --frozen` into
 the owned physical `.venv` without changing declarations or locks. Root CI checks out
 declared members and uses the same native uv workspace/lock noneditably; independent
 checkouts keep their own project contracts. Suppliers use native pyproject sources
@@ -138,8 +150,11 @@ Local workspace generation covers the root and eligible managed members; `CI=Y`
 selects only the target project. Generation publishes managed facades and lazy exports
 from source declarations. Its required staged-consumer and publication checks remain
 mandatory; they do not become a global lint, typing or suite run. Application checking
-belongs to `check`, and `tests` executes the complete applicable suite once with the
-persistent Testmon database.
+belongs to `check`. As defined by
+[ADR-029](029-always-working-one-complete-cycle.md#decision), `tests` executes native
+incremental Testmon selection over the complete applicable population with the
+persistent database. `tests-full` executes that complete population once without
+Testmon or a preliminary incremental run, leaving the database untouched.
 
 Explicit new-project generation reuses the existing project/scaffold models and conform
 planner. The target declares its identity, integration, kind and provenance; Git/worktree
@@ -322,8 +337,12 @@ code.
    rewire and zero Ruff, Pyrefly, or local LSP diagnostics. When an ai-hub CRG/LSP route
    is available and selected, its distinct runtime evidence is recorded without making
    host availability a FLEXT prerequisite.
-4. `make tests` executes the complete applicable suite once, retains the canonical
-   Testmon database, and consumes `flext-tests` public behavior fixtures.
+4. `make tests` executes native incremental Testmon selection over the complete
+   applicable population, retains the canonical database and consumes `flext-tests`
+   public behavior fixtures. An explicitly requested `make tests-full` executes the
+   complete population once without Testmon or an incremental pre-run, leaving the
+   database untouched. Both operations record collection and execution separately;
+   incremental selection also accounts for deselection and typed cache hits.
 5. Independent FLEXT projects pass the same gates; non-FLEXT projects preserve upstream
    conventions with no reverse `flext-*` dependency (ADR-008).
 

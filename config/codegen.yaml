@@ -2,6 +2,8 @@ Infra:
   codegen:
     make:
       lint_freeze_catalog: flext-infra/config/lint_freeze_catalog.json
+      docs:
+        contract_guide: docs/guides/make-commands.md
     vscode:
       # Ordered key/value pairs accept every extension setting and JSON value.
       # Layer composition appends pairs; the final occurrence replaces the whole value.
