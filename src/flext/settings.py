@@ -6,12 +6,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar
+from typing import ClassVar
 
 from flext_core import FlextSettings, m
-
-if TYPE_CHECKING:
-    from flext_core import t
 
 
 class FlextRootSettings(FlextSettings):
@@ -25,4 +22,4 @@ class FlextRootSettings(FlextSettings):
 settings: FlextRootSettings = FlextRootSettings.fetch_global()
 """Pre-instantiated root settings singleton — ``from flext import settings``."""
 
-__all__: t.VariadicTuple[str] = ("FlextRootSettings", "settings")
+__all__: tuple[str, ...] = ("FlextRootSettings", "settings")

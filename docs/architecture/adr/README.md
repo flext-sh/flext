@@ -72,11 +72,15 @@ candidate; acceptance never proves fleet stability.
   — **PROPOSED**
 - [ADR-017: Parametrized Rule Surfaces and the Single Modernize CLI](017-parametrized-rule-surfaces-single-modernize-cli.md)
   — **ACCEPTED TARGET** (`make mod` wired; `flext-infra/config/rules/mod/` exists;
-  distribution/migration acceptance remains unproved)
+  distribution/migration acceptance remains unproved; Python rewrite-engine scope
+  reconciled 2026-10-28 with ADR-028 Decision 17's rope-only interpreter law — the
+  `re`/`ast`/`libcst`/`tokenize` engines named there are exterminated, not
+  parametrized)
 - [ADR-018: Generator Declarations Law](018-generator-declarations.md) — **ACCEPTED**
-  (operator law 2026-09-20; rule owner: global governance rule
-  `flext/generator-declarations` in the `agents-governance` catalog; phased under
-  `flext-0in0k`)
+  (operator law 2026-09-20; authority routing reconciled 2026-10-26: branch-matched
+  ADR-018 and local FLEXT law, not the retired global copy; phased under
+  `flext-0in0k`; amended 2026-10-28 with single-read, single-batch transactional
+  publication under campaign `flext-pipol`)
 - [ADR-019: Service Contract — Protocol Ports, Explicit Composition Root, Typed Operations](019-service-contract-ports-operations.md)
   — **PROPOSED** (operator-approved plan V8, 2026-09-25; phased under `flext-4jtcb`)
 - [ADR-020: Bun installs the npm-backed mise tools fleet-wide](020-npm-installer-bun.md)
@@ -90,7 +94,8 @@ candidate; acceptance never proves fleet stability.
 - [ADR-023: Repair Phases as Mod-Loop Callbacks](023-repair-phases-mod-loop-callbacks.md)
   — **ACCEPTED** (`p.Infra.ModLoopPhase`; namespace-relocations + accessor-rename
   inside `refactor mod`'s joint fixed point; one engine per repair, three invocation
-  surfaces)
+  surfaces; phase engine composition reconciled 2026-10-28 with the rope-only law —
+  no phase introduces its own Python parser)
 - [ADR-024: DI Config Contract — Derived Defaults, Self-Only Minimal Overrides, Generated Commented Defaults](024-di-config-contract-derived-defaults-minimal-overrides.md)
   — **ACCEPTED TARGET** (operator order 2026-10-08; a repository declares only its own
   deltas; library ships generic defaults; injected root with library < repo < local
@@ -102,7 +107,9 @@ candidate; acceptance never proves fleet stability.
 - [ADR-026: Engine Federation — Unified Loop and Parametrized Rule Registry](026-engine-federation-unified-loop-kernel.md)
   — **PROPOSED** (campaign D1–D7, 2026-10-13; orchestration, registry, extraction and
   retirement proposals, not implementation receipts; preserves ast-grep mechanical fixes,
-  Rope semantic refactors and LSP validation under current law; proposed supersession and
+  Rope semantic refactors and LSP validation under current law; constrained by ADR-028
+  Decision 17's rope-only interpreter amendment, 2026-10-28: the registry may not route
+  FLEXT-authored Python through any parser but rope; proposed supersession and
   amendments do not override authority; acceptance requires full inventory provenance,
   actual runtime and canonical gate evidence, not campaign closure)
 - [ADR-027: Facade Single-Owner Law](027-facade-single-owner-law.md)
@@ -110,15 +117,26 @@ candidate; acceptance never proves fleet stability.
   evidence is implied)
 - [ADR-028: Facade Boundary — External Libraries, Orchestrators, Declarative Enforcement](028-facade-boundary-orchestrators-declarative-enforcement.md)
   — **ACCEPTED** (operator orders 2026-10-24/25; Decisions 15–19 are accepted technical
-  contracts: [Decision 15](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15),
-  [Decision 16](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16),
-  [Decision 17](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17),
-  and [Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18).
+  contracts:
+  [Decision 15](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15),
+  [Decision 16](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16),
+  [Decision 17](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17),
+  and
+  [Decision 18](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18).
   Implementation tracking: `flext-43iz8` for Decision 5 static-enforcement migration,
   `flext-1engx.15` for Decisions 16–17 and zero-quality exit, `flext-13s6n` for Decision
-  18 rule projection. The external deprecation census `flext-1engx.11` applies to the
-  Decision 7 compatibility window. These Beads track work; they do not establish
-  completion.)
+  18 rule projection. Decision 8 was amended 2026-10-28 (generated projections are
+  gate-clean by construction, zero manual or automated post-adjustment; campaign
+  `flext-pipol`). Decision 17 was amended 2026-10-28 into its complete rope-only
+  interpreter law (single loop/index/transaction, native refactorings first, CA/DI
+  `p.Infra` surfaces, per-repository isolation, deprecated-signature window for
+  superseded routes, BLOCKED-ON-ROPE-CAPABILITY reporting, LibCST carve-out
+  superseded; campaign engine map is the living census; cutover tracked on
+  `flext-u9h2i` under campaign `flext-pipol`). Decision 18 was amended 2026-10-28 with
+  the fix-form mandate (every declarative rule carries its generalized fix; a
+  detection-only rule is a defect when a fix is expressible). The external deprecation
+  census `flext-1engx.11` applies to the Decision 7 compatibility window. These Beads
+  track work; they do not establish completion.)
 - [ADR-029: Always Working — One Complete Cycle Per Slice](029-always-working-one-complete-cycle.md)
   — **ACCEPTED** (operator orders 2026-10-24; the project and its runtime work 100% of
   the time; one active slice completes gen → fmt → fix → mod → check → tests, runtime

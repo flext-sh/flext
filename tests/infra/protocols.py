@@ -27,7 +27,8 @@ class TestsFlextRootProtocols(FlextRootProtocols):
         class SpecLoader(Protocol):
             """Protocol for module spec loaders."""
 
-            def exec_module(self, module: ModuleType) -> None:
+            @staticmethod
+            def exec_module(module: ModuleType) -> None:
                 """Execute the loaded module in its namespace."""
 
         @runtime_checkable
@@ -62,13 +63,16 @@ class TestsFlextRootProtocols(FlextRootProtocols):
         class RepoProvider(Protocol):
             """Protocol for repository metadata providers."""
 
-            def get_branch(self) -> str:
+            @staticmethod
+            def get_branch() -> str:
                 """Return the repository active branch name."""
                 ...
 
-            def get_remote_url(self) -> str:
+            @staticmethod
+            def get_remote_url() -> str:
                 """Return the repository remote URL."""
                 ...
 
 
-__all__: list[str] = ["TestsFlextRootProtocols"]
+p = TestsFlextRootProtocols
+__all__: list[str] = ["TestsFlextRootProtocols", "p"]

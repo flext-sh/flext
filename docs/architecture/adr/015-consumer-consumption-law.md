@@ -130,6 +130,10 @@ runtime-census consumer cutover is still pending:
 - 0.12.x tags on green tips
 - `AI_HUB_CONSUMER.md` versioned per release
 - Depends on F1, F4, F7
+- Canonical R1–R6 text: [consumption-law](../../standards/consumption-law.md) — its R5 carries the
+  expanded ceremony (per-repository GitHub Releases with wheel+sdist, per-repo SEMVER derived by
+  `make release-plan`, gc-mail gate windows, consumer SSOT tag-refs projected by `make gen` and
+  locked only by `make upg`); this summary stays thin on purpose.
 
 ### R6 — Contribution Path Law
 

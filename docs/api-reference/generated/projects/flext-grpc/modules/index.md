@@ -11,6 +11,7 @@ These pages are generated from public modules and their docstrings.
 - [flext_grpc.api](api.md)
 - [flext_grpc.base](base.md)
 - [flext_grpc.cli](cli.md)
+- [flext_grpc.config_models](config_models.md)
 - [flext_grpc.constants](constants.md)
 - [flext_grpc.errors](errors.md)
 - [flext_grpc.models](models.md)

@@ -27,8 +27,13 @@ remain unproved here.
 - Workspace development cycle: 0.12.0-dev
 - Previous recorded release: [v0.11.0](v0.11.0.md) (historical record, not a fresh
   registry verification).
-- Target publication: workspace `flext` and 31 members, 32 distributions at 0.12.0.
+- Target publication: workspace `flext` and 31 members, 32 distributions via per-repository
+  GitHub Releases (wheel + sdist artifacts) at per-repository SEMVER (`0.12.x`) determined
+  by `release-plan` (e.g. `0.12.0` where unpinned, `0.12.1` where `v0.12.0` is already
+  published on remote, such as `flext-cli`).
 - Candidate size: 32 wheels and 32 sdists, 64 artifacts when both formats apply.
+- Automation: committed `.github/workflows/release.yml` and `.github/workflows/release-plan.yml`
+  across all 32 repositories (`publishes_release: true` in `config/codegen.yaml`).
 
 ## Current 0.12 surface
 
@@ -72,12 +77,23 @@ finding, producing command and exit, package, impact, canonical owner, and open
 remediation Bead. Accepted debt stays open; a red gate never becomes green by
 acceptance. Required-check policy changes need separate operator approval.
 
-The native release/version owner determines versions. Per-repository OIDC trusted
-publishing follows the flext-core pattern. Accepted integrated SHAs, tags, artifact
-hashes, and configuration identity must agree. Validate every exact candidate in a clean
-consumer, then verify the published artifacts from PyPI. Never overwrite an existing
-PyPI file or move a published tag; incompatible existing versions require an operator
-decision.
+The native release/version owner (`make release-plan`) determines per-repository SEMVER
+versions (`finalize_maintenance` forces `0.12.0` before `0.12.1` unless `v0.12.0` is
+already published on the remote). Align historical local tags (such as `rc3`–`rc5` on
+the root repository) by pushing them to remote before cutting new tags; never delete or
+move a published tag. Per-repository publication attaches wheel + sdist distributions to
+each repository's GitHub Release via committed `.github/workflows/release.yml` (plus OIDC
+trusted publishing where configured). Accepted integrated SHAs, tags, artifact hashes,
+and configuration identity must agree. Validate every exact candidate in a clean consumer
+(`ai-hub` pinned to `@v0.12.x` tag refs via `config/codegen.yaml` → `make gen` → `make upg`,
+verified without `FLEXT=` and recorded in `AI_HUB_CONSUMER.md`). Each repository release
+wave follows the ceremony protocol: `make release-plan` → `make release-version` (auto-commit
+`chore(release): v0.12.x` on `release/next` + PR) → `gc-mail` `[coord] [@city-hall]
+gate-window START <repo> release-build` → GO (merge with green gates) → `candidate-ci`
+green → `release-tag` / `release-build` / `release-publish` → `gc-mail` `[coord] landed
+<repo> v0.12.x` naming consumers (`ai-hub`, `algar-oud-mig`, `cosmos-*`, `invest`,
+`dataop`) → `gate-window END`. Never overwrite an existing published artifact or move a
+published tag; incompatible existing versions advance to the next SEMVER patch.
 
 Integrate preserved work through reviewed merge commits and fast-forward pushes.
 Workspace gitlinks must reference integrated, remotely reachable member commits. Retire

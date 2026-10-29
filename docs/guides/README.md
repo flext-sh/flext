@@ -17,21 +17,46 @@ shared owner rather than copying engineering law into each package.
 
 ## Canonical Guides
 
-- [Onboarding (Collection Rules)](onboarding.md)
-- [Migration to v0.13.0](migration-to-v0.13.0.md)
-- [Getting Started](getting-started.md)
-- [Development](development.md)
-- [Configuration](configuration.md)
-- [Testing](testing.md)
-- [Troubleshooting](troubleshooting.md)
-- [Using flext-core](using-flext-core.md)
-- [Using flext-cli](using-flext-cli.md)
-- [Using flext-tests](using-flext-tests.md)
-- [Using Pydantic](using-pydantic.md)
-- [Make Commands](make-commands.md)
-- [Codemod Rules](codemod-rules.md)
-- [Skill Automation Pattern](skill-automation-pattern.md)
-- [Security Guide](security.md)
+### Onboarding & Getting Started
+
+- [Onboarding (Collection Rules)](onboarding.md) — required pre-work, governance
+  hierarchy, and workspace orientation for any FLEXT project.
+- [Getting Started](getting-started.md) — initial environment setup, `make setup`,
+  and first validation pass.
+
+### Daily Workflow & Make Lifecycle
+
+- [Make Commands](make-commands.md) — selector-free public Make verbs, operation
+  ownership, single-pass contracts, and lane verification (`ADR-003`, `ADR-004`,
+  `ADR-025`, `ADR-029`, `ADR-030`).
+- [Development](development.md) — day-to-day coding workflow, facade MRO
+  (`c -> t -> p -> m -> u`), and code generation.
+- [Configuration](configuration.md) — layer-0 `FlextSettings`, YAML configuration
+  layers, and environment precedence (`ADR-024`).
+- [Testing](testing.md) — incremental and full Testmon suite execution,
+  `flext-tests` factories, and real-consumer validation (`ADR-029`).
+- [Security Guide](security.md) — credential hygiene, Bandit/Semgrep gates, and
+  secret isolation.
+
+### Framework & Library Usage
+
+- [Using flext-core](using-flext-core.md) — the public alphabet, named foundation
+  capabilities, lazy imports, configuration and explicit composition.
+- [Using flext-cli](using-flext-cli.md) — CLI command construction, output
+  formatting, and YAML/TOML ingress.
+- [Using flext-tests](using-flext-tests.md) — test builders, fixtures, and assertion helpers.
+- [Using Pydantic](using-pydantic.md) — strict Pydantic v2 models, `ConfigDict`, and
+  boundary validation (`ADR-008`).
+
+### Refactoring, Automation & Migration
+
+- [Migration to v0.13.0](migration-to-v0.13.0.md) — the forward facade and DI
+  migration contract, subject to the accepted topic ADRs.
+- [Codemod Rules](codemod-rules.md) — the declarative catalog consumed by `make mod`.
+- [Skill Automation Pattern](skill-automation-pattern.md) — routing agent skills to
+  deterministic CLI and Make verification loops.
+- [Troubleshooting](troubleshooting.md) — diagnosing lock drift, environment
+  provenance failures, and gate diagnostics.
 
 ## Scope
 

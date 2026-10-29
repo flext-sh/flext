@@ -16,10 +16,18 @@
 
 ## ADR-028 Supersession
 
-For overlapping tool selection, accepted [ADR-028 Decision 17](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)
-and [Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18)
+For overlapping tool selection, accepted [ADR-028 Decision 17](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)
+and [Decision 18](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18)
 duplicate analysis model or blanket removal of distinct native transformation
 capabilities; remove only competing behavior that duplicates the canonical owner.
+
+Reconciled 2026-10-28 with the rope-only interpreter law (operator order
+2026-10-28; [ADR-028 Decision 17 amendment](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)):
+the Python rewrite engines named in the [Context](#context) below (`re`, `ast`,
+`libcst`, `tokenize`) are exterminated under that law, not consolidated as
+parametrized rule surfaces. `make mod` stays the single modernize surface; its
+Python work is ast-grep declarative rules carrying their fix forms where
+mechanical and the single rope index per repository where semantic.
 
 - **Status:** ACCEPTED TARGET — implementation in progress
 - **Date:** 2026-09-15
@@ -90,8 +98,8 @@ cannot inherit fleet rules.
 - The accepted target removes duplicated analysis and rewrite implementations only where
   the canonical native owner expresses the behavior. Distinct syntax-preserving,
   structural-search, text-resource, and policy capabilities retain their own owner, as
-  required by [ADR-028 Decision 17](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)
-  and [Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18). This ADR does not certify that any cutover has
+  required by [ADR-028 Decision 17](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)
+  and [Decision 18](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18). This ADR does not certify that any cutover has
   happened.
 - Discovery must be proven from a foreign project root (tmp project with local sgconfig)
   and from a built wheel before each landing cycle closes.

@@ -10,6 +10,7 @@ These pages are generated from public modules and their docstrings.
 
 - [flext_oracle_wms.api](api.md)
 - [flext_oracle_wms.cli](cli.md)
+- [flext_oracle_wms.config_models](config_models.md)
 - [flext_oracle_wms.constants](constants.md)
 - [flext_oracle_wms.errors](errors.md)
 - [flext_oracle_wms.models](models.md)

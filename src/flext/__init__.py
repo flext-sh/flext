@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from flext.cli import FlextRootCli, main
     from flext.config import FlextRootConfig, config
     from flext.constants import FlextRootConstants, c
-    from flext.models import FlextRootModels, m
+    from flext.models import FlextModelsRoot, m
     from flext.protocols import FlextRootProtocols, p
     from flext.settings import FlextRootSettings, settings
     from flext.typings import FlextRootTypes, t
@@ -48,10 +48,10 @@ if TYPE_CHECKING:
 
 
 __all__: tuple[str, ...] = (
+    "FlextModelsRoot",
     "FlextRootCli",
     "FlextRootConfig",
     "FlextRootConstants",
-    "FlextRootModels",
     "FlextRootProtocols",
     "FlextRootSettings",
     "FlextRootTypes",
@@ -109,7 +109,7 @@ install_lazy_exports(
         "FlextRootCli": ".cli",
         "FlextRootConfig": ".config",
         "FlextRootConstants": ".constants",
-        "FlextRootModels": ".models",
+        "FlextModelsRoot": ".models",
         "FlextRootProtocols": ".protocols",
         "FlextRootSettings": ".settings",
         "FlextRootTypes": ".typings",

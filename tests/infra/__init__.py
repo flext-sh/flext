@@ -13,11 +13,11 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import install_lazy_exports
 
 if TYPE_CHECKING:
-    from tests.infra.constants import TestsFlextRootConstants
-    from tests.infra.models import TestsFlextRootModels
-    from tests.infra.protocols import TestsFlextRootProtocols
+    from tests.infra.constants import TestsFlextRootConstants, c
+    from tests.infra.models import TestsFlextRootModels, m
+    from tests.infra.protocols import TestsFlextRootProtocols, p
     from tests.infra.result import TestsFlextRootResult, r
-    from tests.infra.typings import TestsFlextRootTypes
+    from tests.infra.typings import TestsFlextRootTypes, t
     from tests.infra.utilities import TestsFlextRootUtilities, u
 
 
@@ -28,7 +28,11 @@ __all__: tuple[str, ...] = (
     "TestsFlextRootResult",
     "TestsFlextRootTypes",
     "TestsFlextRootUtilities",
+    "c",
+    "m",
+    "p",
     "r",
+    "t",
     "u",
 )
 
@@ -42,7 +46,11 @@ install_lazy_exports(
         "TestsFlextRootResult": ".result",
         "TestsFlextRootTypes": ".typings",
         "TestsFlextRootUtilities": ".utilities",
+        "c": ".constants",
+        "m": ".models",
+        "p": ".protocols",
         "r": ".result",
+        "t": ".typings",
         "u": ".utilities",
     }),
     public_exports=__all__,

@@ -11,16 +11,17 @@ from collections.abc import Mapping
 from pathlib import Path
 
 import pytest
-from examples.acl_processing_example import FlextRootAclProcessingExample
-from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
-from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
+from examples import (
+    FlextRootAclProcessingExample,
+    FlextRootAdvancedProcessingExample,
+    FlextRootCompleteWorkflowExample,
+)
 from scripts.hooks.check_changed_projects import FlextRootCheckChangedProjects
 
-import flext_cli
-import flext_ldif
 from flext_cli import cli
 from flext_ldif import FlextLdif
-from tests import c, p, tm, u
+from tests import c, m, p, tm, u
+from tests.infra import TestsFlextRootTypes
 
 
 class TestsFlextRootExamplesRuntime:
@@ -44,13 +45,13 @@ class TestsFlextRootExamplesRuntime:
             """Empty and multiple root-file inputs do not select member checks."""
             tm.that(
                 FlextRootCheckChangedProjects.main("unregistered", list(files)),
-                eq=flext_cli.c.Cli.EXIT_CODE_SUCCESS,
+                eq=c.Cli.EXIT_CODE_SUCCESS,
             )
 
         @staticmethod
         @pytest.mark.slow
         def test_changed_project_hook_preserves_the_native_gate_rejection(
-            capfd: pytest.CaptureFixture[str],
+            capfd: TestsFlextRootTypes.Tests.CapturedOutput,
         ) -> None:
             """Execute the real repeated-project CLI route and retain its exit."""
             root = FlextRootCheckChangedProjects.REPOSITORY_ROOT
@@ -83,9 +84,7 @@ class TestsFlextRootExamplesRuntime:
                     cwd=root,
                 ),
             )
-            tm.that(
-                native.outcome.raw_return_code, ne=flext_cli.c.Cli.EXIT_CODE_SUCCESS
-            )
+            tm.that(native.outcome.raw_return_code, ne=c.Cli.EXIT_CODE_SUCCESS)
             tm.that(native.stdout + native.stderr, has="unknown gate")
             files = [
                 (project / c.PYPROJECT_FILENAME).as_posix() for project in projects
@@ -100,7 +99,7 @@ class TestsFlextRootExamplesRuntime:
         @staticmethod
         def test_hook_failure_boundary_reports_the_native_launch_cause(
             tmp_path: Path,
-            capfd: pytest.CaptureFixture[str],
+            capfd: TestsFlextRootTypes.Tests.CapturedOutput,
         ) -> None:
             """The shared CLI boundary exposes a real missing executable failure."""
             missing = tmp_path / "missing-hook-runtime"
@@ -109,7 +108,7 @@ class TestsFlextRootExamplesRuntime:
 
             status = cli.finalize_result(result)
 
-            tm.that(status, ne=flext_cli.c.Cli.EXIT_CODE_SUCCESS)
+            tm.that(status, ne=c.Cli.EXIT_CODE_SUCCESS)
             captured = capfd.readouterr()
             tm.that(captured.err, has=tm.not_none(result.error))
             tm.that(captured.err, has=str(missing))
@@ -195,10 +194,10 @@ class TestsFlextRootExamplesRuntime:
         def test_acl_pipeline_grants_matching_read_permission() -> None:
             """A real ACL granting read to anyone evaluates as granted."""
             processor = FlextRootAclProcessingExample(service=FlextLdif())
-            entry = flext_ldif.m.Ldif.Entry(
+            entry = m.Ldif.Entry(
                 domain_events=[],
-                dn=flext_ldif.m.Ldif.DN(value="cn=sample,dc=example"),
-                attributes=flext_ldif.m.Ldif.Attributes.model_validate({
+                dn=m.Ldif.DN(value="cn=sample,dc=example"),
+                attributes=m.Ldif.Attributes.model_validate({
                     "attributes": {
                         "aci": [
                             (
@@ -213,34 +212,37 @@ class TestsFlextRootExamplesRuntime:
             result: p.Result[p.Ldif.AclEvaluationResult] = (
                 processor.process_acls_with_pipeline(
                     entry=entry,
-                    server_type=flext_ldif.c.Ldif.ServerTypes.OUD,
-                    required_permissions=flext_ldif.m.Ldif.AclPermissions(read=True),
+                    server_type=c.Ldif.ServerTypes.OUD,
+                    required_permissions=m.Ldif.AclPermissions(read=True),
                 )
             )
 
             tm.ok(result.success)
             evaluation = result.unwrap()
-            tm.that(evaluation, is_=flext_ldif.p.Ldif.AclEvaluationResult)
+            tm.that(evaluation, is_=p.Ldif.AclEvaluationResult)
             tm.ok(evaluation.granted)
 
         @staticmethod
         def test_acl_pipeline_denies_without_acl_attributes() -> None:
             """An entry without ACL attributes denies a read requirement."""
             processor = FlextRootAclProcessingExample(service=FlextLdif())
-            entry = flext_ldif.m.Ldif.Entry(
+            entry = m.Ldif.Entry(
                 domain_events=[],
-                dn=flext_ldif.m.Ldif.DN(value="cn=plain,dc=example"),
-                attributes=flext_ldif.m.Ldif.Attributes.model_validate({
+                dn=m.Ldif.DN(value="cn=plain,dc=example"),
+                attributes=m.Ldif.Attributes.model_validate({
                     "attributes": {"cn": ["plain"]},
                 }),
             )
 
             result = processor.process_acls_with_pipeline(
                 entry=entry,
-                server_type=flext_ldif.c.Ldif.ServerTypes.OID,
-                required_permissions=flext_ldif.m.Ldif.AclPermissions(read=True),
+                server_type=c.Ldif.ServerTypes.OID,
+                required_permissions=m.Ldif.AclPermissions(read=True),
             )
 
             tm.ok(result.success)
             evaluation = result.unwrap()
             tm.fail(evaluation.granted)
+
+
+__all__: list[str] = ["TestsFlextRootExamplesRuntime"]

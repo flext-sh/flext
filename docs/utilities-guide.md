@@ -95,7 +95,7 @@ current core conversion owner.
 ```python
 from flext_core import t, u
 
-source: t.StrSequence = ("first", "second")
+source: Sequence[str] = ("first", "second")
 converted = u.to_str_list(source)
 joined = u.join(converted, separator=" / ")
 print(joined)

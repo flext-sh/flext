@@ -17,39 +17,15 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import MutableSequence
+from collections.abc import Mapping, MutableSequence, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Annotated, ClassVar, cast
+from typing import TYPE_CHECKING, Annotated, ClassVar
 
 from examples import ExamplesFlextRootConstants, c, m, p, r, t, u
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-
-
-class FlextRootImmutableMappings:
-    """Immutable mapping factories."""
-
-    @staticmethod
-    def json_mapping() -> t.JsonMapping:
-        """Return a typed immutable empty JSON mapping.
-
-        Returns:
-            A typed immutable empty JSON mapping.
-
-        """
-        return MappingProxyType[str, t.JsonValue]({})
-
-    @staticmethod
-    def scalar_mapping() -> t.ScalarMapping:
-        """Return a typed immutable empty scalar mapping.
-
-        Returns:
-            A typed immutable empty scalar mapping.
-
-        """
-        return MappingProxyType[str, t.Scalar]({})
 
 
 class FlextRootCompleteWorkflowExample:
@@ -61,10 +37,8 @@ class FlextRootCompleteWorkflowExample:
     class WorkflowData(m.BaseModel):
         """Data container for workflow processing."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
-            extra="allow",
-        )
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
+
         content: t.MutableJsonMapping = m.Field(
             default_factory=dict[str, t.JsonValue],
         )
@@ -74,14 +48,12 @@ class FlextRootCompleteWorkflowExample:
     class WorkflowContext(m.BaseModel):
         """Complete workflow context with correlation and metadata."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
-        )
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
         workflow_id: str = m.Field(description="Unique workflow identifier")
         correlation_id: str = m.Field(description="Correlation ID for tracking")
         start_time: float = m.Field(description="Workflow start timestamp")
-        stages: t.StrSequence = m.Field(
+        stages: Sequence[str] = m.Field(
             default_factory=lambda: [
                 "validation",
                 "processing",
@@ -91,7 +63,7 @@ class FlextRootCompleteWorkflowExample:
             description="List of workflow stages to execute",
         )
         metadata: t.JsonMapping = m.Field(
-            default_factory=FlextRootImmutableMappings.json_mapping,
+            default_factory=lambda: MappingProxyType[str, t.JsonValue]({}),
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: t.MutableJsonMapping = m.Field(
@@ -102,9 +74,7 @@ class FlextRootCompleteWorkflowExample:
     class WorkflowStageResult(m.BaseModel):
         """Result of a workflow stage with comprehensive tracking."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
-        )
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
         stage_name: str = m.Field(description="Name of the workflow stage")
         workflow_id: str = m.Field(description="Associated workflow ID")
@@ -114,25 +84,23 @@ class FlextRootCompleteWorkflowExample:
         items_succeeded: int = m.Field(description="Items that succeeded")
         items_failed: int = m.Field(description="Items that failed")
         processing_time: float = m.Field(description="Time taken to process stage")
-        errors: t.StrSequence = m.Field(
-            default_factory=lambda: cast("t.StrSequence", []),
+        errors: Sequence[str] = m.Field(
+            default_factory=tuple,
             description="List of errors encountered",
         )
-        warnings: t.StrSequence = m.Field(
-            default_factory=lambda: cast("t.StrSequence", []),
+        warnings: Sequence[str] = m.Field(
+            default_factory=tuple,
             description="List of warnings encountered",
         )
         stage_metadata: t.JsonMapping = m.Field(
-            default_factory=FlextRootImmutableMappings.json_mapping,
+            default_factory=lambda: MappingProxyType[str, t.JsonValue]({}),
             description="Stage-specific metadata",
         )
 
     class CompleteWorkflowResult(m.BaseModel):
         """Complete workflow result with all stages aggregated."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
-        )
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
         workflow_id: str = m.Field(description="Unique workflow identifier")
         correlation_id: str = m.Field(description="Correlation ID for tracking")
@@ -143,17 +111,15 @@ class FlextRootCompleteWorkflowExample:
             description="Total workflow processing time"
         )
 
-        stage_results: t.SequenceOf[
+        stage_results: Sequence[
             FlextRootCompleteWorkflowExample.WorkflowStageResult
         ] = m.Field(
-            default_factory=lambda: cast(
-                "t.SequenceOf[FlextRootCompleteWorkflowExample.WorkflowStageResult]", []
-            ),
+            default_factory=tuple,
             description="Results from each workflow stage",
         )
 
         aggregated_metrics: t.JsonMapping = m.Field(
-            default_factory=FlextRootImmutableMappings.json_mapping,
+            default_factory=lambda: MappingProxyType[str, t.JsonValue]({}),
             description="Aggregated metrics across all stages",
         )
 
@@ -165,8 +131,10 @@ class FlextRootCompleteWorkflowExample:
     class WorkflowOrchestrator(m.BaseModel):
         """Workflow orchestrator coordinating the full stage pipeline."""
 
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
+
         STAGE_PARAMS: ClassVar[
-            t.MappingKV[ExamplesFlextRootConstants.WorkflowStage, tuple[float, str]]
+            Mapping[ExamplesFlextRootConstants.WorkflowStage, tuple[float, str]]
         ] = {
             ExamplesFlextRootConstants.WorkflowStage.VALIDATION: (0.005, "validated"),
             ExamplesFlextRootConstants.WorkflowStage.PROCESSING: (0.01, "processed"),
@@ -176,11 +144,11 @@ class FlextRootCompleteWorkflowExample:
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
-        data: t.SequenceOf[t.JsonMapping] = m.Field(
+        data: Sequence[t.JsonMapping] = m.Field(
             default_factory=tuple,
         )
-        workflow_settings: t.ScalarMapping = m.Field(
-            default_factory=FlextRootImmutableMappings.scalar_mapping,
+        workflow_settings: Mapping[str, t.Scalar] = m.Field(
+            default_factory=lambda: MappingProxyType[str, t.Scalar]({}),
         )
 
         def execute(self) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
@@ -212,7 +180,9 @@ class FlextRootCompleteWorkflowExample:
             complexity_score_raw = item.get("complexity_score", 0)
             complexity_score = (
                 float(complexity_score_raw)
-                if isinstance(complexity_score_raw, (int, float))
+                if isinstance(
+                    complexity_score_raw, ExamplesFlextRootConstants.NUMERIC_TYPES
+                )
                 else 0.0
             )
             final_score = complexity_score + (
@@ -235,15 +205,15 @@ class FlextRootCompleteWorkflowExample:
 
         @staticmethod
         def _aggregate_workflow_metrics(
-            stage_results: t.SequenceOf[
+            stage_results: Sequence[
                 FlextRootCompleteWorkflowExample.WorkflowStageResult
             ],
             total_time: float,
-        ) -> t.MappingKV[str, t.Numeric]:
+        ) -> Mapping[str, t.Numeric]:
             """Aggregate metrics across all workflow stages.
 
             Returns:
-                The resulting ``t.MappingKV[str, t.Numeric]``.
+                The resulting ``Mapping[str, t.Numeric]``.
 
             """
             if not stage_results:
@@ -307,7 +277,7 @@ class FlextRootCompleteWorkflowExample:
         @staticmethod
         def _execute_stage_parallel(
             stage_name: str,
-            items: t.SequenceOf[t.JsonMapping],
+            items: Sequence[t.JsonMapping],
             stage_func: Callable[
                 [
                     t.JsonMapping,
@@ -328,7 +298,9 @@ class FlextRootCompleteWorkflowExample:
             max_workers_raw = context.metadata.get("max_workers", 4)
             max_workers = (
                 int(max_workers_raw)
-                if isinstance(max_workers_raw, (bool, int, float, str))
+                if isinstance(
+                    max_workers_raw, ExamplesFlextRootConstants.SCALAR_VALUE_TYPES
+                )
                 else 4
             )
 
@@ -370,7 +342,7 @@ class FlextRootCompleteWorkflowExample:
 
         def _execute_workflow(
             self,
-            data: t.SequenceOf[t.JsonMapping],
+            data: Sequence[t.JsonMapping],
             context: FlextRootCompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[FlextRootCompleteWorkflowExample.WorkflowData]:
             """Execute workflow stages with parallel processing.
@@ -566,11 +538,11 @@ class FlextRootCompleteWorkflowExample:
     @staticmethod
     def create_sample_workflow_data(
         count: int = 100,
-    ) -> t.SequenceOf[t.JsonMapping]:
+    ) -> Sequence[t.JsonMapping]:
         """Create sample data for workflow testing.
 
         Returns:
-            The resulting ``t.SequenceOf[t.JsonMapping]``.
+            The resulting ``Sequence[t.JsonMapping]``.
 
         """
         result: MutableSequence[t.JsonMapping] = []
@@ -598,10 +570,10 @@ class FlextRootCompleteWorkflowExample:
             The resulting ``p.Result[FlextRootCompleteWorkflowExample.WorkflowData]``.
 
         """
-        sample_data: t.SequenceOf[t.JsonMapping] = (
+        sample_data: Sequence[t.JsonMapping] = (
             FlextRootCompleteWorkflowExample.create_sample_workflow_data(4)
         )
-        workflow_settings: t.ScalarMapping = {
+        workflow_settings: Mapping[str, t.Scalar] = {
             "workflow_id": "comprehensive_workflow",
             c.ProcessingMode.PARALLEL: True,
             "max_workers": 4,
@@ -612,3 +584,6 @@ class FlextRootCompleteWorkflowExample:
             workflow_settings=workflow_settings,
         )
         return orchestrator.execute()
+
+
+__all__: list[str] = ["FlextRootCompleteWorkflowExample"]

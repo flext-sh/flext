@@ -15,9 +15,16 @@ from flext_core.lazy import install_lazy_exports
 if TYPE_CHECKING:
     from flext._protocols.base import FlextRootProtocolsBase
     from flext._protocols.config import FlextRootProtocolsConfig
+    from flext._protocols.generated_models_value import (
+        FlextModelsRootProtocolsGeneratedValue,
+    )
 
 
-__all__: tuple[str, ...] = ("FlextRootProtocolsBase", "FlextRootProtocolsConfig")
+__all__: tuple[str, ...] = (
+    "FlextModelsRootProtocolsGeneratedValue",
+    "FlextRootProtocolsBase",
+    "FlextRootProtocolsConfig",
+)
 
 install_lazy_exports(
     __name__,
@@ -25,6 +32,7 @@ install_lazy_exports(
     MappingProxyType({
         "FlextRootProtocolsBase": ".base",
         "FlextRootProtocolsConfig": ".config",
+        "FlextModelsRootProtocolsGeneratedValue": ".generated_models_value",
     }),
     public_exports=__all__,
 )

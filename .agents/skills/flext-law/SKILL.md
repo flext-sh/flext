@@ -7,6 +7,17 @@ description:
 
 # FLEXT Law
 
+## Lint-rule change freeze (inviolable)
+
+Lint and type-check rules (ruff, pyrefly, pyright, mypy, jscpd, qlty — rule
+selections, severities, `typeCheckingMode`, code-tier scope, `extraPaths`,
+`venv`/`venvPath` bindings, and their SSOT in `flext-infra/config/tooling.yaml` and
+every generated `[tool.*]` section) change only with express operator authorization.
+Agents never relax, tighten, re-scope, or re-project them on their own account; the
+fix for a lint finding is at the code's owner or the projection's SSOT, never the
+rule. See the root `AGENTS.md` "Lint-Rule Change Freeze" block (operator order
+2026-10-28, pyright incident precedent).
+
 ## Composition
 
 Architecture decisions are recorded under `docs/architecture/adr/`; the ADR records
@@ -22,10 +33,12 @@ completion gates remain owned by:
 
 Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
 Before code changes, consult, align and adjust memory (tracker memories), `AGENTS.md`,
-docs, README, ADRs, rules, applicable local and global skills and Beads at their
+docs, README, ADRs, rules, applicable local and global skills, Beads, approved
+plans and command contracts at their
 canonical owners, in root `AGENTS.md` contract item 8's order (operator order
 2026-10-25, tracker memory `operator-order-2026-10-25-docs-first-before-code`);
-repeat consultation at phase and context boundaries. Code inside docstrings and
+complete the affected owner updates before implementation and repeat consultation
+at phase and context boundaries. Code inside docstrings and
 Markdown is held to the same rules, kept current, tested and formatted (tracker
 memory `operator-order-2026-10-25-embedded-code-same-rules`, ADR-028 Decision 9).
 The global engineering and observable-runtime rules own the order: documentation
@@ -76,6 +89,10 @@ installed delivery remain separate evidence. Global governance is authored under
   stage. Structural repair and dependent lazy exports share one authenticated
   candidate and publisher through `make mod`. This is the target contract, not
   evidence that fleet migration or runtime validation is complete.
+  Core's lazy bootstrap follows
+  [ADR-014's bootstrap specialization](../../../docs/architecture/adr/014-family-part-shape-rope-codemod-rules.md#core-lazy-bootstrap):
+  consolidate numbered implementations at the existing public owner without
+  introducing a self-dependent generated child initializer.
 - Dependencies cross use-case boundaries through `p` protocols and are provided
   explicitly by `api`. A service may not construct infrastructure, read process-global
   configuration, or resolve a dependency by string, reflection, service locator, hidden
@@ -89,6 +106,16 @@ installed delivery remain separate evidence. Global governance is authored under
   dialect name, and no dialect knows another (tracker memories
   `operator-order-2026-10-25-facades-rfc-extensions-metadata-only` and
   `operator-order-2026-10-25-dialects-never-know-each-other`).
+- Source-derived model and service protocols follow
+  [ADR-018's protocol contract](../../../docs/architecture/adr/018-generator-declarations.md#model-and-service-protocol-projection).
+  That owner defines module correspondence, complete Python-consumer migration,
+  native semantic discovery and pilot acceptance. Apply its 2026-10-28 amendment
+  before the older model-mirror retirement plan; the separate SDK/local-stub ban
+  remains in force. Pilot coverage of every variation admits the same pattern's
+  fleet rollout, including all definitions and affected consumers. Complete that
+  entire pattern's runtime, native gates and integration closure before beginning
+  another pattern. Do not restore historical branch
+  implementations or edit installed global skills as an execution shortcut.
 - Each package has one thin `api.py` MRO facade and one simple generated root
   `__init__.py` with automatic lazy public exports. Custom import routers, eager
   alternatives, compatibility aliases, and duplicate facades are forbidden.
@@ -104,6 +131,10 @@ installed delivery remain separate evidence. Global governance is authored under
   pass-through to its new owner until the fleet and external census is zero, and is
   then deleted. This window is the route to zero compatibility code, not an alias
   exception.
+  The operator's 2026-10-28 generic-typing-wrapper cutover in that same ADR requires
+  complete consumer, rule and documentation migration for retired generic wrappers;
+  preserve domain aliases and native collection semantics rather than restoring
+  removed wrappers. Acceptance still requires real runtime and the full gates.
 - Lazy-init re-export (generated `__init__.py`, PEP 562) follows
   [ADR-018](../../../docs/architecture/adr/018-generator-declarations.md#decision)
   and [ADR-028 Decision 10](../../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10).
@@ -135,6 +166,14 @@ installed delivery remain separate evidence. Global governance is authored under
   import is ADR-028 Decision 14.
 
 ## Runtime and language floor
+
+Analyzer environment selection follows
+[ADR-003, Decision 5](../../../docs/architecture/adr/003-workspace-tooling-hub-distribution.md#5-analyzers-use-the-environment-owned-by-the-checkout-topology).
+For MRO/Pydantic static/runtime divergence, use the canonical
+`pydantic-development` diagnosis procedure and
+[the FLEXT consumer guide](../../../docs/guides/using-pydantic.md#static-and-runtime-typing-evidence).
+The bounded 2026-10-28 approval is tracked by `flext-itpd1.13.11`; it does not
+authorize any additional frozen rule, severity or scope change.
 
 - Every first-party FLEXT source, test, example, script, template, and generated surface
   targets the exact Python floor declared by the workspace toolchain; the current FLEXT
@@ -221,12 +260,17 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   add `WHAT=` or `PROJECT=` to setup, generation, repair, formatting, checking, or
   testing.
 - The common Make surface is `setup`, `upg`, `gen`, `mod`, `fix`, `fmt`, `check`,
-  `tests`, `help`, `build` and `clean`. Repository-owned product commands remain
+  `tests`, `tests-full`, `help`, `build` and `clean`. Repository-owned product commands remain
   explicit extensions. Former subverbs are absorbed into their operation owner,
   never retained as aliases or a second pipeline.
 - `tests` executes native incremental Testmon selection over the complete
   applicable population with the persistent database. It never forces a repeated
-  full run or adds a second execution pass; no file/full public aliases are added.
+  full run or adds a second execution pass. The explicit `tests-full` operation
+  executes the complete applicable population once without Testmon or a preliminary
+  incremental run; it preserves the database untouched and uses no cache lease or
+  publication. This 2026-10-28 operator clarification supersedes the no-full-verb
+  prescription; [ADR-029](../../../docs/architecture/adr/029-always-working-one-complete-cycle.md)
+  owns the distinction. No file/full compatibility aliases are added.
   The 2026-10-26 operator order requires global Ruff, Pyrefly and pytest evidence
   before advancement. Global source admission precedes native incremental pytest;
   the full applicable checks still precede completion and integration. Existing
@@ -234,6 +278,21 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   Generation and modification complete their own coherent changes, including
   required dependent projections, through the same typed plans and semantic
   publication engine; neither recursively runs another public operation.
+- Generation and modification read each source once and publish one transactional
+  batch per smallest coherent transaction (ADR-018 single-read, single-batch
+  publication; campaign `flext-pipol`): reuse authenticated facts until relevant
+  inputs change, validate planned sources before effects, and use the common
+  barrier for cooperating Make/Rope readers and writers. The approved contract
+  includes interruption detection, guarded rollback of only that transaction's
+  own effects and incremental native refresh; the current publisher is not proof
+  of implemented batch visibility. Fast transaction gates stay within five seconds;
+  full gates and the 60-second Make budget remain mandatory. No surface re-reads
+  an earlier stage's on-disk output instead of planned sources. Their published
+  projections are gate-clean by construction (ADR-028 Decision 8): `make gen`
+  followed directly by `make check` is green and `make fmt`/`make fix` are no-ops;
+  the engine never runs a fixer or formatter over its own output. Engine
+  configuration travels as typed lists and dicts in the config SSOT: a new VALUE
+  is a data change; orchestrators never branch on literal tables.
 - Reconcile canonical documentation and governance before each implementation
   slice, prove the real public consumer next, and change tests only afterward.
   Tests never use mocks, implementation-shaped assertions, tautologies, copied
@@ -259,7 +318,11 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   publication integrity belong to that transformation; independent quality and
   fresh-import diagnostics belong to explicit verification. Repetitive manual
   call-site editing is prohibited; change the codemod or its typed automation owner
-  and let that pipeline propagate the cutover.
+  and let that pipeline propagate the cutover. `FlextResult` (`r`) railway combinators
+  (`.map`, `.flat_map`, `.map_or`, `.unwrap_or`, `r.traverse`, `r.from_validation`,
+  `r.create_from_callable`) and covariant `p.Result[Never]` failure constructors
+  (`r.fail`, `r.fail_op`, `r.from_failure`) replace imperative `if res.failure: return ...`
+  ladders and local `outcome = r[T]` aliases through `railroad-result.yml`.
 - Symbol placement and nesting are discovered from the live typed module path, AST/Rope
   identities, and LSP references. Hand-maintained symbol/class mapping catalogs, copied
   path registries, inert entries, and review-only confidence lists are forbidden;

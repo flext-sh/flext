@@ -10,7 +10,7 @@
   - [Core Class Matrix](#core-class-matrix)
   - [Namespace Composition Classes](#namespace-composition-classes)
 - [Core Class Contracts](#core-class-contracts)
-  - [FlextRuntime](#flextruntime)
+  - [FlextRuntime retirement target](#flextruntime-retirement-target)
   - [FlextDi](#flextdi)
   - [FlextLogger](#flextlogger)
   - [FlextContext](#flextcontext)
@@ -37,7 +37,7 @@
 ## Status
 
 - Version: `0.13.0`
-- Status: Accepted baseline for implementation
+- Status: Forward planning baseline; implementation follows the accepted topic ADRs
 - Scope: Workspace-wide platform baseline
 
 ## Purpose
@@ -54,9 +54,9 @@ It replaces vague or stale architecture narratives with direct rules for:
 - workspace taxonomy
 - migration direction
 
-If this document conflicts with older architecture overviews, project-level architecture
-notes, or legacy refactoring plans, this baseline wins until the conflicting document is
-migrated.
+This document records forward vocabulary and migration proposals. The accepted
+topic-owning ADRs and current operator instructions determine executable contracts.
+The STRICT campaign does not activate the proposed 0.13 API by editing this document.
 
 ## Governed Scope
 
@@ -82,7 +82,9 @@ This baseline governs:
 - the vocabulary used in migration work
 - the taxonomy of `tests/`, `examples/`, and `scripts/`
 
-Per-project docs are subordinate to this baseline until each project is migrated.
+Per-project docs consume accepted decisions and distinguish current runtime from
+forward targets. The ADR index owns maturity and the active Beads own implementation
+and acceptance evidence; this baseline does not supersede either.
 
 ## Forward Public Surface
 
@@ -97,13 +99,13 @@ Per-project docs are subordinate to this baseline until each project is migrated
 | `FlextUtilities`  | `FlextUtilities`  | `utilities.py`                   | Root utilities facade                  | namespace facade only                                                                                                        | Keep                                 |
 | `FlextSettings`   | `FlextSettings`   | `settings.py`                    | Typed configuration root               | `shared`, `build`, `add`, `load`                                                                                             | Keep and narrow                      |
 | `r`               | `r`               | `result.py`                      | Success and failure contract           | existing result surface                                                                                                      | Keep                                 |
-| `e`               | `e`               | `exceptions.py`                  | Structured error taxonomy              | error models and serializers                                                                                                 | Keep and narrow                      |
-| `FlextRuntime`    | `FlextRuntime`    | `runtime.py`                     | Normalization and validation           | `to_container`, `to_metadata`, `validate_many`, `ensure_utc`                                                                 | Keep, remove DI ownership            |
+| `e`               | none              | `exceptions.py`                  | Boundary exception classes (`ADR-028`) | error codes in `c`, structured payloads in `m`, expected errors in `r[T]`                                                    | Retire `e` single-letter alias       |
+| `FlextRuntime` | none | historical runtime owner | Migrate to existing utility, model and composition owners | Governed by ADR-028 Decision 7 | Retire after consumer migration |
 | none              | `FlextDi`         | `di.py`                          | Bridge to `dependency_injector`        | `build`, `add_service`, `add_factory`, `add_resource`, `bind_config`, `wire`, `unwire`                                       | Add                                  |
 | `FlextLogger`     | `FlextLogger`     | `logger.py`                      | Structured logging and context binding | `get`, `bind`, `unbind`, `scope`, `clear_scope`, `from_context`                                                              | Keep, move from `loggings.py`        |
 | `FlextContext`    | `FlextContext`    | `context.py`                     | Execution context only                 | `get`, `set`, `has`, `remove`, `clear`, `clone`, `merge`, `export`, `get_meta`, `set_meta`                                   | Keep and narrow                      |
 | `FlextContainer`  | `FlextContainer`  | `container.py`                   | Runtime dependency store and resolver  | `shared`, `scope`, `add_service`, `add_factory`, `add_resource`, `get`, `require`, `has`, `list`, `remove`, `wire`, `unwire` | Keep and reshape                     |
-| `s`               | `s`               | `service.py`                     | Runtime bootstrapper                   | `make_settings`, `make_context`, `make_container`, `make_runtime`, `run`                                                     | Keep and narrow                      |
+| `s`               | `s`               | `service.py`                     | Runtime bootstrapper                   | `make_settings`, `make_context`, `make_container`, `run`                                                                     | Keep and narrow                      |
 | `FlextDispatcher` | `FlextDispatcher` | `dispatcher.py`                  | Message dispatch and handler binding   | `dispatch`, `publish`, `add`, `add_many`, `remove`, `has`, `list`, `clear`                                                   | Keep and absorb handler registration |
 | `h`               | `FlextHandler`    | `handler.py`                     | Individual handler contract            | `handle`, `run`, `validate`, `can_handle`, `from_callable`                                                                   | Rename and narrow                    |
 | `FlextRegistry`   | `FlextCatalog`    | `catalog.py`                     | Typed extension storage                | `add`, `add_many`, `get`, `require`, `has`, `list`, `remove`, `clear`                                                        | Replace                              |
@@ -138,24 +140,18 @@ Application and orchestration code should target:
 
 ## Core Class Contracts
 
-### FlextRuntime
+### FlextRuntime retirement target
 
-- Role: normalization and validation only
-- Ownership:
-  - value normalization
-  - metadata normalization
-  - batch validation
-  - UTC normalization
-- Public methods:
-  - `to_container`
-  - `to_metadata`
-  - `validate_many`
-  - `ensure_utc`
-- Explicit exclusions:
-  - no DI bridge
-  - no container creation
-  - no logger creation
-  - no bootstrap responsibilities
+- Status: **Migration target**. Preserve consumed signatures until the governed
+  consumer census reaches zero under
+  [ADR-028 Decision 7](adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7).
+  The public `u` utility facade remains an owner; it is not the retired runtime class.
+- Ownership migration:
+  - value and container normalization → `u` (`FlextUtilities`) and native Pydantic v2 serialization
+  - metadata and UTC timestamp validation → `m` (`FlextModels`) field validators
+  - dependency wiring and container creation → explicit composition under ADR-019
+  - logger creation → the existing public logging utility
+  - service bootstrap → `s` (`FlextService`)
 
 ### FlextDi
 
@@ -259,13 +255,11 @@ Application and orchestration code should target:
   - create settings
   - create context
   - create container
-  - assemble runtime state
   - expose a direct execution contract for facades and service bases
 - Public methods:
   - `make_settings`
   - `make_context`
   - `make_container`
-  - `make_runtime`
   - `run`
 - Explicit exclusions:
   - no plugin storage
@@ -360,11 +354,11 @@ Application and orchestration code should target:
 
 ## DI Baseline
 
-The `0.13.0` workspace DI model has four layers.
+The `0.13.0` workspace DI model has four layers (governed by [`ADR-024`](adr/024-di-config-contract-derived-defaults-minimal-overrides.md)):
 
 1. `FlextDi` builds and wires the dependency graph.
 2. `FlextContainer` stores and resolves runtime dependencies.
-3. `s` bootstraps settings, context, container, and runtime state.
+3. `s` bootstraps settings, context, and container state.
 4. `u` is the flat consumption surface used outside the bootstrap path.
 
 Application code must not touch `dependency_injector` directly.
@@ -374,11 +368,10 @@ Application code must use:
 - `settings`
 - `self.context`
 - `self.container`
-- `self.runtime`
 - `u.get_*`
 - `u.require_*`
 
-`FlextRuntime` is not part of the DI bootstrap path anymore.
+`u` and `_runtime` are retired and are not part of the DI or service bootstrap path.
 
 ## Alias Baseline
 

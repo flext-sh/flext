@@ -24,7 +24,7 @@ _RESULT_ARITY_REQUEST = 2
 _RESULT_ARITY_FULL = 3
 
 
-def _result_pair(result: t.VariadicTuple[object]) -> tuple[object, object]:
+def _result_pair(result: tuple[object]) -> tuple[object, object, ...]:
     """Split a context-manager result into its read/write pair.
 
     Versioned clients expose an extra trailing element; keep only the pair.
@@ -140,7 +140,7 @@ class MCPConnectionStdio(MCPConnection):
         self,
         command: str,
         args: list[str] | None = None,
-        env: t.StrDict | None = None,
+        env: dict[str, str] | None = None,
     ) -> None:
         """Initialize one stdio connection."""
         super().__init__()
@@ -163,7 +163,7 @@ class MCPConnectionStdio(MCPConnection):
 class MCPConnectionSSE(MCPConnection):
     """MCP connection using Server-Sent Events."""
 
-    def __init__(self, url: str, headers: t.StrDict | None = None) -> None:
+    def __init__(self, url: str, headers: dict[str, str] | None = None) -> None:
         """Initialize one Server-Sent Events connection."""
         super().__init__()
         self.url = url
@@ -182,7 +182,7 @@ class MCPConnectionSSE(MCPConnection):
 class MCPConnectionHTTP(MCPConnection):
     """MCP connection using Streamable HTTP."""
 
-    def __init__(self, url: str, headers: t.StrDict | None = None) -> None:
+    def __init__(self, url: str, headers: dict[str, str] | None = None) -> None:
         """Initialize one Streamable HTTP connection."""
         super().__init__()
         self.url = url
@@ -205,9 +205,9 @@ class ConnectionParams:
         self,
         command: str | None = None,
         args: list[str] | None = None,
-        env: t.StrDict | None = None,
+        env: dict[str, str] | None = None,
         url: str | None = None,
-        headers: t.StrDict | None = None,
+        headers: dict[str, str] | None = None,
     ) -> None:
         """Initialize optional connection parameters.
 

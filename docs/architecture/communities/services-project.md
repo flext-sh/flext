@@ -36,7 +36,7 @@ Community of 70 nodes
 | fetch_stream_by_name                     | Function | flext-meltano/src/flext_meltano/services/abstractions.py             | 189-205 |
 | list_streams                             | Function | flext-meltano/src/flext_meltano/services/abstractions.py             | 207-215 |
 | \_extract_raw_streams                    | Function | flext-meltano/src/flext_meltano/services/abstractions.py             | 218-222 |
-| FlextMeltanoPluginDiscoveryMixin         | Class    | flext-meltano/src/flext_meltano/services/meltano_plugin_discovery.py | 14-147  |
+| FlextMeltanoPluginDiscovery         | Class    | flext-meltano/src/flext_meltano/services/meltano_plugin_discovery.py | 14-147  |
 | \_is_meltano_project                     | Function | flext-meltano/src/flext_meltano/services/meltano_plugin_discovery.py | 18-22   |
 | \_build_plugin_info                      | Function | flext-meltano/src/flext_meltano/services/meltano_plugin_discovery.py | 25-37   |
 | \_extract_plugin_info                    | Function | flext-meltano/src/flext_meltano/services/meltano_plugin_discovery.py | 40-60   |

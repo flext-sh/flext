@@ -8,8 +8,10 @@ from __future__ import annotations
 
 from collections.abc import Mapping, MutableSequence, Sequence
 from enum import StrEnum, unique
+from typing import TYPE_CHECKING, Final
 
-from examples import t
+if TYPE_CHECKING:
+    from examples import t
 
 
 class ExamplesFlextRootConstants:
@@ -18,6 +20,9 @@ class ExamplesFlextRootConstants:
     MIN_OID_ACL_ATTRIBUTES: int = 2
     EXPECTED_OID_ACL_COUNT: int = 2
     MAX_VALUE_LENGTH: int = 100
+    SCALAR_SEQUENCE_TYPES: Final = (str, bytes, bytearray)
+    NUMERIC_TYPES: Final = (int, float)
+    SCALAR_VALUE_TYPES: Final = (bool, int, float, str)
 
     class Stage(StrEnum):
         """Processing stage enumeration used across pipeline examples."""
@@ -55,10 +60,10 @@ class ExamplesFlextRootConstants:
         """Helper to extract sequence of JsonMapping from JsonValue."""
 
         @staticmethod
-        def extract(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
+        def extract(value: t.JsonValue) -> Sequence[t.JsonMapping]:
             if not isinstance(value, Sequence) or isinstance(
                 value,
-                (str, bytes, bytearray),
+                ExamplesFlextRootConstants.SCALAR_SEQUENCE_TYPES,
             ):
                 return ()
             mappings: MutableSequence[t.JsonMapping] = []
@@ -71,10 +76,10 @@ class ExamplesFlextRootConstants:
         """Helper to extract string sequence from JsonValue."""
 
         @staticmethod
-        def extract(value: t.JsonValue) -> t.StrSequence:
+        def extract(value: t.JsonValue) -> Sequence[str]:
             if not isinstance(value, Sequence) or isinstance(
                 value,
-                (str, bytes, bytearray),
+                ExamplesFlextRootConstants.SCALAR_SEQUENCE_TYPES,
             ):
                 return ()
             strings: MutableSequence[str] = []

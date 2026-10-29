@@ -14,6 +14,9 @@ from flext_core.lazy import install_lazy_exports
 
 if TYPE_CHECKING:
     from examples._constants import ExamplesFlextRootConstants
+    from examples.acl_processing_example import FlextRootAclProcessingExample
+    from examples.advanced_processing_example import FlextRootAdvancedProcessingExample
+    from examples.complete_workflow_example import FlextRootCompleteWorkflowExample
     from flext import (
         auth,
         build_lazy_import_map,
@@ -60,6 +63,9 @@ if TYPE_CHECKING:
 
 __all__: tuple[str, ...] = (
     "ExamplesFlextRootConstants",
+    "FlextRootAclProcessingExample",
+    "FlextRootAdvancedProcessingExample",
+    "FlextRootCompleteWorkflowExample",
     "api",
     "auth",
     "build_lazy_import_map",
@@ -111,6 +117,9 @@ install_lazy_exports(
     globals(),
     MappingProxyType({
         "ExamplesFlextRootConstants": "._constants",
+        "FlextRootAclProcessingExample": ".acl_processing_example",
+        "FlextRootAdvancedProcessingExample": ".advanced_processing_example",
+        "FlextRootCompleteWorkflowExample": ".complete_workflow_example",
         "api": "flext_tests",
         "auth": "flext",
         "build_lazy_import_map": "flext",

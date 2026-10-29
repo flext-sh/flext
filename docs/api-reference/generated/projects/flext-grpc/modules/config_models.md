@@ -1,4 +1,4 @@
-# flext_tap_ldif.tap
+# flext_grpc.config_models
 
 <!-- TOC START -->
 
@@ -6,7 +6,7 @@
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-::: flext_tap_ldif.tap
+::: flext_grpc.config_models
 
     options:
       show_root_heading: true

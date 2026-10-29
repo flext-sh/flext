@@ -65,7 +65,7 @@ Every test run starts at the workspace root and flows through the retained Testm
 cache:
 
 ```bash
-make test
+make tests
 ```
 
 For one declared test file, use the root dispatcher's

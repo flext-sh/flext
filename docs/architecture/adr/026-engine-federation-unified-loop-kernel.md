@@ -33,8 +33,8 @@
 ## FLEXT Law Anchors (binding for every slice under this ADR)
 
 Every slice follows the [governance authority route](../../GOVERNANCE.md#authority),
-[root law](../../AGENTS.md), [session router](../../.agents/commands/flext-law.md),
-and exact [FLEXT law](../../.agents/skills/flext-law/SKILL.md).
+[root law](../../../AGENTS.md), [session router](../../../.agents/commands/flext-law.md),
+and exact [FLEXT law](../../../.agents/skills/flext-law/SKILL.md).
 The [engineering conformance review](../../GOVERNANCE.md#engineering-conformance-review)
 routes SSOT/YAGNI/DRY/SOLID, Pydantic, DI, and Clean Architecture to their canonical
 owners. The private campaign checklist is execution evidence, not normative law.
@@ -58,6 +58,17 @@ and retirement of competing internal engines. This draft's narrower description
 below does not supersede or soften D2. That discrepancy remains pending explicit
 review and the corresponding source/consumer cutovers; this note neither approves
 the draft nor certifies those cutovers.
+Constraint recorded 2026-10-28 (operator order; ADR-028
+[Decision 17 amendment](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)):
+rope is the only accepted Python interpreter in FLEXT-authored code — ast-grep
+(declarative rules carrying their fix forms), sed and the generator stay canonical
+in their own domains, and stdlib `ast`, `libcst` and `re`-on-code engines are
+banned. This accepted law binds the draft: item 4's "not exclusive Rope ownership
+of every Python transformation or read-only analysis" may not be read as
+permission to retain an alternative Python parser, and the parametrized rule
+registry (item 2) must reject any engine entry that parses FLEXT-authored Python
+outside rope's single index. The draft stays PROPOSED; this note constrains its
+design and records no acceptance.
 Acceptance evidence must identify the complete affected repository, engine, rule, owner,
 and consumer inventory with revision and source provenance, then demonstrate actual
 public runtime behavior, applicable canonical gates, and validated cutover/retirement on

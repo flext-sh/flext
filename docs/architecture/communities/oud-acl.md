@@ -53,7 +53,7 @@ Community of 93 nodes
 | \_parse_operation_kwarg        | Function | flext-ldif/src/flext_ldif/servers/\_base/acl.py | 281-287 |
 | \_supports_feature             | Function | flext-ldif/src/flext_ldif/servers/\_base/acl.py | 289-291 |
 | \_write_acl                    | Function | flext-ldif/src/flext_ldif/servers/\_base/acl.py | 293-296 |
-| FlextLdifServersOudAciMixin    | Class    | flext-ldif/src/flext_ldif/servers/\_oud/aci.py  | 20-178  |
+| FlextLdifServersOudAci    | Class    | flext-ldif/src/flext_ldif/servers/\_oud/aci.py  | 20-178  |
 | \_find_aci_in_dict             | Function | flext-ldif/src/flext_ldif/servers/\_oud/aci.py  | 24-33   |
 | find_aci_values                | Function | flext-ldif/src/flext_ldif/servers/\_oud/aci.py  | 36-83   |
 | normalize_aci_value            | Function | flext-ldif/src/flext_ldif/servers/\_oud/aci.py  | 86-90   |

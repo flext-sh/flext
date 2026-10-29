@@ -62,7 +62,7 @@ Response Requirements:
 - Your response should go last"""
 
 
-def parse_evaluation_file(file_path: Path) -> list[t.StrDict]:
+def parse_evaluation_file(file_path: Path) -> list[dict[str, str]]:
     """Parse XML evaluation file with qa_pair elements.
 
     Args:
@@ -189,7 +189,7 @@ async def agent_loop(
 async def evaluate_single_task(
     client: Anthropic,
     model: str,
-    qa_pair: t.StrDict,
+    qa_pair: dict[str, str],
     tools: list[dict[str, object]],
     connection: MCPConnection,
 ) -> dict[str, object]:
@@ -334,7 +334,7 @@ async def run_evaluation(
     return report
 
 
-def parse_headers(header_list: list[str]) -> t.StrDict:
+def parse_headers(header_list: list[str]) -> dict[str, str]:
     """Parse header strings in format 'Key: Value' into a dictionary.
 
     Args:
@@ -355,7 +355,7 @@ def parse_headers(header_list: list[str]) -> t.StrDict:
     return headers
 
 
-def parse_env_vars(env_list: list[str]) -> t.StrDict:
+def parse_env_vars(env_list: list[str]) -> dict[str, str]:
     """Parse environment variable strings in format 'KEY=VALUE'.
 
     Args:

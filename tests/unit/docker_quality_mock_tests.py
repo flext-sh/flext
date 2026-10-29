@@ -45,3 +45,6 @@ class TestsFlextRootDockerQualityDockerfiles:
             content = (repository_root / dockerfile).read_text(encoding="utf-8")
             for forbidden_copy in self.FORBIDDEN_MOCK_COPIES:
                 tm.ok(forbidden_copy not in content)
+
+
+__all__: list[str] = ["TestsFlextRootDockerQualityDockerfiles"]

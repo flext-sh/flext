@@ -21,10 +21,11 @@ via epic bead and
 
 ## Context
 
-`FlextSettings` (flext-core `src/flext_core/_settings.py`) and `FlextConfig` are layer-0
-SSOT foundations consumed by every FLEXT package and by external consumers (`~/ai-hub`,
-`~/cosmos-main` apps `cosmos-charts`/`cosmos-gitops`, `~/algar-*`, `~/gruponos-*`). The
-contract is critical because it is:
+`FlextSettings` and `FlextConfig` are layer-zero SSOT foundations consumed by FLEXT
+packages and their declared external consumers. Their declaring module names follow
+the current naming contract; the historical `_settings.py` location below does not
+establish a filename exception. The proposed lifecycle contract is critical because
+it is:
 
 - **Namespaced**: nested models per domain (`settings.OracleWms.*`,
   `config.oracle_wms.*`) with registry-driven namespace composition.
@@ -36,10 +37,11 @@ contract is critical because it is:
 
 ### Defect evidence (2026-09-15 session)
 
-The singleton is enforced through `__new__` interception (`_settings.py:226-238`): when
+The 2026-09-15 investigation observed `__new__` interception in that source revision
+(`_settings.py:226-238`): when
 `cls._instance` already exists, ANY pydantic allocation path that reaches `cls.__new__`
 receives the cached singleton object and pydantic re-initializes it in place.
-Empirically (flext-oracle-wms):
+The recorded observations in flext-oracle-wms were:
 
 - Full unit suite under randomized order: 7/8 seeds red; deterministic order green;
   isolated pairs green — classic late-pollution coupling.
@@ -49,9 +51,14 @@ Empirically (flext-oracle-wms):
 - `clone()` performs its final `model_validate(copied, from_attributes=True)` OUTSIDE
   the `singleton_disabled()` window, re-entering the factory semantics.
 
-Consequences: cross-test state pollution, nondeterministic suites, hidden mutation
-channel through "innocent" `model_validate` calls, and unclear identity semantics
+Recorded consequences: cross-test state pollution, nondeterministic suites, hidden
+mutation through "innocent" `model_validate` calls, and unclear identity semantics
 between module-level `settings` export and `fetch_global()`.
+
+These source coordinates and results are historical evidence. They do not prove
+that the same defect exists in the current settings owner or that a later repair
+passed. The active Bead and fresh public runtime receipts determine current state;
+this documentation reconciliation does not promote this proposed ADR to accepted.
 
 ### Performance and SSOT debt
 

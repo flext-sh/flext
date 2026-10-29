@@ -114,8 +114,12 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
    (`@h.handler(command=None, default=True)`); `@h.query` marks a read-only
    operation; `m.ServiceOperation` records `public_name`, `kind`, `default` and the
    `output` type derived from `p.Result[X]`. The request Protocols are generated from
-   the models by the flext-infra model-to-`p` generator (operator decision recorded on
-   `flext-vjj1s.8`), never hand-mirrored.
+   the models by flext-infra, never hand-mirrored. The accepted 2026-10-28
+   [model and service protocol projection](018-generator-declarations.md#model-and-service-protocol-projection)
+   contract owns generation of the service's own structural callable surface and
+   its request protocols, tracked by `flext-vjj1s.8`. It preserves the runtime
+   operation metadata, schema binding and authored DI ports described here;
+   projection is not a substitute for their real runtime acceptance.
 5. **One transport contract (amended 2026-10-24).** Operations are the only public
    surface a transport serves. Adapters derive everything from
    `u.service_operations` and never take a hand-kept route, command or option list:
@@ -134,18 +138,22 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
       HTTP status by one table per transport over `c.ErrorCode`.
    `cli.service_routes` and the route models stay as deprecated pass-throughs until
    their census reaches zero.
-6. **No fake facades (operator decision D1 = A).** The kernel has no `api.py`, `cli.py`,
-   `base.py` or console script; NS-LAYOUT derives when a project must provide `api.py`
+6. **No fake facades (operator decision D1 = A).** An unused `api.py`, `cli.py`,
+   `base.py` or console script is not created merely to satisfy layout. NS-LAYOUT
+   derives when a project must provide `api.py`
    (it composes services) and `cli.py` (it declares a console script and operations).
-   Amendment 2026-10-24: core is the composition root without a locator (bead
+   Amendment 2026-10-24 supersedes the earlier blanket removal of kernel `api.py`:
+   core retains its real consumed composition root without a locator (bead
    `flext-itpd1.11.3`); a transport receives the composed facade, never resolves
-   services by name.
+   services by name. This target does not certify current runtime compliance.
 7. **Consumers first.** A base contract contracts only after every consumer declared
    what it uses; every base slice revalidates its consumers before merge.
-8. **Execution law for every slice.** Modules stay within 200 logical lines, with
-   net-negative LOC on refactors. Every diagnostic, generation, fix, format, check and
+8. **Execution law for every slice.** Module size follows the owning project's typed
+   `loc_cap.max_lines` declaration; this ADR does not freeze a separate numeric cap.
+   Refactors remove confirmed duplication while preserving behavior.
+   Every diagnostic, generation, fix, format, check and
    test runs through a selector-free root Make verb of the lane (`make gen`, `make fix`,
-   `make fmt`, `make check`, `make test`); no selector, filter or raw tool is evidence.
+   `make fmt`, `make check`, `make tests`); no selector, filter or raw tool is evidence.
    A red has no "foreign" category: every red in a slice's blast radius is fixed at its
    owner (in its own small PR when it lives in another repository) before the slice
    lands; it is never narrowed, skipped or suppressed.

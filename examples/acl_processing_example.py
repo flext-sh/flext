@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from flext_ldif import c, p
+    from examples import c, p
 
 
 class FlextRootAclProcessingExample:
@@ -38,3 +38,6 @@ class FlextRootAclProcessingExample:
                 required_permissions,
             ),
         )
+
+
+__all__: list[str] = ["FlextRootAclProcessingExample"]

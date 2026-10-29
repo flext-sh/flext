@@ -11,6 +11,7 @@ These pages are generated from public modules and their docstrings.
 - [flext_dbt_ldap.api](api.md)
 - [flext_dbt_ldap.base](base.md)
 - [flext_dbt_ldap.cli](cli.md)
+- [flext_dbt_ldap.config_models](config_models.md)
 - [flext_dbt_ldap.constants](constants.md)
 - [flext_dbt_ldap.models](models.md)
 - [flext_dbt_ldap.protocols](protocols.md)

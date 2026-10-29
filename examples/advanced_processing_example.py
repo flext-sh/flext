@@ -14,7 +14,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import Callable, MutableMapping, MutableSequence
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
@@ -29,17 +29,15 @@ class FlextRootAdvancedProcessingExample:
     class ValidationResult(m.BaseModel):
         """Result of validation operation."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
-        )
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
         item_id: str = m.Field(description="Unique item identifier")
         valid: bool = m.Field(description="Whether the item is valid")
-        violations: t.StrSequence = m.Field(
+        violations: Sequence[str] = m.Field(
             default_factory=tuple,
             description="List of validation violations",
         )
-        warnings: t.StrSequence = m.Field(
+        warnings: Sequence[str] = m.Field(
             default_factory=tuple,
             description="List of validation warnings",
         )
@@ -51,9 +49,11 @@ class FlextRootAdvancedProcessingExample:
     class FlextLdifProcessingPipeline(m.BaseModel):
         """Declarative processing pipeline with automatic parallel execution."""
 
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
+
         auto_execute: bool = True
-        items: t.SequenceOf[t.JsonMapping]
-        stages: t.StrSequence
+        items: Sequence[t.JsonMapping]
+        stages: Sequence[str]
         max_workers: int = 4
 
         def execute(self) -> p.Result[m.Root.PipelineStageData]:
@@ -63,7 +63,7 @@ class FlextRootAdvancedProcessingExample:
                 The resulting ``p.Result[m.Root.PipelineStageData]``.
 
             """
-            stage_functions: t.MappingKV[
+            stage_functions: Mapping[
                 str,
                 Callable[[t.JsonMapping], p.Result[m.Root.PipelineStageData]],
             ] = {
@@ -109,7 +109,7 @@ class FlextRootAdvancedProcessingExample:
             )
             field_counts: MutableMapping[int, int] = {}
             complexity_scores: MutableSequence[float] = []
-            items_to_analyze: t.SequenceOf[t.JsonMapping] = processed_items
+            items_to_analyze: Sequence[t.JsonMapping] = processed_items
             for item in items_to_analyze:
                 field_count = len(item)
                 field_counts[field_count] = field_counts.get(field_count, 0) + 1
@@ -117,7 +117,9 @@ class FlextRootAdvancedProcessingExample:
             success_rate_data = data.get("success_rate", 0)
             processing_efficiency = (
                 float(success_rate_data)
-                if isinstance(success_rate_data, (int, float))
+                if isinstance(
+                    success_rate_data, ExamplesFlextRootConstants.NUMERIC_TYPES
+                )
                 else 0.0
             )
             validation_summary = {
@@ -288,11 +290,11 @@ class FlextRootAdvancedProcessingExample:
             )
 
     @staticmethod
-    def create_sample_items(count: int = 100) -> t.SequenceOf[t.JsonMapping]:
+    def create_sample_items(count: int = 100) -> Sequence[t.JsonMapping]:
         """Create sample items for testing.
 
         Returns:
-            The resulting ``t.SequenceOf[t.JsonMapping]``.
+            The resulting ``Sequence[t.JsonMapping]``.
 
         """
         return [
@@ -305,3 +307,6 @@ class FlextRootAdvancedProcessingExample:
             }
             for i in range(count)
         ]
+
+
+__all__: list[str] = ["FlextRootAdvancedProcessingExample"]

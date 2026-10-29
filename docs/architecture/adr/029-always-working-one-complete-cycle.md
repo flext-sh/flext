@@ -12,15 +12,17 @@
 
 <!-- TOC END -->
 
-- **Status:** ACCEPTED — operator orders 2026-10-24, amended 2026-10-26
+- **Status:** ACCEPTED — operator orders 2026-10-24, amended 2026-10-28
 - **Date:** 2026-10-24
 - **Amended:** 2026-10-26 — global primary admission, native Testmon selection and
   serial peripheral-first modification
+- **Amended:** 2026-10-28 — explicit full-suite operation without Testmon
 - **Scope:** every FLEXT repository (superproject, every member, external consumers
   such as ai-hub) and every agent or session working in them
 - **Tracker memories:** `operator-order-2026-10-24-always-working-never-skip-phase`,
   `operator-order-2026-10-24-no-incomplete-pushes`,
-  `operator-order-2026-10-26-global-ruff-pyrefly-strict-lazy-exports`
+  `operator-order-2026-10-26-global-ruff-pyrefly-strict-lazy-exports`,
+  `operator-ruling-2026-10-28-tests-testmon-full-native`
 - **Complements:** root `AGENTS.md` contract item 9, the global
   `phase-admission-protocol` rule, ADR-028
 
@@ -53,12 +55,28 @@ Pyrefly and Pytest evidence and required, verbatim, "pytests sempre com testmon
 para nao repetir todos toda hora e lentidão é problema gravíssimo". The tracker
 memory above retains the complete order. The later approved execution plan
 requires global Ruff/Pyrefly admission first, then global native incremental
-pytest admission, before dependent work. It also requires one peripheral `mod`
-pilot before modification reaches foundational consumers. These requirements
-supersede the older full-check-before-initial-pytest and foundation-first-mod
-ordering, not the complete quality contract required for publication.
+pytest admission, before dependent work. The latest 2026-10-28 approval requires
+three peripheral `mod` pilots in order: `flext-dbt-ldif`, `flext-tap-ldif`,
+`flext-target-ldif`. All three complete before modification reaches foundational
+consumers. These requirements supersede the older full-check-before-initial-pytest
+and foundation-first-mod ordering, not the complete quality contract required
+for publication.
 
 ## Decision
+
+The operator clarified the test operations on 2026-10-28 in the active root
+conversation, verbatim: "make tests (usa tetmon ) make tests-fulll nao usa,
+simples assim". The canonical existing spelling is `tests-full`; no typo alias
+is introduced. Tracker memory
+`operator-ruling-2026-10-28-tests-testmon-full-native` records the decision.
+`tests` retains native incremental Testmon selection. `tests-full` executes the
+complete applicable population once without Testmon and without a preliminary
+incremental execution. It neither loads the Testmon plugin nor reads, leases,
+checks, updates or publishes its database. The existing database remains untouched.
+Both operations retain original source admission, applicability, failure accounting
+and the active Make deadline. This supersedes the older no-full-verb and
+incremental-then-full prescriptions; it does not grant an unlimited-time exception.
+Source, generated consumers, runtime proof and integration remain separate states.
 
 1. **The project and its runtime work 100% of the time.** No integration tip and no
    published branch is left with a red gate, a failing test or a broken runtime.
@@ -93,6 +111,23 @@ ordering, not the complete quality contract required for publication.
    digests, newest same-phase evidence and first-failure semantics. A source-only
    receipt never proves full `check`, integration or release acceptance. An invalid
    or incomplete receipt never falls back to an older successful one.
+8. **Small transactions preserve cooperative runtime visibility.** Amendment
+   2026-10-28, accepted contract pending implementation: use
+   [ADR-018's common barrier and owned-effect recovery](018-generator-declarations.md#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol)
+   for live Make/Rope readers and publication. Each entire incremental
+   transaction takes at most five seconds, including staged validation,
+   publication, native refresh and bounded rollback; the public Make operation
+   retains its sixty-second deadline, including lock waits, staging, publication,
+   incremental refresh and recovery. The existing performance policy owns
+   those budgets; frozen analyzer rules are unchanged. Full gates and real
+   runtime proof remain mandatory for every slice. Neither a committed small
+   transaction nor its fast gate closes a slice or authorizes advancement.
+
+   The narrow authorization to reverse an unsuccessful transaction's own
+   authenticated effects supersedes the older blanket rollback prohibition
+   only at this boundary. It never authorizes discarding shared WIP or undoing
+   an independently completed transaction. An interrupted transaction or
+   conflicting external edit keeps recovery and the containing slice open.
 
 ## The cycle
 
@@ -115,6 +150,9 @@ admission; do not replace it with a green member or a stale whole-workspace run.
    A typed cache hit requires database integrity and complete accounting; report
    it as a cache hit, never as tests executed and passed. No repeated full pass is
    added to the normal invocation.
+   When explicitly requested, `make tests-full` runs that complete applicable
+   population once without Testmon or an incremental pre-run. It requires actual
+   execution accounting; a cache hit cannot admit the full-suite operation.
 6. Real runtime proof through the public consumer (CLI from a neutral directory,
    installed artifact, real service), not only tests.
 7. Commit by explicit paths, fast-forward push, pull request to the integration
@@ -152,12 +190,23 @@ admission; do not replace it with a green member or a stale whole-workspace run.
 The dated failures above are recovery evidence, not a substitute for current Beads,
 refs, runtime or native receipts. Recover one slice at a time:
 
+The operator-approved 2026-10-28 campaign (`flext-brr3y`) starts with complete
+alignment of memories, instructions, documentation, topic ADRs, rules, skills,
+commands, existing plan files and Beads before structural reorganization. If a
+public command cannot
+reach the documentation gates, that first slice includes only the causally
+necessary command-bootstrap repair after the documentation alignment. It stays
+open until those gates execute successfully; the blocked documentation does not
+authorize a structural migration or a later phase.
+
 1. Restore global source and native incremental behavioral admission. Correct
    command, rule, generator and runtime owners without weakening contracts.
-2. Repair toolchain implementations at their canonical owners, but do not apply
-   `mod` to foundational consumers before peripheral proof. Elect one declared
-   peripheral project through native dependency topology and validate behavior,
-   complete gates and an unchanged second modification before selecting the next.
+2. Repair toolchain implementations at their canonical owners, then complete
+   `flext-dbt-ldif`, `flext-tap-ldif` and `flext-target-ldif` in that approved
+   order. Each pilot requires behavior, complete gates, unchanged-input
+   convergence and integration before the next. Do not apply `mod` to
+   foundational consumers until all three pilots are accepted, or silently
+   substitute a different pilot after a failure.
 3. Continue serially from validated peripheral consumers inward. A new source
    shape extends the same generalized rule and regression corpus, never a
    package-specific exception or a fleet-wide mutation sweep.
