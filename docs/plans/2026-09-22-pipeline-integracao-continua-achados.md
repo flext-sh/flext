@@ -217,7 +217,7 @@ Dono canônico (header dos 32 Makefiles): `flext-infra/config/codegen.yaml` +
   ccs-dashboard `:62-81`, ai-hub-model-pipeline `:82-117` notify); render
   `generate_systemd_units.py:225` com `LoadCredentialEncrypted=` `:245-249`; mecanismo
   existente de credenciais = **systemd-creds** (`host_runtime.yaml:61-62`; escrita
-  `_host_runtime_parts/credentials.py:37` `_COMMAND="systemd-creds"`; leitura
+  `_host_runtime/credentials.py:37` `_COMMAND="systemd-creds"`; leitura
   `_credential_source.py` — só `CREDENTIALS_DIRECTORY` em systemd ou env em foreground);
   daemon não imprime segredo (`model_pipeline_daemon.py:323-336`).
 
@@ -232,7 +232,7 @@ Dono canônico (header dos 32 Makefiles): `flext-infra/config/codegen.yaml` +
     `PR_TITLE: [WIP] Restore editable setup without release artifacts`.
   - **3 projeções regeradas** (step "gen fixed point (blocking)", gerador republicou →
     árvore suja → exit 1): `scripts/__init__.py`,
-    `src/ai_hub/services/_installed_runtime_parts/__init__.py`,
+    `src/ai_hub/services/_installed_runtime/__init__.py`,
     `src/ai_hub/services/_session_learning/__init__.py`.
   - Local dev estava clean — a divergência existe **só no branch do PR**.
 - dev tip com runs FAILURE: CI `35746445654`, Docs `35746445781`; PR #836 (dev→main) CI

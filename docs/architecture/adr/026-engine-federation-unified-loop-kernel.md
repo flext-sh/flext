@@ -109,7 +109,7 @@ role keeps ai-hub (a heavy flext-infra consumer) green.
    check and codegen loops), extended to the remaining families. The fixed-point engine
    is the proven
    `codemod/batch_apply._converge` behavior extracted in place into a reusable
-   `FlextInfraServiceBase` service in the `codemod/` domain directory, serving the sibling
+   `s` service in the `codemod/` domain directory, serving the sibling
    refactor verbs with injectable fingerprint/judgment strategies. The phase contract is
    `p.Infra.ModLoopPhase` (ADR-023) extended in place (admission, rope requirement) — no
    sibling protocol. `m.Infra.LoopOutcome` is the single envelope. Fan-out behaviors remain

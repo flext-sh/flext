@@ -205,8 +205,14 @@ Such bootstrap dependencies use the explicit leaf producer; importing the facade
 back into its own parts or substituting an empty/default value is not a repair.
 
 Layer-zero `_config`/`_settings` and their source helpers may import an identity-proven
-helper of the same package **only within layer zero**, when the complete proposed
-source/import graph is acyclic. Each schema has one owner and reads values from its
+helper of the same package within layer zero, when the complete proposed
+source/import graph is acyclic. The operator's recorded
+`operator-ruling-2026-10-08-settings-config-boundary` also permits the canonical
+private-family `base.py` as a foundational leaf: its native source identity must
+belong to the candidate and it must import no other module of its own package,
+including settings/config. This exception does not admit a composite family
+facade or another family member. A filename alone does not prove this contract.
+Each schema has one owner and reads values from its
 declared configuration source; helpers do not copy business rules or depend on a
 project `c/t/p/m/u` facade, even under `TYPE_CHECKING`. Helper admission
 distinguishes that project's facades from an
@@ -215,6 +221,8 @@ Pydantic declarations in other projects.
 Both the native import-law validator and its generated declarative rule consume
 this same typed decision;
 neither a filename prefix nor a package-specific allowlist proves helper ownership.
+Analysis of these dependencies resolves source modules and bindings through Rope;
+it never imports or executes the package being analyzed.
 This is the layer-zero boundary applied by [ADR-028 Decision 1](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-1).
 
 Generated facade imports, declaration references and codemod contexts preserve the

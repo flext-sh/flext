@@ -124,7 +124,7 @@ sem bloquear o ci"):
       seletor), preservar checkpoint, rodar sem escritores concorrentes; efeitos
       inválidos corrigidos no dono; nunca excluir regra/teste para verde.
 - [ ] 4. CI AI Hub: resolver PR #854 — regenerar as 3 projeções divergentes no branch
-      (`scripts/__init__.py`, `_installed_runtime_parts/__init__.py`,
+      (`scripts/__init__.py`, `_installed_runtime/__init__.py`,
       `_session_learning/__init__.py`), finalizar commit sem WIP e título convencional,
       reexecutar CI; validar empacotamento determinístico pelo consumidor real; fechar
       runs vermelhos do dev tip (CI `35746445654`, Docs `35746445781`, PR #836
@@ -150,7 +150,7 @@ Cada incremento: integração, publicação pelo dono, prova antes do seguinte.
       `ccs tokens --api-key-only` via configuração tipada de comandos (sem shell; flag
       existe em `ccs/src/commands/tokens-command.ts:9,76,99`), captura sem registrar
       segredo, distribui pelo mecanismo existente systemd-creds
-      (`_host_runtime_parts/credentials.py:37`, `LoadCredentialEncrypted`); uma
+      (`_host_runtime/credentials.py:37`, `LoadCredentialEncrypted`); uma
       aquisição alimenta todos os consumidores da ativação; falha/saída vazia interrompe
       antes da publicação. Segredo de gerenciamento pelo contrato CCS existente +
       config/env CLIProxy. _Observável:_ ativação/rotação sem export manual;
