@@ -134,6 +134,8 @@ direct-reference URL; extras, markers, native inclusion tables, array positions
 and comments retain their owners. Distinct conditional overrides remain native
 UV policy: conflicting source URLs cannot be collapsed into one project
 requirement and must fail before publication.
+The existing pyproject owner separates override selection from the URL-only
+replacement of each requirement; both consume the same captured document.
 
 ## Proposed design (implementation pending)
 

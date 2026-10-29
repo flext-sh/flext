@@ -29,6 +29,15 @@ incremental. The active Bead records implementation and verification separately.
 Source validation, generated publication and installed consumption remain separate
 receipts under the existing verification owner.
 
+For Pydantic, configuration, settings or facade composition, first read
+[ADR-005's domain boundaries](../../docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#domain-boundaries-and-value-flow-amended-2026-10-28)
+and the [Pydantic guide](../../docs/guides/using-pydantic.md).
+Distinguish a value's source, its data contract and its class composition.
+Use ADR-028 Decision 14 for the latest enum and schema policy, not a superseded
+plan or cached skill value. Models, protocol projection and service DI retain
+their separate owners; update source, generated output and installed activation
+with distinct receipts.
+
 For source-derived model/service protocols, compose
 [ADR-018](../../docs/architecture/adr/018-generator-declarations.md#model-and-service-protocol-projection)
 and the
@@ -45,8 +54,10 @@ active Bead records receipts and does not redefine the architecture.
 
 For structural cleanup, also compose the canonical global `search-first`, `yagni`,
 `ssot`, `solid`, `simplify`, and `dry` skills in that order. Execute rewires through
-root `make mod`; its FLEXT-owned ast-grep, Rope, and LSP pipeline discovers hierarchy
-and references. Public ai-hub commands, hooks, MCP routes, and `ai-hub-*` daemons may
+root `make mod`; native Rope owns Python hierarchy, bindings, references and
+refactorings under ADR-028 Decision 17. Declarative rules retain their declared
+owner; they do not authorize FLEXT-authored AST, LibCST or textual Python analyzers.
+Public ai-hub commands, hooks, MCP routes, and `ai-hub-*` daemons may
 enrich that discovery when available, but FLEXT never imports ai-hub or CRG libraries
 and their absence is not an error. Git stays owned by `flext-infra`; GitHub and CRG stay
 owned by ai-hub. Per-symbol mapping registries and repetitive manual call-site edits are
