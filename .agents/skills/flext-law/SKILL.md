@@ -323,8 +323,8 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   `r.create_from_callable`) and covariant `p.Result[Never]` failure constructors
   (`r.fail`, `r.fail_op`, `r.from_failure`) replace imperative `if res.failure: return ...`
   ladders and local `outcome = r[T]` aliases through `railroad-result.yml`.
-- Symbol placement and nesting are discovered from the live typed module path, AST/Rope
-  identities, and LSP references. Hand-maintained symbol/class mapping catalogs, copied
+- Symbol placement and nesting are discovered from the live typed module path, native
+  Rope bindings, scopes, declarations and MRO, and LSP references. Hand-maintained symbol/class mapping catalogs, copied
   path registries, inert entries, and review-only confidence lists are forbidden;
   ambiguity fails at the discovery owner instead of selecting a fallback. The reusable
   classifier or planner survives only on the appropriate public `c/t/p/m/u` facade.
@@ -346,8 +346,9 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
 - FLEXT tests exercise only public facades and observable runtime behavior. They use
   `tm`, canonical `c/t/p/m/u` contracts, the unified `conftest.py`, and typed shared
   fixtures instead of mocks, internal assertions, copied setup, or hardcoded
-  project-owned values. Every test run retains the canonical testmon cache, including an
-  explicitly requested full run.
+  project-owned values. `tests` uses the persistent Testmon database; `tests-full`
+  leaves it untouched and runs without Testmon or an incremental pre-run, as defined
+  by ADR-029 above.
 - Connectivity-test prerequisites and availability skips follow root `AGENTS.md`,
   section "Production Readiness And Connectivity Tests"; they never waive failures
   from an available service or disable pure unit/integration behavior checks.

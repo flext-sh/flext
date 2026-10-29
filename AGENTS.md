@@ -740,6 +740,16 @@ those owners.
 
 ## Architecture Overview
 
+**Pydantic and domain routing:** follow
+[ADR-005's domain boundaries](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#domain-boundaries-and-value-flow-amended-2026-10-28)
+and the [Pydantic usage guide](docs/guides/using-pydantic.md) before changing models,
+settings, configuration or their consumers. The latest enum target is
+`use_enum_values=False`: retain enum members internally and use native outward
+serialization. `strict` controls Python ingress independently. Reconcile older
+`True`/primitive-protocol instructions before code; neither docs nor written
+patches establish activation. ADR-028 Decision 14 owns the precise model contract,
+ADR-018 its projection, and ADR-019 its DI and service boundary.
+
 **Facade layering (strict order `c -> t -> p -> m -> u`)** composed via MRO from
 `flext-core`:
 
@@ -761,9 +771,11 @@ config.<Namespace>.*      settings.<Namespace>.*
 
 Config = business rules (`config/*.yaml`, validated); settings = env/CLI-tunable knobs.
 Facades never hardcode values the SSOT holds. Config/settings modules import only
-stdlib/pydantic/upstream base or source-proven, acyclic layer-zero helpers of their
+stdlib, their authenticated upstream foundation, or source-proven, acyclic layer-zero helpers of their
 own package ([ADR-005 §2](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#2-facade-and-layer-direction-is-strict)) — never a project
 `c/t/p/m/u` facade, including under `TYPE_CHECKING`.
+Core remains the Pydantic SDK import owner; another package's layer-zero schema
+consumes the public Core foundation rather than importing Pydantic independently.
 
 **Dependency direction:** `flext-core` ← everything. `flext-cli` owns CLI domains
 (Toml/Yaml/Csv/Json/Cli/Tui/Run/Dag/Templates/Workflow). Singer connectors are thin

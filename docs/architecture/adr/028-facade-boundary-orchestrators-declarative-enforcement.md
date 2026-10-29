@@ -385,6 +385,10 @@ outside the facades across 12 repositories.
        implementation gap against this accepted contract, pending repair at the
        preset owner and public fresh-import proof. A later gate-triggered build
        does not establish completeness at import.
+       A local model created by a later factory call is proven at its actual
+       declaration/creation boundary, not claimed to exist or have been validated
+       by an earlier module import. Preserve its lexical closure under ADR-018;
+       function placement alone does not establish an invalid Pydantic model.
      - An injected runtime dependency uses `t.Port[p.X]`, the FLEXT field annotation
        built on native Pydantic schema hooks, under [ADR-019](019-service-contract-ports-operations.md).
        Its runtime protocol check proves member presence, not signatures or nested
@@ -397,16 +401,20 @@ outside the facades across 12 repositories.
        Preserve validators, serializers, defaults and JSON Schema once; do not
        substitute the DI port's instance check or excluded schema for that payload.
      - `arbitrary_types_allowed` is banned.
-     - **Enum-value contract, amended 2026-10-28:** governed models and presets
-       resolve `use_enum_values=True`, including `ContractModel` (formerly `False`).
-       This supersedes the earlier enum-identity preservation requirement.
+     - **Enum-preservation revision, amended 2026-10-28:** governed model presets
+       resolve `use_enum_values=False`. This supersedes the intermediate
+       `True`/primitive-protocol policy, including its `ContractModel` change.
        A complete string domain uses its existing `c.*` `StrEnum`; `Literal`
        remains for proper subsets and discriminators. Strict Python constructors
-       and assignment receive enum members; validation stores primitive values,
-       including validated defaults. Projected reads expose `str`, while mutable
-       writes retain the enum input type; frozen fields expose no setter.
-       Reuse validated models by reference rather than reconstructing them from
-       stored primitive values. This is the accepted migration target, not proof
+       and assignment receive enum members; validation preserves members,
+       including validated defaults and factories. Projected reads and writes
+       name the real enum; frozen fields expose no setter. The `strict` setting
+       controls Python input validation independently of enum preservation.
+       Preserve each preset's declared strictness; do not impose Python ingress
+       semantics on environment parsing by accident. Native JSON serialization
+       emits values at the outward boundary. Reuse validated models by reference
+       instead of adding primitive readmission or dump/validate round trips.
+       This is the accepted migration target, not proof
        that every preset, producer and consumer has been migrated. See
        [ADR-005](005-config-settings-constants-templates-schemas-ssot.md#1-each-concern-has-exactly-one-owner)
        and [Pydantic's versioned configuration API](https://github.com/pydantic/pydantic/blob/v2.14.1/pydantic/config.py).
@@ -414,7 +422,10 @@ outside the facades across 12 repositories.
        (`ban-enclosing-family-field-reference`): the enclosing class is unbound while
        its body runs, so the model stays incomplete. The fix extracts the nested member
        into its own family module.
-     - Facade roots (`c`, `t`, `p`, `m`, `u`) never inherit a model.
+     - Facade roots (`c`, `t`, `p`, `m`, `u`) never inherit a model. They compose
+       namespaces; payload models compose data. Native constraints, validators,
+       computed fields and serializers belong to the model contract and are not
+       prohibited domain-service methods. I/O and orchestration stay outside it.
      - Entity equality follows Pydantic (operator ruling 2026-10-25, tracker memory
        `operator-ruling-2026-10-25-entity-equality-pydantic-way`, verbatim: "o que
        pydantic recomenda em relação a isso, o que fazer, qual a forma mais pydantic

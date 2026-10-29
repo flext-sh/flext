@@ -182,13 +182,15 @@ A structural projection never becomes a second runtime model, validation engine
 or operation/schema registry.
 
 The newer operator enum decision in ADR-005 and ADR-028 Decision 14 distinguishes
-input from stored output: governed models use `use_enum_values=True`; a complete
-`StrEnum` remains the input domain while its validated protocol getter returns
-`str`. A writable property's setter retains the accepted input contract rather
-than admitting arbitrary strings. Default and factory producers, strict Python
-construction, JSON validation and consumers of enum identity or `.value` must
-close in the same migration. Retaining their source text alone is not proof of
-preserved behavior. Proper subsets and discriminators keep their narrower law.
+input validation from outward serialization: governed model presets use
+`use_enum_values=False`, superseding the intermediate primitive-output decision.
+A complete `StrEnum` remains the input and stored field type, and the projected
+getter and mutable setter retain that enum. Frozen fields have no setter.
+Default and factory producers, strict Python construction, JSON validation and
+existing enum consumers must close in the same migration. Python dumps retain
+members; JSON serialization emits values at the actual outward boundary.
+Retaining source text alone is not proof of preserved behavior. Proper subsets
+and discriminators keep their narrower law.
 
 Projection modules correspond to the semantic source-module owners of the
 models and services and group the declarations owned by those modules. They live

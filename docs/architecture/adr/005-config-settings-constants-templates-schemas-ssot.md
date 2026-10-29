@@ -50,8 +50,13 @@ generated artifacts, while preserving the runtime dependency direction
 | immutable invariants                                                      | private constant modules exposed through `c`       |
 | configurable policy/defaults, generation inputs, and repository manifests | validated files under `config/`                    |
 | environment-overridable runtime values                                    | typed `settings.<Namespace>.*` models              |
+| reusable type aliases and constrained annotations                        | the owning `t.<Namespace>` family                  |
+| structural capabilities and dependency ports                             | the owning `p.<Namespace>` family                  |
+| data, model presets and native Pydantic invariants                        | the owning `m.<Namespace>` family                  |
+| algorithms and adapters                                                  | the owning `u.<Namespace>` family                  |
 | generated bodies                                                          | `templates/*.j2` rendered only through `flext-cli` |
-| validation contracts                                                      | matching `schemas/*.schema.json` files             |
+| Python payload validation contracts                                      | their declaring Pydantic models or type adapters   |
+| separately declared document grammars                                    | their owning `schemas/*.schema.json` files         |
 
 Large or derived structures are data-backed and generated; they are not hardcoded as
 Python constant tables. `config` and `settings` are independent typed objects.
@@ -75,18 +80,21 @@ by that type; a `Literal` is retained for a proper subset or discriminator.
 Strict Python producers pass enum members and typed nested values. Raw JSON
 is validated once through the existing JSON boundary; field relaxation,
 validation retries and serialization round-trips cannot repair a producer's
-wrong input type. The newer accepted enum-value contract requires
-`use_enum_values=True` throughout governed models and presets, including
-`ContractModel`; this supersedes the former enum-identity preservation policy.
-Validation extracts the member's primitive value. A projected `StrEnum` field
-therefore exposes `str` for reading and accepts its declared enum for writing
-when mutable; frozen fields expose only the read capability. Consumers compare
-these validated values by equality, never enum object identity.
-Constructors and
-strict Python assignment keep the enum input contract, and JSON ingress keeps
-its native validation contract. Consumers transport validated values without
-reconstructing or revalidating the model. Defaults must be validated through the
-existing preset owner so they follow the same extraction contract.
+wrong input type. The latest operator revision supersedes the earlier
+`use_enum_values=True`/primitive-protocol contract with `use_enum_values=False`
+throughout governed model presets. `strict=True` controls Python input validation;
+the enum option preserves validated members rather than making validation strict
+by itself. Preserve the effective strictness of each existing preset; this
+revision does not silently turn every settings source or external adapter into
+a strict Python constructor.
+
+Model attributes and Python dumps retain enum members. Generated protocols name
+the actual enum for reading and, where mutable, writing; frozen fields expose
+only reads. Serialize primitive values at the outward JSON boundary with native
+serialization. Preserve native JSON ingress semantics, validated defaults and
+factories. Pass already validated models by reference and remove redundant
+readmission introduced solely for the superseded primitive-storage policy after
+proving its replacement. Enum singleton identity is distinct from model equality.
 Compose existing presets, nested/generic models, adapters
 and schema hooks before adding custom machinery. Pydantic configuration
 inheritance is verified on the effective model, not inferred from Python C3
@@ -104,6 +112,69 @@ An injected runtime dependency instead follows
 annotation built on native Pydantic hooks, not a replacement payload schema.
 An unresolved port type parameter fails at its declaring owner; it never
 selects an unconstrained schema.
+
+### Domain boundaries and value flow (amended 2026-10-28)
+
+The model declares the shape and invariants of a value; its data source determines
+whether the instance is configuration, settings or an operational payload. A
+Pydantic model is not another configuration source. Do not copy a reviewed rule
+into a field default, a constant and an environment setting. Select its single
+owner by who may change it: reviewed policy belongs to `config`, runtime inputs
+to `settings`, and stable published vocabularies and invariants to `c`.
+
+Presets own model policy, including enum preservation, once. Their existing
+bootstrap-safe constants are schema-contract invariants, not per-deployment
+knobs. Reusable constrained annotations belong to `t`, structural consumption
+contracts to `p`, payloads and native validators/serializers to `m`, algorithms
+and adapters to `u`, and operation orchestration to services. A model validator
+enforces its data invariant; it does not read files, discover dependencies or
+perform network calls. Reuse native constraints before adding a custom validator.
+
+The composition root selects validated policy and runtime settings and injects
+the required values and `p` capabilities into services. Services receive a
+validated request, call their injected capabilities and domain utilities, and
+return a typed result. They do not serialize and reconstruct the same model to
+cross an internal boundary. External input is validated once at its actual
+ingress; a changed representation or domain transition is a new explicit
+boundary with its own consumed contract, not an implicit global conversion.
+
+**Textual ingress decision (operator selected 2026-10-28).** YAML/environment
+tokens and strict Python domain values are different representations. The
+operator selected native textual decoding at the existing entry owner: Pydantic
+materializes the document's types before the strict domain contract consumes
+them. The same owner retains source identity, enum domains, aliases, defaults
+and error provenance. Do not add per-field `strict=False`, consumer-side enum
+constructors, a YAML-to-JSON round trip, another parser or a catch/default route.
+This source grammar is not permission to relax ordinary Python constructors;
+its implementation requires public native-ingress and negative-domain proof.
+
+Parsed document values remain JSON-compatible. Elected operational metadata
+such as a catalog's owner root is validated separately and travels through the
+typed Pydantic validation context; it is not inserted as a Python object into
+the document mapping. The declaration owner binds that metadata through native
+validation before effects. A document cannot select its own operational origin,
+and ordinary Python/JSON construction retains its declared input contract.
+
+A package adds only its own namespace and inherits upstream same-letter facades.
+It neither renames upstream domains nor folds a sibling namespace into its own.
+Cross-domain dependencies consume the declaring facade or an authored minimal
+port. Configuration and settings retain their separate layer-zero owners and
+singleton lifecycles; domain payloads are ordinary values, not singletons.
+Layer-zero initialization cannot read an unfinished own composite facade.
+
+Python C3 composes classes, method lookup and cooperative `super()`; Pydantic
+merges model configuration and validates fields under its own native rules.
+Inspect the effective fields, configuration, validators and specialization rather
+than assuming that one mechanism proves the others. Use inheritance for a real
+contract extension, nested model fields for containment, and injected protocols
+for collaboration. Facade namespace classes never become payload model bases.
+Frozen models are not recursively immutable, and assignment validation does not
+observe mutations inside a list or dictionary. Choose collection and ownership
+semantics according to the domain instead of claiming stronger guarantees.
+
+The [Pydantic guide](../../guides/using-pydantic.md) owns usage examples and the
+native capability selection checklist. The accepted target is not a statement
+that current presets, generators or all consumers already implement it.
 
 **Amendment 2026-10-28 — accepted contract, implementation pending.** An
 extensible catalog is a validated sequence of domain records or a mapping
