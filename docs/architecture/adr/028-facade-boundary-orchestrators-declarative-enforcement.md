@@ -695,8 +695,12 @@ architecture link.
   (`typing_extensions`, operator decision 2026-10-24), which import like the standard
   library. Type checkers recognize the PEP 747 `TypeForm` special form only through its
   own name binding, so a type expression is passed to a `TypeForm[T]` parameter as
-  `TypeForm(X)` with `from typing_extensions import TypeForm`; `t.TypeForm` is the
-  facade's annotation alias and is never called (rule `ban-typeform-alias-call`).
+  `t.TypeForm(X)`; `t.TypeForm` is the facade's runtime re-binding of the special
+  form and is the ONLY spelling consumers may call (operator order 2026-10-29:
+  a simpler single surface, no `typing_extensions` import in consumers). Direct
+  `typing_extensions.TypeForm` imports are banned outside flext-core's own
+  `c/t/p/m/u` typings (rule `typeform-call-via-facade`, successor of
+  `ban-typeform-alias-call`).
 - **Runtime import:** a top-level import statement. Imports under `if TYPE_CHECKING:`
   never run and are outside the boundary.
 

@@ -825,8 +825,9 @@ CLI + pytest plugin, **never imported at runtime**.
     `c/t/p/m/u` modules (and layer-0 config/settings for their foundation libraries).
     Everywhere else, only stdlib and FLEXT packages; the declared stdlib backports
     (tooling `lazy-init.stdlib-backports`: `typing_extensions`, operator decision
-    2026-10-24) count as stdlib. PEP 747 calls use `TypeForm(X)` from
-    typing_extensions; `t.TypeForm` is an annotation alias, never called.
+    2026-10-24) count as stdlib. PEP 747 calls use `t.TypeForm(X)` through the facade's runtime re-binding
+    (ADR-028 amended 2026-10-29); importing `typing_extensions.TypeForm` at
+    consumers is banned.
   - Inside the facades too, an external library's types are named only through `t`
     aliases or `p` protocols; `u` never re-narrows or re-parses (`isinstance` chains,
     `ast.literal_eval`) what a `t`/`m` declaration validates once.
