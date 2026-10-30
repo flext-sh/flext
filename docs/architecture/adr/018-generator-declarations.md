@@ -169,6 +169,17 @@ return nonzero when any error remains. There is no silent skip, catch-and-contin
 success, broad capture that normalizes an unexpected exception, or parallel error
 framework. This supersedes the former invocation-wide abort requirement, without
 admitting dependent publication after a failed prerequisite.
+
+Operational planning state, repository outcomes and candidate-plan coordination
+use the existing mutable model preset and retain their typed collaborators by
+reference. Expected domain outcomes select a typed branch before calling native
+operations; they are not represented by deliberately raised exceptions. Immutable
+file plans and authenticated source witnesses retain their existing protection.
+Real dependency exceptions are contained once at the responsible boundary with
+their causal evidence and failed outcome preserved. Existing aggregation retains
+structured failures for affected units rather than only concatenating messages.
+Typed owners supply legitimate defaults for optional inputs and require only
+non-derivable mandatory values; no error-triggered default substitutes for evidence.
 The bootstrap consolidation
 contract belongs to
 [ADR-014](014-family-part-shape-rope-codemod-rules.md#core-lazy-bootstrap);

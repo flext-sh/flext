@@ -21,11 +21,12 @@ affected documentation, tracker, skill, rule and command owners through root
 before implementation; consultation alone does not align a stale execution plan.
 Apply the operator's specification-preservation requirement in root `AGENTS.md`:
 present evidence and impacts and obtain an explicit operator decision before any
-simplification, reduction or deviation. For `gen`/`mod`, ADR-018 owns the approved
-small coherent transaction contract: the common barrier covers cooperating
-Make/Rope readers and writers, interrupted publication blocks readers, rollback
-touches only authenticated effects of that transaction, and native refresh is
-incremental. The active Bead records implementation and verification separately.
+simplification, reduction or deviation. For `gen`/`mod`, compose
+[ADR-018](../../docs/architecture/adr/018-generator-declarations.md), including its
+2026-10-29 error-handling amendment, with
+`~/agents/rules/runtime/atomic-effects.md` for the current cooperative publication,
+receipt and fix-forward recovery contracts. The active Bead records implementation
+and verification separately.
 Source validation, generated publication and installed consumption remain separate
 receipts under the existing verification owner.
 
