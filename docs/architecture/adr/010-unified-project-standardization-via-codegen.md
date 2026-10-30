@@ -94,8 +94,9 @@ below for other work or establish implementation acceptance.
 
 The typed catalog supplies the common interface through `make help` and the
 [generated public verb matrix](../../guides/make-commands.md#public-verb-matrix).
-The existing documentation generator owns that section in the canonical guide and
-its member projections; surrounding guide prose remains authored. Original source
+The existing documentation generator owns the catalog and test-contract sections in
+the canonical guide and its member projections; surrounding guide prose remains
+authored. Original source
 observations stay attached to the same guarded publication. This requirement does
 not establish completed implementation or convergence.
 Each operation retains its own effect; callers do not invent selectors or aliases.

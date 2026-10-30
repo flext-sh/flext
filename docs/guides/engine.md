@@ -60,6 +60,25 @@ transport mirrors while rewiring the existing planner and renderer; do not
 replace them with another wrapper model or another source scan. Pydantic remains
 the owner of validated input and publication contracts.
 
+The approved facade-planner cutover is defined by
+[ADR-018's nested projection contract](../architecture/adr/018-generator-declarations.md#nested-facade-projection).
+Rewrite `codegen_facades.py` as a few declarative composition lines over the
+existing families and add facade planning to the existing workspace DSL. Retire
+`CodegenFacadeSyntax` and its authored CST/AST routes through the same consumer
+cutover. Do not relocate the monolith, conceal it in a wrapper or reproduce its
+visitors over Rope syntax nodes. Reuse native queries and utility operations;
+the existing candidate and publisher retain their owners. Preserve functionality
+and prove net code reduction over the complete change. This is the accepted
+target, not a receipt of implementation or runtime recovery.
+
+The same ADR owns scope-aware error handling: existing typed results/models and
+the publisher retain the cause, traceback, context and reached/unreached work.
+A failed local unit blocks unsafe dependents while proven independent cohorts
+continue; any error makes the final command nonzero. Preserve valid effects and
+WIP. Neither silent continuation nor broad exception capture that reports
+unexpected failure as success is an error-handling strategy; add no parallel
+error framework.
+
 Initializer import rendering uses complete declared module identities. It may
 shorten a target relative to the current package only when both identities share
 their actual root. An underscore prefix or a repeated private path segment never

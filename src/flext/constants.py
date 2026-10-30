@@ -31,8 +31,8 @@ class FlextRootConstants(
     flext_observability_c,
     flext_plugin_c,
     flext_tests_c,
-    c,
     flext_grpc_c,
+    c,
 ):
     """Workspace root constants facade — access via c.Root.*.
 

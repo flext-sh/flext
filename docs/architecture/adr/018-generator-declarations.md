@@ -127,6 +127,25 @@ ancestor lazy exports are planned and published as one authenticated candidate, 
 source without importing the stale package being repaired. Callers use the nearest
 composed facade at every stage (ADR-028 [Decision 10](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
 
+**Facade-planner cutover, approved 2026-10-29; implementation and acceptance
+pending.** Replace the complete `codegen_facades.py` monolith with a few
+declarative composition lines over the existing `c/t/p/m/u` owners. Extend the
+existing native workspace DSL with facade planning, reusing its invocation-owned
+session, queries, bindings and native utility operations. Retire
+`CodegenFacadeSyntax` and the authored CST/AST projection paths with their complete
+consumer closure. Moving that implementation, wrapping it or reproducing its
+visitors through native syntax nodes is not the cutover. Preserve every consumed
+capability and make the complete change net-negative in code; no parallel engine,
+semantic transport mirror, index, scanner or publisher is introduced.
+
+The existing [engine guide](../../guides/engine.md) and
+[Infra execution contract](../../../flext-infra/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine)
+apply this target. Acceptance re-exercises the original public failure, then
+generation across FLEXT, AI Hub, OUD and their governed subprojects with their
+selected physical environments. Preserve pilot order and coverage, runtime-first
+proof, frozen analyzer policy, full native gates and integrated evidence; a
+shorter source file or an isolated passing consumer does not prove completion.
+
 Planning and runtime acceptance are different boundaries. Planning consumes the
 source-authenticated native workspace model, including candidate overlays,
 without executing the target package. Acceptance exercises the generated public
@@ -140,9 +159,17 @@ and consumed MRO capabilities. Static and lazy bindings account for declared
 eager metadata without lifting child exports into ancestors. Missing targets,
 colliding identities and invalid ownership fail explicitly.
 
-Generation retains the first causal failure and the publisher's confirmed
-effects. It does not catch an import failure and continue publishing other
-repositories. Unreached work remains unexecuted. The bootstrap consolidation
+**Error-handling amendment, 2026-10-29.** Generation handles operational and
+domain failures through the existing typed models/results and publisher at the
+smallest coherent transaction or cohort. Diagnostics retain the original cause,
+traceback and scope context. A local failure does not abort proven independent
+units; an integrity failure stops its unsafe dependents. Account explicitly for
+failed and unreached work, preserve confirmed effects and concurrent WIP, and
+return nonzero when any error remains. There is no silent skip, catch-and-continue
+success, broad capture that normalizes an unexpected exception, or parallel error
+framework. This supersedes the former invocation-wide abort requirement, without
+admitting dependent publication after a failed prerequisite.
+The bootstrap consolidation
 contract belongs to
 [ADR-014](014-family-part-shape-rope-codemod-rules.md#core-lazy-bootstrap);
 `flext-s9r3a` and `flext-1engx.15` retain implementation ownership under the
@@ -389,9 +416,10 @@ consumes this contract and links back to this decision.
 Order of execution (operator): law → extermination of lists, manual declarations and
 their permissions → generator/detector/fix repair → census by the validator → automatic
 correction (`make mod`) → consumers → strict compliance → close. One bead per phase;
-work in the authorized shared-workspace boundary; never roll back unrelated work;
-never a manual mass fix. The amendment above alone authorizes guarded reversal
-of an unsuccessful transaction's own effects.
+work in the authorized shared-workspace boundary; preserve published effects and
+concurrent WIP; never a manual mass fix. The 2026-10-29 recovery supersession
+above requires authenticated fix-forward reconciliation of an unsuccessful
+transaction's partial effects, without restoring its preimages.
 
 ## Consequences
 
@@ -419,16 +447,20 @@ of an unsuccessful transaction's own effects.
   (`make.generation_profile_path`, `modification_profile_path`) show no repeated
   parse of unchanged source across phases. Changed paths refresh incrementally
   in the same engine; a second consecutive `make gen` has zero artifact effects.
-- No partial transaction (campaign `flext-pipol`): a planning failure leaves
-  that transaction's live destinations untouched. A publication/validation
-  failure reverses only its authenticated owned effects before readers are
-  admitted; completed earlier transactions remain intact and the invocation
-  remains failed.
+- Faithful partial-effect evidence (campaign `flext-pipol`): a planning failure
+  leaves that transaction's live destinations untouched. A publication/validation
+  failure preserves every confirmed effect and records the exact reached and
+  unreached work with the first causal failure. Completed earlier transactions
+  and concurrent WIP remain intact; the invocation remains failed. Recovery
+  corrects forward from freshly authenticated inputs and current target states.
 - Cooperative visibility and recovery (accepted contract, implementation
   pending): concurrent Make/Rope readers observe only a committed transaction
-  or a proven preimage. A crash between file/index/directory effects leaves a
-  durable interruption that blocks readers until guarded recovery. Injected
-  failure restores only owned effects; conflicting external WIP is preserved.
+  admitted through the existing barrier and postcondition checks. A crash
+  between file/index/directory effects leaves a faithful durable interruption
+  that blocks readers until authenticated fix-forward recovery is proved.
+  Injected failure preserves partial effects and conflicting external WIP;
+  recovery validates fresh source/target observations under the same CAS,
+  barrier and scope before admitting readers, never by restoring an old image.
 - Bounded admission (accepted contract, implementation pending): prove the
   five-second transaction and sixty-second Make budgets, including barrier
   waits, staged validation, incremental refresh and recovery. Full slice gates

@@ -95,10 +95,13 @@ and conformance use their declared public verbs; `check` is read-only.
 > described below is retired.
 
 The typed `make.verbs` catalog owns builtin names, profile applicability, descriptions
-and named inputs. Its [public verb matrix](../../guides/make-commands.md#public-verb-matrix)
-must be generated in the existing guide by the documentation owner, preserving the
-surrounding authored sections. Member guide projections consume that same planned
-content. The matrix is not a second hand-maintained command list in this ADR.
+and named inputs. Its
+[public verb matrix](../../guides/make-commands.md#public-verb-matrix) and test-contract
+section must be generated in the existing guide by the documentation owner,
+preserving the surrounding authored sections. The test decision points to ADR-029;
+command names and descriptions come from the catalog. Member guide projections
+consume that same planned content. The matrix is not a second hand-maintained
+command list in this ADR.
 Declared product extensions join it through the repository's existing typed registry.
 Diagnostics, profiling, documentation actions and former subverbs belong to their
 operation's existing owner, not additional common public targets. `make help` and
@@ -108,8 +111,9 @@ source of truth.
 This projection is part of the existing documentation bundle and guarded publisher,
 not a separate script or generation lifecycle. Original guide and configuration
 observations accompany the publication plans; a changed source rejects publication.
-The declared guide and its unique section are required. Missing or ambiguous sections
-fail without replacing authored content. This is the projection contract; runtime and
+The declared guide and its unique, non-overlapping sections are required. Missing or
+ambiguous sections fail without replacing authored content. This is the projection
+contract; runtime and
 convergence evidence remain required before acceptance.
 
 The two test operations follow
