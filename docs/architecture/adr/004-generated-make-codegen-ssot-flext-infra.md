@@ -21,6 +21,8 @@
 - **Scope:** generated Makefiles, repository conformance, command routing, and custom
   project handlers.
 - **Tracking:** `mro-wkii.17`
+- **Current consolidation:** `flext-9t6gn`; dated
+  [restart handoff](../../ways-of-working/make-consolidation-handoff.md).
 
 <!-- mro-wkii.17.6 (agent: codex) — replace competing Make owners with the single conform pipeline. -->
 

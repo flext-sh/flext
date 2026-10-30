@@ -56,7 +56,7 @@ Community of 169 nodes
 | \_normalize_imports                        | Function | flext-infra/src/flext_infra/fixers/transformer_fixer.py        | 218-229 |
 | \_fix_file                                 | Function | flext-infra/src/flext_infra/fixers/transformer_fixer.py        | 231-351 |
 | \_build_transformer                        | Function | flext-infra/src/flext_infra/fixers/transformer_fixer.py        | 354-421 |
-| FlextInfraCanonicalAliasGate               | Class    | flext-infra/src/flext_infra/gates/canonical_alias.py           | 28-314  |
+| FlextInfraGatesCanonicalAlias               | Class    | flext-infra/src/flext_infra/gates/canonical_alias.py           | 28-314  |
 | \_normalized_project_name                  | Function | flext-infra/src/flext_infra/gates/canonical_alias.py           | 44-46   |
 | \_alias_files                              | Function | flext-infra/src/flext_infra/gates/canonical_alias.py           | 49-69   |
 | check                                      | Function | flext-infra/src/flext_infra/gates/canonical_alias.py           | 72-132  |

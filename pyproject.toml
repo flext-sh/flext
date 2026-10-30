@@ -1,10 +1,3 @@
-# @flext-generated: continuous
-# @flext-owner: flext-infra/config/codegen.yaml + flext-infra/src/flext_infra/templates/project/base/pyproject.toml.j2
-# @flext-adjust: MANAGED=conflict_sections + overwrite_project_keys. CUSTOM=preserve_project_keys and [tool.*] outside conflict_sections. Never edit this projection.
-# @flext-regenerate: make gen
-
-# [CUSTOM] name, description, authors, maintainers, scripts, entry-points, classifiers, keywords, license, urls, readme, version, dependencies, optional-dependencies
-# [MANAGED] requires-python
 [project]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -37,6 +30,7 @@ name = "flext"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
 version = "0.12.0"
+
 [[project.authors]]
 email = "team@flext.sh"
 name = "FLEXT Team"
@@ -52,17 +46,268 @@ Documentation = "https://docs.flext.sh"
 Homepage = "https://github.com/flext-sh/flext"
 Repository = "https://github.com/flext-sh/flext"
 
-# [MANAGED] build-system
 [build-system]
 build-backend = "hatchling.build"
 requires = ["hatchling"]
 
-# [MANAGED] tool.codespell
+[dependency-groups]
+codegen = [
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "actionlint-py>=1.7.12.24",
+  "bandit>=1.9.4",
+  "deptry",
+  "editables>=0.6",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "hypothesis",
+  "mkdocs",
+  "mkdocs-autorefs",
+  "mkdocs-exclude>=1.0.2",
+  "mkdocs-git-revision-date-localized-plugin>=1.5.4",
+  "mkdocs-material>=9.7.7",
+  "mkdocs-mermaid2-plugin>=1.2.3",
+  "mkdocs-minify-plugin>=0.8.0",
+  "mkdocs-redirects>=1.2.3",
+  "mkdocs-section-index>=0.3.12",
+  "mkdocstrings>=1.0.6",
+  "mkdocstrings-python>=2.0.8",
+  "msgpack-types",
+  "mypy>=2.3.1",
+  "platformdirs>=4.12.0",
+  "pymdown-extensions",
+  "pyrefly>=1.2.0",
+  "pyright>=1.1.411",
+  "pytest>=9.1.1",
+  "pytest-asyncio",
+  "pytest-benchmark",
+  "pytest-cov",
+  "pytest-markdown-docs",
+  "pytest-randomly>=4.1.0",
+  "pytest-reportlog",
+  "pytest-testmon>=2.2.0",
+  "pytest-timeout",
+  "pytest-xdist",
+  "ruff>=0.16.5",
+  "rumdl>=0.2.62",
+  "types-cachetools>=7.0.0.20260713",
+  "types-cffi>=2.1.0.20260827",
+  "types-click>=7.1.8",
+  "types-defusedxml>=0.7.0.20260504",
+  "types-docker>=7.2.0.20260827",
+  "types-grpcio",
+  "types-jsonschema>=4.26.0.20260518",
+  "types-ldap3>=2.9.13.20260827",
+  "types-Markdown",
+  "types-openpyxl>=3.1.5.20260827",
+  "types-paramiko>=5.0.0.20260724",
+  "types-protobuf>=7.35.1.20260827",
+  "types-psutil>=7.2.2.20260827",
+  "types-psycopg2>=2.9.21.20260724",
+  "types-pyasn1>=0.6.0.20260724",
+  "types-pyopenssl>=24.1.0.20240722",
+  "types-python-dateutil>=2.9.0.20260807",
+  "types-pyyaml>=6.0.12.20260815",
+  "types-redis>=4.6.0.20241004",
+  "types-requests>=2.33.0.20260712",
+  "types-setuptools>=84.0.0.20260812",
+  "types-tabulate>=0.10.0.20260508",
+  "types-toml>=0.10.8.20260518",
+  "vulture>=2.16",
+  "yamlfix>=1.19.1",
+]
+dev = [
+  "types-networkx",
+  "actionlint-py>=1.7.12.24",
+  "aiohttp>=3.14.5",
+  "annotated-types>=0.8.0",
+  "bandit>=1.9.4",
+  "bcrypt>=5.0.0",
+  "beartype>=0.22.9",
+  "beartype>=0.23.1",
+  "click>=8.5.0",
+  "defusedxml>=0.7.1",
+  "dependency-injector>=4.49.1",
+  "deptry",
+  "docker>=7.2.0",
+  "editables>=0.6",
+  "fastapi>=0.143.0",
+  "fastmcp>=4.1.0",
+  "flask>=3.1.3",
+  "flext-api @ git+https://github.com/flext-sh/flext-api.git@0.12.0-dev",
+  "flext-api @ git+https://github.com/flext-sh/flext-api.git@0.12.0-dev",
+  "flext-api @ git+https://github.com/flext-sh/flext-api.git@0.12.0-dev",
+  "flext-auth @ git+https://github.com/flext-sh/flext-auth.git@0.12.0-dev",
+  "flext-auth @ git+https://github.com/flext-sh/flext-auth.git@0.12.0-dev",
+  "flext-auth @ git+https://github.com/flext-sh/flext-auth.git@0.12.0-dev",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+  "flext-db-oracle @ git+https://github.com/flext-sh/flext-db-oracle.git@0.12.0-dev",
+  "flext-db-oracle @ git+https://github.com/flext-sh/flext-db-oracle.git@0.12.0-dev",
+  "flext-db-oracle @ git+https://github.com/flext-sh/flext-db-oracle.git@0.12.0-dev",
+  "flext-dbt-ldap @ git+https://github.com/flext-sh/flext-dbt-ldap.git@0.12.0-dev",
+  "flext-dbt-ldif @ git+https://github.com/flext-sh/flext-dbt-ldif.git@0.12.0-dev",
+  "flext-dbt-oracle @ git+https://github.com/flext-sh/flext-dbt-oracle.git@0.12.0-dev",
+  "flext-dbt-oracle-wms @ git+https://github.com/flext-sh/flext-dbt-oracle-wms.git@0.12.0-dev",
+  "flext-grpc @ git+https://github.com/flext-sh/flext-grpc.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
+  "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
+  "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
+  "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
+  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
+  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
+  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
+  "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
+  "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
+  "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
+  "flext-observability @ git+https://github.com/flext-sh/flext-observability.git@0.12.0-dev",
+  "flext-oracle-oic @ git+https://github.com/flext-sh/flext-oracle-oic.git@0.12.0-dev",
+  "flext-oracle-oic @ git+https://github.com/flext-sh/flext-oracle-oic.git@0.12.0-dev",
+  "flext-oracle-oic @ git+https://github.com/flext-sh/flext-oracle-oic.git@0.12.0-dev",
+  "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
+  "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
+  "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
+  "flext-plugin @ git+https://github.com/flext-sh/flext-plugin.git@0.12.0-dev",
+  "flext-quality @ git+https://github.com/flext-sh/flext-quality.git@0.12.0-dev",
+  "flext-tap-ldap @ git+https://github.com/flext-sh/flext-tap-ldap.git@0.12.0-dev",
+  "flext-tap-ldif @ git+https://github.com/flext-sh/flext-tap-ldif.git@0.12.0-dev",
+  "flext-tap-oracle @ git+https://github.com/flext-sh/flext-tap-oracle.git@0.12.0-dev",
+  "flext-tap-oracle-oic @ git+https://github.com/flext-sh/flext-tap-oracle-oic.git@0.12.0-dev",
+  "flext-tap-oracle-wms @ git+https://github.com/flext-sh/flext-tap-oracle-wms.git@0.12.0-dev",
+  "flext-target-ldap @ git+https://github.com/flext-sh/flext-target-ldap.git@0.12.0-dev",
+  "flext-target-ldif @ git+https://github.com/flext-sh/flext-target-ldif.git@0.12.0-dev",
+  "flext-target-oracle @ git+https://github.com/flext-sh/flext-target-oracle.git@0.12.0-dev",
+  "flext-target-oracle-oic @ git+https://github.com/flext-sh/flext-target-oracle-oic.git@0.12.0-dev",
+  "flext-target-oracle-wms @ git+https://github.com/flext-sh/flext-target-oracle-wms.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
+  "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
+  "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
+  "gitdb>=4.0.12",
+  "GitPython>=3.2.1",
+  "grpcio>=1.84.0",
+  "httpx>=0.28.1",
+  "hypothesis",
+  "jinja2>=3.1.6",
+  "jsonschema>=4.26.0",
+  "ldap3>=2.10.2rc4",
+  "libcst>=1.9.0",
+  "Markdown>=3.11.1",
+  "meltano>=4.4.1",
+  "mkdocs-autorefs",
+  "mkdocs-exclude>=1.0.2",
+  "mkdocs-git-revision-date-localized-plugin>=1.5.4",
+  "mkdocs-material>=9.7.7",
+  "mkdocs-mermaid2-plugin>=1.2.3",
+  "mkdocs-minify-plugin>=0.8.0",
+  "mkdocs-redirects>=1.2.3",
+  "mkdocs-section-index>=0.3.12",
+  "mkdocs",
+  "mkdocs>=1.6.1",
+  "mkdocstrings-python>=2.0.8",
+  "mkdocstrings-python>=2.0.9",
+  "mkdocstrings>=1.0.6",
+  "msgpack-types",
+  "msgpack>=1.2.3",
+  "mypy>=2.3.1",
+  "openpyxl>=3.1.5",
+  "oracledb>=26.0.1",
+  "packaging>=26.3",
+  "platformdirs>=4.12.0",
+  "protobuf>=7.36.2",
+  "psutil>=7.2.2",
+  "psycopg2-binary>=2.9.13",
+  "pydantic-settings>=2.15.0",
+  "pydantic>=2.14.1,<3",
+  "PyJWT>=2.15.1",
+  "pymdown-extensions",
+  "pymdown-extensions>=11.0.1",
+  "pyrefly>=1.2.0",
+  "pyright>=1.1.411",
+  "pytest-asyncio",
+  "pytest-benchmark",
+  "pytest-cov",
+  "pytest-markdown-docs",
+  "pytest-markdown-docs>=0.9.2",
+  "pytest-randomly>=4.1.0",
+  "pytest-reportlog",
+  "pytest-testmon>=2.2.0",
+  "pytest-timeout",
+  "pytest-timeout>=2.4.0",
+  "pytest-xdist",
+  "pytest>=9.1.1",
+  "python-docx>=1.2.0",
+  "python-on-whales>=0.81.0",
+  "python-pptx>=1.0.2",
+  "pyyaml>=6.0.3",
+  "redis>=8.1.0",
+  "requests>=2.34.2",
+  "rope @ git+https://github.com/marlon-costa-dc/rope.git@becece05c27c3189b12a06f3fbfa28ad62a98a96",
+  "ruamel.yaml>=0.19.1",
+  "ruff>=0.16.5",
+  "rumdl>=0.2.62",
+  "schedule>=1.2.2",
+  "singer-sdk>=0.54.8",
+  "sqlalchemy>=2.0.54",
+  "starlette>=1.8.0",
+  "structlog>=25.5.0,<27",
+  "structlog>=25.5.0",
+  "structlog>=26.1.0,<27",
+  "structlog>=26.1.0",
+  "tomlkit>=0.15.1",
+  "typer>=0.27.3",
+  "types-cachetools>=7.0.0.20260713",
+  "types-cffi>=2.1.0.20260827",
+  "types-click>=7.1.8",
+  "types-defusedxml>=0.7.0.20260504",
+  "types-docker>=7.2.0.20260827",
+  "types-grpcio",
+  "types-jsonschema>=4.26.0.20260518",
+  "types-ldap3>=2.9.13.20260827",
+  "types-Markdown",
+  "types-openpyxl>=3.1.5.20260827",
+  "types-paramiko>=5.0.0.20260724",
+  "types-protobuf>=7.35.1.20260827",
+  "types-psutil>=7.2.2.20260827",
+  "types-psycopg2>=2.9.21.20260724",
+  "types-pyasn1>=0.6.0.20260724",
+  "types-pyopenssl>=24.1.0.20240722",
+  "types-python-dateutil>=2.9.0.20260807",
+  "types-pyyaml>=6.0.12.20260815",
+  "types-redis>=4.6.0.20241004",
+  "types-requests>=2.33.0.20260712",
+  "types-setuptools>=84.0.0.20260812",
+  "types-tabulate>=0.10.0.20260508",
+  "types-toml>=0.10.8.20260518",
+  "typing-extensions>=4.16.0",
+  "uvicorn>=0.54.0",
+  "vulture>=2.16",
+  "werkzeug>=3.1.9",
+  "yamlfix>=1.19.1",
+]
+
 [tool.codespell]
 check-filenames = true
 ignore-words-list = "crate,nd"
 
-# [MANAGED] tool.coverage
 [tool.coverage.report]
 exclude_also = [
   "if _t.TYPE_CHECKING:",
@@ -81,16 +326,13 @@ omit = [
 ]
 source = ["src"]
 
-# [MANAGED] tool.deptry
 [tool.deptry]
 known_first_party = ["flext"]
-optional_dependencies_dev_groups = ["dev"]
+optional_dependencies_dev_groups = []
 
-# [CUSTOM] tool.flext
 [tool.flext.docs]
 package_name = "flext"
 
-# [MANAGED] tool.hatch.build
 [tool.hatch.build.targets.sdist]
 only-include = ["src/flext"]
 
@@ -106,11 +348,9 @@ only-include = ["src/flext"]
 [tool.hatch.build.targets.wheel.sources]
 "src/flext" = "flext"
 
-# [CUSTOM] tool.hatch
 [tool.hatch.metadata]
 allow-direct-references = true
 
-# [MANAGED] tool.mypy
 [tool.mypy]
 allow_redefinition = true
 check_untyped_defs = true
@@ -137,13 +377,11 @@ warn_unused_ignores = true
 follow_untyped_imports = true
 module = ["rope.*"]
 
-# [MANAGED] tool.pydantic-mypy
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 
-# [MANAGED] tool.pyrefly
 [tool.pyrefly]
 disable-project-excludes-heuristics = true
 project-excludes = [
@@ -291,7 +529,6 @@ unused-coroutine = "error"
 unused-ignore = "error"
 variance-mismatch = "error"
 
-# [MANAGED] tool.pyright
 [tool.pyright]
 exclude = [
   "**/*.bak",
@@ -1193,7 +1430,6 @@ extraPaths = [
 reportPrivateUsage = "error"
 root = "tests"
 
-# [MANAGED] tool.pytest.ini_options
 [tool.pytest.ini_options]
 addopts = [
   "--benchmark-disable",
@@ -1231,7 +1467,6 @@ python_classes = ["Test*"]
 python_files = ["*_test.py", "*_tests.py", "test_*.py"]
 testpaths = ["tests"]
 
-# [MANAGED] tool.ruff
 [tool.ruff]
 extend-exclude = [
   "**/*.bak",
@@ -1396,13 +1631,11 @@ convention = "google"
 [tool.ruff.lint.pylint]
 allow-dunder-method-names = ["__base__", "__bases__"]
 
-# [MANAGED] tool.tomlsort
 [tool.tomlsort]
 all = true
 in_place = true
 sort_first = ["project", "build-system", "tool", "dependency-groups"]
 
-# [CUSTOM] tool.uv
 [tool.uv]
 constraint-dependencies = [
   "pillow>=13.0.0",
@@ -1549,272 +1782,15 @@ members = [
   "flext-web",
 ]
 
-# [MANAGED] tool.vulture
 [tool.vulture]
 exclude = ["*/_protocols/*"]
 min_confidence = 100
 paths = ["src"]
 verbose = false
 
-# [MANAGED] tool.yamlfix
 [tool.yamlfix]
 explicit_start = false
 line_length = 88
 preserve_quotes = true
 section_whitelines = 1
 whitelines = 1
-
-# [MANAGED] dependency-groups
-[dependency-groups]
-codegen = [
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "actionlint-py>=1.7.12.24",
-  "bandit>=1.9.4",
-  "deptry",
-  "editables>=0.6",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "hypothesis",
-  "mkdocs",
-  "mkdocs-autorefs",
-  "mkdocs-exclude>=1.0.2",
-  "mkdocs-git-revision-date-localized-plugin>=1.5.4",
-  "mkdocs-material>=9.7.7",
-  "mkdocs-mermaid2-plugin>=1.2.3",
-  "mkdocs-minify-plugin>=0.8.0",
-  "mkdocs-redirects>=1.2.3",
-  "mkdocs-section-index>=0.3.12",
-  "mkdocstrings>=1.0.6",
-  "mkdocstrings-python>=2.0.8",
-  "msgpack-types",
-  "mypy>=2.3.1",
-  "platformdirs>=4.12.0",
-  "pymdown-extensions",
-  "pyrefly>=1.2.0",
-  "pyright>=1.1.411",
-  "pytest>=9.1.1",
-  "pytest-asyncio",
-  "pytest-benchmark",
-  "pytest-cov",
-  "pytest-markdown-docs",
-  "pytest-randomly>=4.1.0",
-  "pytest-reportlog",
-  "pytest-testmon>=2.2.0",
-  "pytest-timeout",
-  "pytest-xdist",
-  "ruff>=0.16.5",
-  "rumdl>=0.2.62",
-  "types-cachetools>=7.0.0.20260713",
-  "types-cffi>=2.1.0.20260827",
-  "types-click>=7.1.8",
-  "types-defusedxml>=0.7.0.20260504",
-  "types-docker>=7.2.0.20260827",
-  "types-grpcio",
-  "types-jsonschema>=4.26.0.20260518",
-  "types-ldap3>=2.9.13.20260827",
-  "types-Markdown",
-  "types-openpyxl>=3.1.5.20260827",
-  "types-paramiko>=5.0.0.20260724",
-  "types-protobuf>=7.35.1.20260827",
-  "types-psutil>=7.2.2.20260827",
-  "types-psycopg2>=2.9.21.20260724",
-  "types-pyasn1>=0.6.0.20260724",
-  "types-pyopenssl>=24.1.0.20240722",
-  "types-python-dateutil>=2.9.0.20260807",
-  "types-pyyaml>=6.0.12.20260815",
-  "types-redis>=4.6.0.20241004",
-  "types-requests>=2.33.0.20260712",
-  "types-setuptools>=84.0.0.20260812",
-  "types-tabulate>=0.10.0.20260508",
-  "types-toml>=0.10.8.20260518",
-  "vulture>=2.16",
-  "yamlfix>=1.19.1",
-]
-dev = [
-  "types-networkx",
-  "actionlint-py>=1.7.12.24",
-  "aiohttp>=3.14.5",
-  "annotated-types>=0.8.0",
-  "bandit>=1.9.4",
-  "bcrypt>=5.0.0",
-  "beartype>=0.22.9",
-  "beartype>=0.23.1",
-  "click>=8.5.0",
-  "defusedxml>=0.7.1",
-  "dependency-injector>=4.49.1",
-  "deptry",
-  "docker>=7.2.0",
-  "editables>=0.6",
-  "fastapi>=0.143.0",
-  "fastmcp>=4.1.0",
-  "flask>=3.1.3",
-  "flext-api @ git+https://github.com/flext-sh/flext-api.git@0.12.0-dev",
-  "flext-api @ git+https://github.com/flext-sh/flext-api.git@0.12.0-dev",
-  "flext-api @ git+https://github.com/flext-sh/flext-api.git@0.12.0-dev",
-  "flext-auth @ git+https://github.com/flext-sh/flext-auth.git@0.12.0-dev",
-  "flext-auth @ git+https://github.com/flext-sh/flext-auth.git@0.12.0-dev",
-  "flext-auth @ git+https://github.com/flext-sh/flext-auth.git@0.12.0-dev",
-  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
-  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
-  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
-  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
-  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
-  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
-  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
-  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
-  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
-  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
-  "flext-db-oracle @ git+https://github.com/flext-sh/flext-db-oracle.git@0.12.0-dev",
-  "flext-db-oracle @ git+https://github.com/flext-sh/flext-db-oracle.git@0.12.0-dev",
-  "flext-db-oracle @ git+https://github.com/flext-sh/flext-db-oracle.git@0.12.0-dev",
-  "flext-dbt-ldap @ git+https://github.com/flext-sh/flext-dbt-ldap.git@0.12.0-dev",
-  "flext-dbt-ldif @ git+https://github.com/flext-sh/flext-dbt-ldif.git@0.12.0-dev",
-  "flext-dbt-oracle @ git+https://github.com/flext-sh/flext-dbt-oracle.git@0.12.0-dev",
-  "flext-dbt-oracle-wms @ git+https://github.com/flext-sh/flext-dbt-oracle-wms.git@0.12.0-dev",
-  "flext-grpc @ git+https://github.com/flext-sh/flext-grpc.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
-  "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
-  "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
-  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
-  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
-  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
-  "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
-  "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
-  "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
-  "flext-observability @ git+https://github.com/flext-sh/flext-observability.git@0.12.0-dev",
-  "flext-oracle-oic @ git+https://github.com/flext-sh/flext-oracle-oic.git@0.12.0-dev",
-  "flext-oracle-oic @ git+https://github.com/flext-sh/flext-oracle-oic.git@0.12.0-dev",
-  "flext-oracle-oic @ git+https://github.com/flext-sh/flext-oracle-oic.git@0.12.0-dev",
-  "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
-  "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
-  "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
-  "flext-plugin @ git+https://github.com/flext-sh/flext-plugin.git@0.12.0-dev",
-  "flext-quality @ git+https://github.com/flext-sh/flext-quality.git@0.12.0-dev",
-  "flext-tap-ldap @ git+https://github.com/flext-sh/flext-tap-ldap.git@0.12.0-dev",
-  "flext-tap-ldif @ git+https://github.com/flext-sh/flext-tap-ldif.git@0.12.0-dev",
-  "flext-tap-oracle @ git+https://github.com/flext-sh/flext-tap-oracle.git@0.12.0-dev",
-  "flext-tap-oracle-oic @ git+https://github.com/flext-sh/flext-tap-oracle-oic.git@0.12.0-dev",
-  "flext-tap-oracle-wms @ git+https://github.com/flext-sh/flext-tap-oracle-wms.git@0.12.0-dev",
-  "flext-target-ldap @ git+https://github.com/flext-sh/flext-target-ldap.git@0.12.0-dev",
-  "flext-target-ldif @ git+https://github.com/flext-sh/flext-target-ldif.git@0.12.0-dev",
-  "flext-target-oracle @ git+https://github.com/flext-sh/flext-target-oracle.git@0.12.0-dev",
-  "flext-target-oracle-oic @ git+https://github.com/flext-sh/flext-target-oracle-oic.git@0.12.0-dev",
-  "flext-target-oracle-wms @ git+https://github.com/flext-sh/flext-target-oracle-wms.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
-  "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
-  "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
-  "gitdb>=4.0.12",
-  "GitPython>=3.2.1",
-  "grpcio>=1.84.0",
-  "httpx>=0.28.1",
-  "hypothesis",
-  "jinja2>=3.1.6",
-  "jsonschema>=4.26.0",
-  "ldap3>=2.10.2rc4",
-  "libcst>=1.9.0",
-  "Markdown>=3.11.1",
-  "meltano>=4.4.1",
-  "mkdocs-autorefs",
-  "mkdocs-exclude>=1.0.2",
-  "mkdocs-git-revision-date-localized-plugin>=1.5.4",
-  "mkdocs-material>=9.7.7",
-  "mkdocs-mermaid2-plugin>=1.2.3",
-  "mkdocs-minify-plugin>=0.8.0",
-  "mkdocs-redirects>=1.2.3",
-  "mkdocs-section-index>=0.3.12",
-  "mkdocs",
-  "mkdocs>=1.6.1",
-  "mkdocstrings-python>=2.0.8",
-  "mkdocstrings-python>=2.0.9",
-  "mkdocstrings>=1.0.6",
-  "msgpack-types",
-  "msgpack>=1.2.3",
-  "mypy>=2.3.1",
-  "openpyxl>=3.1.5",
-  "oracledb>=26.0.1",
-  "packaging>=26.3",
-  "platformdirs>=4.12.0",
-  "protobuf>=7.36.2",
-  "psutil>=7.2.2",
-  "psycopg2-binary>=2.9.13",
-  "pydantic-settings>=2.15.0",
-  "pydantic>=2.14.1,<3",
-  "PyJWT>=2.15.1",
-  "pymdown-extensions",
-  "pymdown-extensions>=11.0.1",
-  "pyrefly>=1.2.0",
-  "pyright>=1.1.411",
-  "pytest-asyncio",
-  "pytest-benchmark",
-  "pytest-cov",
-  "pytest-markdown-docs",
-  "pytest-markdown-docs>=0.9.2",
-  "pytest-randomly>=4.1.0",
-  "pytest-reportlog",
-  "pytest-testmon>=2.2.0",
-  "pytest-timeout",
-  "pytest-timeout>=2.4.0",
-  "pytest-xdist",
-  "pytest>=9.1.1",
-  "python-docx>=1.2.0",
-  "python-on-whales>=0.81.0",
-  "python-pptx>=1.0.2",
-  "pyyaml>=6.0.3",
-  "redis>=8.1.0",
-  "requests>=2.34.2",
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@becece05c27c3189b12a06f3fbfa28ad62a98a96",
-  "ruamel.yaml>=0.19.1",
-  "ruff>=0.16.5",
-  "rumdl>=0.2.62",
-  "schedule>=1.2.2",
-  "singer-sdk>=0.54.8",
-  "sqlalchemy>=2.0.54",
-  "starlette>=1.8.0",
-  "structlog>=25.5.0,<27",
-  "structlog>=25.5.0",
-  "structlog>=26.1.0,<27",
-  "structlog>=26.1.0",
-  "tomlkit>=0.15.1",
-  "typer>=0.27.3",
-  "types-cachetools>=7.0.0.20260713",
-  "types-cffi>=2.1.0.20260827",
-  "types-click>=7.1.8",
-  "types-defusedxml>=0.7.0.20260504",
-  "types-docker>=7.2.0.20260827",
-  "types-grpcio",
-  "types-jsonschema>=4.26.0.20260518",
-  "types-ldap3>=2.9.13.20260827",
-  "types-Markdown",
-  "types-openpyxl>=3.1.5.20260827",
-  "types-paramiko>=5.0.0.20260724",
-  "types-protobuf>=7.35.1.20260827",
-  "types-psutil>=7.2.2.20260827",
-  "types-psycopg2>=2.9.21.20260724",
-  "types-pyasn1>=0.6.0.20260724",
-  "types-pyopenssl>=24.1.0.20240722",
-  "types-python-dateutil>=2.9.0.20260807",
-  "types-pyyaml>=6.0.12.20260815",
-  "types-redis>=4.6.0.20241004",
-  "types-requests>=2.33.0.20260712",
-  "types-setuptools>=84.0.0.20260812",
-  "types-tabulate>=0.10.0.20260508",
-  "types-toml>=0.10.8.20260518",
-  "typing-extensions>=4.16.0",
-  "uvicorn>=0.54.0",
-  "vulture>=2.16",
-  "werkzeug>=3.1.9",
-  "yamlfix>=1.19.1",
-]

@@ -80,7 +80,7 @@ an ambient installed export union. The consumer explanation in
 - Extended duplication gate covers consumer+family scope
 - Thresholds via `[tool.flext.project]` config SSOT
 - Semantic classifier: only executable behavior counts
-- Enforcement: `FlextInfraDuplicationGate` extended → ENFORCE-100+
+- Enforcement: `FlextInfraGatesDuplication` extended → ENFORCE-100+
 
 ### R3 — Layer Law (Declaration vs Behavior)
 

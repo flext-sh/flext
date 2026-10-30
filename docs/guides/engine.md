@@ -1,5 +1,12 @@
 # FLEXT Engine Law — Rope-Only Python Interpretation
 
+The active rewrite's [2026-10-30 handoff](../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/plan.md#handoff-de-retomada--2026-10-30-chat-01a18a11)
+records owners, source changes, unresolved bootstrap/candidate failures and exact
+runtime limits. Bead `flext-u9h2i` remains open. Existing templates also form the
+base for refactoring existing modules: the existing Infra Rope catalog assembles
+typed slot content, preserving authored code and native identity. See
+[ADR-018](../architecture/adr/018-generator-declarations.md#template-backed-native-refactoring-operator-clarification-2026-10-30).
+
 | Workspace declaration | Accepted decision |
 | --- | --- |
 | This page; the living census and wave status (beads `flext-pipol`, `flext-u9h2i`). | [ADR-028 Decision 17, amendment 2026-10-28](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17) |

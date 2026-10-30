@@ -173,6 +173,21 @@ outside the facades across 12 repositories.
   to completing this migration. This decision is the target contract, not evidence
   of implemented or verified consumer closure.
 
+  Amended 2026-10-29 (fix-forward/adopt, tracker keys
+  `operator-execute-more-with-less-law-20261028`,
+  `flext-wq1mo-complexity-campaign`): the first removal wave deleted
+  `MappingKV`, `SequenceOf`, `StrMapping` and siblings while their complete
+  consumer closure had not migrated, breaking non-migrated siblings fleet-wide;
+  the tree was repaired fix-forward by restoring those domain aliases in
+  `flext-core/src/flext_core/_typings/base.py` until the consumer migration
+  completes. The restoration is a managed transition, not a cancellation of
+  this decision: native collection annotations remain the target contract, the
+  consumer/rule/template closure migration resumes in the same campaign, and
+  `VariadicTuple`/`Pair`/`Triple`/`Quad`/`Quint` carry no restoration — they
+  continue through the deprecated-signature window to zero. Each wrapper's
+  removal closes only when its census reaches zero, external consumers
+  included.
+
   Modernizing `typing.List` or `typing.Dict` preserves the concrete native
   `list` or `dict` contract and does not require importing a `t` facade merely
   for that spelling. A rule must not propose an identity rewrite of an already
@@ -263,6 +278,10 @@ outside the facades across 12 repositories.
     outside the facades, the Pydantic way).
 
 ### Decision 10
+
+  The accepted [projector bootstrap dependency cut](018-generator-declarations.md#projector-bootstrap-dependency-cut)
+  preserves this import contract. Resolve the original models/projector dependency
+  cycle rather than granting producer-only defining-module imports.
 
   1. **Imports go through package lazy exports, never module paths or module objects.**
     Operator orders 2026-10-24 (verbatim): "violacao gravissima -> from

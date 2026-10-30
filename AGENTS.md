@@ -1039,6 +1039,13 @@ CLI + pytest plugin, **never imported at runtime**.
     ([using flext-core](docs/guides/using-flext-core.md#domain-models)).
 - **Typing:** never `Any`/`object`/concrete-class annotations; type via `t.*` aliases
   and `p.*` protocols; `T | None` (never `Optional`). A model is never a type.
+  Generic wrapper aliases (`MappingKV`, `SequenceOf`, `StrMapping`, …) are a managed
+  transition under [ADR-028 Decision 7](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7)
+  (amended 2026-10-29): restored fix-forward because premature removal broke
+  non-migrated consumers; native collection annotations remain the target, each
+  alias retires when its consumer census reaches zero. `VariadicTuple` and
+  tuple-arity wrappers carry no restoration and continue through the
+  deprecated-signature window.
 - **No owned typing stubs:** handwritten and generated first-party `.pyi`, custom
   stub distributions, stub generators, SDK-shaped shadow modules, and model-signature
   mirrors in `.py` are prohibited. Dependency contracts belong to the smallest

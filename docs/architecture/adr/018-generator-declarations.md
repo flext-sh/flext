@@ -117,6 +117,28 @@ This ADR owns the following fourteen generator declaration requirements:
 
 ### Nested facade projection
 
+#### Template-backed native refactoring (operator clarification 2026-10-30)
+
+Existing templates are the structural base for refactoring existing modules as
+well as creating absent declarations. The existing Infra Rope infrastructure
+catalogs native declarations and assembles their semantic content into the
+existing typed render context; templates fill their owned slots. Preserve
+authored bodies, execution order, identities and source trivia through native
+refactoring. This does not authorize another parser, parallel renderer, relocated
+monolith or manual generated-file repair. Reuse validated models and protocols
+by reference, with defaults for optional inputs and explicit required inputs.
+
+Candidate parse failure must preserve the original cause at the existing typed
+failure boundary. It must never select physical bytes in place of candidate
+bytes, parse a replacement module or inject that replacement into the native
+module cache. Repair the operation that produced the invalid candidate.
+
+This amendment states the accepted contract, not implementation acceptance.
+The [2026-10-30 handoff](../../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/plan.md#handoff-de-retomada--2026-10-30-chat-01a18a11)
+records source limits and failing runtime receipts; `flext-u9h2i` owns execution
+and closure. Shared-worktree adoption remains mandatory; no clean or quiet
+workspace prerequisite applies to this projection.
+
 The generator applies [ADR-014's semantic ownership](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership)
 recursively: a direct family domain facade composes the declarations in its private
 `_domain/` directory by MRO, and nested private directories repeat that pattern.
@@ -185,6 +207,30 @@ contract belongs to
 [ADR-014](014-family-part-shape-rope-codemod-rules.md#core-lazy-bootstrap);
 `flext-s9r3a` and `flext-1engx.15` retain implementation ownership under the
 `flext-brr3y` campaign.
+
+#### Projector bootstrap dependency cut
+
+The operator's 2026-10-29 decision is to decouple the existing projector while
+preserving every contract. Its original planning models and the same projection
+implementation must be available before importing the aggregate facades whose
+exports they repair. Initial Make/CLI selection elects that same projector through
+an acyclic public package boundary. Refactor the original declarations and their
+consumers as one dependency group; retain one model, projector, renderer and publisher.
+
+This is not an exception to
+[ADR-028 Decision 10](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10).
+Imports remain static through public package exports; no defining-module bypass,
+method-local import, mirrored DTO, compatibility alias, second CLI or hand-written
+initializer may bridge the cycle. Preserve model validation, wire contracts,
+ownership, source receipts and failure semantics. Qualification exercises the
+original cold Make entrypoint and its consumers; source decoupling alone proves
+neither generation nor installed runtime recovery.
+
+The dated [2026-10-30 restart handoff][make-consolidation-handoff] records the
+bootstrap implementation cursor and unqualified execution evidence under
+`flext-9t6gn`. It does not amend this contract or attest a repaired CLI.
+
+[make-consolidation-handoff]: ../../ways-of-working/make-consolidation-handoff.md
 
 ### Model and service protocol projection
 

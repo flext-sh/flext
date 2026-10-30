@@ -60,7 +60,7 @@ artesanais. Sem aumento de erro de lint; testes 100% verdes.
   flext-core quando a árvore assentar. Todos os IDs `ENFORCE-067..074` deste documento
   leem-se como `ENFORCE-071..078` (071 = smell_function_parameters runtime; 072..078 =
   CODE_SMELL delegado).
-- Gate novo flext-infra = subclass `FlextInfraGate` (template `gates/loc_cap.py`) + row
+- Gate novo flext-infra = subclass `FlextInfraGates` (template `gates/loc_cap.py`) + row
   em `SARIF_TOOL_INFO` (`_constants/check.py:25-46`, `ALLOWED_GATES` deriva) + registry
   (`check/workspace_check_gates.py:30-41`).
 - `qlty smells` default = changed-files-only; full scan exige `--all`. SARIF:
@@ -170,7 +170,7 @@ CODE_SMELL (warning sempre carrega ENFORCE-NNN + anchor + Fix).
 
 ### B. flext-infra — gate `smells` (qlty SARIF, report-only, warna sempre)
 
-- **NOVO** `gates/smells.py` (~95 LOC, template loc_cap.py): `FlextInfraSmellsGate` —
+- **NOVO** `gates/smells.py` (~95 LOC, template loc_cap.py): `FlextInfraGatesSmells` —
   `gate_id="smells"`, `can_fix=False`.
   - Resolver binário explícito: `shutil.which("qlty")` + fallback
     `Path.home()/".qlty/bin/qlty"` (constante).

@@ -35,6 +35,9 @@
   naming for `src`, `tests`, `examples`, `scripts`. Third-party repositories remain
   outside the FLEXT architecture boundary and retain their upstream layout and commands.
 - **Tracking:** the active branch-matched Bead and its dependencies.
+- **Current execution:** `flext-9t6gn`; the dated
+  [restart handoff](../../ways-of-working/make-consolidation-handoff.md)
+  distinguishes source changes from runtime and integration acceptance.
 - **Complements:** ADR-003 (topology/profiles), ADR-004 (Make/codegen SSOT ownership),
   ADR-005 (config/settings/constants/templates/schemas SSOT and facade layering),
   ADR-007 (operational kernel/CLI/transactional conform), ADR-008 (neutral consumer
