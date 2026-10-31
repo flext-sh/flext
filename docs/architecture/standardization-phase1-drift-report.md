@@ -15,7 +15,7 @@
 
 <!-- TOC END -->
 
-Owner: ADR-010 · Bead `mro-377y.1` · Target line `0.20.0-dev`. This is a read-only drift
+Owner: ADR-010 · Bead `mro-377y.1` · Target line `0.13.x` (future). This is a read-only drift
 report. No source was modified to produce it.
 
 ## Method

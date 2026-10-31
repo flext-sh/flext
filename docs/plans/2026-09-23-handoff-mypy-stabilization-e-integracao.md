@@ -92,7 +92,7 @@ INTERNAL ERROR com 2.14.2).
      com o hold e destrava a resolução do infra em modo versionado.
    - **PR #812** (infra): com o tip absorvido e CI verde → `gh pr merge 812 --merge`.
    - Varra outras branches contributivas: `git branch -r --no-merged origin/0.12.0-dev`
-     (ignorar histórico: audit/_, recovery/_, validate/\*, 0.20.0-dev, dolt).
+     (ignorar histórico: audit/_, recovery/_, validate/\*, 0.13.0-dev, dolt).
 7. **Re-pin final da raiz** (update-index de novo, tips podem ter andado com os merges)
    - push → CI da raiz deve passar do setup E do gen fixed point.
 8. **Prova canônica** (nesta ordem, todos exit 0): `make gen` → `make docs` →

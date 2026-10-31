@@ -10,6 +10,7 @@ Infra:
       settings:
       - [python.analysis.enableTroubleshootMissingImports, true]
     repository:
+      kind: internal_flext
       project:
         package_name: flext
         class_stem: Flext

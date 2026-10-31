@@ -34,7 +34,7 @@ modified while collecting these findings.
 - 13 commits ahead / 21 behind `origin/0.12.0-dev` (origin tip `1e59a9d493`).
 - Handoff constraints (operator 2026-09-22): absorb `origin/0.12.0-dev` with
   `git merge --no-ff`; no rebase/force-push/reset/checkout-restore/stash-clean discard;
-  no blanket ours/theirs; no unscoped staging; exclusions `main`, `0.20.0-dev`, Dolt
+  no blanket ours/theirs; no unscoped staging; exclusions `main`, `0.13.0-dev`, Dolt
   refs; do not create another checkout/worktree (the validation CLONE requested on
   2026-09-22 is explicitly authorized and is a clone, not a worktree).
 

@@ -27,8 +27,8 @@ consistent with each owner-local ADR. It coordinates internal FLEXT packages and
 independent external applications and platforms; it never makes an external repository a
 FLEXT dependency.
 
-**Target line:** FLEXT `0.13.0` (forward planning). The former `0.20.0-dev`
-name is historical provenance, not a separate implementation lane. Bead
+**Target line:** FLEXT `0.13.x` (future line, `0.13.0-dev`); the active line is
+`0.12.x`. There is no other forward line. Bead
 `flext-ik359` preserves the future inventory and gates execution on completion
 of `flext-1wjg1` and separate operator authorization. This document does not
 add future API or ecosystem migrations to the 0.12 release acceptance scope.

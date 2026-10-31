@@ -27,8 +27,8 @@ external projects
 - **Planning reconciliation:** 2026-10-20 (documentation only).
 - **Target line:** FLEXT `0.13.0`. This coordination contract is forward work, not a
   retrofit or acceptance prerequisite for the `0.12.0-dev` release line.
-- **Historical origin:** Accepted planning for `0.20.0-dev`. That original target is
-  retained as provenance, not a second active delivery line or proof of implementation.
+- **Line rule:** the active line is `0.12.x`; every planning item after 0.12 belongs to
+  the future `0.13.x` line (`0.13.0-dev`). There is no other forward line.
 - **Scope:** Coordination contract for the whole Cosmos ecosystem: FLEXT packages
   (`flext-core`, `flext-cli`, `flext-infra`, and the rest) plus the independent external
   applications `cosmos-docgen`/`dcdoc`, DataOP, and DcBackup, and the external platforms
@@ -63,7 +63,7 @@ ADR-008 already fixed the neutral-boundary rules FLEXT itself must honor. This A
 the coordination view: which project owns what, in which order actions run, how the
 still-open libraries are evaluated, and the gate any new `flext-*` package must pass.
 
-Timing: the original `0.20.0-dev` planning is now reconciled into the single 0.13 target.
+Timing: all forward planning lives in the single future `0.13.x` line.
 Coordination flow, static-consumer docs mode and Office boundary completion remain
 forward contracts until their individual acceptance evidence exists. Retargeting does
 not establish that they are implemented, deployed or published, and does not reset the
