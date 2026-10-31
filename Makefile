@@ -608,7 +608,7 @@ INSTALL_RUNTIME_RECIPE = set -eu; \
 	UV_PROJECT_ENVIRONMENT="$(RUNTIME_VENV)" timeout --signal=TERM --kill-after=5s 118s $(UV) sync --frozen --project "$(RUNTIME_ROOT)" --python "$$desired_python" --no-python-downloads $(SETUP_SYNC_ARGS); \
 	if [ -n "$(strip $(FLEXT))" ]; then \
 		if [ "$(CI)" = "Y" ]; then printf 'ERROR[setup] local editable sources are forbidden in CI\n' >&2; exit 2; fi; \
-		(cd "$(FLEXT)"; "$(RUNTIME_PYTHON)" -m pip install --no-deps --requirement "requirements-infra.txt"); \
+		(cd "$(FLEXT)"; $(UV) pip install --python "$(RUNTIME_PYTHON)" --no-deps --requirement "requirements-infra.txt"); \
 	fi; \
 	$(FLEXT_EDITABLE_RECIPE)
 
