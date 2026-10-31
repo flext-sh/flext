@@ -123,33 +123,13 @@ consumes them; the public documentation holder inherits that declaration by MRO.
 A leaf cannot resolve its own package's fields through the upstream core `m`
 facade or import its unfinished aggregate facade to complete a schema.
 
-For an explicitly bounded Python dependency upgrade, the existing `upg` owner
-receives `FLEXT_INFRA_UPGRADE_PACKAGES` as a JSON array through typed Infra
-settings. It delegates selection to native `uv lock --upgrade-package`, verifies
-the resulting lock and does not resolve unrelated Python packages or Mise tools.
-An empty selection retains the complete upgrade operation. The one-time Rope
-exception in ADR-030 authorizes only that package for the current repair;
-`setup` activates the resulting locked candidate through its normal owner.
-
-When the settings model disables automatic decoding globally, this collection
-field uses Pydantic Settings' native `ForceDecode` metadata through the core
-models facade. The environment is decoded at its owner before tuple validation;
-the global settings policy and native tuple constructor inputs remain unchanged.
-
-Before native resolution, that same selected-upgrade owner projects only the
-selected global dependency overrides from typed SSOT into the native project
-document. The existing TOML parser preserves authorial content and the existing
-file publisher authenticates the original file state. This is resolution input
-metadata, not general generation; no facade planner, alternate resolver view,
-manual pyproject patch or unrelated dependency rewrite participates.
-
-In a workspace, the existing governed-root inventory supplies each owned
-manifest to that same selected metadata pass. Direct URL requirements for a
-selected package follow its declared global source as well, so an explicitly
-provided editable distribution cannot reintroduce the previous SDK source.
-Registry constraints, unrelated requirements and scoped overrides retain their
-owners. All changed metadata keeps its original witness and publishes through
-one shared batch before native resolution.
+`upg` upgrades the complete Python declaration through one native writer:
+generated `make upg` runs `uv lock --upgrade` before any FLEXT Python, and
+`deps upgrade-lock` only verifies that lock and upgrades the Mise half. No
+package-selected upgrade or selected-override projection exists; the former
+`FLEXT_INFRA_UPGRADE_PACKAGES` route was a second UV writer running inside the
+environment it had to repair. `setup` activates the resulting locked candidate
+through its normal owner.
 
 ## What stays canonical
 
