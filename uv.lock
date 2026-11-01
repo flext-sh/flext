@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = "==3.13.*"
 resolution-markers = [
     "sys_platform == 'linux'",
@@ -53,7 +53,7 @@ constraints = [
     { name = "uv", specifier = ">=0.13.4" },
     { name = "virtualenv", specifier = ">=21.14.13" },
 ]
-overrides = [{ name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=becece05c27c3189b12a06f3fbfa28ad62a98a96" }]
+overrides = [{ name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=d56a179adcb2a8d932d96e742cdc42abebaf3885" }]
 
 [[package]]
 name = "actionlint-py"
@@ -2897,7 +2897,6 @@ dependencies = [
     { name = "pytest" },
     { name = "pytest-markdown-docs" },
     { name = "rope" },
-    { name = "tomlkit" },
     { name = "typing-extensions" },
 ]
 
@@ -2982,8 +2981,7 @@ requires-dist = [
     { name = "pymdown-extensions", specifier = ">=11.0.1" },
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "pytest-markdown-docs", specifier = ">=0.9.2" },
-    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=becece05c27c3189b12a06f3fbfa28ad62a98a96" },
-    { name = "tomlkit", specifier = ">=0.13,<1" },
+    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=41dd74bf11b11f874bac008cc82bea71e5f4b863" },
     { name = "typing-extensions", specifier = ">=4.16.0" },
 ]
 
@@ -7944,8 +7942,8 @@ wheels = [
 
 [[package]]
 name = "rope"
-version = "1.15.0+dc.7"
-source = { git = "https://github.com/marlon-costa-dc/rope.git?rev=becece05c27c3189b12a06f3fbfa28ad62a98a96#becece05c27c3189b12a06f3fbfa28ad62a98a96" }
+version = "1.15.0+dc.10"
+source = { git = "https://github.com/marlon-costa-dc/rope.git?rev=d56a179adcb2a8d932d96e742cdc42abebaf3885#d56a179adcb2a8d932d96e742cdc42abebaf3885" }
 dependencies = [
     { name = "pytoolconfig", extra = ["global"] },
 ]

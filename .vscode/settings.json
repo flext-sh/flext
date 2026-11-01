@@ -302,5 +302,6 @@
     "**/.gitea/workflows/*.yaml",
     "**/.forgejo/workflows/*.yml",
     "**/.forgejo/workflows/*.yaml"
-  ]
+  ],
+  "python.terminal.useEnvFile": true
 }
