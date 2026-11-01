@@ -124,11 +124,11 @@ A leaf cannot resolve its own package's fields through the upstream core `m`
 facade or import its unfinished aggregate facade to complete a schema.
 
 `upg` upgrades the complete Python declaration through one native writer:
-generated `make upg` runs `uv lock --upgrade` before any FLEXT Python, and
-`deps upgrade-lock` only verifies that lock and upgrades the Mise half. No
-package-selected upgrade or selected-override projection exists; the former
-`FLEXT_INFRA_UPGRADE_PACKAGES` route was a second UV writer running inside the
-environment it had to repair. `setup` activates the resulting locked candidate
+generated `make upg` runs `uv lock --upgrade` before any FLEXT Python;
+`workspace verify-lock` then verifies that lock and `deps upgrade-mise-lock`
+upgrades the Mise half. No package-selected upgrade or selected-override projection
+exists; the former `FLEXT_INFRA_UPGRADE_PACKAGES` route was a second UV writer running
+inside the environment it had to repair. `setup` activates the resulting locked candidate
 through its normal owner.
 
 ## What stays canonical

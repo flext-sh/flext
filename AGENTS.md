@@ -771,9 +771,10 @@ config.<Namespace>.*      settings.<Namespace>.*
 
 Config = business rules (`config/*.yaml`, validated); settings = env/CLI-tunable knobs.
 Facades never hardcode values the SSOT holds. Config/settings modules import only
-stdlib, their authenticated upstream foundation, or source-proven, acyclic layer-zero helpers of their
-own package ([ADR-005 §2](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#2-facade-and-layer-direction-is-strict)) — never a project
-`c/t/p/m/u` facade, including under `TYPE_CHECKING`.
+stdlib, their authenticated upstream foundation, or source-proven, acyclic layer-zero
+helpers of their own package
+([ADR-005 §2](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#2-facade-and-layer-direction-is-strict)) —
+never a project `c/t/p/m/u` facade, including under `TYPE_CHECKING`.
 Core remains the Pydantic SDK import owner; another package's layer-zero schema
 consumes the public Core foundation rather than importing Pydantic independently.
 
