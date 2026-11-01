@@ -764,7 +764,7 @@ ADR-018 its projection, and ADR-019 its DI and service boundary.
 **Config/settings are the layer-0 SSOT** consumed BY the facades (ADR-005). Access is
 single-form only:
 
-```python notest
+```python
 from <namespace> import config, settings   # e.g. from flext_core import config, settings
 config.<Namespace>.*      settings.<Namespace>.*
 ```
