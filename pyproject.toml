@@ -627,6 +627,7 @@ include = [
   "flext-grpc/src",
   "flext-grpc/tests",
   "flext-infra/conftest.py",
+  "flext-infra/scripts",
   "flext-infra/src",
   "flext-infra/tests",
   "flext-ldap/conftest.py",
@@ -913,6 +914,11 @@ root = "flext-grpc/tests"
 extraPaths = ["flext-grpc", "flext-grpc/src"]
 reportPrivateUsage = "error"
 root = "flext-grpc"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-infra", "flext-infra/src"]
+reportPrivateUsage = "error"
+root = "flext-infra/scripts"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = ["flext-infra/src", "flext-infra"]
@@ -1648,7 +1654,7 @@ constraint-dependencies = [
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 link-mode = "copy"
 override-dependencies = [
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@becece05c27c3189b12a06f3fbfa28ad62a98a96",
+  "rope @ git+https://github.com/marlon-costa-dc/rope.git@d56a179adcb2a8d932d96e742cdc42abebaf3885",
 ]
 
 [tool.uv.sources.flext]

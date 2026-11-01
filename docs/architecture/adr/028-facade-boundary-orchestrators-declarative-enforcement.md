@@ -712,14 +712,20 @@ architecture link.
   installed distribution metadata). No library list exists anywhere. The one declared
   exception is the stdlib backports in tooling `lazy-init.stdlib-backports`
   (`typing_extensions`, operator decision 2026-10-24), which import like the standard
-  library. Type checkers recognize the PEP 747 `TypeForm` special form only through its
-  own name binding, so a type expression is passed to a `TypeForm[T]` parameter as
-  `t.TypeForm(X)`; `t.TypeForm` is the facade's runtime re-binding of the special
-  form and is the ONLY spelling consumers may call (operator order 2026-10-29:
-  a simpler single surface, no `typing_extensions` import in consumers). Direct
-  `typing_extensions.TypeForm` imports are banned outside flext-core's own
-  `c/t/p/m/u` typings (rule `typeform-call-via-facade`, successor of
-  `ban-typeform-alias-call`).
+  library. The PEP 747 `TypeForm` special form is called and annotated only through
+  `from typing_extensions import TypeForm` — `TypeForm(X)` and `TypeForm[T]` — in
+  every module of every project (operator ruling 2026-10-31, verbatim: "ok, use a
+  opção b e propague para todos a solucao e em todos os projetos ... Option B: import
+  from `typing_extensions` directly. `from typing_extensions import TypeForm`"). mypy
+  recognizes the PEP 747 call only when the callee's fullname is
+  `typing_extensions.TypeForm`; a facade attribute is a class attribute, so mypy
+  reports `"<typing special form>" not callable` and the result is `Any`.
+  `t.TypeForm` is removed: rule `ban-typeform-alias-call` rewrites every `t.TypeForm`
+  reference to the bare name and `pydantic-typeform-import` adds the import, both
+  through `make mod`; the `t` re-binding is deleted at its typings owner.
+  History (superseded 2026-10-31, not live law): the operator order of 2026-10-29
+  made `t.TypeForm(X)` the only spelling and banned `typing_extensions.TypeForm`
+  imports outside flext-core's typings (rule `typeform-call-via-facade`).
 - **Runtime import:** a top-level import statement. Imports under `if TYPE_CHECKING:`
   never run and are outside the boundary.
 
