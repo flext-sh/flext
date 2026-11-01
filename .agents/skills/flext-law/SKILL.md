@@ -203,6 +203,17 @@ authorize any additional frozen rule, severity or scope change.
 
 ## Sources, generation, and commands
 
+The 2026-11-01 operator correction in
+[ADR-018](../../../docs/architecture/adr/018-generator-declarations.md#nested-facade-projection)
+supersedes earlier Rope-only generation requirements. `make gen` performs pure
+declaration projection through the existing typed AST inventory, with no Rope
+project, source movement, consumer rewrite or semantic convergence loop. Its
+complete invocation must finish below twenty seconds; stage budgets and counters
+belong to typed configuration. `make mod` retains native Rope semantic refactoring
+and the existing projection contracts and publisher. Preserve class/member shapes,
+bodies and public functionality; reduce coupling, complexity and the execution
+chain by composing existing CA/DI owners, not by adding wrappers or another engine.
+
 For `flext-0029c` only, the operator's direct-public-CLI route supersedes the
 Make-only requirements in this law, the session router and parent instructions:
 native-bootstrap diagnosis, real runtime, semantic refactoring and applicable gates
@@ -276,17 +287,19 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   the full applicable checks still precede completion and integration. Existing
   receipt-based operations retain their declared admission contracts.
   Generation and modification complete their own coherent changes, including
-  required dependent projections, through the same typed plans and semantic
+  required dependent projections, through the same typed plans and authenticated
   publication engine; neither recursively runs another public operation.
 - Generation and modification read each source once and publish one transactional
   batch per smallest coherent transaction (ADR-018 single-read, single-batch
   publication; campaign `flext-pipol`): reuse authenticated facts until relevant
   inputs change, validate planned sources before effects, and use the common
   barrier for cooperating Make/Rope readers and writers. The approved contract
-  includes interruption detection, guarded rollback of only that transaction's
-  own effects and incremental native refresh; the current publisher is not proof
-  of implemented batch visibility. Fast transaction gates stay within five seconds;
-  full gates and the 60-second Make budget remain mandatory. No surface re-reads
+  includes interruption detection, fix-forward recovery preserving confirmed
+  effects and incremental native refresh for modification; the current publisher
+  is not proof of implemented batch visibility. Fast transaction gates stay within
+  five seconds;
+  full gates and the general 60-second Make budget remain mandatory; generation
+  has the stricter below-20-second budget above. No surface re-reads
   an earlier stage's on-disk output instead of planned sources. Their published
   projections are gate-clean by construction (ADR-028 Decision 8): `make gen`
   followed directly by `make check` is green and `make fmt`/`make fix` are no-ops;

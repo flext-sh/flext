@@ -120,8 +120,8 @@ This ADR owns the following fourteen generator declaration requirements:
 #### Template-backed native refactoring (operator clarification 2026-10-30)
 
 Existing templates are the structural base for refactoring existing modules as
-well as creating absent declarations. The existing Infra Rope infrastructure
-catalogs native declarations and assembles their semantic content into the
+well as creating absent declarations. During `make mod`, the existing Infra Rope
+infrastructure catalogs native declarations and assembles their semantic content into the
 existing typed render context; templates fill their owned slots. Preserve
 authored bodies, execution order, identities and source trivia through native
 refactoring. This does not authorize another parser, parallel renderer, relocated
@@ -132,6 +132,12 @@ Candidate parse failure must preserve the original cause at the existing typed
 failure boundary. It must never select physical bytes in place of candidate
 bytes, parse a replacement module or inject that replacement into the native
 module cache. Repair the operation that produced the invalid candidate.
+
+The 2026-11-01 projection correction below confines this semantic refactoring
+contract to `make mod`; `make gen` consumes declarations without changing authored
+structure. Preserve existing class/member shapes, bodies and public functionality.
+Compose the existing typed owners through CA and explicit DI to reduce coupling
+and the execution chain; do not replace it with wrappers or another engine.
 
 This amendment states the accepted contract, not implementation acceptance.
 The [2026-10-30 handoff](../../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/plan.md#handoff-de-retomada--2026-10-30-chat-01a18a11)
@@ -149,16 +155,18 @@ ancestor lazy exports are planned and published as one authenticated candidate, 
 source without importing the stale package being repaired. Callers use the nearest
 composed facade at every stage (ADR-028 [Decision 10](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
 
-**Facade-planner cutover, approved 2026-10-29; implementation and acceptance
-pending.** Replace the complete `codegen_facades.py` monolith with a few
-declarative composition lines over the existing `c/t/p/m/u` owners. Extend the
-existing native workspace DSL with facade planning, reusing its invocation-owned
-session, queries, bindings and native utility operations. Retire
-`CodegenFacadeSyntax` and the authored CST/AST projection paths with their complete
-consumer closure. Moving that implementation, wrapping it or reproducing its
-visitors through native syntax nodes is not the cutover. Preserve every consumed
-capability and make the complete change net-negative in code; no parallel engine,
-semantic transport mirror, index, scanner or publisher is introduced.
+**Projection-engine correction, approved 2026-11-01.** The incident mandate
+supersedes the 2026-10-29 requirement to use native semantic machinery during
+generation. `make gen` projects declarations through one typed, invocation-local
+source inventory parsed with the standard-library AST. It opens no Rope projects,
+moves no modules, rewrites no consumers and runs no semantic convergence loop.
+Family composition and direct exports retain all declared module correspondence,
+types and identities. Missing or ambiguous declarations fail explicitly; generated
+initializers and existing generated filenames never become declaration authorities.
+The second generation must produce identical bytes, and the canonical generation
+budget is below 20 seconds. Semantic discovery, structural repair, consumer
+rewiring and source movement remain owned by `make mod` and its native workspace.
+This separation introduces no substitute semantic engine or alternate publisher.
 
 The existing [engine guide](../../guides/engine.md) and
 [Infra execution contract](../../../flext-infra/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine)
@@ -168,9 +176,10 @@ selected physical environments. Preserve pilot order and coverage, runtime-first
 proof, frozen analyzer policy, full native gates and integrated evidence; a
 shorter source file or an isolated passing consumer does not prove completion.
 
-Planning and runtime acceptance are different boundaries. Planning consumes the
-source-authenticated native workspace model, including candidate overlays,
-without executing the target package. Acceptance exercises the generated public
+Planning and runtime acceptance are different boundaries. Projection planning reads
+authenticated declarations and explicit candidate bytes without executing the target
+package. Semantic modification retains the native workspace and its candidate
+overlays. Acceptance exercises the generated public
 surface in a fresh process. A source move must not require its obsolete export
 map to import successfully before the replacement can be planned.
 
@@ -243,10 +252,10 @@ The MRO/Pydantic analyzer and environment acceptance tracked by
 
 Every `make gen` derives model and service structural protocols through the
 existing flext-infra projection owner. Its input is the complete authenticated
-native Python inventory of the elected repository/workspace, including `src`,
+AST source inventory of the elected repository/workspace, including `src`,
 `tests`, `examples`, `scripts` and every other discovered Python module. These
-examples are not a closed tier list. Discovery and classification follow native
-declaration identities, inheritance, nested facade ownership and specialization;
+examples are not a closed tier list. Projection follows declared source identities,
+inheritance, nested facade ownership and specialization;
 neither filename spelling nor an existing consumer reference limits coverage.
 Every discovered model and service receives an accounted classification and
 projection disposition. Unresolved identities fail with their original cause;
@@ -286,9 +295,15 @@ suffix, guessed basename or per-symbol mapping table resolves a collision.
 Generated protocols, authored ports, composed facades and lazy exports preserve
 their distinct owners and public identities.
 
-The existing native Rope workspace model and reference graph drive discovery,
-annotation resolution and automatic rewiring through flext-infra. `make gen`
-derives the projection on every invocation; `make check` compares its drift
+The native Rope workspace model and reference graph drive semantic discovery,
+annotation migration and automatic rewiring through flext-infra's modification
+operation. Generation reads declared source contracts through the shared AST
+inventory, retaining aliases, module correspondence, complete field and computed
+property types, generic parameters, and inherited source contracts. Required
+supplier declarations are authenticated against the elected locked environment;
+unavailable required ancestry fails instead of dropping fields. `make gen`
+derives every declared projection, including absent generated outputs, on every
+invocation; `make check` compares its drift
 without mutation. Authored annotation and layout cutover, structural consumer
 rewiring and obsolete-owner retirement belong to `make mod`, under
 [ADR-010's operation ownership](010-unified-project-standardization-via-codegen.md#3b-semantic-discovery-and-automated-rewiring).
@@ -297,10 +312,12 @@ modification candidate includes dependent protocols, facades and lazy exports
 through their existing projection owner as coherent migration effects; it neither
 invokes `make gen` nor implements another generator.
 
-The approved Rope DSL entry is `RopeWorkspaceDsl.protocol_projection()`, returning
+For semantic modification, the approved Rope DSL entry is
+`RopeWorkspaceDsl.protocol_projection()`, returning
 one typed, invocation-local `ProtocolProjectionPlan`: projected sources, native
 source-to-protocol identities, declaration classifications and dependency edges.
-Both operations consume this same projection owner. The modification integration
+Both operations retain the declaration projection owner's output contracts;
+generation never opens the semantic DSL session. The modification integration
 uses the existing `ModLoopPhase.plan` callback contract and `CodegenFilePlan`
 composition after structural callbacks, not another loop or fake per-symbol
 `RopeContractRule` pattern. The invocation owns the native session/snapshots and
@@ -373,8 +390,10 @@ Finish its fleet-wide definitions, uses and complete consumer rewiring, real
 runtime proof, applicable native gates and integration closure before beginning
 another pattern. A passing pilot never authorizes switching patterns while that
 rollout or any affected consumer remains incomplete.
-The existing five-second transaction and sixty-second Make budgets, source
-authentication and frozen analyzer rules remain unchanged. Recovery follows the
+The existing five-second transaction and general sixty-second Make budgets remain;
+the 2026-11-01 correction requires generation itself below twenty seconds.
+Stage budgets and counters remain configuration-owned. Source authentication and
+frozen analyzer rules remain unchanged. Recovery follows the
 2026-10-29 fix-forward supersession below; own-effects rollback is no longer authorized.
 Acceptance requires real public runtime and invalid-case detection, native
 gates, complete coverage accounting, repeated generation/refactoring fixed point
