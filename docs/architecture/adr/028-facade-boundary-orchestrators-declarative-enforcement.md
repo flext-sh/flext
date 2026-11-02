@@ -317,7 +317,7 @@ outside the facades across 12 repositories.
     altas para composição enquanto elas estão sendo compostas para uso hierárquico".
     Inside the declaration modules of the five families, while the package's own
     facades are being composed, the letters of the upstream packages it composes
-    (`from flext_cli import c, t, p, m, u`) are the canonical binding: each own family
+    (`from flext_cli import c, p, t, p, m, u`) are the canonical binding: each own family
     composes the upstream same-letter class by MRO. The boundaries around it:
       - Elect the spelling from native references at the class header. Retain a bare
         upstream letter when its identity is used there; when an existing verified

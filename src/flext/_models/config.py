@@ -18,7 +18,7 @@ class FlextModelsRootConfig:
     class PipelinePayload(m.BaseModel):
         """Pipeline payload container."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
+        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(extra="forbid")
 
         values: t.MutableJsonMapping = m.Field(
             default_factory=dict,
@@ -28,7 +28,7 @@ class FlextModelsRootConfig:
     class PipelineStageData(m.BaseModel):
         """Data container for pipeline stage processing."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
+        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(extra="forbid")
 
         data: FlextModelsRootConfig.PipelinePayload = m.Field(
             description="Payload produced by the preceding pipeline stage.",

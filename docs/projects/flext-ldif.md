@@ -61,8 +61,8 @@ migration = ldif.migrate(
 ```
 
 `FlextLdifParser.parse_ldif(...)` accepts either a string or a `Path` and returns
-`r[m.Ldif.ParseResponse]`; `ldif.migrate(...)` builds a `FlextLdifMigrationPipeline` and
-executes it, returning `r[m.Ldif.MigrationPipelineResult]`. Every fallible operation
+`r[p.Ldif.ParseResponse]`; `ldif.migrate(...)` builds a `FlextLdifMigrationPipeline` and
+executes it, returning `r[p.Ldif.MigrationPipelineResult]`. Every fallible operation
 returns `r[T]`, so parsing, validation, filtering, and migration compose with the same
 railway discipline.
 

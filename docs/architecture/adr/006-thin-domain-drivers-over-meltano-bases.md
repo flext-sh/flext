@@ -280,7 +280,7 @@ data, never machinery. New inviolable rules (bind every `flext-(tap|target|dbt)-
 
     `m.Meltano.FetchRequest(stream_name, config)` and returns
 
-    `p.Result[m.Meltano.FetchResult(records)]`. No dict/round-trip across the boundary;
+    `p.Result[p.Meltano.FetchResult(records)]`. No dict/round-trip across the boundary;
 
     records stay in Singer-native `JsonMapping` (the wire shape).
 

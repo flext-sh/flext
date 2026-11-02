@@ -965,7 +965,7 @@ CLI + pytest plugin, **never imported at runtime**.
     Inside the declaration modules of the five families (`c`, `t`, `p`, `m`, `u`,
     their family packages and composition modules), while the package's own facades
     are being composed, importing the letters of the upstream packages it composes
-    (`from flext_cli import c, t, p, m, u`, `from flext_core import …`) is the
+    (`from flext_cli import c, p, t, p, m, u`, `from flext_core import …`) is the
     canonical form. Each own family composes the upstream same-letter class by MRO.
     [ADR-028 Decision 10](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)
     elects one import binding from actual header references: a used bare upstream

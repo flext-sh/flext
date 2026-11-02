@@ -53,7 +53,7 @@
 
   - Removido override de mypy em `pyproject.toml`.
   - Settings: `create_for_development` / `create_for_production` / `create_for_testing`
-    passam a usar `overrides: m.SettingsOverridesModel` e defaults em modelos
+    passam a usar `overrides: p.SettingsOverridesModel` e defaults em modelos
     explícitos, mantendo `model_validate(...)` sem interfaces genéricas.
   - Utilities: erro pyrefly “bad-assignment / breaking cycles” resolvido na raiz
     extraindo a construção do record para `build_record_from_lines()` com tipagem forte;
