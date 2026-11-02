@@ -48,11 +48,10 @@ profile's value across the fleet. Release notes per cycle live under `docs/relea
   downgraded. First stable releases, RC finalization and already-merged release commits
   awaiting a tag retain their declared version instead of receiving a duplicate bump.
   Existing tags are never overwritten.
-- Applying the version phase requires an explicitly supplied
-  `GitLaneOwnershipReceipt` through the public release request's `ownership` input.
-  The receipt must identify the same checkout and prove its prior state was published
-  and integrated. The release caller forwards that evidence unchanged; it never
-  invents ownership or creates a preservation checkpoint automatically.
+- Applying the version phase cuts the release lane through the shared lane admission:
+  its base must be the freshly fetched integration tip (operator decision 2026-11-01,
+  "Abrir com prova git"). No ownership receipt is part of the request, and the release
+  caller never creates a preservation checkpoint automatically.
 
 ## Compatibility contract
 

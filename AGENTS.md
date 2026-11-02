@@ -1151,13 +1151,19 @@ CLI + pytest plugin, **never imported at runtime**.
   untracked objects through scoped Git history and validated no-ff integration before
   retiring incident references. Never blindly apply or blanket pop, clear, or drop;
   never discard work to pass hygiene checks. Checkpoints are not green integration.
-- **Safe retirement:** worktree/ref cleanup requires byte, index, and untracked-content
-  preservation, published integration-ancestor proof, and no active session or locked
-  WIP. HEAD ancestry alone is insufficient; never retire before integration proof.
-- **Executable guard contract:** fail fast on unsafe creation/removal while leaving
-  preservation checkpoints and merge-forward recovery available. Implementation belongs
-  to the existing infra Git service candidate (`flext-itpd1.3.26`); this is a contract,
-  not evidence that enforcement is active or code is green.
+- **Safe retirement:** worktree/ref cleanup requires the lane tip to be an ancestor of
+  the freshly fetched integration tip, the lane branch published on the remote at its
+  local object, and a clean worktree (no staged, unstaged, or untracked change). HEAD
+  ancestry alone is insufficient; never retire before integration proof.
+- **Executable guard contract:** `u.Infra.git_verify_lane` admits lanes by Git proof
+  alone. Operator decision 2026-11-01, verbatim: "Abrir com prova git (Recommended)" —
+  "Criar: base = tip de integração recém-buscada; Retirar: ancestralidade provada +
+  branch publicada no remoto + worktree limpa; sem recibo de Beads (o store do merges
+  está fora)". Creation fetches the declared integration remote and is admitted only
+  when the requested base is that fresh tip; retirement fetches it and is admitted only
+  when all three retirement conditions above hold. Every refusal names the failed
+  condition with its object ids; no tracker receipt takes part. Stash state is refused
+  before either, as the stash prohibition requires.
 - **Config-owned module size cap** (`flext-infra/config/codegen.yaml` → `loc_cap.max_lines`,
   enforced by the `loc-cap` check gate); net-negative LOC on refactors.
 - Toolchain: `uv` + `.venv` only, always via `make`.
