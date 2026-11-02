@@ -110,6 +110,12 @@ the deadline to obtain acceptance.
 
 ## (a) Canonical cycle
 
+Apply the canonical `simplify` procedure to each entire module changed in a repair,
+not only its edited hunks (operator clarification, 2026-11-01). Remove proven
+redundancy while preserving public behavior, typed origins, error causes, ordering,
+effects, observability and admission witnesses. This review does not authorize
+speculative rewrites, manual changes to generated projections or weaker gates.
+
 Align the authorities above, provision only when required, and exercise the real public
 consumer before static gates and tests. Resolve operations from the current native
 root Make catalog. The approved slice sequence is `gen` → `fmt` → `fix` → `mod` →
