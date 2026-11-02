@@ -334,6 +334,40 @@ outside the facades across 12 repositories.
     module's `__all__`; an `__init__.py` only re-exports it (or inherits it from the
     parent namespace) and never assigns it.
 
+    Operator order 2026-11-02 (tracker key
+    `operator-order-2026-11-02-import-and-composition-forms`, translated from
+    Portuguese: "the codemod is generating the wrong imports … the codemod must fix
+    this kind of code to the correct patterns; it is mandatory, in every existing
+    rule") makes three forms mandatory for every generator and codemod rule:
+    - A facade or consumer imports a family's classes in one statement from the
+      family package (`from examples._models import ExamplesFlextModelsEx00, …`),
+      never one statement per module path (`from examples._models.ex00 import …`).
+    - Inside a family module, only same-family siblings come through the family
+      package (`from flext_core._protocols import FlextProtocolsContainer`). A member
+      of another family is reached through that family's letter (`c`, `t`, …),
+      never imported from its family package (`from flext_core._typings import
+      FlextTypesCore` is forbidden there).
+    - A facade class lists only the upstream facades it composes as bases. Its own
+      components compose inside its nested namespace class
+      (`class FlextTargetOracleOic(FlextTargetOracleOicServiceRuntime,
+      FlextTargetOracleOicSink)`), never as extra facade bases and never as
+      `X: TypeAlias = X` re-exports.
+    - The letter law of this decision applies to every import of every module in
+      the same pass: the own letter is forbidden inside its own family; the upstream
+      letter is elected per namespace from the package the family composes, bound
+      once, and every competing or duplicate binding is removed; outside the
+      families every letter comes from the own package root; a reverse-layer letter
+      is bound only under `TYPE_CHECKING`.
+    - `gen` and `mod` correct every divergent import to these forms, in every module
+      they write or read, through one import-law owner (`_utilities/_import_law/`).
+      A competing origin, a module-path import, a cross-family class import or a
+      component published as a base or `TypeAlias` is rewritten, never reported as a
+      failure; only a case the law cannot decide fails, with the exact evidence.
+      No generator, renderer or rule writes imports by its own logic.
+    Existing violations are rewritten by rule, never by hand. The operator repeated
+    the order the same day (translated from Portuguese): "it has to correct ALL THE
+    IMPORTS, according to the correct rules, without simplifying".
+
     Hierarchical composition imports the upstream letters. Operator rulings
     2026-10-25 (verbatim): "essa é a forma canonica, isso tem que estar declarado,
     documentado e automatizado, confirme com as regras atuais" and "veja que estamos
