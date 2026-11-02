@@ -52,9 +52,15 @@ For source-derived model/service protocols, compose
 and the
 [Pydantic consumer guide](../../docs/guides/using-pydantic.md#source-derived-protocol-contracts).
 Its current protocol amendment owns projection shape, all-Python consumer scope,
-native Rope migration and pilot-before-rollout proof. Cover every pilot variation,
-then complete that same pattern's fleet declarations and consumer rewires, real
-runtime, native gates and integration closure before beginning another pattern.
+native Rope migration and pilot-before-rollout proof.
+Apply its 2026-11-02 strict mandate before code: every `m.*` typing reference is
+prohibited; canonical `p.*` protocols are `@runtime_checkable`. Executable model
+construction and schema ownership stay concrete. Follow the existing Pydantic
+guide for valid `t.Port` and native payload-schema preservation, without an
+annotation fallback or compatibility layer.
+Cover every pilot variation, then complete that same pattern's fleet declarations,
+consumer rewires, real runtime, native gates and integration closure before
+beginning another pattern.
 The older protocol/stub
 plan's supersession notice distinguishes this authorized first-party generation
 from the retained SDK and local-stub prohibition. Preserve the MRO/environment

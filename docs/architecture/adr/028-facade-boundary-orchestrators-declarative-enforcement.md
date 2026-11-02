@@ -416,7 +416,8 @@ outside the facades across 12 repositories.
        because the metaclass is private API.
      - A serializable model payload projected to a structural protocol follows
        [ADR-018](018-generator-declarations.md#model-and-service-protocol-projection):
-       native `GetPydanticSchema` delegates to the original concrete annotation.
+       native `GetPydanticSchema` delegates to the original concrete model schema
+       in validation metadata, while the consumer's type position remains a protocol.
        Preserve validators, serializers, defaults and JSON Schema once; do not
        substitute the DI port's instance check or excluded schema for that payload.
      - `arbitrary_types_allowed` is banned.
@@ -457,7 +458,17 @@ outside the facades across 12 repositories.
 
 ### Decision 15
 
- 1. **Library names never leave the facades; exports are named by capability.**
+ 1. **Operator amendment 2026-11-02 — protocol-only annotations.** First-party
+    model, service and data annotations use their canonical `p.*` contracts,
+    decorated with `@runtime_checkable`, including annotations within models.
+    Concrete model references remain only in executable construction, validation,
+    schema, serialization and declaration metadata. Native binding identity owns
+    this distinction, including imported or quoted references; spelling or aliases
+    cannot exempt a concrete model type. Earlier model-annotation exceptions are
+    superseded. [ADR-018's projection contract](018-generator-declarations.md#model-and-service-protocol-projection)
+    owns complete declarations, concrete payload schemas and atomic consumer rewiring.
+
+ 2. **Library names never leave the facades; exports are named by capability.**
     Operator orders 2026-10-25, verbatim (tracker memories
     `operator-order-2026-10-25-library-names-only-in-facades` and
     `operator-rulings-2026-10-25-libnames-locks-ldif-rope`): "lembre de ser CA/DI, os
@@ -662,6 +673,11 @@ outside the facades across 12 repositories.
     the missing engine fix form, not detection, was the gap; the rope-only
     cutover waves close it. The authoring declaration is
     [Codemod Rules, One rule per law](../../guides/codemod-rules.md#one-rule-per-law).
+    Model-reception fixes under Decision 15 use native binding and expression
+    context: only type positions migrate to protocols. Constructors, schema
+    providers, validators and handler metadata retain their runtime model owners;
+    class patterns retain their proven subject contract. An unbound or incompatible
+    projection fails before effects. A prefix substitution is not a generalized fix.
 
 ### Decision 19
 

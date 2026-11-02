@@ -8,13 +8,13 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from flext_core import FlextSettings, m
+from flext_core import FlextSettings, m, t
 
 
 class FlextRootSettings(FlextSettings):
     """Workspace root settings — extends flext-core settings with FLEXT_ROOT_ prefix."""
 
-    model_config: ClassVar[p.SettingsConfigDict] = m.SettingsConfigDict(
+    model_config: ClassVar[t.SettingsConfigDict] = m.SettingsConfigDict(
         env_prefix="FLEXT_ROOT_",
     )
 

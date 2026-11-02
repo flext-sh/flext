@@ -50,6 +50,12 @@ installed delivery remain separate evidence. Global governance is authored under
 
 ## Architecture and imports
 
+Enforce ADR-018's 2026-11-02 strict operator amendment: no `m.*` typing, canonical
+`p.*` contracts decorated with `@runtime_checkable`, and real model construction
+only at executable boundaries. The topic-owning ADR and Pydantic guide govern
+native schema preservation and valid `t.Port` use; neither runtime failures nor
+missing projections authorize a concrete-model typing exception or protocol shim.
+
 - Dependency direction is `flext-core <- consumers`. `flext-infra` owns build, conform,
   codegen, and policy; it is never a runtime dependency.
 - Facades compose in strict order `c -> t -> p -> m -> u`, with operational

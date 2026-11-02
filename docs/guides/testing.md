@@ -23,6 +23,9 @@ environment. Do not assume another city's activation or connection settings.
 
 - Exercise only public `api.py` surfaces and canonical `c`, `t`, `p`, `m`, and `u`
   facades.
+- Test service bootstrap return annotations use the imported `p` facade; construct
+  their runtime options through `m`. Missing protocol imports are errors, not
+  deferred annotations that can be left unresolved.
 - Follow the current source-owned signatures and return contracts. A sequence return
   does not promise a mutable list, and a structural port exposes only its declared
   properties. Update stale callers instead of widening production parameters.

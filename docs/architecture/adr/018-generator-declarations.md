@@ -250,6 +250,45 @@ contracts, source-module layout, automatic consumer rewiring and pilot coverage.
 The MRO/Pydantic analyzer and environment acceptance tracked by
 `flext-itpd1.13.11` remains incomplete and is not replaced by this amendment.
 
+**Operator amendment 2026-11-02 — strict protocol typing.** Every `m.*` type
+reference is prohibited. First-party model, service and data contracts are typed
+through their canonical `p.*` protocols, each decorated with `@runtime_checkable`.
+This includes model fields, callback signatures, aliases, quoted references,
+generic arguments and service payload specializations; runtime evaluation of a
+typing expression does not make a concrete-model annotation permissible.
+Earlier exceptions retaining `m.*` annotations are superseded.
+
+Executable construction, validation, serializers, schema and handler metadata
+retain the actual model owner: a Protocol is never instantiated. A value-level
+constructor/schema reference is distinct from a type annotation. Preserve the
+existing canonical scalar, enum and external SDK type owners; this decision does
+not authorize SDK-shaped protocol mirrors or aliases that disguise model classes
+as protocols.
+Native model base expressions and metadata factory calls such as `m.Field`
+remain actual model construction. They do not permit `m.*` in a type operand;
+the native migration distinguishes these roles by syntax and resolved identity.
+
+Use the existing `t.Port[p.X]` only for a genuine validated DI capability under
+ADR-019. Its dependency exclusion from serialization and JSON Schema cannot
+replace a persisted payload's validation. Serializable protocol-typed values
+must preserve the actual model's native validation, serializers and schema
+through native `GetPydanticSchema` projection at the established Pydantic owner.
+The metadata delegates to the original model schema; it preserves nested payloads,
+generic specialization, aliases, defaults, strictness and JSON Schema without
+retaining a concrete model in the consumer's type position. Metadata expressions
+that construct or validate a model are runtime expressions, not annotation targets
+for the reception codemod. Qualify that contract with real
+ingress, serialization and consumer execution; do not invent a compatibility
+schema, suppress a failure, or restore a prohibited `m.*` type to obtain green.
+
+The existing generator and native Rope modification owner complete this cutover
+coherently across the declared inventory. Required protocol declarations,
+dependent initializers and facade exports precede consumer use in the same
+authenticated candidate. Blind prefix replacement is not semantic migration.
+An unresolved declaration or unsupported native schema contract fails before
+publication and is repaired at its owner. Source changes alone do not establish
+runtime, gate or integration acceptance.
+
 Every `make gen` derives model and service structural protocols through the
 existing flext-infra projection owner. Its input is the complete authenticated
 AST source inventory of the elected repository/workspace, including `src`,

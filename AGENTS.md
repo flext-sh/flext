@@ -1043,6 +1043,14 @@ CLI + pytest plugin, **never imported at runtime**.
     ([using flext-core](docs/guides/using-flext-core.md#domain-models)).
 - **Typing:** never `Any`/`object`/concrete-class annotations; type via `t.*` aliases
   and `p.*` protocols; `T | None` (never `Optional`). A model is never a type.
+  The 2026-11-02 operator mandate strictly prohibits every `m.*` typing reference;
+  canonical model/service/data protocols must be `@runtime_checkable`. This also
+  governs fields, callbacks, quoted types and generic specializations. Actual
+  model construction and native validation remain executable model operations,
+  never Protocol construction. Apply
+  [ADR-018's strict amendment](docs/architecture/adr/018-generator-declarations.md#model-and-service-protocol-projection)
+  through the existing generator and native Rope owner. `t.Port` is valid only
+  for its real DI contract and never bypasses persisted payload validation.
   Generic wrapper aliases (`MappingKV`, `SequenceOf`, `StrMapping`, …) are a managed
   transition under [ADR-028 Decision 7](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7)
   (amended 2026-10-29): restored fix-forward because premature removal broke
