@@ -70,7 +70,7 @@ hand-written. The root `__init__.py` derives it in this fixed order:
 2. **Operational letters are inherited from the highest upstream flext library.** `r`,
    `d`, `e`, `h`, `s`, `x` are re-exported from the immediate upstream (`flext_cli`,
    which sources them from `flext_core`) via
-   `FlextInfraCodegenLazyInitPlannerAliasesMixin._resolve_aliases` /
+   `FlextInfraCodegenLazyInitPlannerAliases._resolve_aliases` /
    `_resolve_inherited_alias_source`. The full canonical set is
    `ALIAS_NAMES = {c, t, m, p, u, r, d, e, h, s, x, tc}`.
 3. **A local redeclaration published in `__all__` overrides the ancestor.** If the

@@ -31,10 +31,10 @@ Community of 590 nodes
 | \_resolve_correlation_id              | Function | flext-core/src/flext_core/\_decorators/\_logging.py                                             | 79-84   |
 | \_execute_logged_call                 | Function | flext-core/src/flext_core/\_decorators/\_logging.py                                             | 87-138  |
 | with_correlation                      | Function | flext-core/src/flext_core/\_decorators/\_logging.py                                             | 141-156 |
-| ContextRuntimeState                   | Class    | flext-core/src/flext_core/\_models/\_context/\_\_scope_parts/flextmodelscontextscope_part_02.py | 24-165  |
-| create_default                        | Function | flext-core/src/flext_core/\_models/\_context/\_\_scope_parts/flextmodelscontextscope_part_02.py | 87-112  |
-| resolve_scope_var                     | Function | flext-core/src/flext_core/\_models/\_context/\_\_scope_parts/flextmodelscontextscope_part_02.py | 114-133 |
-| with_operation_update                 | Function | flext-core/src/flext_core/\_models/\_context/\_\_scope_parts/flextmodelscontextscope_part_02.py | 135-165 |
+| ContextRuntimeState                   | Class    | flext-core/src/flext_core/\_models/\_context/\_\_scope_parts/Flextmodelscontextscope_part_02.py | 24-165  |
+| create_default                        | Function | flext-core/src/flext_core/\_models/\_context/\_\_scope_parts/Flextmodelscontextscope_part_02.py | 87-112  |
+| resolve_scope_var                     | Function | flext-core/src/flext_core/\_models/\_context/\_\_scope_parts/Flextmodelscontextscope_part_02.py | 114-133 |
+| with_operation_update                 | Function | flext-core/src/flext_core/\_models/\_context/\_\_scope_parts/Flextmodelscontextscope_part_02.py | 135-165 |
 | GuardCheckSpec                        | Class    | flext-core/src/flext_core/\_models/collections.py                                               | 23-145  |
 | \_MappingRootBase                     | Class    | flext-core/src/flext_core/\_models/containers.py                                                | 51-111  |
 | **getitem**                           | Function | flext-core/src/flext_core/\_models/containers.py                                                | 60-61   |

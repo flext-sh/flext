@@ -59,6 +59,15 @@ above are not declared with `autouse=True`.
 ```python
 from __future__ import annotations
 
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
 from flext_core import FlextSettings
 from flext_tests import FlextTestsSettings, tm
 
@@ -159,7 +168,8 @@ mutation, including assertion failure:
 
 ```python
 from flext_core import FlextSettings
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 
 def test_settings_override() -> None:

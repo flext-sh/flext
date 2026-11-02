@@ -54,25 +54,25 @@ Community of 114 nodes
 | recover                            | Function | flext-core/src/flext_core/\_protocols/result.py                                                            | 140-142 |
 | to_model                           | Function | flext-core/src/flext_core/\_protocols/result.py                                                            | 144-146 |
 | **bool**                           | Function | flext-core/src/flext_core/\_protocols/result.py                                                            | 148-148 |
-| \_peer_first_allowed               | Function | flext-core/src/flext_core/\_utilities/\_beartype/\_class_visitor_parts/\_parts/class_visitor_part_02_01.py | 15-33   |
-| \_requires_alias_first             | Function | flext-core/src/flext_core/\_utilities/\_beartype/\_class_visitor_parts/\_parts/class_visitor_part_02_01.py | 36-53   |
-| alias_first_violation              | Function | flext-core/src/flext_core/\_utilities/\_beartype/\_class_visitor_parts/\_parts/class_visitor_part_02_01.py | 56-159  |
-| FlextUtilitiesChecker              | Class    | flext-core/src/flext_core/\_utilities/\_checker_parts/checker_part_03.py                                   | 27-138  |
-| \_extract_generic_message_types    | Function | flext-core/src/flext_core/\_utilities/\_checker_parts/checker_part_03.py                                   | 29-56   |
-| \_extract_message_type_from_handle | Function | flext-core/src/flext_core/\_utilities/\_checker_parts/checker_part_03.py                                   | 59-81   |
-| can_handle_message_type            | Function | flext-core/src/flext_core/\_utilities/\_checker_parts/checker_part_03.py                                   | 84-95   |
-| compute_accepted_message_types     | Function | flext-core/src/flext_core/\_utilities/\_checker_parts/checker_part_03.py                                   | 98-109  |
-| resolve_message_route              | Function | flext-core/src/flext_core/\_utilities/\_checker_parts/checker_part_03.py                                   | 112-138 |
-| FlextUtilitiesEnforcementCollect   | Class    | flext-core/src/flext_core/\_utilities/\_enforcement_collect_parts/enforcement_collect_part_01.py           | 30-226  |
-| \_owning_project_root              | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect_parts/enforcement_collect_part_01.py           | 34-58   |
-| \_resolve_target_source_file       | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect_parts/enforcement_collect_part_01.py           | 61-69   |
-| \_discover_src_package             | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect_parts/enforcement_collect_part_01.py           | 72-95   |
-| \_project                          | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect_parts/enforcement_collect_part_01.py           | 98-127  |
-| \_iter_inner                       | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect_parts/enforcement_collect_part_01.py           | 130-133 |
-| \_iter_effective                   | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect_parts/enforcement_collect_part_01.py           | 136-148 |
-| \_field_items                      | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect_parts/enforcement_collect_part_01.py           | 151-163 |
-| \_attr_filter                      | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect_parts/enforcement_collect_part_01.py           | 166-182 |
-| accept_utility                     | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect_parts/enforcement_collect_part_01.py           | 172-174 |
+| \_peer_first_allowed               | Function | flext-core/src/flext_core/\_utilities/\_beartype/\_class_visitor/\_parts/class_visitor_part_02_01.py | 15-33   |
+| \_requires_alias_first             | Function | flext-core/src/flext_core/\_utilities/\_beartype/\_class_visitor/\_parts/class_visitor_part_02_01.py | 36-53   |
+| alias_first_violation              | Function | flext-core/src/flext_core/\_utilities/\_beartype/\_class_visitor/\_parts/class_visitor_part_02_01.py | 56-159  |
+| FlextUtilitiesChecker              | Class    | flext-core/src/flext_core/\_utilities/\_checker/checker_part_03.py                                   | 27-138  |
+| \_extract_generic_message_types    | Function | flext-core/src/flext_core/\_utilities/\_checker/checker_part_03.py                                   | 29-56   |
+| \_extract_message_type_from_handle | Function | flext-core/src/flext_core/\_utilities/\_checker/checker_part_03.py                                   | 59-81   |
+| can_handle_message_type            | Function | flext-core/src/flext_core/\_utilities/\_checker/checker_part_03.py                                   | 84-95   |
+| compute_accepted_message_types     | Function | flext-core/src/flext_core/\_utilities/\_checker/checker_part_03.py                                   | 98-109  |
+| resolve_message_route              | Function | flext-core/src/flext_core/\_utilities/\_checker/checker_part_03.py                                   | 112-138 |
+| FlextUtilitiesEnforcementCollect   | Class    | flext-core/src/flext_core/\_utilities/\_enforcement_collect/enforcement_collect_part_01.py           | 30-226  |
+| \_owning_project_root              | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect/enforcement_collect_part_01.py           | 34-58   |
+| \_resolve_target_source_file       | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect/enforcement_collect_part_01.py           | 61-69   |
+| \_discover_src_package             | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect/enforcement_collect_part_01.py           | 72-95   |
+| \_project                          | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect/enforcement_collect_part_01.py           | 98-127  |
+| \_iter_inner                       | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect/enforcement_collect_part_01.py           | 130-133 |
+| \_iter_effective                   | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect/enforcement_collect_part_01.py           | 136-148 |
+| \_field_items                      | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect/enforcement_collect_part_01.py           | 151-163 |
+| \_attr_filter                      | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect/enforcement_collect_part_01.py           | 166-182 |
+| accept_utility                     | Function | flext-core/src/flext_core/\_utilities/\_enforcement_collect/enforcement_collect_part_01.py           | 172-174 |
 
 _... and 64 more members._
 
@@ -106,7 +106,7 @@ No execution flows pass through this community.
   edge(s))
 - `derive_class_stem` (8 edge(s))
 - `attr_accept_constants` (7 edge(s))
-- `flext-core/src/flext_core/_utilities/_beartype/_class_visitor_parts/_parts/class_visitor_part_02_01.py`
+- `flext-core/src/flext_core/_utilities/_beartype/_class_visitor/_parts/class_visitor_part_02_01.py`
   (3 edge(s))
 - `flext-core/tests/unit/test_models_project_metadata.py::TestsFlextModelsProjectMetadata`
   (3 edge(s))

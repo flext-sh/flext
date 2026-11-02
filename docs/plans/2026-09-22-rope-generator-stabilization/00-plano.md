@@ -275,7 +275,7 @@ Appended below as increments land (command, cwd, exit code, decisive output).
   collection. Fleet-wide `-W error` import+exports probe then showed ALL 30 other
   members green; only tap-ldap needed the cure.
 - gen-9 (exit 2): tap-ldap passed; next failure `flext_tap_ldif` —
-  `cannot import name 'FlextTapLdifModelsEntry' from 'flext_tap_ldif._models'`. Root
+  `cannot import name 'FlextModelsTapLdifEntry' from 'flext_tap_ldif._models'`. Root
   cause: the `_models` part modules imported the own-package root `m` alias, whose owner
   (`models.py`) eagerly imports these same parts — a genuine import cycle (part → root m
   → .models → eager .\_models → re-entrant `__getattr__`). Cure at source

@@ -55,7 +55,7 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   `models.py→m`, `utilities.py→u`, `config.py→config`, `settings.py→settings`); (2) the
   **operational letters** (`r`, `d`, `e`, `h`, `s`, `x`) are inherited from the highest
   upstream flext library (`flext_cli`, which sources them from `flext_core`) through
-  `FlextInfraCodegenLazyInitPlannerAliasesMixin._resolve_aliases` /
+  `FlextInfraCodegenLazyInitPlannerAliases._resolve_aliases` /
   `_resolve_inherited_alias_source`; (3) a **local redeclaration published in `__all__`
   overrides the inherited ancestor**; (4) `Flext*` long-name classes re-export only
   modules from the **current directory** — never subdirectories, parents, or siblings.

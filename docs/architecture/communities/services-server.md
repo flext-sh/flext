@@ -45,7 +45,7 @@ Community of 317 nodes
 | migration_pipeline              | Function | flext-ldif/src/flext_ldif/api.py                   | 228-253 |
 | migrate                         | Function | flext-ldif/src/flext_ldif/api.py                   | 255-273 |
 | validate_entries                | Function | flext-ldif/src/flext_ldif/api.py                   | 276-283 |
-| FlextLdifServerMethodsMixin     | Class    | flext-ldif/src/flext_ldif/servers/\_base/mixins.py | 8-80    |
+| FlextLdifServerMethods     | Class    | flext-ldif/src/flext_ldif/servers/\_base/mixins.py | 8-80    |
 | project_processor_fields        | Function | flext-ldif/src/flext_ldif/servers/\_base/mixins.py | 12-32   |
 | get_parent_server_from_instance | Function | flext-ldif/src/flext_ldif/servers/\_base/mixins.py | 35-47   |
 | get_priority_from_parent        | Function | flext-ldif/src/flext_ldif/servers/\_base/mixins.py | 50-60   |

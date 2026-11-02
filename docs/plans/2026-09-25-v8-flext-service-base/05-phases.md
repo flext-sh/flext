@@ -138,7 +138,7 @@ registrations raise `e.ValidationError` (messages in `c`);
 `shared(auto_register_factories=True)` without a resolvable caller raises; a
 non-callable in the scan raises. Delete the string-only dependency_injector bridge
 (`provide`, `wire`) after the zero-use proof; remove `SkipValidation` in
-`_container_parts` (9) and `_dependency_types.py` (3) where a validatable type exists.
+`_container` (9) and `_dependency_types.py` (3) where a validatable type exists.
 Tests include the `scope()` LOGGER regression. Docs: `dependency-injection-advanced.md`,
 `service-patterns.md`. Consumers: the core suite, auth, observability, target-ldap,
 plugin.
@@ -221,10 +221,10 @@ graph-driven consumer revalidation; one commit per owner.
   `context_crud.py:103-107`; `_utilities/project_metadata.py:55-62`. Also the `make mod`
   detection findings measured on 2026-09-26: `ban-silent-except-swallow` at
   `_exceptions/helpers.py:43`,
-  `_exceptions/_base_parts/flextexceptionsbase_part_02.py:96`,
-  `_enforcement_collect_parts/enforcement_collect_part_01.py:49`, `dispatcher.py:118`;
+  `_exceptions/_base/flextexceptionsbase_part_02.py:96`,
+  `_enforcement_collect/enforcement_collect_part_01.py:49`, `dispatcher.py:118`;
   `ban-ambient-environ-read` at `_config.py:235`; `ban-pass-through-wrapper` at
-  `_beartype/_helpers_parts/helpers_part_01.py:155` and
+  `_beartype/_helpers/helpers_part_01.py:155` and
   `tests/unit/test_utilities_pydantic_coverage_100.py:122`.
 - **S9 batch B:** `dispatcher.py:58-80`, `:117-120`; `checker_part_02.py:84-93`;
   `parser_coerce.py:99-107`, `conversion.py:88-108`; `parser_targets_part_02.py:45-63`;

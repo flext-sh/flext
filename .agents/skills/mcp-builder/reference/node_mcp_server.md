@@ -167,7 +167,7 @@ Returns:
   For JSON format: Structured data with schema:
   {
     "total": number,           // Total number of matches found
-    "count": number,           // Number of results in this response
+    c.Aggregation.COUNT: number,           // Number of results in this response
     "offset": number,          // Current pagination offset
     "users": [
       {

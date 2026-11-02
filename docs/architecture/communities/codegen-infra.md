@@ -60,7 +60,7 @@ Community of 688 nodes
 | repository_baseline_branch            | Function | flext-infra/src/flext_infra/\_utilities/repository.py      | 105-142 |
 | workspace_spec_load                   | Function | flext-infra/src/flext_infra/\_utilities/repository.py      | 145-149 |
 | repository_conform_target             | Function | flext-infra/src/flext_infra/\_utilities/repository.py      | 152-166 |
-| FlextInfraCodegenLayoutGitignoreMixin | Class    | flext-infra/src/flext_infra/codegen/\_layout_gitignore.py  | 20-110  |
+| FlextInfraCodegenLayoutGitignore | Class    | flext-infra/src/flext_infra/codegen/\_layout_gitignore.py  | 20-110  |
 | \_apply_gitignore                     | Function | flext-infra/src/flext_infra/codegen/\_layout_gitignore.py  | 23-33   |
 | \_apply_gitignore_managed             | Function | flext-infra/src/flext_infra/codegen/\_layout_gitignore.py  | 35-59   |
 | \_apply_gitignore_append              | Function | flext-infra/src/flext_infra/codegen/\_layout_gitignore.py  | 61-90   |

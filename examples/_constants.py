@@ -6,6 +6,33 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+import re
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
 from collections.abc import Mapping, MutableSequence, Sequence
 from enum import StrEnum, unique
 
@@ -55,7 +82,7 @@ class ExamplesFlextRootConstants:
         """Helper to extract sequence of JsonMapping from JsonValue."""
 
         @staticmethod
-        def extract(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
+        def extract(value: t.JsonValue) -> Sequence[t.JsonMapping]:
             if not isinstance(value, Sequence) or isinstance(
                 value,
                 (str, bytes, bytearray),
@@ -71,7 +98,7 @@ class ExamplesFlextRootConstants:
         """Helper to extract string sequence from JsonValue."""
 
         @staticmethod
-        def extract(value: t.JsonValue) -> t.StrSequence:
+        def extract(value: t.JsonValue) -> Sequence[str]:
             if not isinstance(value, Sequence) or isinstance(
                 value,
                 (str, bytes, bytearray),

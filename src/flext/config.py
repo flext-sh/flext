@@ -6,6 +6,33 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+import re
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
 from typing import TYPE_CHECKING
 
 import flext_core
@@ -32,4 +59,4 @@ config = FlextRootConfig
 """The facade alias the rule contract allows beside the class; the
 process-wide singleton comes from ``FlextRootConfig.published()``."""
 
-__all__: t.VariadicTuple[str] = ("FlextRootConfig", "config")
+__all__: tuple[str, ...] = ("FlextRootConfig", "config")

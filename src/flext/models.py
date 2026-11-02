@@ -7,23 +7,50 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext._models import FlextRootModelsBase, FlextRootModelsConfig
-from flext_db_oracle import FlextDbOracleModels
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+import re
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+from flext._models import FlextModelsRootBase, FlextModelsRootConfig
+from flext_db_oracle import FlextModelsDbOracle
 from flext_grpc import FlextGrpcModels
 from flext_infra import FlextInfraModels
 from flext_ldap import FlextLdapModels
 from flext_meltano import FlextMeltanoModels
 from flext_observability import FlextObservabilityModels
-from flext_oracle_oic import FlextOracleOicModels
-from flext_oracle_wms import FlextOracleWmsModels
+from flext_oracle_oic import FlextModelsOracleOic
+from flext_oracle_wms import FlextModelsOracleWms
 from flext_plugin import FlextPluginModels
 from flext_quality import FlextQualityModels
 from flext_tests import FlextTestsModels
 
 
-class FlextRootModels(
-    FlextOracleOicModels,
-    FlextOracleWmsModels,
+class FlextModelsRoot(
+    FlextModelsOracleOic,
+    FlextModelsOracleWms,
     FlextQualityModels,
     FlextLdapModels,
     FlextInfraModels,
@@ -31,22 +58,22 @@ class FlextRootModels(
     FlextObservabilityModels,
     FlextPluginModels,
     FlextTestsModels,
-    FlextDbOracleModels,
+    FlextModelsDbOracle,
     FlextGrpcModels,
 ):
     """Workspace root models facade — access via m.Root.*.
 
     MRO ordered by inheritance depth (deepest first) to satisfy C3 linearization.
-    FlextAuthModels is inherited via FlextOracleOicModels.
+    FlextAuthModels is inherited via FlextModelsOracleOic.
     FlextApiModels, FlextWebModels, FlextCliModels are inherited via
     the OracleOic/OracleWms/Quality paths.
     FlextLdifModels is inherited via FlextLdapModels.
     """
 
-    class Root(FlextRootModelsBase, FlextRootModelsConfig):
+    class Root(FlextModelsRootBase, FlextModelsRootConfig):
         """Workspace root models MRO composition."""
 
 
-m = FlextRootModels
+m = FlextModelsRoot
 
-__all__ = ("FlextRootModels", "m")
+__all__ = ("FlextModelsRoot", "m")

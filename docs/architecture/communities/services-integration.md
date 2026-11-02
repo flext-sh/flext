@@ -56,7 +56,7 @@ Community of 106 nodes
 | \_store_and_return_token        | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py    | 404-408 |
 | \_to_api_payload                | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py    | 410-420 |
 | \_validate_token_url            | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py    | 422-426 |
-| FlextOracleOicAuthMixin         | Class    | flext-oracle-oic/src/flext_oracle_oic/services/auth.py | 17-59   |
+| FlextOracleOicAuth         | Class    | flext-oracle-oic/src/flext_oracle_oic/services/auth.py | 17-59   |
 | refresh_auth_token              | Function | flext-oracle-oic/src/flext_oracle_oic/services/auth.py | 20-37   |
 | validate_auth_token             | Function | flext-oracle-oic/src/flext_oracle_oic/services/auth.py | 39-59   |
 | FlextOracleOicServiceBase       | Class    | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 26-276  |
@@ -105,7 +105,7 @@ _... and 56 more members._
 - `getattr` (9 edge(s))
 - `from_failure` (9 edge(s))
 - `Mapping` (6 edge(s))
-- `flext-oracle-oic/src/flext_oracle_oic/services/integration_crud.py::FlextOracleOicIntegrationCrudMixin._as_text`
+- `flext-oracle-oic/src/flext_oracle_oic/services/integration_crud.py::FlextOracleOicIntegrationCrud._as_text`
   (6 edge(s))
 - `items` (5 edge(s))
 - `map` (5 edge(s))
