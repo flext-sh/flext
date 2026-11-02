@@ -142,8 +142,9 @@ and the execution chain; do not replace it with wrappers or another engine.
 This amendment states the accepted contract, not implementation acceptance.
 The [2026-10-30 handoff](../../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/plan.md#handoff-de-retomada--2026-10-30-chat-01a18a11)
 records source limits and failing runtime receipts; `flext-u9h2i` owns execution
-and closure. Shared-worktree adoption remains mandatory; no clean or quiet
-workspace prerequisite applies to this projection.
+and closure. Fix-forward adoption under the root `AGENTS.md` "Rig and Lane
+Contract" remains mandatory; no clean or quiet workspace prerequisite applies to
+this projection.
 
 The generator applies [ADR-014's semantic ownership](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership)
 recursively: a direct family domain facade composes the declarations in its private

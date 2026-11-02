@@ -101,11 +101,27 @@ declaration owners without forming or writing another lock, followed by the
 existing typed selection owner in the physical consumer environment. That owner
 validates the complete selection and publishes its existing receipt. Local
 override paths are runtime inputs, never captured in generated Makefiles. The
-[execution-context contract](../../../flext-infra/docs/guides/execution-context.md#generation-staging-transaction-journals-and-modernization)
+[execution-context contract](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#generation-staging-transaction-journals-and-modernization)
 owns the source-only bootstrap target and its still-pending implementation and
 cold consumer proof; workspace-only export cannot be presumed to include the
 excluded editable path dependencies described below. This clarification does not
 relax the upgrade guard or qualify an SDK release.
+
+**Release eligibility.** Clarification of 2026-11-02, documentation only (reconciliation
+of the retired 2026-09-10 cooldown plan, bead `flext-tvkbj`); no decision changes. The
+releases `make upg` may lock are bounded by one fleet cooldown, declared once as
+`codegen.toolchain.dependency_cooldown_days` in
+`flext-infra/src/flext_infra/config/codegen.yaml` (global rule `security/supply-chain`:
+a rolling cooldown, never a fixed date). The generator projects that single value to
+the Mise `[settings]` `minimum_release_age` and to the `cooldown.default-days` of every
+Dependabot ecosystem entry; requirements a project takes by direct Git reference (the
+FLEXT members and `rope`) are excluded from the Dependabot cooldown. uv carries no
+cooldown key: `exclude-newer` and `exclude-newer-package` stay banned in every form,
+and conform removes both from `[tool.uv]` unconditionally
+(`flext-infra/src/flext_infra/_utilities/_pyproject/uv_sources.py`). Vulnerable
+transitive packages are held by hand-reviewed floors in `uv_constraint_dependencies`,
+projected to `[tool.uv] constraint-dependencies` (tracker memory
+`operator-ruling-2026-10-24-security-cooldown-and-fp`; bead `flext-y9dqj`).
 
 ## The upgrade guard
 
@@ -127,7 +143,7 @@ operator's behalf; a violation is a RED result naming the dirty path or the stal
 gitlink, and the operator or agent commits and reruns `make upg`.
 
 The guard is scoped to `make upg` only. It is the explicit operator exception to the
-root `AGENTS.md` Shared Worktree Contract, which otherwise prohibits a clean tree as
+root `AGENTS.md` "Rig and Lane Contract", which otherwise prohibits a clean tree as
 a prerequisite: lock writing pins SHAs that remote CI must reproduce, so only this
 verb requires committed state. No other verb inherits the requirement.
 

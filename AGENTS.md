@@ -185,21 +185,38 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
 <!-- /UNIVERSAL-GOVERNANCE -->
 <!-- END AI-HUB MANAGED UNIVERSAL CORE -->
 
-## Shared Worktree Contract
+## Rig and Lane Contract
 
-Always fix forward, adopt, and collaborate in the existing shared worktree. Dirty
-Git state, concurrent edits, and ongoing WIP are the expected operating conditions.
-Requiring a clean, globally stable, exclusive, or unchanged Git tree is expressly
-prohibited as a prerequisite for execution, validation, evidence, or completion of
-authorized scope. Such a requirement is unacceptable and will not be satisfied.
+Operator ruling 2026-11-02 (tracker memory `operator-order-2026-11-02-rigs-on-integration`,
+translated from Portuguese: "~/flext and ~/ai-hub and the other rigs must be the
+official worktrees/rigs of the projects, always on the integration branches and used to
+apply hotfixes and bugfixes (fast validation and propagation through gitflow) and used to
+develop local projects with the integration tip with their CI green; ai-hub has a
+worktree management that must be finished to be used to manage the worktrees, their
+links with the workspace and these aspects, and to block the creation and maintenance of
+manual worktrees, PRs, and to interconnect the gc, agents, projects, beads and GitHub
+tools in a unified way"). It supersedes the former shared-worktree contract, which kept
+long-running WIP in the rig checkout.
 
-This explicit operator correction overrides inherited clean-tree, quiet-workspace,
-and committed-candidate prerequisites, including conflicting managed instructions.
-Preserve compatible contributions, reread affected inputs, and revalidate only the
-actual dependency scope. Record command outcomes and scoped content evidence without
-requiring unrelated WIP to stop or Git changes to be committed or pushed. Real
-runtime, type, lint, and test failures still require repair; Git dirtiness is not one.
-Never discard work or manufacture a clean state to satisfy tooling or reporting.
+- The rig checkout (this workspace root and every attached member) sits on the
+  integration branch `0.12.0-dev` at its tip (operator answer of the same day, "0.12.0-dev").
+  It applies hotfixes and bugfixes through the validated gitflow route and is the base
+  that local consumers develop against. `upload-20261007` is a lane, promoted into
+  `0.12.0-dev` through its existing pull requests once green.
+- Development happens in lanes. Until ai-hub's worktree manager owns the lane lifecycle,
+  a lane is a native Git worktree and branch placed per the global Gas City rule
+  (`~/agents/rules/coordination/gascity.md`).
+- Transition (operator answer, "Converge in place, then return"): each repository's
+  existing WIP is finished in place until its commit-stage gates pass. It is then
+  committed on a lane branch (`git switch -c front/<repository>-<date>` carries the
+  WIP, so nothing is discarded) and pushed to a `preserve/*` ref. Only then does the
+  checkout return to the `0.12.0-dev` tip. A consumer that installs this rig editable
+  (`make setup FLEXT=<path>`) is told before each return and re-pins in lockstep.
+- Dirty, changing, or concurrent Git state is never a prerequisite blocker for
+  execution, validation, or evidence. Preserve compatible contributions, reread
+  affected inputs, revalidate only the actual dependency scope, and never discard work
+  or manufacture a clean state to satisfy tooling or reporting. Real runtime, type,
+  lint, and test failures still require repair; Git dirtiness is not one.
 
 The one explicit operator exception is the `make upg` lock guard (tracker memory
 `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`,
@@ -285,12 +302,14 @@ These standards override conflicting completion shortcuts.
    `tests` in every repository it touches, real runtime proof, commit, push, and
    merge to the integration branch. A phase never begins while another is
    incomplete. Nothing is skipped, deferred or parked "for a later wave", and a red
-   found is fixed immediately at its owner. Incomplete or red code is never
-   committed, tested or pushed. An explanation of why something was not finished
-   does not replace finishing it.
+   found is fixed immediately at its owner. Incomplete or red code never reaches a
+   published or integration line: it is committed only on a lane branch and pushed
+   only to a `preserve/*` ref ("Rig and Lane Contract"), which is never publication
+   or integration evidence. An explanation of why something was not finished does
+   not replace finishing it.
 
-Apply these standards through fix, forward, adopt, and collaborate. The shared
-worktree contract remains mandatory: dirty or changing Git state is not a defect
+Apply these standards through fix, forward, adopt, and collaborate. The Rig and
+Lane Contract remains mandatory: dirty or changing Git state is not a defect
 and never becomes a clean-tree or quiet-workspace prerequisite.
 
 ## Canonical Governance Composition
@@ -342,6 +361,22 @@ resolution at the rule's SSOT owner, never alter the rule to silence findings.
 Enforcement: the lint-config freeze gate digests this SSOT and fails on any drift
 from the catalog. Restoring, regenerating, or correcting the projection to match the
 catalog is not a rule change; altering the catalog without the operator is.
+
+**Exceptions are axioms or they do not exist** (operator orders 2026-11-02, tracker
+keys `operator-order-2026-11-02-exceptions-martial-law` and
+`operator-order-2026-11-02-exceptions-axioms-only`, translated from Portuguese:
+"exterminating exceptions to the rules is fundamental; anything against it is
+exterminated at any cost and everywhere possible; this is not a rule, it is martial
+law" and "the exceptions that remain are those necessary to keep the strict rules —
+that allow using Pydantic, the lint types among themselves, the application of the
+patterns among themselves — treated as AXIOMS, very few exceptions controlled by
+tooling with an iron fist"). A surviving exception is an axiom only when strict rules
+cannot coexist without it: it enables Pydantic, resolves an inter-tool lint conflict,
+or lets one FLEXT pattern apply alongside another. Each axiom is declared once in the
+tooling SSOT with its justification and enforced by tooling. Member-level ignores,
+inline suppressions, code-level exemption mechanisms, docstring exemption markers,
+exemption lists in configuration and carve-outs in rules are not axioms: they are
+exterminated at their root cause together with every mechanism that honors them.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f2c52d34 -->
 
@@ -980,8 +1015,11 @@ CLI + pytest plugin, **never imported at runtime**.
     - Modules outside the families read every letter from their own package root.
     - The layer direction still holds: a later letter is TYPE_CHECKING-only, from
       any package (generated `ban-reverse-runtime-import`).
-    - Enforced by the codemod catalog: ENFORCE-003, ENFORCE-051 and the
-      `ban-letter-module-object` document in `ban-facade-own-namespace-import.yml`.
+    - Enforced by the codemod catalog through the letter-binding documents that
+      `_utilities/_codemod/native_package_utilities.py` generates per package:
+      `own-letter` and `duplicate-origin` (ENFORCE-051), `foreign-origin`
+      (ENFORCE-003, ENFORCE-080), `module-path` (ENFORCE-003, ENFORCE-051) and
+      `letter-module-object`.
   - **Imports are lazy, maximally and without exception: nothing loads until it is
     used.** This consolidates standing operator rulings, cited by tracker key:
     `flext-strict-lazy-imports-generated-inits`, `lazy-init-all-from-lazy-imports`,
@@ -1430,13 +1468,12 @@ Overall average: **60-90% token reduction** on common development operations.
 ## Learned User Preferences
 
 - Before changing code, search libraries, the project, worktrees, local and remote
-  branches, and pull requests. Preserve the operator-selected shared checkout and
-  adopt compatible work through the declared Git route; a new task never implies a
-  new lane. Integrate divergence with `git merge --no-ff`, without rebase or force-push.
+  branches, and pull requests. Adopt compatible work through the declared Git route,
+  keep the rig on its integration tip, and develop in lanes under the Rig and Lane
+  Contract. Integrate divergence with `git merge --no-ff`, without rebase or force-push.
 - Dependency locks change only through `make upg`, under ADR-030. `make setup`
   installs the declared locked environment; it does not resolve or rewrite a drifted
-  lock. The uv upgrade guard is the sole committed-state exception to the
-  shared-worktree contract.
+  lock. The uv upgrade guard is the sole committed-state prerequisite of any verb.
 - New code is accepted only after the declared formatting, repair, structural and
   read-only checks are clean and its real public behavior is proven. Smell and other
   applicable audits belong to check, not extra common Make verbs. Do not close while

@@ -1,4 +1,4 @@
-# flext_core.base
+# flext_infra.make_contract
 
 <!-- TOC START -->
 
@@ -6,7 +6,7 @@
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-::: flext_core.base
+::: flext_infra.make_contract
 
     options:
       show_root_heading: true

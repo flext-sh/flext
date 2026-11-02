@@ -384,6 +384,10 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
 - Resolve each repository's declared integration branch and refresh its remote before
   work, after validation, and before publication. Prove the lane contains that tip;
   adopt new integration commits with a non-rewriting merge, never a history replacement.
+- The rig checkout stays on its integration branch tip (`0.12.0-dev`) and serves
+  hotfixes, bugfixes and local consumers. Development happens in lanes, and an existing
+  WIP converges in place before the rig returns to the tip (root `AGENTS.md`
+  "Rig and Lane Contract"; tracker memory `operator-order-2026-11-02-rigs-on-integration`).
 - Keep one active owner per checkout. Reuse and reconcile existing lanes instead of
   duplicating work. Dirty or divergent input is preserved, attributed, and fixed forward.
 - Land independently validated member slices first. Update superproject gitlinks only

@@ -173,11 +173,21 @@ declared at the generation owner; authored files are never retired by that decla
 Every finding is the native match; no Python admission runs after the scan. A
 project fact a catalog rule needs is a stable generated utility (`own-package`,
 `stdlib-module`, `runtime-package`, `facade-package`, `local-alias`,
-`runtime-alias`, `package-export`, `compose-module`, ...) that the rule references
+`runtime-alias`, `package-published-import`, `compose-module`, ...) that the rule references
 through `matches:`, or a file scope the generated provider publishes in its
 `scopes.json`. Catalog fixtures resolve those identities through
 `config/rules/ast-grep/fixture-utils/`, which only the fixture stage reads. A native
 rule that still reports an actionable finding after the cascade fails `make mod`.
+
+The deep-import law has one rewrite rule, `rewire-deep-import-to-package`: a
+`from <package>.<module> import ...` moves to `from <package> import ...` only
+when the `package-published-import` utility proves that the package's initializer
+publishes every imported name and that no sibling import of the package's modules
+in the file imports an unpublished name. The header of a package's members moves
+together or stays untouched; a package without an initializer publishes nothing
+and never rewrites. The detection rules `ban-test-deep-module-import`,
+`ban-consumer-submodule-import` and `ban-own-family-internal-import` report what
+the rewrite cannot repair.
 
 ## ast-grep rules
 
@@ -268,9 +278,74 @@ The engine reads these `metadata` keys, declared in
 | `scope` | File scopes the generated provider publishes: `{in: [selector], not-in: [selector]}` narrows the rule's `files`/`ignores`; `partition` renders one generated rule `<id>--<package>[--<key>]` per file group, and selecting the catalog id selects every partition. |
 | `owner` | The distribution that owns the law; that project's own plan drops the rule. |
 | `consumers_of` | The rule applies only to projects whose runtime closure includes that distribution. |
-| `relocation` | A detection-only rule names the Rope relocation that repairs it and captures the symbol as `$NAME`. |
+| `relocation` | A detection-only rule names the Rope relocation that repairs it and captures the symbol as `$NAME`. `family-declaration` also captures the owning facade letter as `$FAMILY` (see below). |
+
+### One relocation law: every declaration lives in its family
+
+ADR-028 Decisions 3-4 give each kind of declaration one owner family: type
+aliases, `TypeVar`s and other typing declarations in `t`, constants in `c`,
+`Protocol` classes in `p`, models in `m`, reusable behavior in `u`. The
+`family-declaration` relocation is the single executor of that law
+(`refactor/namespace_relocations.py`); a rule only declares the kind, its
+`$NAME`, and the owning letter as `$FAMILY`. The rules that name it are
+`ban-manual-typing-alias-outside-typings` (`t`),
+`ban-manual-protocol-outside-protocols` (`p`),
+`ban-class-wrong-facade-layer` (`c`, `m`, `u` by the class kind) and
+`ban-behavior-in-declaration-layer` (`u`).
+
+- **Destination.** The module of the owning family named after the declaring
+  module, inside the namespace root that hosts the family directories:
+  `_models/matchers.py` relocates a typing to `_typings/matchers.py`
+  (`u.Infra.family_declaration_target_file`; the directory and the letter come
+  from the facade-family census). An absent destination is scaffolded; the
+  class-nesting cutover then nests the moved declaration in the module's single
+  family class and the facade composition publishes it by MRO
+  (`t.Tests.MatchExpectedValue`).
+- **Consumers.** The native Rope move rewires every consumer, in other members
+  and external consumers included.
+- **Private names.** The family namespace has no privacy, so `_Name` is
+  renamed to `Name` through the native Rename before the move. A collision at
+  the source or the destination, or a quoted forward reference to the name,
+  stops the relocation with the first failure.
+- **Behavior.** A module-level function moves whole. A static or class method
+  is transferred into the destination owner class by the native class transfer
+  and rejected whole when a reference is unproven (the rejection is logged and
+  the finding stays). Instance methods, properties and dunders need a receiver
+  rewrite that no derivation supplies and stay findings.
+- **Nesting yields.** Class nesting leaves a typing declaration outside the
+  typings family, and a function in a constants, typings or models module,
+  at module level so this relocation finds it.
 | `expected` | The exact finding count receipt; any other count fails. |
 | `owned_path_suffix` | Reject owned `.pyi` paths from discovery even without a syntax tree; detection-only, with no exemption. |
+
+### One construction owner: the model, never the protocol
+
+A `p` member is a structural Protocol: it describes a contract and never builds
+or validates data. `ban-protocol-constructor` is the single rule of this law and
+covers every form at any namespace depth: `p.X(...)`, `p.NS.X(...)` and the
+model classmethods `.model_validate`, `.model_validate_json`,
+`.model_validate_strings` and `.model_construct` on a `p` path. A protocol
+read in an annotation, `isinstance` check or `match` class pattern is the
+intended use and never fires; only a call whose callee is the `p` path does,
+and only in a module that binds `p` from a FLEXT package. The runtime failure
+this prevents is real: a protocol class has no `model_validate`.
+
+The rewrite is exact and derived, never listed. The generated utility
+`protocol-model-path` (producer `codemod_requested_utilities`, the same
+request mechanism as `generic-specialization`) holds the dotted `p` paths that
+a reached facade package publishes as a model (`FacadeMemberKind.MODEL`) at the
+same path in `m`, read from the native source of both letters. A path that any
+reached package publishes without a model twin is excluded. The rule's
+rewriter retargets only that path from `p` to `m`, so a protocol without a model
+at its path keeps its text and stays a finding for its owner: the rule reports
+it and never guesses. The unbound `m` the rewrite introduces is bound by the
+generated `import-header` stage of the same `make mod` fixed point. The
+fixture value of the utility is `fixture-utils/protocol-model-path.yml`; the
+rule test covers the constructor, validation, nested-path, no-model, annotation,
+`isinstance` and unbound-facade cases.
+
+See [using-pydantic](using-pydantic.md#source-derived-protocol-contracts) for the
+protocol contract this rule enforces.
 
 ### One rule per law
 
@@ -308,10 +383,9 @@ library-named exports to capability names follows ADR-028 Decision 15.
   `partition` is used only when the verdict depends on which file group holds
   the match. When the law can be stated from the code itself, state it there
   and use `scope: {not-in: [...]}`, which renders as plain native `ignores`.
-  `ban-foreign-namespace-source`, `ban-foreign-canonical-alias-import` and
-  `ban-foreign-namespace-annotation-source` are single documents that way:
-  facade modules compose upstream letters by design, so they are scoped out
-  rather than partitioned per letter.
+  The generated `foreign-origin` letter-binding document is one document per
+  package that way: the family modules compose upstream letters by design, so
+  they are listed in its native `ignores` rather than partitioned per letter.
 - **One law, one rule, every library.** A law that applies to many libraries,
   packages or letters derives the set from its facts (installed distributions,
   facade exports, the import law). It never ships one clone per member.

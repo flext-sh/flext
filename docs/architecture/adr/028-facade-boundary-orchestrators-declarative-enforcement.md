@@ -111,6 +111,17 @@ outside the facades across 12 repositories.
     `p` protocols only, `m` models only, `u` behavior only, each in the import order
     `c → t → p → m → u` (reverse imports `TYPE_CHECKING`-only) and with one owner per
     object (ADR-027).
+  2. **The law is repaired automatically, by one relocation.** A declaration found
+    outside its family (a type alias or `TypeVar`, a `Protocol`, a class of another
+    family's kind, a function or static/class method in a declaration layer) moves
+    through the single `family-declaration` relocation of `make mod` to the module of
+    the owning family that carries the declaring module's domain
+    (`_models/matchers.py` → `_typings/matchers.py`), is nested in that module's one
+    class, is published by MRO (`t.Tests.<Name>`) and has every consumer rewired by the
+    native Rope move. A module-private name becomes the public family member, because a
+    family namespace has no privacy. Instance methods, properties and dunders need a
+    receiver rewrite no derivation supplies and remain findings for the operator. See
+    the codemod rules guide, "One relocation law: every declaration lives in its family".
 
 ### Decision 5
 
@@ -277,6 +288,19 @@ outside the facades across 12 repositories.
     follows every decision of this ADR (root-letter imports, no library names
     outside the facades, the Pydantic way).
 
+    **Amendment 2026-11-02 — universal automatic rewiring** (operator order, tracker
+    memory `operator-order-2026-11-02-universal-auto-rewiring`, translated from
+    Portuguese: "the auto-rewiring law must cover all Python code; the mechanism must be
+    so generalized and applied to everything that it applies even to Python code in the
+    project's Markdown and docstrings, using flext-infra with rope for it; it is not
+    optional, it is mandatory for it and for every other complex code rewrite"). Every
+    rewiring cutover, whether import or letter binding, rename, move or relocation,
+    covers Python in Markdown code blocks and docstrings in the same change. It runs
+    through flext-infra on the native Rope workspace model ([Decision 17](#decision-17)),
+    using its documentation occurrences and the existing `_utilities/_docs` owners.
+    Text scripts and hand edits are not a rewrite mechanism. A cutover that leaves
+    stale embedded code is incomplete, never a follow-up item.
+
 ### Decision 10
 
   The accepted [projector bootstrap dependency cut](018-generator-declarations.md#projector-bootstrap-dependency-cut)
@@ -335,7 +359,27 @@ outside the facades across 12 repositories.
         (`ban-reverse-runtime-import`).
 
     A letter of any facade package read through its module object (`import pkg`,
-    then `pkg.u.X`) is detected by the single rule `ban-letter-module-object`.
+    then `pkg.u.X`) is detected by the `letter-module-object` document that the
+    letter-binding producer (`_utilities/_codemod/native_package_utilities.py`)
+    generates per package. It sits beside that producer's `own-letter`,
+    `duplicate-origin`, `foreign-origin` and `module-path` documents, which together
+    form the one letter-binding law.
+
+    **Amendment 2026-11-02 — import header, automatic repair and rewiring**
+    (operator order, tracker memory `operator-order-2026-11-02-import-header-auto-rewire`,
+    translated from Portuguese: "a serious example of rule simplification that breaks
+    the projects: in flext-core, `_protocols/base.py` imports `p` (it will create an
+    import cycle and we have two TYPE_CHECKING import sections; it must always be the
+    last, and we cannot have comments between the imports)" and "the engine must fix
+    this too, automatically, and rewire the components to their definitions in the
+    correct location"). A module header has exactly one `if TYPE_CHECKING:` block, and
+    it is the last import section. There are no comments between imports, and the
+    package's own letter never appears inside its own family. The binding exists even
+    when the package has no foreign upstream for that letter. The repair is automatic
+    inside `make mod`, never detection-only. It runs on the native Rope workspace
+    model ([Decision 17](#decision-17)), rewiring references to their defining classes
+    in the correct family location, imported through the family package. Exactly one
+    owner places imports; parallel placement routes are deleted in the same cutover.
 
 ### Decision 11
 
@@ -552,7 +596,14 @@ outside the facades across 12 repositories.
        `u.Infra` owner is the only module that names it (Decision 15). A workspace-level
        command uses its declared repository loop and creates one project per repository;
        it does not model sibling repositories as one project or open redundant projects
-       for the same repository during that invocation.
+       for the same repository during that invocation. Measured 2026-11-02
+       (`flext-4760z`): one merged project over the workspace and its 31 members made
+       every internal-tier rename fail. The `tests` package exists in 32 roots, so a
+       dotted lookup resolved the workspace root's package. An internal-tier module is
+       identified by its owning repository and path, inside that repository's own
+       project. Cross-repository effects use Rope's native multi-project refactoring,
+       which also covers the documentation occurrences required by the Decision 9
+       amendment.
      - **Amendment 2026-10-28 — accepted contract, implementation pending:**
        refresh is always incremental within that same native project.
        After a transaction, invalidate only changed resources, affected
@@ -709,7 +760,7 @@ architecture link.
 
 | Decision | Workspace declaration | Subproject declaration and execution |
 | --- | --- | --- |
-| [8 — one standard, automated; gate-clean projections](#decision-8) | [Root `AGENTS.md`, Conventions and Patterns — automated correction](../../../AGENTS.md#conventions--patterns); [make commands guide, Convergence](../../guides/make-commands.md#convergence-shared-worktree-and-clean-rules); [ADR-018 verification contract](018-generator-declarations.md#verification-contract) | Campaign `flext-pipol` (gate-clean slice `flext-wznvp`); lazy-init wrapping cure `flext-tlqrw`; engine post-cleanup removal tracked on `flext-pipol` |
+| [8 — one standard, automated; gate-clean projections](#decision-8) | [Root `AGENTS.md`, Conventions and Patterns — automated correction](../../../AGENTS.md#conventions--patterns); [make commands guide, Convergence](../../guides/make-commands.md#convergence-dirty-inputs-and-clean-rules); [ADR-018 verification contract](018-generator-declarations.md#verification-contract) | Campaign `flext-pipol` (gate-clean slice `flext-wznvp`); lazy-init wrapping cure `flext-tlqrw`; engine post-cleanup removal tracked on `flext-pipol` |
 | [5 — static enforcement](#decision-5) | [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra, ADR-028 Decision 5: Declarative enforcement](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-5-declarative-enforcement); Bead `flext-43iz8` |
 | [15 — capability names](#decision-15) | [Root `AGENTS.md`, Decision 15](../../../AGENTS.md#adr-028-decision-15); [public core guide, What flext-core must not absorb](../../guides/using-flext-core.md#what-flext-core-must-not-absorb); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); external consumer census: `flext-1engx.11` |
 | [16 — CA/DI and zero findings](#decision-16) | [Root `AGENTS.md`, Decision 16](../../../AGENTS.md#adr-028-decision-16); [consumer law, R2](../../standards/consumption-law.md#r2--no-duplication-structural-scan); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [Target LDAP CA/DI declaration](https://github.com/flext-sh/flext-target-ldap/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16-ca-di-and-quality); implementation and quality gates: `flext-1engx.15`, `flext-pawp5` |
