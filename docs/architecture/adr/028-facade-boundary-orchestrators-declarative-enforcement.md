@@ -525,9 +525,19 @@ outside the facades across 12 repositories.
     ser o máximo desacoplado com as regras ca/di de flext-core, exemplo, rope nao tem
     referencia de todos os objetos em memória da workspace ? e ele tem metodos de
     refatoração, isso tem que ser usado ao inves de custom".
-     - Each governed repository invocation reuses exactly one workspace project as its
-       in-memory model (module cache, parsed modules, file listing, import tools, and
-       change validation), exposed only through `p.Infra.WorkspaceSnapshot`; the
+     - **Projection exception approved 2026-11-01.** [ADR-018's pure-projection
+       correction](018-generator-declarations.md#nested-facade-projection)
+       supersedes this decision's Rope-only parsing and project requirements for
+       `make gen` alone. Generation uses the existing typed standard-library AST
+       declaration inventory, opens no Rope project and performs no source movement,
+       consumer rewiring or semantic convergence. Preserve existing declaration
+       shapes and public contracts; the complete generation budget is below twenty
+       seconds. Semantic modification remains native Rope-owned. This exception
+       authorizes no alternate semantic engine, LibCST route or parallel publisher.
+     - Each governed semantic modification invocation reuses exactly one workspace
+       project as its in-memory model (module cache, parsed modules, file listing,
+       import tools and change validation), exposed only through
+       `p.Infra.WorkspaceSnapshot`; the
        `u.Infra` owner is the only module that names it (Decision 15). A workspace-level
        command uses its declared repository loop and creates one project per repository;
        it does not model sibling repositories as one project or open redundant projects
@@ -542,7 +552,7 @@ outside the facades across 12 repositories.
        bootstrap/import/source read and protects later lazy reads; it is not
        limited to snapshot construction. Staged validators use the independent
        candidate without reacquiring a parent-held live barrier. ADR-018 owns
-       ordering, crash recovery and guarded rollback of owned effects.
+       ordering, crash recovery and its newer fix-forward recovery contract.
      - Renames, moves and import rewrites use rope's native refactorings (rename with
        documentation occurrences, move, restructure, multi-project refactoring).
      - Custom parse, discovery, import-graph and rename/move planners that duplicate
@@ -550,7 +560,8 @@ outside the facades across 12 repositories.
        `flext-1engx.15`).
      - **Amendment 2026-10-28 (operator order 2026-10-28; campaigns `flext-pipol`
        and its rope-only cutover daughter `flext-u9h2i`): rope is the only accepted
-       Python interpreter in FLEXT-authored code.** The engine never parses,
+       Python interpreter in FLEXT-authored semantic modification code.** Except
+       for the narrowly approved generation projection above, the engine never parses,
        analyzes or rewrites Python source with the `ast` module, `libcst`, or `re`
        applied to code — every such site is exterminated and rewired to rope's
        PyModules from the single indexed project. Custom transforms operate on that
@@ -560,9 +571,9 @@ outside the facades across 12 repositories.
        own owners: the ban is on FLEXT-authored Python parsing, not on those
        engines. The complete decision form:
        - **Single loop, single index, single transaction.** One rope loop per
-         invocation. Exactly one index per repository per invocation — no phase,
-         planner, checker or validator opens a second project or re-parses what
-         that index already holds. Effects publish as one batch in a single
+         semantic modification invocation. Exactly one index per repository per
+         invocation — no phase, planner, checker or validator opens a second project
+         or re-parses what that index already holds. Effects publish as one batch in a single
          transaction, and the first causal failure retains the batch
          ([ADR-018 single-read, single-batch publication](018-generator-declarations.md#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol)).
        - **Native refactorings first.** Before any custom transform, the operation
@@ -607,9 +618,10 @@ outside the facades across 12 repositories.
          typed JSON facts, so member code still never loads in the engine's
          interpreter — awaits operator authorization.
        - **No LibCST carve-out.** The 2026-10-25 ADR-014 §6 permission to retain
-         separate tools for distinct capabilities is superseded for Python
-         parsing: no alternative-parser carve-out exists. A gap in rope is a
-         BLOCKED-ON-ROPE-CAPABILITY report, never a retained parallel engine.
+         separate tools for distinct capabilities is superseded for semantic
+         Python parsing. Only the generation AST projection expressly approved
+         above is excepted; it supplies no semantic transformation route. A gap in
+         rope is a BLOCKED-ON-ROPE-CAPABILITY report, never a retained parallel engine.
        - **Living census and execution truth.** The campaign engine map
          (`.kilo/plans/2026-10-28-gen-mod-parametrization-performance/engine-map.md`,
          private plan tree, not published authority) is the living census

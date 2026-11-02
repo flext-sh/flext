@@ -56,6 +56,15 @@ Two 2026-10-25 operator rulings bind every FLEXT model (root `AGENTS.md`
 
 Only flext-core imports `pydantic`, `pydantic_settings` or `pydantic_core`.
 
+Configuration annotations follow the type owner: declare model metadata as
+`ClassVar[t.ConfigDict]` and construct its value with `m.ConfigDict(...)`.
+Settings-specific metadata uses `ClassVar[t.SettingsConfigDict]` with
+`m.SettingsConfigDict(...)`, preserving the native settings key contract.
+The typing facade supplies the native annotation contract; the models facade
+supplies the runtime constructor. Codemods preserve every configuration argument
+and reuse the existing import-header stage to bind `t` before publication. They
+must never rewrite a valid `t.ConfigDict` annotation back to the value facade.
+
 The operator's 2026-10-28 declaration policy uses the enum type for its full
 domain. `Literal` expresses a proper subset or a discriminator; enumerating
 every member again duplicates the owner. Strict Python constructors receive

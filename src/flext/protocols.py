@@ -7,7 +7,11 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext._protocols import FlextRootProtocolsBase, FlextRootProtocolsConfig
+from flext._protocols import (
+    FlextModelsRootProtocolsGeneratedValue,
+    FlextRootProtocolsBase,
+    FlextRootProtocolsConfig,
+)
 from flext_db_oracle import p
 from flext_grpc import p as flext_grpc_p
 from flext_infra import p as flext_infra_p
@@ -43,7 +47,11 @@ class FlextRootProtocols(
     FlextLdifProtocols is inherited via FlextLdapProtocols.
     """
 
-    class Root(FlextRootProtocolsBase, FlextRootProtocolsConfig):
+    class Root(
+        FlextRootProtocolsBase,
+        FlextRootProtocolsConfig,
+        FlextModelsRootProtocolsGeneratedValue,
+    ):
         """Workspace root protocols MRO composition."""
 
 

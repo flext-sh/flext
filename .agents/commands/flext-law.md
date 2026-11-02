@@ -23,12 +23,20 @@ Apply the operator's specification-preservation requirement in root `AGENTS.md`:
 present evidence and impacts and obtain an explicit operator decision before any
 simplification, reduction or deviation. For `gen`/`mod`, compose
 [ADR-018](../../docs/architecture/adr/018-generator-declarations.md), including its
-2026-10-29 error-handling amendment, with
+2026-10-29 error-handling and 2026-11-01 pure-projection amendments, with
 `~/agents/rules/runtime/atomic-effects.md` for the current cooperative publication,
 receipt and fix-forward recovery contracts. The active Bead records implementation
 and verification separately.
 Source validation, generated publication and installed consumption remain separate
 receipts under the existing verification owner.
+
+`make gen` uses the existing typed AST declaration projection without Rope,
+source moves, consumer rewrites or semantic convergence. Its complete invocation
+must finish below twenty seconds; typed stage budgets remain configuration-owned.
+`make mod` retains native Rope for semantic discovery and refactoring and reuses
+the same projection contracts and publisher. Preserve functionality and existing
+class/member shapes while reducing coupling and the execution chain through
+existing CA/DI owners. Historical Rope-only generation text is superseded.
 
 For Pydantic, configuration, settings or facade composition, first read
 [ADR-005's domain boundaries](../../docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#domain-boundaries-and-value-flow-amended-2026-10-28)
@@ -57,7 +65,9 @@ For structural cleanup, also compose the canonical global `search-first`, `yagni
 `ssot`, `solid`, `simplify`, and `dry` skills in that order. Execute rewires through
 root `make mod`; native Rope owns Python hierarchy, bindings, references and
 refactorings under ADR-028 Decision 17. Declarative rules retain their declared
-owner; they do not authorize FLEXT-authored AST, LibCST or textual Python analyzers.
+owner; they do not authorize FLEXT-authored AST, LibCST or textual semantic
+refactoring engines. The bounded AST declaration projection above does not grant
+such a semantic transformation route.
 Public ai-hub commands, hooks, MCP routes, and `ai-hub-*` daemons may
 enrich that discovery when available, but FLEXT never imports ai-hub or CRG libraries
 and their absence is not an error. Git stays owned by `flext-infra`; GitHub and CRG stay

@@ -8,12 +8,18 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from types import MappingProxyType
+from typing import TYPE_CHECKING
 
 from flext_core.lazy import install_lazy_exports
-from tests.unit.docker_quality_mock_tests import TestsFlextRootDockerQualityDockerfiles
-from tests.unit.examples_runtime_tests import TestsFlextRootExamplesRuntime
-from tests.unit.infra_models_tests import TestsFlextRootInfraModels
-from tests.unit.release_packaging_tests import TestsFlextRootReleasePackaging
+
+if TYPE_CHECKING:
+    from tests.unit.docker_quality_mock_tests import (
+        TestsFlextRootDockerQualityDockerfiles,
+    )
+    from tests.unit.examples_runtime_tests import TestsFlextRootExamplesRuntime
+    from tests.unit.infra_models_tests import TestsFlextRootInfraModels
+    from tests.unit.release_packaging_tests import TestsFlextRootReleasePackaging
+
 
 __all__: tuple[str, ...] = (
     "TestsFlextRootDockerQualityDockerfiles",

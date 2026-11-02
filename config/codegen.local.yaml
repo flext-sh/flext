@@ -2,7 +2,7 @@ Infra:
   codegen:
     toolchain:
       editable_sources:
-        rope: /home/marlonsc/rope-dc15
+        rope: /home/marlonsc/flext/.worktrees/rope-zero-global-20261102
     repository:
       candidate_bootstrap_targets:
         - path: ../docsmos-main

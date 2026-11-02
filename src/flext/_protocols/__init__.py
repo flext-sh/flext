@@ -30,9 +30,9 @@ install_lazy_exports(
     __name__,
     globals(),
     MappingProxyType({
+        "FlextModelsRootProtocolsGeneratedValue": ".generated_models_value",
         "FlextRootProtocolsBase": ".base",
         "FlextRootProtocolsConfig": ".config",
-        "FlextModelsRootProtocolsGeneratedValue": ".generated_models_value",
     }),
     public_exports=__all__,
 )
