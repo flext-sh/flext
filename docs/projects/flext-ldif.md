@@ -80,6 +80,10 @@ railway discipline.
 - **Private facets**: `_constants`, `_models`, `_protocols`, `_typings`, `_utilities`
   back the public `c/m/p/t/u` facades; execution parametrization lives in
   `config/ldif.yaml`, consumed through the SSOT `settings` access form.
+- **Server constants** retain distinct OID and OUD values. Their shared
+  `ACL_ATTRIBUTE_NAME` spelling has different values and is shadowed by the base
+  default when owners are composed; consumers obtain the selected dialect's
+  constants through `ldif.resolve_server_constants(...)` instead of retired aliases.
 
 ### Key architectural patterns
 

@@ -68,6 +68,16 @@ every loaded provider. A text rule may also name the projects it targets in
 
 ## Make verbs
 
+Declared signature additions use native Rope `ChangeSignature` through the
+existing contract planner and guarded publisher. Their source changes are not
+accepted until the native lifecycle verifies the declaration and every caller.
+
+Distribution-name normalization belongs to `u.Infra.distribution_identity`.
+The declared Rope migration targets proven one-argument calls and single-iterable
+`map` callbacks while retaining the native backend in its implementation owner.
+Calls with other arguments, including `validate=True`, retain their contracts and
+require their own evidence before migration.
+
 Common verbs are declared in
 `flext-infra/src/flext_infra/config/codegen.yaml` (`make.verbs`). Infra declares
 its owned snapshot operation in `flext-infra/config/codegen.yaml`
@@ -157,7 +167,7 @@ declared at the generation owner; authored files are never retired by that decla
 
 | Workspace declaration | Infra implementation |
 | --- | --- |
-| [ADR-028 Decision 17](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17) requires one snapshot/planner per repository. | [Codemod native utilities](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/_utilities/_codemod/codemod_native_utilities.py) |
+| [ADR-028 Decision 17](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17) requires one snapshot/planner per repository. | [Codemod native utilities](https://github.com/flext-sh/flext-infra/blob/40ec9df58cd4170f70227e91cee4483f1250d221/src/flext_infra/_utilities/_codemod/native_utilities.py) |
 | [ADR-028 Decision 18](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) owns one generalized source rule per law. | Repository plans preserve renderer IDs; the source catalog remains the single rule owner. |
 
 Every finding is the native match; no Python admission runs after the scan. A
@@ -266,15 +276,14 @@ The engine reads these `metadata` keys, declared in
 
 | Workspace declaration | Accepted decision |
 | --- | --- |
-| This section, One rule per law; the generated Infra copy links back here. | [FLEXT ADR-028 Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) |
+| This section, One rule per law; the generated Infra copy links back here. | [FLEXT ADR-028 Decision 18](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) |
 
-Rope is the only accepted Python interpreter in FLEXT's own code ([ADR-028
-Decision 17, amendment
-2026-10-28](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)):
-the engine never parses, analyzes or rewrites Python source with the `ast`
-module, `libcst`, or `re` applied to code — analysis and transforms go through
-rope's PyModules from the single indexed project. ast-grep (declarative rules),
-sed (text) and the generator (projections) keep their canonical domains.
+For semantic discovery and refactoring, [ADR-028 Decision 17](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17)
+uses Rope's native workspace and refactorings. The later
+[ADR-018 projection correction](../architecture/adr/018-generator-declarations.md)
+assigns declaration-only generation to one typed AST inventory; generation does
+not perform semantic moves or consumer rewrites. ast-grep rules, text operations
+and generated projections retain their declared owners.
 
 Operator order of 2026-10-25, verbatim (tracker memory
 `operator-order-2026-10-25-rules-generalized-min-count`; ADR-028 Decision 18):
@@ -462,6 +471,8 @@ FLEXT-owned CPython AST and LibCST interpretation are being retired separately.
   adapter construction, `m.TypeAdapter(...)` and `t.TypeAdapter(...)` exercise the
   rewrite, while `u.type_adapter(...)` is a valid fixed point. Regenerate snapshots
   from those authored inputs; never repair stale labels by editing generated output.
+- A fixture asserting a semantic class match must contain valid Python; malformed
+  source belongs to a separate parser-boundary case.
 
 ## Workflow
 

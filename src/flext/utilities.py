@@ -7,7 +7,10 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext._utilities import FlextRootUtilitiesBase, FlextRootUtilitiesConfig
+from typing import TypeAlias
+
+from flext._utilities.base import FlextRootUtilitiesBase
+from flext._utilities.config import FlextRootUtilitiesConfig
 from flext_db_oracle import u
 from flext_grpc import u as flext_grpc_u
 from flext_infra import u as flext_infra_u
@@ -43,8 +46,11 @@ class FlextRootUtilities(
     FlextLdifUtilities is inherited via FlextLdapUtilities.
     """
 
-    class Root(FlextRootUtilitiesBase, FlextRootUtilitiesConfig):
+    class Root:
         """Workspace root utilities MRO composition."""
+
+        FlextRootUtilitiesBase: TypeAlias = FlextRootUtilitiesBase
+        FlextRootUtilitiesConfig: TypeAlias = FlextRootUtilitiesConfig
 
 
 u = FlextRootUtilities

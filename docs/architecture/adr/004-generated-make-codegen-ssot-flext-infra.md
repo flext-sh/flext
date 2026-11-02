@@ -86,6 +86,20 @@ Make integration last. Other operation ownership and generated-file rules remain
 
 ### 2. The Makefile is a self-contained generated artifact
 
+**Setup recovery amendment, 2026-11-02.** Native environment recreation must not
+clear the serving environment in place. The same generated setup owner prepares
+a sibling relocatable environment, installs the frozen closure and elected local
+sources, and validates real Python, console and loaded-code origins before
+publication. Its editable-selection receipt belongs inside that environment,
+so one directory publication binds executable code and provenance together.
+The old environment remains available for explicit recovery; setup does not
+automatically delete it. Linux publication uses a capability-proven native atomic
+exchange under the existing shared mutation lock, with source and directory
+identity witnesses. Other platforms remain an explicit capability requirement;
+there is no destructive fallback or assertion of unproved portability. The
+[execution contract](../../../flext-infra/docs/guides/execution-context.md)
+and `flext-9t6gn` retain implementation and real interruption evidence.
+
 One template layer emits the complete versioned Makefile for the `workspace` or
 `standalone` profile from
 `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`. Make never regenerates

@@ -115,6 +115,10 @@ not only its edited hunks (operator clarification, 2026-11-01). Remove proven
 redundancy while preserving public behavior, typed origins, error causes, ordering,
 effects, observability and admission witnesses. This review does not authorize
 speculative rewrites, manual changes to generated projections or weaker gates.
+Apply the canonical `yagni` necessity test to the same module: retain a surface
+when its current requirement, consumer and supported runtime justify it. Remove
+proven unnecessary code with its consumer cutover, while preserving all required
+behavior and failure boundaries.
 
 Align the authorities above, provision only when required, and exercise the real public
 consumer before static gates and tests. Resolve operations from the current native

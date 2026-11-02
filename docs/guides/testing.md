@@ -35,6 +35,9 @@ environment. Do not assume another city's activation or connection settings.
   do not introduce a competing `d`/`de` helper facade or compatibility shim.
 - Put shared setup in the unified `conftest.py` and typed fixtures under
   `tests/fixtures/`.
+- Generated project bootstrap calls the shared `install_local_packages` owner
+  directly at collection time. A per-project class that only forwards that call
+  adds no behavior and duplicates the same implementation across the fleet.
 - Use `tm` matchers and shared `flext-tests` builders for assertions and test data.
 - Read project-owned values from typed config or settings. Never freeze current defaults
   in tests, examples, or golden files.
