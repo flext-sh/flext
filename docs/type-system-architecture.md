@@ -94,7 +94,7 @@ and optional source/schema references. This sample is a record serialization
 round-trip, not an installation of application settings or business rules.
 
 ```python
-from flext_core import m
+from flext_core import m, p
 
 document = m.ConfigDocument.model_validate_json('{"data":{"label":"example"}}')
 serialized = document.model_dump_json()

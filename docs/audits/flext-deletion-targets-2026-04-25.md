@@ -137,7 +137,7 @@ this tooling-only consumer; do not substitute an empty or synthetic report.
 import sys
 from pathlib import Path
 
-from flext_infra import m
+from flext_infra import m, p
 
 report = m.Infra.WorkspaceReport.model_validate_json(
     Path(sys.argv[1]).read_text(encoding="utf-8"),

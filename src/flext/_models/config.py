@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import ClassVar
 
 from flext import t
-from flext_infra import m
+from flext_infra import m, p
 
 
 class FlextModelsRootConfig:

@@ -86,7 +86,7 @@ from pathlib import Path
 import sys
 
 from flext_cli import cli
-from flext_infra import codemod, infra, m, u
+from flext_infra import codemod, infra, m, p, u
 
 root = Path(sys.argv[1])
 owner = Path(sys.argv[2])
