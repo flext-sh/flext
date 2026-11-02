@@ -68,14 +68,14 @@ their canonical owners and regenerate rather than editing the projections.
 ### Simple type contracts
 
 Reuse an existing alias when it already expresses the contract. The core owner
-declares `t.Scalar`, `t.StrSequence`, and `t.MappingKV` among its public aliases.
+declares `t.Scalar`, `Sequence[str]`, and `Mapping` among its public aliases.
 Do not introduce a duplicate domain alias for the same meaning.
 
 ```python
 from flext_core import t, u
 
 label: t.Scalar = "example"
-names: t.StrSequence = ("first", "second")
+names: Sequence[str] = ("first", "second")
 print(label, u.join(names, separator=", "))
 ```
 
@@ -178,19 +178,19 @@ through the appropriate protocol.
 
 ### Covariance (Subtype Compatibility)
 
-`t.MappingKV` is backed by `collections.abc.Mapping`, and `t.SequenceOf` is backed
+`Mapping` is backed by `collections.abc.Mapping`, and `Sequence` is backed
 by `collections.abc.Sequence`. Both are read-only contracts with covariance in
 their value/item parameter. `dict` and mutable collections are invariant. Sequence
 is not invariant merely because it is more restrictive than Iterable.
 
-Select `t.IterableOf` when the operation only needs iteration, `t.SequenceOf` when
+Select `Iterable` when the operation only needs iteration, `Sequence` when
 it needs sequence operations, and a mutable alias only when mutation is required.
 
 ```python
 from flext_core import t, u
 
-tuple_names: t.StrSequence = ("first", "second")
-list_names: t.StrSequence = ["first", "second"]
+tuple_names: Sequence[str] = ("first", "second")
+list_names: Sequence[str] = ["first", "second"]
 print(u.join(tuple_names), u.join(list_names))
 ```
 

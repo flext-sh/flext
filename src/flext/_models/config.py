@@ -6,12 +6,39 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+import re
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
 from typing import ClassVar, cast
 
 from flext_infra import m, t
 
 
-class FlextRootModelsConfig:
+class FlextModelsRootConfig:
     """Config models for flext-workspace."""
 
     class PipelinePayload(m.BaseModel):
@@ -35,9 +62,9 @@ class FlextRootModelsConfig:
             extra="allow",
         )
 
-        data: FlextRootModelsConfig.PipelinePayload = m.Field(
+        data: FlextModelsRootConfig.PipelinePayload = m.Field(
             description="Payload produced by the preceding pipeline stage.",
         )
 
 
-__all__ = ("FlextRootModelsConfig",)
+__all__ = ("FlextModelsRootConfig",)

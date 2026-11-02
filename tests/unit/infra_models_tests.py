@@ -6,11 +6,39 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+import re
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
 from json import dumps
 from pathlib import Path
 
 import pytest
 
+from tests import c, r
 from tests import c, infra, t, tm
 
 
@@ -62,7 +90,7 @@ class TestsFlextRootInfraModels:
                     eq=True,
                 )
 
-            invalid_paths: t.VariadicTuple[t.JsonValue] = (None, {}, [])
+            invalid_paths: tuple[t.JsonValue] = (None, {}, [, ...],)
             for invalid_path in invalid_paths:
                 payload = value.model_dump(mode="json")
                 payload["anchor_file"] = invalid_path

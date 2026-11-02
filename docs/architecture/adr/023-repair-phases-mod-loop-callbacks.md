@@ -53,7 +53,7 @@ standalone verbs.
    (`FlextInfraAccessorRenamePhase`, name `accessor-rename`) reuses the accessor
    migration's origin-aware rewrite, so a homonym the rename catalog does not own is
    never renamed inside the loop either. Phases are injected as
-   `phase_callbacks: t.VariadicTuple[t.Port[p.Infra.ModLoopPhase]]` into the batch
+   `phase_callbacks: tuple[t.Port[p.Infra.ModLoopPhase], ...],` into the batch
    apply — the loop knows the port, not the implementations.
 3. **One engine per repair, three invocation surfaces.** The relocation cascade and
    the accessor rewrite each exist once. They are invoked from: (a) the mod loop, as

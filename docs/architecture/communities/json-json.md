@@ -23,7 +23,7 @@ Community of 71 nodes
 
 | Name                                                | Kind     | File                                                                       | Lines   |
 | --------------------------------------------------- | -------- | -------------------------------------------------------------------------- | ------- |
-| FlextCliUtilitiesJsonCoreMixin                      | Class    | flext-cli/src/flext_cli/\_utilities/\_json/\_core.py                       | 26-170  |
+| FlextCliUtilitiesJsonCore                      | Class    | flext-cli/src/flext_cli/\_utilities/\_json/\_core.py                       | 26-170  |
 | json_dumps                                          | Function | flext-cli/src/flext_cli/\_utilities/\_json/\_core.py                       | 32-45   |
 | json_loads                                          | Function | flext-cli/src/flext_cli/\_utilities/\_json/\_core.py                       | 48-54   |
 | json_sort_keys                                      | Function | flext-cli/src/flext_cli/\_utilities/\_json/\_core.py                       | 57-75   |

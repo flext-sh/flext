@@ -1,5 +1,21 @@
 # Scripts de manutenção do repositório
 
+## Private module filenames
+
+From the provisioned workspace root, run
+`bash scripts/workspace/rename-private-modules.sh` to preview single-underscore
+Python module filenames, or add `--apply` to publish the candidate. The script
+preserves facade directories and all `__*` filenames, excludes hidden tool and
+environment directories. An occupied file or package destination selects
+`<name>_definitions.py` instead, preserving the existing owner; an occupied or
+competing alternative still fails before publication.
+It uses the canonical source inventory and processes declared repositories in
+order through the existing semantic rename planner and initializer generator,
+not the complete `make mod` cascade. Each repository is published separately;
+the preview publishes no source renames but may create control-plane lease
+metadata. Arbitrary strings, configuration and documentation are not a
+semantic-reference contract and are not globally replaced.
+
 ## Canonical docs maintenance
 
 O fluxo de documentação do workspace e dos subprojetos FLEXT é o alvo canônico

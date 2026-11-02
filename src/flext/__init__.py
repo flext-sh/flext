@@ -7,6 +7,33 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+import re
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
 from types import MappingProxyType
 from typing import TYPE_CHECKING
 
@@ -16,7 +43,7 @@ if TYPE_CHECKING:
     from flext.cli import FlextRootCli, main
     from flext.config import FlextRootConfig, config
     from flext.constants import FlextRootConstants, c
-    from flext.models import FlextRootModels, m
+    from flext.models import FlextModelsRoot, m
     from flext.protocols import FlextRootProtocols, p
     from flext.settings import FlextRootSettings, settings
     from flext.typings import FlextRootTypes, t
@@ -30,7 +57,7 @@ __all__: tuple[str, ...] = (
     "FlextRootCli",
     "FlextRootConfig",
     "FlextRootConstants",
-    "FlextRootModels",
+    "FlextModelsRoot",
     "FlextRootProtocols",
     "FlextRootSettings",
     "FlextRootTypes",
@@ -63,7 +90,7 @@ install_lazy_exports(
         "FlextRootCli": ".cli",
         "FlextRootConfig": ".config",
         "FlextRootConstants": ".constants",
-        "FlextRootModels": ".models",
+        "FlextModelsRoot": ".models",
         "FlextRootProtocols": ".protocols",
         "FlextRootSettings": ".settings",
         "FlextRootTypes": ".typings",

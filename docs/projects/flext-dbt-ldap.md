@@ -66,7 +66,7 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldap/`:
   there are no wrapper or delegation methods.
 - `services/client.py` — client mixin: `create_ldap_api`, `extract_ldap_entries`,
   `transform_with_dbt`, `validate_ldap_data`, `run_full_pipeline`.
-- `services/sync.py` — `FlextDbtLdapSyncMixin`: warehouse sync for
+- `services/sync.py` — `FlextDbtLdapSync`: warehouse sync for
   users/groups/memberships, dbt model runs, full warehouse sync, data-quality
   validation, analytics reports, with bookmark state persisted under `history/`.
 - `base.py` — service base (`s`) over `flext-meltano`'s dbt service base.

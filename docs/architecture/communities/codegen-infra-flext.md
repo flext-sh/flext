@@ -23,12 +23,12 @@ Community of 345 nodes
 
 | Name                                 | Kind     | File                                                          | Lines   |
 | ------------------------------------ | -------- | ------------------------------------------------------------- | ------- |
-| FlextInfraCodegenFixerResultsMixin   | Class    | flext-infra/src/flext_infra/codegen/\_fixer_results.py        | 18-91   |
+| FlextInfraCodegenFixerResults   | Class    | flext-infra/src/flext_infra/codegen/\_fixer_results.py        | 18-91   |
 | \_empty_result                       | Function | flext-infra/src/flext_infra/codegen/\_fixer_results.py        | 22-29   |
 | \_build_result                       | Function | flext-infra/src/flext_infra/codegen/\_fixer_results.py        | 32-41   |
 | \_load_initial_violations            | Function | flext-infra/src/flext_infra/codegen/\_fixer_results.py        | 44-65   |
 | \_classify_remaining_violations      | Function | flext-infra/src/flext_infra/codegen/\_fixer_results.py        | 68-91   |
-| FlextInfraCodegenPipelineStagesMixin | Class    | flext-infra/src/flext_infra/codegen/\_pipeline_stages.py      | 22-260  |
+| FlextInfraCodegenPipelineStages | Class    | flext-infra/src/flext_infra/codegen/\_pipeline_stages.py      | 22-260  |
 | \_run_stage                          | Function | flext-infra/src/flext_infra/codegen/\_pipeline_stages.py      | 34-39   |
 | \_stage_discover                     | Function | flext-infra/src/flext_infra/codegen/\_pipeline_stages.py      | 41-62   |
 | \_action                             | Function | flext-infra/src/flext_infra/codegen/\_pipeline_stages.py      | 246-251 |

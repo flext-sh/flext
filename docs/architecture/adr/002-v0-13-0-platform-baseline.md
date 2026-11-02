@@ -96,7 +96,7 @@ in the forward baseline only.
 
 We will keep a small direct runtime surface in the **forward baseline**:
 
-- `FlextRuntime`
+- `u`
 - `FlextDi`
 - `FlextLogger` — **planned for 0.13.0**; does not exist in the current runtime
 - `FlextContext`

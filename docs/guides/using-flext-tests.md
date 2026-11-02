@@ -59,6 +59,15 @@ above are not declared with `autouse=True`.
 ```python
 from __future__ import annotations
 
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
 from flext_core import FlextSettings
 from flext_tests import FlextTestsSettings, tm
 
@@ -158,7 +167,8 @@ For a standalone test without the settings plugin, keep the reset on both sides 
 mutation, including assertion failure:
 
 ```python
-from tests import tm
+from tests import c, r
+from tests import c, tm
 
 from flext_core import FlextSettings
 

@@ -432,7 +432,6 @@ project-excludes = [
   "**/site-packages/**",
   "**/site/**",
   "**/target/**",
-  "**/typings/**",
   "**/venv/**",
 ]
 project-includes = [
@@ -638,7 +637,6 @@ include = [
   "flext-meltano/examples",
   "flext-meltano/src",
   "flext-meltano/tests",
-  "flext-meltano/typings",
   "flext-observability/conftest.py",
   "flext-observability/examples",
   "flext-observability/src",
@@ -708,6 +706,7 @@ reportIncompatibleMethodOverride = "error"
 reportInconsistentConstructor = "error"
 reportMissingImports = "error"
 reportMissingModuleSource = "error"
+reportMissingTypeStubs = "none"
 reportPrivateUsage = "error"
 reportUnnecessaryCast = "error"
 reportUnnecessaryComparison = "error"
@@ -973,11 +972,6 @@ root = "flext-meltano/src"
 extraPaths = ["flext-meltano", "flext-meltano/src"]
 reportPrivateUsage = "error"
 root = "flext-meltano/tests"
-
-[[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-meltano", "flext-meltano/src"]
-reportPrivateUsage = "error"
-root = "flext-meltano/typings"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = ["flext-meltano", "flext-meltano/src"]

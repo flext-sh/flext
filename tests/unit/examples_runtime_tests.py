@@ -6,6 +6,33 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
+
+import re
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
 import sys
 from collections.abc import Mapping
 from pathlib import Path
@@ -20,6 +47,7 @@ import flext_cli
 import flext_ldif
 from flext_cli import cli
 from flext_ldif import FlextLdif
+from tests import c, r
 from tests import c, p, tm, u
 
 
@@ -32,10 +60,10 @@ class TestsFlextRootExamplesRuntime:
         @staticmethod
         @pytest.mark.parametrize(
             "files",
-            [(), ("pyproject.toml",), ("pyproject.toml", ".gitmodules", ".gitignore")],
+            [(), ( c.PYPROJECT_FILENAME,), ( c.PYPROJECT_FILENAME, ".gitmodules", ".gitignore")],
         )
         def test_changed_project_hook_has_a_no_project_noop(
-            files: tuple[str, ...],
+            files: tuple[str, ...]
         ) -> None:
             """Empty and multiple root-file inputs do not select member checks."""
             tm.that(
@@ -83,7 +111,7 @@ class TestsFlextRootExamplesRuntime:
                 native.outcome.raw_return_code, ne=flext_cli.c.Cli.EXIT_CODE_SUCCESS
             )
             tm.that(native.stdout + native.stderr, has="unknown gate")
-            files = [(project / "pyproject.toml").as_posix() for project in projects]
+            files = [(project /  c.PYPROJECT_FILENAME).as_posix() for project in projects]
 
             status = FlextRootCheckChangedProjects.main(gate, files)
 

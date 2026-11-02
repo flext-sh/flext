@@ -23,10 +23,10 @@ Community of 206 nodes
 
 | Name                                  | Kind     | File                                                                                                          | Lines   |
 | ------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------- | ------- |
-| FlextCliUtilitiesFileTestHelpersMixin | Class    | flext-cli/src/flext_cli/\_utilities/\_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py | 24-98   |
+| FlextCliUtilitiesFileTestHelpers | Class    | flext-cli/src/flext_cli/\_utilities/\_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py | 24-98   |
 | files_context                         | Function | flext-cli/src/flext_cli/\_utilities/\_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py | 29-84   |
 | \_files_write_structured              | Function | flext-cli/src/flext_cli/\_utilities/\_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_01.py | 87-98   |
-| FlextCliUtilitiesFileTestHelpersMixin | Class    | flext-cli/src/flext_cli/\_utilities/\_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_04.py | 22-44   |
+| FlextCliUtilitiesFileTestHelpers | Class    | flext-cli/src/flext_cli/\_utilities/\_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_04.py | 22-44   |
 | files_parse_content                   | Function | flext-cli/src/flext_cli/\_utilities/\_file_test_helper/flextcliutilitiesfiletesthelpersmixin_part_04.py | 26-44   |
 | FlextCliUtilitiesFiles                | Class    | flext-cli/src/flext_cli/\_utilities/\_files/flextcliutilitiesfiles_part_01.py                           | 19-188  |
 | files_delete                          | Function | flext-cli/src/flext_cli/\_utilities/\_files/flextcliutilitiesfiles_part_01.py                           | 32-47   |
@@ -55,7 +55,7 @@ Community of 206 nodes
 | \_create                              | Function | flext-cli/src/flext_cli/\_utilities/\_files/flextcliutilitiesfiles_part_04.py                           | 140-141 |
 | files_remove_directory                | Function | flext-cli/src/flext_cli/\_utilities/\_files/flextcliutilitiesfiles_part_04.py                           | 148-162 |
 | \_remove                              | Function | flext-cli/src/flext_cli/\_utilities/\_files/flextcliutilitiesfiles_part_04.py                           | 156-158 |
-| FlextCliUtilitiesRulesLoadersMixin    | Class    | flext-cli/src/flext_cli/\_utilities/\_rules/\_loaders.py                                                      | 26-185  |
+| FlextCliUtilitiesRulesLoaders    | Class    | flext-cli/src/flext_cli/\_utilities/\_rules/\_loaders.py                                                      | 26-185  |
 | rules_resolve_scope                   | Function | flext-cli/src/flext_cli/\_utilities/\_rules/\_loaders.py                                                      | 30-39   |
 | rules_load_scoped_config              | Function | flext-cli/src/flext_cli/\_utilities/\_rules/\_loaders.py                                                      | 42-54   |
 | rules_load_registry                   | Function | flext-cli/src/flext_cli/\_utilities/\_rules/\_loaders.py                                                      | 57-85   |

@@ -106,12 +106,12 @@ _... and 161 more members._
 ### Incoming
 
 - `that` (54 edge(s))
-- `flext-ldif/tests/unit/test_parser_utilities.py::TestsFlextLdifParserUtilities` (16
+- `flext-ldif/tests/unit/test_parser_utilities.py::TestsFlextLdifUtilitiesParser` (16
   edge(s))
 - `get_acl_attributes` (11 edge(s))
 - `flext-ldif/tests/unit/test_acl_registry.py::TestsFlextLdifAclRegistry` (10 edge(s))
 - `assert_success` (7 edge(s))
-- `flext-ldif/tests/unit/test_oid_utilities.py::TestsFlextLdifOidUtilities` (7 edge(s))
+- `flext-ldif/tests/unit/test_oid_utilities.py::TestsFlextLdifUtilitiesOid` (7 edge(s))
 - `flext-ldif/src/flext_ldif/utilities.py` (6 edge(s))
 - `is_acl_attribute` (6 edge(s))
 - `extract_from_definition` (5 edge(s))

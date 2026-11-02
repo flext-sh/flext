@@ -234,7 +234,7 @@ async def list_items(params: ListInput) -> str:
     # Return pagination info
     response = {
         "total": data["total"],
-        "count": len(data["items"]),
+        c.Aggregation.COUNT: len(data["items"]),
         "offset": params.offset,
         "items": data["items"],
         "has_more": data["total"] > params.offset + len(data["items"]),
@@ -367,7 +367,7 @@ async def search_users(params: UserSearchInput) -> str:
         Success response:
         {
             "total": int,           # Total number of matches found
-            "count": int,           # Number of results in this response
+            c.Aggregation.COUNT: int,           # Number of results in this response
             "offset": int,          # Current pagination offset
             "users": [
                 {
@@ -453,7 +453,7 @@ class UserSearchInput(BaseModel):
         default=ResponseFormat.MARKDOWN, description="Output format"
     )
 
-    @field_validator("query")
+    @field_validator(c.HandlerMode.QUERY)
     @classmethod
     def validate_query(cls, v: str) -> str:
         if not v.strip():
@@ -539,7 +539,7 @@ async def example_search_users(params: UserSearchInput) -> str:
 
             response = {
                 "total": total,
-                "count": len(users),
+                c.Aggregation.COUNT: len(users),
                 "offset": params.offset,
                 "users": users,
             }
@@ -577,7 +577,7 @@ async def advanced_search(query: str, ctx: Context) -> str:
 
     # Log information for debugging
     await ctx.log_info(
-        "Processing query", {"query": query, "timestamp": datetime.now()}
+        "Processing query", {c.HandlerMode.QUERY: query, "timestamp": datetime.now()}
     )
 
     # Perform search

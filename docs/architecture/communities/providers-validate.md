@@ -87,7 +87,7 @@ _... and 6 more members._
 
 - `fail` (16 edge(s))
 - `get` (8 edge(s))
-- `FlextAuthProviderMixin` (7 edge(s))
+- `FlextAuthProvider` (7 edge(s))
 - `p.Auth.FlextAuthBaseProvider` (7 edge(s))
 - `super` (6 edge(s))
 - `bool` (5 edge(s))

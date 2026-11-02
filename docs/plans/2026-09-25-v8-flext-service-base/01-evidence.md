@@ -99,7 +99,7 @@ Runtime measurements:
   `model_command(model_cls, handler, settings=None)` (`part_03:26-48`, options from
   `model_fields`, skipping `exclude=True`), `register_result_routes` (`part_05:131`),
   `finalize_result` (`part_05:139`). Route model `m.Cli.ResultCommandRoute`
-  (`_models/_base/flextclimodelsbase_part_03.py:108-133`).
+  (`_models/_base/Flextmodelsclibase_part_03.py:108-133`).
 - Dead duplicate builder `_utilities/model_commands.py:36-152` (test-only consumer).
 - Fail-soft: `part_02:27-29`, `options_part_02:32-37`, `services/cli_params.py:32-38`,
   `part_03:75-80`; annotation resolver falls back to `str` (`part_01:70-72`); the

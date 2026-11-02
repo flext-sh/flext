@@ -70,7 +70,7 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldif/`:
   the four service mixins below; `fetch_instance()` returns the shared instance.
 - `services/client.py` — `FlextDbtLdifClient`: LDIF file parsing via `flext-ldif`.
 - `services/core.py` — `FlextDbtLdifCore`: core domain behavior shared by the workflows.
-- `services/service.py` — `FlextDbtLdifServiceMixin`: the bound workflow `Service`
+- `services/service.py` — `FlextDbtLdifService`: the bound workflow `Service`
   (`generate_and_write_models`, `run_complete_workflow`, `run_data_quality_assessment`).
 - `services/unified_service.py` — `FlextDbtLdifUnifiedService`: unified orchestration
   surface.

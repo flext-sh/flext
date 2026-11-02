@@ -294,7 +294,8 @@ result = docker_mgr.start_container("flext-postgres-test")
 
 ```python
 # ❌ OLD - Local fixture files
-from tests import postgres_container
+from tests import c, r
+from tests import c, postgres_container
 
 # ✅ NEW - Centralized fixtures
 from flext_tests import postgres_container
