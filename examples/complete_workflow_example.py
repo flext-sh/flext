@@ -37,7 +37,7 @@ class FlextRootCompleteWorkflowExample:
     class WorkflowData(m.BaseModel):
         """Data container for workflow processing."""
 
-        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(extra="forbid")
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(extra="forbid")
 
         content: t.MutableJsonMapping = m.Field(
             default_factory=dict[str, t.JsonValue],
@@ -48,7 +48,7 @@ class FlextRootCompleteWorkflowExample:
     class WorkflowContext(m.BaseModel):
         """Complete workflow context with correlation and metadata."""
 
-        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(extra="forbid")
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(extra="forbid")
 
         workflow_id: str = m.Field(description="Unique workflow identifier")
         correlation_id: str = m.Field(description="Correlation ID for tracking")
@@ -74,7 +74,7 @@ class FlextRootCompleteWorkflowExample:
     class WorkflowStageResult(m.BaseModel):
         """Result of a workflow stage with comprehensive tracking."""
 
-        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(extra="forbid")
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(extra="forbid")
 
         stage_name: str = m.Field(description="Name of the workflow stage")
         workflow_id: str = m.Field(description="Associated workflow ID")
@@ -100,7 +100,7 @@ class FlextRootCompleteWorkflowExample:
     class CompleteWorkflowResult(m.BaseModel):
         """Complete workflow result with all stages aggregated."""
 
-        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(extra="forbid")
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(extra="forbid")
 
         workflow_id: str = m.Field(description="Unique workflow identifier")
         correlation_id: str = m.Field(description="Correlation ID for tracking")
@@ -131,7 +131,7 @@ class FlextRootCompleteWorkflowExample:
     class WorkflowOrchestrator(m.BaseModel):
         """Workflow orchestrator coordinating the full stage pipeline."""
 
-        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(extra="forbid")
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(extra="forbid")
 
         STAGE_PARAMS: ClassVar[
             Mapping[ExamplesFlextRootConstants.WorkflowStage, tuple[float, str]]

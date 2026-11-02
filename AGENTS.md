@@ -965,6 +965,22 @@ CLI + pytest plugin, **never imported at runtime**.
     per-package or per-library clones, zero-finding one-shot migrations deleted after
     a fleet census, and the executed-rule count tracked against a typed budget
     ([codemod rules, One rule per law](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/codemod-rules.md#one-rule-per-law)).
+    **Theme-rule convergence** (ADR-028 Decision 18 item 2, operator orders 2026-11-02,
+    translated from Portuguese: "the idea is to unify the rules by theme so they are
+    global, and to check and fix the code globally"; "running flext-infra globally without
+    naming the rule is the same as using make"; "adjustments made by hand were supposed
+    to be automated; by hand we never finish"):
+    - A theme is one law set fixed by one generalized rule.
+    - Code changes only through the theme cycle: unify, perfect with fixtures, check
+      globally over every governed repository with the theme selection
+      (`refactor mod --projects <every repo> --laws <set> --check`), apply the same way,
+      verify, commit everywhere, then move to the next theme.
+    - An engine run without a selection is refused.
+    - Hand edits of violating sources are prohibited; workers change only rule,
+      generator and engine owners plus their fixtures.
+    - Until make is repaired and validated, lint verdicts come from direct `ruff` and
+      `pyrefly`.
+    - The operator and the approved plan rank above superseded ADR text.
   - Static violation detection lives only in flext-infra's declarative rule catalog.
     Violations are banned and fixed, never waived. Current state (2026-10-24): flext-core
     still carries its ENFORCE catalog and static Beartype visitors until slice S

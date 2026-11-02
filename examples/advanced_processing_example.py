@@ -29,7 +29,7 @@ class FlextRootAdvancedProcessingExample:
     class ValidationResult(m.BaseModel):
         """Result of validation operation."""
 
-        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(extra="forbid")
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(extra="forbid")
 
         item_id: str = m.Field(description="Unique item identifier")
         valid: bool = m.Field(description="Whether the item is valid")
@@ -49,7 +49,7 @@ class FlextRootAdvancedProcessingExample:
     class FlextLdifProcessingPipeline(m.BaseModel):
         """Declarative processing pipeline with automatic parallel execution."""
 
-        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(extra="forbid")
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(extra="forbid")
 
         auto_execute: bool = True
         items: Sequence[t.JsonMapping]

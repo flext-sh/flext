@@ -729,6 +729,40 @@ outside the facades across 12 repositories.
     providers, validators and handler metadata retain their runtime model owners;
     class patterns retain their proven subject contract. An unbound or incompatible
     projection fails before effects. A prefix substitution is not a generalized fix.
+ 2. **Theme-rule convergence: one theme, checked and fixed globally, by automation only**
+    (amended 2026-11-02). Operator orders, verbatim:
+    - "FAZER DE POUCO EM POUCO NÃO É FAZER MANUALENTE, é fazer por automacao em larga
+      escala de uma regra de automacao de flext-infra até ficar muito boa, alinhada, sem
+      duplicacoes e divergencias delas e fazer ela funcionar e gravar em todos os lugares
+      e todos os projetos, e depois outra" ("working a little at a time does not mean
+      by hand: it means large-scale automation of one flext-infra rule until it is very
+      good, aligned, without duplicates or divergence, made to work and committed in
+      every place and every project, and then the next one");
+    - "vc rodar flext-infra globalmente sem especificar a rule nao roda, é a mesma coisa
+      que usar os make ... a ideia é unificar as rules por tema para serem globais,
+      checar e corrigir o código globalmente" ("running flext-infra globally without
+      naming the rule does not work and is the same as make; the idea is to unify the
+      rules by theme so they are global, and to check and fix the code globally");
+    - "os ajustes que vc está fazendo manual eram para estar sendo feitos
+      automatizados ... fazer manual nunca vamos terminar" ("the adjustments made by
+      hand were supposed to be automated; by hand we never finish").
+
+    The law:
+    - A **theme** is one law set (`ENFORCE-xxx` ids) owned by one generalized rule or
+      rule family. The theme's clones and duplicates are deleted when the theme is
+      unified, per item 1.
+    - Code changes only through a theme cycle: UNIFY → PERFECT (fixtures; the native test)
+      → GLOBAL CHECK → GLOBAL APPLY → VERIFY → COMMIT everywhere → the next theme.
+    - The check and the apply run over every governed repository in one invocation, with
+      the theme selection: `refactor mod --projects <every repo> --laws <theme set>
+      [--check]`, or `--rule-ids` for static ids until the law selector exists.
+    - An engine run without a selection is the same as a global make and is refused.
+    - Hand edits of violating sources are prohibited. Workers change only rule,
+      generator and engine owners plus their fixtures.
+    - Until make is repaired and validated, lint verdicts come from direct `ruff` and
+      `pyrefly` (tracker key
+      `operator-order-2026-11-02-direct-ruff-pyrefly-until-make-validated`).
+    - The operator and the approved plan rank above any ADR text this law supersedes.
 
 ### Decision 19
 
