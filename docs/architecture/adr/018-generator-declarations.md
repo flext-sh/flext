@@ -20,10 +20,11 @@
 - **Complements:** ADR-010 (standardization via codegen), ADR-014 (family shape +
   codemod rules), ADR-017 (parametrized rule surfaces). Supersedes every filename→letter
   table, closed folder list and advisory-gate list those ADRs tolerated.
-- **Rule owner:** global governance rule `flext/generator-declarations` in the
-  `agents-governance` catalog (projected to every provider; referenced by governance
-  identity, never by a machine-local path). This ADR records the decision; the rule is
-  the binding text.
+- **Rule owner:** this branch-matched ADR, composed by the local `flext-law`.
+  The duplicate global `flext/generator-declarations` rule is retired by the
+  2026-10-20 authority-routing amendment to global ADR-0024, "FLEXT generator
+  declaration authority". AI Hub distributes the selected source;
+  it does not own another definition of generator law.
 - **Tracking:** epic `flext-0in0k` (a phased bead set, each carrying the full rule text;
   live membership and counts on the epic, never frozen here); superseded `flext-exbwv`,
   `flext-crd1y`, `flext-b3xmn`, `flext-szjre`, `flext-fdoah`, `flext-s9bxq` (closed,
@@ -50,7 +51,7 @@ the permission that tolerated it, one by one, at the source.
 
 ## Decision
 
-The fourteen points of `generator-declarations.md` are law. In one line each:
+The following fourteen points are the generator declaration contract:
 
 1. A facade letter belongs to the module that declares it in its explicit `__all__`.
 2. An `__init__.py` propagates; it never declares.
@@ -61,15 +62,36 @@ The fourteen points of `generator-declarations.md` are law. In one line each:
    declares no short alias.
 6. The generator propagates, never compensates; the validator reports.
 7. Violations are fixed at the source; recurrence makes a catalog rule with a fixture.
-8. Verdict and count derive from one classification; `error` fails, warning does not.
+8. Verdict and count derive from one classification; errors and warnings block
+   acceptance under the current execution contract. The original 2026-09-20 warning
+   allowance is historical and grants no waiver.
 9. Every rule is computed from an existing source and proven fleet-wide before commit.
 10. Declaration adjustment is automatic; deriving beats listing; unnecessary lists die.
-11. Every module is one nested class; nothing loose, no alias outside `__all__`; the
-    existing rules become `error`.
+11. Each module obeys its declared family and orchestration role; aliases are
+    published only by their owning module's explicit `__all__`. Family composition
+    follows ADR-014's amended semantic ownership, never an arbitrary class or
+    base count that changes the public contract.
 12. An exception is a single motivated entry authorized explicitly by the operator.
 13. A hack's permission dies in the same commit as the hack.
 14. Every module obeys every rule (FLEXT, SOLID, DRY, YAGNI, CA, SSOT, DI); strict
     compliance is the dedup mechanism expected to free 60–80% of the code.
+
+<a id="nested-facade-projection"></a>
+The generator applies [ADR-014's 2026-10-23 semantic ownership](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership)
+recursively. A direct family domain facade composes its private domain declarations
+through their meaningful MRO, and nested private directories repeat that ownership.
+The earlier one-part-class and minimum-two-base prescriptions are superseded;
+neither a wrapper nor another base is created to satisfy a count. Existing upstream
+public contracts, necessary inheritance and intended MRO remain intact.
+
+Each generated lazy `__init__.py` reflects only its immediate modules' explicit
+`__all__`; a subdirectory declares no short alias and an ancestor never republishes
+leaf implementations around their owner. A source move and the affected subfacade,
+consumer imports and ancestor lazy exports share one authenticated candidate and
+publisher. Callers use the nearest composed facade at every stage, as specified by
+[ADR-028 Decision 10](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10).
+An unsupported or unresolved binding fails with its original causal evidence;
+generation never invents a missing declaration, a compatibility alias or an exception.
 
 Order of execution (operator): law → extermination of lists, manual declarations and
 their permissions → generator/detector/fix repair → census by the validator → automatic
@@ -86,8 +108,10 @@ manual mass fix.
 - Every consumer regenerates; the diff is the inventory of hacks it carried. Two
   flext-infra forks (`flext-sh@0.12.0-dev`, `datacosmos-br@baseline-20260919`) converge
   to one line.
-- The namespace validator reports one-nested-class, no-alias and nothing-loose
-  violations as `error`; the fix derives letter ⇄ base and writes the declaration.
+- The namespace validator reports violations of declared family ownership and
+  publication as errors; the fix derives letter ⇄ base from native identity.
+  The original one-class shape census is dated evidence, not permission to
+  restructure a meaningful declaration solely to satisfy a number.
 - Measured populations at decision time: 42 internal facades without the letter in
   `__all__` (10 repos, 0 in `src/`), 5 letters bound to non-extending classes, 4 dead
   example classes, 36 numbered scripts inside packages (12 repos), 8 public + 18 private
@@ -98,8 +122,13 @@ manual mass fix.
 - `make gen` exits 0 in 32/32 and a second run has no diff, after every flext-infra
   commit of the epic — before the commit is pushed.
 - `make mod` twice is idempotent; the validator's counts above reach 0.
-- `make check` and `make test` green in 32/32 and in every consumer; no new exclusion.
+- `make check` and `make tests` green in the complete authorized consumer population;
+  no new exclusion, suppressed warning or reduced execution scope.
 - Logical LOC measured by the canonical verb before the first commit and after the last;
   the delta is recorded on `flext-0in0k`.
 - `bd lint --json` clean for every bead of the epic; each closes with SHA, command and
   exit code.
+
+The 2026-10-26 authority and semantic reconciliation is documentation only. The
+historical population counts and acceptance requirements above do not establish
+current implementation, runtime behavior, integration or fleet rollout.

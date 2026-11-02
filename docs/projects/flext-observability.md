@@ -61,6 +61,7 @@ def work(data: str) -> str:
 
     Returns:
         The uppercase label.
+
     """
     return data.upper()
 

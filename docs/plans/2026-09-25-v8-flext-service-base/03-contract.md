@@ -68,6 +68,7 @@ class DocumentService(s[p.Model]):
 
         Returns:
             The document through its instance protocol.
+
         """
         return r[p.Model].ok(self.document)
 
@@ -77,6 +78,7 @@ class DocumentService(s[p.Model]):
 
         Returns:
             The snapshot result.
+
         """
         return self.snapshot()
 
@@ -143,6 +145,7 @@ class DocumentService(s[p.Model]):
 
         Returns:
             The document through its instance protocol.
+
         """
         return r[p.Model].ok(self.document)
 
@@ -205,6 +208,7 @@ class DocumentService(s[p.Model]):
 
         Returns:
             The document through its instance protocol.
+
         """
         return r[p.Model].ok(self.document)
 
@@ -214,6 +218,7 @@ class DocumentService(s[p.Model]):
 
         Returns:
             The snapshot result.
+
         """
         return self.snapshot()
 
@@ -223,6 +228,7 @@ def provide_document_service() -> s[p.Model]:
 
     Returns:
         A service bound to a validated document.
+
     """
     document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
     return DocumentService(document=document)

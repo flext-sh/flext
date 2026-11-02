@@ -5,14 +5,7 @@
 - [Status](#status)
 - [Context](#context)
 - [Decision](#decision)
-  - [R1 — Facade-Only Import Grammar](#r1-facade-only-import-grammar)
-  - [R1a — Lazy-Init Re-Export Derivation](#r1a-lazy-init-re-export-derivation)
-  - [R2 — No Duplication (Structural Scan)](#r2-no-duplication-structural-scan)
-  - [R3 — Layer Law (Declaration vs Behavior)](#r3-layer-law-declaration-vs-behavior)
-  - [R4 — Gates as Products](#r4-gates-as-products)
-  - [R5 — Release Consumption](#r5-release-consumption)
-  - [R6 — Contribution Path Law](#r6-contribution-path-law)
-- [Anti-Hardcode Law (Binding)](#anti-hardcode-law-binding)
+  - [Runtime alias inspection amendment](#runtime-alias-inspection-amendment)
 - [Consequences](#consequences)
   - [Positive](#positive)
   - [Negative](#negative)
@@ -23,7 +16,7 @@
 
 ## Status
 
-CURRENT IMPLEMENTATION (accepted 2026-09-11)
+ACCEPTED TARGET (ratified 2026-09-11; ownership reconciled 2026-10-20)
 
 ## Context
 
@@ -43,49 +36,15 @@ This led to:
 
 ## Decision
 
-We ratify the **Consumer Consumption Law (R1-R6)** as the canonical standard for all
-FLEXT packages. This law is codified in `docs/standards/consumption-law.md` and enforced
-through the following mechanisms:
+The [consumption standard](../../standards/consumption-law.md) owns the R1-R6
+contract. This ADR ratifies it rather than copying another normative body.
+[ADR-018](018-generator-declarations.md) supersedes older alias/folder tables;
+[ADR-019](019-service-contract-ports-operations.md) owns the service and model
+amendment. The 2026-10-20 consolidation removes competing restatements and false
+current-implementation claims. Native evidence, not historical gate numbers,
+establishes implementation completeness.
 
-### R1 — Facade-Only Import Grammar
-
-- Legal: `from <pkg> import X` where `X ∈ pkg.__all__`
-- Illegal: any `pkg.<submodule>` path (facet modules, reach-throughs, internal
-  machinery)
-- Enforcement: `FlextInfraConsumerImportViolationsDetector` → ENFORCE-099
-- Derivation: `FlextUtilitiesFamilySurface` from published lazy contract (`__all__` +
-  `_LAZY_IMPORTS`)
-
-### R1a — Lazy-Init Re-Export Derivation
-
-How the generated root `__init__.py` builds `pkg.__all__` (see
-`docs/standards/consumption-law.md` R1a for the full rule):
-
-- `ALIAS_NAMES = {c, t, m, p, u, r, d, e, h, s, x, tc}` is the complete facade-letter
-  set.
-- Local facade files win (`constants.py→c`, `typings.py→t`, `protocols.py→p`,
-  `models.py→m`, `utilities.py→u`).
-- Operational letters (`r, d, e, h, s, x`) are inherited from the highest upstream flext
-  library (`flext_cli`, sourced from `flext_core`) via
-  `_resolve_inherited_alias_source`.
-- A local redeclaration published in `__all__` overrides the inherited ancestor.
-- `Flext*` module exports come from the current directory only.
-- Determinism (flext-b3xmn): the facade-letter set derives from the statically indexed
-  workspace source, never the ambient installed surface.
-
-### R2 — No Duplication (Structural Scan)
-
-- Extended duplication gate covers consumer+family scope
-- Thresholds via `[tool.flext.project]` config SSOT
-- Semantic classifier: only executable behavior counts
-- Enforcement: `FlextInfraDuplicationGate` extended → ENFORCE-100+
-
-### R3 — Layer Law (Declaration vs Behavior)
-
-- Declaration layers (`c,t,p,m,u,r,e,x,h,d,s`) = pure data, zero methods
-- Behavior only in `u`, `base.py`, `services/*.py`, `api.py`, `cli.py`
-- Reverse imports `TYPE_CHECKING`-only; `c` never imports `m` at runtime
-- One class per module, ≤200 LOC, Pydantic-2-way only
+### Runtime alias inspection amendment
 
 Runtime alias inspection refinement (`flext-edcqq`).
 **State at 0.12.0-dev (2026-09-27):** the flext-core side exists
@@ -113,40 +72,13 @@ runtime-census consumer cutover is still pending:
   Runtime-census aggregation must retain deferral provenance and must not publish an
   incomplete report as passed or clean.
 
-### R4 — Gates as Products
-
-- Every gate has typed config via `[tool.flext.project]`
-- Budget gate (time/memory/token limits) is non-optional
-- Atomic `O_APPEND` primitive in `flext-core.u`
-- Fixed-point exposure via conform check
-
-### R5 — Release Consumption
-
-- 0.12.x tags on green tips
-- `AI_HUB_CONSUMER.md` versioned per release
-- Depends on F1, F4, F7
-
-### R6 — Contribution Path Law
-
-- Bead → formula lane → canonical Make verbs → WIP commits → PR → `--no-ff` merge →
-  gates on merged SHA → roll-up gitlinks → bead closure with 4 evidences
-- Zero residue: dead code/compat shims are defects
-
-## Anti-Hardcode Law (Binding)
-
-- **No bypass lists**: `BOUNDARY_SKIP_PROJECTS`, `CLICK_FILES`, `TOML_ALLOWED`,
-  `BOUNDARY_FLEXT_CLI_CONCRETE_RE`, `startswith("flext_")` — all exterminated
-- **No frozen enumerations**: facts derivable from SSOT/code are never fixed
-- **No absolute paths**: config keys only
-- **Tests**: synthetic runtime-derived violations only; no committed fixtures
-
 ## Consequences
 
 ### Positive
 
 - Consumers couple only to published contracts (stable)
 - Duplication eliminated at owner (single source of truth)
-- Gates are products with budgets (predictable CI)
+- Gate contracts and applicable limits come from their typed owners
 - Contribution path is explicit (no WIP residue)
 - All enforcement derives from typed config SSOT
 
@@ -154,29 +86,20 @@ runtime-census consumer cutover is still pending:
 
 - Migration required for existing consumers using internal imports
 - Duplication gate may surface existing debt (must fix at owner)
-- Budget gate may require optimization of slow gates
+- Measured slow gates require correction at their implementation owner
 - Forward-line ADR numbering remains branch-specific; this branch's index is
   authoritative for the `0.12.0-dev` decision set.
 
 ## Implementation
 
-| Workstream | Deliverable                                                   | Bead            |
-| ---------- | ------------------------------------------------------------- | --------------- |
-| WS-F1      | R1 grammar + SSOT derivation cutover                          | flext-ssnc7.1 ✓ |
-| WS-F1.v    | Synthetic RED/GREEN validation                                | flext-ssnc7.1.1 |
-| WS-F2      | Consumer+family structural scan                               | flext-ssnc7.2   |
-| WS-F2.v    | Planted structural twin RED proof                             | flext-ssnc7.2.1 |
-| WS-F3      | consumption-law.md + ADR-015 + ADR index repair               | flext-ssnc7.3   |
-| WS-F4      | `[tool.flext.project]` + budget gate + atomic append          | flext-ssnc7.4   |
-| WS-F5      | 0.12.x tags + AI_HUB_CONSUMER versioned                       | flext-ssnc7.5   |
-| WS-F6      | Contribution path law                                         | flext-ssnc7.6   |
-| WS-F7      | ADR bijection + owner-resolution gates + three-file gate docs | flext-ssnc7.7   |
+The selected canonical tracker owns current work, dependencies and closure.
+The historical WS-F assignment table is retained in Git history. Its proposed
+gate names, registrations and check marks are not a current implementation
+census or permission to restore a retired product.
 
 ## References
 
-- `docs/standards/consumption-law.md` (canonical R1-R6 text)
-- `flext_core._utilities.family_surface` (R1 derivation SSOT)
-- `flext_infra.detectors.consumer_import_violations_detector` (R1 enforcement)
-- `flext_infra.gates.duplication` (R2 enforcement)
-- `flext-infra/config/codegen.yaml` (R4/R5 config SSOT)
-- `docs/GOVERNANCE.md` (R6 router)
+- [Consumption standard](../../standards/consumption-law.md)
+- [Generator declarations](018-generator-declarations.md)
+- [Service contracts](019-service-contract-ports-operations.md)
+- The current flext-infra typed gate declarations and native public interface
