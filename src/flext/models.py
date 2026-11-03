@@ -22,7 +22,7 @@ from flext_quality import m as flext_quality_m
 from flext_tests import m as flext_tests_m
 
 
-class FlextModelsRoot(
+class FlextRootModels(
     flext_oracle_oic_m,
     flext_oracle_wms_m,
     flext_quality_m,
@@ -48,5 +48,5 @@ class FlextModelsRoot(
         """Workspace root models MRO composition."""
 
 
-m = FlextModelsRoot
-__all__: list[str] = ["FlextModelsRoot", "m"]
+m = FlextRootModels
+__all__: list[str] = ["FlextRootModels", "m"]

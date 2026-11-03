@@ -111,14 +111,14 @@ into expectations or turn a mapping into a second data contract. JSON enters via
 ### Protocol-based consumer interfaces
 
 Use the smallest existing protocol that provides the capability consumed by the
-function. For example, `p.Model` describes model-instance serialization and
+function. For example, `p.BaseModel` describes model-instance serialization and
 copying; it is not the concrete model constructor.
 
 ```python
 from flext_core import m, p, t
 
 
-def serialize_model(value: p.Model) -> t.JsonDict:
+def serialize_model(value: p.BaseModel) -> t.JsonDict:
     """Serialize a validated model through its public instance protocol.
 
     Returns:
@@ -225,14 +225,14 @@ consumer needs it.
 - Use `Self` only for an operation whose real implementation returns itself;
   do not invent fluent methods to illustrate chaining.
 
-The existing `p.Model` protocol is runtime-checkable. A validated public model
+The existing `p.BaseModel` protocol is runtime-checkable. A validated public model
 can be inspected without a local duplicate protocol definition:
 
 ```python
 from flext_core import m, p
 
 document = m.ConfigDocument.model_validate_json('{"data":{"label":"example"}}')
-print(isinstance(document, p.Model))
+print(isinstance(document, p.BaseModel))
 ```
 
 ## TypeVar Organization
