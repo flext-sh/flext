@@ -1,5 +1,21 @@
 # Make consolidation — restart handoff, 2026-10-30
 
+<!-- TOC START -->
+
+- [Intent and restart boundary](#intent-and-restart-boundary)
+- [Approved scope and sequence](#approved-scope-and-sequence)
+- [Contracts that must not be rediscovered or weakened](#contracts-that-must-not-be-rediscovered-or-weakened)
+- [Immediate blockers and exact source state](#immediate-blockers-and-exact-source-state)
+  - [Bootstrap and naming corruption](#bootstrap-and-naming-corruption)
+  - [Newly verified candidate-to-disk fallback](#newly-verified-candidate-to-disk-fallback)
+  - [Native operations and remaining legacy paths](#native-operations-and-remaining-legacy-paths)
+- [Source repairs adopted, not globally qualified](#source-repairs-adopted-not-globally-qualified)
+- [Native execution evidence](#native-execution-evidence)
+- [Coordination cursor](#coordination-cursor)
+- [Resume procedure and stop condition](#resume-procedure-and-stop-condition)
+
+<!-- TOC END -->
+
 This is a dated execution snapshot requested by the operator. It is not a new
 plan, tracker, architectural decision or qualification receipt. Current work and
 evidence belong to Bead **`flext-9t6gn`**. Read its latest comments before acting;

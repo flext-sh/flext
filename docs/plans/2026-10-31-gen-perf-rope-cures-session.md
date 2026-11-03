@@ -1,5 +1,14 @@
 # Session record 2026-10-31 — gen-perf / rope cures (flext-side view)
 
+<!-- TOC START -->
+
+- [Landed (committed)](#landed-committed)
+- [In flight (flext-infra tree, commit blocked by the lane's 117 lint findings)](#in-flight-flext-infra-tree-commit-blocked-by-the-lanes-117-lint-findings)
+- [Blocking decision pending (lane network owner)](#blocking-decision-pending-lane-network-owner)
+- [Next perf lever (C4)](#next-perf-lever-c4)
+
+<!-- TOC END -->
+
 SSOT of the campaign lives in the consumer repo:
 `devops-oud-iac/docs/handoffs/20261030-gen-perf-rope-cures.md`. This file records only
 the facts that land on flext-side surfaces; do not duplicate the full campaign here.

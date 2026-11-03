@@ -1044,7 +1044,7 @@
   },
   {
     "name": "TapLdif",
-    "qualified_name": "~/flext/flext-tap-ldif/src/flext_tap_ldif/models.py::FlextModelsTapLdif.TapLdif",
+    "qualified_name": "~/flext/flext-tap-ldif/src/flext_tap_ldif/models.py::FlextTapLdifModels.TapLdif",
     "kind": "Class",
     "file": "~/flext/flext-tap-ldif/src/flext_tap_ldif/models.py",
     "file_path": "~/flext/flext-tap-ldif/src/flext_tap_ldif/models.py",

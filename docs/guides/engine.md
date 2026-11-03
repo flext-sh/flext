@@ -1,5 +1,15 @@
 # FLEXT Engine Law — Rope-Only Python Interpretation
 
+<!-- TOC START -->
+
+- [What stays canonical](#what-stays-canonical)
+- [Isolation by repository](#isolation-by-repository)
+- [Deprecation window](#deprecation-window)
+- [Correction authority](#correction-authority)
+- [Blocked capabilities](#blocked-capabilities)
+
+<!-- TOC END -->
+
 The active rewrite's [2026-10-30 handoff](../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/plan.md#handoff-de-retomada--2026-10-30-chat-01a18a11)
 records owners, source changes, unresolved bootstrap/candidate failures and exact
 runtime limits. Bead `flext-u9h2i` remains open. Existing templates also form the

@@ -72,6 +72,8 @@ declares `t.Scalar`, `Sequence[str]`, and `Mapping` among its public aliases.
 Do not introduce a duplicate domain alias for the same meaning.
 
 ```python
+from collections.abc import Sequence
+
 from flext_core import t, u
 
 label: t.Scalar = "example"
@@ -94,7 +96,7 @@ and optional source/schema references. This sample is a record serialization
 round-trip, not an installation of application settings or business rules.
 
 ```python
-from flext_core import m, p
+from flext_core import m
 
 document = m.ConfigDocument.model_validate_json('{"data":{"label":"example"}}')
 serialized = document.model_dump_json()
@@ -187,7 +189,9 @@ Select `Iterable` when the operation only needs iteration, `Sequence` when
 it needs sequence operations, and a mutable alias only when mutation is required.
 
 ```python
-from flext_core import t, u
+from collections.abc import Sequence
+
+from flext_core import u
 
 tuple_names: Sequence[str] = ("first", "second")
 list_names: Sequence[str] = ["first", "second"]

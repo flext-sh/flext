@@ -965,18 +965,22 @@ CLI + pytest plugin, **never imported at runtime**.
     per-package or per-library clones, zero-finding one-shot migrations deleted after
     a fleet census, and the executed-rule count tracked against a typed budget
     ([codemod rules, One rule per law](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/codemod-rules.md#one-rule-per-law)).
-    **Theme-rule convergence** (ADR-028 Decision 18 item 2, operator orders 2026-11-02,
-    translated from Portuguese: "the idea is to unify the rules by theme so they are
-    global, and to check and fix the code globally"; "running flext-infra globally without
-    naming the rule is the same as using make"; "adjustments made by hand were supposed
-    to be automated; by hand we never finish"):
-    - A theme is one law set fixed by one generalized rule.
-    - Code changes only through the theme cycle: unify, perfect with fixtures, check
-      globally over every governed repository with the theme selection
-      (`refactor mod --projects <every repo> --laws <set> --check`), apply the same way,
-      verify, commit everywhere, then move to the next theme.
-    - An engine run without a selection is refused.
-    - Hand edits of violating sources are prohibited; workers change only rule,
+    **One pipeline** (ADR-028 Decision 18 item 2, operator orders 2026-11-02,
+    translated from Portuguese: "it has to be a processing pipeline"; "check, gen and
+    mod use the same framework, code and rules; only the functions change"; "gen and mod
+    do different things … neither is a prerequisite of the other"; "one path only, no
+    fallback"; epic `flext-lqfqo`):
+    - `check`, `gen` and `mod` share one pipeline: capture, classification, relocation,
+      module shape, layer zero, orchestrators, projection, the import law, rendering,
+      validation and atomic publication. `check` reports, `gen` scaffolds or conforms
+      with the same engine, templates and source, and `mod` refactors; each verb alone
+      reaches its fixed point.
+    - Each law is owned by exactly one stage or generalized rule, perfected with
+      fixtures and the native test; duplicates, fallbacks and compatibility paths are
+      exterminated without a remaining reference.
+    - `refactor mod --laws <set>` is the diagnostic and repair route for one law; the
+      import law always runs.
+    - Hand edits of violating sources are prohibited; workers change only stage, rule,
       generator and engine owners plus their fixtures.
     - Until make is repaired and validated, lint verdicts come from direct `ruff` and
       `pyrefly`.
@@ -1016,7 +1020,7 @@ CLI + pytest plugin, **never imported at runtime**.
     Inside the declaration modules of the five families (`c`, `t`, `p`, `m`, `u`,
     their family packages and composition modules), while the package's own facades
     are being composed, importing the letters of the upstream packages it composes
-    (`from flext_cli import c, p, t, p, m, u`, `from flext_core import …`) is the
+    (`from flext_cli import c, t, p, m, u`, `from flext_core import …`) is the
     canonical form. Each own family composes the upstream same-letter class by MRO.
     [ADR-028 Decision 10](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)
     elects one import binding from actual header references: a used bare upstream
@@ -1030,12 +1034,12 @@ CLI + pytest plugin, **never imported at runtime**.
       (`from flext_infra._utilities import FlextInfraUtilitiesPytest`).
     - Modules outside the families read every letter from their own package root.
     - The layer direction still holds: a later letter is TYPE_CHECKING-only, from
-      any package (generated `ban-reverse-runtime-import`).
-    - Enforced by the codemod catalog through the letter-binding documents that
-      `_utilities/_codemod/native_package_utilities.py` generates per package:
-      `own-letter` and `duplicate-origin` (ENFORCE-051), `foreign-origin`
-      (ENFORCE-003, ENFORCE-080), `module-path` (ENFORCE-003, ENFORCE-051) and
-      `letter-module-object`.
+      any package; the import law calculates that placement.
+    - Declared as one authored letter-binding rule in flext-infra's rule catalog
+      (`config/rules/**`; no rule is generated) over facts the engine computes, and
+      executed for `check`, `gen` and `mod`; it claims ENFORCE-003, ENFORCE-051 and
+      ENFORCE-080, and ai-hub's hooks consume the same catalog ([ADR-028 Decision 10](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10);
+      epic `flext-lqfqo`).
   - **Imports are lazy, maximally and without exception: nothing loads until it is
     used.** This consolidates standing operator rulings, cited by tracker key:
     `flext-strict-lazy-imports-generated-inits`, `lazy-init-all-from-lazy-imports`,
@@ -1074,17 +1078,18 @@ CLI + pytest plugin, **never imported at runtime**.
   `model_validate_json`; failures leave as `r.Fail` at the `e`/`u` boundary. Full
   reference: `pydantic-development` skill (declaration/boundary/catalog parts) with the
   good/bad-practice and removal catalog.
-  - **Models import `u` only two ways** (operator ruling 2026-10-25, tracker key
-    `operator-ruling-2026-10-25-models-u-imports-pydantic-home`, translated from Portuguese:
-    "Models may import u in only two ways: u from the upstream FLEXT project they
-    import, or a private _utilities class in their own namespace in very restricted
-    cases. Note that models cannot export methods"). `_models` imports either the
-    upstream FLEXT
-    project's `u` or, in very restricted cases, a private `_utilities` class of its
-    own namespace; models export no methods. The Pydantic surface models need lives
-    in `_models/pydantic.py`, never `_utilities/pydantic.py`; it is migrated and
-    rewired fleet-wide, and the same principle holds per family for `c`, `t`, `p`,
-    `m` and `u` (ADR-028 Decision 19).
+  - **Each family owns its Pydantic surface; a model never imports `u`** (operator
+    orders 2026-10-25 and 2026-11-02, tracker keys
+    `operator-ruling-2026-10-25-models-u-imports-pydantic-home` and
+    `operator-order-2026-11-02-models-never-import-u-for-pydantic`, translated from
+    Portuguese: "models cannot export methods … the Pydantic that models need must be
+    migrated to _models/pydantic.py … this holds for c, t, p, m and u equally" and
+    "models importing u for Pydantic is a workaround; the internal Pydantic modules of
+    c, t, p, m and u must be adjusted so it never happens"). Each family's internal
+    Pydantic module serves its own surface; a model reaches what it needs through `m`
+    and its earlier-layer letters, never `u`, and exports no methods. A capability a
+    model reads from `u` is relocated by the pipeline to the family of its runtime kind
+    and every consumer is rewired fleet-wide (ADR-028 Decision 19; epic `flext-lqfqo`).
   - **Entity equality is the Pydantic way** (operator ruling 2026-10-25, tracker key
     `operator-ruling-2026-10-25-entity-equality-pydantic-way`, translated from Portuguese:
     "Whatever Pydantic recommends for this, the most Pydantic-native approach, is

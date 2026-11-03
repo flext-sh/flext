@@ -334,39 +334,65 @@ outside the facades across 12 repositories.
     module's `__all__`; an `__init__.py` only re-exports it (or inherits it from the
     parent namespace) and never assigns it.
 
-    Operator order 2026-11-02 (tracker key
-    `operator-order-2026-11-02-import-and-composition-forms`, translated from
-    Portuguese: "the codemod is generating the wrong imports … the codemod must fix
-    this kind of code to the correct patterns; it is mandatory, in every existing
-    rule") makes three forms mandatory for every generator and codemod rule:
+    Operator orders 2026-11-02 (tracker key
+    `operator-order-2026-11-02-import-and-composition-forms`; epic `flext-lqfqo`).
+    The operator showed, by example, forms that the generators and the codemod
+    violated (translated from Portuguese: "the codemod is generating the wrong
+    imports … it must fix this kind of code to the correct patterns; it is mandatory,
+    in every existing rule"; "it has to correct ALL THE IMPORTS, according to the
+    correct rules, without simplifying"; "the rule is calculated, deterministic …
+    already well documented"; "I gave examples of rules being violated and the
+    correct form, but you must do it calculated for every case and NOT USE hardcoded
+    lists or rules"). The examples are fixtures, never the rule; every decision below
+    is computed from facts the sources already declare:
     - A facade or consumer imports a family's classes in one statement from the
-      family package (`from examples._models import ExamplesFlextModelsEx00, …`),
-      never one statement per module path (`from examples._models.ex00 import …`).
-    - Inside a family module, only same-family siblings come through the family
-      package (`from flext_core._protocols import FlextProtocolsContainer`). A member
-      of another family is reached through that family's letter (`c`, `t`, …),
-      never imported from its family package (`from flext_core._typings import
-      FlextTypesCore` is forbidden there).
-    - A facade class lists only the upstream facades it composes as bases. Its own
-      components compose inside its nested namespace class
-      (`class FlextTargetOracleOic(FlextTargetOracleOicServiceRuntime,
+      package that publishes them (`from examples._models import
+      (ExamplesFlextModelsEx00, …)`), never one module-path statement per part
+      (`from examples._models.ex00 import …`).
+    - In a family module of letter L (for example `flext_core/_protocols/handler.py`)
+      the own letter L never appears; same-family siblings come through the family
+      package (`from flext_core._protocols import FlextProtocolsBase,
+      FlextProtocolsResult`); a member of another family is reached through that
+      family's letter, never imported from its family package (`from
+      flext_core._typings import FlextTypesCore` is forbidden there). Letters earlier
+      than L in `import-layer-order` come from the own package root; L and later
+      letters come from the elected upstream.
+    - Placement is calculated. An executed read needs a runtime binding: a class
+      base, a decorator, a class keyword, a default value, a `type` statement value,
+      or a construction that evaluates its annotations at runtime, such as a Pydantic
+      model. An annotation-only binding keeps its placement. A binding that would
+      close an import cycle is deferred into the single, last `if TYPE_CHECKING:`
+      block. In the example, `t` and `FlextProtocolsResult` (read by `type` values)
+      and `FlextProtocolsBase` (class bases) are runtime bindings, while `c`,
+      `FlextProtocolsContainer` and `Callable` stay deferred.
+    - A facade class lists only the upstream letters it composes as bases, aliased
+      `{package}_{letter}` when the module binds that letter itself (`class
+      FlextTargetOracleOicUtilities(flext_meltano_u, flext_oracle_oic_u)`). Its own
+      components compose inside one nested namespace class named by the package
+      (`class TargetOracleOic(FlextTargetOracleOicServiceRuntime,
       FlextTargetOracleOicSink)`), never as extra facade bases and never as
-      `X: TypeAlias = X` re-exports.
-    - The letter law of this decision applies to every import of every module in
-      the same pass: the own letter is forbidden inside its own family; the upstream
-      letter is elected per namespace from the package the family composes, bound
-      once, and every competing or duplicate binding is removed; outside the
-      families every letter comes from the own package root; a reverse-layer letter
-      is bound only under `TYPE_CHECKING`.
-    - `gen` and `mod` correct every divergent import to these forms, in every module
-      they write or read, through one import-law owner (`_utilities/_import_law/`).
-      A competing origin, a module-path import, a cross-family class import or a
-      component published as a base or `TypeAlias` is rewritten, never reported as a
-      failure; only a case the law cannot decide fails, with the exact evidence.
-      No generator, renderer or rule writes imports by its own logic.
-    Existing violations are rewritten by rule, never by hand. The operator repeated
-    the order the same day (translated from Portuguese): "it has to correct ALL THE
-    IMPORTS, according to the correct rules, without simplifying".
+      `X: TypeAlias = X` republications.
+    - Each provider of a letter is bound once, bare or as its verified alias, as the
+      election below decides. Competing or duplicate bindings are rewritten to it:
+      `from flext_cli import p` beside `from flext_core import p` inside flext-cli's
+      own `_protocols` is corrected, never reported as competing import origins.
+    - Every form above is one authored, generalized rule in flext-infra's rule
+      catalog (`src/flext_infra/config/rules/**`: native ast-grep documents and
+      declarative Rope rules, each with fixtures and its native test). No rule is
+      generated: the operator ruled (verbatim) "NAO TEM QUE EXISTIR REGRAS GERADAS,
+      ISSO É COMPLETAMENTE FAKE, SE DÁ PARA GERAR NÃO É REGRA". The Python engine
+      only computes facts (publication, MRO upstream, layer rank, runtime reads, the
+      import-cycle graph, Pydantic-evaluated constructions), binds them to the
+      rules' declared utilities and parameters, and executes the rules natively; a
+      law written as a Python branch is a hardcoded rule. `check` reports the rules'
+      findings, `gen` applies them to every module it generates, and `mod` applies
+      them to every authored module it refactors. ai-hub builds its hooks from the
+      same catalog (verbatim: "TODAS AS REGRAS ... TEM QUE ESTAR em rules, pois ai-hub
+      irá usar elas para fazer hooks ... regras em python é considerado hardcoded e
+      gambiarra"). Ruff's type-checking rules are disabled as an axiom; these rules
+      own `TYPE_CHECKING` placement.
+    Existing violations are rewritten by the pipeline, never by hand. Status: target
+    contract; the implementation runs under epic `flext-lqfqo`.
 
     Hierarchical composition imports the upstream letters. Operator rulings
     2026-10-25 (verbatim): "essa é a forma canonica, isso tem que estar declarado,
@@ -375,7 +401,7 @@ outside the facades across 12 repositories.
     altas para composição enquanto elas estão sendo compostas para uso hierárquico".
     Inside the declaration modules of the five families, while the package's own
     facades are being composed, the letters of the upstream packages it composes
-    (`from flext_cli import c, p, t, p, m, u`) are the canonical binding: each own family
+    (`from flext_cli import c, t, p, m, u`) are the canonical binding: each own family
     composes the upstream same-letter class by MRO. The boundaries around it:
       - Elect the spelling from native references at the class header. Retain a bare
         upstream letter when its identity is used there; when an existing verified
@@ -393,11 +419,8 @@ outside the facades across 12 repositories.
         (`ban-reverse-runtime-import`).
 
     A letter of any facade package read through its module object (`import pkg`,
-    then `pkg.u.X`) is detected by the `letter-module-object` document that the
-    letter-binding producer (`_utilities/_codemod/native_package_utilities.py`)
-    generates per package. It sits beside that producer's `own-letter`,
-    `duplicate-origin`, `foreign-origin` and `module-path` documents, which together
-    form the one letter-binding law.
+    then `pkg.u.X`) is rewritten by the same letter-binding rule data to the binding
+    this decision elects.
 
     **Amendment 2026-11-02 — import header, automatic repair and rewiring**
     (operator order, tracker memory `operator-order-2026-11-02-import-header-auto-rewire`,
@@ -426,18 +449,16 @@ outside the facades across 12 repositories.
     narrowing or degrading its use meanwhile is the same bypass. For the codemod
     catalog this means:
      - rules apply through `ast-grep scan --update-all`, and rule semantics are native
-       ast-grep (`utils`, `constraints`, `transforms`, `rewriters`). SSOT-derived rules
-       come from the class-A producers and renderers registered in
-       `Infra.codegen.ast_grep`. They are rendered in memory by the `make mod` cascade,
-       one document per shape, and are not projected into repositories (bead
-       `flext-13s6n` removes the current per-rule projection);
+       ast-grep (`utils`, `constraints`, `transforms`, `rewriters`). Every rule is
+       authored in the catalog with fixtures and its native test; no rule is
+       generated (operator order 2026-11-02; [Decision 10](#decision-10));
      - no per-finding Python admission exists: every finding is the native match. A
-       project fact a catalog rule needs is a stable generated utility (`own-package`,
-       `facade-package`, `runtime-alias`, ...) referenced through `matches:`, or a file
-       scope the generated provider publishes and the stage applies through
-       `metadata.scope` (`in`/`not-in`, or `partition` for one generated rule
-       `<id>--<package>[--<key>]` per file group). Runtime import cycles are the
-       whole-graph `ban-cyclic-import` gate, not a rule;
+       project fact a rule needs (own package, facade package, publication, layer
+       rank, runtime alias, …) is computed by the engine and bound to the authored rule
+       through a declared utility referenced by `matches:` or a declared parameter; a
+       fact never carries a law. Runtime import cycles are a fact of the engine's
+       import graph: the placement rule defers a cycle-closing binding, and candidate
+       validation proves zero cycles;
      - the staged scan configuration is reproducible with native ast-grep, so a native
        scan and `make mod` agree.
 
@@ -452,25 +473,21 @@ outside the facades across 12 repositories.
 
 ### Decision 13
 
- 1. **The `make mod` pipeline has a fixed order.**
-    1. The canonical import header, generated from SSOT: the dependency namespace
-       singletons, the project's own aliases, and the facade-module letter taken from
-       the upstream facade, with reverse-layer letters under `if TYPE_CHECKING:`.
-       Insertion fires only for names a module uses but binds nowhere. Its native
-       form is one generated `import-header--<package>` rule per declaring package
-       and scope: it inserts one `from <package> import ...` line with every name
-       that package resolves there. A module inside a declaring package imports
-       from the deepest declaring package containing it; any other module imports
-       from the unique shallowest one. Step 3 prunes the unused names. ast-grep
-       applies one insertion per anchor and run, so a per-name insertion would
-       need a pass per name; a per-package insertion converges within the pass cap.
-       In step 2, the generated `module-member--<package>` rules rewrite
-       `<child>.<Name>` to `Name` when `<child>` is a child package bound by
-       `from <package> import <child>`. The next pass's step 1 imports `Name`,
-       and step 3 removes the module-object import.
-    2. The whole codemod catalog, repeated until nothing changes.
-    3. Last, ruff `--fix --select` over the import families declared in the tooling
-       SSOT.
+ 1. **The pipeline has a fixed stage order** ([Decision 18](#decision-18) item 2;
+    epic `flext-lqfqo`): capture, classification, relocation, module shape, layer
+    zero, orchestrators, projection, the import rules, rendering, candidate
+    validation and atomic publication. `check` reports, `gen` generates and `mod`
+    refactors through the same stages.
+    1. The import rules are authored catalog rules over computed facts (publication,
+       layer rank, elected upstream, runtime reads, the cycle graph): insertion binds
+       a name a module uses but binds nowhere, from the package that publishes it,
+       grouped into one statement per package; a module-object read `<child>.<Name>`
+       is rewritten to `Name` bound from its publishing package. No rule is generated
+       per package or scope.
+    2. The whole authored catalog runs until nothing changes, inside the candidate.
+    3. Rendering emits the formatter's final order by construction; no Ruff pass
+       decides or repairs imports ([Decision 8](#decision-8)), and Ruff's
+       type-checking rules are disabled as an axiom.
 
 ### Decision 14
 
@@ -763,8 +780,8 @@ outside the facades across 12 repositories.
     providers, validators and handler metadata retain their runtime model owners;
     class patterns retain their proven subject contract. An unbound or incompatible
     projection fails before effects. A prefix substitution is not a generalized fix.
- 2. **Theme-rule convergence: one theme, checked and fixed globally, by automation only**
-    (amended 2026-11-02). Operator orders, verbatim:
+ 2. **One pipeline; each law owned once and perfected by automation** (amended
+    2026-11-02, night; epic `flext-lqfqo`). Operator orders, verbatim:
     - "FAZER DE POUCO EM POUCO NÃO É FAZER MANUALENTE, é fazer por automacao em larga
       escala de uma regra de automacao de flext-infra até ficar muito boa, alinhada, sem
       duplicacoes e divergencias delas e fazer ela funcionar e gravar em todos os lugares
@@ -780,19 +797,35 @@ outside the facades across 12 repositories.
     - "os ajustes que vc está fazendo manual eram para estar sendo feitos
       automatizados ... fazer manual nunca vamos terminar" ("the adjustments made by
       hand were supposed to be automated; by hand we never finish").
+    - "tem que ser como um pipeline de processamento" ("it has to be a processing
+      pipeline");
+    - "check, gen e mod usa o mesmo framework e código, rules, só que as funcoes que
+      mudam, check só reporta, gen faz parte de scaffold e aplicacao de padroes
+      generativos, e mod o de refatoracao" ("check, gen and mod use the same
+      framework, code and rules; only the functions change: check only reports, gen
+      does scaffolding and applies generative patterns, and mod does the
+      refactoring");
+    - "gen e mod FAZEM COISAS DIFERENTES, eles compartilham a engine, MAS fazem coisas
+      diferentes e um não é pré-requisito para o outro" ("gen and mod do different
+      things; they share the engine, but neither is a prerequisite of the other");
+    - "UM CAMINHO SÓ, SEM FALLBACK" ("ONE PATH ONLY, NO FALLBACK").
 
     The law:
-    - A **theme** is one law set (`ENFORCE-xxx` ids) owned by one generalized rule or
-      rule family. The theme's clones and duplicates are deleted when the theme is
-      unified, per item 1.
-    - Code changes only through a theme cycle: UNIFY → PERFECT (fixtures; the native test)
-      → GLOBAL CHECK → GLOBAL APPLY → VERIFY → COMMIT everywhere → the next theme.
-    - The check and the apply run over every governed repository in one invocation, with
-      the theme selection: `refactor mod --projects <every repo> --laws <theme set>
-      [--check]`, or `--rule-ids` for static ids until the law selector exists.
-    - An engine run without a selection is the same as a global make and is refused.
-    - Hand edits of violating sources are prohibited. Workers change only rule,
-      generator and engine owners plus their fixtures.
+    - `check`, `gen` and `mod` run one pipeline with shared stages: capture,
+      classification, relocation, module shape, layer zero, orchestrators,
+      projection, the import law (Decision 10), rendering, candidate validation and
+      atomic publication. `check` reports; `gen` scaffolds a project from zero or
+      conforms an existing one, with the same engine, templates and source; `mod`
+      refactors. Each verb alone reaches its fixed point.
+    - A law (an `ENFORCE-xxx` set) is owned by exactly one stage or one generalized
+      rule. Its duplicates, clones, fallbacks and compatibility paths are exterminated
+      per item 1, leaving no reference.
+    - A law is perfected at its owner with fixtures and the native test before it
+      joins the pipeline. `refactor mod --laws <set>` and `--rule-ids` are the
+      diagnostic and repair route for one law; the import law always runs, inside a
+      selected run too.
+    - Hand edits of violating sources are prohibited. Workers change only stage,
+      rule, generator and engine owners plus their fixtures.
     - Until make is repaired and validated, lint verdicts come from direct `ruff` and
       `pyrefly` (tracker key
       `operator-order-2026-11-02-direct-ruff-pyrefly-until-make-validated`).
@@ -800,23 +833,25 @@ outside the facades across 12 repositories.
 
 ### Decision 19
 
- 1. **Models import `u` only two ways; each family owns its Pydantic surface.**
-    Operator ruling 2026-10-25, verbatim (tracker memory
-    `operator-ruling-2026-10-25-models-u-imports-pydantic-home`): "models podem import
-    u apenas de 2 formas, u do projeto flext maiis alto que ela importa, ou classe
-    privada _utilities de seu namespace por casos bem restritos, veja que mdoels nao
+ 1. **Each family owns its Pydantic surface; a model never imports `u`** (operator
+    orders, epic `flext-lqfqo`). Verbatim, 2026-10-25 (tracker memory
+    `operator-ruling-2026-10-25-models-u-imports-pydantic-home`): "veja que mdoels nao
     pode exportar metodos, ele precisa pydantic best practices sempre, anliase o caso
     com cuidado e arrume para evitar problemas, temos_utilities/pydantic.py que se
     estiver exportando pydantic que models precisa, ele precisa ser migrado para
     _models/pydantic.py e seu uso atualizado em todos os repos global wide, isso vale
-    para c,t,p,m, e u de forma equivalente".
-     - A `_models` module imports either the upstream FLEXT project's `u` (the
-       hierarchical binding of Decision 10) or, in very restricted cases, a private
-       `_utilities` class of its own namespace.
-     - Models export no methods; they follow Pydantic best practices.
-     - The Pydantic surface that models need lives in `_models/pydantic.py`, not
-       `_utilities/pydantic.py`; it is migrated and every use is rewired in every
-       repository. The same principle holds per family for `c`, `t`, `p`, `m` and `u`.
+    para c,t,p,m, e u de forma equivalente". Verbatim, 2026-11-02 (tracker memory
+    `operator-order-2026-11-02-models-never-import-u-for-pydantic`): "models importar
+    u de pydanic é gambiarra, os modulos internos de pydantic em c,t,p,m,u tem que ser
+    ajustados para não ter que acontecer isso".
+     - Each family's internal Pydantic module serves that family's Pydantic surface:
+       `_models/pydantic.py` for models, `_typings/pydantic.py` for aliases,
+       `_constants/pydantic.py` for constants, `_protocols` for contracts.
+     - A model reaches what it needs through `m` and its earlier-layer letters, never
+       through `u`. Models export no methods; they follow Pydantic best practices.
+     - A Pydantic capability a model reads from `u` is relocated by the pipeline's
+       relocation stage to the family that owns its runtime kind, and every consumer is
+       rewired in every repository.
 
 ## Bidirectional Traceability
 
