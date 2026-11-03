@@ -107,15 +107,6 @@ unexpected runtime exceptions into success or ad-hoc error dictionaries.
 ```python
 from __future__ import annotations
 
-from collections.abc import (
-    Iterable,
-    Iterator,
-    Mapping,
-    MutableMapping,
-    MutableSequence,
-    Sequence,
-)
-
 from math import isclose
 
 from flext_core import p, r
@@ -152,22 +143,6 @@ through its declared ports at composition time.
 
 ```python
 from __future__ import annotations
-
-from collections.abc import (
-    Iterable,
-    Iterator,
-    Mapping,
-    MutableMapping,
-    MutableSequence,
-    Sequence,
-)
-
-from flext_core import FlextSettings
-
-settings = FlextSettings.fetch_global()
-if not isinstance(settings.model_dump(), dict):
-    message = "Expected settings to dump to a mapping"
-    raise TypeError(message)
 ```
 
 Subprojects extend `FlextSettings` with their own `env_prefix`:
@@ -175,22 +150,13 @@ Subprojects extend `FlextSettings` with their own `env_prefix`:
 ```python
 from __future__ import annotations
 
-from collections.abc import (
-    Iterable,
-    Iterator,
-    Mapping,
-    MutableMapping,
-    MutableSequence,
-    Sequence,
-)
-
 from flext_core import FlextSettings, m
 
 
 class GreetingSettings(FlextSettings):
     """Greeting settings read from ``GREETING_*`` environment variables."""
 
-    model_config = m.SettingsConfigDict(env_prefix="GREETING_", extra="forbid")
+    model_config = m.SettingsConfigDict(env_prefix="GREETING_")
 ```
 
 Family internals may consume settings/config through the acyclic layer-zero contract.
@@ -219,15 +185,6 @@ collaborator directly through its protocol port; it does not look it up by this 
 
 ```python
 from __future__ import annotations
-
-from collections.abc import (
-    Iterable,
-    Iterator,
-    Mapping,
-    MutableMapping,
-    MutableSequence,
-    Sequence,
-)
 
 from flext_core import FlextContainer, p
 
@@ -295,15 +252,6 @@ thread submission; an application-owned executor needs the same per-submission
 
 ```python
 from __future__ import annotations
-
-from collections.abc import (
-    Iterable,
-    Iterator,
-    Mapping,
-    MutableMapping,
-    MutableSequence,
-    Sequence,
-)
 
 from typing import override
 

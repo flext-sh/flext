@@ -93,7 +93,9 @@ filter or a truthiness filter. Do not call the former guide's
 current core conversion owner.
 
 ```python
-from flext_core import t, u
+from collections.abc import Sequence
+
+from flext_core import u
 
 source: Sequence[str] = ("first", "second")
 converted = u.to_str_list(source)

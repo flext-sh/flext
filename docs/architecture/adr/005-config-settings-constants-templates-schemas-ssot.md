@@ -5,6 +5,7 @@
 - [Context](#context)
 - [Decision](#decision)
   - [1. Each concern has exactly one owner](#1-each-concern-has-exactly-one-owner)
+  - [Domain boundaries and value flow (amended 2026-10-28)](#domain-boundaries-and-value-flow-amended-2026-10-28)
   - [2. Facade and layer direction is strict](#2-facade-and-layer-direction-is-strict)
   - [3. Repository conformance is data-driven](#3-repository-conformance-is-data-driven)
   - [4. Rendering and application are deterministic transactions](#4-rendering-and-application-are-deterministic-transactions)

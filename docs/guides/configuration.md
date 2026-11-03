@@ -6,6 +6,7 @@
 - [Connect configuration to domain models](#connect-configuration-to-domain-models)
 - [Public exports manifest](#public-exports-manifest)
 - [Documentation configuration](#documentation-configuration)
+  - [Build API documentation with MkDocs and mkdocstrings](#build-api-documentation-with-mkdocs-and-mkdocstrings)
 - [Apply and validate](#apply-and-validate)
 - [Related guides](#related-guides)
 

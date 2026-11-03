@@ -38,7 +38,7 @@ class FlextModelsRoot(
     """Workspace root models facade — access via m.Root.*.
 
     MRO ordered by inheritance depth (deepest first) to satisfy C3 linearization.
-    FlextAuthModels is inherited via FlextModelsOracleOic.
+    FlextAuthModels is inherited via FlextOracleOicModels.
     FlextApiModels, FlextWebModels, FlextCliModels are inherited via
     the OracleOic/OracleWms/Quality paths.
     FlextLdifModels is inherited via FlextLdapModels.

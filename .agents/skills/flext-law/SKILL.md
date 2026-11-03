@@ -209,26 +209,24 @@ authorize any additional frozen rule, severity or scope change.
 
 ## Sources, generation, and commands
 
-**Theme-rule convergence is the only correction route**
+**One pipeline is the only correction route**
 ([ADR-028 Decision 18 item 2](../../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18),
-operator orders 2026-11-02). Rules are unified by theme (one law set, one generalized
-rule), checked and fixed globally, by automation only. The cycle, with exact forms:
+operator orders 2026-11-02; epic `flext-lqfqo`). `check`, `gen` and `mod` share one
+pipeline and one rule set; `check` reports, `gen` scaffolds or conforms, `mod` refactors,
+and neither `gen` nor `mod` requires the other. The import law (Decision 10) is its bind
+stage and always runs. The work cycle, with exact forms:
 
-1. Unify and perfect the theme at its owner: rule YAML, rope rule or generator, with
+1. Perfect the law at its single owner (stage, rule YAML, Rope rule or generator), with
    fixtures and the native test. Never edit a violating source by hand.
-2. Global check, every governed repository in one invocation:
-   `flext-infra refactor mod --repository-root <ws> --projects <repo>... --laws <ENFORCE-id>... --check`.
-   Use `--rule-ids <id>...` only for static ids until the law selector exists.
-3. Global apply: the same command without `--check`, serialized, then `--check` must
-   report 0.
+2. Check, every governed repository in one invocation:
+   `flext-infra refactor mod --repository-root <ws> --projects <repo>... --check`, or
+   `--laws <ENFORCE-id>...` to diagnose one law.
+3. Apply: the same command without `--check`, serialized; then `--check` reports 0, and
+   a second run changes nothing.
 4. Verify each touched repository: direct `ruff check`, `ruff format --check` and
-   `pyrefly check` on explicit paths, plus the runtime import. Make is not evidence until
-   it is repaired and validated.
-5. Commit everywhere by explicit paths, record the bead evidence (`law:<theme>`), then
-   move to the next theme.
-
-A `refactor mod` without a selection equals a global make and is refused. The operator
-and the approved plan rank above superseded ADR text.
+   `pyrefly check` on explicit paths, the fresh import of every module, and building
+   every model. Make is not evidence until it is repaired and validated.
+5. Commit by explicit paths and record the bead evidence.
 
 The 2026-11-01 operator correction in
 [ADR-018](../../../docs/architecture/adr/018-generator-declarations.md#nested-facade-projection)

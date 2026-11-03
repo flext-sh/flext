@@ -33,7 +33,7 @@
 
 **Rule**: A consumer import is **legal** iff it matches:
 
-```python
+```text
 from <flext-package> import <symbol>
 ```
 

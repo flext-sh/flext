@@ -3,6 +3,10 @@
 <!-- TOC START -->
 
 - [Canonical Guides](#canonical-guides)
+  - [Onboarding & Getting Started](#onboarding-getting-started)
+  - [Daily Workflow & Make Lifecycle](#daily-workflow-make-lifecycle)
+  - [Framework & Library Usage](#framework-library-usage)
+  - [Refactoring, Automation & Migration](#refactoring-automation-migration)
 - [Scope](#scope)
 
 <!-- TOC END -->

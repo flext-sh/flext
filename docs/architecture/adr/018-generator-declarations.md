@@ -36,8 +36,12 @@ Wiki generation never creates or closes Beads by itself.
 
 <!-- TOC START -->
 
+- [Offline dependency and architecture references (amended 2026-10-28)](#offline-dependency-and-architecture-references-amended-2026-10-28)
 - [Context](#context)
 - [Decision](#decision)
+  - [Nested facade projection](#nested-facade-projection)
+  - [Model and service protocol projection](#model-and-service-protocol-projection)
+  - [Single-read, single-batch publication (amended 2026-10-28, campaign flext-pipol)](#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
