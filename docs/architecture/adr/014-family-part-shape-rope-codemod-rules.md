@@ -31,6 +31,9 @@
   change cycle in `flext-infra`, and the namespace/codemod gate alignment. Third-party
   forks stay outside FLEXT architecture (fleet boundary, `flext-law`).
 - **Tracking:** the active branch-matched Bead (`flext-joe2x` at authoring).
+- **Current consolidation:** `flext-9t6gn`; see the dated
+  [restart handoff](../../ways-of-working/make-consolidation-handoff.md)
+  before treating naming or native-tool source changes as qualified execution.
 - **Complements:** ADR-005 (config/settings SSOT and canonical pattern), ADR-010
   (unified standardization via codegen), `flext-law` (facade and import law).
 - **Operator basis:** operator directives of 2026-09-09 (this session): flat part
@@ -99,6 +102,11 @@ has already passed its runtime and native validation gates.
    tests, scripts, and examples consume that facade. Preserve declared dependency
    direction and use explicit protocol injection where a runtime back-import
    would otherwise create a cycle.
+   The operator's 2026-10-29 clarification limits lazy dispatch to generated
+   `__init__.py` exports. Consumers import the public namespace statically at module
+   scope; method-local, deferred or ad hoc dynamic imports cannot repair a cycle.
+   Resolve the responsibility and injected dependency before regenerating those
+   exports. Type-only annotations retain their declaring layer's import contract.
 6. Semantic rewiring updates inheritance, annotations, imports, quoted references,
    exports, and generated surfaces together. Preserve payload behavior and intended
    MRO; reject unresolved ownership and occupied destinations before publication.

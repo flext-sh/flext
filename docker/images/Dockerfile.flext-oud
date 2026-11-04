@@ -40,7 +40,7 @@ RUN chmod +x /opt/oracle/oud/scripts/*.sh
 # Set up OUD instance with FLEXT-specific configuration
 RUN /opt/oracle/oud/scripts/setup-oud.sh
 
-# Settingsure OUD for FLEXT migration requirements
+# Configure OUD for FLEXT migration requirements
 RUN /opt/oracle/oud/scripts/configure-oud.sh
 
 # Health check

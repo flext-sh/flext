@@ -16,7 +16,8 @@ Read, in order:
 
 ## Operating contract
 
-- Work only on `0.12.0-dev`; `0.20.0-dev` is read-only comparison evidence.
+- Work only on `0.12.0-dev` (active line); `0.13.0-dev` is the future line and stays
+  untouched until the operator opens it.
 - Use Gas City Beads as the sole work tracker. Run every tracker command as
   `direnv exec <repo> bd ...`: prime the context, inspect the selected Bead, claim it,
   and record evidence there.

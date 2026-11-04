@@ -47,7 +47,7 @@ manutenção), estágio e todos restantes.
 ## 2. Contrato ai-hub (para onde alinhar)
 
 - **Descoberta**: `.git/worktrees/*/gitdir` lido direto do filesystem
-  (`_storage_worktrees.py:34`), sem subprocess git.
+  (`worktrees.py:34`), sem subprocess git.
 - **Convenção de local**: `worktrees/<bead-id>` dentro do workspace OU sibling
   `<repo>-worktrees/` (`WorktreePolicy.sibling_suffix`); BG-GIT-020 nega
   `git worktree add` fora da convenção.

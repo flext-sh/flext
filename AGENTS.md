@@ -764,16 +764,17 @@ ADR-018 its projection, and ADR-019 its DI and service boundary.
 **Config/settings are the layer-0 SSOT** consumed BY the facades (ADR-005). Access is
 single-form only:
 
-```python notest
+```python
 from <namespace> import config, settings   # e.g. from flext_core import config, settings
 config.<Namespace>.*      settings.<Namespace>.*
 ```
 
 Config = business rules (`config/*.yaml`, validated); settings = env/CLI-tunable knobs.
 Facades never hardcode values the SSOT holds. Config/settings modules import only
-stdlib, their authenticated upstream foundation, or source-proven, acyclic layer-zero helpers of their
-own package ([ADR-005 §2](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#2-facade-and-layer-direction-is-strict)) — never a project
-`c/t/p/m/u` facade, including under `TYPE_CHECKING`.
+stdlib, their authenticated upstream foundation, or source-proven, acyclic layer-zero
+helpers of their own package
+([ADR-005 §2](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#2-facade-and-layer-direction-is-strict)) —
+never a project `c/t/p/m/u` facade, including under `TYPE_CHECKING`.
 Core remains the Pydantic SDK import owner; another package's layer-zero schema
 consumes the public Core foundation rather than importing Pydantic independently.
 
@@ -825,9 +826,12 @@ CLI + pytest plugin, **never imported at runtime**.
     `c/t/p/m/u` modules (and layer-0 config/settings for their foundation libraries).
     Everywhere else, only stdlib and FLEXT packages; the declared stdlib backports
     (tooling `lazy-init.stdlib-backports`: `typing_extensions`, operator decision
-    2026-10-24) count as stdlib. PEP 747 calls use `t.TypeForm(X)` through the facade's runtime re-binding
-    (ADR-028 amended 2026-10-29); importing `typing_extensions.TypeForm` at
-    consumers is banned.
+    2026-10-24) count as stdlib. The PEP 747 special form is called and annotated
+    only through `from typing_extensions import TypeForm` (`TypeForm(X)`,
+    `TypeForm[T]`): mypy honours the call only for the fullname
+    `typing_extensions.TypeForm`. `t.TypeForm` is removed (operator ruling
+    2026-10-31, ADR-028; supersedes the 2026-10-29 `t.TypeForm` order, now
+    history).
   - Inside the facades too, an external library's types are named only through `t`
     aliases or `p` protocols; `u` never re-narrows or re-parses (`isinstance` chains,
     `ast.literal_eval`) what a `t`/`m` declaration validates once.
@@ -1039,6 +1043,13 @@ CLI + pytest plugin, **never imported at runtime**.
     ([using flext-core](docs/guides/using-flext-core.md#domain-models)).
 - **Typing:** never `Any`/`object`/concrete-class annotations; type via `t.*` aliases
   and `p.*` protocols; `T | None` (never `Optional`). A model is never a type.
+  Generic wrapper aliases (`MappingKV`, `SequenceOf`, `StrMapping`, …) are a managed
+  transition under [ADR-028 Decision 7](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7)
+  (amended 2026-10-29): restored fix-forward because premature removal broke
+  non-migrated consumers; native collection annotations remain the target, each
+  alias retires when its consumer census reaches zero. `VariadicTuple` and
+  tuple-arity wrappers carry no restoration and continue through the
+  deprecated-signature window.
 - **No owned typing stubs:** handwritten and generated first-party `.pyi`, custom
   stub distributions, stub generators, SDK-shaped shadow modules, and model-signature
   mirrors in `.py` are prohibited. Dependency contracts belong to the smallest
