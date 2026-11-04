@@ -554,7 +554,7 @@ private-method assertions or copied configuration expectations.
 
 - The first exception, traceback, and non-zero exit propagate unchanged.
 - Warnings, empty output, and missing tools are failures. Connectivity availability
-  skips follow [root prerequisite law](../../AGENTS.md#production-readiness-and-connectivity-tests)
+  skips follow [root prerequisite](../../AGENTS.md#flext-core)
   and never count as successful connectivity or production validation.
 - No retry, fallback, suppression, normalization, partial run, or alternate raw tool
   path can replace the canonical verb.
