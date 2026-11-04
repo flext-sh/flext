@@ -1,4 +1,4 @@
-# flext_core.loggings
+# flext_infra.pytest
 
 <!-- TOC START -->
 
@@ -6,7 +6,7 @@
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-::: flext_core.loggings
+::: flext_infra.pytest
 
     options:
       show_root_heading: true

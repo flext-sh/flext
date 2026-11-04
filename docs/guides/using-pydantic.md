@@ -13,6 +13,9 @@
 - [Enforcement](#enforcement)
 - [Static and runtime typing evidence](#static-and-runtime-typing-evidence)
   - [Analyzer rule review](#analyzer-rule-review)
+  - [Analyzer declaration snapshot — 2026-10-28](#analyzer-declaration-snapshot-2026-10-28)
+- [Source-derived protocol contracts](#source-derived-protocol-contracts)
+  - [Dependency documentation references](#dependency-documentation-references)
 
 <!-- TOC END -->
 
@@ -27,15 +30,16 @@ Do not infer a fleet-wide capability from one installed environment. Member lock
 and the workspace lock that composes them follow
 ([ADR-030](../architecture/adr/030-member-locks-composition-upg-guard.md)).
 
-Two 2026-10-25 operator rulings bind every FLEXT model (root `AGENTS.md`
+Two operator rulings bind every FLEXT model (root `AGENTS.md`
 "Pydantic law"; ADR-028 Decisions 14 and 19):
 
-- models import `u` only from the upstream FLEXT project or, in very restricted
-  cases, from a private `_utilities` class of their own namespace; arbitrary
-  business methods belong outside models, while native validators, serializers
-  and computed fields remain model declarations. The Pydantic surface they need
-  lives in `_models/pydantic.py`
-  (tracker memory `operator-ruling-2026-10-25-models-u-imports-pydantic-home`);
+- each family owns its Pydantic surface and a model never imports `u`: the
+  Pydantic surface models need lives in `_models/pydantic.py` (and each family's own
+  Pydantic module serves that family); arbitrary business methods belong outside
+  models, while native validators, serializers and computed fields remain model
+  declarations (tracker memories
+  `operator-ruling-2026-10-25-models-u-imports-pydantic-home` and
+  `operator-order-2026-11-02-models-never-import-u-for-pydantic`);
 - entity equality is Pydantic value equality with explicit identity by id
   (tracker memory `operator-ruling-2026-10-25-entity-equality-pydantic-way`; see
   [Domain models](using-flext-core.md#domain-models)).
@@ -55,6 +59,28 @@ Two 2026-10-25 operator rulings bind every FLEXT model (root `AGENTS.md`
 | Static rules | `config.<Namespace>.*` from `config/*.yaml` | read through the singleton |
 
 Only flext-core imports `pydantic`, `pydantic_settings` or `pydantic_core`.
+
+Configuration annotations follow the type owner: declare model metadata as
+`ClassVar[t.ConfigDict]` and construct its value with `m.ConfigDict(...)`.
+Settings-specific metadata uses `ClassVar[t.SettingsConfigDict]` with
+`m.SettingsConfigDict(...)`, preserving the native settings key contract.
+The typing facade supplies the native annotation contract; the models facade
+supplies the runtime constructor. Codemods preserve every configuration argument
+and reuse the existing import-header stage to bind `t` before publication in
+source, tests, and examples. They
+must never rewrite a valid `t.ConfigDict` annotation back to the value facade.
+
+Native settings-source overrides retain the SDK's nominal signature through
+`t.PydanticBaseSettings` and `t.PydanticBaseSettingsSource`. These external SDK
+types belong to Core's typing owner; they are not first-party payload models or
+structural protocol mirrors. Moving their annotations from the value facade
+must preserve the actual Pydantic override and source-construction behavior.
+Protocol names used by executable `r[p.Contract]` specializations remain real
+runtime bindings; a `TYPE_CHECKING`-only import cannot supply their validation.
+
+The shared runtime-checkable `p.BaseModel` owns instance serialization capabilities,
+including native `model_dump_json` keyword options. Generated model protocols
+inherit that capability; consumers do not duplicate serializer declarations.
 
 The operator's 2026-10-28 declaration policy uses the enum type for its full
 domain. `Literal` expresses a proper subset or a discriminator; enumerating
@@ -84,8 +110,10 @@ checks runtime protocol presence; it does not validate signatures. Retain static
 protocol checks and real consumer evidence rather than duplicate local narrowing.
 `t.Port` is a FLEXT DI annotation built on native hooks and excludes its runtime
 dependency from JSON Schema. It must not replace a serializable payload's
-validation: a payload projected to `p` delegates its original concrete annotation
-through `GetPydanticSchema`, preserving validators, serializers and JSON Schema.
+validation: a payload typed through `p` delegates to its actual native model
+schema through `GetPydanticSchema`, preserving validators, serializers and JSON
+Schema. Model constructor identities supplied as schema metadata are executable
+values; they do not permit `m.*` type annotations.
 An unresolved port type parameter fails instead of selecting `any_schema`.
 See [ADR-019](../architecture/adr/019-service-contract-ports-operations.md) for DI
 and [ADR-018](../architecture/adr/018-generator-declarations.md#model-and-service-protocol-projection)
@@ -222,8 +250,11 @@ invalid: ADR-018 requires retaining its runtime class and closure while deriving
 a deterministic lexical protocol identity. Do not hoist it generically or call
 `model_rebuild` to hide an unresolved declaration. Repair the actual dependency
 or export, and prove a fresh public import. The enclosing family class is not
-bound while its body executes, so a self-qualified sibling reference needs its
-real declaring owner, not a fabricated namespace.
+bound while its body executes, so a self-qualified sibling reference is never
+evaluated eagerly: type the field by the sibling's protocol and defer the schema
+owner, `Annotated[p.X, t.schema_for_model(lambda: Holder.X)]`. The field is then
+complete at class creation, and a subclass in another module inherits it without
+re-resolving any name.
 
 ## Library boundaries
 
@@ -457,6 +488,17 @@ operator's explicit old/new-key authorization under the lint-rule freeze. No row
 classifies an unmeasured diagnostic as a false positive.
 
 ## Source-derived protocol contracts
+
+The strict 2026-11-02 operator amendment in ADR-018 prohibits every `m.*` typing
+reference. Use the canonical source-derived `p.*` contract decorated with
+`@runtime_checkable`, including fields, callback parameters, forward references
+and generic type arguments. Keep actual construction and validation with the
+model owner. A Protocol is never a model constructor, and presence checks do not
+replace native payload validation or static signature checks. `t.Port` remains
+reserved for its documented DI semantics; it does not make a serializable model
+field exempt from validation. Missing protocols or unsupported schema behavior
+require producer repair and real consumer qualification, without a concrete-model
+annotation fallback or fabricated Pydantic compatibility.
 
 ### Dependency documentation references
 

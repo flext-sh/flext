@@ -31,6 +31,9 @@
   change cycle in `flext-infra`, and the namespace/codemod gate alignment. Third-party
   forks stay outside FLEXT architecture (fleet boundary, `flext-law`).
 - **Tracking:** the active branch-matched Bead (`flext-joe2x` at authoring).
+- **Current consolidation:** `flext-9t6gn`; see the dated
+  [restart handoff](../../ways-of-working/make-consolidation-handoff.md)
+  before treating naming or native-tool source changes as qualified execution.
 - **Complements:** ADR-005 (config/settings SSOT and canonical pattern), ADR-010
   (unified standardization via codegen), `flext-law` (facade and import law).
 - **Operator basis:** operator directives of 2026-09-09 (this session): flat part
@@ -99,6 +102,11 @@ has already passed its runtime and native validation gates.
    tests, scripts, and examples consume that facade. Preserve declared dependency
    direction and use explicit protocol injection where a runtime back-import
    would otherwise create a cycle.
+   The operator's 2026-10-29 clarification limits lazy dispatch to generated
+   `__init__.py` exports. Consumers import the public namespace statically at module
+   scope; method-local, deferred or ad hoc dynamic imports cannot repair a cycle.
+   Resolve the responsibility and injected dependency before regenerating those
+   exports. Type-only annotations retain their declaring layer's import contract.
 6. Semantic rewiring updates inheritance, annotations, imports, quoted references,
    exports, and generated surfaces together. Preserve payload behavior and intended
    MRO; reject unresolved ownership and occupied destinations before publication.
@@ -212,14 +220,17 @@ acceptance or fleet rollout.
    input, never authority. Divergence is repaired at the canonical source and
    re-proven, not patched by a competing projection writer.
 4. **Strict/total init.** Generated `__init__` exports are the ordered union of the
-   sibling parts' `__all__`: a sibling without `__all__` emits warning `GEN-W001`; a
-   stale `__all__` (export listed but absent from the sibling) is an error (`GEN-E001`)
-   that fails loud; a symbol collision between siblings is an error. Exceptions are
-   declared as one data line in `flext-infra/config/codegen.yaml` (rules-as-data — never
-   a detector branch).
-5. **Three levels.** gen emits `GEN-W*` warnings; `make fix` corrects the auto-fixable
-   subset (relativized self-imports `GEN-W002`); `make check` reports anything
-   remaining. No detector is ever disabled and no finding turns into a silent success.
+   sibling parts' `__all__`. A missing `__all__` is derived and written by the
+   pipeline's shape stage from the module's single class (generator-declarations
+   point 10); a stale `__all__` entry fails loud with its evidence; a symbol
+   collision between siblings is resolved by the census stage when the identities
+   match and fails with both declarations otherwise. No exception list exists, in
+   configuration or anywhere else.
+5. **One pipeline, no warning level.** `gen` emits gate-clean output by construction,
+   `mod` corrects authored sources through the same stages, and `check` reports what
+   either would change. No generator finding is a warning, no later verb repairs the
+   generator's own output, and no detector is ever disabled (ADR-028 Decisions 8 and
+   18; epic `flext-lqfqo`).
 6. **Render purity.** `render = f(SSOT, templates, PINS)` and nothing else: any
    environment input (filesystem probing, wall clock, dependency resolution, worktree
    WIP state) reaching the render is a P0 engine defect.

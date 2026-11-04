@@ -1,4 +1,4 @@
-# flext_core.runtime
+# flext_infra.conform
 
 <!-- TOC START -->
 
@@ -6,7 +6,7 @@
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-::: flext_core.runtime
+::: flext_infra.conform
 
     options:
       show_root_heading: true

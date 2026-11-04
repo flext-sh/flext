@@ -17,10 +17,12 @@
 
 - **Status:** Accepted (replaces the former Make registry decision)
 - **Date:** 2026-06-28
-- **Amended:** 2026-10-23 (operation ownership and incremental validation)
+- **Amended:** 2026-10-29 (frozen setup and distinct test operations)
 - **Scope:** generated Makefiles, repository conformance, command routing, and custom
   project handlers.
 - **Tracking:** `mro-wkii.17`
+- **Current consolidation:** `flext-9t6gn`; dated
+  [restart handoff](../../ways-of-working/make-consolidation-handoff.md).
 
 <!-- mro-wkii.17.6 (agent: codex) — replace competing Make owners with the single conform pipeline. -->
 
@@ -75,7 +77,7 @@ For `flext-0029c`, [ADR-010's native-flow trust amendment](010-unified-project-s
 retires pre-install Python setup admission and its copied artifact. The existing
 Make/direnv template and catalog owners must delegate provisioning to native
 Mise/uv, not port that installer to AWK/shell or another lock parser. Official
-Mise acquisition and native locked tool provisioning precede `uv sync --locked`
+Mise acquisition and native locked tool provisioning precede `uv sync --frozen`
 into the owned physical `.venv`. Installed typed provenance and the
 separately consumed post-install import guard remain after native installation,
 without retroactive installation attestation. Coordinate the wider generated
@@ -83,6 +85,20 @@ cutover with `flext-itpd1.4.13`; direct public Infra subsystem QA comes first an
 Make integration last. Other operation ownership and generated-file rules remain.
 
 ### 2. The Makefile is a self-contained generated artifact
+
+**Setup recovery amendment, 2026-11-02.** Native environment recreation must not
+clear the serving environment in place. The same generated setup owner prepares
+a sibling relocatable environment, installs the frozen closure and elected local
+sources, and validates real Python, console and loaded-code origins before
+publication. Its editable-selection receipt belongs inside that environment,
+so one directory publication binds executable code and provenance together.
+The old environment remains available for explicit recovery; setup does not
+automatically delete it. Linux publication uses a capability-proven native atomic
+exchange under the existing shared mutation lock, with source and directory
+identity witnesses. Other platforms remain an explicit capability requirement;
+there is no destructive fallback or assertion of unproved portability. The
+[execution contract](../../../flext-infra/docs/guides/execution-context.md)
+and `flext-9t6gn` retain implementation and real interruption evidence.
 
 One template layer emits the complete versioned Makefile for the `workspace` or
 `standalone` profile from
@@ -95,17 +111,35 @@ and conformance use their declared public verbs; `check` is read-only.
 > described below is retired.
 
 The typed `make.verbs` catalog owns builtin names, profile applicability, descriptions
-and named inputs. The operator-approved common surface is `setup`, `upg`, `gen`,
-`mod`, `fix`, `fmt`, `check`, `tests`, `help`, `build` and `clean`. Declared product
-extensions join it through the repository's existing typed registry. Diagnostics,
-profiling, documentation actions and former subverbs belong to their operation's
-existing owner, not additional common public targets. `make help` and the per-verb
-contract view project that declaration; neither is an independent source of truth.
+and named inputs. Its
+[public verb matrix](../../guides/make-commands.md#public-verb-matrix) and test-contract
+section must be generated in the existing guide by the documentation owner,
+preserving the surrounding authored sections. The test decision points to ADR-029;
+command names and descriptions come from the catalog. Member guide projections
+consume that same planned content. The matrix is not a second hand-maintained
+command list in this ADR.
+Declared product extensions join it through the repository's existing typed registry.
+Diagnostics, profiling, documentation actions and former subverbs belong to their
+operation's existing owner, not additional common public targets. `make help` and
+the per-verb contract view project that declaration; neither is an independent
+source of truth.
 
-The sole common testing verb, `tests`, executes the complete applicable suite once
-with the existing persistent Testmon database. It has no incremental prepass or
-public file/full aliases. Workflow, hooks, receipts and CI cache publication consume
-the same typed testing declaration.
+This projection is part of the existing documentation bundle and guarded publisher,
+not a separate script or generation lifecycle. Original guide and configuration
+observations accompany the publication plans; a changed source rejects publication.
+The declared guide and its unique, non-overlapping sections are required. Missing or
+ambiguous sections fail without replacing authored content. This is the projection
+contract; runtime and
+convergence evidence remain required before acceptance.
+
+The two test operations follow
+[ADR-029](029-always-working-one-complete-cycle.md#decision). `tests` executes native
+incremental Testmon selection over the complete applicable population, using the
+existing persistent database. `tests-full` executes the complete applicable population
+once without Testmon or a preliminary incremental run. It neither reads, leases,
+checks, updates nor publishes that database. Workflow, hooks, receipts and CI cache
+publication consume the same typed testing declaration and preserve the selected
+operation's accounting.
 
 General help displays each verb's declared named inputs. A builtin contract view
 (`OPTIONS=Y` or `HELP=Y`) displays those inputs without running its prerequisites,

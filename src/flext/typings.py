@@ -1,13 +1,25 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Typings facade for flext-workspace — t.Root project namespace.
+"""Unified typings facade for the FLEXT workspace.
+
+Aggregates and exposes type aliases, typed mappings, and type-system markers
+across the member project hierarchy through a single canonical entry point ``t``
+and workspace namespace ``t.Root``. Preserves C3 MRO linearization order across
+inherited subproject types.
+
+See Also:
+    - ADR-027: Facade Single-Owner Law.
+    - ADR-028: Facade Boundary Orchestrators Declarative Enforcement.
+    - :mod:`flext.protocols`: Unified protocols facade.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
 
-from flext._typings import FlextRootTypingsBase, FlextRootTypingsConfig
+from flext._typings.base import FlextRootTypingsBase
+from flext._typings.config import FlextRootTypingsConfig
 from flext_db_oracle import t
 from flext_grpc import t as flext_grpc_t
 from flext_infra import t as flext_infra_t
@@ -34,18 +46,18 @@ class FlextRootTypes(
     t,
     flext_grpc_t,
 ):
-    """Workspace root typings facade — access via t.Root.*.
+    """Unified root typings facade.
 
-    MRO ordered by inheritance depth (deepest first) to satisfy C3 linearization.
-    FlextAuthTypes is inherited via FlextOracleOicTypes.
-    FlextApiTypes, FlextWebTypes, FlextCliTypes are inherited via
-    the OracleOic/OracleWms/Quality paths.
-    FlextLdifTypes is inherited via FlextLdapTypes.
+    Exposes type aliases, union types, and type definitions across all workspace
+    packages. MRO is ordered by inheritance depth (deepest first) to ensure
+    deterministic C3 linearization across diamond dependencies.
     """
 
     class Root(FlextRootTypingsBase, FlextRootTypingsConfig):
-        """Workspace root typings MRO composition."""
+        """Workspace-specific type aliases accessed via ``t.Root.*``."""
 
 
 t = FlextRootTypes
+"""Canonical typings facade alias for the workspace."""
+
 __all__: list[str] = ["FlextRootTypes", "t"]

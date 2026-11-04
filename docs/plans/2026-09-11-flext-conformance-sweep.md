@@ -210,8 +210,8 @@ pós-pouso do ator no agents.
   `flext-2h0un`.
 - Lei de budget: bead `flext-38p39`; guia: `docs/guides/make-commands.md`.
 - Migração breaking: `docs/guides/migration-to-v0.13.0.md`.
-- Plano predecessor: `docs/plans/2026-09-10-cooldown-extermination-plan.md` (fases F4–F7
-  MK sidetracked — repin mcb segue pendente lá).
+- Plano predecessor: the 2026-09-10 cooldown-extermination plan, reconciled and retired
+  (flext-infra #679 and mcb #238 merged; receipts on bead `flext-tvkbj`).
 
 ---
 

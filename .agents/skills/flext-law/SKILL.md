@@ -50,6 +50,12 @@ installed delivery remain separate evidence. Global governance is authored under
 
 ## Architecture and imports
 
+Enforce ADR-018's 2026-11-02 strict operator amendment: no `m.*` typing, canonical
+`p.*` contracts decorated with `@runtime_checkable`, and real model construction
+only at executable boundaries. The topic-owning ADR and Pydantic guide govern
+native schema preservation and valid `t.Port` use; neither runtime failures nor
+missing projections authorize a concrete-model typing exception or protocol shim.
+
 - Dependency direction is `flext-core <- consumers`. `flext-infra` owns build, conform,
   codegen, and policy; it is never a runtime dependency.
 - Facades compose in strict order `c -> t -> p -> m -> u`, with operational
@@ -203,6 +209,36 @@ authorize any additional frozen rule, severity or scope change.
 
 ## Sources, generation, and commands
 
+**One pipeline is the only correction route**
+([ADR-028 Decision 18 item 2](../../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18),
+operator orders 2026-11-02; epic `flext-lqfqo`). `check`, `gen` and `mod` share one
+pipeline and one rule set; `check` reports, `gen` scaffolds or conforms, `mod` refactors,
+and neither `gen` nor `mod` requires the other. The import law (Decision 10) is its bind
+stage and always runs. The work cycle, with exact forms:
+
+1. Perfect the law at its single owner (stage, rule YAML, Rope rule or generator), with
+   fixtures and the native test. Never edit a violating source by hand.
+2. Check, every governed repository in one invocation:
+   `flext-infra refactor mod --repository-root <ws> --projects <repo>... --check`, or
+   `--laws <ENFORCE-id>...` to diagnose one law.
+3. Apply: the same command without `--check`, serialized; then `--check` reports 0, and
+   a second run changes nothing.
+4. Verify each touched repository: direct `ruff check`, `ruff format --check` and
+   `pyrefly check` on explicit paths, the fresh import of every module, and building
+   every model. Make is not evidence until it is repaired and validated.
+5. Commit by explicit paths and record the bead evidence.
+
+The 2026-11-01 operator correction in
+[ADR-018](../../../docs/architecture/adr/018-generator-declarations.md#nested-facade-projection)
+supersedes earlier Rope-only generation requirements. `make gen` performs pure
+declaration projection through the existing typed AST inventory, with no Rope
+project, source movement, consumer rewrite or semantic convergence loop. Its
+complete invocation must finish below twenty seconds; stage budgets and counters
+belong to typed configuration. `make mod` retains native Rope semantic refactoring
+and the existing projection contracts and publisher. Preserve class/member shapes,
+bodies and public functionality; reduce coupling, complexity and the execution
+chain by composing existing CA/DI owners, not by adding wrappers or another engine.
+
 For `flext-0029c` only, the operator's direct-public-CLI route supersedes the
 Make-only requirements in this law, the session router and parent instructions:
 native-bootstrap diagnosis, real runtime, semantic refactoring and applicable gates
@@ -276,17 +312,19 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   the full applicable checks still precede completion and integration. Existing
   receipt-based operations retain their declared admission contracts.
   Generation and modification complete their own coherent changes, including
-  required dependent projections, through the same typed plans and semantic
+  required dependent projections, through the same typed plans and authenticated
   publication engine; neither recursively runs another public operation.
 - Generation and modification read each source once and publish one transactional
   batch per smallest coherent transaction (ADR-018 single-read, single-batch
   publication; campaign `flext-pipol`): reuse authenticated facts until relevant
   inputs change, validate planned sources before effects, and use the common
   barrier for cooperating Make/Rope readers and writers. The approved contract
-  includes interruption detection, guarded rollback of only that transaction's
-  own effects and incremental native refresh; the current publisher is not proof
-  of implemented batch visibility. Fast transaction gates stay within five seconds;
-  full gates and the 60-second Make budget remain mandatory. No surface re-reads
+  includes interruption detection, fix-forward recovery preserving confirmed
+  effects and incremental native refresh for modification; the current publisher
+  is not proof of implemented batch visibility. Fast transaction gates stay within
+  five seconds;
+  full gates and the general 60-second Make budget remain mandatory; generation
+  has the stricter below-20-second budget above. No surface re-reads
   an earlier stage's on-disk output instead of planned sources. Their published
   projections are gate-clean by construction (ADR-028 Decision 8): `make gen`
   followed directly by `make check` is green and `make fmt`/`make fix` are no-ops;
@@ -365,6 +403,10 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
 - Resolve each repository's declared integration branch and refresh its remote before
   work, after validation, and before publication. Prove the lane contains that tip;
   adopt new integration commits with a non-rewriting merge, never a history replacement.
+- The rig checkout stays on its integration branch tip (`0.12.0-dev`) and serves
+  hotfixes, bugfixes and local consumers. Development happens in lanes, and an existing
+  WIP converges in place before the rig returns to the tip (root `AGENTS.md`
+  "Rig and Lane Contract"; tracker memory `operator-order-2026-11-02-rigs-on-integration`).
 - Keep one active owner per checkout. Reuse and reconcile existing lanes instead of
   duplicating work. Dirty or divergent input is preserved, attributed, and fixed forward.
 - Land independently validated member slices first. Update superproject gitlinks only

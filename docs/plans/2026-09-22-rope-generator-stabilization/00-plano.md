@@ -275,7 +275,7 @@ Appended below as increments land (command, cwd, exit code, decisive output).
   collection. Fleet-wide `-W error` import+exports probe then showed ALL 30 other
   members green; only tap-ldap needed the cure.
 - gen-9 (exit 2): tap-ldap passed; next failure `flext_tap_ldif` —
-  `cannot import name 'FlextModelsTapLdifEntry' from 'flext_tap_ldif._models'`. Root
+  `cannot import name 'FlextTapLdifModelsEntry' from 'flext_tap_ldif._models'`. Root
   cause: the `_models` part modules imported the own-package root `m` alias, whose owner
   (`models.py`) eagerly imports these same parts — a genuine import cycle (part → root m
   → .models → eager .\_models → re-entrant `__getattr__`). Cure at source
@@ -330,7 +330,7 @@ Appended below as increments land (command, cwd, exit code, decisive output).
   (gen-10 planned 111), exit 0, `✅ project conformance complete`
   (/tmp/clone-gen-12.log). The killed gen-11 proof is delivered.
 - **`make mod` findings cured at source**: root `src/flext/settings.py`
-  `from pydantic import ConfigDict` → `ClassVar[m.SettingsConfigDict]` via the
+  `from pydantic import ConfigDict` → `ClassVar[p.SettingsConfigDict]` via the
   `flext_core` models facade (`b4042b4290`); three root script subpackages
   (`scripts/{docs,hooks,workspace}`) received explicit `__init__.py` markers — the 3
   ruff INP001 findings that failed every `make fix` run at the workspace root

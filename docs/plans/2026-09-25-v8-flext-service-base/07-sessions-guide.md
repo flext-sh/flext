@@ -137,13 +137,13 @@ src/<package>/
    capability, published as `p.<Ns>.<Port>`.
 3. **Models:** request and response of every operation in `_models/`, on an `m.*` preset
    (strict at the boundary); never a `dict` as a contract.
-4. **Services:** `class Flext<X><Case>(s[m.<Ns>.<Result>])`; import `p`, `t` and `m`
+4. **Services:** `class Flext<X><Case>(s[p.<Ns>.<Result>])`; import `p`, `t` and `m`
    **at runtime** in the service module (Pydantic resolves annotations at class
    creation; `model_rebuild` is forbidden); dependencies as
    `name: t.Port[p.<Ns>.<Port>] = m.Field(exclude=True, description=…)` with a plain
    Protocol class (before S1, annotate with `p.<Ns>.<Port>` and the same `m.Field`);
    each public method is an operation
-   `def verb(self, request: m.<Ns>.<Req>) -> p.Result[m.<Ns>.<Res>]` with a one-line
+   `def verb(self, request: p.<Ns>.<Req>) -> p.Result[p.<Ns>.<Res>]` with a one-line
    docstring; no global `settings`/`config` reads, no other service's `fetch_global()`.
 5. **Adapters** in `adapters/`: implement the ports with the project's owned libraries
    (tier-whitelist); receive settings through the constructor; no I/O at construction.

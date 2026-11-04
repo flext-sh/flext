@@ -33,7 +33,7 @@
 
 **Rule**: A consumer import is **legal** iff it matches:
 
-```{.python .notest}
+```text
 from <flext-package> import <symbol>
 ```
 
@@ -103,8 +103,8 @@ under `m.Api.*`), and referencing an upstream namespace by a renamed alias (the
 referenced the new name).
 
 **Runtime proof** (flext-api `3c004ef0`, flext-web `dced660`/`4bc984c`):
-`flext_api.m.Api` carries no web members; `flext_api.m.Web` resolves the web namespace
-through the chain; `flext_web.m.Web.FastAPIAppConfig` resolves.
+`m.Api` carries no web members; `m.Web` resolves the web namespace
+through the chain; `m.Web.FastAPIAppConfig` resolves.
 
 **Canonical source**: this law (R1a/R1b); ADR-015; the accepted topic ADR; skill
 `flext-law` ("Architecture and imports").
@@ -186,7 +186,7 @@ and Pydantic completeness follows [Decision 14](../../docs/architecture/adr/028-
 
 **Primitives**: `u.append_atomic(path, data)` — generic, reusable across fleet.
 
-**Enforcement**: budget gate delivered (`FlextInfraBudgetGate`, validates one declared
+**Enforcement**: budget gate delivered (`FlextInfraGatesBudget`, validates one declared
 budget row per `c.Infra.ALLOWED_GATES` gate); catalog row pending its next free ID (101)
 — WS-F4 validation. Runtime budget telemetry (measured time/memory in reports) remains
 open.
@@ -259,7 +259,7 @@ survivors are defects.
 | R1a Lazy-Init  | `flext_infra._utilities.lazy_init_letters` (`lazy_init_resolve_aliases`) |
 | R1 Enforcement | `flext_infra.detectors.consumer_import_violations_detector`           |
 | R2 Duplication | [ADR-028 Decision 16](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16); typed Infra tooling declaration and the declared duplication/smells gates |
-| R3 Layer Law   | `flext_infra.gates.namespace.FlextInfraNamespaceGate`                 |
+| R3 Layer Law   | `flext_infra.gates.namespace.FlextInfraGatesNamespace`                 |
 | R4 Config      | `config/codegen.yaml` → `codegen.yaml` scaffold.project.dev           |
 | R4 Budget Gate | `flext_infra.gates.budget` (new)                                      |
 | R4 Primitives  | `flext_core._utilities.files` (new)                                   |

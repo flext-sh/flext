@@ -111,6 +111,17 @@ outside the facades across 12 repositories.
     `p` protocols only, `m` models only, `u` behavior only, each in the import order
     `c → t → p → m → u` (reverse imports `TYPE_CHECKING`-only) and with one owner per
     object (ADR-027).
+  2. **The law is repaired automatically, by one relocation.** A declaration found
+    outside its family (a type alias or `TypeVar`, a `Protocol`, a class of another
+    family's kind, a function or static/class method in a declaration layer) moves
+    through the single `family-declaration` relocation of `make mod` to the module of
+    the owning family that carries the declaring module's domain
+    (`_models/matchers.py` → `_typings/matchers.py`), is nested in that module's one
+    class, is published by MRO (`t.Tests.<Name>`) and has every consumer rewired by the
+    native Rope move. A module-private name becomes the public family member, because a
+    family namespace has no privacy. Instance methods, properties and dunders need a
+    receiver rewrite no derivation supplies and remain findings for the operator. See
+    the codemod rules guide, "One relocation law: every declaration lives in its family".
 
 ### Decision 5
 
@@ -172,6 +183,21 @@ outside the facades across 12 repositories.
   widening the contract. Do not restore already removed wrappers as an alternative
   to completing this migration. This decision is the target contract, not evidence
   of implemented or verified consumer closure.
+
+  Amended 2026-10-29 (fix-forward/adopt, tracker keys
+  `operator-execute-more-with-less-law-20261028`,
+  `flext-wq1mo-complexity-campaign`): the first removal wave deleted
+  `MappingKV`, `SequenceOf`, `StrMapping` and siblings while their complete
+  consumer closure had not migrated, breaking non-migrated siblings fleet-wide;
+  the tree was repaired fix-forward by restoring those domain aliases in
+  `flext-core/src/flext_core/_typings/base.py` until the consumer migration
+  completes. The restoration is a managed transition, not a cancellation of
+  this decision: native collection annotations remain the target contract, the
+  consumer/rule/template closure migration resumes in the same campaign, and
+  `VariadicTuple`/`Pair`/`Triple`/`Quad`/`Quint` carry no restoration — they
+  continue through the deprecated-signature window to zero. Each wrapper's
+  removal closes only when its census reaches zero, external consumers
+  included.
 
   Modernizing `typing.List` or `typing.Dict` preserves the concrete native
   `list` or `dict` contract and does not require importing a `t` facade merely
@@ -262,7 +288,24 @@ outside the facades across 12 repositories.
     follows every decision of this ADR (root-letter imports, no library names
     outside the facades, the Pydantic way).
 
+    **Amendment 2026-11-02 — universal automatic rewiring** (operator order, tracker
+    memory `operator-order-2026-11-02-universal-auto-rewiring`, translated from
+    Portuguese: "the auto-rewiring law must cover all Python code; the mechanism must be
+    so generalized and applied to everything that it applies even to Python code in the
+    project's Markdown and docstrings, using flext-infra with rope for it; it is not
+    optional, it is mandatory for it and for every other complex code rewrite"). Every
+    rewiring cutover, whether import or letter binding, rename, move or relocation,
+    covers Python in Markdown code blocks and docstrings in the same change. It runs
+    through flext-infra on the native Rope workspace model ([Decision 17](#decision-17)),
+    using its documentation occurrences and the existing `_utilities/_docs` owners.
+    Text scripts and hand edits are not a rewrite mechanism. A cutover that leaves
+    stale embedded code is incomplete, never a follow-up item.
+
 ### Decision 10
+
+  The accepted [projector bootstrap dependency cut](018-generator-declarations.md#projector-bootstrap-dependency-cut)
+  preserves this import contract. Resolve the original models/projector dependency
+  cycle rather than granting producer-only defining-module imports.
 
   1. **Imports go through package lazy exports, never module paths or module objects.**
     Operator orders 2026-10-24 (verbatim): "violacao gravissima -> from
@@ -291,6 +334,66 @@ outside the facades across 12 repositories.
     module's `__all__`; an `__init__.py` only re-exports it (or inherits it from the
     parent namespace) and never assigns it.
 
+    Operator orders 2026-11-02 (tracker key
+    `operator-order-2026-11-02-import-and-composition-forms`; epic `flext-lqfqo`).
+    The operator showed, by example, forms that the generators and the codemod
+    violated (translated from Portuguese: "the codemod is generating the wrong
+    imports … it must fix this kind of code to the correct patterns; it is mandatory,
+    in every existing rule"; "it has to correct ALL THE IMPORTS, according to the
+    correct rules, without simplifying"; "the rule is calculated, deterministic …
+    already well documented"; "I gave examples of rules being violated and the
+    correct form, but you must do it calculated for every case and NOT USE hardcoded
+    lists or rules"). The examples are fixtures, never the rule; every decision below
+    is computed from facts the sources already declare:
+    - A facade or consumer imports a family's classes in one statement from the
+      package that publishes them (`from examples._models import
+      (ExamplesFlextModelsEx00, …)`), never one module-path statement per part
+      (`from examples._models.ex00 import …`).
+    - In a family module of letter L (for example `flext_core/_protocols/handler.py`)
+      the own letter L never appears; same-family siblings come through the family
+      package (`from flext_core._protocols import FlextProtocolsBase,
+      FlextProtocolsResult`); a member of another family is reached through that
+      family's letter, never imported from its family package (`from
+      flext_core._typings import FlextTypesCore` is forbidden there). Letters earlier
+      than L in `import-layer-order` come from the own package root; L and later
+      letters come from the elected upstream.
+    - Placement is calculated. An executed read needs a runtime binding: a class
+      base, a decorator, a class keyword, a default value, a `type` statement value,
+      or a construction that evaluates its annotations at runtime, such as a Pydantic
+      model. An annotation-only binding keeps its placement. A binding that would
+      close an import cycle is deferred into the single, last `if TYPE_CHECKING:`
+      block. In the example, `t` and `FlextProtocolsResult` (read by `type` values)
+      and `FlextProtocolsBase` (class bases) are runtime bindings, while `c`,
+      `FlextProtocolsContainer` and `Callable` stay deferred.
+    - A facade class lists only the upstream letters it composes as bases, aliased
+      `{package}_{letter}` when the module binds that letter itself (`class
+      FlextTargetOracleOicUtilities(flext_meltano_u, flext_oracle_oic_u)`). Its own
+      components compose inside one nested namespace class named by the package
+      (`class TargetOracleOic(FlextTargetOracleOicServiceRuntime,
+      FlextTargetOracleOicSink)`), never as extra facade bases and never as
+      `X: TypeAlias = X` republications.
+    - Each provider of a letter is bound once, bare or as its verified alias, as the
+      election below decides. Competing or duplicate bindings are rewritten to it:
+      `from flext_cli import p` beside `from flext_core import p` inside flext-cli's
+      own `_protocols` is corrected, never reported as competing import origins.
+    - Every form above is one authored, generalized rule in flext-infra's rule
+      catalog (`src/flext_infra/config/rules/**`: native ast-grep documents and
+      declarative Rope rules, each with fixtures and its native test). No rule is
+      generated: the operator ruled (verbatim) "NAO TEM QUE EXISTIR REGRAS GERADAS,
+      ISSO É COMPLETAMENTE FAKE, SE DÁ PARA GERAR NÃO É REGRA". The Python engine
+      only computes facts (publication, MRO upstream, layer rank, runtime reads, the
+      import-cycle graph, Pydantic-evaluated constructions), binds them to the
+      rules' declared utilities and parameters, and executes the rules natively; a
+      law written as a Python branch is a hardcoded rule. `check` reports the rules'
+      findings, `gen` applies them to every module it generates, and `mod` applies
+      them to every authored module it refactors. ai-hub builds its hooks from the
+      same catalog (verbatim: "TODAS AS REGRAS ... TEM QUE ESTAR em rules, pois ai-hub
+      irá usar elas para fazer hooks ... regras em python é considerado hardcoded e
+      gambiarra"). Ruff's type-checking rules are disabled as an axiom; these rules
+      own `TYPE_CHECKING` placement.
+    Existing violations are rewritten by the pipeline, never by hand. Status: target
+    contract; the implementation runs under epic `flext-lqfqo`.
+
     Hierarchical composition imports the upstream letters. Operator rulings
     2026-10-25 (verbatim): "essa é a forma canonica, isso tem que estar declarado,
     documentado e automatizado, confirme com as regras atuais" and "veja que estamos
@@ -316,7 +419,24 @@ outside the facades across 12 repositories.
         (`ban-reverse-runtime-import`).
 
     A letter of any facade package read through its module object (`import pkg`,
-    then `pkg.u.X`) is detected by the single rule `ban-letter-module-object`.
+    then `pkg.u.X`) is rewritten by the same letter-binding rule data to the binding
+    this decision elects.
+
+    **Amendment 2026-11-02 — import header, automatic repair and rewiring**
+    (operator order, tracker memory `operator-order-2026-11-02-import-header-auto-rewire`,
+    translated from Portuguese: "a serious example of rule simplification that breaks
+    the projects: in flext-core, `_protocols/base.py` imports `p` (it will create an
+    import cycle and we have two TYPE_CHECKING import sections; it must always be the
+    last, and we cannot have comments between the imports)" and "the engine must fix
+    this too, automatically, and rewire the components to their definitions in the
+    correct location"). A module header has exactly one `if TYPE_CHECKING:` block, and
+    it is the last import section. There are no comments between imports, and the
+    package's own letter never appears inside its own family. The binding exists even
+    when the package has no foreign upstream for that letter. The repair is automatic
+    inside `make mod`, never detection-only. It runs on the native Rope workspace
+    model ([Decision 17](#decision-17)), rewiring references to their defining classes
+    in the correct family location, imported through the family package. Exactly one
+    owner places imports; parallel placement routes are deleted in the same cutover.
 
 ### Decision 11
 
@@ -329,18 +449,16 @@ outside the facades across 12 repositories.
     narrowing or degrading its use meanwhile is the same bypass. For the codemod
     catalog this means:
      - rules apply through `ast-grep scan --update-all`, and rule semantics are native
-       ast-grep (`utils`, `constraints`, `transforms`, `rewriters`). SSOT-derived rules
-       come from the class-A producers and renderers registered in
-       `Infra.codegen.ast_grep`. They are rendered in memory by the `make mod` cascade,
-       one document per shape, and are not projected into repositories (bead
-       `flext-13s6n` removes the current per-rule projection);
+       ast-grep (`utils`, `constraints`, `transforms`, `rewriters`). Every rule is
+       authored in the catalog with fixtures and its native test; no rule is
+       generated (operator order 2026-11-02; [Decision 10](#decision-10));
      - no per-finding Python admission exists: every finding is the native match. A
-       project fact a catalog rule needs is a stable generated utility (`own-package`,
-       `facade-package`, `runtime-alias`, ...) referenced through `matches:`, or a file
-       scope the generated provider publishes and the stage applies through
-       `metadata.scope` (`in`/`not-in`, or `partition` for one generated rule
-       `<id>--<package>[--<key>]` per file group). Runtime import cycles are the
-       whole-graph `ban-cyclic-import` gate, not a rule;
+       project fact a rule needs (own package, facade package, publication, layer
+       rank, runtime alias, …) is computed by the engine and bound to the authored rule
+       through a declared utility referenced by `matches:` or a declared parameter; a
+       fact never carries a law. Runtime import cycles are a fact of the engine's
+       import graph: the placement rule defers a cycle-closing binding, and candidate
+       validation proves zero cycles;
      - the staged scan configuration is reproducible with native ast-grep, so a native
        scan and `make mod` agree.
 
@@ -355,25 +473,21 @@ outside the facades across 12 repositories.
 
 ### Decision 13
 
- 1. **The `make mod` pipeline has a fixed order.**
-    1. The canonical import header, generated from SSOT: the dependency namespace
-       singletons, the project's own aliases, and the facade-module letter taken from
-       the upstream facade, with reverse-layer letters under `if TYPE_CHECKING:`.
-       Insertion fires only for names a module uses but binds nowhere. Its native
-       form is one generated `import-header--<package>` rule per declaring package
-       and scope: it inserts one `from <package> import ...` line with every name
-       that package resolves there. A module inside a declaring package imports
-       from the deepest declaring package containing it; any other module imports
-       from the unique shallowest one. Step 3 prunes the unused names. ast-grep
-       applies one insertion per anchor and run, so a per-name insertion would
-       need a pass per name; a per-package insertion converges within the pass cap.
-       In step 2, the generated `module-member--<package>` rules rewrite
-       `<child>.<Name>` to `Name` when `<child>` is a child package bound by
-       `from <package> import <child>`. The next pass's step 1 imports `Name`,
-       and step 3 removes the module-object import.
-    2. The whole codemod catalog, repeated until nothing changes.
-    3. Last, ruff `--fix --select` over the import families declared in the tooling
-       SSOT.
+ 1. **The pipeline has a fixed stage order** ([Decision 18](#decision-18) item 2;
+    epic `flext-lqfqo`): capture, classification, relocation, module shape, layer
+    zero, orchestrators, projection, the import rules, rendering, candidate
+    validation and atomic publication. `check` reports, `gen` generates and `mod`
+    refactors through the same stages.
+    1. The import rules are authored catalog rules over computed facts (publication,
+       layer rank, elected upstream, runtime reads, the cycle graph): insertion binds
+       a name a module uses but binds nowhere, from the package that publishes it,
+       grouped into one statement per package; a module-object read `<child>.<Name>`
+       is rewritten to `Name` bound from its publishing package. No rule is generated
+       per package or scope.
+    2. The whole authored catalog runs until nothing changes, inside the candidate.
+    3. Rendering emits the formatter's final order by construction; no Ruff pass
+       decides or repairs imports ([Decision 8](#decision-8)), and Ruff's
+       type-checking rules are disabled as an axiom.
 
 ### Decision 14
 
@@ -397,7 +511,8 @@ outside the facades across 12 repositories.
        because the metaclass is private API.
      - A serializable model payload projected to a structural protocol follows
        [ADR-018](018-generator-declarations.md#model-and-service-protocol-projection):
-       native `GetPydanticSchema` delegates to the original concrete annotation.
+       native `GetPydanticSchema` delegates to the original concrete model schema
+       in validation metadata, while the consumer's type position remains a protocol.
        Preserve validators, serializers, defaults and JSON Schema once; do not
        substitute the DI port's instance check or excluded schema for that payload.
      - `arbitrary_types_allowed` is banned.
@@ -418,10 +533,16 @@ outside the facades across 12 repositories.
        that every preset, producer and consumer has been migrated. See
        [ADR-005](005-config-settings-constants-templates-schemas-ssot.md#1-each-concern-has-exactly-one-owner)
        and [Pydantic's versioned configuration API](https://github.com/pydantic/pydantic/blob/v2.14.1/pydantic/config.py).
-     - A field naming a sibling through its own enclosing family class is banned
-       (`ban-enclosing-family-field-reference`): the enclosing class is unbound while
-       its body runs, so the model stays incomplete. The fix extracts the nested member
-       into its own family module.
+     - A field naming a sibling through its own enclosing family class in an eagerly
+       evaluated position is banned (`ban-enclosing-family-field-reference`): the
+       enclosing class is unbound while its body runs, so the model stays incomplete.
+       The type position names the sibling's protocol, and the schema owner is
+       deferred (`t.schema_for_model(lambda: Holder.X)`,
+       [ADR-018 amendment 2026-11-03](018-generator-declarations.md#model-and-service-protocol-projection));
+       a deferred reference is not evaluated at class creation and keeps the field
+       complete (measured 2026-11-03: eager form incomplete, cross-module subclass
+       fails; deferred form complete, cross-module subclass validates and rejects
+       invalid input).
      - Facade roots (`c`, `t`, `p`, `m`, `u`) never inherit a model. They compose
        namespaces; payload models compose data. Native constraints, validators,
        computed fields and serializers belong to the model contract and are not
@@ -438,7 +559,17 @@ outside the facades across 12 repositories.
 
 ### Decision 15
 
- 1. **Library names never leave the facades; exports are named by capability.**
+ 1. **Operator amendment 2026-11-02 — protocol-only annotations.** First-party
+    model, service and data annotations use their canonical `p.*` contracts,
+    decorated with `@runtime_checkable`, including annotations within models.
+    Concrete model references remain only in executable construction, validation,
+    schema, serialization and declaration metadata. Native binding identity owns
+    this distinction, including imported or quoted references; spelling or aliases
+    cannot exempt a concrete model type. Earlier model-annotation exceptions are
+    superseded. [ADR-018's projection contract](018-generator-declarations.md#model-and-service-protocol-projection)
+    owns complete declarations, concrete payload schemas and atomic consumer rewiring.
+
+ 2. **Library names never leave the facades; exports are named by capability.**
     Operator orders 2026-10-25, verbatim (tracker memories
     `operator-order-2026-10-25-library-names-only-in-facades` and
     `operator-rulings-2026-10-25-libnames-locks-ldif-rope`): "lembre de ser CA/DI, os
@@ -506,13 +637,30 @@ outside the facades across 12 repositories.
     ser o máximo desacoplado com as regras ca/di de flext-core, exemplo, rope nao tem
     referencia de todos os objetos em memória da workspace ? e ele tem metodos de
     refatoração, isso tem que ser usado ao inves de custom".
-     - Each governed repository invocation reuses exactly one workspace project as its
-       in-memory model (module cache, parsed modules, file listing, import tools, and
-       change validation), exposed only through `p.Infra.WorkspaceSnapshot`; the
+     - **Projection exception approved 2026-11-01.** [ADR-018's pure-projection
+       correction](018-generator-declarations.md#nested-facade-projection)
+       supersedes this decision's Rope-only parsing and project requirements for
+       `make gen` alone. Generation uses the existing typed standard-library AST
+       declaration inventory, opens no Rope project and performs no source movement,
+       consumer rewiring or semantic convergence. Preserve existing declaration
+       shapes and public contracts; the complete generation budget is below twenty
+       seconds. Semantic modification remains native Rope-owned. This exception
+       authorizes no alternate semantic engine, LibCST route or parallel publisher.
+     - Each governed semantic modification invocation reuses exactly one workspace
+       project as its in-memory model (module cache, parsed modules, file listing,
+       import tools and change validation), exposed only through
+       `p.Infra.WorkspaceSnapshot`; the
        `u.Infra` owner is the only module that names it (Decision 15). A workspace-level
        command uses its declared repository loop and creates one project per repository;
        it does not model sibling repositories as one project or open redundant projects
-       for the same repository during that invocation.
+       for the same repository during that invocation. Measured 2026-11-02
+       (`flext-4760z`): one merged project over the workspace and its 31 members made
+       every internal-tier rename fail. The `tests` package exists in 32 roots, so a
+       dotted lookup resolved the workspace root's package. An internal-tier module is
+       identified by its owning repository and path, inside that repository's own
+       project. Cross-repository effects use Rope's native multi-project refactoring,
+       which also covers the documentation occurrences required by the Decision 9
+       amendment.
      - **Amendment 2026-10-28 — accepted contract, implementation pending:**
        refresh is always incremental within that same native project.
        After a transaction, invalidate only changed resources, affected
@@ -523,7 +671,7 @@ outside the facades across 12 repositories.
        bootstrap/import/source read and protects later lazy reads; it is not
        limited to snapshot construction. Staged validators use the independent
        candidate without reacquiring a parent-held live barrier. ADR-018 owns
-       ordering, crash recovery and guarded rollback of owned effects.
+       ordering, crash recovery and its newer fix-forward recovery contract.
      - Renames, moves and import rewrites use rope's native refactorings (rename with
        documentation occurrences, move, restructure, multi-project refactoring).
      - Custom parse, discovery, import-graph and rename/move planners that duplicate
@@ -531,7 +679,8 @@ outside the facades across 12 repositories.
        `flext-1engx.15`).
      - **Amendment 2026-10-28 (operator order 2026-10-28; campaigns `flext-pipol`
        and its rope-only cutover daughter `flext-u9h2i`): rope is the only accepted
-       Python interpreter in FLEXT-authored code.** The engine never parses,
+       Python interpreter in FLEXT-authored semantic modification code.** Except
+       for the narrowly approved generation projection above, the engine never parses,
        analyzes or rewrites Python source with the `ast` module, `libcst`, or `re`
        applied to code — every such site is exterminated and rewired to rope's
        PyModules from the single indexed project. Custom transforms operate on that
@@ -541,9 +690,9 @@ outside the facades across 12 repositories.
        own owners: the ban is on FLEXT-authored Python parsing, not on those
        engines. The complete decision form:
        - **Single loop, single index, single transaction.** One rope loop per
-         invocation. Exactly one index per repository per invocation — no phase,
-         planner, checker or validator opens a second project or re-parses what
-         that index already holds. Effects publish as one batch in a single
+         semantic modification invocation. Exactly one index per repository per
+         invocation — no phase, planner, checker or validator opens a second project
+         or re-parses what that index already holds. Effects publish as one batch in a single
          transaction, and the first causal failure retains the batch
          ([ADR-018 single-read, single-batch publication](018-generator-declarations.md#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol)).
        - **Native refactorings first.** Before any custom transform, the operation
@@ -588,9 +737,10 @@ outside the facades across 12 repositories.
          typed JSON facts, so member code still never loads in the engine's
          interpreter — awaits operator authorization.
        - **No LibCST carve-out.** The 2026-10-25 ADR-014 §6 permission to retain
-         separate tools for distinct capabilities is superseded for Python
-         parsing: no alternative-parser carve-out exists. A gap in rope is a
-         BLOCKED-ON-ROPE-CAPABILITY report, never a retained parallel engine.
+         separate tools for distinct capabilities is superseded for semantic
+         Python parsing. Only the generation AST projection expressly approved
+         above is excepted; it supplies no semantic transformation route. A gap in
+         rope is a BLOCKED-ON-ROPE-CAPABILITY report, never a retained parallel engine.
        - **Living census and execution truth.** The campaign engine map
          (`.kilo/plans/2026-10-28-gen-mod-parametrization-performance/engine-map.md`,
          private plan tree, not published authority) is the living census
@@ -631,26 +781,83 @@ outside the facades across 12 repositories.
     the missing engine fix form, not detection, was the gap; the rope-only
     cutover waves close it. The authoring declaration is
     [Codemod Rules, One rule per law](../../guides/codemod-rules.md#one-rule-per-law).
+    Model-reception fixes under Decision 15 use native binding and expression
+    context: only type positions migrate to protocols. Constructors, schema
+    providers, validators and handler metadata retain their runtime model owners;
+    class patterns retain their proven subject contract. An unbound or incompatible
+    projection fails before effects. A prefix substitution is not a generalized fix.
+ 2. **One pipeline; each law owned once and perfected by automation** (amended
+    2026-11-02, night; epic `flext-lqfqo`). Operator orders, verbatim:
+     - "FAZER DE POUCO EM POUCO NÃO É FAZER MANUALENTE, é fazer por automacao em larga
+       escala de uma regra de automacao de flext-infra até ficar muito boa, alinhada, sem
+       duplicacoes e divergencias delas e fazer ela funcionar e gravar em todos os lugares
+       e todos os projetos, e depois outra" ("working a little at a time does not mean
+       by hand: it means large-scale automation of one flext-infra rule until it is very
+       good, aligned, without duplicates or divergence, made to work and committed in
+       every place and every project, and then the next one");
+     - "vc rodar flext-infra globalmente sem especificar a rule nao roda, é a mesma coisa
+       que usar os make ... a ideia é unificar as rules por tema para serem globais,
+       checar e corrigir o código globalmente" ("running flext-infra globally without
+       naming the rule does not work and is the same as make; the idea is to unify the
+       rules by theme so they are global, and to check and fix the code globally");
+     - "os ajustes que vc está fazendo manual eram para estar sendo feitos
+       automatizados ... fazer manual nunca vamos terminar" ("the adjustments made by
+       hand were supposed to be automated; by hand we never finish").
+     - "tem que ser como um pipeline de processamento" ("it has to be a processing
+       pipeline");
+     - "check, gen e mod usa o mesmo framework e código, rules, só que as funcoes que
+       mudam, check só reporta, gen faz parte de scaffold e aplicacao de padroes
+       generativos, e mod o de refatoracao" ("check, gen and mod use the same
+       framework, code and rules; only the functions change: check only reports, gen
+       does scaffolding and applies generative patterns, and mod does the
+       refactoring");
+     - "gen e mod FAZEM COISAS DIFERENTES, eles compartilham a engine, MAS fazem coisas
+       diferentes e um não é pré-requisito para o outro" ("gen and mod do different
+       things; they share the engine, but neither is a prerequisite of the other");
+     - "UM CAMINHO SÓ, SEM FALLBACK" ("ONE PATH ONLY, NO FALLBACK").
+
+    The law:
+     - `check`, `gen` and `mod` run one pipeline with shared stages: capture,
+       classification, relocation, module shape, layer zero, orchestrators,
+       projection, the import law (Decision 10), rendering, candidate validation and
+       atomic publication. `check` reports; `gen` scaffolds a project from zero or
+       conforms an existing one, with the same engine, templates and source; `mod`
+       refactors. Each verb alone reaches its fixed point.
+     - A law (an `ENFORCE-xxx` set) is owned by exactly one stage or one generalized
+       rule. Its duplicates, clones, fallbacks and compatibility paths are exterminated
+       per item 1, leaving no reference.
+     - A law is perfected at its owner with fixtures and the native test before it
+       joins the pipeline. `refactor mod --laws <set>` and `--rule-ids` are the
+       diagnostic and repair route for one law; the import law always runs, inside a
+       selected run too.
+     - Hand edits of violating sources are prohibited. Workers change only stage,
+       rule, generator and engine owners plus their fixtures.
+     - Until make is repaired and validated, lint verdicts come from direct `ruff` and
+       `pyrefly` (tracker key
+       `operator-order-2026-11-02-direct-ruff-pyrefly-until-make-validated`).
+     - The operator and the approved plan rank above any ADR text this law supersedes.
 
 ### Decision 19
 
- 1. **Models import `u` only two ways; each family owns its Pydantic surface.**
-    Operator ruling 2026-10-25, verbatim (tracker memory
-    `operator-ruling-2026-10-25-models-u-imports-pydantic-home`): "models podem import
-    u apenas de 2 formas, u do projeto flext maiis alto que ela importa, ou classe
-    privada _utilities de seu namespace por casos bem restritos, veja que mdoels nao
+ 1. **Each family owns its Pydantic surface; a model never imports `u`** (operator
+    orders, epic `flext-lqfqo`). Verbatim, 2026-10-25 (tracker memory
+    `operator-ruling-2026-10-25-models-u-imports-pydantic-home`): "veja que mdoels nao
     pode exportar metodos, ele precisa pydantic best practices sempre, anliase o caso
     com cuidado e arrume para evitar problemas, temos_utilities/pydantic.py que se
     estiver exportando pydantic que models precisa, ele precisa ser migrado para
     _models/pydantic.py e seu uso atualizado em todos os repos global wide, isso vale
-    para c,t,p,m, e u de forma equivalente".
-     - A `_models` module imports either the upstream FLEXT project's `u` (the
-       hierarchical binding of Decision 10) or, in very restricted cases, a private
-       `_utilities` class of its own namespace.
-     - Models export no methods; they follow Pydantic best practices.
-     - The Pydantic surface that models need lives in `_models/pydantic.py`, not
-       `_utilities/pydantic.py`; it is migrated and every use is rewired in every
-       repository. The same principle holds per family for `c`, `t`, `p`, `m` and `u`.
+    para c,t,p,m, e u de forma equivalente". Verbatim, 2026-11-02 (tracker memory
+    `operator-order-2026-11-02-models-never-import-u-for-pydantic`): "models importar
+    u de pydanic é gambiarra, os modulos internos de pydantic em c,t,p,m,u tem que ser
+    ajustados para não ter que acontecer isso".
+     - Each family's internal Pydantic module serves that family's Pydantic surface:
+       `_models/pydantic.py` for models, `_typings/pydantic.py` for aliases,
+       `_constants/pydantic.py` for constants, `_protocols` for contracts.
+     - A model reaches what it needs through `m` and its earlier-layer letters, never
+       through `u`. Models export no methods; they follow Pydantic best practices.
+     - A Pydantic capability a model reads from `u` is relocated by the pipeline's
+       relocation stage to the family that owns its runtime kind, and every consumer is
+       rewired in every repository.
 
 ## Bidirectional Traceability
 
@@ -662,7 +869,7 @@ architecture link.
 
 | Decision | Workspace declaration | Subproject declaration and execution |
 | --- | --- | --- |
-| [8 — one standard, automated; gate-clean projections](#decision-8) | [Root `AGENTS.md`, Conventions and Patterns — automated correction](../../../AGENTS.md#conventions--patterns); [make commands guide, Convergence](../../guides/make-commands.md#convergence-shared-worktree-and-clean-rules); [ADR-018 verification contract](018-generator-declarations.md#verification-contract) | Campaign `flext-pipol` (gate-clean slice `flext-wznvp`); lazy-init wrapping cure `flext-tlqrw`; engine post-cleanup removal tracked on `flext-pipol` |
+| [8 — one standard, automated; gate-clean projections](#decision-8) | [Root `AGENTS.md`, Conventions and Patterns — automated correction](../../../AGENTS.md#conventions--patterns); [make commands guide, Convergence](../../guides/make-commands.md#convergence-dirty-inputs-and-clean-rules); [ADR-018 verification contract](018-generator-declarations.md#verification-contract) | Campaign `flext-pipol` (gate-clean slice `flext-wznvp`); lazy-init wrapping cure `flext-tlqrw`; engine post-cleanup removal tracked on `flext-pipol` |
 | [5 — static enforcement](#decision-5) | [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra, ADR-028 Decision 5: Declarative enforcement](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-5-declarative-enforcement); Bead `flext-43iz8` |
 | [15 — capability names](#decision-15) | [Root `AGENTS.md`, Decision 15](../../../AGENTS.md#adr-028-decision-15); [public core guide, What flext-core must not absorb](../../guides/using-flext-core.md#what-flext-core-must-not-absorb); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); external consumer census: `flext-1engx.11` |
 | [16 — CA/DI and zero findings](#decision-16) | [Root `AGENTS.md`, Decision 16](../../../AGENTS.md#adr-028-decision-16); [consumer law, R2](../../standards/consumption-law.md#r2--no-duplication-structural-scan); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [Target LDAP CA/DI declaration](https://github.com/flext-sh/flext-target-ldap/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16-ca-di-and-quality); implementation and quality gates: `flext-1engx.15`, `flext-pawp5` |
@@ -693,14 +900,20 @@ architecture link.
   installed distribution metadata). No library list exists anywhere. The one declared
   exception is the stdlib backports in tooling `lazy-init.stdlib-backports`
   (`typing_extensions`, operator decision 2026-10-24), which import like the standard
-  library. Type checkers recognize the PEP 747 `TypeForm` special form only through its
-  own name binding, so a type expression is passed to a `TypeForm[T]` parameter as
-  `t.TypeForm(X)`; `t.TypeForm` is the facade's runtime re-binding of the special
-  form and is the ONLY spelling consumers may call (operator order 2026-10-29:
-  a simpler single surface, no `typing_extensions` import in consumers). Direct
-  `typing_extensions.TypeForm` imports are banned outside flext-core's own
-  `c/t/p/m/u` typings (rule `typeform-call-via-facade`, successor of
-  `ban-typeform-alias-call`).
+  library. The PEP 747 `TypeForm` special form is called and annotated only through
+  `from typing_extensions import TypeForm` — `TypeForm(X)` and `TypeForm[T]` — in
+  every module of every project (operator ruling 2026-10-31, verbatim: "ok, use a
+  opção b e propague para todos a solucao e em todos os projetos ... Option B: import
+  from `typing_extensions` directly. `from typing_extensions import TypeForm`"). mypy
+  recognizes the PEP 747 call only when the callee's fullname is
+  `typing_extensions.TypeForm`; a facade attribute is a class attribute, so mypy
+  reports `"<typing special form>" not callable` and the result is `Any`.
+  `t.TypeForm` is removed: rule `ban-typeform-alias-call` rewrites every `t.TypeForm`
+  reference to the bare name and `pydantic-typeform-import` adds the import, both
+  through `make mod`; the `t` re-binding is deleted at its typings owner.
+  History (superseded 2026-10-31, not live law): the operator order of 2026-10-29
+  made `t.TypeForm(X)` the only spelling and banned `typing_extensions.TypeForm`
+  imports outside flext-core's typings (rule `typeform-call-via-facade`).
 - **Runtime import:** a top-level import statement. Imports under `if TYPE_CHECKING:`
   never run and are outside the boundary.
 

@@ -62,6 +62,18 @@ consumers. These requirements supersede the older full-check-before-initial-pyte
 and foundation-first-mod ordering, not the complete quality contract required
 for publication.
 
+**Amendment 2026-11-02 (operator answer, tracker memory
+`operator-order-2026-11-02-engine-self-repair-first`):** "Engine self-repair first".
+The engine-repair rules (`ban-protocol-constructor` and the import-header/letter
+binding) are applied to flext-infra's own source and proven first. Their violations
+inside the engine crash `codegen conform` and the duplication gate for every
+repository, the pilots included, and a manual fix is barred while the rule exists.
+The three pilots then run in the order above, each up to commit and preservation,
+before modification reaches the other foundational members. The flext-cli runtime
+hotfix authorized the same day ("Hotfix flext-cli first", tracker memory
+`operator-order-2026-11-02-rigs-on-integration`) is the only other exception to this
+order.
+
 ## Decision
 
 The operator clarified the test operations on 2026-10-28 in the active root
@@ -86,7 +98,11 @@ Source, generated consumers, runtime proof and integration remain separate state
    blast radius — including pre-existing reds — is fixed immediately at its owner,
    inside the active slice. "Later", "next wave" and "pre-existing" are not
    dispositions.
-4. **No incomplete or red code is committed or pushed.** Initial behavioral
+4. **No incomplete or red code reaches a published or integration line.** Red or
+   incomplete work is committed only on a lane branch and pushed only to a
+   `preserve/*` ref outside the working and integration branches (root `AGENTS.md`
+   "Rig and Lane Contract"; the `flext-law` preservation route). A preserve ref is
+   never publication, integration or advancement evidence. Initial behavioral
    admission requires fresh global source admission, not a claim that the full
    composite check is already green. Every applicable check and behavioral gate
    still passes before publication, integration or advancement beyond the slice.
@@ -123,11 +139,11 @@ Source, generated consumers, runtime proof and integration remain separate state
    runtime proof remain mandatory for every slice. Neither a committed small
    transaction nor its fast gate closes a slice or authorizes advancement.
 
-   The narrow authorization to reverse an unsuccessful transaction's own
-   authenticated effects supersedes the older blanket rollback prohibition
-   only at this boundary. It never authorizes discarding shared WIP or undoing
-   an independently completed transaction. An interrupted transaction or
-   conflicting external edit keeps recovery and the containing slice open.
+    The narrow authorization to reverse an unsuccessful transaction's own
+    authenticated effects supersedes the older blanket rollback prohibition
+    only at this boundary. It never authorizes discarding shared WIP or undoing
+    an independently completed transaction. An interrupted transaction or
+    conflicting external edit keeps recovery and the containing slice open.
 
 ## The cycle
 
@@ -162,7 +178,8 @@ admission; do not replace it with a green member or a stale whole-workspace run.
 ## Prohibited
 
 - Starting a phase or slice while another is incomplete.
-- Pushing, merging or tagging a red state, including `[WIP]` snapshots of red work.
+- Pushing, merging or tagging a red state on a published or integration line,
+  including `[WIP]` snapshots of red work. Red work goes only to a `preserve/*` ref.
 - Running initial pytest without fresh global source admission, or presenting
   primary admission as a green full composite check.
 - Leaving a red found in the blast radius for later, or attributing it to someone

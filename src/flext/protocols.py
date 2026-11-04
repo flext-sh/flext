@@ -1,13 +1,29 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Protocols facade for flext-workspace — p.Root project namespace.
+"""Unified protocols facade for the FLEXT workspace.
+
+Aggregates and exposes structural typing protocols and interface contracts across
+the member project hierarchy through a single canonical entry point ``p`` and
+workspace namespace ``p.Root``. Preserves C3 MRO linearization order across
+inherited subproject protocols.
+
+See Also:
+    - ADR-018: Generator Declarations.
+    - ADR-019: Service Contract Ports and Operations.
+    - ADR-027: Facade Single-Owner Law.
+    - :mod:`flext.typings`: Unified typings facade.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
 
-from flext._protocols import FlextRootProtocolsBase, FlextRootProtocolsConfig
+from flext._protocols.base import FlextRootProtocolsBase
+from flext._protocols.config import FlextRootProtocolsConfig
+from flext._protocols.generated_models_value import (
+    FlextModelsRootProtocolsGeneratedValue,
+)
 from flext_db_oracle import p
 from flext_grpc import p as flext_grpc_p
 from flext_infra import p as flext_infra_p
@@ -34,18 +50,23 @@ class FlextRootProtocols(
     p,
     flext_grpc_p,
 ):
-    """Workspace root protocols facade — access via p.Root.*.
+    """Unified root protocols facade.
 
-    MRO ordered by inheritance depth (deepest first) to satisfy C3 linearization.
-    FlextAuthProtocols is inherited via FlextOracleOicProtocols.
-    FlextApiProtocols, FlextWebProtocols, FlextCliProtocols are inherited via
-    the OracleOic/OracleWms/Quality paths.
-    FlextLdifProtocols is inherited via FlextLdapProtocols.
+    Exposes structural interface contracts across all workspace packages and
+    provides root workspace protocol specifications under the ``Root`` namespace.
+    MRO is ordered by inheritance depth (deepest first) to ensure deterministic
+    C3 linearization across multi-project dependencies.
     """
 
-    class Root(FlextRootProtocolsBase, FlextRootProtocolsConfig):
-        """Workspace root protocols MRO composition."""
+    class Root(
+        FlextRootProtocolsBase,
+        FlextRootProtocolsConfig,
+        FlextModelsRootProtocolsGeneratedValue,
+    ):
+        """Workspace-specific protocol contracts accessed via ``p.Root.*``."""
 
 
 p = FlextRootProtocols
+"""Canonical protocols facade alias for the workspace."""
+
 __all__: list[str] = ["FlextRootProtocols", "p"]

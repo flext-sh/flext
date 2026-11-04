@@ -42,7 +42,7 @@ echo "Starting OUD server..."
 echo "Waiting for OUD server to be ready..."
 sleep 10
 
-# Settingsure single structural objectclass behavior
+# Configure single structural objectclass behavior
 echo "Settingsuring OUD settings..."
 "${INSTANCE_PATH}/OUD/bin/dsconfig" \
 	-h localhost -p 4444 \

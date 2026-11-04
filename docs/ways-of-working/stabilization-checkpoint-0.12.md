@@ -18,6 +18,11 @@ queue, ownership, or gate receipts. Current execution follows the branch-matched
 and the active Bead; historical selectors and manual repair approaches do not override
 the canonical cycle.
 
+For the current Make consolidation campaign, consult `flext-9t6gn` and its dated
+[2026-10-30 restart handoff](make-consolidation-handoff.md). Earlier test-command,
+recovery and phase descriptions below are superseded where that campaign's
+operator decisions and the topic-owning ADRs say otherwise.
+
 ## Current authoritative decisions
 
 The common contract reconciled on 2026-10-25 is recorded in `flext-itpd1.17`.
@@ -38,12 +43,12 @@ the reconciliation delivery.
 | --- | --- | --- | --- |
 | Preserve member dependency and tool locks; compose the workspace lock | Operator ruling `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`, 2026-10-25 | Replaces root-only lock deletion. Only `upg` has the editable-checkout/gitlink consistency guard; ordinary work accepts shared WIP. The guard is an accepted target until implementation is proven. | [ADR-030](../architecture/adr/030-member-locks-composition-upg-guard.md) |
 | Mark deprecated signatures until all consumers migrate | Operator ruling `operator-ruling-2026-10-24-deprecated-signature-window`, 2026-10-24 | Replaces immediate public-signature deletion. Delegation retains no old implementation; removal requires the complete external and fleet census. New DI-only boundaries still apply. | [ADR-028 Decision 7](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7) and the canonical global zero-residue rule |
-| Preserve shared work and publish complete green slices | Current operator shared-worktree contract and no-incomplete-pushes order, 2026-10-24/25 | Replaces clean-tree admission, rollback and incomplete working-branch publication. Only the ADR-030 upgrade guard requires its scoped committed state. | Root [AGENTS.md](../../AGENTS.md), [ADR-029](../architecture/adr/029-always-working-one-complete-cycle.md), and global fix-forward/Git owners |
+| Keep the rig on its integration tip; develop in lanes; publish complete green slices | Operator rig ruling `operator-order-2026-11-02-rigs-on-integration` (with its same-day transition and integration-branch answers), superseding the shared-worktree contract of 2026-10-24/25; no-incomplete-pushes order 2026-10-24 | Replaces the shared-checkout WIP model, clean-tree admission, rollback and incomplete working-branch publication. Existing WIP converges in place, is committed on a lane branch, preserved under `preserve/*`, then the rig returns to `0.12.0-dev`. Dirty state never blocks execution; only the ADR-030 upgrade guard requires its scoped committed state. | Root [AGENTS.md](../../AGENTS.md) "Rig and Lane Contract", [ADR-029](../architecture/adr/029-always-working-one-complete-cycle.md), and global fix-forward/Git/Gas City owners |
 | Static enforcement belongs to Infra | Operator order `operator-order-2026-10-25-core-static-enforce-off`, 2026-10-25 | Replaces import/definition-time static enforcement in Core. This is the required boundary, not a claim that migration is complete. | [ADR-028 Decision 5](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-5); Infra enforcement owner, tracked by `flext-43iz8` |
 | Inject generic capabilities and isolate dialects | Operator DI/dialect and maximum-decoupling orders, 2026-10-25 | Replaces server-name registries, concrete client construction in services and library-named consumer contracts. Preserve the validated external ACL receiver exception until semantic/golden proof. | [ADR-028 Decision 15](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15), [Decision 16](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16), composition roots and the receiver's scoped law |
 | Reuse native analysis and refactoring through existing adapters | Operator native-tool and generalized-rule orders, reaffirmed 2026-10-25 | Replaces duplicate parses, indexes and walkers where native equivalence is proven. Native model availability alone proves neither dynamic identity nor Python C3 correctness. Count and consolidate rules without narrowing coverage. | [ADR-028 Decision 17](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17); implementation and proof remain in [Infra execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine) and `flext-1engx.15`. [Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) is implemented through the shared rule guide. ADR-014 and ADR-017 are subordinate where their older implementation text conflicts. |
 | Align authorities before code and validate embedded code | Operator docs-first/embedded-code orders, 2026-10-25 | Read memory, AGENTS, docs, ADRs, rules, skills and Beads before implementation. Markdown/docstring code receives the same applicable native source gates. Proposed ADRs remain proposals. | Canonical global documentation owners and each project's documentation generator |
-| Prove global Ruff, Pyrefly and Pytest acceptance before advancing | Direct operator order extended to Pytest, 2026-10-26 | No advance with any Ruff, Pyrefly or Pytest error. Evaluate the complete declared scope, preserve strict typing from its origin, and repair the causal owner. Pytest always uses Testmon and its persistent external database; repeated whole-suite runs and deadline inflation do not repair slowness. A configured project result, filtered input set or interrupted evaluation does not prove global acceptance. | Current native checker, Testmon and scope owners; execution evidence in `flext-itpd1.17` and consumer Beads |
+| Prove global Ruff, Pyrefly and Pytest acceptance before advancing | Direct operator orders of 2026-10-26 and distinct test modes confirmed on 2026-10-28 | Evaluate the complete declared scope and repair its causal failures. `tests` uses persistent incremental Testmon; explicit `tests-full` runs once without Testmon or a pre-pass and leaves its DB untouched. Do not inflate deadlines or claim global acceptance from a filtered or interrupted run. | [ADR-029](../architecture/adr/029-always-working-one-complete-cycle.md), native checker/test owners and active consumer Beads |
 | Preserve derived lazy package exports on every Python edit | Direct operator order, 2026-10-26 | Inspect the module's `__all__`, its owning `__init__.py` and the canonical generator before changing Python. Keep lazy imports derived from those exports; do not hand-maintain a competing index. Unit-test modules are exempt from this package-export requirement, not from lint or typing. | Topic-owning accepted facade/generation ADRs, each package's export declarations and the existing generator |
 
 ### ADR-028 Decision Links
@@ -104,6 +109,16 @@ the deadline to obtain acceptance.
 > use does not authorize copying or publishing them, nor selection by newest filename.
 
 ## (a) Canonical cycle
+
+Apply the canonical `simplify` procedure to each entire module changed in a repair,
+not only its edited hunks (operator clarification, 2026-11-01). Remove proven
+redundancy while preserving public behavior, typed origins, error causes, ordering,
+effects, observability and admission witnesses. This review does not authorize
+speculative rewrites, manual changes to generated projections or weaker gates.
+Apply the canonical `yagni` necessity test to the same module: retain a surface
+when its current requirement, consumer and supported runtime justify it. Remove
+proven unnecessary code with its consumer cutover, while preserving all required
+behavior and failure boundaries.
 
 Align the authorities above, provision only when required, and exercise the real public
 consumer before static gates and tests. Resolve operations from the current native

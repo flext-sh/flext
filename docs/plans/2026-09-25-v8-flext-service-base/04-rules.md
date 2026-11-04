@@ -190,7 +190,7 @@ exit), R6 (gate = local check with `CI=Y` plus a runtime probe), R7 (consumers
 revalidated per slice, reinforced by R19), R8 (superseded 2026-09-26: a red has no
 "foreign" category; every red in the blast radius is fixed at its owner), R9 (check PRs
 and origin before implementing), R10 (codemod rule lands with `ast-grep test`), R11
-(mechanical cures are never manual), plus: serial per repository; never `0.20.0-dev`,
+(mechanical cures are never manual), plus: serial per repository; never `0.13.0-dev`,
 dolt, `dev` or `main`; content conflicts are asked.
 
 ## 12. New V8 laws
