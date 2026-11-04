@@ -23,7 +23,6 @@
   - [Decision 17](#decision-17)
   - [Decision 18](#decision-18)
   - [Decision 19](#decision-19)
-- [Bidirectional Traceability](#bidirectional-traceability)
 - [Definitions](#definitions)
 - [Enforcement](#enforcement)
 - [Consequences](#consequences)
@@ -782,54 +781,54 @@ outside the facades across 12 repositories.
     projection fails before effects. A prefix substitution is not a generalized fix.
  2. **One pipeline; each law owned once and perfected by automation** (amended
     2026-11-02, night; epic `flext-lqfqo`). Operator orders, verbatim:
-    - "FAZER DE POUCO EM POUCO NÃO É FAZER MANUALENTE, é fazer por automacao em larga
-      escala de uma regra de automacao de flext-infra até ficar muito boa, alinhada, sem
-      duplicacoes e divergencias delas e fazer ela funcionar e gravar em todos os lugares
-      e todos os projetos, e depois outra" ("working a little at a time does not mean
-      by hand: it means large-scale automation of one flext-infra rule until it is very
-      good, aligned, without duplicates or divergence, made to work and committed in
-      every place and every project, and then the next one");
-    - "vc rodar flext-infra globalmente sem especificar a rule nao roda, é a mesma coisa
-      que usar os make ... a ideia é unificar as rules por tema para serem globais,
-      checar e corrigir o código globalmente" ("running flext-infra globally without
-      naming the rule does not work and is the same as make; the idea is to unify the
-      rules by theme so they are global, and to check and fix the code globally");
-    - "os ajustes que vc está fazendo manual eram para estar sendo feitos
-      automatizados ... fazer manual nunca vamos terminar" ("the adjustments made by
-      hand were supposed to be automated; by hand we never finish").
-    - "tem que ser como um pipeline de processamento" ("it has to be a processing
-      pipeline");
-    - "check, gen e mod usa o mesmo framework e código, rules, só que as funcoes que
-      mudam, check só reporta, gen faz parte de scaffold e aplicacao de padroes
-      generativos, e mod o de refatoracao" ("check, gen and mod use the same
-      framework, code and rules; only the functions change: check only reports, gen
-      does scaffolding and applies generative patterns, and mod does the
-      refactoring");
-    - "gen e mod FAZEM COISAS DIFERENTES, eles compartilham a engine, MAS fazem coisas
-      diferentes e um não é pré-requisito para o outro" ("gen and mod do different
-      things; they share the engine, but neither is a prerequisite of the other");
-    - "UM CAMINHO SÓ, SEM FALLBACK" ("ONE PATH ONLY, NO FALLBACK").
+     - "FAZER DE POUCO EM POUCO NÃO É FAZER MANUALENTE, é fazer por automacao em larga
+       escala de uma regra de automacao de flext-infra até ficar muito boa, alinhada, sem
+       duplicacoes e divergencias delas e fazer ela funcionar e gravar em todos os lugares
+       e todos os projetos, e depois outra" ("working a little at a time does not mean
+       by hand: it means large-scale automation of one flext-infra rule until it is very
+       good, aligned, without duplicates or divergence, made to work and committed in
+       every place and every project, and then the next one");
+     - "vc rodar flext-infra globalmente sem especificar a rule nao roda, é a mesma coisa
+       que usar os make ... a ideia é unificar as rules por tema para serem globais,
+       checar e corrigir o código globalmente" ("running flext-infra globally without
+       naming the rule does not work and is the same as make; the idea is to unify the
+       rules by theme so they are global, and to check and fix the code globally");
+     - "os ajustes que vc está fazendo manual eram para estar sendo feitos
+       automatizados ... fazer manual nunca vamos terminar" ("the adjustments made by
+       hand were supposed to be automated; by hand we never finish").
+     - "tem que ser como um pipeline de processamento" ("it has to be a processing
+       pipeline");
+     - "check, gen e mod usa o mesmo framework e código, rules, só que as funcoes que
+       mudam, check só reporta, gen faz parte de scaffold e aplicacao de padroes
+       generativos, e mod o de refatoracao" ("check, gen and mod use the same
+       framework, code and rules; only the functions change: check only reports, gen
+       does scaffolding and applies generative patterns, and mod does the
+       refactoring");
+     - "gen e mod FAZEM COISAS DIFERENTES, eles compartilham a engine, MAS fazem coisas
+       diferentes e um não é pré-requisito para o outro" ("gen and mod do different
+       things; they share the engine, but neither is a prerequisite of the other");
+     - "UM CAMINHO SÓ, SEM FALLBACK" ("ONE PATH ONLY, NO FALLBACK").
 
     The law:
-    - `check`, `gen` and `mod` run one pipeline with shared stages: capture,
-      classification, relocation, module shape, layer zero, orchestrators,
-      projection, the import law (Decision 10), rendering, candidate validation and
-      atomic publication. `check` reports; `gen` scaffolds a project from zero or
-      conforms an existing one, with the same engine, templates and source; `mod`
-      refactors. Each verb alone reaches its fixed point.
-    - A law (an `ENFORCE-xxx` set) is owned by exactly one stage or one generalized
-      rule. Its duplicates, clones, fallbacks and compatibility paths are exterminated
-      per item 1, leaving no reference.
-    - A law is perfected at its owner with fixtures and the native test before it
-      joins the pipeline. `refactor mod --laws <set>` and `--rule-ids` are the
-      diagnostic and repair route for one law; the import law always runs, inside a
-      selected run too.
-    - Hand edits of violating sources are prohibited. Workers change only stage,
-      rule, generator and engine owners plus their fixtures.
-    - Until make is repaired and validated, lint verdicts come from direct `ruff` and
-      `pyrefly` (tracker key
-      `operator-order-2026-11-02-direct-ruff-pyrefly-until-make-validated`).
-    - The operator and the approved plan rank above any ADR text this law supersedes.
+     - `check`, `gen` and `mod` run one pipeline with shared stages: capture,
+       classification, relocation, module shape, layer zero, orchestrators,
+       projection, the import law (Decision 10), rendering, candidate validation and
+       atomic publication. `check` reports; `gen` scaffolds a project from zero or
+       conforms an existing one, with the same engine, templates and source; `mod`
+       refactors. Each verb alone reaches its fixed point.
+     - A law (an `ENFORCE-xxx` set) is owned by exactly one stage or one generalized
+       rule. Its duplicates, clones, fallbacks and compatibility paths are exterminated
+       per item 1, leaving no reference.
+     - A law is perfected at its owner with fixtures and the native test before it
+       joins the pipeline. `refactor mod --laws <set>` and `--rule-ids` are the
+       diagnostic and repair route for one law; the import law always runs, inside a
+       selected run too.
+     - Hand edits of violating sources are prohibited. Workers change only stage,
+       rule, generator and engine owners plus their fixtures.
+     - Until make is repaired and validated, lint verdicts come from direct `ruff` and
+       `pyrefly` (tracker key
+       `operator-order-2026-11-02-direct-ruff-pyrefly-until-make-validated`).
+     - The operator and the approved plan rank above any ADR text this law supersedes.
 
 ### Decision 19
 
@@ -852,28 +851,6 @@ outside the facades across 12 repositories.
      - A Pydantic capability a model reads from `u` is relocated by the pipeline's
        relocation stage to the family that owns its runtime kind, and every consumer is
        rewired in every repository.
-
-## Bidirectional Traceability
-
-Each accepted decision links to its nearest workspace declaration and subproject
-contract; those declarations link back to the exact decision anchor below. Project URLs
-are pinned to the same `0.12.0-dev` release line used by their branch-matched law. Beads
-record execution, status, and evidence; they do not replace either direction of the
-architecture link.
-
-| Decision | Workspace declaration | Subproject declaration and execution |
-| --- | --- | --- |
-| [8 — one standard, automated; gate-clean projections](#decision-8) | [Root `AGENTS.md`, Conventions and Patterns — automated correction](../../../AGENTS.md#conventions--patterns); [make commands guide, Convergence](../../guides/make-commands.md#convergence-dirty-inputs-and-clean-rules); [ADR-018 verification contract](018-generator-declarations.md#verification-contract) | Campaign `flext-pipol` (gate-clean slice `flext-wznvp`); lazy-init wrapping cure `flext-tlqrw`; engine post-cleanup removal tracked on `flext-pipol` |
-| [5 — static enforcement](#decision-5) | [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra, ADR-028 Decision 5: Declarative enforcement](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-5-declarative-enforcement); Bead `flext-43iz8` |
-| [15 — capability names](#decision-15) | [Root `AGENTS.md`, Decision 15](../../../AGENTS.md#adr-028-decision-15); [public core guide, What flext-core must not absorb](../../guides/using-flext-core.md#what-flext-core-must-not-absorb); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); external consumer census: `flext-1engx.11` |
-| [16 — CA/DI and zero findings](#decision-16) | [Root `AGENTS.md`, Decision 16](../../../AGENTS.md#adr-028-decision-16); [consumer law, R2](../../standards/consumption-law.md#r2--no-duplication-structural-scan); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [Target LDAP CA/DI declaration](https://github.com/flext-sh/flext-target-ldap/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16-ca-di-and-quality); implementation and quality gates: `flext-1engx.15`, `flext-pawp5` |
-| [17 — workspace model and native refactorings](#decision-17) | [Root `AGENTS.md`, Decision 17](../../../AGENTS.md#adr-028-decision-17); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map); [stabilization decision-link section](../../ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links); [Core failure-factory declaration](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/AGENTS.md#failure-factory-responsibility) | [Infra `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); implementation: `flext-1engx.15` |
-| [18 — generalized rules](#decision-18) | [Root `AGENTS.md`, Decision 18](../../../AGENTS.md#adr-028-decision-18); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map); [codemod guide, One rule per law](../../guides/codemod-rules.md#one-rule-per-law); [stabilization decision-link section](../../ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links) | [Infra `AGENTS.md`, Decision 18](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-18); projection cleanup: `flext-13s6n` |
-| [17 amendment — rope-only interpreter law](#decision-17) | [Root `AGENTS.md`, Decision 17](../../../AGENTS.md#adr-028-decision-17); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map); [engine map — living campaign census](../../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/engine-map.md) (private plan tree, not published authority) | Rope-only cutover epic `flext-u9h2i` under campaign `flext-pipol`; the Beads record execution truth, not acceptance |
-| [18 fix-form mandate](#decision-18) | [Root `AGENTS.md`, Decision 18](../../../AGENTS.md#adr-028-decision-18); [codemod guide, One rule per law](../../guides/codemod-rules.md#one-rule-per-law) | Declarative catalog `Infra.codegen.ast_grep`, rendered in memory by the `make mod` cascade (Decision 11); flext-ldap fix-form gap evidence and closure tracked on `flext-u9h2i` |
-| AI Hub consumer route | [AI Hub ADR-0039](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/adr/0039-universal-law-references-in-governed-docs.md); [ADR catalog](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/adr/README.md#fleet-canon); [engineering-law routing](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/engineering-laws.md); [FLEXT development skill](https://github.com/datacosmos-br/agents/blob/dev/skills/framework/flext-development/SKILL.md) | Consumer Bead `aihub-9qdu6`; reciprocal-link Bead `flext-1engx.16` |
-| [9 — governed embedded examples](#decision-9) | [Root `AGENTS.md`, embedded-code rule](../../../AGENTS.md#adr-028-decision-9); [documentation standard](../../standards/documentation.md#command-and-test-examples) | The docs Bead `flext-0exhi` records authoring and executable-doc validation. |
-| Prior codemod ADR sections | [ADR-014 §5, Gate alignment](014-family-part-shape-rope-codemod-rules.md#5-gate-alignment-one-law-shared-consumers); [ADR-014 §6, Native tool responsibilities](014-family-part-shape-rope-codemod-rules.md#6-native-tool-responsibilities-amended-by-adr-028); [ADR-017, ADR-028 Supersession](017-parametrized-rule-surfaces-single-modernize-cli.md#adr-028-supersession) | These sections link back to the superseding decisions above. |
 
 ## Definitions
 

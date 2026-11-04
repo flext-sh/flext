@@ -56,7 +56,7 @@ make gen
 ```
 
 Tests run only through the retained Testmon cache. Apply the root
-[connectivity prerequisite contract](../../AGENTS.md#production-readiness-and-connectivity-tests):
+[connectivity prerequisite](../../AGENTS.md#flext-core):
 availability skips are unmet prerequisites, not successful runtime validation.
 Warnings, empty collection, missing tools, and suppressed failures remain explicit.
 

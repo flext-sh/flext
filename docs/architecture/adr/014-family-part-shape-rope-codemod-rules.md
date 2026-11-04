@@ -199,7 +199,7 @@ unrelated homonyms retain their names.
 The 2026-09-15 operator ruling (plan-of-record `rope-gen engine strict/total init`,
 Bead `flext-crd1y`) established one shared engine. Its gen-only projection-writer
 restriction is superseded by the current root
-[operation-ownership contract](../../../AGENTS.md#build--test) and
+[FLEXT core](../../../AGENTS.md#flext-core) and
 [Make guide](../../guides/make-commands.md#operation-ownership), reconciled here on
 2026-10-26: `gen` and `mod` complete their own dependent projections through the
 same typed planner and publisher, without recursively invoking another public verb.
