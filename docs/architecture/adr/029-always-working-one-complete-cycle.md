@@ -123,11 +123,11 @@ Source, generated consumers, runtime proof and integration remain separate state
    runtime proof remain mandatory for every slice. Neither a committed small
    transaction nor its fast gate closes a slice or authorizes advancement.
 
-   The narrow authorization to reverse an unsuccessful transaction's own
-   authenticated effects supersedes the older blanket rollback prohibition
-   only at this boundary. It never authorizes discarding shared WIP or undoing
-   an independently completed transaction. An interrupted transaction or
-   conflicting external edit keeps recovery and the containing slice open.
+    The narrow authorization to reverse an unsuccessful transaction's own
+    authenticated effects supersedes the older blanket rollback prohibition
+    only at this boundary. It never authorizes discarding shared WIP or undoing
+    an independently completed transaction. An interrupted transaction or
+    conflicting external edit keeps recovery and the containing slice open.
 
 ## The cycle
 

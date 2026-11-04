@@ -95,6 +95,18 @@ Remote CI installs the committed locks frozen and never relocks (tracker memory
 installs from the member's own committed lock, and workspace CI from the composed
 workspace lock.
 
+Local `make setup FLEXT=<workspace>` retains the consumer's mandatory frozen
+installation before source binding. Executor self-hosting must use the native
+declaration owners without forming or writing another lock, followed by the
+existing typed selection owner in the physical consumer environment. That owner
+validates the complete selection and publishes its existing receipt. Local
+override paths are runtime inputs, never captured in generated Makefiles. The
+[execution-context contract](../../../flext-infra/docs/guides/execution-context.md#generation-staging-transaction-journals-and-modernization)
+owns the source-only bootstrap target and its still-pending implementation and
+cold consumer proof; workspace-only export cannot be presumed to include the
+excluded editable path dependencies described below. This clarification does not
+relax the upgrade guard or qualify an SDK release.
+
 ## The upgrade guard
 
 The guard applies to uv only and runs in the `make upg` preflight, before any lock
@@ -137,6 +149,15 @@ requirement and must fail before publication.
 The existing pyproject owner separates override selection from the URL-only
 replacement of each requirement; both consume the same captured document.
 
+**Closure, 2026-10-31.** The operator ruled the one-time Rope exception used up
+(answer: "Exception used up, remove"). The selected-upgrade path it relied on
+(`FLEXT_INFRA_UPGRADE_PACKAGES`, the Python `--upgrade-package` route and the
+selected-override projection) is removed: it was a second uv lock writer running
+inside the environment it had to repair, against the repair-never-deadlocks
+ruling. `make upg` now has one uv lock writer, the native `uv lock --upgrade`
+in the generated template, followed by the frozen sync and `workspace
+verify-lock`. The two paragraphs above are historical evidence only.
+
 ## Proposed design (implementation pending)
 
 Agent 11's design for the stabilization task force, recorded 2026-10-25. It is a
@@ -177,12 +198,36 @@ pending.
   resolver machinery.
 
 **One `make upg` pass.** The guard runs first, then members in `.gitmodules` order,
-then the root. uv runs `lock --upgrade`; Mise locks only the tools whose version
-changes. `uv lock --upgrade` implies `--refresh` and costs about one second per
-project. Open gap: the 60-second verb budget on a real version bump. The proposed
-answer is concurrent per-member relocks with a bounded job count through the
-existing process owner, within the authenticated GitHub quota (5000 requests per
-hour); a real concurrent bump has not been measured yet.
+then the root. uv runs `lock --upgrade`, which implies `--refresh` and costs about
+one second per project.
+
+The Mise half follows design D1 (operator approval 2026-10-31), native and before
+any flext-infra import, in the generated template (flext-infra
+`docs/guides/execution-context.md`, generated `make upg`):
+
+1. acquire the pinned Mise;
+2. classify `uv.lock` and every governed `mise.lock` with the acquired Mise's own
+   TOML reader (`mise fmt --stdin`, which reads no lock), deleting an invalid lock
+   so its native writer regenerates it;
+3. per governed repository, one `mise lock --bump --dry-run --json` whose output
+   must be exactly `[]`; otherwise each declared tool previews alone and
+   `mise lock --bump <changed tools>` locks only those;
+4. the locked `mise install`.
+
+The only flext-infra step left, `deps repair-mise-platforms` (locked tools missing
+a declared platform, which Mise does not report), runs last from an isolated
+executor environment synced from the frozen lock.
+
+The 60-second gap is closed by measurement (scratch dc-recon, mise 2026.10.3,
+uv 0.13.4, 2026-10-31):
+
+- no-change `make upg`: 18–26 s in total, of which the whole-lock `[]` gate takes
+  0.06 s warm or 4 s cold;
+- one changed tool: only that tool is relocked (about 7 s for four platforms);
+- a full relock costs 44–55 s, so it runs only when a lock is invalid or absent:
+  a corrupt root `mise.lock` is regenerated in a 63 s `make upg`.
+
+Concurrent per-member relocks are not needed.
 
 **CI.** Root CI checks out submodules at their gitlinks and runs `uv sync --frozen`
 and `mise install --locked`. Member CI runs on the member's own frozen locks.
