@@ -533,10 +533,16 @@ outside the facades across 12 repositories.
        that every preset, producer and consumer has been migrated. See
        [ADR-005](005-config-settings-constants-templates-schemas-ssot.md#1-each-concern-has-exactly-one-owner)
        and [Pydantic's versioned configuration API](https://github.com/pydantic/pydantic/blob/v2.14.1/pydantic/config.py).
-     - A field naming a sibling through its own enclosing family class is banned
-       (`ban-enclosing-family-field-reference`): the enclosing class is unbound while
-       its body runs, so the model stays incomplete. The fix extracts the nested member
-       into its own family module.
+     - A field naming a sibling through its own enclosing family class in an eagerly
+       evaluated position is banned (`ban-enclosing-family-field-reference`): the
+       enclosing class is unbound while its body runs, so the model stays incomplete.
+       The type position names the sibling's protocol, and the schema owner is
+       deferred (`t.schema_for_model(lambda: Holder.X)`,
+       [ADR-018 amendment 2026-11-03](018-generator-declarations.md#model-and-service-protocol-projection));
+       a deferred reference is not evaluated at class creation and keeps the field
+       complete (measured 2026-11-03: eager form incomplete, cross-module subclass
+       fails; deferred form complete, cross-module subclass validates and rejects
+       invalid input).
      - Facade roots (`c`, `t`, `p`, `m`, `u`) never inherit a model. They compose
        namespaces; payload models compose data. Native constraints, validators,
        computed fields and serializers belong to the model contract and are not
@@ -782,54 +788,54 @@ outside the facades across 12 repositories.
     projection fails before effects. A prefix substitution is not a generalized fix.
  2. **One pipeline; each law owned once and perfected by automation** (amended
     2026-11-02, night; epic `flext-lqfqo`). Operator orders, verbatim:
-    - "FAZER DE POUCO EM POUCO NÃO É FAZER MANUALENTE, é fazer por automacao em larga
-      escala de uma regra de automacao de flext-infra até ficar muito boa, alinhada, sem
-      duplicacoes e divergencias delas e fazer ela funcionar e gravar em todos os lugares
-      e todos os projetos, e depois outra" ("working a little at a time does not mean
-      by hand: it means large-scale automation of one flext-infra rule until it is very
-      good, aligned, without duplicates or divergence, made to work and committed in
-      every place and every project, and then the next one");
-    - "vc rodar flext-infra globalmente sem especificar a rule nao roda, é a mesma coisa
-      que usar os make ... a ideia é unificar as rules por tema para serem globais,
-      checar e corrigir o código globalmente" ("running flext-infra globally without
-      naming the rule does not work and is the same as make; the idea is to unify the
-      rules by theme so they are global, and to check and fix the code globally");
-    - "os ajustes que vc está fazendo manual eram para estar sendo feitos
-      automatizados ... fazer manual nunca vamos terminar" ("the adjustments made by
-      hand were supposed to be automated; by hand we never finish").
-    - "tem que ser como um pipeline de processamento" ("it has to be a processing
-      pipeline");
-    - "check, gen e mod usa o mesmo framework e código, rules, só que as funcoes que
-      mudam, check só reporta, gen faz parte de scaffold e aplicacao de padroes
-      generativos, e mod o de refatoracao" ("check, gen and mod use the same
-      framework, code and rules; only the functions change: check only reports, gen
-      does scaffolding and applies generative patterns, and mod does the
-      refactoring");
-    - "gen e mod FAZEM COISAS DIFERENTES, eles compartilham a engine, MAS fazem coisas
-      diferentes e um não é pré-requisito para o outro" ("gen and mod do different
-      things; they share the engine, but neither is a prerequisite of the other");
-    - "UM CAMINHO SÓ, SEM FALLBACK" ("ONE PATH ONLY, NO FALLBACK").
+     - "FAZER DE POUCO EM POUCO NÃO É FAZER MANUALENTE, é fazer por automacao em larga
+       escala de uma regra de automacao de flext-infra até ficar muito boa, alinhada, sem
+       duplicacoes e divergencias delas e fazer ela funcionar e gravar em todos os lugares
+       e todos os projetos, e depois outra" ("working a little at a time does not mean
+       by hand: it means large-scale automation of one flext-infra rule until it is very
+       good, aligned, without duplicates or divergence, made to work and committed in
+       every place and every project, and then the next one");
+     - "vc rodar flext-infra globalmente sem especificar a rule nao roda, é a mesma coisa
+       que usar os make ... a ideia é unificar as rules por tema para serem globais,
+       checar e corrigir o código globalmente" ("running flext-infra globally without
+       naming the rule does not work and is the same as make; the idea is to unify the
+       rules by theme so they are global, and to check and fix the code globally");
+     - "os ajustes que vc está fazendo manual eram para estar sendo feitos
+       automatizados ... fazer manual nunca vamos terminar" ("the adjustments made by
+       hand were supposed to be automated; by hand we never finish").
+     - "tem que ser como um pipeline de processamento" ("it has to be a processing
+       pipeline");
+     - "check, gen e mod usa o mesmo framework e código, rules, só que as funcoes que
+       mudam, check só reporta, gen faz parte de scaffold e aplicacao de padroes
+       generativos, e mod o de refatoracao" ("check, gen and mod use the same
+       framework, code and rules; only the functions change: check only reports, gen
+       does scaffolding and applies generative patterns, and mod does the
+       refactoring");
+     - "gen e mod FAZEM COISAS DIFERENTES, eles compartilham a engine, MAS fazem coisas
+       diferentes e um não é pré-requisito para o outro" ("gen and mod do different
+       things; they share the engine, but neither is a prerequisite of the other");
+     - "UM CAMINHO SÓ, SEM FALLBACK" ("ONE PATH ONLY, NO FALLBACK").
 
     The law:
-    - `check`, `gen` and `mod` run one pipeline with shared stages: capture,
-      classification, relocation, module shape, layer zero, orchestrators,
-      projection, the import law (Decision 10), rendering, candidate validation and
-      atomic publication. `check` reports; `gen` scaffolds a project from zero or
-      conforms an existing one, with the same engine, templates and source; `mod`
-      refactors. Each verb alone reaches its fixed point.
-    - A law (an `ENFORCE-xxx` set) is owned by exactly one stage or one generalized
-      rule. Its duplicates, clones, fallbacks and compatibility paths are exterminated
-      per item 1, leaving no reference.
-    - A law is perfected at its owner with fixtures and the native test before it
-      joins the pipeline. `refactor mod --laws <set>` and `--rule-ids` are the
-      diagnostic and repair route for one law; the import law always runs, inside a
-      selected run too.
-    - Hand edits of violating sources are prohibited. Workers change only stage,
-      rule, generator and engine owners plus their fixtures.
-    - Until make is repaired and validated, lint verdicts come from direct `ruff` and
-      `pyrefly` (tracker key
-      `operator-order-2026-11-02-direct-ruff-pyrefly-until-make-validated`).
-    - The operator and the approved plan rank above any ADR text this law supersedes.
+     - `check`, `gen` and `mod` run one pipeline with shared stages: capture,
+       classification, relocation, module shape, layer zero, orchestrators,
+       projection, the import law (Decision 10), rendering, candidate validation and
+       atomic publication. `check` reports; `gen` scaffolds a project from zero or
+       conforms an existing one, with the same engine, templates and source; `mod`
+       refactors. Each verb alone reaches its fixed point.
+     - A law (an `ENFORCE-xxx` set) is owned by exactly one stage or one generalized
+       rule. Its duplicates, clones, fallbacks and compatibility paths are exterminated
+       per item 1, leaving no reference.
+     - A law is perfected at its owner with fixtures and the native test before it
+       joins the pipeline. `refactor mod --laws <set>` and `--rule-ids` are the
+       diagnostic and repair route for one law; the import law always runs, inside a
+       selected run too.
+     - Hand edits of violating sources are prohibited. Workers change only stage,
+       rule, generator and engine owners plus their fixtures.
+     - Until make is repaired and validated, lint verdicts come from direct `ruff` and
+       `pyrefly` (tracker key
+       `operator-order-2026-11-02-direct-ruff-pyrefly-until-make-validated`).
+     - The operator and the approved plan rank above any ADR text this law supersedes.
 
 ### Decision 19
 

@@ -25,6 +25,58 @@ configuration. Establish runtime reality first, then encode it through a public 
 - Keep the canonical thin `Tests<Unit>` nesting and the standard
   `tests/{unit,integration,e2e}` layout.
 
+## Test facade MRO
+
+The `c`, `t`, `p`, `m` and `u` test facades follow one composition. The outer
+class inherits **only** the production facade; the nested `Tests` class inherits
+the `flext_tests` facade plus the test-only mixins. There is no `@override`.
+
+```python
+from flext_infra import m as flext_infra_m
+from flext_tests import m as flext_tests_m
+
+from tests._models import TestsFlextInfraModelsBase
+
+
+class TestsFlextInfraModels(flext_infra_m):
+    class Tests(flext_tests_m.Tests, TestsFlextInfraModelsBase):
+        """..."""
+```
+
+The same shape applies to every letter:
+
+```python
+class TestsFlextInfraConstants(flext_infra_c):
+    class Tests(flext_tests_c.Tests, TestsFlextInfraConstantsScan): ...
+
+
+class TestsFlextInfraTypes(flext_infra_t):
+    class Tests(flext_tests_t.Tests): ...
+
+
+class TestsFlextInfraProtocols(flext_infra_p):
+    class Tests(flext_tests_p.Tests, TestsFlextInfraProtocolsBase): ...
+
+
+class TestsFlextInfraUtilities(flext_infra_u):
+    class Tests(flext_tests_u.Tests, TestsFlextInfraUtilitiesToml, ...): ...
+```
+
+For a member project, replace `flext_infra` with that project's package
+(`flext_api`, `flext_ldif`, ...). Production models/constants stay reachable
+through the production facade; the test-only mixins stay in `_models`,
+`_constants`, `_typings`, `_protocols` and `_utilities`.
+
+## Strong typing
+
+Test code is typed as strictly as production code. `Any`, `object`, `cast`,
+`TypeGuard`, `TypeIs`, `assert isinstance` narrowing, implicit conversions used to
+satisfy the checker, and every ignore hint (`# type: ignore`, `# pyright: ignore`,
+`# mypy: ignore`, `# ruff: ignore`, `# noqa`) are prohibited. Declare the concrete
+type in `t`, the protocol in `p`, the model in `m`, the constant in `c`, or the
+helper in `u`; then consume that declaration. A checker failure is repaired at its
+declaration, never suppressed.
+
 ## Fixtures and assertions
 
 - Use `tm` for assertions and shared builders from `flext-tests`.

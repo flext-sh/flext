@@ -378,7 +378,6 @@ inline suppressions, code-level exemption mechanisms, docstring exemption marker
 exemption lists in configuration and carve-outs in rules are not axioms: they are
 exterminated at their root cause together with every mechanism that honors them.
 
-
 ## Overview
 
 FLEXT is a **multi-package Python 3.13 workspace** (git superproject + 31 `flext-*` git

@@ -1,8 +1,31 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Flext package.
+"""Root package for the FLEXT platform workspace.
+
+Exposes canonical platform facades, configurations, settings, models,
+protocols, types, and utility namespaces via PEP 562 lazy loading.
+Provides the central composition root integrating all member services
+and domain adapters.
+
+Canonical Facades:
+    - ``c``: Unified platform constants (:class:`flext.constants.FlextRootConstants`).
+    - ``m``: Unified domain models (:class:`flext.models.FlextRootModels`).
+    - ``p``: Unified structural protocols (:class:`flext.protocols.FlextRootProtocols`).
+    - ``t``: Unified type aliases (:class:`flext.typings.FlextRootTypes`).
+    - ``u``: Unified helper utilities (:class:`flext.utilities.FlextRootUtilities`).
+    - ``config``: Workspace configuration singleton facade
+      (:class:`flext.config.FlextRootConfig`).
+    - ``settings``: Dynamic environment settings
+      (:class:`flext.settings.FlextRootSettings`).
+
+See Also:
+    - ADR-018: Generator Declarations.
+    - ADR-027: Facade Single-Owner Law.
+    - ADR-028: Facade Boundary Orchestrators Declarative Enforcement.
+    - :mod:`flext_core`: Foundational core platform primitives.
 
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations

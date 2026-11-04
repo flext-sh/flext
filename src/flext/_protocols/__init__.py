@@ -1,8 +1,17 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Flext. Protocols package.
+"""Lazy export package for workspace root protocol declarations.
+
+Defines PEP 562 lazy exports for structural subtyping protocols, value object
+contracts, and configuration interfaces.
+
+See Also:
+    - ADR-018: Generator Declarations.
+    - ADR-019: Service Contract Ports and Operations.
+    - :mod:`flext.protocols`: Public protocols facade.
 
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations

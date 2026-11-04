@@ -1,8 +1,17 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Flext. Constants package.
+"""Lazy export package for workspace root constant declarations.
+
+Defines PEP 562 lazy exports for base constant declarations and configuration
+parameters across the workspace.
+
+See Also:
+    - ADR-005: Config, Settings, Constants, Templates, Schemas SSOT.
+    - ADR-018: Generator Declarations.
+    - :mod:`flext.constants`: Public constants facade.
 
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations

@@ -72,7 +72,7 @@ automatically):
 from playwright.sync_api import sync_playwright
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(
+    browser = m.chromium.launch(
         headless=True
     )  # Always launch chromium in headless mode
     page = browser.new_page()

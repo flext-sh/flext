@@ -1,8 +1,20 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Models facade for flext-workspace — m.Root project namespace.
+"""Unified domain models facade for the FLEXT workspace.
+
+Aggregates and exposes domain models, entity schemas, and value objects across
+the member project hierarchy through a single canonical entry point ``m`` and
+workspace namespace ``m.Root``. Preserves C3 MRO linearization order across
+inherited subproject models.
+
+See Also:
+    - ADR-018: Generator Declarations.
+    - ADR-027: Facade Single-Owner Law.
+    - ADR-028: Facade Boundary Orchestrators Declarative Enforcement.
+    - :mod:`flext.protocols`: Unified protocols facade.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
@@ -35,18 +47,18 @@ class FlextRootModels(
     m,
     flext_grpc_m,
 ):
-    """Workspace root models facade — access via m.Root.*.
+    """Unified root domain models facade.
 
-    MRO ordered by inheritance depth (deepest first) to satisfy C3 linearization.
-    FlextAuthModels is inherited via FlextOracleOicModels.
-    FlextApiModels, FlextWebModels, FlextCliModels are inherited via
-    the OracleOic/OracleWms/Quality paths.
-    FlextLdifModels is inherited via FlextLdapModels.
+    Provides access to domain entities, schemas, and payload types across all
+    workspace packages. MRO is ordered by inheritance depth (deepest first)
+    to guarantee deterministic C3 linearization across diamond dependencies.
     """
 
     class Root(FlextModelsRootBase, FlextModelsRootConfig):
-        """Workspace root models MRO composition."""
+        """Workspace-specific model classes accessed via ``m.Root.*``."""
 
 
 m = FlextRootModels
+"""Canonical models facade alias for the workspace."""
+
 __all__: list[str] = ["FlextRootModels", "m"]

@@ -18,7 +18,7 @@ html_file_path = pathlib.Path("path/to/your/file.html").resolve()
 file_url = f"file://{html_file_path}"
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True)
+    browser = m.chromium.launch(headless=True)
     page = browser.new_page(viewport={"width": 1920, "height": 1080})
 
     # Navigate to local HTML file

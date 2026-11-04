@@ -103,8 +103,8 @@ under `m.Api.*`), and referencing an upstream namespace by a renamed alias (the
 referenced the new name).
 
 **Runtime proof** (flext-api `3c004ef0`, flext-web `dced660`/`4bc984c`):
-`flext_api.m.Api` carries no web members; `flext_api.m.Web` resolves the web namespace
-through the chain; `flext_web.m.Web.FastAPIAppConfig` resolves.
+`m.Api` carries no web members; `m.Web` resolves the web namespace
+through the chain; `m.Web.FastAPIAppConfig` resolves.
 
 **Canonical source**: this law (R1a/R1b); ADR-015; the accepted topic ADR; skill
 `flext-law` ("Architecture and imports").

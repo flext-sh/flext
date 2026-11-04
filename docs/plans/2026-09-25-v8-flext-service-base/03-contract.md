@@ -55,25 +55,25 @@ from typing import override
 from flext_core import m, p, r, s, t
 
 
-class DocumentService(s[p.Model]):
+class DocumentService(s[p.BaseModel]):
     """Expose an injected model through the service result contract."""
 
-    document: t.Port[p.Model] = m.Field(
+    document: t.Port[p.BaseModel] = m.Field(
         exclude=True,
         description="Validated model supplied by the composition root.",
     )
 
-    def snapshot(self) -> p.Result[p.Model]:
+    def snapshot(self) -> p.Result[p.BaseModel]:
         """Return the injected validated document.
 
         Returns:
             The document through its instance protocol.
 
         """
-        return r[p.Model].ok(self.document)
+        return r[p.BaseModel].ok(self.document)
 
     @override
-    def execute(self) -> p.Result[p.Model]:
+    def execute(self) -> p.Result[p.BaseModel]:
         """Execute the snapshot operation.
 
         Returns:
@@ -131,23 +131,23 @@ from typing import override
 from flext_core import m, p, r, s, t
 
 
-class DocumentService(s[p.Model]):
+class DocumentService(s[p.BaseModel]):
     """Serialize a model supplied explicitly by the composition root."""
 
-    document: t.Port[p.Model] = m.Field(
+    document: t.Port[p.BaseModel] = m.Field(
         exclude=True,
         description="Validated model supplied by the composition root.",
     )
 
     @override
-    def execute(self) -> p.Result[p.Model]:
+    def execute(self) -> p.Result[p.BaseModel]:
         """Return the injected document.
 
         Returns:
             The document through its instance protocol.
 
         """
-        return r[p.Model].ok(self.document)
+        return r[p.BaseModel].ok(self.document)
 
 
 document = m.ConfigDocument.model_validate_json('{"data":{"name":"example"}}')
@@ -195,25 +195,25 @@ from flext_cli import cli
 from flext_core import m, p, r, s, t
 
 
-class DocumentService(s[p.Model]):
+class DocumentService(s[p.BaseModel]):
     """Publish one real model-returning operation for CLI derivation."""
 
-    document: t.Port[p.Model] = m.Field(
+    document: t.Port[p.BaseModel] = m.Field(
         exclude=True,
         description="Validated model supplied by the composition root.",
     )
 
-    def snapshot(self) -> p.Result[p.Model]:
+    def snapshot(self) -> p.Result[p.BaseModel]:
         """Return the injected validated document.
 
         Returns:
             The document through its instance protocol.
 
         """
-        return r[p.Model].ok(self.document)
+        return r[p.BaseModel].ok(self.document)
 
     @override
-    def execute(self) -> p.Result[p.Model]:
+    def execute(self) -> p.Result[p.BaseModel]:
         """Execute the snapshot operation.
 
         Returns:
@@ -223,7 +223,7 @@ class DocumentService(s[p.Model]):
         return self.snapshot()
 
 
-def provide_document_service() -> s[p.Model]:
+def provide_document_service() -> s[p.BaseModel]:
     """Construct the service and its model only when the command executes.
 
     Returns:

@@ -16,7 +16,7 @@ from playwright.sync_api import sync_playwright
 # Example: Discovering buttons and other elements on a page
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True)
+    browser = m.chromium.launch(headless=True)
     page = browser.new_page()
 
     # Navigate to page and wait for it to fully load
