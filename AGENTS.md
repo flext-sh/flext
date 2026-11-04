@@ -114,8 +114,10 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
     and evidence. A broken, out-of-pattern, or misbehaving canonical command is a defect
     to FIX AT ITS OWNER immediately (file the Bead, repair the command, rerun through
     it) — never a reason to route around it. Shared mutable tool state (e.g. Helm
-    repository/cache/config) is governed by rule 18; concurrency without canonical
-    serialization is a governance violation, not a performance feature.
+    repository/cache/config) is governed by rule 18. Agents run public verbs
+    concurrently; the owning tool queues, coalesces and publishes optimistically
+    (`rules/coordination/heavy-gate-serialization.md`, operator order 2026-11-04T16:05Z).
+    A private lock, `flock`, PID file or "busy, refuse" guard is a governance violation.
     **This binds DIAGNOSIS and VALIDATION exactly as it binds mutation.** Establishing a
     fact about the workspace — which verbs exist, whether a gate passes, whether two
     generated files agree, how a tool behaves — is itself a validation action and MUST
@@ -605,8 +607,8 @@ public behavior and validate the runtime contract; they never redefine that cont
 to accommodate implementation details. This operator rule (2026-10-10) supersedes
 older no-skip and capability-deselection instructions for these connectivity tests.
 
-The coordinator owns `flext-itpd1.3` recovery ordering, Beads, serialized gates,
-integration, and closure. Sibling workstreams `flext-itpd1.2` (documentation) and
+The coordinator owns `flext-itpd1.3` recovery ordering, Beads, integration, and
+closure. Sibling workstreams `flext-itpd1.2` (documentation) and
 `flext-itpd1.4` (Make machinery) deliver bounded repairs under that coordination.
 Workers implement assigned owners and return evidence; they do not merge or close Beads.
 
@@ -1359,8 +1361,9 @@ Overall average: **60-90% token reduction** on common development operations.
   libraries; apply DI, DRY, YAGNI, and SSOT — invert dependencies, respect domain
   interfaces, and decouple instead of patching around a problem (no gambiarra).
 - Follow the current operator's division of work and the canonical coordination
-  rules. Serialized heavy operations and required local proof remain mandatory;
-  remote CI does not replace them.
+  rules. Required local proof remains mandatory; remote CI does not replace it.
+  Heavy operations run concurrently through their owning tools, never serialized
+  by hand.
 
 ## Learned Workspace Facts
 
