@@ -18,8 +18,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext._typings.base import FlextRootTypingsBase
-from flext._typings.config import FlextRootTypingsConfig
+from flext._typings import FlextRootTypingsBase, FlextRootTypingsConfig
 from flext_db_oracle import t
 from flext_grpc import t as flext_grpc_t
 from flext_infra import t as flext_infra_t

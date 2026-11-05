@@ -53,7 +53,7 @@ constraints = [
     { name = "uv", specifier = ">=0.13.4" },
     { name = "virtualenv", specifier = ">=21.14.13" },
 ]
-overrides = [{ name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=52bf3e21" }]
+overrides = [{ name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=5ebf6d5c477fbf8fc66191bd991a27ca1b9eed7a" }]
 
 [[package]]
 name = "actionlint-py"
@@ -1264,7 +1264,7 @@ dev = [
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "redis", specifier = ">=8.1.0" },
     { name = "requests", specifier = ">=2.34.2" },
-    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=52bf3e21" },
+    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=5ebf6d5c477fbf8fc66191bd991a27ca1b9eed7a" },
     { name = "ruamel-yaml", specifier = ">=0.19.1" },
     { name = "ruff", specifier = ">=0.16.5" },
     { name = "rumdl", specifier = ">=0.2.62" },
@@ -7942,7 +7942,7 @@ wheels = [
 [[package]]
 name = "rope"
 version = "1.15.0+dc.12"
-source = { git = "https://github.com/marlon-costa-dc/rope.git?rev=52bf3e21#52bf3e2146feabf8d90c9f1f40ac9d1cdd1acc4b" }
+source = { git = "https://github.com/marlon-costa-dc/rope.git?rev=5ebf6d5c477fbf8fc66191bd991a27ca1b9eed7a#5ebf6d5c477fbf8fc66191bd991a27ca1b9eed7a" }
 dependencies = [
     { name = "pytoolconfig", extra = ["global"] },
 ]

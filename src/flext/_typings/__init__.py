@@ -1,22 +1,12 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Lazy export package for workspace root typing declarations.
-
-Defines PEP 562 lazy exports for base type aliases, specialized mappings,
-and configuration type definitions.
-
-See Also:
-    - ADR-027: Facade Single-Owner Law.
-    - ADR-028: Facade Boundary Orchestrators Declarative Enforcement.
-    - :mod:`flext.typings`: Public typings facade.
+"""Flext. Typings package.
 
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
 """
 
 from __future__ import annotations
 
-from types import MappingProxyType
 from typing import TYPE_CHECKING
 
 from flext_core.lazy import install_lazy_exports
@@ -31,9 +21,6 @@ __all__: tuple[str, ...] = ("FlextRootTypingsBase", "FlextRootTypingsConfig")
 install_lazy_exports(
     __name__,
     globals(),
-    MappingProxyType({
-        "FlextRootTypingsBase": ".base",
-        "FlextRootTypingsConfig": ".config",
-    }),
+    {"FlextRootTypingsBase": ".base", "FlextRootTypingsConfig": ".config"},
     public_exports=__all__,
 )

@@ -17,6 +17,9 @@ from __future__ import annotations
 
 from typing import Protocol, runtime_checkable
 
+from flext import t
+from flext_oracle_oic import FlextOracleOicProtocols
+
 
 @runtime_checkable
 class FlextRootProtocolsConfig(Protocol):
@@ -25,6 +28,21 @@ class FlextRootProtocolsConfig(Protocol):
     Defines expected attributes and methods for configuration consumers to interact
     with settings without coupling to concrete configuration classes.
     """
+
+    @runtime_checkable
+    class PipelinePayload(FlextOracleOicProtocols.BaseModel, Protocol):
+        """Structural data contract projected from the owning model."""
+
+        values: t.MutableJsonMapping
+
+    @runtime_checkable
+    class PipelineStageData(FlextOracleOicProtocols.BaseModel, Protocol):
+        """Structural data contract projected from the owning model."""
+
+        @property
+        def data(self) -> FlextRootProtocolsConfig.PipelinePayload:
+            """Payload produced by the preceding pipeline stage."""
+            ...
 
 
 __all__ = ("FlextRootProtocolsConfig",)

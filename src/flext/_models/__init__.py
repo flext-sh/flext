@@ -1,22 +1,12 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Lazy export package for workspace root model declarations.
-
-Defines PEP 562 lazy exports for base domain models, entity schemas, and
-pipeline payload data models.
-
-See Also:
-    - ADR-018: Generator Declarations.
-    - ADR-028: Facade Boundary Orchestrators Declarative Enforcement.
-    - :mod:`flext.models`: Public models facade.
+"""Flext. Models package.
 
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
 """
 
 from __future__ import annotations
 
-from types import MappingProxyType
 from typing import TYPE_CHECKING
 
 from flext_core.lazy import install_lazy_exports
@@ -31,9 +21,6 @@ __all__: tuple[str, ...] = ("FlextModelsRootBase", "FlextModelsRootConfig")
 install_lazy_exports(
     __name__,
     globals(),
-    MappingProxyType({
-        "FlextModelsRootBase": ".base",
-        "FlextModelsRootConfig": ".config",
-    }),
+    {"FlextModelsRootBase": ".base", "FlextModelsRootConfig": ".config"},
     public_exports=__all__,
 )

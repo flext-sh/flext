@@ -18,8 +18,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext._constants.base import FlextRootConstantsBase
-from flext._constants.config import FlextRootConstantsConfig
+from flext._constants import FlextRootConstantsBase, FlextRootConstantsConfig
 from flext_db_oracle import c
 from flext_grpc import c as flext_grpc_c
 from flext_infra import c as flext_infra_c

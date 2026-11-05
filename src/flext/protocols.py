@@ -19,10 +19,10 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext._protocols.base import FlextRootProtocolsBase
-from flext._protocols.config import FlextRootProtocolsConfig
-from flext._protocols.generated_models_value import (
+from flext._protocols import (
     FlextModelsRootProtocolsGeneratedValue,
+    FlextRootProtocolsBase,
+    FlextRootProtocolsConfig,
 )
 from flext_db_oracle import p
 from flext_grpc import p as flext_grpc_p
