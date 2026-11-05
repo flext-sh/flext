@@ -282,7 +282,8 @@ data, never machinery. New inviolable rules (bind every `flext-(tap|target|dbt)-
 
     `p.Result[p.Meltano.FetchResult]`, built from the model
     `m.Meltano.FetchResult(records)` (a `p` member never constructs; see
-    `ban-protocol-constructor` in the codemod rules guide). No dict/round-trip across the boundary;
+    `ban-protocol-constructor` in the codemod rules guide). No dict/round-trip
+    across the boundary;
 
     records stay in Singer-native `JsonMapping` (the wire shape).
 
