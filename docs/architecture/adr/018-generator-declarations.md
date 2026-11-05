@@ -195,6 +195,38 @@ and consumed MRO capabilities. Static and lazy bindings account for declared
 eager metadata without lifting child exports into ancestors. Missing targets,
 colliding identities and invalid ownership fail explicitly.
 
+#### Deferred heavy capabilities (amended 2026-11-05)
+
+The operator answered "Declared libraries (Recommended)" on 2026-11-05 (tracker
+memory `operator-decision-2026-11-05-lazy-declared-distributions`). This
+implements lever 2 of `operator-ruling-2026-10-02-lazy-heavy-capabilities`,
+translated from Portuguese: "the xlsx and docx libraries must not be initialized
+just by importing the facade; fix it so they enter lazily, only on use".
+
+- A project declares its costly third-party distributions once, in the lazy-init
+  section of its own `config/codegen.yaml`. That declaration is the only input.
+- The lazy-init generator reads the same source inventory it already uses. It
+  marks as deferred every export whose declaring module imports a declared
+  distribution at module scope, either directly or through modules of its own
+  package. The export's members are the names bound in the class bodies along
+  its in-package MRO, excluding dunders.
+- The generated initializer publishes those exports as deferred. `FlextLazy`
+  hands consumers a stand-in class of `FlextLazyMember` descriptors. The first
+  member access loads the declaring module through the lazy loader and caches the
+  real member on the stand-in. Facades compose the stand-in by MRO, so importing
+  a facade loads no declared distribution.
+- Type checkers read the real class through the initializer's `TYPE_CHECKING`
+  imports. Consumers, facades and authored modules do not change.
+- Generation fails explicitly for a deferred export with an out-of-package base,
+  or one whose member set cannot be computed from source.
+- Acceptance: a fresh process imports the facade and loads none of the declared
+  distributions, and runtime acceptance resolves every deferred member through
+  `resolve_lazy_members`. A broken target fails exactly as an eager import
+  would.
+- This is the only deferral form outside `__init__.py` and `flext.lazy`.
+  Method-local imports, operation registries, module-object attribute access and
+  `TYPE_CHECKING` class splits remain prohibited.
+
 **Error-handling amendment, 2026-10-29.** Generation handles operational and
 domain failures through the existing typed models/results and publisher at the
 smallest coherent transaction or cohort. Diagnostics retain the original cause,

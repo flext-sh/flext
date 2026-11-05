@@ -904,6 +904,8 @@ CLI + pytest plugin, **never imported at runtime**.
       modules declare and is never empty while its members have consumers.
     - Heavy capabilities (spreadsheet and document libraries and their models, for
       example) load only on first use, never as a side effect of importing a facade.
+      The project declares those distributions; the generated init defers the exports
+      that import them ([ADR-018 deferred heavy capabilities](docs/architecture/adr/018-generator-declarations.md#deferred-heavy-capabilities-amended-2026-11-05)).
     - The `m.*` presets build Pydantic models lazily (`defer_build`), and a check
       gate builds every model so annotation errors still fail `make check`.
     - The lazy-init generator derives exports from source (AST over each module's
