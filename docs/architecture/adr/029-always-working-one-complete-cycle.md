@@ -74,6 +74,23 @@ hotfix authorized the same day ("Hotfix flext-cli first", tracker memory
 `operator-order-2026-11-02-rigs-on-integration`) is the only other exception to this
 order.
 
+**Amendment 2026-11-05 (operator answer, tracker memory
+`operator-answers-2026-11-05-core-restore-adr029`):** "Reparo agora, emenda ADR".
+The operator's option text, verbatim: "Aplico o ENFORCE-003 pelo motor agora, como
+restauração de runtime, um membro por vez (core → tests → web → api → …), com prova
+em cada um. A ADR-029 é emendada primeiro (docs-first) com as suas palavras."
+Restoring the broken import runtime through the import law (ENFORCE-003: letter
+bindings instead of `import <package>` module-object access, and removal of
+deep per-module letter imports) is therefore admitted on foundational members
+before the three pilots are accepted. It runs one repository at a time, each proven
+by fresh import, its native gates and tests before the next. It authorizes no other
+law or theme on foundational members; every other `mod` theme keeps the pilot order
+above. The bootstrap step that precedes it, when the engine cannot start because a
+foundational package no longer imports, is the operator's chosen route of the same
+day: "Bindings mínimos + motor": only the missing letter bindings are added by hand,
+at the placement the import law defines, until the package imports; the engine then
+owns every remaining rewrite and header normalization.
+
 ## Decision
 
 The operator clarified the test operations on 2026-10-28 in the active root

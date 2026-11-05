@@ -17,10 +17,10 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import flext_core
+from flext_core import FlextConfig
 
 
-class FlextRootConfig(flext_core.FlextConfig):
+class FlextRootConfig(FlextConfig):
     """Process-wide workspace configuration container.
 
     Enforces declarative configuration invariants, provides typed accessors for
