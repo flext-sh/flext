@@ -59,7 +59,7 @@ candidate; acceptance never proves fleet stability.
 - [ADR-008: Neutral consumer boundaries for docs, Office bytes, and artifact metadata](008-neutral-consumer-boundaries.md)
   — **CURRENT IMPLEMENTATION**
 - [ADR-009: Ecosystem coordination and reusable-library evaluation](009-ecosystem-coordination-and-library-evaluation.md)
-  — **ACCEPTED TARGET** (unified `0.13.0` planning; historical origin `0.20.0-dev`;
+  — **ACCEPTED TARGET** (future `0.13.x` line;
   accepted-to-build, rejected and deferred feature verdicts preserved; no implementation
   receipt)
 - [ADR-010: Unified project standardization (Make, scripts, tests, structure) via codegen](010-unified-project-standardization-via-codegen.md)
@@ -148,8 +148,15 @@ candidate; acceptance never proves fleet stability.
   composition; only `make upg` writes locks; exact SHA pinning; the upgrade guard is
   the target contract, implementation pending; supersedes the same-day root-only lock
   statements)
+- [ADR-031: Class-Body Type Re-Exports Use Plain Assignment, Never PEP 695](031-class-body-reexport-plain-assignment.md)
+  — **ACCEPTED** (2026-11-02; codifies measured CPython 3.13 runtime behavior:
+  `type X = X` in a class body yields a self-referential lazy `TypeAliasType`
+  wrapper and breaks value consumers, while `X: TypeAlias = X` and plain `X = X`
+  re-export the class object; closes `UP040` at class-body re-export sites with the
+  plain-assignment form; evidence in `gruponos/merges` audit
+  `RUFF_PYREFLY_FLEXT_CORE_BATCH1_20261102.md`, bead `dc_recon-ob4`)
 
-> **Historical numbering evidence:** the recorded `0.20.0-dev` catalog associates
+> **Numbering evidence:** the recorded future-line (`0.13.0-dev`) catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance
 > (ADR-007 here). That remote catalog was not revalidated in this reconciliation; the
 > collision warning remains. This local catalog has no ADR-011, ADR-012 or ADR-013 files

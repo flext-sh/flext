@@ -79,7 +79,6 @@ scripts/maintenance/
 !AGENTS.md
 !codex.md
 !.rumdl.toml
-!.markdownlintignore
 !.shellcheckrc
 
 # Git configuration
@@ -363,6 +362,7 @@ secrets.yml
 .beads-credential-key
 .worktrees/
 legado/
+.beads.gate.lock
 
 # Beads ledger identity (workspace and standalone)
 !.beads/metadata.json
@@ -429,8 +429,10 @@ skill-create-output/
 .debug-journal.md
 .mcp.json
 CLAUDE.local.md
+/.flext/executor/
 
 # Tracked managed artifacts
+!requirements-infra.txt
 !.github/ci-template/
 !.github/ci-template/ci.yml
 !.github/dependabot.yml

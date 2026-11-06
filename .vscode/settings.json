@@ -8,6 +8,7 @@
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": false
   },
+  "better-yaml.documentOptions.version": "",
   "editor.mouseWheelZoom": true,
   "explorer.excludeGitIgnore": true,
   "files.autoSave": "afterDelay",
@@ -112,21 +113,16 @@
   "git.repositoryScanMaxDepth": 2,
   "githubPullRequests.autoRepositoryDetection": true,
   "githubPullRequests.ignoreSubmodules": false,
+  "markdownlint.appliesTo": "noFiles",
   "markdownlint.configFile": ".markdownlint.json",
-  "markdownlint.lintWorkspaceGlobs": [
-    "!**/.git/**",
-    "!**/.planning/**",
-    "!**/.reports/**",
-    "!**/.venv/**",
-    "!**/*.code-search",
-    "!**/bower_components/**",
-    "!**/build/**",
-    "!**/dist/**",
-    "!**/node_modules/**",
-    "!**/output/**",
-    "!**/tmp/**",
-    "!**/vendor/**",
-    "**/*.{md,mkd,mdwn,mdown,markdown,markdn,mdtxt,mdtext,workbook}"
+  "mypy-type-checker.cwd": "${nearestConfig}",
+  "mypy-type-checker.interpreter": [
+    "${workspaceFolder}/.venv/bin/python"
+  ],
+  "mypy-type-checker.path": [
+    "${interpreter}",
+    "-m",
+    "mypy"
   ],
   "pyrefly.lspPath": "${workspaceFolder}/.venv/bin/pyrefly",
   "python-envs.workspaceSearchPaths": [
@@ -180,6 +176,7 @@
   "python.pyrefly.syncNotebooks": false,
   "python.terminal.activateEnvInCurrentTerminal": true,
   "python.terminal.activateEnvironment": true,
+  "python.terminal.useEnvFile": true,
   "python.testing.pytestEnabled": false,
   "python.testing.unittestEnabled": false,
   "python.useEnvironmentsExtension": true,
@@ -257,6 +254,5 @@
     "**/.gitea/workflows/*.yaml",
     "**/.forgejo/workflows/*.yml",
     "**/.forgejo/workflows/*.yaml"
-  ],
-  "better-yaml.documentOptions.version": ""
+  ]
 }

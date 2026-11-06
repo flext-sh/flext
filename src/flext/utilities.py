@@ -1,13 +1,24 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Utilities facade for flext-workspace — u.Root project namespace.
+"""Unified utilities facade for the FLEXT workspace.
+
+Aggregates and exposes pure helper functions, conversion routines, and railway
+operations across the member project hierarchy through a single canonical entry
+point ``u`` and workspace namespace ``u.Root``. Preserves C3 MRO linearization order
+across inherited subproject utilities.
+
+See Also:
+    - ADR-001: Railway-Oriented Programming.
+    - ADR-027: Facade Single-Owner Law.
+    - ADR-028: Facade Boundary Orchestrators Declarative Enforcement.
+    - :mod:`flext.constants`: Unified constants facade.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
 
-from flext._utilities import FlextRootUtilitiesBase, FlextRootUtilitiesConfig
 from flext_db_oracle import u
 from flext_grpc import u as flext_grpc_u
 from flext_infra import u as flext_infra_u
@@ -34,18 +45,18 @@ class FlextRootUtilities(
     u,
     flext_grpc_u,
 ):
-    """Workspace root utilities facade — access via u.Root.*.
+    """Unified root utilities facade.
 
-    MRO ordered by inheritance depth (deepest first) to satisfy C3 linearization.
-    FlextAuthUtilities is inherited via FlextOracleOicUtilities.
-    FlextApiUtilities, FlextWebUtilities, FlextCliUtilities are inherited via
-    the OracleOic/OracleWms/Quality paths.
-    FlextLdifUtilities is inherited via FlextLdapUtilities.
+    Exposes shared algorithmic functions, railway result builders, and formatters
+    across all workspace packages. MRO is ordered by inheritance depth (deepest first)
+    to guarantee deterministic C3 linearization across diamond dependencies.
     """
 
-    class Root(FlextRootUtilitiesBase, FlextRootUtilitiesConfig):
-        """Workspace root utilities MRO composition."""
+    class Root:
+        """Workspace-specific utility helpers accessed via ``u.Root.*``."""
 
 
 u = FlextRootUtilities
+"""Canonical utilities facade alias for the workspace."""
+
 __all__: list[str] = ["FlextRootUtilities", "u"]

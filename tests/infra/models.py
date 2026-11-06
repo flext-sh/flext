@@ -9,53 +9,53 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated
 
-from flext import FlextModelsRoot
+from flext import FlextRootModels
 from flext_tests import FlextTestsModels
 
 
-class TestsFlextRootModels(FlextModelsRoot, FlextTestsModels):
+class TestsFlextRootModels(FlextRootModels, FlextTestsModels):
     """Infrastructure test models facade — extends flext workspace models."""
 
     class Tests(FlextTestsModels.Tests):
         """Test infrastructure model definitions."""
 
-        class ModuleRef(FlextModelsRoot.Value):
+        class ModuleRef(FlextRootModels.Value):
             """Module reference with path and name information."""
 
-            anchor_file: Path = FlextModelsRoot.Field(
+            anchor_file: Path = FlextRootModels.Field(
                 description="Absolute path to the module's anchor file.",
             )
-            module_name: str = FlextModelsRoot.Field(
+            module_name: str = FlextRootModels.Field(
                 description="Fully qualified module name.",
             )
-            relative_path: str = FlextModelsRoot.Field(
+            relative_path: str = FlextRootModels.Field(
                 description="Module path relative to the workspace root.",
             )
 
-        class SyncCall(FlextModelsRoot.Value):
+        class SyncCall(FlextRootModels.Value):
             """Workspace synchronization call record."""
 
             action: Annotated[
                 str,
-                FlextModelsRoot.Field(
+                FlextRootModels.Field(
                     description="Sync action performed (e.g. pull, push).",
                 ),
             ]
             repo: Annotated[
                 Path,
-                FlextModelsRoot.Field(description="Target repository root."),
+                FlextRootModels.Field(description="Target repository root."),
             ]
 
-        class RepoState(FlextModelsRoot.Value):
+        class RepoState(FlextRootModels.Value):
             """Repository state snapshot."""
 
             branch: Annotated[
                 str,
-                FlextModelsRoot.Field(description="Current branch name."),
+                FlextRootModels.Field(description="Current branch name."),
             ]
             commit_sha: Annotated[
                 str,
-                FlextModelsRoot.Field(description="Current commit SHA."),
+                FlextRootModels.Field(description="Current commit SHA."),
             ]
 
 

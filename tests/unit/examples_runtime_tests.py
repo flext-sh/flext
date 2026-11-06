@@ -31,7 +31,7 @@ class TestsFlextRootExamplesRuntime:
         """Runtime behavior, including a failure path."""
 
         @staticmethod
-        @pytest.mark.parametrize(
+        @c.Tests.MARK.parametrize(
             "files",
             [
                 (),

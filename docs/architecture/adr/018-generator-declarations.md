@@ -36,8 +36,12 @@ Wiki generation never creates or closes Beads by itself.
 
 <!-- TOC START -->
 
+- [Offline dependency and architecture references (amended 2026-10-28)](#offline-dependency-and-architecture-references-amended-2026-10-28)
 - [Context](#context)
 - [Decision](#decision)
+  - [Nested facade projection](#nested-facade-projection)
+  - [Model and service protocol projection](#model-and-service-protocol-projection)
+  - [Single-read, single-batch publication (amended 2026-10-28, campaign flext-pipol)](#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [0.13 unified planning reconciliation (documentation only)](#013-unified-planning-reconciliation-documentation-only)
@@ -117,6 +121,35 @@ This ADR owns the following fourteen generator declaration requirements:
 
 ### Nested facade projection
 
+#### Template-backed native refactoring (operator clarification 2026-10-30)
+
+Existing templates are the structural base for refactoring existing modules as
+well as creating absent declarations. During `make mod`, the existing Infra Rope
+infrastructure catalogs native declarations and assembles their semantic content into the
+existing typed render context; templates fill their owned slots. Preserve
+authored bodies, execution order, identities and source trivia through native
+refactoring. This does not authorize another parser, parallel renderer, relocated
+monolith or manual generated-file repair. Reuse validated models and protocols
+by reference, with defaults for optional inputs and explicit required inputs.
+
+Candidate parse failure must preserve the original cause at the existing typed
+failure boundary. It must never select physical bytes in place of candidate
+bytes, parse a replacement module or inject that replacement into the native
+module cache. Repair the operation that produced the invalid candidate.
+
+The 2026-11-01 projection correction below confines this semantic refactoring
+contract to `make mod`; `make gen` consumes declarations without changing authored
+structure. Preserve existing class/member shapes, bodies and public functionality.
+Compose the existing typed owners through CA and explicit DI to reduce coupling
+and the execution chain; do not replace it with wrappers or another engine.
+
+This amendment states the accepted contract, not implementation acceptance.
+The [2026-10-30 handoff](../../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/plan.md#handoff-de-retomada--2026-10-30-chat-01a18a11)
+records source limits and failing runtime receipts; `flext-u9h2i` owns execution
+and closure. Fix-forward adoption under the root `AGENTS.md` "Rig and Lane
+Contract" remains mandatory; no clean or quiet workspace prerequisite applies to
+this projection.
+
 The generator applies [ADR-014's semantic ownership](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership)
 recursively: a direct family domain facade composes the declarations in its private
 `_domain/` directory by MRO, and nested private directories repeat that pattern.
@@ -127,9 +160,31 @@ ancestor lazy exports are planned and published as one authenticated candidate, 
 source without importing the stale package being repaired. Callers use the nearest
 composed facade at every stage (ADR-028 [Decision 10](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
 
-Planning and runtime acceptance are different boundaries. Planning consumes the
-source-authenticated native workspace model, including candidate overlays,
-without executing the target package. Acceptance exercises the generated public
+**Projection-engine correction, approved 2026-11-01.** The incident mandate
+supersedes the 2026-10-29 requirement to use native semantic machinery during
+generation. `make gen` projects declarations through one typed, invocation-local
+source inventory parsed with the standard-library AST. It opens no Rope projects,
+moves no modules, rewrites no consumers and runs no semantic convergence loop.
+Family composition and direct exports retain all declared module correspondence,
+types and identities. Missing or ambiguous declarations fail explicitly; generated
+initializers and existing generated filenames never become declaration authorities.
+The second generation must produce identical bytes, and the canonical generation
+budget is below 20 seconds. Semantic discovery, structural repair, consumer
+rewiring and source movement remain owned by `make mod` and its native workspace.
+This separation introduces no substitute semantic engine or alternate publisher.
+
+The existing [engine guide](../../guides/engine.md) and
+[Infra execution contract](../../../flext-infra/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine)
+apply this target. Acceptance re-exercises the original public failure, then
+generation across FLEXT, AI Hub, OUD and their governed subprojects with their
+selected physical environments. Preserve pilot order and coverage, runtime-first
+proof, frozen analyzer policy, full native gates and integrated evidence; a
+shorter source file or an isolated passing consumer does not prove completion.
+
+Planning and runtime acceptance are different boundaries. Projection planning reads
+authenticated declarations and explicit candidate bytes without executing the target
+package. Semantic modification retains the native workspace and its candidate
+overlays. Acceptance exercises the generated public
 surface in a fresh process. A source move must not require its obsolete export
 map to import successfully before the replacement can be planned.
 
@@ -140,13 +195,90 @@ and consumed MRO capabilities. Static and lazy bindings account for declared
 eager metadata without lifting child exports into ancestors. Missing targets,
 colliding identities and invalid ownership fail explicitly.
 
-Generation retains the first causal failure and the publisher's confirmed
-effects. It does not catch an import failure and continue publishing other
-repositories. Unreached work remains unexecuted. The bootstrap consolidation
+#### Deferred heavy capabilities (amended 2026-11-05)
+
+The operator answered "Declared libraries (Recommended)" on 2026-11-05 (tracker
+memory `operator-decision-2026-11-05-lazy-declared-distributions`). This
+implements lever 2 of `operator-ruling-2026-10-02-lazy-heavy-capabilities`,
+translated from Portuguese: "the xlsx and docx libraries must not be initialized
+just by importing the facade; fix it so they enter lazily, only on use".
+
+- A project declares its costly third-party distributions once, in the lazy-init
+  section of its own `config/codegen.yaml`. That declaration is the only input.
+- The lazy-init generator reads the same source inventory it already uses. It
+  marks as deferred every export whose declaring module itself imports a
+  declared distribution at module scope. Only direct imports count; a module
+  that reaches the distribution through another module of its package is not
+  marked, because that other module's own export is the deferred one. The
+  export's members are the names bound in the class bodies along
+  its in-package MRO, excluding dunders.
+- The generated initializer publishes those exports as deferred. `FlextLazy`
+  hands consumers a stand-in class of `FlextLazyMember` descriptors. The first
+  member access loads the declaring module through the lazy loader and caches the
+  real member on the stand-in. Facades compose the stand-in by MRO, so importing
+  a facade loads no declared distribution.
+- Type checkers read the real class through the initializer's `TYPE_CHECKING`
+  imports. Consumers, facades and authored modules do not change.
+- Generation fails explicitly for a deferred export with an out-of-package base,
+  or one whose member set cannot be computed from source.
+- Acceptance: a fresh process imports the facade and loads none of the declared
+  distributions, and runtime acceptance resolves every deferred member through
+  `resolve_lazy_members`. A broken target fails exactly as an eager import
+  would.
+- This is the only deferral form outside `__init__.py` and `flext.lazy`.
+  Method-local imports, operation registries, module-object attribute access and
+  `TYPE_CHECKING` class splits remain prohibited.
+
+**Error-handling amendment, 2026-10-29.** Generation handles operational and
+domain failures through the existing typed models/results and publisher at the
+smallest coherent transaction or cohort. Diagnostics retain the original cause,
+traceback and scope context. A local failure does not abort proven independent
+units; an integrity failure stops its unsafe dependents. Account explicitly for
+failed and unreached work, preserve confirmed effects and concurrent WIP, and
+return nonzero when any error remains. There is no silent skip, catch-and-continue
+success, broad capture that normalizes an unexpected exception, or parallel error
+framework. This supersedes the former invocation-wide abort requirement, without
+admitting dependent publication after a failed prerequisite.
+
+Operational planning state, repository outcomes and candidate-plan coordination
+use the existing mutable model preset and retain their typed collaborators by
+reference. Expected domain outcomes select a typed branch before calling native
+operations; they are not represented by deliberately raised exceptions. Immutable
+file plans and authenticated source witnesses retain their existing protection.
+Real dependency exceptions are contained once at the responsible boundary with
+their causal evidence and failed outcome preserved. Existing aggregation retains
+structured failures for affected units rather than only concatenating messages.
+Typed owners supply legitimate defaults for optional inputs and require only
+non-derivable mandatory values; no error-triggered default substitutes for evidence.
+The bootstrap consolidation
 contract belongs to
 [ADR-014](014-family-part-shape-rope-codemod-rules.md#core-lazy-bootstrap);
 `flext-s9r3a` and `flext-1engx.15` retain implementation ownership under the
 `flext-brr3y` campaign.
+
+#### Projector bootstrap dependency cut
+
+The operator's 2026-10-29 decision is to decouple the existing projector while
+preserving every contract. Its original planning models and the same projection
+implementation must be available before importing the aggregate facades whose
+exports they repair. Initial Make/CLI selection elects that same projector through
+an acyclic public package boundary. Refactor the original declarations and their
+consumers as one dependency group; retain one model, projector, renderer and publisher.
+
+This is not an exception to
+[ADR-028 Decision 10](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10).
+Imports remain static through public package exports; no defining-module bypass,
+method-local import, mirrored DTO, compatibility alias, second CLI or hand-written
+initializer may bridge the cycle. Preserve model validation, wire contracts,
+ownership, source receipts and failure semantics. Qualification exercises the
+original cold Make entrypoint and its consumers; source decoupling alone proves
+neither generation nor installed runtime recovery.
+
+The dated [2026-10-30 restart handoff][make-consolidation-handoff] records the
+bootstrap implementation cursor and unqualified execution evidence under
+`flext-9t6gn`. It does not amend this contract or attest a repaired CLI.
+
+[make-consolidation-handoff]: ../../ways-of-working/make-consolidation-handoff.md
 
 ### Model and service protocol projection
 
@@ -157,12 +289,64 @@ contracts, source-module layout, automatic consumer rewiring and pilot coverage.
 The MRO/Pydantic analyzer and environment acceptance tracked by
 `flext-itpd1.13.11` remains incomplete and is not replaced by this amendment.
 
+**Operator amendment 2026-11-02 — strict protocol typing.** Every `m.*` type
+reference is prohibited. First-party model, service and data contracts are typed
+through their canonical `p.*` protocols, each decorated with `@runtime_checkable`.
+This includes model fields, callback signatures, aliases, quoted references,
+generic arguments and service payload specializations; runtime evaluation of a
+typing expression does not make a concrete-model annotation permissible.
+Earlier exceptions retaining `m.*` annotations are superseded.
+
+Executable construction, validation, serializers, schema and handler metadata
+retain the actual model owner: a Protocol is never instantiated. A value-level
+constructor/schema reference is distinct from a type annotation. Preserve the
+existing canonical scalar, enum and external SDK type owners; this decision does
+not authorize SDK-shaped protocol mirrors or aliases that disguise model classes
+as protocols.
+Native model base expressions and metadata factory calls such as `m.Field`
+remain actual model construction. They do not permit `m.*` in a type operand;
+the native migration distinguishes these roles by syntax and resolved identity.
+
+Use the existing `t.Port[p.X]` only for a genuine validated DI capability under
+ADR-019. Its dependency exclusion from serialization and JSON Schema cannot
+replace a persisted payload's validation. Serializable protocol-typed values
+must preserve the actual model's native validation, serializers and schema
+through native `GetPydanticSchema` projection at the established Pydantic owner.
+The metadata delegates to the original model schema; it preserves nested payloads,
+generic specialization, aliases, defaults, strictness and JSON Schema without
+retaining a concrete model in the consumer's type position. Metadata expressions
+that construct or validate a model are runtime expressions, not annotation targets
+for the reception codemod.
+
+**Amendment 2026-11-03 — deferred schema owner.** The field form is
+`Annotated[<protocol route>, t.schema_for_model(lambda: <model>)]`; the schema owner
+is a zero-argument callable resolved when the schema is generated, never an eager
+class reference. Measured on Pydantic 2.14: a nested model can only name a sibling
+through its holder class (the bare name is undefined for static checkers), the
+holder is unbound while its body executes, so an eager `Holder.X` leaves the field
+incomplete; Pydantic then re-evaluates it in the namespace of each class it builds,
+and a subclass in another module fails unless it happens to bind every name of the
+parent annotation. With the deferred owner the annotation evaluates at class
+creation (the protocol route is bound), the field is complete, subclasses copy it
+unchanged, and validation, serialization and JSON Schema still come from the real
+model. Qualify that contract with real
+ingress, serialization and consumer execution; do not invent a compatibility
+schema, suppress a failure, or restore a prohibited `m.*` type to obtain green.
+
+The existing generator and native Rope modification owner complete this cutover
+coherently across the declared inventory. Required protocol declarations,
+dependent initializers and facade exports precede consumer use in the same
+authenticated candidate. Blind prefix replacement is not semantic migration.
+An unresolved declaration or unsupported native schema contract fails before
+publication and is repaired at its owner. Source changes alone do not establish
+runtime, gate or integration acceptance.
+
 Every `make gen` derives model and service structural protocols through the
 existing flext-infra projection owner. Its input is the complete authenticated
-native Python inventory of the elected repository/workspace, including `src`,
+AST source inventory of the elected repository/workspace, including `src`,
 `tests`, `examples`, `scripts` and every other discovered Python module. These
-examples are not a closed tier list. Discovery and classification follow native
-declaration identities, inheritance, nested facade ownership and specialization;
+examples are not a closed tier list. Projection follows declared source identities,
+inheritance, nested facade ownership and specialization;
 neither filename spelling nor an existing consumer reference limits coverage.
 Every discovered model and service receives an accounted classification and
 projection disposition. Unresolved identities fail with their original cause;
@@ -202,9 +386,15 @@ suffix, guessed basename or per-symbol mapping table resolves a collision.
 Generated protocols, authored ports, composed facades and lazy exports preserve
 their distinct owners and public identities.
 
-The existing native Rope workspace model and reference graph drive discovery,
-annotation resolution and automatic rewiring through flext-infra. `make gen`
-derives the projection on every invocation; `make check` compares its drift
+The native Rope workspace model and reference graph drive semantic discovery,
+annotation migration and automatic rewiring through flext-infra's modification
+operation. Generation reads declared source contracts through the shared AST
+inventory, retaining aliases, module correspondence, complete field and computed
+property types, generic parameters, and inherited source contracts. Required
+supplier declarations are authenticated against the elected locked environment;
+unavailable required ancestry fails instead of dropping fields. `make gen`
+derives every declared projection, including absent generated outputs, on every
+invocation; `make check` compares its drift
 without mutation. Authored annotation and layout cutover, structural consumer
 rewiring and obsolete-owner retirement belong to `make mod`, under
 [ADR-010's operation ownership](010-unified-project-standardization-via-codegen.md#3b-semantic-discovery-and-automated-rewiring).
@@ -213,10 +403,12 @@ modification candidate includes dependent protocols, facades and lazy exports
 through their existing projection owner as coherent migration effects; it neither
 invokes `make gen` nor implements another generator.
 
-The approved Rope DSL entry is `RopeWorkspaceDsl.protocol_projection()`, returning
+For semantic modification, the approved Rope DSL entry is
+`RopeWorkspaceDsl.protocol_projection()`, returning
 one typed, invocation-local `ProtocolProjectionPlan`: projected sources, native
 source-to-protocol identities, declaration classifications and dependency edges.
-Both operations consume this same projection owner. The modification integration
+Both operations retain the declaration projection owner's output contracts;
+generation never opens the semantic DSL session. The modification integration
 uses the existing `ModLoopPhase.plan` callback contract and `CodegenFilePlan`
 composition after structural callbacks, not another loop or fake per-symbol
 `RopeContractRule` pattern. The invocation owns the native session/snapshots and
@@ -289,20 +481,35 @@ Finish its fleet-wide definitions, uses and complete consumer rewiring, real
 runtime proof, applicable native gates and integration closure before beginning
 another pattern. A passing pilot never authorizes switching patterns while that
 rollout or any affected consumer remains incomplete.
-The existing five-second transaction and sixty-second Make budgets, source
-authentication, own-effects rollback and frozen analyzer rules remain unchanged.
+The existing five-second transaction and general sixty-second Make budgets remain;
+the 2026-11-01 correction requires generation itself below twenty seconds.
+Stage budgets and counters remain configuration-owned. Source authentication and
+frozen analyzer rules remain unchanged. Recovery follows the
+2026-10-29 fix-forward supersession below; own-effects rollback is no longer authorized.
 Acceptance requires real public runtime and invalid-case detection, native
 gates, complete coverage accounting, repeated generation/refactoring fixed point
 and integrated evidence; a source restoration or sampled pilot is not completion.
 
 ### Single-read, single-batch publication (amended 2026-10-28, campaign `flext-pipol`)
 
+Read-only planning inputs travel separately from effects in each
+`CodegenFilePlan.inputs`, retaining their original atomic observations by
+reference. The existing publisher verifies those observations under the same
+native file-change lock used for effects before any publication. A YAML or
+dependency manifest consumed only as input never acquires invented destination
+ownership. This transport is an implementation requirement, not a claim of
+completed concurrency or fix-forward recovery validation.
+
 **Amendment 2026-10-28 — accepted contract, implementation pending.** The
 operator-approved small-transaction and cooperative-reader boundary supersedes
-the earlier invocation-wide, physically atomic batch interpretation. It also
-authorizes the narrowly scoped rollback below instead of the historical blanket
-rollback prohibition; no unrelated WIP or completed independent transaction is
-rolled back.
+the earlier invocation-wide, physically atomic batch interpretation.
+
+**Recovery supersession 2026-10-29 — operator order (`ag-ssut`, related
+`aihub-6sls5.2`).** The 2026-10-28 permission for transaction-owned rollback is
+historical and no longer operative. The canonical
+[atomic-effects rule](https://github.com/datacosmos-br/agents/blob/dev/rules/runtime/atomic-effects.md)
+owns preservation of published effects and correction forward. The small-transaction,
+reader-barrier, authentication, scope and deadline contracts remain in force.
 
 Within one repository invocation, an unchanged source observation is read and
 parsed once. One native workspace model per repository (ADR-028
@@ -343,22 +550,24 @@ authenticated effects before admitting readers; it never treats an absent
 process or an expired lock as successful publication. The record belongs to
 the publisher, not a substitute Beads tracker, semantic index or global cache.
 
-On failure, preserve the first cause and undo only this transaction's proven
-effects in reverse order, guarded by compare-and-swap against authenticated
-published states. This includes index entries, file modes and owned directory
-effects. A conflicting external edit is preserved and keeps recovery explicit;
-no global reset, historical restore or blind overwrite is permitted. Cleanup or
-rollback failures remain attached to the primary failure and the operational
-record remains unresolved until recovery is proved. Earlier committed
-transactions remain intact; the containing operation is still failed and
-unreached work is not successful.
+On failure, preserve the first cause and every confirmed published effect,
+including this transaction's index entries, file modes and directory effects.
+Retain authenticated before/after observations and partial-effect evidence in
+the existing operational record; they do not authorize restoration. Reconcile
+drift and correct the canonical owner forward under the same source/target
+authentication, compare-and-swap admission and cooperative barrier. Preserve
+conflicting external edits and earlier transactions. Cleanup discards only
+this invocation's unpublished staging and releases its own locks; its failures
+remain attached to the primary failure. The operational record stays unresolved
+until recovery is proved, the containing operation remains failed, and unreached
+work is not successful.
 
 The entire incremental transaction takes at most five seconds, including staged
-validation, publication, native refresh and bounded rollback. The existing
-performance policy owner declares that budget; the whole Make invocation,
+validation, publication, native refresh and bounded failure recording/cleanup.
+The existing performance policy owner declares that budget; the whole Make invocation,
 including lock waits, staging and recovery, remains within sixty seconds.
-Transaction sizing must leave recovery margin inside these limits. Fast
-validation never weakens the frozen analyzer rules or replaces the complete
+Transaction sizing must leave failure-recording and cleanup margin inside these
+limits. Fast validation never weakens the frozen analyzer rules or replaces the complete
 gates and real consumer proof required for the slice. Exhausting either budget remains a
 failure. Superseded planning/publication routes are removed in the same cutover.
 
@@ -374,9 +583,10 @@ consumes this contract and links back to this decision.
 Order of execution (operator): law → extermination of lists, manual declarations and
 their permissions → generator/detector/fix repair → census by the validator → automatic
 correction (`make mod`) → consumers → strict compliance → close. One bead per phase;
-work in the authorized shared-workspace boundary; never roll back unrelated work;
-never a manual mass fix. The amendment above alone authorizes guarded reversal
-of an unsuccessful transaction's own effects.
+work in the authorized shared-workspace boundary; preserve published effects and
+concurrent WIP; never a manual mass fix. The 2026-10-29 recovery supersession
+above requires authenticated fix-forward reconciliation of an unsuccessful
+transaction's partial effects, without restoring its preimages.
 
 ## Consequences
 
@@ -404,16 +614,20 @@ of an unsuccessful transaction's own effects.
   (`make.generation_profile_path`, `modification_profile_path`) show no repeated
   parse of unchanged source across phases. Changed paths refresh incrementally
   in the same engine; a second consecutive `make gen` has zero artifact effects.
-- No partial transaction (campaign `flext-pipol`): a planning failure leaves
-  that transaction's live destinations untouched. A publication/validation
-  failure reverses only its authenticated owned effects before readers are
-  admitted; completed earlier transactions remain intact and the invocation
-  remains failed.
+- Faithful partial-effect evidence (campaign `flext-pipol`): a planning failure
+  leaves that transaction's live destinations untouched. A publication/validation
+  failure preserves every confirmed effect and records the exact reached and
+  unreached work with the first causal failure. Completed earlier transactions
+  and concurrent WIP remain intact; the invocation remains failed. Recovery
+  corrects forward from freshly authenticated inputs and current target states.
 - Cooperative visibility and recovery (accepted contract, implementation
   pending): concurrent Make/Rope readers observe only a committed transaction
-  or a proven preimage. A crash between file/index/directory effects leaves a
-  durable interruption that blocks readers until guarded recovery. Injected
-  failure restores only owned effects; conflicting external WIP is preserved.
+  admitted through the existing barrier and postcondition checks. A crash
+  between file/index/directory effects leaves a faithful durable interruption
+  that blocks readers until authenticated fix-forward recovery is proved.
+  Injected failure preserves partial effects and conflicting external WIP;
+  recovery validates fresh source/target observations under the same CAS,
+  barrier and scope before admitting readers, never by restoring an old image.
 - Bounded admission (accepted contract, implementation pending): prove the
   five-second transaction and sixty-second Make budgets, including barrier
   waits, staged validation, incremental refresh and recovery. Full slice gates

@@ -6,6 +6,7 @@
 - [Connect configuration to domain models](#connect-configuration-to-domain-models)
 - [Public exports manifest](#public-exports-manifest)
 - [Documentation configuration](#documentation-configuration)
+  - [Build API documentation with MkDocs and mkdocstrings](#build-api-documentation-with-mkdocs-and-mkdocstrings)
 - [Apply and validate](#apply-and-validate)
 - [Related guides](#related-guides)
 
@@ -49,12 +50,12 @@ hashing remain with the config owner when schemas move to a pure helper.
 
 `config`, `settings` and `m` all use typed validation, but their roles differ:
 
-| Owner | What it represents | How it changes |
-| --- | --- | --- |
-| `config` | Reviewed rules, catalogs and generation policy | Governed data edit, owner validation and regeneration |
+| Owner      | What it represents                                       | How it changes                                                             |
+| ---------- | -------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `config`   | Reviewed rules, catalogs and generation policy           | Governed data edit, owner validation and regeneration                      |
 | `settings` | Deployment/process inputs such as the environment or CLI | The settings owner's declared sources and validated update/clone lifecycle |
-| `c` | Immutable vocabulary, enum members and invariants | A deliberate domain-contract change, not an operator knob |
-| `m` | Data crossing a domain or adapter boundary | Construction or an authorized validated state transition |
+| `c`        | Immutable vocabulary, enum members and invariants        | A deliberate domain-contract change, not an operator knob                  |
+| `m`        | Data crossing a domain or adapter boundary               | Construction or an authorized validated state transition                   |
 
 The settings owner is the single source reader. Preserve its prefixes, aliases,
 source precedence and declared defaults; an invalid supplied value is an error,

@@ -114,8 +114,10 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
     and evidence. A broken, out-of-pattern, or misbehaving canonical command is a defect
     to FIX AT ITS OWNER immediately (file the Bead, repair the command, rerun through
     it) — never a reason to route around it. Shared mutable tool state (e.g. Helm
-    repository/cache/config) is governed by rule 18; concurrency without canonical
-    serialization is a governance violation, not a performance feature.
+    repository/cache/config) is governed by rule 18. Agents run public verbs
+    concurrently; the owning tool queues, coalesces and publishes optimistically
+    (`rules/coordination/heavy-gate-serialization.md`, operator order 2026-11-04T16:05Z).
+    A private lock, `flock`, PID file or "busy, refuse" guard is a governance violation.
     **This binds DIAGNOSIS and VALIDATION exactly as it binds mutation.** Establishing a
     fact about the workspace — which verbs exist, whether a gate passes, whether two
     generated files agree, how a tool behaves — is itself a validation action and MUST
@@ -185,21 +187,38 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
 <!-- /UNIVERSAL-GOVERNANCE -->
 <!-- END AI-HUB MANAGED UNIVERSAL CORE -->
 
-## Shared Worktree Contract
+## Rig and Lane Contract
 
-Always fix forward, adopt, and collaborate in the existing shared worktree. Dirty
-Git state, concurrent edits, and ongoing WIP are the expected operating conditions.
-Requiring a clean, globally stable, exclusive, or unchanged Git tree is expressly
-prohibited as a prerequisite for execution, validation, evidence, or completion of
-authorized scope. Such a requirement is unacceptable and will not be satisfied.
+Operator ruling 2026-11-02 (tracker memory `operator-order-2026-11-02-rigs-on-integration`,
+translated from Portuguese: "~/flext and ~/ai-hub and the other rigs must be the
+official worktrees/rigs of the projects, always on the integration branches and used to
+apply hotfixes and bugfixes (fast validation and propagation through gitflow) and used to
+develop local projects with the integration tip with their CI green; ai-hub has a
+worktree management that must be finished to be used to manage the worktrees, their
+links with the workspace and these aspects, and to block the creation and maintenance of
+manual worktrees, PRs, and to interconnect the gc, agents, projects, beads and GitHub
+tools in a unified way"). It supersedes the former shared-worktree contract, which kept
+long-running WIP in the rig checkout.
 
-This explicit operator correction overrides inherited clean-tree, quiet-workspace,
-and committed-candidate prerequisites, including conflicting managed instructions.
-Preserve compatible contributions, reread affected inputs, and revalidate only the
-actual dependency scope. Record command outcomes and scoped content evidence without
-requiring unrelated WIP to stop or Git changes to be committed or pushed. Real
-runtime, type, lint, and test failures still require repair; Git dirtiness is not one.
-Never discard work or manufacture a clean state to satisfy tooling or reporting.
+- The rig checkout (this workspace root and every attached member) sits on the
+  integration branch `0.12.0-dev` at its tip (operator answer of the same day, "0.12.0-dev").
+  It applies hotfixes and bugfixes through the validated gitflow route and is the base
+  that local consumers develop against. `upload-20261007` is a lane, promoted into
+  `0.12.0-dev` through its existing pull requests once green.
+- Development happens in lanes. Until ai-hub's worktree manager owns the lane lifecycle,
+  a lane is a native Git worktree and branch placed per the global Gas City rule
+  (`~/agents/rules/coordination/gascity.md`).
+- Transition (operator answer, "Converge in place, then return"): each repository's
+  existing WIP is finished in place until its commit-stage gates pass. It is then
+  committed on a lane branch (`git switch -c front/<repository>-<date>` carries the
+  WIP, so nothing is discarded) and pushed to a `preserve/*` ref. Only then does the
+  checkout return to the `0.12.0-dev` tip. A consumer that installs this rig editable
+  (`make setup FLEXT=<path>`) is told before each return and re-pins in lockstep.
+- Dirty, changing, or concurrent Git state is never a prerequisite blocker for
+  execution, validation, or evidence. Preserve compatible contributions, reread
+  affected inputs, revalidate only the actual dependency scope, and never discard work
+  or manufacture a clean state to satisfy tooling or reporting. Real runtime, type,
+  lint, and test failures still require repair; Git dirtiness is not one.
 
 The one explicit operator exception is the `make upg` lock guard (tracker memory
 `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`,
@@ -285,12 +304,14 @@ These standards override conflicting completion shortcuts.
    `tests` in every repository it touches, real runtime proof, commit, push, and
    merge to the integration branch. A phase never begins while another is
    incomplete. Nothing is skipped, deferred or parked "for a later wave", and a red
-   found is fixed immediately at its owner. Incomplete or red code is never
-   committed, tested or pushed. An explanation of why something was not finished
-   does not replace finishing it.
+   found is fixed immediately at its owner. Incomplete or red code never reaches a
+   published or integration line: it is committed only on a lane branch and pushed
+   only to a `preserve/*` ref ("Rig and Lane Contract"), which is never publication
+   or integration evidence. An explanation of why something was not finished does
+   not replace finishing it.
 
-Apply these standards through fix, forward, adopt, and collaborate. The shared
-worktree contract remains mandatory: dirty or changing Git state is not a defect
+Apply these standards through fix, forward, adopt, and collaborate. The Rig and
+Lane Contract remains mandatory: dirty or changing Git state is not a defect
 and never becomes a clean-tree or quiet-workspace prerequisite.
 
 ## Canonical Governance Composition
@@ -343,156 +364,21 @@ Enforcement: the lint-config freeze gate digests this SSOT and fails on any drif
 from the catalog. Restoring, regenerating, or correcting the projection to match the
 catalog is not a rule change; altering the catalog without the operator is.
 
-<!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f2c52d34 -->
-
-## Issue Tracking with bd (beads)
-
-**IMPORTANT**: This project uses **bd (beads)** for ALL issue tracking. Do NOT use
-markdown TODOs, task lists, or other tracking methods.
-
-### Why bd?
-
-- Dependency-aware: Track blockers and relationships between issues
-- Git-friendly: Dolt-powered version control with native sync
-- Agent-optimized: JSON output, ready work detection, discovered-from links
-- Prevents duplicate tracking systems and confusion
-
-### Quick Start
-
-**Check for ready work:**
-
-```bash
-bd ready --json
-```
-
-**Create new issues:**
-
-```bash
-bd create "Issue title" --description="Detailed context" \
-  -t bug | feature | task -p 0-4 --json
-bd create "Issue title" --description="What this issue is about" -p 1 --deps
-discovered-from:bd-123 --json
-```
-
-**Claim and update:**
-
-```bash
-bd update --json < id > --claim
-bd update bd-42 --priority 1 --json
-```
-
-**Complete work:**
-
-```bash
-bd close bd-42 --reason "Completed" --json
-```
-
-### Issue Types
-
-- `bug` - Something broken
-- `feature` - New functionality
-- `task` - Work item (tests, docs, refactoring)
-- `epic` - Large feature with subtasks
-- `chore` - Maintenance (dependencies, tooling)
-
-### Priorities
-
-- `0` - Critical (security, data loss, broken builds)
-- `1` - High (major features, important bugs)
-- `2` - Medium (default, nice-to-have)
-- `3` - Low (polish, optimization)
-- `4` - Backlog (future ideas)
-
-### Workflow for AI Agents
-
-1. **Check ready work**: `bd ready` shows unblocked issues
-2. **Claim your task atomically**: `bd update <id> --claim`
-3. **Work on it**: Implement, test, document
-4. **Discover new work?** Create linked issue:
-   - `bd create "Found bug" --description="Details about what was found" -p 1 --deps discovered-from:<parent-id>`
-5. **Complete**: `bd close <id> --reason "Done"`
-
-### Quality
-
-- Use `--acceptance` and `--design` fields when creating issues
-- Use `--validate` to check description completeness
-
-### Lifecycle
-
-- `bd defer <id>` / `bd supersede <id>` for issue management
-- `bd stale` / `bd orphans` / `bd lint` for hygiene
-- `bd human <id>` to flag for human decisions
-- `bd formula list` / `bd mol pour <name>` for structured workflows
-
-### Sync
-
-bd stores issue history in Dolt:
-
-- Each write auto-commits to Dolt history
-- Do not treat `.beads/issues.jsonl` as the sync protocol
-
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data`
-on your git remote; `.beads/issues.jsonl` is a passive export. See
-<https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md> for details and
-anti-patterns.
-
-### Important Rules
-
-- ✅ Use bd for ALL task tracking
-- ✅ Always use `--json` flag for programmatic use
-- ✅ Link discovered work with `discovered-from` dependencies
-- ✅ Check `bd ready` before asking "what should I work on?"
-- ❌ Do NOT create markdown TODO lists
-- ❌ Do NOT use external issue trackers
-- ❌ Do NOT duplicate tracking systems
-
-For more details, see README.md and docs/QUICKSTART.md.
-
-## Agent Context Profiles
-
-The managed Beads block is task-tracking guidance, not permission to override
-repository, user, or orchestrator instructions.
-
-- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git
-  pushes, or Dolt remote sync unless explicitly asked. At handoff, report changed files,
-  validation, and suggested next commands.
-- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same
-  conservative git policy unless active instructions say otherwise.
-- **Team-maintainer**: Only when the repository explicitly opts in, agents may close
-  beads, run quality gates, commit, and push as part of session close. A current "do not
-  commit" or "do not push" instruction still wins.
-
-## Session Completion
-
-This protocol applies when ending a Beads implementation workflow. It is subordinate to
-explicit user, repository, and orchestrator instructions.
-
-1. **File issues for remaining work** - Create beads for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
-3. **Update issue status** - Close finished work, update in-progress items
-4. **Handle git/sync by active profile**:
-
-   ```bash
-   # Conservative/minimal/default: report status and proposed commands; wait for approval.
-   git status
-   
-   # Team-maintainer opt-in only, unless current instructions forbid it:
-   git pull --rebase
-   git push
-   git status
-   ```
-
-5. **Hand off** - Summarize changes, validation, issue status, and any blocked
-   sync/commit/push step
-
-**Critical rules:**
-
-- Explicit user or orchestrator instructions override this Beads block.
-- Do not commit or push without clear authority from the active profile or the current
-  user request.
-- If a required sync or push is blocked, stop and report the exact command and error.
-
-<!-- END BEADS INTEGRATION -->
+**Exceptions are axioms or they do not exist** (operator orders 2026-11-02, tracker
+keys `operator-order-2026-11-02-exceptions-martial-law` and
+`operator-order-2026-11-02-exceptions-axioms-only`, translated from Portuguese:
+"exterminating exceptions to the rules is fundamental; anything against it is
+exterminated at any cost and everywhere possible; this is not a rule, it is martial
+law" and "the exceptions that remain are those necessary to keep the strict rules —
+that allow using Pydantic, the lint types among themselves, the application of the
+patterns among themselves — treated as AXIOMS, very few exceptions controlled by
+tooling with an iron fist"). A surviving exception is an axiom only when strict rules
+cannot coexist without it: it enables Pydantic, resolves an inter-tool lint conflict,
+or lets one FLEXT pattern apply alongside another. Each axiom is declared once in the
+tooling SSOT with its justification and enforced by tooling. Member-level ignores,
+inline suppressions, code-level exemption mechanisms, docstring exemption markers,
+exemption lists in configuration and carve-outs in rules are not axioms: they are
+exterminated at their root cause together with every mechanism that honors them.
 
 ## Overview
 
@@ -721,8 +607,8 @@ public behavior and validate the runtime contract; they never redefine that cont
 to accommodate implementation details. This operator rule (2026-10-10) supersedes
 older no-skip and capability-deselection instructions for these connectivity tests.
 
-The coordinator owns `flext-itpd1.3` recovery ordering, Beads, serialized gates,
-integration, and closure. Sibling workstreams `flext-itpd1.2` (documentation) and
+The coordinator owns `flext-itpd1.3` recovery ordering, Beads, integration, and
+closure. Sibling workstreams `flext-itpd1.2` (documentation) and
 `flext-itpd1.4` (Make machinery) deliver bounded repairs under that coordination.
 Workers implement assigned owners and return evidence; they do not merge or close Beads.
 
@@ -764,16 +650,17 @@ ADR-018 its projection, and ADR-019 its DI and service boundary.
 **Config/settings are the layer-0 SSOT** consumed BY the facades (ADR-005). Access is
 single-form only:
 
-```python notest
+```python
 from <namespace> import config, settings   # e.g. from flext_core import config, settings
 config.<Namespace>.*      settings.<Namespace>.*
 ```
 
 Config = business rules (`config/*.yaml`, validated); settings = env/CLI-tunable knobs.
 Facades never hardcode values the SSOT holds. Config/settings modules import only
-stdlib, their authenticated upstream foundation, or source-proven, acyclic layer-zero helpers of their
-own package ([ADR-005 §2](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#2-facade-and-layer-direction-is-strict)) — never a project
-`c/t/p/m/u` facade, including under `TYPE_CHECKING`.
+stdlib, their authenticated upstream foundation, or source-proven, acyclic layer-zero
+helpers of their own package
+([ADR-005 §2](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md#2-facade-and-layer-direction-is-strict)) —
+never a project `c/t/p/m/u` facade, including under `TYPE_CHECKING`.
 Core remains the Pydantic SDK import owner; another package's layer-zero schema
 consumes the public Core foundation rather than importing Pydantic independently.
 
@@ -825,9 +712,12 @@ CLI + pytest plugin, **never imported at runtime**.
     `c/t/p/m/u` modules (and layer-0 config/settings for their foundation libraries).
     Everywhere else, only stdlib and FLEXT packages; the declared stdlib backports
     (tooling `lazy-init.stdlib-backports`: `typing_extensions`, operator decision
-    2026-10-24) count as stdlib. PEP 747 calls use `t.TypeForm(X)` through the facade's runtime re-binding
-    (ADR-028 amended 2026-10-29); importing `typing_extensions.TypeForm` at
-    consumers is banned.
+    2026-10-24) count as stdlib. The PEP 747 special form is called and annotated
+    only through `from typing_extensions import TypeForm` (`TypeForm(X)`,
+    `TypeForm[T]`): mypy honours the call only for the fullname
+    `typing_extensions.TypeForm`. `t.TypeForm` is removed (operator ruling
+    2026-10-31, ADR-028; supersedes the 2026-10-29 `t.TypeForm` order, now
+    history).
   - Inside the facades too, an external library's types are named only through `t`
     aliases or `p` protocols; `u` never re-narrows or re-parses (`isinstance` chains,
     `ast.literal_eval`) what a `t`/`m` declaration validates once.
@@ -926,6 +816,26 @@ CLI + pytest plugin, **never imported at runtime**.
     per-package or per-library clones, zero-finding one-shot migrations deleted after
     a fleet census, and the executed-rule count tracked against a typed budget
     ([codemod rules, One rule per law](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/guides/codemod-rules.md#one-rule-per-law)).
+    **One pipeline** (ADR-028 Decision 18 item 2, operator orders 2026-11-02,
+    translated from Portuguese: "it has to be a processing pipeline"; "check, gen and
+    mod use the same framework, code and rules; only the functions change"; "gen and mod
+    do different things … neither is a prerequisite of the other"; "one path only, no
+    fallback"; epic `flext-lqfqo`):
+    - `check`, `gen` and `mod` share one pipeline: capture, classification, relocation,
+      module shape, layer zero, orchestrators, projection, the import law, rendering,
+      validation and atomic publication. `check` reports, `gen` scaffolds or conforms
+      with the same engine, templates and source, and `mod` refactors; each verb alone
+      reaches its fixed point.
+    - Each law is owned by exactly one stage or generalized rule, perfected with
+      fixtures and the native test; duplicates, fallbacks and compatibility paths are
+      exterminated without a remaining reference.
+    - `refactor mod --laws <set>` is the diagnostic and repair route for one law; the
+      import law always runs.
+    - Hand edits of violating sources are prohibited; workers change only stage, rule,
+      generator and engine owners plus their fixtures.
+    - Until make is repaired and validated, lint verdicts come from direct `ruff` and
+      `pyrefly`.
+    - The operator and the approved plan rank above superseded ADR text.
   - Static violation detection lives only in flext-infra's declarative rule catalog.
     Violations are banned and fixed, never waived. Current state (2026-10-24): flext-core
     still carries its ENFORCE catalog and static Beartype visitors until slice S
@@ -975,9 +885,12 @@ CLI + pytest plugin, **never imported at runtime**.
       (`from flext_infra._utilities import FlextInfraUtilitiesPytest`).
     - Modules outside the families read every letter from their own package root.
     - The layer direction still holds: a later letter is TYPE_CHECKING-only, from
-      any package (generated `ban-reverse-runtime-import`).
-    - Enforced by the codemod catalog: ENFORCE-003, ENFORCE-051 and the
-      `ban-letter-module-object` document in `ban-facade-own-namespace-import.yml`.
+      any package; the import law calculates that placement.
+    - Declared as one authored letter-binding rule in flext-infra's rule catalog
+      (`config/rules/**`; no rule is generated) over facts the engine computes, and
+      executed for `check`, `gen` and `mod`; it claims ENFORCE-003, ENFORCE-051 and
+      ENFORCE-080, and ai-hub's hooks consume the same catalog ([ADR-028 Decision 10](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10);
+      epic `flext-lqfqo`).
   - **Imports are lazy, maximally and without exception: nothing loads until it is
     used.** This consolidates standing operator rulings, cited by tracker key:
     `flext-strict-lazy-imports-generated-inits`, `lazy-init-all-from-lazy-imports`,
@@ -991,6 +904,8 @@ CLI + pytest plugin, **never imported at runtime**.
       modules declare and is never empty while its members have consumers.
     - Heavy capabilities (spreadsheet and document libraries and their models, for
       example) load only on first use, never as a side effect of importing a facade.
+      The project declares those distributions; the generated init defers the exports
+      that import them ([ADR-018 deferred heavy capabilities](docs/architecture/adr/018-generator-declarations.md#deferred-heavy-capabilities-amended-2026-11-05)).
     - The `m.*` presets build Pydantic models lazily (`defer_build`), and a check
       gate builds every model so annotation errors still fail `make check`.
     - The lazy-init generator derives exports from source (AST over each module's
@@ -1016,17 +931,18 @@ CLI + pytest plugin, **never imported at runtime**.
   `model_validate_json`; failures leave as `r.Fail` at the `e`/`u` boundary. Full
   reference: `pydantic-development` skill (declaration/boundary/catalog parts) with the
   good/bad-practice and removal catalog.
-  - **Models import `u` only two ways** (operator ruling 2026-10-25, tracker key
-    `operator-ruling-2026-10-25-models-u-imports-pydantic-home`, translated from Portuguese:
-    "Models may import u in only two ways: u from the upstream FLEXT project they
-    import, or a private _utilities class in their own namespace in very restricted
-    cases. Note that models cannot export methods"). `_models` imports either the
-    upstream FLEXT
-    project's `u` or, in very restricted cases, a private `_utilities` class of its
-    own namespace; models export no methods. The Pydantic surface models need lives
-    in `_models/pydantic.py`, never `_utilities/pydantic.py`; it is migrated and
-    rewired fleet-wide, and the same principle holds per family for `c`, `t`, `p`,
-    `m` and `u` (ADR-028 Decision 19).
+  - **Each family owns its Pydantic surface; a model never imports `u`** (operator
+    orders 2026-10-25 and 2026-11-02, tracker keys
+    `operator-ruling-2026-10-25-models-u-imports-pydantic-home` and
+    `operator-order-2026-11-02-models-never-import-u-for-pydantic`, translated from
+    Portuguese: "models cannot export methods … the Pydantic that models need must be
+    migrated to _models/pydantic.py … this holds for c, t, p, m and u equally" and
+    "models importing u for Pydantic is a workaround; the internal Pydantic modules of
+    c, t, p, m and u must be adjusted so it never happens"). Each family's internal
+    Pydantic module serves its own surface; a model reaches what it needs through `m`
+    and its earlier-layer letters, never `u`, and exports no methods. A capability a
+    model reads from `u` is relocated by the pipeline to the family of its runtime kind
+    and every consumer is rewired fleet-wide (ADR-028 Decision 19; epic `flext-lqfqo`).
   - **Entity equality is the Pydantic way** (operator ruling 2026-10-25, tracker key
     `operator-ruling-2026-10-25-entity-equality-pydantic-way`, translated from Portuguese:
     "Whatever Pydantic recommends for this, the most Pydantic-native approach, is
@@ -1039,6 +955,21 @@ CLI + pytest plugin, **never imported at runtime**.
     ([using flext-core](docs/guides/using-flext-core.md#domain-models)).
 - **Typing:** never `Any`/`object`/concrete-class annotations; type via `t.*` aliases
   and `p.*` protocols; `T | None` (never `Optional`). A model is never a type.
+  The 2026-11-02 operator mandate strictly prohibits every `m.*` typing reference;
+  canonical model/service/data protocols must be `@runtime_checkable`. This also
+  governs fields, callbacks, quoted types and generic specializations. Actual
+  model construction and native validation remain executable model operations,
+  never Protocol construction. Apply
+  [ADR-018's strict amendment](docs/architecture/adr/018-generator-declarations.md#model-and-service-protocol-projection)
+  through the existing generator and native Rope owner. `t.Port` is valid only
+  for its real DI contract and never bypasses persisted payload validation.
+  Generic wrapper aliases (`MappingKV`, `SequenceOf`, `StrMapping`, …) are a managed
+  transition under [ADR-028 Decision 7](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7)
+  (amended 2026-10-29): restored fix-forward because premature removal broke
+  non-migrated consumers; native collection annotations remain the target, each
+  alias retires when its consumer census reaches zero. `VariadicTuple` and
+  tuple-arity wrappers carry no restoration and continue through the
+  deprecated-signature window.
 - **No owned typing stubs:** handwritten and generated first-party `.pyi`, custom
   stub distributions, stub generators, SDK-shaped shadow modules, and model-signature
   mirrors in `.py` are prohibited. Dependency contracts belong to the smallest
@@ -1411,13 +1342,12 @@ Overall average: **60-90% token reduction** on common development operations.
 ## Learned User Preferences
 
 - Before changing code, search libraries, the project, worktrees, local and remote
-  branches, and pull requests. Preserve the operator-selected shared checkout and
-  adopt compatible work through the declared Git route; a new task never implies a
-  new lane. Integrate divergence with `git merge --no-ff`, without rebase or force-push.
+  branches, and pull requests. Adopt compatible work through the declared Git route,
+  keep the rig on its integration tip, and develop in lanes under the Rig and Lane
+  Contract. Integrate divergence with `git merge --no-ff`, without rebase or force-push.
 - Dependency locks change only through `make upg`, under ADR-030. `make setup`
   installs the declared locked environment; it does not resolve or rewrite a drifted
-  lock. The uv upgrade guard is the sole committed-state exception to the
-  shared-worktree contract.
+  lock. The uv upgrade guard is the sole committed-state prerequisite of any verb.
 - New code is accepted only after the declared formatting, repair, structural and
   read-only checks are clean and its real public behavior is proven. Smell and other
   applicable audits belong to check, not extra common Make verbs. Do not close while
@@ -1433,8 +1363,9 @@ Overall average: **60-90% token reduction** on common development operations.
   libraries; apply DI, DRY, YAGNI, and SSOT — invert dependencies, respect domain
   interfaces, and decouple instead of patching around a problem (no gambiarra).
 - Follow the current operator's division of work and the canonical coordination
-  rules. Serialized heavy operations and required local proof remain mandatory;
-  remote CI does not replace them.
+  rules. Required local proof remains mandatory; remote CI does not replace it.
+  Heavy operations run concurrently through their owning tools, never serialized
+  by hand.
 
 ## Learned Workspace Facts
 

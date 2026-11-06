@@ -61,8 +61,8 @@ migration = ldif.migrate(
 ```
 
 `FlextLdifParser.parse_ldif(...)` accepts either a string or a `Path` and returns
-`r[m.Ldif.ParseResponse]`; `ldif.migrate(...)` builds a `FlextLdifMigrationPipeline` and
-executes it, returning `r[m.Ldif.MigrationPipelineResult]`. Every fallible operation
+`r[p.Ldif.ParseResponse]`; `ldif.migrate(...)` builds a `FlextLdifMigrationPipeline` and
+executes it, returning `r[p.Ldif.MigrationPipelineResult]`. Every fallible operation
 returns `r[T]`, so parsing, validation, filtering, and migration compose with the same
 railway discipline.
 
@@ -80,6 +80,10 @@ railway discipline.
 - **Private facets**: `_constants`, `_models`, `_protocols`, `_typings`, `_utilities`
   back the public `c/m/p/t/u` facades; execution parametrization lives in
   `config/ldif.yaml`, consumed through the SSOT `settings` access form.
+- **Server constants** retain distinct OID and OUD values. Their shared
+  `ACL_ATTRIBUTE_NAME` spelling has different values and is shadowed by the base
+  default when owners are composed; consumers obtain the selected dialect's
+  constants through `ldif.resolve_server_constants(...)` instead of retired aliases.
 
 ### Key architectural patterns
 

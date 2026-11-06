@@ -50,7 +50,7 @@ Community of 345 nodes
 | execute                              | Function | flext-infra/src/flext_infra/codegen/consolidator.py           | 25-109  |
 | \_project_python_files               | Function | flext-infra/src/flext_infra/codegen/consolidator.py           | 111-136 |
 | \_selected_projects                  | Function | flext-infra/src/flext_infra/codegen/consolidator.py           | 138-151 |
-| FlextInfraCodegenQualityGate         | Class    | flext-infra/src/flext_infra/codegen/constants_quality_gate.py | 24-417  |
+| FlextInfraGatesCodegenQuality         | Class    | flext-infra/src/flext_infra/codegen/constants_quality_gate.py | 24-417  |
 | execute                              | Function | flext-infra/src/flext_infra/codegen/constants_quality_gate.py | 28-36   |
 | build_report                         | Function | flext-infra/src/flext_infra/codegen/constants_quality_gate.py | 38-99   |
 | modified_python_files                | Function | flext-infra/src/flext_infra/codegen/constants_quality_gate.py | 102-126 |
