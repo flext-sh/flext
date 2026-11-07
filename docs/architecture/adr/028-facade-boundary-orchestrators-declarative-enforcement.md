@@ -829,7 +829,10 @@ outside the facades across 12 repositories.
      - A law is perfected at its owner with fixtures and the native test before it
        joins the pipeline. `refactor mod --laws <set>` and `--rule-ids` are the
        diagnostic and repair route for one law; the import law always runs, inside a
-       selected run too.
+       selected run too. A selector-free `make mod` runs the complete active catalog
+       (every law and rule) to its fixed point; selection only narrows the focus
+       (operator decision 2026-11-07, tracker key
+       `operator-decision-2026-11-07-bare-mod-all-laws`).
      - Hand edits of violating sources are prohibited. Workers change only stage,
        rule, generator and engine owners plus their fixtures.
      - Until make is repaired and validated, lint verdicts come from direct `ruff` and

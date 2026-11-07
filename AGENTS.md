@@ -830,7 +830,9 @@ CLI + pytest plugin, **never imported at runtime**.
       fixtures and the native test; duplicates, fallbacks and compatibility paths are
       exterminated without a remaining reference.
     - `refactor mod --laws <set>` is the diagnostic and repair route for one law; the
-      import law always runs.
+      import law always runs. A selector-free `make mod` runs the complete active
+      catalog to its fixed point; selection only narrows the focus (operator decision
+      2026-11-07, tracker key `operator-decision-2026-11-07-bare-mod-all-laws`).
     - Hand edits of violating sources are prohibited; workers change only stage, rule,
       generator and engine owners plus their fixtures.
     - Until make is repaired and validated, lint verdicts come from direct `ruff` and
