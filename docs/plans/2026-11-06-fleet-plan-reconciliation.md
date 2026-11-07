@@ -39,7 +39,9 @@ Aterrissado em `0.12.0-dev` nesta execução: infra #2151 `bf9724e0` (mixins pyd
 
 Zerados também após o registro inicial: `flext-core` (#760, #761 `da927555` — `HasDomainEvents` vincula ao modelo de evento próprio), `flext-target-oracle-oic` (#149 `34f9b682` — constantes de schema em `dict[str, JsonValue]`, provado com pyrefly), `flext-web` (0 após #761), `flext-grpc` (#154 `83e16a5e` — contratos runtime em exemplos/managers, payload pelo modelo).
 
-Restam: `flext-infra` 428, `flext-ldif` 227, `flext-cli` 35, `flext-db-oracle` 32, `flext-api` 24, `flext-tests` 18, `flext-target-oracle` 11.
+Restam: `flext-infra` 394, `flext-ldif` ~225.
+
+**Porta forward do OID ACL (design próprio pendente):** a refatoração `04c13768` ("oid fixes") removeu os modelos `AciAllow`/`AciRule` e os métodos `build_aci_rule`/`convert_targetattr`/`named_target_attrs`/`generate_acl_name` da camada de conversão, substituindo-os por `AclClause/AclLevelRule/AclBindRule` + `build_rule`/`subject_leaf`/`AclPipeline`, mas deixou a pipeline e os testes chamando a API antiga. Restaurar a camada antiga por inteiro reverte o refactor (piores gates: o flip de campos foi rejeitado pelo conformance) e não é aceitável. A correção correta é concluir o refactor: re-apontar `AclPipeline.build_aci_rules` e os testes OID ACL (assemble/source/convert_oud) para a camada nova (`AclLevelRule`/`AclBindRule`), preservando o comportamento OUD verificado (`SuperUser`→Directory Manager, `attr=[]`/`attr!=(*)` diagnósticos, `OUD_TARGETATTR_ALL`).
 
 LDIF (227) — estado funcional apurado: `tests/unit/servers/test_oid_acl_convert.py` e `test_oid_acl_endtoend.py` têm **7 falhas** e `test_oid_servers.py` falha na coleta (fixture `schema` com assinatura inválida). Os módulos `test_oid_acl_assemble.py`/`test_oid_acl_convert_oud.py` são **stale** contra a API removida (`AciRule/AciAllow`, `build_aci_rule`, `convert_subject_to_oud`); a API atual é `AclClause/AclLevelRule/AclBindRule`, `build_rule`, `subject_leaf`, `AclPipeline.render_aci_values`. Próximo passo: corrigir a fixture e as 7 falhas funcionais, depois decidir entre reescrever ou aposentar os dois módulos stale com cobertura equivalente comprovada.
 
@@ -67,3 +69,15 @@ Cada item exige PR pequeno, `make gen` incluso quando houver projeção, e medi�
 - Não editar arquivos gerados à mão.
 - Não aplicar o stash OID ACL antigo sobre o refactor atual.
 - Não usar `# type: ignore`, `cast`, `Any` ou hardcode para fechar gate.
+
+## Rodada de convergência e landing (2026-11-07)
+
+Decisão do operador (2026-11-07, registrada no tracker como `operator-decision-2026-11-07-land-now-red-base`): landar agora com a base vermelha pré-existente; achados restantes permanecem em beads.
+
+- Censo: 1.021 refs nos 32 repositórios; todas decididas (mescladas, superadas ou rejeitadas com SHA e motivo em `flext-bhvgw`). Stashes e worktrees sujos preservados em `preserve/*-20261107` antes de qualquer remoção.
+- Adotados em `upload-20261007`: protocol-guard (#2156), setup-lock-hygiene, layout-catalog-roots, gen-removal (`flext-otcin`), cli spawn-argv, tests connectivity-executables e docker-surface, contratos de dbt-ldap/observability/tap-oracle/tap-oracle-wms/target-ldap.
+- Correções de causa raiz: admissão no-op do gen pulada (gen de membro 160 s → 28 s), alias de protocolo projetado deixou de oscilar, constantes do meltano sem base Pydantic, `DbOracle.engine(url)` honra credenciais da URL (`flext-dhzep`), dependências por URL `@0.12.0-dev` (`flext-3mma0`).
+- Rope 1.15.2+dc.4 (`64cbd65b`) projetado na frota e no lock da workspace.
+- Landing: `upload-20261007` → `0.12.0-dev` nos 31 membros (merge commit), produtores primeiro.
+
+Pendências reais (beads abertos): achados de `make check` da frota; gen da raiz acima do orçamento (`flext-obayy`, `flext-srb6l`); formação dos `uv.lock` de membro (`flext-zzynv`); itens de gerador e regras (`flext-q9qkq`, `flext-i49ap`, `flext-vw3bw`, `flext-kt51y`, `flext-nas61`, `flext-bqr5e`, `flext-p93dh`, `flext-pblzr`, `flext-ccsjh`); decisão de verbo `make mod` (`flext-py33d`).
