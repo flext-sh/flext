@@ -74,7 +74,7 @@ Community of 240 nodes
 | FlextInfraEnsurePyreflyConfigPhase      | Class    | flext-infra/src/flext_infra/deps/phases/ensure_pyrefly.py       | 15-180  |
 | **init**                                | Function | flext-infra/src/flext_infra/deps/phases/ensure_pyrefly.py       | 18-20   |
 
-_... and 190 more members._
+*... and 190 more members.*
 
 ## Execution Flows
 

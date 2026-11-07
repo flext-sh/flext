@@ -74,7 +74,7 @@ Community of 110 nodes
 | test_success                                            | Test     | flext-infra/tests/unit/deps/test_detection_typings.py               | 31-37   |
 | test_failure_fails_loud                                 | Test     | flext-infra/tests/unit/deps/test_detection_typings.py               | 39-44   |
 
-_... and 60 more members._
+*... and 60 more members.*
 
 ## Execution Flows
 

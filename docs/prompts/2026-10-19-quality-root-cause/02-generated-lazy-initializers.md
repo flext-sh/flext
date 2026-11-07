@@ -40,7 +40,7 @@ member route is 'rtk proxy make -f flext-core/Makefile check'; use the correspon
 member as needed. Read the Make owner to discover existing verbs; never invent
 selectors or bypass Make with bare analyzers/pytest. Structural rewires belong to make
 mod. Never generate production files from pytest. Never hand-edit generated
-__init__.py, facets, Makefiles or pyproject.toml.
+**init**.py, facets, Makefiles or pyproject.toml.
 
 Exception decision rule: authorization alone is insufficient. For each proposed
 restoration record the exact rule and scope, verified authorization, present
@@ -72,8 +72,8 @@ templates/lazy_init_root.py.j2; flext-core/src/flext_core/lazy.py and its implem
 
 Require absolute TYPE_CHECKING imports. Keep bootstrap imports from flext_core.lazy,
 avoiding re-entry through the flext_core facade. Inspect install_lazy_exports: it
-already installs __getattr__/__dir__ and returns hooks; validate direct invocation
-versus redundant __getattr__ assignment from real behavior. Some producer corrections
+already installs **getattr**/**dir** and returns hooks; validate direct invocation
+versus redundant **getattr** assignment from real behavior. Some producer corrections
 are already present; adopt them and complete validation. Runtime lazy-map relative
 module strings have a distinct contract: do not mechanically rewrite them because
 static imports are absolute.

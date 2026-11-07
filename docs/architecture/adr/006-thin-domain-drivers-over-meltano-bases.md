@@ -27,12 +27,12 @@ declarative pilot: **flext-tap-ldap**, landed). Rollout to the remaining
 
 **Rollout status (verified 2026-09-17):**
 
-| Project               | Status                             | Evidence                                                                                                               |
-| --------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `flext-tap-ldap`      | **Converted** (declarative driver) | Pilot realized 2026-07-17: src 3276 → 914 LOC (−72%)                                                                   |
-| `flext-tap-oracle`    | **Not converted**                  | Still has hand-rolled `tap.py` (`:26/:91/:167/:220`) and `streams.py` (`:40/:268`); bypasses the meltano base entirely |
-| `flext-target-oracle` | **Not converted**                  | 3211 src LOC; Loader pattern, declares no `sink_factory` (the former `create_sink()` stub raising `TypeError` was deleted 2026-10-25) |
-| `flext-dbt-*` (all)   | **Not converted**                  | Each pilot re-declares Oracle connection scalars from `settings.DbOracle`                                              |
+| Project                | Status                                   | Evidence                                                                                                                                                 |
+| ---------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `flext-tap-ldap`       | **Converted** (declarative driver)       | Pilot realized 2026-07-17: src 3276 → 914 LOC (−72%)                                                                                                     |
+| `flext-tap-oracle`     | **Not converted**                        | Still has hand-rolled `tap.py` (`:26/:91/:167/:220`) and `streams.py` (`:40/:268`); bypasses the meltano base entirely                                   |
+| `flext-target-oracle`  | **Not converted**                        | 3211 src LOC; Loader pattern, declares no `sink_factory` (the former `create_sink()` stub raising `TypeError` was deleted 2026-10-25)                    |
+| `flext-dbt-*` (all)    | **Not converted**                        | Each pilot re-declares Oracle connection scalars from `settings.DbOracle`                                                                                |
 | `flext-tap-oracle-oic` | **Runtime-broken** (measured 2026-10-24) | Both console scripts exit 1 for any argv: `api.py:29-44` raises `TypeError`, `tap_service_base.py:78` turns it into `SystemExit(1)` (bead `flext-ceqsw`) |
 
 **Transport amendment (2026-10-24):** the Singer and dbt adapters are part of the single
@@ -105,7 +105,7 @@ codegraph blast-radius on `connection_profile` ):
 
     **no reusable connection-config model** upstream — `m.DbOracle.ConnectionStatus` is
 
-    runtime _status_, not config.
+    runtime *status*, not config.
 
 ### The duplication / anti-patterns (verified, file:line)
 
@@ -155,10 +155,10 @@ Adopt the **Thin Domain Driver** contract for every `flext-(dbt|tap|target)-<dom
 
 project. Three layers, each with one owner:
 
-| Layer                                                                      | Owner                                     | Responsibility                                                                                                                                                     |
-| -------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Integration interfaces** (dbt/tap/target/singer machinery in FLEXT form) | `flext-meltano`                           | the 3 consumer bases + `c/t/p/m/u` for meltano; 100% domain-agnostic (never references oracle/ldap/…)                                                              |
-| **Action library** (real connection + execution)                           | `flext-<domain>` (e.g. `flext-db-oracle`) | connection SSOT (`settings.<Domain>.*`), runtime API (`FlextDbOracleApi`), `p.<Domain>.Connection`, type/Singer maps                                               |
+| Layer                                                                      | Owner                                     | Responsibility                                                                                                                                                                   |
+| -------------------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Integration interfaces** (dbt/tap/target/singer machinery in FLEXT form) | `flext-meltano`                           | the 3 consumer bases + `c/t/p/m/u` for meltano; 100% domain-agnostic (never references oracle/ldap/…)                                                                            |
+| **Action library** (real connection + execution)                           | `flext-<domain>` (e.g. `flext-db-oracle`) | connection SSOT (`settings.<Domain>.*`), runtime API (`FlextDbOracleApi`), `p.<Domain>.Connection`, type/Singer maps                                                             |
 | **Thin driver**                                                            | `flext-(dbt\|tap\|target)-{domain}`       | declares ONLY the base's one capability (bound to its `u`); reuses `c/t/p/m/u` from BOTH flext-meltano and the action library; declares no connection settings/models of its own |
 
 ### Rules (inviolable for these projects)
@@ -200,7 +200,7 @@ project. Three layers, each with one owner:
 
 ### Uniform connection seam
 
-`connection_profile` is currently dbt-only and dict-typed. Generalize the _type_ (not
+`connection_profile` is currently dbt-only and dict-typed. Generalize the *type* (not
 
 the domain knowledge): add a minimal protocol `p.Meltano.DbtConnectionProfile` (members
 

@@ -74,7 +74,7 @@ Community of 69 nodes
 | test_default_max_lines_is_five                         | Test     | flext-infra/tests/unit/\_utilities/test_log_parser.py        | 85-93   |
 | test_mixed_errors_and_noise                            | Test     | flext-infra/tests/unit/\_utilities/test_log_parser.py        | 103-110 |
 
-_... and 19 more members._
+*... and 19 more members.*
 
 ## Execution Flows
 

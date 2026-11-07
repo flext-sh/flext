@@ -74,7 +74,7 @@ Community of 93 nodes
 | test_explicit_settings_are_the_ones_used                       | Test     | flext-dbt-ldif/tests/unit/test_dbt_client.py                  | 30-33   |
 | test_parse_with_explicit_path_returns_entry_tagged_with_source | Test     | flext-dbt-ldif/tests/unit/test_dbt_client.py                  | 37-45   |
 
-_... and 43 more members._
+*... and 43 more members.*
 
 ## Execution Flows
 

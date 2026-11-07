@@ -136,7 +136,7 @@ nunca limites elevados. Ambiente de produção: budget existe para que CI caiba 
 desenvolvimento; não negociável.
 
 **D4 — Reds estruturais zerados** (ator): namespace 83, loc-cap 5 (config.py 3.695 LOC,
-conform.py 2.986 LOC — _splits obrigatórios pela SUPREME LAW de 1k LOC_), duplication 57
+conform.py 2.986 LOC — *splits obrigatórios pela SUPREME LAW de 1k LOC*), duplication 57
 (`flext-uuhc4`), mypy 38, tier-whitelist 712 violações (`flext-y3qpq.3`). Gatilho de
 absorção: a cada pouso do ator, revalidar gates antes de qualquer nova lane.
 

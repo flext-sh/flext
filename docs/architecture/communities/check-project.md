@@ -74,7 +74,7 @@ Community of 57 nodes
 | test_cli_returns_error_without_discovered_projects          | Test     | flext-infra/tests/unit/check/workspace_tests.py                | 53-58   |
 | test_resolve_gates_with_valid_gates                         | Test     | flext-infra/tests/unit/check/workspace_tests.py                | 97-106  |
 
-_... and 7 more members._
+*... and 7 more members.*
 
 ## Execution Flows
 

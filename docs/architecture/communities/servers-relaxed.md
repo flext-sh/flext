@@ -74,7 +74,7 @@ Community of 61 nodes
 | test_parse_acl_scenarios                        | Test     | flext-ldif/tests/unit/servers/test_relaxed_servers.py | 140-151 |
 | test_write_acl_preserves_raw_content            | Test     | flext-ldif/tests/unit/servers/test_relaxed_servers.py | 153-167 |
 
-_... and 11 more members._
+*... and 11 more members.*
 
 ## Execution Flows
 

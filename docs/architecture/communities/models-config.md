@@ -74,7 +74,7 @@ Community of 55 nodes
 | test_generate_catalog_success                        | Test     | flext-meltano/tests/unit/test_tap_abstractions.py          | 244-260 |
 | test_catalog_entry_structure                         | Test     | flext-meltano/tests/unit/test_tap_abstractions.py          | 262-279 |
 
-_... and 5 more members._
+*... and 5 more members.*
 
 ## Execution Flows
 

@@ -44,7 +44,7 @@
 
 ## Classification decision tree (per bead)
 
-```
+```text
 read title+body
   → does the defect/request still exist in code at 0.12.0-dev tip?
       no  → CLOSED (evidence: the landing commit/PR that resolved it)
@@ -208,7 +208,6 @@ read title+body
   flext-web 6560c1d committed conflict markers healed via canonical gen + runtime proof
   (a9a56f5/f2f51ef). Integration: guarded ladder (SELECTED_PROJECTS, infra WIP guard,
   transient retry) cycling the verbs on the new base; #257 MERGED noted.
-
 - **Security batch (session zcode-lane-A, 2026-09-21晚)** — dual-scanner re-validation:
   - `flext-p57t.12` CLOSED (Mimosa sealed 0 + Semgrep 1.177.0 live 0), `flext-p57t.5`
     CLOSED (live 0), `flext-jbfz` epic CLOSED (17/17 children + SAST merged #292) —

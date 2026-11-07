@@ -74,7 +74,7 @@ Community of 77 nodes
 | test_detect_file_format_fails_for_unknown_extension    | Test     | flext-cli/tests/unit/test_files_cov.py                                       | 41-46   |
 | test_write_then_read_json_round_trips                  | Test     | flext-cli/tests/unit/test_files_cov.py                                       | 64-70   |
 
-_... and 27 more members._
+*... and 27 more members.*
 
 ## Execution Flows
 

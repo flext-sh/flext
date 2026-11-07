@@ -74,7 +74,7 @@ Community of 169 nodes
 | unregister_metric                  | Function | flext-observability/src/flext_observability/services/custom_metrics.py   | 298-327 |
 | resolve_metric                     | Function | flext-observability/src/flext_observability/services/custom_metrics.py   | 330-344 |
 
-_... and 119 more members._
+*... and 119 more members.*
 
 ## Execution Flows
 

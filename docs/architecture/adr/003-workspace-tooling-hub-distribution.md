@@ -155,11 +155,11 @@ arbitrary neighboring environment. No absolute developer path is published.
 
 The editor declaration adds exactly these previously undeclared settings:
 
-| Setting | Approved value | Purpose |
-| --- | --- | --- |
+| Setting                         | Approved value                            | Purpose                                      |
+| ------------------------------- | ----------------------------------------- | -------------------------------------------- |
 | `mypy-type-checker.interpreter` | `["${workspaceFolder}/.venv/bin/python"]` | Bind the extension to the opened environment |
-| `mypy-type-checker.path` | `["${interpreter}", "-m", "mypy"]` | Invoke that environment's module explicitly |
-| `mypy-type-checker.cwd` | `"${nearestConfig}"` | Discover the owning member's configuration |
+| `mypy-type-checker.path`        | `["${interpreter}", "-m", "mypy"]`        | Invoke that environment's module explicitly  |
+| `mypy-type-checker.cwd`         | `"${nearestConfig}"`                      | Discover the owning member's configuration   |
 
 The one-program Pylance workspace contract remains unchanged. Its
 `Pylance + Pyright` diagnostics and environment-selected version remain explicit;

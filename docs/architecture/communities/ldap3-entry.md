@@ -74,7 +74,7 @@ Community of 91 nodes
 | connection                     | Function | flext-ldap/src/flext_ldap/adapters/ldap3.py                      | 62-64   |
 | is_connected                   | Function | flext-ldap/src/flext_ldap/adapters/ldap3.py                      | 67-71   |
 
-_... and 41 more members._
+*... and 41 more members.*
 
 ## Execution Flows
 

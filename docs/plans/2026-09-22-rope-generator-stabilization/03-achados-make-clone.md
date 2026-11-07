@@ -77,7 +77,6 @@ section, and the handoff note.
      serves what alternates lack. The member object stores are shared through
      `${HOME}/flext/.git/modules/<name>` (worktree-linked gitdirs reuse the same
      objects), so all checkout SHAs resolve locally.
-
   3. Verify `git submodule status` in the clone equals the checkpoint recorded by the
      worktree (member SHA list + superproject SHA).
 

@@ -74,7 +74,7 @@ Community of 70 nodes
 | test_format_table_is_idempotent_for_equal_input                 | Test     | flext-cli/tests/unit/test_services_tables_branch_cov.py | 81-90   |
 | test_format_table_rejects_invalid_format_string                 | Test     | flext-cli/tests/unit/test_services_tables_branch_cov.py | 95-102  |
 
-_... and 20 more members._
+*... and 20 more members.*
 
 ## Execution Flows
 

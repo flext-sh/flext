@@ -74,7 +74,7 @@ Community of 129 nodes
 | sample_catalog                      | Function | flext-tap-oracle-wms/tests/conftest.py                   | 85-98   |
 | tap_instance                        | Function | flext-tap-oracle-wms/tests/conftest.py                   | 102-106 |
 
-_... and 79 more members._
+*... and 79 more members.*
 
 ## Execution Flows
 

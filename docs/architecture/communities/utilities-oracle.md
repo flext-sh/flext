@@ -74,7 +74,7 @@ Community of 78 nodes
 | \_create_custom_indexes         | Function | flext-target-oracle/src/flext_target_oracle/\_utilities/loader.py | 455-490 |
 | \_custom_index_columns          | Function | flext-target-oracle/src/flext_target_oracle/\_utilities/loader.py | 493-507 |
 
-_... and 28 more members._
+*... and 28 more members.*
 
 ## Execution Flows
 

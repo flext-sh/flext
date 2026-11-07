@@ -106,13 +106,13 @@ The following previously listed highlights are subjects for validation, not a bl
 delivered-feature list. Record evidence against the exact integrated candidate before
 promoting any row to a release claim:
 
-| Claim to validate | Required evidence |
-| ----------------- | ----------------- |
-| Unified documentation automation owned by `flext-infra` | Canonical docs lifecycle receipts showing generation, build, validation and audit, with the actual repository scope and remaining diagnostics. |
-| GitHub Pages / `docs.flext.sh` publication | Successful deployment tied to the candidate SHA and an independent check of the served site, CNAME/domain routing and public links. A workflow file alone is insufficient. |
-| Workspace docstring uplift, including D401/D417 | Canonical lint and executable-snippet receipts for every claimed project, including examples, scripts and tests; no fleet-wide inference from a sample. |
-| Generated API reference summaries and classifiers | Owner-generated output from the candidate, verified documentation rendering and consistency with the packaged public surface and metadata. |
-| Published code-community documentation | Graph provenance tied to the candidate and verified generated pages, navigation and deployed links; graph or page existence alone is not publication. |
+| Claim to validate                                       | Required evidence                                                                                                                                                          |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unified documentation automation owned by `flext-infra` | Canonical docs lifecycle receipts showing generation, build, validation and audit, with the actual repository scope and remaining diagnostics.                             |
+| GitHub Pages / `docs.flext.sh` publication              | Successful deployment tied to the candidate SHA and an independent check of the served site, CNAME/domain routing and public links. A workflow file alone is insufficient. |
+| Workspace docstring uplift, including D401/D417         | Canonical lint and executable-snippet receipts for every claimed project, including examples, scripts and tests; no fleet-wide inference from a sample.                    |
+| Generated API reference summaries and classifiers       | Owner-generated output from the candidate, verified documentation rendering and consistency with the packaged public surface and metadata.                                 |
+| Published code-community documentation                  | Graph provenance tied to the candidate and verified generated pages, navigation and deployed links; graph or page existence alone is not publication.                      |
 
 Every receipt records the command, working directory, exit status, decisive output,
 candidate identity and covered packages. Link/build checks and real installed-consumer
@@ -124,12 +124,12 @@ edit runs no gates and supplies none of these receipts.
 These changes are **not 0.12 blockers** merely because they are described or accepted
 as future work. They do not excuse failures in the current release contract.
 
-| Forward work | Disposition outside the 0.12 checkpoint |
-| ------------ | -------------------------------------- |
-| Remove root operational aliases or long-name exports; redesign `core` as a typed lazy module namespace | Proposed 0.13 public-contract migration. Requires approved contracts, consumer migration evidence and separate implementation authorization; not an existing 0.12 API. |
-| Reorganize service/DI, registry/dispatcher and settings/config access for the new namespace | Forward 0.13 design. Preserve current caller-scoped runtime and injected dependencies until an authorized, validated cutover. No compatibility layer is introduced by these notes. |
-| Static-consumer documentation mode and generic Office-byte completion | Accepted future work derived from ADR-009's historical 0.20 planning, now targeted to the unified 0.13 plan. Acceptance does not prove completion; existing tooling/adapters are not evidence of the full proposed capability. |
-| New `flext-docs`, `flext-gworkspace`, backup library or neutral artifact-envelope extraction | Preserve ADR-009's rejected, conditional or deferred verdicts. Retargeting does not approve a package or bypass the two-consumer, deletion-positive extraction gate. |
+| Forward work                                                                                           | Disposition outside the 0.12 checkpoint                                                                                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Remove root operational aliases or long-name exports; redesign `core` as a typed lazy module namespace | Proposed 0.13 public-contract migration. Requires approved contracts, consumer migration evidence and separate implementation authorization; not an existing 0.12 API.                                                         |
+| Reorganize service/DI, registry/dispatcher and settings/config access for the new namespace            | Forward 0.13 design. Preserve current caller-scoped runtime and injected dependencies until an authorized, validated cutover. No compatibility layer is introduced by these notes.                                             |
+| Static-consumer documentation mode and generic Office-byte completion                                  | Accepted future work derived from ADR-009's historical 0.20 planning, now targeted to the unified 0.13 plan. Acceptance does not prove completion; existing tooling/adapters are not evidence of the full proposed capability. |
+| New `flext-docs`, `flext-gworkspace`, backup library or neutral artifact-envelope extraction           | Preserve ADR-009's rejected, conditional or deferred verdicts. Retargeting does not approve a package or bypass the two-consumer, deletion-positive extraction gate.                                                           |
 
 See [ADR-009](../architecture/adr/009-ecosystem-coordination-and-library-evaluation.md)
 and the [ADR index](../architecture/adr/README.md) for decision maturity and historical

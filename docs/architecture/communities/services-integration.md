@@ -56,7 +56,7 @@ Community of 106 nodes
 | \_store_and_return_token        | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py    | 404-408 |
 | \_to_api_payload                | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py    | 410-420 |
 | \_validate_token_url            | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py    | 422-426 |
-| FlextOracleOicAuth         | Class    | flext-oracle-oic/src/flext_oracle_oic/services/auth.py | 17-59   |
+| FlextOracleOicAuth              | Class    | flext-oracle-oic/src/flext_oracle_oic/services/auth.py | 17-59   |
 | refresh_auth_token              | Function | flext-oracle-oic/src/flext_oracle_oic/services/auth.py | 20-37   |
 | validate_auth_token             | Function | flext-oracle-oic/src/flext_oracle_oic/services/auth.py | 39-59   |
 | FlextOracleOicServiceBase       | Class    | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 26-276  |
@@ -74,7 +74,7 @@ Community of 106 nodes
 | \_get_or_create_client          | Function | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 175-198 |
 | validate_business_rules         | Function | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 200-241 |
 
-_... and 56 more members._
+*... and 56 more members.*
 
 ## Execution Flows
 
@@ -88,7 +88,7 @@ _... and 56 more members._
 - **execute_file_transfer** (criticality: 0.59, depth: 5)
 - **execute_scheduled_orchestration** (criticality: 0.59, depth: 5)
 - **create_integration** (criticality: 0.56, depth: 5)
-- _... and 1 more flows._
+- *... and 1 more flows.*
 
 ## Dependencies
 

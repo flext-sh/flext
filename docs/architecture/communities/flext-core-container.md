@@ -74,7 +74,7 @@ Community of 203 nodes
 | create                             | Function | flext-core/src/flext_core/context.py   | 130-135 |
 | resolve_container                  | Function | flext-core/src/flext_core/context.py   | 138-143 |
 
-_... and 153 more members._
+*... and 153 more members.*
 
 ## Execution Flows
 

@@ -74,7 +74,7 @@ Community of 71 nodes
 | test_dotted_path_resolves_nested_mapping             | Test     | flext-oracle-wms/tests/unit/test_filtering.py                  | 282-290 |
 | test_dotted_path_falls_back_to_flattened_key         | Test     | flext-oracle-wms/tests/unit/test_filtering.py                  | 292-300 |
 
-_... and 21 more members._
+*... and 21 more members.*
 
 ## Execution Flows
 

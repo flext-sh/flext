@@ -74,7 +74,7 @@ Community of 198 nodes
 | **init**                    | Function | flext-db-oracle/src/flext_db_oracle/services/facade.py      | 27-29   |
 | settings                    | Function | flext-db-oracle/src/flext_db_oracle/services/facade.py      | 33-35   |
 
-_... and 148 more members._
+*... and 148 more members.*
 
 ## Execution Flows
 

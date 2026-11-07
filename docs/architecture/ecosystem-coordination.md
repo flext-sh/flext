@@ -129,14 +129,14 @@ Platform deployment status is planned/conditional until proven by executable evi
 
 ## Open libraries and possible new `flext-*` (gated)
 
-| Candidate                       | Verdict                  | Re-evaluation trigger                                      |
-| ------------------------------- | ------------------------ | ---------------------------------------------------------- |
-| `flext-docs`                    | Rejected                 | Second real consumer + deletion-positive extraction        |
-| `flext-gworkspace`              | Rejected in current form | Deployed DMS owner + neutral Google contract + 2 consumers |
-| Backup shared library           | Not created              | DcBackup primitive proven reusable by a second consumer    |
-| Static-consumer docs mode       | Accepted target, gated   | 0.13 authorization — historical reference `mro-ib6t.1`      |
+| Candidate                       | Verdict                  | Re-evaluation trigger                                                  |
+| ------------------------------- | ------------------------ | ---------------------------------------------------------------------- |
+| `flext-docs`                    | Rejected                 | Second real consumer + deletion-positive extraction                    |
+| `flext-gworkspace`              | Rejected in current form | Deployed DMS owner + neutral Google contract + 2 consumers             |
+| Backup shared library           | Not created              | DcBackup primitive proven reusable by a second consumer                |
+| Static-consumer docs mode       | Accepted target, gated   | 0.13 authorization — historical reference `mro-ib6t.1`                 |
 | Generic Office byte completion  | Accepted target, gated   | 0.13 authorization — historical references `mro-ib6t.2` / `dcdoc-gsnp` |
-| Neutral artifact-envelope model | Deferred                 | Two consumers need the identical neutral contract          |
+| Neutral artifact-envelope model | Deferred                 | Two consumers need the identical neutral contract                      |
 
 ## Project standardization (ADR-010)
 

@@ -109,7 +109,7 @@ contrato CI combina comandos renderizados com etapas derivadas do catálogo; con
 adota os helpers e módulos de teste reorganizados na integração, que já preservam a
 remoção dos campos aposentados. Isso atualiza a base da lane; não comprova pouso dos PRs
 
-# 240/#731
+## 240/#731
 
 A exigência reiterada às 01:00 UTC é trabalhar sobre a tip de integração atual em todos
 os projetos: buscar novamente antes de aplicar os patches preparados e incorporar
@@ -130,7 +130,7 @@ precisam adaptação ao merge infra mais recente e revisão antes da geração/s
 - Preservar todo WIP e resolver fix-forward. Sem reset, restore, checkout destrutivo,
   stash, clean, rebase, force-push ou no-verify.
 
-### Evidências encerradas
+#### Evidências encerradas
 
 | Operação                 | Evidência e limite                                                                                                                                                                                |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -160,7 +160,7 @@ Os relatórios nativos em `.reports/workspace/test/` e `.reports/workspace/check
 mutáveis e devem ser associados à invocação e ao candidato correspondente. Não atribuir
 seus resultados automaticamente ao HEAD atual.
 
-### Patches aplicados depois dos respectivos testes, ainda não validados
+#### Patches aplicados depois dos respectivos testes, ainda não validados
 
 - API: dois testes substituíram `is_str` inexistente pelo contrato `is_=str`.
 - Core: executor dos exemplos passou a `u.Cli.run_raw`, preservando assertions e
@@ -202,7 +202,7 @@ RootModel antes de normalizar. A proposta de alias genérico e testes de TypeAda
 retirada por fix-forward; o reparo final elimina o ramo morto e preserva a entrada
 existente.
 
-### Publicação não é integração
+#### Publicação não é integração
 
 O checkpoint da raiz **`a0d0bd81e8`** publicou o handoff e os gitlinks dos quatro
 membros daquele lote. Entre os checkpoints publicados estão API `f34cfb5c`, core
@@ -222,7 +222,7 @@ PRs de referência: [raiz #240](https://github.com/flext-sh/flext/pull/240),
 atuais antes do pouso; o documento não transforma estado histórico de Draft/OPEN/CLEAN
 em consulta atual.
 
-### Checkpoint dos membros em 2026-09-15 UTC
+#### Checkpoint dos membros em 2026-09-15 UTC
 
 Os 31 membros publicaram os deltas revisados por commits WIP e push FF. O snapshot
 [candidate-publication-20260915.json](candidate-publication-20260915.json) registra
@@ -244,7 +244,7 @@ core. Auth terminou com falhas custom (silent-failure, runtime-census, namespace
 passou. O restante da frota continua em execução; nenhuma contagem final ou integração
 foi obtida.
 
-### Endereços dos 32 PRs de estabilização
+#### Endereços dos 32 PRs de estabilização
 
 Esta tabela é navegação, não atestado de merge ou consulta atual de checks.
 
@@ -288,9 +288,9 @@ LDAP e infra/Target WMS terminaram sem achados de código bloqueantes, condicion
 gates atuais. A revisão identificou documentação de herança em Target Oracle a alinhar.
 Nenhuma revisão afirmou sucesso funcional ou aprovação de CI.
 
-## 2. Falhas operacionais e reparos causais
+### 2. Falhas operacionais e reparos causais
 
-### Core
+#### Core
 
 As três falhas de exemplos foram timeouts de 10 segundos em `process.communicate()`, não
 divergências comprovadas de goldens. O caso de decorator ValueError falhou com avisos de
@@ -304,7 +304,7 @@ custom ou campos inválidos de violações. A correção do executor dos exemplo
 automaticamente a rota Git. Não elevar limites, excluir testes ou mudar goldens para
 esconder o problema. Otimização exige perfil causal.
 
-### Oracle e provisionamento
+#### Oracle e provisionamento
 
 Startup Compose retornou 125 e fixtures converteram falhas em skips. Inspeção histórica
 encontrou Compose instalado pelo mise sem diretório padrão de plugins Docker; isso
@@ -317,7 +317,7 @@ provisionamento real. A retirada de fixture sem consumidor em DBT Oracle não au
 remover infraestrutura de testes que a utilizam. Suites inteiramente puladas não cumprem
 o aceite operacional.
 
-### Infra
+#### Infra
 
 Distinguir defeitos do produto de findings custom excluídos. O teste de checkout tinha
 expectativa obsoleta `gen check (blocking)`; o gerador já emitia ponto fixo por make gen
@@ -328,14 +328,14 @@ As duas falhas de `release/protocol_tests.py` permanecem sem causa determinada p
 execução interrompida. Não inferir timeout, problema de Git ou defeito do protocolo sem
 traceback. Recuperar evidência na próxima rodada canônica.
 
-### Ferramentas padrão
+#### Ferramentas padrão
 
 Ruff, Pyrefly, Pyright, Mypy e testes precisam de rodada no candidato estabilizado. O
 Mypy histórico foi interrompido com teto de 6144 MiB; isso não identifica sozinho a
 causa nem autoriza execução ilimitada. Não reutilizar contagens históricas como
 confirmação de erros ainda presentes ou corrigidos.
 
-## 3. Ordem de execução até o fechamento
+### 3. Ordem de execução até o fechamento
 
 1. Recolher a rodada `make check` 16946 até os 32, classificar as falhas ordinárias e
    corrigir seus owners. As gerações 17490/69562 já terminaram com exit 0; não repetir
@@ -375,7 +375,7 @@ confirmação de erros ainda presentes ou corrigidos.
 9. Manter S0–S8 reconciliado na bead. Cada fatia restante precisa de ciclo completo;
    nenhuma fatia é concluída por este handoff.
 
-## 4. Plano, Beads e fontes
+### 4. Plano, Beads e fontes
 
 Fontes canônicas de planejamento a reler integralmente ao retomar:
 
@@ -414,7 +414,7 @@ antes de agir. A contagem histórica de 19 filhas não é censo atual.
 histórico; ler suas pré-condições antes de usar. Não assumir branches, limpeza ou base
 exata a partir desses scripts.
 
-### Auditoria histórica imutável
+#### Auditoria histórica imutável
 
 A auditoria anterior permanece no
 commit `81873eeff9` (histórico documentado neste README).
@@ -435,7 +435,7 @@ Todos ficam em `docs/plans/2026-09-14-stabilization-handoff/`. A revisão deste 
 confirmou a existência dos sete anexos; não refez consultas remotas ou provas de
 runtime.
 
-## 5. Crítica da execução e correções de método
+### 5. Crítica da execução e correções de método
 
 1. **Preservação excedeu entrega.** A absorção ampla foi autorizada, mas WIP e Draft PRs
    acumularam sem pouso. Publicação não substitui incremento entregue; limitar cada
@@ -474,7 +474,7 @@ runtime.
     também não exigir reparo dos custom checks antes de pouso contra o aceite atual.
     Classificar falhas pelo owner e contrato.
 
-## 6. Reconciliação de S0–S8
+### 6. Reconciliação de S0–S8
 
 | Fatia       | Estado e limite de conclusão                                                                                                                                                                                                                                             |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -499,7 +499,7 @@ apenas porque o pouso exige prova Git; preservar regiões externas byte a byte q
 essa é a fronteira autorizada; não assumir que revisão histórica de branch autoriza sua
 aposentadoria.
 
-## 7. Contribuições históricas e adjudicação pendente
+### 7. Contribuições históricas e adjudicação pendente
 
 Infra #723/#724/#730 foram incorporados na lane; não confundir isso com pouso de #731 em
 dev. #729 foi mergeado externamente pelo operador como `a312043b5`, head `155c52a34`, às

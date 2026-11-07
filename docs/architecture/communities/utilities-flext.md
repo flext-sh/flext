@@ -74,7 +74,7 @@ Community of 590 nodes
 | normalize_registerable_service        | Function | flext-core/src/flext_core/\_runtime/\_container.py                                              | 86-121  |
 | validate_callable_input               | Function | flext-core/src/flext_core/\_runtime/\_container.py                                              | 124-129 |
 
-_... and 540 more members._
+*... and 540 more members.*
 
 ## Execution Flows
 
@@ -88,7 +88,7 @@ _... and 540 more members._
 - **\_parse_try_model** (criticality: 0.57, depth: 1)
 - **validate_metadata_attributes** (criticality: 0.57, depth: 2)
 - **run** (criticality: 0.57, depth: 7)
-- _... and 3 more flows._
+- *... and 3 more flows.*
 
 ## Dependencies
 

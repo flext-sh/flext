@@ -28,7 +28,7 @@ deploy, repin, envio de mensagem ou aceite do ai-hub.
 
 ---
 
-# ai-hub — `.envrc` carregado em toda sessão de agente (pacote para a sessão do ai-hub)
+## ai-hub — `.envrc` carregado em toda sessão de agente (pacote para a sessão do ai-hub)
 
 Origem: bead flext `flext-itpd1.1` (P-1b). Ordem do operador (14/09): o `.envrc` do
 diretório de trabalho deve carregar em **todo** agente, **sempre**, inclusive em git
@@ -36,7 +36,7 @@ worktrees. Sem export manual, sem fallback, sem jeitinho. Este documento é o pa
 execução; a sessão do ai-hub executa numa lane própria do ai-hub com os gates nativos do
 ai-hub.
 
-## 1. Sintoma medido
+### 1. Sintoma medido
 
 - **Onde:** sessão Claude Code (job em background) rodando em
   `~/flext/.claude/worktrees/bugfix+stabilize-0.12.0`.
@@ -51,7 +51,7 @@ ai-hub.
   `templates/host-runtime/bash.rc.sh.j2:23-25` (`eval "$(direnv hook bash)"`) só cobre
   shells interativos.
 
-## 2. Causas (arquivo:linha)
+### 2. Causas (arquivo:linha)
 
 1. **Hooks declarados mas não implantados:** `config/agents.yaml:49-117` declara a
    surface `hooks` do Claude (session-start, subagent-start, stop, stop-failure,
@@ -80,7 +80,7 @@ ai-hub.
 6. **Kilo:** não tem mecanismo. **Codex:** nenhum mecanismo documentado confirmado
    localmente (`shell_environment_policy` é estático).
 
-## 3. Mudança (um dono, sem daemon)
+### 3. Mudança (um dono, sem daemon)
 
 1. **`config/agents.yaml`, engine do Claude:**
     - Declarar a variável do arquivo de ambiente, por exemplo
@@ -110,7 +110,7 @@ ai-hub.
     - A parte do flext-infra (`.envrc.j2` e bootstrap) está sendo feita na sessão flext
       (P-1b/P-1c).
 
-## 3b. Defeito adicional encontrado: projeções de governança commitadas com marcadores
+### 3b. Defeito adicional encontrado: projeções de governança commitadas com marcadores
 
 de conflito
 
@@ -134,7 +134,7 @@ de conflito
   - Prova: `git -C flext-cli grep -c '^<<<<<<< ' HEAD -- .claude .agents` retorna vazio
     após o commit da regeneração.
 
-## 3c. Fronteira flext ↔ ai-hub decidida pelo operador (14/09, atualização)
+### 3c. Fronteira flext ↔ ai-hub decidida pelo operador (14/09, atualização)
 
 - **flext não conhece ai-hub nem Gas City.** Nenhum arquivo, chave, template ou doc do
   flext cita ai-hub/gc.
@@ -163,7 +163,7 @@ de conflito
     flext-infra (não mergeada; modelos ainda carregam `gascity`/endpoint). SHA de merge
     da S2 ainda pendente — enviar após o pouso da S2 completa.
 
-## 4. Aceite (prova em runtime real)
+### 4. Aceite (prova em runtime real)
 
 - **Worktree nova:** sessão Claude Code nova numa worktree nova do flext. O primeiro
   comando Bash mostra `BEADS_DOLT_SERVER_DATABASE=flext` e

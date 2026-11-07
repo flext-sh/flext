@@ -51,13 +51,13 @@ generated artifacts, while preserving the runtime dependency direction
 | immutable invariants                                                      | private constant modules exposed through `c`       |
 | configurable policy/defaults, generation inputs, and repository manifests | validated files under `config/`                    |
 | environment-overridable runtime values                                    | typed `settings.<Namespace>.*` models              |
-| reusable type aliases and constrained annotations                        | the owning `t.<Namespace>` family                  |
-| structural capabilities and dependency ports                             | the owning `p.<Namespace>` family                  |
+| reusable type aliases and constrained annotations                         | the owning `t.<Namespace>` family                  |
+| structural capabilities and dependency ports                              | the owning `p.<Namespace>` family                  |
 | data, model presets and native Pydantic invariants                        | the owning `m.<Namespace>` family                  |
-| algorithms and adapters                                                  | the owning `u.<Namespace>` family                  |
+| algorithms and adapters                                                   | the owning `u.<Namespace>` family                  |
 | generated bodies                                                          | `templates/*.j2` rendered only through `flext-cli` |
-| Python payload validation contracts                                      | their declaring Pydantic models or type adapters   |
-| separately declared document grammars                                    | their owning `schemas/*.schema.json` files         |
+| Python payload validation contracts                                       | their declaring Pydantic models or type adapters   |
+| separately declared document grammars                                     | their owning `schemas/*.schema.json` files         |
 
 Large or derived structures are data-backed and generated; they are not hardcoded as
 Python constant tables. `config` and `settings` are independent typed objects.

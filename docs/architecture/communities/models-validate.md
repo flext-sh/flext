@@ -74,7 +74,7 @@ Community of 75 nodes
 | has_attribute                  | Function | flext-ldif/src/flext_ldif/\_utilities/entry.py          | 64-75    |
 | has_object_class               | Function | flext-ldif/src/flext_ldif/\_utilities/entry.py          | 78-91    |
 
-_... and 25 more members._
+*... and 25 more members.*
 
 ## Execution Flows
 

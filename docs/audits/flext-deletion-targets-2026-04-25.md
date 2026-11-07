@@ -38,7 +38,7 @@ concrete violation lists:
 | --- | ---------------------------------------------------------- | ---------------------------------------------------------- |
 | 1   | `flext-cli/src/flext_cli/_utilities/yaml.py`               | `yaml`                                                     |
 | 2   | `flext-cli/src/flext_cli/typings.py`                       | `yaml`                                                     |
-| 3   | `flext-core/tests/unit/test_enforcement.py`                | `pydantic.warnings` _(test fixture; possibly intentional)_ |
+| 3   | `flext-core/tests/unit/test_enforcement.py`                | `pydantic.warnings` *(test fixture; possibly intentional)* |
 | 4   | `flext-target-oracle-wms/tests/integration/test_oracle.py` | `orjson`                                                   |
 | 5   | `flext-target-oracle-wms/tests/unit/test_workflow.py`      | `orjson`                                                   |
 
@@ -184,7 +184,6 @@ project / one module at a time) — which is the design intent.
     The rewrite is origin-aware: only occurrences whose defining module resolves
     inside the rename catalog's origin package are renamed; homonyms are skipped
     with a warning. Without `--apply` the verb reports without writing.
-
 4. Verify net-negative LOC delta and 0 ruff + 0 pyrefly post-change (verb's safety gate
    enforces this).
 

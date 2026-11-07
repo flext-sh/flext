@@ -31,12 +31,12 @@ dessa infra".
 The trigger: flext-core re-exports the same upstream object from several facade
 families. Measured with ast-grep over the fleet on 2026-10-24:
 
-| Object | Exported by | Consumers |
-| --- | --- | --- |
-| `pydantic.ValidationError` | `c`, `t` (alias), `m` | 200 use `m.ValidationError` |
-| `pydantic.Field` | `m`, `u` | 52 use `u.Field` |
-| `AliasPath`, `AliasChoices`, `StringConstraints`, `Discriminator`, `FailFast`, `SerializeAsAny`, `InstanceOf` | `t`, `m` | 31 use `m.AliasPath`; others 1-6 |
-| validator and serializer decorators, `computed_field` | `m`, `u` | 1-2 each |
+| Object                                                                                                        | Exported by           | Consumers                        |
+| ------------------------------------------------------------------------------------------------------------- | --------------------- | -------------------------------- |
+| `pydantic.ValidationError`                                                                                    | `c`, `t` (alias), `m` | 200 use `m.ValidationError`      |
+| `pydantic.Field`                                                                                              | `m`, `u`              | 52 use `u.Field`                 |
+| `AliasPath`, `AliasChoices`, `StringConstraints`, `Discriminator`, `FailFast`, `SerializeAsAny`, `InstanceOf` | `t`, `m`              | 31 use `m.AliasPath`; others 1-6 |
+| validator and serializer decorators, `computed_field`                                                         | `m`, `u`              | 1-2 each                         |
 
 The import direction (`c → t → p → m → u`, reverse imports `TYPE_CHECKING`-only) is
 already correct; ownership is not. Two owners of one object drift independently and
@@ -57,13 +57,13 @@ make the consumer choose, which is exactly what a facade exists to prevent.
 
 The kind is read from the resolved object, never from its name:
 
-| Kind predicate (on the resolved object) | Owner |
-| --- | --- |
-| subclass of `BaseException`; warning class; sentinel instance; version constant; `StrEnum` subclass | `c` |
-| `TypeAliasType`; `Annotated` metadata marker instance or class used only in annotations | `t` |
-| `typing.Protocol` subclass | `p` |
-| pydantic/pydantic-settings model or settings base; `ConfigDict`; `Field`/`PrivateAttr`; validator/serializer decorators and `Annotated` validator/serializer classes | `m` |
-| any other callable (functions, adapters, factories) | `u` |
+| Kind predicate (on the resolved object)                                                                                                                              | Owner |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| subclass of `BaseException`; warning class; sentinel instance; version constant; `StrEnum` subclass                                                                  | `c`   |
+| `TypeAliasType`; `Annotated` metadata marker instance or class used only in annotations                                                                              | `t`   |
+| `typing.Protocol` subclass                                                                                                                                           | `p`   |
+| pydantic/pydantic-settings model or settings base; `ConfigDict`; `Field`/`PrivateAttr`; validator/serializer decorators and `Annotated` validator/serializer classes | `m`   |
+| any other callable (functions, adapters, factories)                                                                                                                  | `u`   |
 
 - Families and letters come from `u.Infra.facade_families()`.
 - Object identity and alias resolution come from the python-model owner `u.Infra`

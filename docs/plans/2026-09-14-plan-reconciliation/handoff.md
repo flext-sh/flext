@@ -5,7 +5,7 @@ source: Operator requests, repository owners, Beads, native command evidence
 work_item: flext-ro6mj.1
 ---
 
-# Verdict
+## Verdict
 
 <!-- TOC START -->
 
@@ -33,7 +33,7 @@ work_item: flext-ro6mj.1
 
 <!-- TOC END -->
 
-## Active resumption — 2026-09-15T02:06:56Z
+### Active resumption — 2026-09-15T02:06:56Z
 
 The operator requires fix-forward adoption of current work and freshly fetched
 integration tips across every repository. Correct runtime behavior defines acceptance;
@@ -59,7 +59,7 @@ both identify descendant `f3001e5`; consumer functional validation remains pendi
 execution Bead remains `flext-ro6mj.1`, in progress. No collector round trip or corpus
 completion is claimed.
 
-## Current handoff — 2026-09-14T22:57:00Z
+### Current handoff — 2026-09-14T22:57:00Z
 
 The operator requested this handoff now, with integrated and operational PRs. That
 acceptance condition is **not satisfied**. This document delivers the current evidence
@@ -71,7 +71,7 @@ The execution owner is `flext-ro6mj.1` (in progress), under `flext-ro6mj` (open)
 [plan](../2026-09-14-plan-reconciliation.md) and [context index](00-index.md) remain the
 navigation entrypoints. No substitute tracker is created here.
 
-### Published versus integrated
+#### Published versus integrated
 
 - FLEXT root WIP snapshot `5fe704eaae217ae8a93279fe06e80edf666640c4` is published in
   [PR 242](https://github.com/flext-sh/flext/pull/242). Later root documentation and
@@ -89,7 +89,7 @@ navigation entrypoints. No substitute tracker is created here.
   Hub has a newer published WIP cut `77823582f` in
   [PR 776](https://github.com/datacosmos-br/ai-hub/pull/776).
 
-### Latest bounded evidence and first failures
+#### Latest bounded evidence and first failures
 
 | Owner / working directory                                       | Command and result                                                                           | Meaning / next action                                                                                                                                 |
 | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -105,7 +105,7 @@ The operator clarified that Ruff, Pyrefly, Pyright and Mypy remain mandatory; th
 exception concerns other Infra custom Make checks. No functional collection, generation,
 transaction or publication failure is hidden under that exception.
 
-### Resume at the actual causal boundary
+#### Resume at the actual causal boundary
 
 Finish the active producer test failure, checkpoint its exact green source and
 publish/review it. Then validate the installed AI Hub consumer against that producer.
@@ -123,7 +123,7 @@ The handoff/context skills were amended at their canonical `agents` owner; AI Hu
 remains their publisher. These changes improve evidence freshness and navigation, but
 their existence does not demonstrate propagation to FLEXT.
 
-## Earlier audit, retained with corrections
+### Earlier audit, retained with corrections
 
 The requested outcome has not been delivered. Useful source changes and WIP checkpoints
 exist, but no demonstrated end-to-end cycle takes a real plan and its annexes through
@@ -137,7 +137,7 @@ distinguishes direct observations, earlier command results, worker reports, and
 remaining hypotheses. No closed Bead was reopened or closed merely from a source-code
 reading during this audit.
 
-## Authority and requested behavior
+### Authority and requested behavior
 
 The [approved plan](../2026-09-14-plan-reconciliation.md) remains the product contract.
 Success is a simple prompt, “Reconcilie os planos do FLEXT até terminar”, invoking a
@@ -183,7 +183,7 @@ the operator's later fixed-effect direction. Its closed state does not prove tod
 complete docs workflow. `cosmos-e286z` tracks the paused external consumer cut and
 remains in progress.
 
-## Requirement-to-evidence assessment
+### Requirement-to-evidence assessment
 
 | Required outcome                  | What exists                                                             | What remains unproven or absent                                                                   |
 | --------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
@@ -199,9 +199,9 @@ remains in progress.
 | Rope propagation                  | Callback and guarded replacement sources written                        | Last `make mod` failed before callback; necessary callsites remain unmigrated                     |
 | Integration of complete increment | Multiple published checkpoints and Draft PRs                            | No green native round, independent approval or post-merge proof for this increment                |
 
-## Deep critique of execution
+### Deep critique of execution
 
-### Blocker: implementation risk displaced the user-visible slice
+#### Blocker: implementation risk displaced the user-visible slice
 
 The work expanded across transaction capabilities, Rope/codemod repair, package resource
 schemas, parser redesign, SDK resource gates, and serialization. Some are legitimate
@@ -216,7 +216,7 @@ acceptance failure, and finish producers before consumers. Do not start another 
 plan or unrelated repair campaign. Required red gates remain real defects, but every
 repair must state its causal link and bounded stop condition.
 
-### Blocker: source discovery was mistaken for adapter readiness
+#### Blocker: source discovery was mistaken for adapter readiness
 
 Finding a provider directory or writing a pure parser does not authenticate a session,
 establish project association, include every annex, or safely publish derived content.
@@ -231,7 +231,7 @@ adapter/driver/schema version, not just unchanged bytes. Prove source renames,
 overlapping roots, attachment links and retired revisions cannot duplicate or revive an
 already adjudicated plan.
 
-### Blocker: cross-repository contracts were changed out of landing order
+#### Blocker: cross-repository contracts were changed out of landing order
 
 At the preservation snapshot, AI Hub consumed `SkillRecord.resources`, while its
 dependency was still `agents-governance` from `agents@dev`; the corresponding producer
@@ -250,7 +250,7 @@ dependency/setup/generation paths, and validate installed artifacts before deplo
 Do not use editable imports, PYTHONPATH, handwritten projections or test changes that
 freeze incorrect defaults to disguise the broken boundary.
 
-### Major: safety machinery is written but not demonstrated
+#### Major: safety machinery is written but not demonstrated
 
 Exact bytes/mode/identity comparisons, external leases and absent-parent witnesses are
 justified for home publication. They also expand the critical failure surface. Tests
@@ -264,7 +264,7 @@ second run; then concurrent edit, symlink/traversal, missing ancestor, interrupt
 recovery and failed-publication residue tests through native owners. Do not expose the
 operator's home corpus to an unproven transaction.
 
-### Major: historical gate and PR evidence became stale
+#### Major: historical gate and PR evidence became stale
 
 Earlier `agents` checks passed before parser/resource-policy changes. AI Hub's 67
 passing tests did not reach the new publisher tests. A merged old PR does not mean later
@@ -277,7 +277,7 @@ ancestry proof, preserve all member work, and never blindly commit older member 
 over a newer integrated root. WIP publication and reviewed functional integration are
 different outcomes.
 
-### Major: the active task became a multi-repository mega-lane
+#### Major: the active task became a multi-repository mega-lane
 
 `flext-ro6mj.1` accumulated collection, fixed Make, governance distribution, transaction
 repair, resource packaging and inherited migrations. A long note stream preserved
@@ -290,7 +290,7 @@ prerequisite work under the same epic, without inventing duplicate trackers or f
 closing the active acceptance contract. Do not mass-change historic Beads based on this
 audit; their four-source verification remains work.
 
-### Major: orchestration needs stronger boundaries
+#### Major: orchestration needs stronger boundaries
 
 Parallel workers usefully found owner defects and preserved WIP, but concurrent
 producer/consumer editing made test applicability and checkpoint ownership hard to
@@ -304,7 +304,7 @@ receive disjoint paths and a concrete stop condition. Reviews report what was ac
 executed, not merely tests added. Preserve another actor's work in separate
 attributed-as-adopted WIP when necessary.
 
-## Retain these sound choices
+### Retain these sound choices
 
 Keep the approved storage and sequencing decisions; source-owned generators; the
 existing transaction and callback loop rather than a second publisher; explicit external
@@ -313,7 +313,7 @@ all-status Beads verification; oldest scoped ADR identity; and Draft WIP preserv
 without force-push. Do not restart from scratch or delete working changes because the
 overall increment remains incomplete.
 
-## Implementation cursor and source map
+### Implementation cursor and source map
 
 Primary worktree: `~/flext-worktrees/plan-reconciliation`, branch
 `feature/plan-reconciliation`. Infra member: `fix/plan-reconciliation-make-contract`.
@@ -349,7 +349,7 @@ Canonical owners and exact investigation entrypoints:
   Cosmos consumer annotation work. Preserve separately and revalidate; no fleet
   serialization completion claim.
 
-## Native evidence ledger for this handoff only
+### Native evidence ledger for this handoff only
 
 This is an immutable audit snapshot, not another tracker. Detailed earlier evidence
 remains in `flext-ro6mj.1` notes and native reports.
@@ -379,7 +379,7 @@ lifecycle/message typing; no suppression was introduced. Artifact packaging does
 prove binary/mode fidelity. The resource policy also needs scrutiny for duplicate
 identities and mutable override exposure.
 
-## Ordered resumption contract
+### Ordered resumption contract
 
 1. Read this package and Beads, inspect current Git/PR state, and preserve all WIP. No
    new lane or tracker. Confirm the active task remains `flext-ro6mj.1`.
@@ -417,7 +417,7 @@ not widen into the paused serialization campaign unless a concrete native accept
 failure requires its owner correction. No completion claim from a Draft PR, test count,
 source search, package build, or another actor's merge.
 
-## Publication receipts
+### Publication receipts
 
 WIP preservation is authorized even with red functional gates; it is not merge approval.
 Root PR242 and agents PR148 are Draft/WIP. AI Hub's new PR774 preserves commits not

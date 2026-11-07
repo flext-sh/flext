@@ -3,7 +3,7 @@ title: Beads reconciliation boundary
 updated_at: 2026-09-25T17:27:00Z
 ---
 
-# Beads reconciliation boundary
+## Beads reconciliation boundary
 
 This is the dated 2026-09-25 boundary, not a claim about the current tracker.
 `${HOME}` denotes the recorded operator home directory; path suffixes, database

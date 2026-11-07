@@ -74,7 +74,7 @@ Community of 88 nodes
 | list_running_executions      | Function | flext-plugin/src/flext_plugin/\_utilities/plugin_platform.py | 480-488 |
 | resolve_plugin_active        | Function | flext-plugin/src/flext_plugin/\_utilities/plugin_platform.py | 490-493 |
 
-_... and 38 more members._
+*... and 38 more members.*
 
 ## Execution Flows
 

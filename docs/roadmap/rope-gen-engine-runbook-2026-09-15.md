@@ -35,7 +35,7 @@
 | Auto-fixable findings (rel-import self-import, etc.)          | `make fix` (rope via engine)                                                                                                            | fix corrects, never suppresses                                                    |
 | Reporting of remaining findings                               | `make check`                                                                                                                            | detectors never disabled; no silent success                                       |
 | Ad-hoc structural moves                                       | `make mod`                                                                                                                              | consumes the same Rope primitives; one engine                                     |
-| Config/rules surface                                          | `flext-infra/src/flext_infra/config/codegen.yaml` and the owning typed rule configuration                                                | rules-as-data; no exception that hides an in-scope defect                         |
+| Config/rules surface                                          | `flext-infra/src/flext_infra/config/codegen.yaml` and the owning typed rule configuration                                               | rules-as-data; no exception that hides an in-scope defect                         |
 | Render inputs                                                 | SSOT + templates + PINS only                                                                                                            | any environment input in render = P0 defect                                       |
 | Landing                                                       | coordinator: reviewed merge commits into the verified integration branch, expected `0.12.0-dev`; members published before root gitlinks | no administrative bypass; local green or mergeability is not integrated proof     |
 
@@ -65,7 +65,7 @@
 
 ## 4. Transaction loop per repository
 
-```
+```text
 snapshot (input-CAS, authenticated)
  → plan EVERYTHING (pyproject, templates, mise, lazy-init, docs) — ONE rope project per
  repo

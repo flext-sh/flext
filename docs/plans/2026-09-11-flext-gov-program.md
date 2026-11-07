@@ -51,7 +51,7 @@ por tópico: lei de consumo = `docs/standards/consumption-law.md`
   realidade medida (comando/cwd/exit/output), (4) código integrado.
   **Nenhum bead fecha com WIP não pousado** — lição aplicada ao F1.
 
-## Snapshot (_commits_ e estados, 2026-09-11 13:10)
+## Snapshot (*commits* e estados, 2026-09-11 13:10)
 
 STATUS LEGENDA: ◐ = `in_progress` no registro bd · ○ = `open` · ✓ = `closed` Fonte da
 verdade dos status: `bd list` (não o texto deste plano — qualquer divergência é erro
