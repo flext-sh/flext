@@ -74,7 +74,7 @@ Community of 98 nodes
 | test_authenticate_is_idempotent                           | Test     | flext-oracle-wms/tests/unit/test_authentication_core.py | 167-176 |
 | test_authenticate_failure_carries_specific_error          | Test     | flext-oracle-wms/tests/unit/test_authentication_core.py | 203-210 |
 
-_... and 48 more members._
+*... and 48 more members.*
 
 ## Execution Flows
 

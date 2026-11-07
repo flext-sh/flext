@@ -69,12 +69,12 @@ Community of 92 nodes
 | test_compose_resolves_relative_file_against_repository_root | Test     | flext-tests/tests/integration/test_docker_integration.py | 77-86   |
 | test_sibling_compose_files_use_distinct_projects            | Test     | flext-tests/tests/integration/test_docker_integration.py | 88-109  |
 | test_compose_preserves_absolute_file_unchanged              | Test     | flext-tests/tests/integration/test_docker_integration.py | 111-120 |
-| test_compose_builder_resolves_target_config                 | Test     | flext-tests/tests/unit/\_docker/builders.py        | 42-54   |
-| test_stack_builder_resolves_target_config                   | Test     | flext-tests/tests/unit/\_docker/builders.py        | 56-69   |
-| test_stack_builder_allows_stack_only_target                 | Test     | flext-tests/tests/unit/\_docker/builders.py        | 71-80   |
-| test_compose_up_returns_flext_result                        | Test     | flext-tests/tests/unit/\_docker/operations.py      | 18-25   |
+| test_compose_builder_resolves_target_config                 | Test     | flext-tests/tests/unit/\_docker/builders.py              | 42-54   |
+| test_stack_builder_resolves_target_config                   | Test     | flext-tests/tests/unit/\_docker/builders.py              | 56-69   |
+| test_stack_builder_allows_stack_only_target                 | Test     | flext-tests/tests/unit/\_docker/builders.py              | 71-80   |
+| test_compose_up_returns_flext_result                        | Test     | flext-tests/tests/unit/\_docker/operations.py            | 18-25   |
 
-_... and 42 more members._
+*... and 42 more members.*
 
 ## Execution Flows
 

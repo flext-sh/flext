@@ -49,13 +49,13 @@ import exception, or invoke a second cold generator.
 
 The five approved batches remain open:
 
-| Batch | Intended result | Current qualification |
-| --- | --- | --- |
-| Stabilization and editable setup | Real Make paths and authenticated physical environments | Blocked by bootstrap; source repairs exist |
-| Existing automation pilot | AI Hub `require_prepared` transfer to `u.Cli.verify_guarded_directory_chain` | Full consumer cutover and runtime unproved |
-| Native Rope completion | Remove Infra AST/LibCST, duplicate analyses and fallbacks | Native and legacy paths still coexist |
-| Semantic standardization | Names, domains, nesting, imports and model/protocol contracts | Automation repairs and source moves remain unqualified |
-| Templates and consumers | One declared owner per output and full scenario matrix | Full generation and propagation unproved |
+| Batch                            | Intended result                                                              | Current qualification                                  |
+| -------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Stabilization and editable setup | Real Make paths and authenticated physical environments                      | Blocked by bootstrap; source repairs exist             |
+| Existing automation pilot        | AI Hub `require_prepared` transfer to `u.Cli.verify_guarded_directory_chain` | Full consumer cutover and runtime unproved             |
+| Native Rope completion           | Remove Infra AST/LibCST, duplicate analyses and fallbacks                    | Native and legacy paths still coexist                  |
+| Semantic standardization         | Names, domains, nesting, imports and model/protocol contracts                | Automation repairs and source moves remain unqualified |
+| Templates and consumers          | One declared owner per output and full scenario matrix                       | Full generation and propagation unproved               |
 
 The AI Hub ownership-transfer pilot was explicitly approved in the resumed plan.
 It precedes that plan's earlier peripheral rollout. Preserve the additional
@@ -180,20 +180,20 @@ Do not publish a stub or copy the reader into callers. `DeploymentReceipt` and
 
 ## Source repairs adopted, not globally qualified
 
-| Owner | Source change | Limit of current evidence |
-| --- | --- | --- |
-| Protocol projection | Native attribute bindings reused; aliases canonicalized; ambiguity/collision return Result; failure precedes retirement | Independent source review approved; new public Result caller test still awaits real runtime |
-| Workspace detector | Reuse admitted distribution and verify original local snapshots instead of reparsing root metadata | Source reviewed; no measured total speedup |
-| Make documentation | Existing guide matrix/test section derives from the typed Make catalog and one existing-template-family renderer | Full generation/convergence unproved |
-| DocScope | Removed tuple-of-FieldInfo default defect | Source repair; full generator unproved |
-| Mise activation | `.envrc.j2` adds command-local `MISE_LOCKED=1` to `mise env` | Generated activation and cold behavior unproved |
-| Setup | Frozen install followed by declared bootstrap requirements and fresh editable selector, with authenticated sources | Consumer physical origins still require proof |
-| Gen control | Metadata/bootstrap before Python, same publisher, prepared plans, cohort hooks and native failed-repository IDs | Final blocked-dependent handling and runtime need review |
-| Semantic publication | Readset transport and plan composer preserve original inputs, including projection-only effects | Source review; no runtime qualification |
-| SDK MRO | One native C3 pass; no DFS approximation/retry; unresolved order not cached | Source review; no full fleet qualification |
-| SDK version guards | Proven native import-only runtime-version branch, preserving unknown conditions | Source review; full consumer acceptance open |
-| Core Result / MOD | Explicit exception policy and cancellation preservation in existing primitives | Some runtime reached wrappers; operation incomplete |
-| Composition predicate | Per-module native query and early negative result at moved `_codemod/project.py` | Source and guide reviewed; post-change replay blocked before CLI |
+| Owner                 | Source change                                                                                                           | Limit of current evidence                                                                   |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Protocol projection   | Native attribute bindings reused; aliases canonicalized; ambiguity/collision return Result; failure precedes retirement | Independent source review approved; new public Result caller test still awaits real runtime |
+| Workspace detector    | Reuse admitted distribution and verify original local snapshots instead of reparsing root metadata                      | Source reviewed; no measured total speedup                                                  |
+| Make documentation    | Existing guide matrix/test section derives from the typed Make catalog and one existing-template-family renderer        | Full generation/convergence unproved                                                        |
+| DocScope              | Removed tuple-of-FieldInfo default defect                                                                               | Source repair; full generator unproved                                                      |
+| Mise activation       | `.envrc.j2` adds command-local `MISE_LOCKED=1` to `mise env`                                                            | Generated activation and cold behavior unproved                                             |
+| Setup                 | Frozen install followed by declared bootstrap requirements and fresh editable selector, with authenticated sources      | Consumer physical origins still require proof                                               |
+| Gen control           | Metadata/bootstrap before Python, same publisher, prepared plans, cohort hooks and native failed-repository IDs         | Final blocked-dependent handling and runtime need review                                    |
+| Semantic publication  | Readset transport and plan composer preserve original inputs, including projection-only effects                         | Source review; no runtime qualification                                                     |
+| SDK MRO               | One native C3 pass; no DFS approximation/retry; unresolved order not cached                                             | Source review; no full fleet qualification                                                  |
+| SDK version guards    | Proven native import-only runtime-version branch, preserving unknown conditions                                         | Source review; full consumer acceptance open                                                |
+| Core Result / MOD     | Explicit exception policy and cancellation preservation in existing primitives                                          | Some runtime reached wrappers; operation incomplete                                         |
+| Composition predicate | Per-module native query and early negative result at moved `_codemod/project.py`                                        | Source and guide reviewed; post-change replay blocked before CLI                            |
 
 The protocol source cut touched `protocol_model_sources`, `render`, `_inventory`
 and `_inventory_models` in `_utilities/protocol_models.py`, and its single source
@@ -208,16 +208,16 @@ Profiling captures are owner-thread wall timing, not worker CPU, whole-operation
 acceptance or automatically comparable populations. `partial=False` does not mean
 the command completed successfully.
 
-| Session | Canonical invocation and bound | Actual result |
-| --- | --- | --- |
-| 67033 | `make help`, direnv, TERM 58 + KILL 2 | Exit 0; exposed stale `tests-full` help text despite corrected catalog |
-| 53387 | `make gen FLEXT_INFRA_PROFILE=true`, direnv, INT 48 + KILL 12 | Exit 124; 32 selected; Root lazy 6.690 s, then API lazy; no managed/final publication proof |
-| API member attempt | `direnv exec <flext-api> make -C flext-api gen CI=Y` | Exit 1 before Make: member `.envrc` blocked |
-| 21712 | `make -f flext-api/Makefile gen CI=Y FLEXT_INFRA_PROFILE=true`, Root direnv, INT 48 + KILL 12 | Exit 124; actual root API, scope self, one repository; managed protocol inventory reached |
-| 35308, peer receipt | `make mod`, direnv, TERM 58 + KILL 2 | Exit 124; `requested_utilities` completed without former Generic failure; operation incomplete |
-| 28107, peer receipt | `make mod FLEXT_INFRA_PROFILE=true`, direnv, INT 48 + KILL 12 | Exit 124; 41.944 s capture; layout/composition hot path; no full refactor |
-| 95987, peer receipt | Same profiled MOD entry | Exit 2 before CLI: missing `_protocols.runtime`; no post-change profile |
-| DBT-LDIF, peer receipt | `make gen` from member, TERM 58 + KILL 2 | Exit 1 before Make; direnv blocked and credentials source missing; no pilot publication |
+| Session                | Canonical invocation and bound                                                                | Actual result                                                                                  |
+| ---------------------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| 67033                  | `make help`, direnv, TERM 58 + KILL 2                                                         | Exit 0; exposed stale `tests-full` help text despite corrected catalog                         |
+| 53387                  | `make gen FLEXT_INFRA_PROFILE=true`, direnv, INT 48 + KILL 12                                 | Exit 124; 32 selected; Root lazy 6.690 s, then API lazy; no managed/final publication proof    |
+| API member attempt     | `direnv exec <flext-api> make -C flext-api gen CI=Y`                                          | Exit 1 before Make: member `.envrc` blocked                                                    |
+| 21712                  | `make -f flext-api/Makefile gen CI=Y FLEXT_INFRA_PROFILE=true`, Root direnv, INT 48 + KILL 12 | Exit 124; actual root API, scope self, one repository; managed protocol inventory reached      |
+| 35308, peer receipt    | `make mod`, direnv, TERM 58 + KILL 2                                                          | Exit 124; `requested_utilities` completed without former Generic failure; operation incomplete |
+| 28107, peer receipt    | `make mod FLEXT_INFRA_PROFILE=true`, direnv, INT 48 + KILL 12                                 | Exit 124; 41.944 s capture; layout/composition hot path; no full refactor                      |
+| 95987, peer receipt    | Same profiled MOD entry                                                                       | Exit 2 before CLI: missing `_protocols.runtime`; no post-change profile                        |
+| DBT-LDIF, peer receipt | `make gen` from member, TERM 58 + KILL 2                                                      | Exit 1 before Make; direnv blocked and credentials source missing; no pilot publication        |
 
 Persistent locators:
 
@@ -245,14 +245,14 @@ just this snapshot. No Make from this chat remained running at handoff. Peer
 cursors reported no active Make at capture; obtain a fresh START/END handoff
 before launching a new heavy command.
 
-| Chat / Bead | Responsibility |
-| --- | --- |
-| `01a169f6-6f88-7290-993a-ce570830902a`, `flext-9t6gn` | Original campaign, independent review, Root/API generation and this handoff |
-| `01a18299-c89c-7640-80ec-c72894daa59f`, `flext-vjj1s.8` | Unique bootstrap writer; setup/editable installs; control helper/execute/conform; prefix candidates and CAS composition |
-| `01a1827e-4146-7a23-80f7-1463b40c7d6c`, `flext-u9h2i` | Dirty Rope SDK, MRO/version guard/MoveMethod; Core Result/MOD; composition predicate |
-| `01a18a11-80aa-7b90-8958-d6788ce6468a` | Facade DSL, existing renderer/templates, native-cutover adapters; plan outcomes/publication and blocked-control consumers |
-| `01a1826e-a543-7873-bb13-3454a45b7e53`, `aihub-6sls5.1` | AI Hub application, environment/credentials, hook/JSONC/reader consumers; no competing Infra installer |
-| `01a18502-adf4-7b72-8a71-cf98b88afdda`, `aihub-6sls5.2` | Canonical governance, plan collector, existing tracker/receipt transport and projection delivery |
+| Chat / Bead                                             | Responsibility                                                                                                            |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `01a169f6-6f88-7290-993a-ce570830902a`, `flext-9t6gn`   | Original campaign, independent review, Root/API generation and this handoff                                               |
+| `01a18299-c89c-7640-80ec-c72894daa59f`, `flext-vjj1s.8` | Unique bootstrap writer; setup/editable installs; control helper/execute/conform; prefix candidates and CAS composition   |
+| `01a1827e-4146-7a23-80f7-1463b40c7d6c`, `flext-u9h2i`   | Dirty Rope SDK, MRO/version guard/MoveMethod; Core Result/MOD; composition predicate                                      |
+| `01a18a11-80aa-7b90-8958-d6788ce6468a`                  | Facade DSL, existing renderer/templates, native-cutover adapters; plan outcomes/publication and blocked-control consumers |
+| `01a1826e-a543-7873-bb13-3454a45b7e53`, `aihub-6sls5.1` | AI Hub application, environment/credentials, hook/JSONC/reader consumers; no competing Infra installer                    |
+| `01a18502-adf4-7b72-8a71-cf98b88afdda`, `aihub-6sls5.2` | Canonical governance, plan collector, existing tracker/receipt transport and projection delivery                          |
 
 The Main actor also had an active `imports.py` Result producer/consumer cut and
 template-render-context changes. Consume their SourceEND before evaluating that

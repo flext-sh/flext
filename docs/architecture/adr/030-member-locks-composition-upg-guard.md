@@ -82,13 +82,13 @@ The planned removal of member `uv.lock` files is cancelled.
 
 ## Lock formation and composition
 
-| Context | Who forms the lock | What the lock binds |
-| --- | --- | --- |
-| Member inside the workspace | the member, from its own declarations | its declared internal Git requirements, pinned by exact SHA |
-| Workspace root | the root, composing the member locks | every member at the committed gitlink SHA plus the composed third-party resolution |
-| Standalone FLEXT checkout | the checkout itself | the internal requirements it declares, pinned by exact SHA |
-| Installed as a package (pip, non-editable) | not applicable | the consumer's `uv.lock` follows what it is bound to |
-| Standalone with an external editable `.venv` | the standalone consumer | the external project's committed SHA, recorded through the consumer's committed gitlinks |
+| Context                                      | Who forms the lock                    | What the lock binds                                                                      |
+| -------------------------------------------- | ------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Member inside the workspace                  | the member, from its own declarations | its declared internal Git requirements, pinned by exact SHA                              |
+| Workspace root                               | the root, composing the member locks  | every member at the committed gitlink SHA plus the composed third-party resolution       |
+| Standalone FLEXT checkout                    | the checkout itself                   | the internal requirements it declares, pinned by exact SHA                               |
+| Installed as a package (pip, non-editable)   | not applicable                        | the consumer's `uv.lock` follows what it is bound to                                     |
+| Standalone with an external editable `.venv` | the standalone consumer               | the external project's committed SHA, recorded through the consumer's committed gitlinks |
 
 Remote CI installs the committed locks frozen and never relocks (tracker memory
 `operator-ruling-2026-10-24-ci-frozen-homologated-locks`). Member CI therefore

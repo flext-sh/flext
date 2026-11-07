@@ -74,7 +74,7 @@ Community of 92 nodes
 | test_execute_propagates_validation_failure                   | Test     | flext-core/tests/unit/test_handlers_factory.py  | 150-159 |
 | test_dispatch_message_runs_pipeline_to_success               | Test     | flext-core/tests/unit/test_handlers_factory.py  | 172-186 |
 
-_... and 42 more members._
+*... and 42 more members.*
 
 ## Execution Flows
 

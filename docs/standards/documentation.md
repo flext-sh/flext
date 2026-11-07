@@ -55,8 +55,8 @@ behavior rules as source code. The documentation auditor recursively enforces th
 contract over live `docs/guides/` and `docs/standards/` sources. The accepted embedded-
 code decision is linked here:
 
-| Documentation declaration | Accepted decision |
-| --- | --- |
+| Documentation declaration                                      | Accepted decision                                                                                                               |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | Examples receive the same rules and validation as source code. | [FLEXT ADR-028 Decision 9](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-9) |
 
 Historical exclusions

@@ -29,7 +29,7 @@ Community of 290 nodes
 | get                                     | Function | flext-infra/src/flext_infra/check/workspace_check_gates.py                | 95-97   |
 | create                                  | Function | flext-infra/src/flext_infra/check/workspace_check_gates.py                | 99-106  |
 | default                                 | Function | flext-infra/src/flext_infra/check/workspace_check_gates.py                | 109-111 |
-| FlextInfraWorkspaceCheckGates      | Class    | flext-infra/src/flext_infra/check/workspace_check_gates.py                | 114-336 |
+| FlextInfraWorkspaceCheckGates           | Class    | flext-infra/src/flext_infra/check/workspace_check_gates.py                | 114-336 |
 | \_isolate_context                       | Function | flext-infra/src/flext_infra/check/workspace_check_gates.py                | 122-134 |
 | \_run_single_project                    | Function | flext-infra/src/flext_infra/check/workspace_check_gates.py                | 136-164 |
 | \_run_project_loop                      | Function | flext-infra/src/flext_infra/check/workspace_check_gates.py                | 166-198 |
@@ -74,7 +74,7 @@ Community of 290 nodes
 | **init**                                | Function | flext-infra/src/flext_infra/fixers/gate_fixer.py                          | 32-34   |
 | \_registry                              | Function | flext-infra/src/flext_infra/fixers/gate_fixer.py                          | 36-38   |
 
-_... and 240 more members._
+*... and 240 more members.*
 
 ## Execution Flows
 

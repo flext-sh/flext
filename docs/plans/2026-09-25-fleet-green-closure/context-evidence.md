@@ -3,7 +3,7 @@ title: Measured context and evidence
 updated_at: 2026-09-25T17:27:00Z
 ---
 
-# Measured context and evidence
+## Measured context and evidence
 
 All measurements below belong to the dated 2026-09-25 candidate, not the current
 tree. `${HOME}` denotes the recorded operator home directory; path suffixes,
@@ -18,7 +18,7 @@ SHAs, counts, and exit evidence are preserved.
 
 <!-- TOC END -->
 
-## `flext-infra` current slice
+### `flext-infra` current slice
 
 The working tree contains the uncommitted test-convergence slice on top of published
 commit `44b3381eaca295eeba280142572f62770a691381`. Its substantive behavior is:
@@ -50,7 +50,7 @@ Of its 221 red results, 184 were caused by fixtures copying the deliberately rem
 `mise.lock`; the remainder covered real timeout duplication and contract mismatches. The
 present batch targets all of them. Do not use the interrupted later run as proof.
 
-## Latest valid local gates
+### Latest valid local gates
 
 All commands below ran in the active `flext-infra` lane:
 
@@ -69,7 +69,7 @@ codemod, boundary, namespace and runtime-census. Their authority is
 `flext-itpd1.3 / operator 2026-09-24 / flext-xp6ec`; do not silently add, remove or
 reinterpret them.
 
-## Downstream lanes preserved
+### Downstream lanes preserved
 
 `flext-cli` lives at
 `${HOME}/fleet-closure-lanes/cli-atomic-interrupt-20260925/flext-cli`, branch
@@ -88,7 +88,7 @@ manually.
 work plus generated and test changes. `.beads.gate.lock` is untracked execution residue
 and must never be staged.
 
-## Handoff package lane
+### Handoff package lane
 
 This package was created in the dedicated superproject worktree
 `${HOME}/fleet-closure-lanes/session-handoff-20260925`, branch

@@ -6,7 +6,7 @@ status: Approved
 work_item: flext-ro6mj
 ---
 
-# Plan reconciliation and fixed Make contracts
+## Plan reconciliation and fixed Make contracts
 
 <!-- TOC START -->
 
@@ -21,7 +21,7 @@ work_item: flext-ro6mj
 
 <!-- TOC END -->
 
-## Audit and handoff amendment
+### Audit and handoff amendment
 
 Operator amendment, recorded 2026-09-15T01:08:46Z: continue by adopting the current
 published tip and repairing forward. Existing integration is input to the continuation,
@@ -49,7 +49,7 @@ changes the immediate activity, not the approved product acceptance below. The
 automation increment and full reconciliation remain incomplete; Beads owns their live
 state. No historical pass or merged earlier PR validates later WIP.
 
-## Approved outcome
+### Approved outcome
 
 Publish one reusable workflow, invoked by “Reconcilie os planos do FLEXT até terminar”,
 through canonical agents governance and AI Hub distribution. Collect FLEXT plans and
@@ -62,7 +62,7 @@ not duplicate the tracker. Functional implementation discovered during reconcili
 remains accurately tracked without expanding this documentary cycle. Implementing the
 collector and workflow is explicitly in scope.
 
-## Sequential delivery
+### Sequential delivery
 
 1. Deliver the usable automation increment: fixed Make effects, the governance workflow
    distributed through AI Hub, and the incremental collector integrated with the
@@ -81,7 +81,7 @@ The active first increment is `flext-ro6mj.1`. Related prior work includes `flex
 `flext-im2my`, `flext-5mgye`, and `flext-xeg9x`; historical claims must be revalidated
 rather than inherited as proof.
 
-## Fixed Make contract
+### Fixed Make contract
 
 Each public verb performs its fixed operation without an effect token, mode selector, or
 validation of retired parameters. Remove the former `APPLY` mechanism, derived
@@ -93,7 +93,7 @@ retain their own validation responsibilities. Preserve content, environment, and
 integrity validation. Change sources and regenerate projections instead of editing
 generated Makefiles.
 
-## Governance ownership and distribution
+### Governance ownership and distribution
 
 `agents` owns generic rules, skills, commands, their supporting resources, and semantic
 evaluations. Reconcile the existing documentation, architecture, Beads, Make, handoff,
@@ -114,7 +114,7 @@ projection root explicitly without weakening destination-boundary checks. Import
 existing home plans before publishing, and treat later home edits as incoming revisions
 rather than silently overwriting them.
 
-## Collection contract
+### Collection contract
 
 Inventory workspace and member documents, earlier home-directory plans, OMO, Sisyphus,
 OpenCode, Codex, VS Code, Claude, Poolside, and Kimi. Include relevant historical
@@ -135,7 +135,7 @@ performs those evidence-backed decisions. Missing source access prevents claimin
 complete coverage. Provider extraction is automatic through its declared owner, never a
 manual-export prerequisite. Collection provenance is not a second execution tracker.
 
-## Reconciliation and ADR consolidation
+### Reconciliation and ADR consolidation
 
 For every plan, compare its orientations with newer decisions, registered records,
 current integrated code, measured behavior, documentation, ADRs, commits, PRs, and
@@ -160,7 +160,7 @@ preserving useful evidence and repairing references. Record its successor and
 disposition in Beads so collection cannot recreate that revision. Do not delete complete
 sessions or rewrite Git history.
 
-## Execution boundary and acceptance
+### Execution boundary and acceptance
 
 Use `direnv exec` in the appropriate checkout. The operator authorized manual tracker
 and integration work while rigs remain suspended, then required a separate FLEXT

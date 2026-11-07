@@ -74,7 +74,7 @@ Community of 60 nodes
 | runtime_dir                | Function | flext-core/src/flext_core/\_settings.py | 416-432 |
 | \_validate_settings        | Function | flext-core/src/flext_core/\_settings.py | 435-439 |
 
-_... and 10 more members._
+*... and 10 more members.*
 
 ## Execution Flows
 

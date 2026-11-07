@@ -3,7 +3,7 @@ title: Resumption contract
 updated_at: 2026-09-25T17:27:00Z
 ---
 
-# Resumption contract
+## Resumption contract
 
 This is the dated 2026-09-25 contract, not current authorization. `${HOME}`
 denotes the recorded operator home directory; suffixes, revisions, and evidence
@@ -26,7 +26,7 @@ ${HOME}/fleet-closure-lanes/infra-convergence-20260925/flext-infra
 Its branch is `fix/infra-green-convergence-20260925`; its open draft PR is
 <https://github.com/flext-sh/flext-infra/pull/861> onto `0.12.0-dev`.
 
-## Read-only preflight
+### Read-only preflight
 
 Run these commands in order. Record working directory, exit code and decisive output.
 
@@ -57,7 +57,7 @@ Any changed SHA, PR state, worktree content, rig state or database identity inva
 the corresponding fact and must be investigated before mutation. Do not run `bd init`,
 set Beads endpoint variables, or create a substitute store.
 
-## Exact continuation
+### Exact continuation
 
 The first repository command is:
 

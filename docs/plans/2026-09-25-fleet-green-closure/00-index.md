@@ -6,7 +6,7 @@ current_phase: phases/03-infra-test-convergence.md
 coordination_item: aihub-l42it
 ---
 
-# FLEXT fleet green closure handoff
+## FLEXT fleet green closure handoff
 
 This is the dated 2026-09-25 handoff, not current execution authority. Paths use
 `${HOME}` for the recorded operator home directory; suffixes and evidence are

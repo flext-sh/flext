@@ -74,7 +74,7 @@ Community of 302 nodes
 | detect_file                          | Function | flext-infra/src/flext_infra/detectors/inline_import_detector.py       | 35-173  |
 | \_binding_offset                     | Function | flext-infra/src/flext_infra/detectors/inline_import_detector.py       | 176-196 |
 
-_... and 252 more members._
+*... and 252 more members.*
 
 ## Execution Flows
 

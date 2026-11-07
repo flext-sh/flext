@@ -74,7 +74,7 @@ Community of 211 nodes
 | \_extract_leading_trailing_spaces  | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 219-228 |
 | \_extract_matching_rule_details    | Function | flext-ldif/src/flext_ldif/\_utilities/metadata.py | 231-267 |
 
-_... and 161 more members._
+*... and 161 more members.*
 
 ## Execution Flows
 

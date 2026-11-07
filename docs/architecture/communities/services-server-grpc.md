@@ -74,7 +74,7 @@ Community of 76 nodes
 | \_new_stream_buffer                       | Function | flext-grpc/src/flext_grpc/services/stream.py          | 35-36   |
 | GrpcStreamManager                         | Class    | flext-grpc/src/flext_grpc/services/stream.py          | 38-107  |
 
-_... and 26 more members._
+*... and 26 more members.*
 
 ## Execution Flows
 

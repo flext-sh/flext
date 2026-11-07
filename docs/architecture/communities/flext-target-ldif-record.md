@@ -74,7 +74,7 @@ Community of 64 nodes
 | testneeds_base64_encoding_normal_value              | Function | flext-target-ldif/tests/unit/test_writer.py       | 284-288 |
 | test_write_base64_encoded_attribute                 | Test     | flext-target-ldif/tests/unit/test_writer.py       | 290-319 |
 
-_... and 14 more members._
+*... and 14 more members.*
 
 ## Execution Flows
 

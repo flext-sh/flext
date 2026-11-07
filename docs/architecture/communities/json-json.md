@@ -23,7 +23,7 @@ Community of 71 nodes
 
 | Name                                                | Kind     | File                                                                       | Lines   |
 | --------------------------------------------------- | -------- | -------------------------------------------------------------------------- | ------- |
-| FlextCliUtilitiesJsonCore                      | Class    | flext-cli/src/flext_cli/\_utilities/\_json/\_core.py                       | 26-170  |
+| FlextCliUtilitiesJsonCore                           | Class    | flext-cli/src/flext_cli/\_utilities/\_json/\_core.py                       | 26-170  |
 | json_dumps                                          | Function | flext-cli/src/flext_cli/\_utilities/\_json/\_core.py                       | 32-45   |
 | json_loads                                          | Function | flext-cli/src/flext_cli/\_utilities/\_json/\_core.py                       | 48-54   |
 | json_sort_keys                                      | Function | flext-cli/src/flext_cli/\_utilities/\_json/\_core.py                       | 57-75   |
@@ -74,7 +74,7 @@ Community of 71 nodes
 | test_json_pick_int_coerces_scalar_variants          | Test     | flext-cli/tests/unit/test_json_cov.py                                      | 194-203 |
 | test_json_pick_bool_coerces_truthy_variants         | Test     | flext-cli/tests/unit/test_json_cov.py                                      | 222-233 |
 
-_... and 21 more members._
+*... and 21 more members.*
 
 ## Execution Flows
 

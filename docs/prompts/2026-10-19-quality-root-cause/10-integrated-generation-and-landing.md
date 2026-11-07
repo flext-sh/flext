@@ -40,7 +40,7 @@ member route is 'rtk proxy make -f flext-core/Makefile check'; use the correspon
 member as needed. Read the Make owner to discover existing verbs; never invent
 selectors or bypass Make with bare analyzers/pytest. Structural rewires belong to make
 mod. Never generate production files from pytest. Never hand-edit generated
-__init__.py, facets, Makefiles or pyproject.toml.
+**init**.py, facets, Makefiles or pyproject.toml.
 
 Exception decision rule: authorization alone is insufficient. For each proposed
 restoration record the exact rule and scope, verified authorization, present

@@ -4,7 +4,7 @@ updated_at: 2026-09-25T17:27:00Z
 status: active
 ---
 
-# Execution plan
+## Execution plan
 
 <!-- TOC START -->
 
@@ -14,14 +14,14 @@ status: active
 
 <!-- TOC END -->
 
-## Objective
+### Objective
 
 Adopt every current FLEXT lane and fix all failures forward until the public behavior is
 preserved, every repository's native gates and CI are green, changes are integrated
 through `0.12.0-dev`, and the increment leaves no open PR, unpublished branch, unretired
 worktree, or unresolved Bead in its declared scope.
 
-## Accepted operator decisions
+### Accepted operator decisions
 
 - Python 3.13 local aliases require explicit declaration-owner context. If that context
   is absent or cannot prove the declaration, the original error propagates unchanged.
@@ -43,7 +43,7 @@ worktree, or unresolved Bead in its declared scope.
 - Commits and pushes are authorized. Deliver through reviewed PRs onto each configured
   integration branch and keep the branch green before integration.
 
-## Ordered phases
+### Ordered phases
 
 1. Complete `flext-infra` test convergence, build, review, publication, integration and
    post-merge proof.

@@ -74,7 +74,7 @@ Community of 60 nodes
 | test_escape_identifier_returns_valid_identifier_unchanged | Test     | flext-db-oracle/tests/unit/test_utilities.py                 | 177-181 |
 | test_escape_identifier_rejects_invalid_input              | Test     | flext-db-oracle/tests/unit/test_utilities.py                 | 195-199 |
 
-_... and 10 more members._
+*... and 10 more members.*
 
 ## Execution Flows
 

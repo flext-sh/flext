@@ -74,7 +74,7 @@ Community of 102 nodes
 | \_dispatch_pipeline          | Function | flext-meltano/src/flext_meltano/pipeline_mgr.py | 277-293 |
 | \_fetch_pipeline_status      | Function | flext-meltano/src/flext_meltano/pipeline_mgr.py | 295-299 |
 
-_... and 52 more members._
+*... and 52 more members.*
 
 ## Execution Flows
 

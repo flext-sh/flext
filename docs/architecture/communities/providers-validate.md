@@ -74,7 +74,7 @@ Community of 56 nodes
 | authenticate                 | Function | flext-auth/src/flext_auth/providers/saml.py                | 43-56   |
 | get_metadata                 | Function | flext-auth/src/flext_auth/providers/saml.py                | 58-73   |
 
-_... and 6 more members._
+*... and 6 more members.*
 
 ## Execution Flows
 

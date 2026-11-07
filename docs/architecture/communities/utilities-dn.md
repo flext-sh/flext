@@ -74,7 +74,7 @@ Community of 89 nodes
 | parse_rdn                                | Function | flext-ldif/src/flext_ldif/\_utilities/dn.py               | 705-717 |
 | \_parse_dn_components                    | Function | flext-ldif/src/flext_ldif/\_utilities/dn.py               | 720-734 |
 
-_... and 39 more members._
+*... and 39 more members.*
 
 ## Execution Flows
 

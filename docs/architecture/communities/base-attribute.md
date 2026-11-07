@@ -74,7 +74,7 @@ Community of 109 nodes
 | \_normalize_attribute_names   | Function | flext-ldif/src/flext_ldif/servers/\_oid/schema.py  | 195-202 |
 | \_normalize_auxiliary_typo    | Function | flext-ldif/src/flext_ldif/servers/\_oid/schema.py  | 204-230 |
 
-_... and 59 more members._
+*... and 59 more members.*
 
 ## Execution Flows
 

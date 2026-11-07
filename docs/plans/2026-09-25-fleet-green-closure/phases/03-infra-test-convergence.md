@@ -4,7 +4,7 @@ updated_at: 2026-09-25T17:27:00Z
 status: active
 ---
 
-# Phase 03: `flext-infra` test convergence and integration
+## Phase 03: `flext-infra` test convergence and integration
 
 This records the 2026-09-25 phase, not its current status. `${HOME}` denotes the
 recorded operator home directory; the lane suffix, SHAs, and measurements below
@@ -19,7 +19,7 @@ are unchanged. Reconcile the live tracker before resuming any step.
 
 <!-- TOC END -->
 
-## Entry state
+### Entry state
 
 - Worktree: `${HOME}/fleet-closure-lanes/infra-convergence-20260925/flext-infra`
 - Branch: `fix/infra-green-convergence-20260925`
@@ -32,14 +32,14 @@ are unchanged. Reconcile the live tracker before resuming any step.
 - Full `make test`: no valid result after the batch; prior invocation ended 130 by
   operator-requested handoff
 
-## Owned behavior
+### Owned behavior
 
 This phase owns the repository-local catalog fixtures, layout context, Rope PEP 701
 occurrence behavior, facade-source invalidation, CI candidate reuse, release fixtures,
 Mise seed fixtures and pytest runner accounting/performance. It must preserve raw
 exceptions, complete test accounting and public consumer behavior.
 
-## Execution loop
+### Execution loop
 
 1. Run `rtk make test` at the worktree root.
 2. Read the complete report. Repair every failure/error/warning/skip at its canonical
@@ -55,7 +55,7 @@ exceptions, complete test accounting and public consumer behavior.
 7. Update PR 861 from draft, require non-skipped green CI/review, merge through the
    configured integration branch, then run post-merge proof at the exact integrated SHA.
 
-## Stop condition
+### Stop condition
 
 This phase completes only when `flext-infra` is integrated into `0.12.0-dev`, native
 post-merge gates and required CI are green, the exact SHA is recorded in the canonical

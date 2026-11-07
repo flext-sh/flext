@@ -74,7 +74,7 @@ Community of 65 nodes
 | test_tests_module_class_with_composed_prefix_is_compliant          | Test     | flext-core/tests/unit/test_enforcement_namespace.py | 106-116 |
 | test_run_layer_emits_warnings_for_mutable_constant_under_warn_mode | Test     | flext-core/tests/unit/test_enforcement_namespace.py | 202-223 |
 
-_... and 15 more members._
+*... and 15 more members.*
 
 ## Execution Flows
 

@@ -74,7 +74,7 @@ Community of 114 nodes
 | module_assignment_strings_source      | Function | flext-infra/src/flext_infra/\_utilities/rope_analysis.py | 915-934 |
 | module_mapping_assignment_source      | Function | flext-infra/src/flext_infra/\_utilities/rope_analysis.py | 937-946 |
 
-_... and 64 more members._
+*... and 64 more members.*
 
 ## Execution Flows
 

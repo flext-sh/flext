@@ -74,7 +74,7 @@ Community of 65 nodes
 | test_run_cli_command_rejects_unknown_operation                | Test     | flext-db-oracle/tests/unit/test_cli.py        | 184-187 |
 | test_api_observability_metrics_are_available                  | Test     | flext-db-oracle/tests/unit/test_cli.py        | 238-243 |
 
-_... and 15 more members._
+*... and 15 more members.*
 
 ## Execution Flows
 

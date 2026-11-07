@@ -74,7 +74,7 @@ Community of 74 nodes
 | test_model_dump_json_round_trips_through_public_schema  | Test     | flext-meltano/tests/unit/test_execution_result.py              | 176-203 |
 | test_translate_tap_run_is_idempotent                    | Test     | flext-meltano/tests/unit/test_singer_cli_translator.py         | 108-118 |
 
-_... and 24 more members._
+*... and 24 more members.*
 
 ## Execution Flows
 

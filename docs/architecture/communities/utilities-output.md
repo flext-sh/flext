@@ -74,7 +74,7 @@ Community of 86 nodes
 | test_resolve_report_path                      | Test     | flext-cli/tests/unit/\_cases/test_output_cov/testsflextclioutputcov_part_02.py | 43-48   |
 | test_formatter_result_wins_over_all_fallbacks | Test     | flext-cli/tests/unit/test_commands_utils_cov.py                                | 28-41   |
 
-_... and 36 more members._
+*... and 36 more members.*
 
 ## Execution Flows
 

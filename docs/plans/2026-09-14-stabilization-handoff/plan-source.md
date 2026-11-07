@@ -58,9 +58,9 @@ dos 32, pendências e crítica dessas contradições.
 
 ---
 
-# FLEXT 0.12.0 estável — execução contínua até o pouso (causa raiz, extermínio)
+## FLEXT 0.12.0 estável — execução contínua até o pouso (causa raiz, extermínio)
 
-## Contexto
+### Contexto
 
 Operador (14/09): estabilizar 0.12.0 sem falhas, sem rollback/remendo/workaround,
 exterminando over-engineering e bypass que duplica SSOT. Épico `flext-itpd1`, bead
@@ -70,11 +70,11 @@ exterminando over-engineering e bypass que duplica SSOT. Épico `flext-itpd1`, b
 `.claude/worktrees/bugfix+stabilize-0.12.0`, branch `bugfix/stabilize-0.12.0` (super) e
 flext-infra `bugfix/stabilize-0.12.0` (PR draft
 
-# 727). Execução **contínua até o fim**: cada fatia termina com verbos canônicos + commit
+## 727). Execução **contínua até o fim**: cada fatia termina com verbos canônicos + commit
 
 `[WIP]` + push FF + nota na bead; só se para por bloqueio real.
 
-## Decisões do operador em vigor
+### Decisões do operador em vigor
 
 1. **flext não conhece nem usa ai-hub nem Gas City** (nenhum nome, chave, tool,
    diretório, doc, teste).
@@ -106,7 +106,7 @@ flext-infra `bugfix/stabilize-0.12.0` (PR draft
    dependabot, copilot, PR/release em GitHub): o dono passa a ser o ai-hub. Detalhe e
    fronteira (URL de remote git ≠ gh) na fatia S2b.
 
-### S2b — Extermínio GitHub/gh
+#### S2b — Extermínio GitHub/gh
 
 - Regra: flext-infra deixa de gerar/ler/validar qualquer superfície GitHub; consumidores
   religados ao que é git puro; o que o ai-hub precisa assumir entra no pacote ai-hub
@@ -149,7 +149,7 @@ flext-infra `bugfix/stabilize-0.12.0` (PR draft
 - Prova: grep `\.github/|gh pr|gh release|GITHUB_|github_actions|GithubWorkflow` = 0 em
   flext-infra vivos; `make setup/gen/check/test` e `release plan` executam sem `gh`.
 
-## Estado medido (14/09 ~16:20Z)
+### Estado medido (14/09 ~16:20Z)
 
 - flext-infra commits na lane: `265346e77` (budget), `b7385f600` (fix/fmt
   apply-and-report, fix/apply), `bf1e1e532` (orquestrador roda tudo, `FAIL_FAST` fora,
@@ -184,7 +184,7 @@ flext-infra `bugfix/stabilize-0.12.0` (PR draft
 - `~/wip-hier.sh`: `bash -n` OK; shellcheck NOT EXECUTED (sem binário; instalação é do
   ambiente do operador).
 
-## Progresso 14/09 ~17:05Z (lane)
+### Progresso 14/09 ~17:05Z (lane)
 
 - S0+S1 editados e validados com exportado (condição do shell do operador): `make gen`
   exit 0 (310 arquivos), 2ª `make gen` exit 0 com `mode=apply` e 0 publicados (ponto
@@ -205,7 +205,7 @@ flext-infra `bugfix/stabilize-0.12.0` (PR draft
   gitlinks, merge commit; `~/flext` sai do isolamento de worktree (ExitWorktree) e faz
   fetch/merge ff das integrações + `make gen`, adotando WIP local por fix-forward.
 
-## Progresso 14/09 ~17:45Z — PAUSA (handoff)
+### Progresso 14/09 ~17:45Z — PAUSA (handoff)
 
 Retomada: `~/.claude/plans/happy-puzzling-flask-handoff.md` (tabela de estado + próximos
 passos em ordem).
@@ -225,7 +225,7 @@ passos em ordem).
 - Pendente: merge #240 → propagar `~/flext` → S2 2ª metade (modelos/python/testes) → S2b
   → S3 → S4 → S5 → S6 → S7 → S8.
 
-## Ciclo de cada fatia (sem exceção)
+### Ciclo de cada fatia (sem exceção)
 
 edição no dono → `make gen` ×2 (2ª sem efeito) → `make setup` → `make fix` → `make fmt`
 → `make check` (tem de **executar até o fim**; achados não bloqueiam a fatia, erro de
@@ -233,15 +233,15 @@ execução bloqueia) → grep de resíduo zero da fatia → commit `[WIP]` escop
 (`git -C flext-infra commit -- <paths>`) → push FF → atualizar PR #727 e bead.
 `make test` entra na fatia S8.
 
-## Fatias
+### Fatias
 
-### S0 — Checkpoint do trabalho já feito
+#### S0 — Checkpoint do trabalho já feito
 
 1. `make gen` ×2 (regenera lazy `__init__` do `_utilities`, projeta templates P-1c).
 2. Ciclo completo; 3 commits separados: (a) templates P-1c, (b) A5 `.gen`+políticas, (c)
    A4 ancestralidade.
 
-### S1 — Superfície Make sem modo
+#### S1 — Superfície Make sem modo
 
 Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 `config/codegen.yaml`, `_models/config.py`, `promoted/`, testes.
@@ -289,7 +289,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   `APPLY|CHECK_ONLY|check_mode` = 0 em templates/config/src/tests/docs vivos; 32
   Makefiles regenerados.
 
-### S2 — Extermínio ai-hub/Gas City
+#### S2 — Extermínio ai-hub/Gas City
 
 - Mapa atual (14/09 ~17:10Z, pós S1): fonte `_models/config.py` (238
   GithubWorkflowRenderSpec.gascity_enabled, 413 EnvrcRenderSpec.gascity, 1481-1492
@@ -366,7 +366,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   src/config/templates/tests/docs vivos e nas projeções; `bd list` funciona com o
   ambiente do operador após `make gen` (sem export manual além do ambiente dele).
 
-### S3 — AGENTS.md gerido com 4 regiões
+#### S3 — AGENTS.md gerido com 4 regiões
 
 - Novo managed file `AGENTS.md` (owner `agents`, policy `merge`) em `codegen.yaml`
   `managed_files` + `templates.entries` (`base/AGENTS.md.j2`), dono de merge no ponto de
@@ -386,7 +386,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 - Testes funcionais em `tmp_path`: preservação byte a byte de `external`/`local`,
   `projects` só na raiz, ponto fixo na 2ª geração.
 
-### S4 — Erros de execução do `make check`
+#### S4 — Erros de execução do `make check`
 
 - flext-tests `_typings/base.py:61`: remover as aspas de `TestobjectAtom` (lane
   flext-tests).
@@ -394,7 +394,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   com traceback completo no relatório (exit ≠0), os demais gates do projeto concluem.
 - Reexecutar `make check` 32/32: zero tracebacks.
 
-### S5 — Restante do P-1c (bootstrap seguro)
+#### S5 — Restante do P-1c (bootstrap seguro)
 
 - A1 validadores cruzados no import (`_models/config.py` 141-148 já removido; demais
   232-256, 548-563, 596-603, 771-789, 858-861, 1022-1087): sem função → exterminar; com
@@ -413,7 +413,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 - Prova: checkout tmp com config quebrada → setup/gen concluem com WARNINGs e estado
   coeso; 2ª execução sem diff.
 
-### S6 — Frota e flext-core
+#### S6 — Frota e flext-core
 
 - flext-core: remover `budget` de `_models/project_metadata.py:88`; `_settings.py:165`
   mapeamento `AI_HUB_`; docstrings ai-hub (`_settings.py:369`, `_config.py:209`,
@@ -427,7 +427,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 - Uma lane `bugfix/stabilize-0.12.0` por membro com mudança; PR draft; merge commit após
   CI verde.
 
-### S7 — Superprojeto e docs
+#### S7 — Superprojeto e docs
 
 - `pyproject.toml [project.scripts]` corrigido; `scripts/workspace/dependabot_merge.py`
   safe-delete (CodeQL #6); `exclude_docs` restaurado do histórico; gitlinks → merge
@@ -445,7 +445,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   `external`; saídas de runtime não podem cair não rastreadas nos repos flext; 3b
   (flext-cli) mantido.
 
-### S8 — Testes e pouso
+#### S8 — Testes e pouso
 
 - `make test` na lane (flext-infra primeiro, depois frota); correção no dono de cada
   falha.
@@ -460,7 +460,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 - `~/wip-hier.sh`: shellcheck quando o binário existir no ambiente; senão NOT EXECUTED
   registrado.
 
-## Verificação final
+### Verificação final
 
 - Root e membros: `make gen` ×2 sem diff; `make setup`, `make fix`, `make fmt`,
   `make check`, `make test` executam até o fim; `make check`/`make test` exit 0 no
@@ -475,7 +475,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 - CI `0.12.0-dev` verde nos 32 heads; `--is-ancestor` = 0; gitlinks ≡ `.gitmodules`;
   nenhum `uv.lock` em membros; CodeQL abertos = 0.
 
-## Status 2026-09-20 (contribuição ZCode — ordem do operador: estabilizar esta lane)
+### Status 2026-09-20 (contribuição ZCode — ordem do operador: estabilizar esta lane)
 
 - Parede de imports diagnosticada e corrigida: gitlinks da lane apontavam heads gravados
   atrasados; todos os membros absorvidos para os HEADS VIVOS (commit `bbb51101d6`).
@@ -493,7 +493,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 - Beads assumidos (ordem do operador): `flext-itpd1.4.3`, `flext-9xsim`, `flext-1tcsp`,
   `flext-w3qcn` — claim + evidência no store do super.
 
-### Propagação 2026-09-20c
+#### Propagação 2026-09-20c
 
 - flext-infra: 6 commits de conserto pushados em ff no branch de lane (até `3aab6ac6f`)
   — pronto para o runner pousar em `0.12.0-dev` (`[coord] landed flext-infra`
@@ -502,7 +502,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   coordenador indicar o pouso (a origin deletou a branch).
 - Restante: codemod 5 + duplication 17 (roteado) + tests por membro.
 
-### Passada lane [A] 2026-09-21 (aprovada pelo operador: worktree primeiro, merges depois)
+#### Passada lane [A] 2026-09-21 (aprovada pelo operador: worktree primeiro, merges depois)
 
 - Baseline limpo: 3 READMEs com resíduo prettier do épico markdown commitados nos
   membros (flext-cli `55af0268`, flext-ldif `d56c2018`, flext-tap-oracle-wms `4f3c937`)
@@ -519,7 +519,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   (upstream `wip/stabilize-0.12-root-20260919` foi deletado na origin — recriar) + PR
   para `0.12.0-dev`. Announce gc-mail `gc-wisp-4vyc7s`.
 
-### Estado final para retomada — 2026-09-21 (sessão finalizada)
+#### Estado final para retomada — 2026-09-21 (sessão finalizada)
 
 **Onde está tudo (comandos e saídas para revalidar):**
 
@@ -538,7 +538,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   IDENTITY MISMATCH (cidade).
 - Census 1428 (rota: regras ast-grep pós-integração — decisão do operador flext/claude).
 
-### `make test` 2026-09-21 — diagnóstico e fix de causa comum
+#### `make test` 2026-09-21 — diagnóstico e fix de causa comum
 
 - Primeira passada: 12/32 pass, 20 exit=2. Causa comum dominante: o payload de
   flext-tests rejeitava leaves que a wave-2 tornou públicos (TypeError: Unsupported
