@@ -1,9 +1,0 @@
-Infra:
-  codegen:
-    toolchain:
-      editable_sources:
-        rope: /home/marlonsc/rope-dc15
-    repository:
-      candidate_bootstrap_targets:
-        - path: ../docsmos-main
-          what: makefile
