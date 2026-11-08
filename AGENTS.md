@@ -69,20 +69,17 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
 
     conflicts or an action would be destructive; otherwise continue to the observable
     stop condition.
-
 13. **Short validated slices.** Deliver in small, independently validated
 
     units that merge to the integration branch quickly — one Bead, one reviewable PR,
     hours not days. Mega-lanes and long-lived WIP are defects; the orchestrator splits
     any unit that cannot merge green within a session.
-
 14. **Living documentation.** Project knowledge is durable, never rebuilt
 
     per session. On entering a project, read its docs first and validate key claims
     quickly against live reality. Every change that produces new understanding or
     behavior updates the affected docs in the SAME change; stale docs are defects filed
     as beads, never worked around.
-
 15. **Runtime reality precedes implementation and tests.** Establish the correct
     behavior from the official external contract and the real consumer first. For
     generated or deployed artifacts, validate the staged artifact with that real
@@ -326,13 +323,13 @@ agent governance. Installed skills and generated instruction surfaces, including
 those under `~/.agents/`, consume that authority; they are not independent writable
 owners. Project law contributes only its documented scope-specific delta.
 
-| Layer        | Canonical owner                                                                                              | Permitted content                                                                                                   |
-| ------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| Global       | `~/agents/AGENTS.md` and its canonical rules and skills, consumed through installed projections              | universal conduct, execution safety, command selection, evidence, and completion                                    |
-| Architecture | the accepted, topic-owning record in `docs/architecture/adr/`                                                 | precise technical decisions, their scope, consequences, and supersession links                                      |
-| FLEXT        | this root file and `.agents/skills/flext-law/SKILL.md`                                                        | workspace routing, FLEXT-wide application and enforcement of accepted decisions, Make control plane, and fleet law |
-| Scope        | the nearest member or standalone `AGENTS.md`                                                                  | only narrower domain facts, public surfaces, and explicit exclusions                                                |
-| Execution    | the active Bead                                                                                                | current intent, ownership, dependencies, phase, evidence, and stop condition; never a conflicting design decision   |
+| Layer        | Canonical owner                                                                                 | Permitted content                                                                                                  |
+| ------------ | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Global       | `~/agents/AGENTS.md` and its canonical rules and skills, consumed through installed projections | universal conduct, execution safety, command selection, evidence, and completion                                   |
+| Architecture | the accepted, topic-owning record in `docs/architecture/adr/`                                   | precise technical decisions, their scope, consequences, and supersession links                                     |
+| FLEXT        | this root file and `.agents/skills/flext-law/SKILL.md`                                          | workspace routing, FLEXT-wide application and enforcement of accepted decisions, Make control plane, and fleet law |
+| Scope        | the nearest member or standalone `AGENTS.md`                                                    | only narrower domain facts, public surfaces, and explicit exclusions                                               |
+| Execution    | the active Bead                                                                                 | current intent, ownership, dependencies, phase, evidence, and stop condition; never a conflicting design decision  |
 
 AI Hub distributes and validates managed projections; it does not become the authority
 for global or FLEXT law. The local provider exposes the exact branch-matched
@@ -437,14 +434,14 @@ exclusions; it never copies or replaces either parent or ADR.
 
 ## Where to Look
 
-| Task                             | Location                           | Notes                                                                                                                                                                         |
-| -------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Foundation facades / result / DI | `flext-core/src/flext_core/`       | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base                                                                                                                                 |
-| Build/codegen/enforcement        | `flext-infra/src/flext_infra/`     | drives standard Make generation, conform, and lint rules                                                                                                                      |
-| Test fixtures & builders         | `flext-tests/src/flext_tests/`     | public test facades and typed fixtures; unified `conftest.py` pattern                                                                                                         |
+| Task                             | Location                           | Notes                                                                                                                                                                                                                                                                                                                                                                                                           |
+| -------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Foundation facades / result / DI | `flext-core/src/flext_core/`       | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base                                                                                                                                                                                                                                                                                                                                                                   |
+| Build/codegen/enforcement        | `flext-infra/src/flext_infra/`     | drives standard Make generation, conform, and lint rules                                                                                                                                                                                                                                                                                                                                                        |
+| Test fixtures & builders         | `flext-tests/src/flext_tests/`     | public test facades and typed fixtures; unified `conftest.py` pattern                                                                                                                                                                                                                                                                                                                                           |
 | Architectural decisions          | `docs/architecture/adr/`           | Topic-owning accepted ADRs are the technical source of truth; [ADR-028 Decisions 15–18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15) cover capability boundaries, CA/DI, native workspace/refactoring ownership, and generalized rules. The ADR index records maturity; Beads record implementation state. |
-| Workspace composition            | `.gitmodules`                      | sole member-list owner (ADR-024); each repository's `config/codegen.yaml` holds its own declarations and deltas                                                             |
-| A Singer connector               | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006)                                                                                                                              |
+| Workspace composition            | `.gitmodules`                      | sole member-list owner (ADR-024); each repository's `config/codegen.yaml` holds its own declarations and deltas                                                                                                                                                                                                                                                                                                 |
+| A Singer connector               | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006)                                                                                                                                                                                                                                                                                                                                                                |
 
 ## Build & Test
 
@@ -725,7 +722,7 @@ CLI + pytest plugin, **never imported at runtime**.
     sets/tables, aliases, `TypeVar`s, inline `Literal` domains, protocols, models,
     payload dicts or reusable helpers, explicit or implicit. The families never violate
     one another.
-  - #### ADR-028 Decision 15
+  - ### ADR-028 Decision 15
 
     **Library names never leave the facades**
     ([ADR-028 Decision 15][decision-15]; operator order 2026-10-25, tracker
@@ -830,7 +827,9 @@ CLI + pytest plugin, **never imported at runtime**.
       fixtures and the native test; duplicates, fallbacks and compatibility paths are
       exterminated without a remaining reference.
     - `refactor mod --laws <set>` is the diagnostic and repair route for one law; the
-      import law always runs.
+      import law always runs. A selector-free `make mod` runs the complete active
+      catalog to its fixed point; selection only narrows the focus (operator decision
+      2026-11-07, tracker key `operator-decision-2026-11-07-bare-mod-all-laws`).
     - Hand edits of violating sources are prohibited; workers change only stage, rule,
       generator and engine owners plus their fixtures.
     - Until make is repaired and validated, lint verdicts come from direct `ruff` and
