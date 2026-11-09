@@ -397,6 +397,13 @@ for reuse by external consumers. Portable intent is separate from each
 checkout's observed source states and edits: applying it resolves native bindings
 and validates the target project's own sources before publication. Native Rope owns
 semantic moves and rewiring, including capabilities added at its upstream owner.
+Native discovery and refactoring retain reexports through `__init__.py`, nested
+namespace aliases, inherited declarations and diamond inheritance under Python C3
+precedence. Valid namespace depth has no project-imposed cap. The same binding
+identity drives classification, movement and consumer rewiring; a homonymous
+override is a different declaration. Dependency cycles in deferred annotations
+form atomic cohorts, while illegal evaluated inheritance preserves its native
+failure. Class-size and splitting policy remain with their separate owner.
 
 No generated `model_conformance.py` witness is required or emitted. `make gen`
 retires existing generated witnesses through the shared retirement publisher.

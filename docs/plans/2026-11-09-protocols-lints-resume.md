@@ -1,5 +1,20 @@
 # Protocols and quality gates: resume checkpoint
 
+## Refinement after coordination on 2026-11-09
+
+The operator resumed this work using only the shared `/home/marlonsc/flext` checkout and specified that a separate agent owns class-refactoring limits. The operator subsequently assigned that responsibility to the integration chat `01a1c0c8-fe74-7880-80a4-5ca080d39a6a`. Do not run a parallel class-limit, loc-cap, or protocol-splitting campaign. Existing unvalidated changes in `flext-infra/src/flext_infra/_utilities/protocol_contracts.py` and C901 in `opaque_ports.py` were handed to that owner for review; preserve them and coordinate functional edits, not revert them.
+
+Execute the remaining work in this order, adopting validated work from the other owners:
+
+1. Stabilize the public entry points first. The integration/setup owner handles the setup matrix; the census/protocol owner handles `protocol_models` and census; the Qlty owner handles editor rendering. The CLI cold help has again returned zero, but this alone is not setup-matrix proof. Re-exercise the original entry point whenever one of these owners changes it.
+   The focused protocol-organization run `20261109T152121.375814Z-3717060` found the loaded Rope lacked `MoveClass`. Subsequent coordination established that the current editable fork at `4c5bd` contains it, while frozen revision `41b960` does not. The fork owner is handling the source, dependency and native lock cycle. Revalidate the actually loaded provider and both editable and frozen paths before declaring reproducibility. Do not change locks by hand or add an alternate refactoring engine.
+2. Validate protocol/envelope behavior by focused native tests, including structural protocols, serializable models, opaque mutable ports, negative cases and live consumers. The current envelope file passed 16 cases on receipt `flext-infra/.reports/tests/20261109T145431.141120Z-2928897`; revalidate affected cases after changes. Apply only identity-authenticated bulk transformations via `flext-infra mod`, preserving work from concurrent owners.
+3. Use native selected-file tests to isolate pytest failures, then run full pytest once the owners and generated sources converge. The current baseline `flext-infra/.reports/tests/20261109T145301.587244Z-2876922` stopped at three failures; `20261109T151544.856491Z-3542629` gives additional conform-fixture failures. These are failure snapshots, not full-suite inventories.
+4. Run `fmt`/`fix` and the four complete lints on the current full project, without repeated `--file` arguments. Baseline `flext-infra/.reports/check/8bd29288-7967-4f70-af7a-8952b59d16ef` reported Ruff 79, Pyrefly 156, Pyright 23 and a Mypy timeout; all remain red. Use source-derived codemods to repair repeated types and retain the full-check result, including operational failures.
+5. Only after the standard and shared owners are verified, propagate with native automation to the whole requested fleet and external consumers; execute their complete required gates and runtime proofs, then coordinate integration and preserve all WIP. The other integration chat has preserved and triaged auxiliary worktree material under its recorded archives; adopt individual useful changes only with current-source evidence, not entire obsolete patches.
+
+Run independent work concurrently by non-overlapping owner; avoid repeating expensive full suites before the relevant fixes are in place. No earlier green receipt applies automatically to a later revision or another project.
+
 Status recorded on 2026-11-09 at the operator's request to stop. Work is **incomplete**. Preserve all existing changes and coordinate with the FLEXT integration chat before editing shared owners. The active tracking issue is `flext-vjj1s.8`.
 
 ## Objective and constraints
