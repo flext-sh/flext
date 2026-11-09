@@ -546,13 +546,11 @@ owner places imports; parallel placement routes are deleted in the same cutover.
      - A field naming a sibling through its own enclosing family class in an eagerly
        evaluated position is banned (`ban-enclosing-family-field-reference`): the
        enclosing class is unbound while its body runs, so the model stays incomplete.
-       The type position names the sibling's protocol, and the schema owner is
-       deferred (`t.schema_for_model(lambda: Holder.X)`,
-       [ADR-018 amendment 2026-11-03](018-generator-declarations.md#model-and-service-protocol-projection));
-       a deferred reference is not evaluated at class creation and keeps the field
-       complete (measured 2026-11-03: eager form incomplete, cross-module subclass
-       fails; deferred form complete, cross-module subclass validates and rejects
-       invalid input).
+       The type position names the sibling model directly (``Holder.X`` /
+       ``m.<Model>``); no protocol mirror or deferred schema owner is needed at
+       the field boundary, so the field stays complete at class creation and
+       subclasses inherit it unchanged
+       ([ADR-018 amendment 2026-11-09](018-generator-declarations.md#model-and-service-protocol-projection)).
      - Facade roots (`c`, `t`, `p`, `m`, `u`) never inherit a model. They compose
        namespaces; payload models compose data. Native constraints, validators,
        computed fields and serializers belong to the model contract and are not
