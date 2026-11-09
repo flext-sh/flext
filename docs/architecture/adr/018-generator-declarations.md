@@ -391,6 +391,13 @@ classify native declarations and destinations, relocate owners, rewire the compl
 consumer closure, then project and validate the coherent candidate. Phase outputs
 share the authenticated native source view and refresh affected inputs; generation
 does not discover a repair by repeatedly attempting publication.
+The census and portable intent must cover Python bindings of every kind, including
+modules, classes, functions, methods, fields, variables, constants and aliases.
+Their native scopes and dependencies must retain properties, descriptors, closures
+and implicit consumers in the same relocation cohort. Identify existing model
+protocols by their actual public bindings; record the planned destination of an
+absent projection without requiring it to exist. Missing or ambiguous source
+bindings fail explicitly rather than disappearing from the census.
 The existing semantic migration artifact persists the global source-to-destination
 identities in immutable cohort files under the configured `config/rewires` directory
 for reuse by external consumers. Portable intent is separate from each
