@@ -392,7 +392,8 @@ consumer closure, then project and validate the coherent candidate. Phase output
 share the authenticated native source view and refresh affected inputs; generation
 does not discover a repair by repeatedly attempting publication.
 The existing semantic migration artifact persists the global source-to-destination
-identities for reuse by external consumers. Portable intent is separate from each
+identities in immutable cohort files under the configured `config/rewires` directory
+for reuse by external consumers. Portable intent is separate from each
 checkout's observed source states and edits: applying it resolves native bindings
 and validates the target project's own sources before publication. Native Rope owns
 semantic moves and rewiring, including capabilities added at its upstream owner.

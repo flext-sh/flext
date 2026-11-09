@@ -517,6 +517,9 @@ The census records placement and the global migration intent before modification
 the ordered relocation, rewiring and projection phases share that intent. External
 projects reuse the stored migration through the same native refactoring owner,
 resolving and validating their own sources rather than replaying workspace edits.
+Each admitted cohort retains an immutable artifact in the configured
+`config/rewires` directory; `refactor mod --rename-plan` consumes that intent through
+the existing command boundary.
 
 Use canonical source-derived `p.*` contracts decorated with `@runtime_checkable`
 for consumers. ADR-018's simplified-field amendment retains concrete model types
