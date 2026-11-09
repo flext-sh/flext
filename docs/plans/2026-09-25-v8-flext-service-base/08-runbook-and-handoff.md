@@ -44,7 +44,7 @@ Every command runs in the lane worktree:
       blocked agent-made merges, with and without `--admin` ("Merge Without Review").
       Merges go to the operator, or the operator adds an explicit permission rule.
       #274's required checks were 3/3 green at head `f5da32acf0`.
-   3. Post-merge proof: `git fetch origin 0.12.0-dev`, then clean `make gen` ×2, then
+   3. Post-merge proof: `git fetch origin 0.12.0-dev`, then clean `make gen` x2, then
       `make check` at the merged SHA.
 2. **Fast-forward the primary `~/flext`.** It carries local commit `73cb90ea7a` and
    staged docs (#271 formatting).
@@ -65,7 +65,7 @@ Every command runs in the lane worktree:
        - flext-cli: subagent on lane `~/flext-work/v8-process-consumers/flext-cli`.
          State: see section 4.
    2. Bump the superproject pins: core ≥ `8de52fa6`, infra ≥ `a4898b561`, cli, ldif,
-      then `make gen` ×2, `make check` and PR.
+      then `make gen` x2, `make check` and PR.
    3. `make upg` at the root: clears the `mise WARN ... not in the lockfile` notice and
       unlocks `bd`.
    4. flext-web #105: logical rebase (merge `--no-ff` from the integration), revalidate

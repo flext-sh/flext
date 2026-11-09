@@ -160,7 +160,7 @@ Appended below as increments land (command, cwd, exit code, decisive output).
   conflict-marker resolutions in plugin/quality `__init__.py` took the ours shape
   consistent with each file's own `__all__`/`_LAZY_IMPORTS`; tests and core converged
   with the parallel lane: tests `2eb1ffa`/`fcb5977`, core `890fdb653` + WIP adoption
-  commit `99fb2032a` — 17 files, +261/−163).
+  commit `99fb2032a` — 17 files, +261/-163).
 - Superproject absorb concluded by the coordinator lane as `115fe8d8cb` (includes this
   session's staged doc resolution, CSV rename engine, custom.mk, plan docs, gitlinks)
   plus alignment commit `8dfe0ddb0e`. All 31 members hold no `MERGE_HEAD` and carry the

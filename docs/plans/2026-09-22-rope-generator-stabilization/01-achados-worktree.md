@@ -80,8 +80,8 @@ modified while collecting these findings.
 ## 4. Preserved WIP not in commits
 
 - Stashes: superproject `stash@{0}` (autostash, 9 files, worker-lane-contract +
-  tests/infra/{constants,protocols,typings}.py); flext-infra ×4; flext-core ×1;
-  flext-quality ×1.
+  tests/infra/{constants,protocols,typings}.py); flext-infra x4; flext-core x1;
+  flext-quality x1.
 - External patch:
   `${HOME}/flext-worktrees/rope-modernize-flext-infra-uncommitted.patch` (57,836
   bytes, 2026-09-16; first hunk: `_conform_gitignore.py` ruff per-file-ignores).

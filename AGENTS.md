@@ -707,8 +707,8 @@ CLI + pytest plugin, **never imported at runtime**.
     2026-10-24) count as stdlib. The PEP 747 special form is called and annotated
     only through `from typing_extensions import TypeForm` (`TypeForm(X)`,
     `TypeForm[T]`): mypy honours the call only for the fullname
-    `typing_extensions.TypeForm`. `t.TypeForm` is removed (operator ruling
-    2026-10-31, ADR-028; supersedes the 2026-10-29 `t.TypeForm` order, now
+    `typing_extensions.TypeForm`. `TypeForm` is removed (operator ruling
+    2026-10-31, ADR-028; supersedes the 2026-10-29 `TypeForm` order, now
     history).
   - Inside the facades too, an external library's types are named only through `t`
     aliases or `p` protocols; `u` never re-narrows or re-parses (`isinstance` chains,

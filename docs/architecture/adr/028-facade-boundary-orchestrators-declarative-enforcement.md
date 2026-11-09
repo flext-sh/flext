@@ -884,11 +884,11 @@ architecture link.
   recognizes the PEP 747 call only when the callee's fullname is
   `typing_extensions.TypeForm`; a facade attribute is a class attribute, so mypy
   reports `"<typing special form>" not callable` and the result is `Any`.
-  `t.TypeForm` is removed: rule `ban-typeform-alias-call` rewrites every `t.TypeForm`
+  `TypeForm` is removed: rule `ban-typeform-alias-call` rewrites every `TypeForm`
   reference to the bare name and `pydantic-typeform-import` adds the import, both
   through `make mod`; the `t` re-binding is deleted at its typings owner.
   History (superseded 2026-10-31, not live law): the operator order of 2026-10-29
-  made `t.TypeForm(X)` the only spelling and banned `typing_extensions.TypeForm`
+  made `TypeForm(X)` the only spelling and banned `typing_extensions.TypeForm`
   imports outside flext-core's typings (rule `typeform-call-via-facade`).
 - **Runtime import:** a top-level import statement. Imports under `if TYPE_CHECKING:`
   never run and are outside the boundary.

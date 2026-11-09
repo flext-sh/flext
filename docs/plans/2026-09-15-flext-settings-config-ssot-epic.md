@@ -64,7 +64,7 @@ como singleton em todos os módulos (incluindo as fachadas `c,t,p,m,u`). A sess�
    migração para fachada → `make check/test` do próprio projeto → prova de runtime
    (import + identidade) → PR com CI verde no SHA.
 6. **Validação de fechamento.** Frota: pytest com seeds aleatórias ≥8 consecutivos
-   verdes por membro tocado; `make setup/gen/fix/fmt/check` ×2 idempotentes; ADR-016 →
+   verdes por membro tocado; `make setup/gen/fix/fmt/check` x2 idempotentes; ADR-016 →
    Accepted; beads fechados com as 4 fontes de evidência.
 
 ## 4. Aceite (checklist)
@@ -81,7 +81,7 @@ como singleton em todos os módulos (incluindo as fachadas `c,t,p,m,u`). A sess�
 
 ## 5. Riscos
 
-- **Contrato implícito dependente da intercepção** (identidade alias×fetch_global) —
+- **Contrato implícito dependente da intercepção** (identidade aliasxfetch_global) —
   mitigado pela onda 1 (mapa completo antes do corte).
 - **Externos em branches próprios** — integração por merge `--no-ff`, nunca rebase;
   adjudicação de WIP concorrente com o operador.

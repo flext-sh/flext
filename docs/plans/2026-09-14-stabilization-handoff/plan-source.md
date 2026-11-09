@@ -154,7 +154,7 @@ flext-infra `bugfix/stabilize-0.12.0` (PR draft
 - flext-infra commits na lane: `265346e77` (budget), `b7385f600` (fix/fmt
   apply-and-report, fix/apply), `bf1e1e532` (orquestrador roda tudo, `FAIL_FAST` fora,
   gates sem `FORCE_COLOR`). Super: `8090291786`.
-- Verbos: setup 0; gen ×2 0 (ponto fixo); fix 0 (WARN restantes); fmt 0 (32/32);
+- Verbos: setup 0; gen x2 0 (ponto fixo); fix 0 (WARN restantes); fmt 0 (32/32);
   `make check` #2 **rodou 32/32 até o fim**, exit 1, 32 FAIL por achados + 2 erros de
   execução:
   - flext-infra `runtime_census`:
@@ -227,7 +227,7 @@ passos em ordem).
 
 ### Ciclo de cada fatia (sem exceção)
 
-edição no dono → `make gen` ×2 (2ª sem efeito) → `make setup` → `make fix` → `make fmt`
+edição no dono → `make gen` x2 (2ª sem efeito) → `make setup` → `make fix` → `make fmt`
 → `make check` (tem de **executar até o fim**; achados não bloqueiam a fatia, erro de
 execução bloqueia) → grep de resíduo zero da fatia → commit `[WIP]` escopado
 (`git -C flext-infra commit -- <paths>`) → push FF → atualizar PR #727 e bead.
@@ -237,7 +237,7 @@ execução bloqueia) → grep de resíduo zero da fatia → commit `[WIP]` escop
 
 #### S0 — Checkpoint do trabalho já feito
 
-1. `make gen` ×2 (regenera lazy `__init__` do `_utilities`, projeta templates P-1c).
+1. `make gen` x2 (regenera lazy `__init__` do `_utilities`, projeta templates P-1c).
 2. Ciclo completo; 3 commits separados: (a) templates P-1c, (b) A5 `.gen`+políticas, (c)
    A4 ancestralidade.
 
@@ -462,7 +462,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 
 ### Verificação final
 
-- Root e membros: `make gen` ×2 sem diff; `make setup`, `make fix`, `make fmt`,
+- Root e membros: `make gen` x2 sem diff; `make setup`, `make fix`, `make fmt`,
   `make check`, `make test` executam até o fim; `make check`/`make test` exit 0 no
   estado pousado.
 - Greps = 0 nos vivos: `APPLY|CHECK_ONLY|check_mode`,
@@ -488,7 +488,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   gerado), fmt 0, ruff e pyrefly verdes na enumeração por membro.
 - Restante (grind em andamento): cluster pyright `inconsistent-inheritance` na
   hierarquia `deps_tool_config`, `bad-dunder-all` de `TestsRule4Annotations`,
-  type-mismatch em `tests/utilities_release.py:44` (artifact × release
+  type-mismatch em `tests/utilities_release.py:44` (artifact x release
   BuildConstraintSpec) — depois `check`/`tests` completos e announce `[coord] verify`.
 - Beads assumidos (ordem do operador): `flext-itpd1.4.3`, `flext-9xsim`, `flext-1tcsp`,
   `flext-w3qcn` — claim + evidência no store do super.
@@ -509,11 +509,11 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   - gitlinks avançados na raiz da lane (`ef57a57d0`: infra `3aab6ac6f` + os três).
 - Probe wave-2 OK: `FlextSettings` e `FlextInfraCodegenConform` importáveis no venv.
 - Lifecycle completo na worktree: `make setup` exit 0 (rumdl 0.2.75), `make deps` exit
-  0, `make gen` ×3 com ponto fixo PROVADO (pass 3 no-op por fingerprint de diff),
+  0, `make gen` x3 com ponto fixo PROVADO (pass 3 no-op por fingerprint de diff),
   `make fix` 32/32 exit 0, `make fmt` 32/32 exit 0, `make check` = 14 findings.
-- Triagem dos 14: 1× MD034 (meu épico) CORRIGIDO e convergido (rumdl+prettier verdes;
-  resolução do conflito prettier↔MD034 em link definition quebrada = URL relativa); 12×
-  duplication `_conform` = rota do executor-único (evidência em flext-y3qpq.2.6); 1×
+- Triagem dos 14: 1x MD034 (meu épico) CORRIGIDO e convergido (rumdl+prettier verdes;
+  resolução do conflito prettier↔MD034 em link definition quebrada = URL relativa); 12x
+  duplication `_conform` = rota do executor-único (evidência em flext-y3qpq.2.6); 1x
   runtime-census 1050 = bloco namespace (evidência em flext-0in0k).
 - `make test` em execução no fechamento desta seção; land da lane via push de branch
   (upstream `wip/stabilize-0.12-root-20260919` foi deletado na origin — recriar) + PR
@@ -526,7 +526,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 - flext-infra (membro, branch `wip/stabilize-0.12-flext-infra-20260919`, até
   `7ff88fd43`): namespace/mod verdes; dedup executado (existing_plan: 3 famílias de
   clone deletadas — métodos MRO-shadowed); `make fix`/`fmt` 0. `make test`: 2602 passed
-  / 156 failed — causa raiz única: strictness de dependência interna × scratch
+  / 156 failed — causa raiz única: strictness de dependência interna x scratch
   pyprojects dos testes (mesma família do #827); VEREDITO DE DESIGN pendente do dono
   (mail gc-wisp-5l3zf4: pins @baseline vs helper injetor).
 - Raiz da lane (commits locais `bbb51101d6`, `b44af1a75f`, fix-pass): origin deletou a

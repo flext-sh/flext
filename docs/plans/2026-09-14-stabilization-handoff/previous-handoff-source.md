@@ -62,7 +62,7 @@ Pausado pelo operador em 2026-09-14 ~17:45Z. Plano aprovado (SSOT de escopo e de
 | Super                              | merge `-s ours` de `c2dba374e0` (adjudicado) + `5806a67377` (31 gitlinks, `[project.scripts]` → `FlextRoot*.main`); push feito; **PR flext-sh/flext#240 aberto, não mergeado**                                                                                                                                                               |
 | flext-infra S2 (1ª metade)         | `[WIP] 95baa0c0d` só templates (`.envrc.j2`, `beads-config.yaml.j2`, `beads-metadata.json.j2`, `.mise.toml.j2`, `check-beads-policy.sh.j2`, `config/beads.yaml.j2`, `config/workspace.yaml.j2`); push feito; sem PR; **não regenerado/validado ainda**                                                                                       |
 | `make check` frota                 | parado por ordem em 9/32; 0 tracebacks; PASS flext-api; FAIL por achados: raiz, auth, cli, core (619: namespace 585, silent-failure 18, codemod 9, pyrefly 3, pyright 2, mypy 1, runtime-census 1), db-oracle (pyrefly `services/api_runtime.py:123`), dbt-ldap, dbt-ldif, dbt-oracle. Relatórios em `<lane>/.reports/workspace/check/*.log` |
-| Validação anterior (lane)          | gen ×2 ponto fixo; setup 0; fix 32/32; fmt 32/32                                                                                                                                                                                                                                                                                             |
+| Validação anterior (lane)          | gen x2 ponto fixo; setup 0; fix 32/32; fmt 32/32                                                                                                                                                                                                                                                                                             |
 | Beads                              | fechadas nesta sessão: `flext-xeg9x`, `flext-5mgye` (obsoletas por S1)                                                                                                                                                                                                                                                                       |
 | `~/flext` (checkout do operador)   | **não propagado**; sessão externa (pid 3657409) roda `make -C <membro> gen` em loop e apaga o lock do journal — coordenar antes                                                                                                                                                                                                              |
 
@@ -94,7 +94,7 @@ Pausado pelo operador em 2026-09-14 ~17:45Z. Plano aprovado (SSOT de escopo e de
    `conform.py:493-495,609-711` (rotas beads), `detector.py:27-66,461-477,523-560`
    (symlink/rota). `codegen.yaml` toolchain gascity/beads endpoint; template
    `.envrc.beads-workspace.j2`; `check-beads-policy.sh.j2` sem invocador → remover com
-   entradas. Testes listados no plano §S2. Então gen ×2, setup, fix, fmt, check (executa
+   entradas. Testes listados no plano §S2. Então gen x2, setup, fix, fmt, check (executa
    até o fim), grep de resíduo, commit sem `[WIP]`, PR, merge, propagar membros
    (`land_members.sh`) e super; enviar merge SHA à sessão ai-hub (ela espera o SHA do
    `.envrc.j2`).

@@ -99,7 +99,7 @@ this documentation reconciliation does not promote this proposed ADR to accepted
 - One migration cycle must transport all construction alias sites (fleet + external) in
   the same landing; partial cutovers are defects.
 - The dedicated session must prove: flext-core contract tests, fleet pytest across
-  randomized seeds (≥8 consecutive green), gates ×2 idempotent, and runtime import
+  randomized seeds (≥8 consecutive green), gates x2 idempotent, and runtime import
   identity checks in each external consumer.
 
 ## 0.13 unified planning reconciliation (documentation only)

@@ -19,7 +19,7 @@
   - [9.2 Drifts de DOCUMENTAÇÃO corrigidos nesta reconciliação](#92-drifts-de-documentacao-corrigidos-nesta-reconciliacao)
   - [9.3 Regras que precisam ser CODIFICADAS para o piloto de produção com propagação](#93-regras-que-precisam-ser-codificadas-para-o-piloto-de-producao-com-propagacao)
   - [9.4 Inputs atualizados nesta passada](#94-inputs-atualizados-nesta-passada)
-- [10. FUSÃO — handoff flext-gov (sessão irmão) × este handoff (13:05 UTC)](#10-fusao-handoff-flext-gov-sessao-irmao-este-handoff-1305-utc)
+- [10. FUSÃO — handoff flext-gov (sessão irmão) x este handoff (13:05 UTC)](#10-fusao-handoff-flext-gov-sessao-irmao-este-handoff-1305-utc)
   - [10.1 Duas cadeias de gate, uma sequência (sinergia central)](#101-duas-cadeias-de-gate-uma-sequencia-sinergia-central)
   - [10.2 Estado de acumulação entre as sessões (o que uma deixou para a outra)](#102-estado-de-acumulacao-entre-as-sessoes-o-que-uma-deixou-para-a-outra)
   - [10.3 Cadeia única de retomada (merge das duas ordens)](#103-cadeia-unica-de-retomada-merge-das-duas-ordens)
@@ -43,7 +43,7 @@
 | **Worktrees de flext-infra**                    | `flext-infra/worktrees/promoted-framework-lift` (de outra lane — NÃO tocar)                                                                                                                              |
 | **~30 submódulos dirty**                        | `m` prefix (working-dirty) vs `[+SHA]` (gitlink divergente) — A0.2 triagem obrigatória ANTES de commit umbrella                                                                                          |
 | **Suíte de testes**                             | flext-infra: verde PARCIAL (27 pontuais em 6 arquivos); 9 reds ci_matrix (fixed-point pyproject.toml) + 3 timeouts make_environment + 1 ast-grep timeout (mod_circuit) + 1 git-identity (docs generator) |
-| **`make gen`**                                  | VERDE ×2 no escopo flext-infra repo; **PUSH ÉVitar** até fixed-point do pyproject (classe `flext-3cabz`) fechado                                                                                         |
+| **`make gen`**                                  | VERDE x2 no escopo flext-infra repo; **PUSH ÉVitar** até fixed-point do pyproject (classe `flext-3cabz`) fechado                                                                                         |
 | **crg graph**                                   | `Built at commit 79dcca088` — STALE 2+ dias vs tip; rodar `code-review-graph update` antes de qualquer citação                                                                                           |
 | **Capsule-budget de ~/agents**                  | capsuula 9.477/9.488 (folga ~11 chars) — NÃO criar artifacts novos sem ADR; tudo novo vai in-place no corpo                                                                                              |
 
@@ -78,7 +78,7 @@ Regen: `env -u BEADS_DOLT_SERVER_DATABASE bd list --status=open --json`
 | ADRs ~/agents                                          | `~/agents/docs/adr/ADR-0012/0013`                                                                                                                                                                                                                                                                                | crg-autopilot, fork versions                                                                                                                                                                                                                               |
 | Regra nova (RASCUNHO apt)                              | `~/agents/rules/workflow/landing-and-sweep-law.md`                                                                                                                                                                                                                                                               | leis: descarte histórico inventário prévio; push FF = viol; idempotência SLA; red no turn                                                                                                                                                                  |
 | Comando (RASCUNHO apt)                                 | `~/agents/commands/implementation/conformance-sweep.md`                                                                                                                                                                                                                                                          | ciclo completo A0→A5                                                                                                                                                                                                                                       |
-| Skills atualizadas in-place (CORPO, legal silo-budget) | `~/agents/skills/framework/flext-development` (landing delta), `tool/beads` (mutation coupling), `project-wide/shell/make-check` (pré-push guard ×2 + graph loop), `agent-wide/verification/verification-loop` (investigation protocol), `project-wide/coordination/fleet-lane-discipline` (graph freshness law) | seções novas no fim de cada SKILL.md — guardando conteúdo pendente ADR capsule                                                                                                                                                                             |
+| Skills atualizadas in-place (CORPO, legal silo-budget) | `~/agents/skills/framework/flext-development` (landing delta), `tool/beads` (mutation coupling), `project-wide/shell/make-check` (pré-push guard x2 + graph loop), `agent-wide/verification/verification-loop` (investigation protocol), `project-wide/coordination/fleet-lane-discipline` (graph freshness law) | seções novas no fim de cada SKILL.md — guardando conteúdo pendente ADR capsule                                                                                                                                                                             |
 | Rules ast-grep SSOT                                    | `flext-infra/src/flext_infra/codemod/rules/` (139) + `~/agents/ast-grep-rules/universal/`                                                                                                                                                                                                                        | toda regra nova com snapshot-test em `ast-grep-rule-tests/`                                                                                                                                                                                                |
 | crg capa CLI                                           | `code-review-graph {status,update,impact,query,detect-changes,refactor,flows,dead-code,large-functions,update,doctor,daemon}`                                                                                                                                                                                    | automação de evidência                                                                                                                                                                                                                                     |
 | bd remember (fila)                                     | `fleet-stabilization-2026-09-08`, `lane-worktree-and-living-plan-law`, `operator-correction-learning`                                                                                                                                                                                                            | lições absorvidas                                                                                                                                                                                                                                          |
@@ -151,8 +151,8 @@ transição, turno a turno.
 | anos da sessão: commits superproject | 9 (4159c877b4 → 516d9adc80)                                                          |
 | commits flext-infra                  | 3 (dd65db77c, bff592284, 3000b6bc0)                                                  |
 | reds fixed-point testes ci_matrix    | 9/28 — classe flext-3cabz                                                            |
-| Timeout testes make_environment      | 3 ×60s — flext-9wwed                                                                 |
-| verts strategy: VERDE hoje           | flext-infra: gen ×2, workspace+docs-auditor+conform+make-env gate=27 testes pontuais |
+| Timeout testes make_environment      | 3 x60s — flext-9wwed                                                                 |
+| verts strategy: VERDE hoje           | flext-infra: gen x2, workspace+docs-auditor+conform+make-env gate=27 testes pontuais |
 | crg                                  | 33.744 nodes/230k edges, build 79dcca088 (stale)                                     |
 
 ---
@@ -172,17 +172,17 @@ tarefa de reconciliação local; propagationpreserved: nada foi normalizado.
 
 | ADR-010 §Verification contract                                          | SLA no plano §3                      | Estado medido no tip `bff592284`                                                                                 | Conclusão                                                              |
 | ----------------------------------------------------------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| (1) `make gen` ×2 byte-idempotente                                      | SLA-1 Idempotência                   | **RED** — 9 ci_matrix + classe `flext-3cabz` (prova 1ª passada de `FlextInfraCodegenProjectNew` falha em tmpdir) | **BLOQUEIA o piloto de produção**                                      |
+| (1) `make gen` x2 byte-idempotente                                      | SLA-1 Idempotência                   | **RED** — 9 ci_matrix + classe `flext-3cabz` (prova 1ª passada de `FlextInfraCodegenProjectNew` falha em tmpdir) | **BLOQUEIA o piloto de produção**                                      |
 | (2) Standardization audit zero-drift                                    | SLA-2 Gate CI                        | RED (`flext-cpkk` P0; base vermelha = entrega vermelha pela rule `production-readiness`)                         | bloqueia                                                               |
 | (3) `make mod` zero actionable/detection-only + **rota CRG sancionada** | automação §10-11 (ciclo crg+mod+gen) | mod viável (139 regras SSOT); CRG com grafo STALE @79dcca088                                                     | piloto usa a rota já sancionada pelo ADR — não é invenção desta sessão |
-| (4) testmon canônico / budget (10s)                                     | SLA-3 Budget                         | VULNERADO (3×60s+, `flext-9wwed`)                                                                                | bloqueia                                                               |
+| (4) testmon canônico / budget (10s)                                     | SLA-3 Budget                         | VULNERADO (3x60s+, `flext-9wwed`)                                                                                | bloqueia                                                               |
 | (5) fence de consumers/projetos independentes                           | —                                    | out-of-scope indie                                                                                               | —                                                                      |
 
 ### 9.2 Drifts de DOCUMENTAÇÃO corrigidos nesta reconciliação
 
 | #   | Drift                                                                                       | Correção aplicada                                                                                                                                                                                                        |
 | --- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| DR1 | Skill `flext-development` "Landing law delta" afirmava o guard gen-×2 como lei desta sessão | **corrigido in-place**: ADR-010 §Verification contract (item 1) é o DONO; skill restata para o caso pressão, não re-inventa                                                                                              |
+| DR1 | Skill `flext-development` "Landing law delta" afirmava o guard gen-x2 como lei desta sessão | **corrigido in-place**: ADR-010 §Verification contract (item 1) é o DONO; skill restata para o caso pressão, não re-inventa                                                                                              |
 | DR2 | Plano §10 apresentava o loop crg como invenção                                              | esclarecido: **ADR-010 item 3 já sanciona a rota ai-hub CRG/LSP** como evidência sem pré-requisito de host — o ciclo §11 é ADR-conformant                                                                                |
 | DR3 | Framing "pré-existente fora de escopo" (meu delta verde) usado para Reds estruturais        | rule `production-readiness` proíbe: defeito no blast radius é adotado ("combined state is the deliverable") — Reds do ator só são ACEITÁVEIS como beads abertas com promoção bloqueada, nunca como "fora do meu mirante" |
 
@@ -215,7 +215,7 @@ de retomada; a cadeia 9.3 substitui qualquer leitura de Reds como "fora de alcan
 
 ---
 
-## 10. FUSÃO — handoff flext-gov (sessão irmão) × este handoff (13:05 UTC)
+## 10. FUSÃO — handoff flext-gov (sessão irmão) x este handoff (13:05 UTC)
 
 Fonte fundida: `~/flext-work/flext-gov-super/docs/plans/2026-09-11-flext-gov-handoff.md`
 (SKA a853d3e599) — programa de consumo/GOV (`epic flext-ssnc7`, ADR-015,
@@ -259,7 +259,7 @@ AQUI como mapa único, e o decreto §13 deles (§10.4) governa as duas sessões.
 
 ### 10.3 Cadeia única de retomada (merge das duas ordens)
 
-1. Ler AMBOS os handoffs (§1-§9 aqui; §1-§13 lá) → revalidar TODO↔bd×2 (decree §13).
+1. Ler AMBOS os handoffs (§1-§9 aqui; §1-§13 lá) → revalidar TODO↔bdx2 (decree §13).
 2. Pedir **A1** ao operador → pousar 3 lanes gov com `--no-ff` (absorvendo meu tip
    9526645ea9) + A0.3 do sweep em um PR por lane.
 3. Pedir **A2** → `crg update/build` nos tips integrados (fecha a lacuna de grafo das

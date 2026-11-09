@@ -29,7 +29,7 @@ declarative pilot: **flext-tap-ldap**, landed). Rollout to the remaining
 
 | Project                | Status                                   | Evidence                                                                                                                                                 |
 | ---------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `flext-tap-ldap`       | **Converted** (declarative driver)       | Pilot realized 2026-07-17: src 3276 → 914 LOC (−72%)                                                                                                     |
+| `flext-tap-ldap`       | **Converted** (declarative driver)       | Pilot realized 2026-07-17: src 3276 → 914 LOC (-72%)                                                                                                     |
 | `flext-tap-oracle`     | **Not converted**                        | Still has hand-rolled `tap.py` (`:26/:91/:167/:220`) and `streams.py` (`:40/:268`); bypasses the meltano base entirely                                   |
 | `flext-target-oracle`  | **Not converted**                        | 3211 src LOC; Loader pattern, declares no `sink_factory` (the former `create_sink()` stub raising `TypeError` was deleted 2026-10-25)                    |
 | `flext-dbt-*` (all)    | **Not converted**                        | Each pilot re-declares Oracle connection scalars from `settings.DbOracle`                                                                                |
@@ -309,7 +309,7 @@ data, never machinery. New inviolable rules (bind every `flext-(tap|target|dbt)-
     and sync, never through Click `main()`. `<pkg>.cli:main` and `Service().cli_main`
     stay as deprecated pass-throughs until their census reaches zero.
 
-**Pilot result (flext-tap-ldap):** src 3276 → 914 LOC (−72%); deleted
+**Pilot result (flext-tap-ldap):** src 3276 → 914 LOC (-72%); deleted
 
 `tap.py`/`client.py`/`streams.py`/`ldif_streams.py` + old `_utilities` mixins; real
 

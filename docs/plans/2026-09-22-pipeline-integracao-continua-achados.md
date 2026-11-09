@@ -205,7 +205,7 @@ Dono canônico (header dos 32 Makefiles): `flext-infra/config/codegen.yaml` +
 - **Ciclo 600 s**: `models.yaml:5-6`; daemon `model_pipeline_daemon.py:384`; READY só
   após publicação completa (`:206-216`, `:369-381`); fail-loud `restart: no` (`:273-275`
   systemctl).
-- **Acoplamento descoberta×seleção** (incremento 2 pendente):
+- **Acoplamento descobertaxseleção** (incremento 2 pendente):
   `model_pipeline/cycle.py:70-119`, segunda leitura de inventário em `:92` (comentário
   CAS de fatos stale). Bead `aihub-6k1.28`.
 - **Publicação**: snapshot `model_pipeline/snapshot.py:142-144` (target `ccs`,

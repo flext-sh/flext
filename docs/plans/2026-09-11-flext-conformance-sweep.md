@@ -73,7 +73,7 @@
 
 | Item                | Evidência                                                                                        |
 | ------------------- | ------------------------------------------------------------------------------------------------ |
-| Rollup ×2           | PRs flext **#215** `9a73d0f8` e **#216** `c4f9fb1b` (ambas MERGED)                               |
+| Rollup x2           | PRs flext **#215** `9a73d0f8` e **#216** `c4f9fb1b` (ambas MERGED)                               |
 | 8 guias sem legado  | doc gates do gen verdes pós-saneamento                                                           |
 | `make gen` umbrella | **VERDE** + ponto fixo (colisão "guia protegida" era transitória — iteração de worktree do ator) |
 
@@ -109,7 +109,7 @@
 | A4  | **Zero alinhamento proativo com o ator** (gc mail) — descobri 3 movimentações de tip tardiamente, gerei 2 rollups de gitlink que poderiam ser 1                                                                          | Média            | lição registrada; nas próximas lanes: mensagem de frota antes, absorb origin a cada material-step                        | incluir "fleet ping" no checklist da skill                                                                                                    |
 | A5  | **Commits de `docs/plans` direto na integração `0.12.0-dev`** (`135de0efae`, `c7308e6791`) — seguindo padrão do predecessor sem questionar                                                                               | Baixo-médio      | documento vivente tem natureza de bookkeeping, mas lei exige branch de mudança                                           | **decisão pendente do operador**: (a) autorizar exceção formal p/ planos vivos, ou (b) fluxo PR-only; enquanto isso, acumular e emitir via PR |
 | A6  | Plano anterior rotulou vermelhos de check como "amarelo aceitável" — **RED é RED**; não criar bead para cada classe foi informalidade                                                                                    | Alto (corrigido) | esta revisão itemiza cada classe com bead/dono (§5)                                                                      | —                                                                                                                                             |
-| A7  | **Grep heurístico para "spalhamento do fix"** em membro (literal não casa com `$(APPLY),N`) — quase declarei conclusão errada                                                                                            | Médio            | desmentido no mesmo passo; prova correta é gen ×2 ponto fixo por membro (§2)                                             | registrar na skill: "grep literal não prova macro Make"                                                                                       |
+| A7  | **Grep heurístico para "spalhamento do fix"** em membro (literal não casa com `$(APPLY),N`) — quase declarei conclusão errada                                                                                            | Médio            | desmentido no mesmo passo; prova correta é gen x2 ponto fixo por membro (§2)                                             | registrar na skill: "grep literal não prova macro Make"                                                                                       |
 | A8  | Verifiquei "0 regrowth" em CICLOS de gen que **falharam** — válido para o escritor, inválido como prova do pipeline                                                                                                      | Médio            | revisão v2 separa as duas afirmações explicitamente                                                                      | —                                                                                                                                             |
 | A9  | Monopólio sobre "conformidade" mostrou limite real: reds estruturais são reformas do ator em voo — lane `z82dg-nsloc`\*\* — respeitei, mas o plano anterior não explicava o custo (check/test vermelhos indefinidamente) | Informativo      | §2.2 explicita dependência e gatilho de absorção                                                                         | —                                                                                                                                             |
 
@@ -120,7 +120,7 @@
 Sweep não está "feito" quando minha Lane fica verde; está feito quando o ambiente
 hospedado **se mantém** conforme sob operação normal e CI. Definição de done (D1–D6):
 
-**D1 — Ponto fixo de geração por membro**: `make gen` ×2 byte-idêntico para os 32
+**D1 — Ponto fixo de geração por membro**: `make gen` x2 byte-idêntico para os 32
 membros (hoje: verde no umbrella; 9 testes ci_matrix provam drift em membro novo →
 `flext-2h0un`).
 
@@ -148,7 +148,7 @@ fleet), CI verde em `0.12.0-dev` → promoção a `main`
 
 **D6 — Ativação nos consumidores**: workspaces hospedeiros (ex.: ai-hub consome
 `agents-governance` 0.5.0; o paralelo flext: workspaces de projetos hospedados
-regenerados sobre o novo tip) + prova pós-ativação no runtime canônico (gen ×2 + check +
+regenerados sobre o novo tip) + prova pós-ativação no runtime canônico (gen x2 + check +
 test no ambiente real, não só no sand de sweep).
 
 ---
@@ -164,9 +164,9 @@ fica como histórico do raciocínio D1–D6 (§3).
 | #   | Item                                                                                                              | Bead (status real)                                                            | Referências no plano   | Aceite                                     |
 | --- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ---------------------- | ------------------------------------------ |
 | 1   | **Pouso do hotfix D1-D2** (reparar violações de pouso: PR `--no-ff` pós-verde, inventário de hunks, gates no SHA) | `flext-vo335` (OPEN P1)                                                       | §9.1 A0.3              | PR pós-verde; violações V1-V3 zeradas      |
-| 2   | **Fixed-point drift** — unificar composição pyproject apply/verify em `conform.py`; codemod da regra nova no SSOT | `flext-2h0un` (OPEN P1, instância) ⇄ classe canônica `flext-3cabz` (OPEN P2)  | §10 F1-F4, §11 Wave-P1 | probe ×2 byte-idêntico; 9 ci_matrix verdes |
+| 2   | **Fixed-point drift** — unificar composição pyproject apply/verify em `conform.py`; codemod da regra nova no SSOT | `flext-2h0un` (OPEN P1, instância) ⇄ classe canônica `flext-3cabz` (OPEN P2)  | §10 F1-F4, §11 Wave-P1 | probe x2 byte-idêntico; 9 ci_matrix verdes |
 | 3   | **Budget de teste** (setup/hostile-env, ast-grep receipt)                                                         | `flext-9wwed` (OPEN P1; **dep** em `flext-38p39`); `flext-p8sjy` CLOSED→9wwed | §11 Wave-P2            | 0 timeout; <=120s                          |
-| 4   | **Gate de regrowth + keep_backup**                                                                                | `flext-gxgqp` (OPEN P2)                                                       | §11 Wave-P3; §2 D2     | gate falha em fixture; gen ×2              |
+| 4   | **Gate de regrowth + keep_backup**                                                                                | `flext-gxgqp` (OPEN P2)                                                       | §11 Wave-P3; §2 D2     | gate falha em fixture; gen x2              |
 | 5   | **make setup** (uv re-resolve antes de install)                                                                   | `flext-5k9r7` (**IN_PROGRESS** P1 — dono em execução; não duplicar)           | §9.1                   | regen de membros verde                     |
 | 6   | Revisão humana dos 8 diffs de docs APPLY (A2) antes de pousar os 2 commits docs locais via PR                     | — (autocrítica A2/A5)                                                         | §2, §12(d)             | diffs revisados 1-a-1                      |
 | 7   | Onda-P autorizada → executar §11.1 nas ondas P1-P3                                                                | proposta §11/§12(a)                                                           | §10-§11                | aceites §11.3                              |
@@ -280,9 +280,9 @@ budget 9.477/9.488):
 
 | Caminho                                                     | Conteúdo                                                                                                                                                                                                             |
 | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `skills/framework/flext-development/SKILL.md`               | seção "Landing law delta": pressão ≠ revoga lei de pouso; descarte de história pública exige inventário de hunks em bead; pre-push guard `make gen` ×2 byte-idênticos; pre-commit liveness pós-mutação de CI surface |
+| `skills/framework/flext-development/SKILL.md`               | seção "Landing law delta": pressão ≠ revoga lei de pouso; descarte de história pública exige inventário de hunks em bead; pre-push guard `make gen` x2 byte-idênticos; pre-commit liveness pós-mutação de CI surface |
 | `skills/tool/beads/SKILL.md`                                | seção "Mutation coupling delta": bead ANTES da 1ª mutação; red → bead no mesmo turno com site/hipótese/gatilho; fechamento com 4 evidências                                                                          |
-| `skills/project-wide/shell/make-check/SKILL.md`             | seção "Idempotency pre-push guard": ×2 idêntico obrigatório; divergência 2ª passada = P0-produto; lock de journal = bead + kill owner, nunca `rm -f`                                                                 |
+| `skills/project-wide/shell/make-check/SKILL.md`             | seção "Idempotency pre-push guard": x2 idêntico obrigatório; divergência 2ª passada = P0-produto; lock de journal = bead + kill owner, nunca `rm -f`                                                                 |
 | `skills/agent-wide/verification/verification-loop/SKILL.md` | seção "Investigation protocol delta": hipótese→método antes de mutar; artefatos em ARQUIVO; orçamento força no teste, nunca no limite                                                                                |
 | `rules/workflow/landing-and-sweep-law.md`                   | NOVO: descarte de história pública como efeito de produção; pressão não revoga pouso; idempotência como SLA; red capturada no turno                                                                                  |
 | `commands/implementation/conformance-sweep.md`              | NOVO: comando do ciclo completo A0→A5 do sweep                                                                                                                                                                       |
@@ -306,7 +306,7 @@ arquivos criados acima servem como RASCUNHO de conteúdo, a absorver in-place.
 
 | #   | Fato                                               | Evidência (arquivo/comando)                                                                                                                                                                                                                                                                                                                                             |
 | --- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| F1  | `make mod` é o único mutador estrutural sancionado | `flext-infra/Makefile` `_builtin_mod_apply` -> `refactor mod` (compõe ast-grep × Rope × LSP); invocação direta de ast-grep é sonda de pesquisa, nunca mutação                                                                                                                                                                                                           |
+| F1  | `make mod` é o único mutador estrutural sancionado | `flext-infra/Makefile` `_builtin_mod_apply` -> `refactor mod` (compõe ast-grep x Rope x LSP); invocação direta de ast-grep é sonda de pesquisa, nunca mutação                                                                                                                                                                                                           |
 | F2  | Regra plan composto em camadas herdáveis           | `flext-infra/src/flext_infra/_utilities/codemod_rules.py` — universal -> runtime-transitivo -> local; regras herdadas via distribuições instaladas (= global de graça para consumidores)                                                                                                                                                                                |
 | F3  | Catálogo SSOT de regras                            | `flext-infra/src/flext_infra/codemod/rules/**.yml` (regras de frota com snapshot-tests) + library de linguagem em `~/ai-hub/ast-grep-rules/` (anti-hardcode, agent-law contract, bans de boundary)                                                                                                                                                                      |
 | F4  | `make gen` = único estampador de projeções         | `codegen conform --mode apply`; aceite = segunda passada byte-idêntica (fixed point)                                                                                                                                                                                                                                                                                    |
@@ -338,7 +338,7 @@ nenhum seletor `WHAT=` salvo necessidade declarada.
 
 | Onda        | Unidade                                                                               | Classe/bead                                                          | Gate do aceite                                                                   |
 | ----------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| **Wave-P1** | flext-infra `codegen_file_plan.py` + `conform.py` (composição pyproject apply/verify) | fixed-point drift (instância `flext-2h0un` sob classe `flext-3cabz`) | probe `project_new` ×2 byte-idêntico; 9 testes ci_matrix verdes; gen ×2 umbrella |
+| **Wave-P1** | flext-infra `codegen_file_plan.py` + `conform.py` (composição pyproject apply/verify) | fixed-point drift (instância `flext-2h0un` sob classe `flext-3cabz`) | probe `project_new` x2 byte-idêntico; 9 testes ci_matrix verdes; gen x2 umbrella |
 | **Wave-P2** | 3 testes make_environment + ast-grep receipt timeout                                  | budget law `flext-9wwed`                                             | 0 timeout; suite <=120s/membro                                                   |
 | **Wave-P3** | gate de regrowth (fixture semeada)                                                    | `flext-gxgqp`                                                        | gate FAILS em fixture; umbrella verde                                            |
 
@@ -352,7 +352,7 @@ Branch: lane dedicada `hotfix/conformance-sweep-p` de `origin/0.12.0-dev` recém
       bloco
 - [ ] 1 codemod novo no SSOT (driver H1/H2/H3 do fixed-point) COM snapshot-test
 - [ ] Loop aplicado nas ondas P1/P2/P3
-- [ ] `make gen` ×2 idêntico em flext-infra antes de qualquer push
+- [ ] `make gen` x2 idêntico em flext-infra antes de qualquer push
 - [ ] Gates verdes no SHA integrado (pós-merge), rerun registrado
 - [ ] Instância + ondas fechadas com 4 evidências; classe `flext-3cabz` colapsada a
       estado de referência

@@ -53,9 +53,9 @@ and the
 [Pydantic consumer guide](../../docs/guides/using-pydantic.md#source-derived-protocol-contracts).
 Its current protocol amendment owns projection shape, all-Python consumer scope,
 native Rope migration and pilot-before-rollout proof.
-Apply its 2026-11-02 strict mandate before code: every `m.*` typing reference is
-prohibited; canonical `p.*` protocols are `@runtime_checkable`. Executable model
-construction and schema ownership stay concrete. Follow the existing Pydantic
+Consumer annotations use canonical `p.*` protocols decorated with
+`@runtime_checkable`; native schema fields name their concrete model owner.
+Executable model construction and schema ownership stay concrete. Follow the existing Pydantic
 guide for valid `t.Port` and native payload-schema preservation, without an
 annotation fallback or compatibility layer.
 Cover every pilot variation, then complete that same pattern's fleet declarations,

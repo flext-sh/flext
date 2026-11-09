@@ -93,7 +93,7 @@ conforme R6 — nada de produtivo passa da lane sem autorização explícita.
 | flext-core (lane)  | ˆ                                | `14c63121d`                 | F4 core: `FlextUtilitiesFiles` (`append_atomic`/`write_atomic`, payload `r[int]`), pin refresh infra→`bff59228` + cli |
 | flext-infra (lane) | `feat/consumer-gates`            | `8c4ef3266`                 | F1 infra: detector + model + engine wiring                                                                            |
 | flext-infra (lane) | ˆ                                | `ba1e5ab70`                 | F2/F4: duplicação consumer+family + budget gate                                                                       |
-| flext-infra (lane) | ˆ                                | `c8a429d59`                 | Autocrítica: detector v2 grounded; budget deriva de `ALLOWED_GATES` (−64 LOC líquida)                                 |
+| flext-infra (lane) | ˆ                                | `c8a429d59`                 | Autocrítica: detector v2 grounded; budget deriva de `ALLOWED_GATES` (-64 LOC líquida)                                 |
 | super (lane)       | `feat/flext-gov-consumption-law` | `3ebf812055` / `b25d519d51` | F3 docs + ledger honesto                                                                                              |
 
 Pins vivos (core lane `uv.lock`): flext-infra `rev=0.12.0-dev#bff59228`, flext-cli

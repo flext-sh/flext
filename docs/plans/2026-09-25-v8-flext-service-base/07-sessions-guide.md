@@ -211,7 +211,7 @@ src/<package>/
 - [ ] Services with ports and parameters only; no global reads; no cross `fetch_global`.
 - [ ] `api.py` is the only root; `cli.py` derived and real, or absent.
 - [ ] Tests through facades with real adapters and failure paths.
-- [ ] `make gen` ×2 fixed point, `fix`, `fmt`, `check`, `test`, `build` green in the
+- [ ] `make gen` x2 fixed point, `fix`, `fmt`, `check`, `test`, `build` green in the
       lane.
 - [ ] The project's consumers revalidated; lock refreshed when the base changed.
 - [ ] Docs and docstrings in the same PR; residue (section 6) removed.

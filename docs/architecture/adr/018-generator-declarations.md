@@ -160,6 +160,10 @@ ancestor lazy exports are planned and published as one authenticated candidate, 
 source without importing the stale package being repaired. Callers use the nearest
 composed facade at every stage (ADR-028 [Decision 10](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
 
+Exported data classes retain their nominal identity. In particular, a subclass of a
+native data type is a published member, not a namespace composition base; exporting
+two such classes never combines their instance layouts in the facade's MRO.
+
 **Projection-engine correction, approved 2026-11-01.** The incident mandate
 supersedes the 2026-10-29 requirement to use native semantic machinery during
 generation. `make gen` projects declarations through one typed, invocation-local
@@ -289,13 +293,10 @@ contracts, source-module layout, automatic consumer rewiring and pilot coverage.
 The MRO/Pydantic analyzer and environment acceptance tracked by
 `flext-itpd1.13.11` remains incomplete and is not replaced by this amendment.
 
-**Operator amendment 2026-11-02 — strict protocol typing.** Every `m.*` type
-reference is prohibited. First-party model, service and data contracts are typed
-through their canonical `p.*` protocols, each decorated with `@runtime_checkable`.
-This includes model fields, callback signatures, aliases, quoted references,
-generic arguments and service payload specializations; runtime evaluation of a
-typing expression does not make a concrete-model annotation permissible.
-Earlier exceptions retaining `m.*` annotations are superseded.
+Consumer model, service and data annotations use their canonical generated `p.*`
+contracts, each decorated with `@runtime_checkable`. Native Pydantic schema fields
+use their concrete model owner, including nested model operands. Callback
+signatures, consumer aliases and service payload annotations retain protocols.
 
 Executable construction, validation, serializers, schema and handler metadata
 retain the actual model owner: a Protocol is never instantiated. A value-level
@@ -304,24 +305,16 @@ existing canonical scalar, enum and external SDK type owners; this decision does
 not authorize SDK-shaped protocol mirrors or aliases that disguise model classes
 as protocols.
 Native model base expressions and metadata factory calls such as `m.Field`
-remain actual model construction. They do not permit `m.*` in a type operand;
-the native migration distinguishes these roles by syntax and resolved identity.
+remain actual model construction. Schema and consumer positions are distinguished
+by syntax and resolved identity, not by a blind prefix replacement.
 
 Use the existing `t.Port[p.X]` only for a genuine validated DI capability under
 ADR-019. Its dependency exclusion from serialization and JSON Schema cannot
-replace a persisted payload's validation. Serializable protocol-typed values
-must preserve the actual model's native validation, serializers and schema
-through native `GetPydanticSchema` projection at the established Pydantic owner.
-The metadata delegates to the original model schema; it preserves nested payloads,
-generic specialization, aliases, defaults, strictness and JSON Schema without
-retaining a concrete model in the consumer's type position. Metadata expressions
-that construct or validate a model are runtime expressions, not annotation targets
-for the reception codemod.
+replace a persisted payload's validation. The concrete field model owns native
+validation, serializers, aliases, defaults, specialization and JSON Schema.
 
-**Amendment 2026-11-09 — simplified model fields.** Model fields now use the
-model directly (``m.<Model>``) instead of the deferred schema owner form
-``Annotated[<protocol route>, t.schema_for_model(lambda: <model>)]``. The protocol
-mirror and deferred schema owner are no longer needed at the field boundary; the
+Model fields use the model directly (``m.<Model>``). No deferred schema helper,
+protocol schema hook or model-lookup registry is retained at this boundary; the
 model itself owns validation, serialization and JSON Schema. Qualify that
 contract with real ingress, serialization and consumer execution; do not invent a
 compatibility schema, suppress a failure, or restore a prohibited form to obtain
@@ -364,6 +357,9 @@ input validation from outward serialization: governed model presets use
 `use_enum_values=False`, superseding the intermediate primitive-output decision.
 A complete `StrEnum` remains the input and stored field type, and the projected
 getter and mutable setter retain that enum. Frozen fields have no setter.
+A frozen model's protocol cannot inherit writable fields from a mutable model's
+protocol. Its projection declares those inherited fields as read-only members;
+the model's native inheritance and runtime behavior remain authoritative.
 Default and factory producers, strict Python construction, JSON validation and
 existing enum consumers must close in the same migration. Python dumps retain
 members; JSON serialization emits values at the actual outward boundary.

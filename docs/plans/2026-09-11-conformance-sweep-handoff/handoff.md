@@ -56,7 +56,7 @@ no SHA → prova de runtime.
 
 1. **Tracker**: `env -u BEADS_DOLT_SERVER_DATABASE` para TODO comando `bd` neste tema
    (poluição de sessão causou horas de falso-bloqueio).
-2. **Provas por gerador**, nunca por find/grep literal (A7): gen ×2 byte-idêntico; grafo
+2. **Provas por gerador**, nunca por find/grep literal (A7): gen x2 byte-idêntico; grafo
    CRG fresco; `make mod` é o único mutador; `make gen` estampa.
 3. **Fechamento de bead** cita o escopo exato verde NO momento; pipeline parcial nunca
    citado como verde — resto vira bead nova.

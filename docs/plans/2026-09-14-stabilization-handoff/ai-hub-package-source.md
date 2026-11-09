@@ -171,7 +171,7 @@ de conflito
 - **Troca de repositório:** `cd` para outro repositório dentro da sessão (`CwdChanged`)
   troca para os valores daquele repositório.
 - **`.envrc` bloqueado:** produz mensagem visível do hook com o caminho.
-- **Deploy:** `agentsctl sync` ×2 → a 2ª execução muda 0 bytes;
+- **Deploy:** `agentsctl sync` x2 → a 2ª execução muda 0 bytes;
   `~/.claude/settings.json` contém os hooks gerenciados de SessionStart e CwdChanged.
 - **Gates:** gates nativos do ai-hub verdes; teste funcional público do `hook_client`,
   sem mock, com um `.envrc` real em `tmp_path` e `CLAUDE_ENV_FILE` apontando para
