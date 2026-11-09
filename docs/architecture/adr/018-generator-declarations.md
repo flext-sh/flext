@@ -376,6 +376,32 @@ suffix, guessed basename or per-symbol mapping table resolves a collision.
 Generated protocols, authored ports, composed facades and lazy exports preserve
 their distinct owners and public identities.
 
+Model contracts mirror `_models/` beneath `_protocols/`. Internal service
+contracts and authored DI ports live beneath `_protocols/_services/`; external
+integration capabilities live beneath `_protocols/_external/`, named by capability
+and domain. Each module owns one holder with nested contracts. Service projections
+remain source-derived; authored ports remain consumer-owned. External contracts
+describe only consumed capabilities and reuse official types rather than mirroring
+SDKs. Native declaration identities and consumers determine placement, not filename
+heuristics. Facades and initializers compose these holders without changing public
+`p` identities. `make mod` owns moves and complete consumer rewiring.
+
+The existing census and modification pipeline executes ordered phases:
+classify native declarations and destinations, relocate owners, rewire the complete
+consumer closure, then project and validate the coherent candidate. Phase outputs
+share the authenticated native source view and refresh affected inputs; generation
+does not discover a repair by repeatedly attempting publication.
+The existing semantic migration artifact persists the global source-to-destination
+identities for reuse by external consumers. Portable intent is separate from each
+checkout's observed source states and edits: applying it resolves native bindings
+and validates the target project's own sources before publication. Native Rope owns
+semantic moves and rewiring, including capabilities added at its upstream owner.
+
+No generated `model_conformance.py` witness is required or emitted. `make gen`
+retires existing generated witnesses through the shared retirement publisher.
+Candidate imports and ordinary native type gates validate actual declarations and
+consumers without a separate generated assignment surface.
+
 The native Rope workspace model and reference graph drive semantic discovery,
 annotation migration and automatic rewiring through flext-infra's modification
 operation. Generation reads declared source contracts through the shared AST

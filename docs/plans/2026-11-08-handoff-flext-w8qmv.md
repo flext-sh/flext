@@ -33,22 +33,23 @@ The plan is `~/.claude/plans/lexical-baking-harbor.md`. The bead is `flext-w8qmv
 
 1. **Refactor-suite baseline:** compare the 189 refactor failures with the base. Fix only regressions caused by d096973855.
 2. **`flext-w8qmv.12`:** with the lane CLI (`.venv/bin/flext-infra refactor mod --repository-root ~/flext --projects <repo> --rule-ids tests-fixture-method-missing-staticmethod`), apply `make mod` to the 9 cycle repos:
-   - meltano, oracle-wms, target-ldif, target-oracle, target-ldap, tap-oracle-wms, tap-oracle-oic, target-oracle-oic, and the root (42 modules).
-   - It aborts on "atomic source changed" while another actor edits the flext-infra rig; rerun when it is quiet.
-   - Commit each repo on `upload`.
+    - meltano, oracle-wms, target-ldif, target-oracle, target-ldap, tap-oracle-wms, tap-oracle-oic, target-oracle-oic, and the root (42 modules).
+    - It aborts on "atomic source changed" while another actor edits the flext-infra rig; rerun when it is quiet.
+    - Commit each repo on `upload`.
 3. **`flext-w8qmv.13`:** relocate the fixture holders out of `tests/fixtures` (auth, cli, infra, observability, tests), by rule.
 4. **`flext-w8qmv.14`:** generalize the rule "each package service base binds its own Settings" (approved for flext-plugin).
 5. **Test-secret rule:** finish the B105/B106 rule from the draft in `~/worktrees/flext-infra/test-secret-rule`, then apply it fleet-wide (auth 8, db-oracle 13, ldap 1, oracle-wms 12, tap-oracle-wms 18, target-oracle 3, web 2).
 6. **Root pin:** move the root flext-infra gitlink and the member upload heads, then land. Send the SHA to Algar.
 7. **Other open beads:**
-   - `flext-w8qmv.2`: the editor surface builds its own analyzer context (`codegen/_conform/editor.py`) instead of the canonical one (`deps/_modernizer/document.py`).
-   - `flext-1cl2f`: duplicated AGENTS.md managed blocks.
-   - `flext-obayy`: `make gen` exceeds its 900 s budget (facades: core 116 s, cli 61 s).
-   - pyright: 1674 errors in flext-web; `p` is rebound in `protocols.py`.
+    - `flext-w8qmv.2`: the editor surface builds its own analyzer context (`codegen/_conform/editor.py`) instead of the canonical one (`deps/_modernizer/document.py`).
+    - `flext-1cl2f`: duplicated AGENTS.md managed blocks.
+    - `flext-obayy`: `make gen` exceeds its 900 s budget (facades: core 116 s, cli 61 s).
+    - pyright: 1674 errors in flext-web; `p` is rebound in `protocols.py`.
 
 ## Uncommitted WIP from stopped agents (based on old `0.12.0-dev`)
 
 These worktrees hold uncommitted WIP; adopt it or redo it on the tip:
+
 - `~/worktrees/flext-infra/editor-analyzer-context`;
 - `~/worktrees/flext-infra/gen-facades-speed`;
 - `~/worktrees/flext-infra/agents-md-projection`;

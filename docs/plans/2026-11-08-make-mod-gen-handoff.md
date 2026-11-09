@@ -79,28 +79,28 @@ original: `~/.claude/plans/melhore-corrrija-automatize-ainda-melodic-quill.md`.
    lane e, quando o CI permitir, o check completo.
 2. **Zerar o pyrefly de `src/` do flext-infra (~40 restantes).** Os `tests/` são da
    sessão Rope (PR #2217, que deve ser mergeado em `upload`). Famílias:
-   - uniões discriminadas por `isinstance` de modelo: estreitar pela variante usada;
-   - fluxos de `ast`/Rope (`RopeAstNode` contra `AST`, escopo opcional);
-   - `JsonValue`;
-   - `missing-override`;
-   - `source_bases_runtime.py:196` (`SourceClassReference.rpartition`);
-   - `nesting_references.py:394` (`RopeImportedName` ausente no `p.Infra`).
+    - uniões discriminadas por `isinstance` de modelo: estreitar pela variante usada;
+    - fluxos de `ast`/Rope (`RopeAstNode` contra `AST`, escopo opcional);
+    - `JsonValue`;
+    - `missing-override`;
+    - `source_bases_runtime.py:196` (`SourceClassReference.rpartition`);
+    - `nesting_references.py:394` (`RopeImportedName` ausente no `p.Infra`).
 3. **flext-ldif.**
-   - Lint: E501, C901/PLR0914 em `acl_pipeline`, PLR0904 em `acl_region`.
-   - Pyrefly 21: 10 `missing-override`, `AclBindRule.require` (protocolo
-     desatualizado, sai pelo gen) e o teste gold de ACL.
+    - Lint: E501, C901/PLR0914 em `acl_pipeline`, PLR0904 em `acl_region`.
+    - Pyrefly 21: 10 `missing-override`, `AclBindRule.require` (protocolo
+      desatualizado, sai pelo gen) e o teste gold de ACL.
 4. **flext-db-oracle:** lint DOC201 em `tests/conftest.py`.
 5. **Abrir o PR** `upload-20261007` → `0.12.0-dev` no flext-infra, e depois nos
    membros, quando o CI estiver verde. Avisar o SHA às sessões que esperam (Kilo2,
    "Projeto continuação e integração", Rope, cosmos-main).
 6. **Defeitos do DcBackup, em beads filhos de `flext-w8qmv`** (`.5` a `.11`):
-   - (a) o mod aceitar os ids curtos que o check reporta;
-   - (b) seed do namespace do projeto nas fachadas geradas;
-   - (c) F821 do import-header;
-   - (d) property-docstring sem progresso;
-   - (e) crash do ban-loose-module-object;
-   - (f) storage/cache no filesystem do checkout, com fail-loud;
-   - (g) `.gitignore` de `.flext/*.lock` e `.envrc.local` (#2215 da sessão Rope).
+    - (a) o mod aceitar os ids curtos que o check reporta;
+    - (b) seed do namespace do projeto nas fachadas geradas;
+    - (c) F821 do import-header;
+    - (d) property-docstring sem progresso;
+    - (e) crash do ban-loose-module-object;
+    - (f) storage/cache no filesystem do checkout, com fail-loud;
+    - (g) `.gitignore` de `.flext/*.lock` e `.envrc.local` (#2215 da sessão Rope).
 7. **Desempenho do gen (`flext-obayy.1`):** usar o cache nativo de arquivos do Rope
    em `native_project.get_python_files` (30 redescobertas, 34 s). Depois, memo da
    resolução de anotações por (escopo, expressão).
@@ -112,14 +112,14 @@ original: `~/.claude/plans/melhore-corrrija-automatize-ainda-melodic-quill.md`.
 
 ## Divisão com as outras sessões (sem dois escritores no mesmo arquivo)
 
-| Sessão | Escopo |
-|---|---|
-| Fork handling Rope | `tests/` do pyrefly do infra (#2217); `ban-runtime-environment-skip` (#2211); pin do rope dc.6 (#2216); `.gitignore` do `.flext` (#2215) |
-| Estabilização cluster (d1110f) | 4 defeitos do mod/fix: IndentationError de imports, PEP 723, krr what≠filename, verbos promovidos sem target (com admin-merge autorizado para ela) |
-| cosmos-main | split por orçamento de membros no `_source_render_module` (`fix/projector-member-budget-20261108`) |
-| Algar | `fix:` das regras W3: `ban-test-import-outside-test-namespace`, depois `ban-loose-module-object`, depois `ban-reverse-runtime-import`; também o hook `__contract_model__` do projetor (flext-core #766) |
-| Projeto continuação e integração | perfil do censo no DataOP, para eu corrigir no dono |
-| Projeto flext integração e conclusão | não recebe mensagem direta (outro modo de permissão); o canal com ela é o bead `flext-w8qmv` |
+| Sessão                               | Escopo                                                                                                                                                                                                  |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fork handling Rope                   | `tests/` do pyrefly do infra (#2217); `ban-runtime-environment-skip` (#2211); pin do rope dc.6 (#2216); `.gitignore` do `.flext` (#2215)                                                                |
+| Estabilização cluster (d1110f)       | 4 defeitos do mod/fix: IndentationError de imports, PEP 723, krr what≠filename, verbos promovidos sem target (com admin-merge autorizado para ela)                                                      |
+| cosmos-main                          | split por orçamento de membros no `_source_render_module` (`fix/projector-member-budget-20261108`)                                                                                                      |
+| Algar                                | `fix:` das regras W3: `ban-test-import-outside-test-namespace`, depois `ban-loose-module-object`, depois `ban-reverse-runtime-import`; também o hook `__contract_model__` do projetor (flext-core #766) |
+| Projeto continuação e integração     | perfil do censo no DataOP, para eu corrigir no dono                                                                                                                                                     |
+| Projeto flext integração e conclusão | não recebe mensagem direta (outro modo de permissão); o canal com ela é o bead `flext-w8qmv`                                                                                                            |
 
 O handoff da sessão Rope está em `~/flext/.reports/handoff-rope-session-20261108.md`.
 Ele cobre as lanes #2211, #2215, #2216 e #2217, o pyrefly de `tests/` e a propagação
