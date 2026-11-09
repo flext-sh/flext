@@ -54,8 +54,8 @@ On 2026-10-26 the operator extended the admission requirement to global Ruff,
 Pyrefly and Pytest evidence and required, verbatim, "pytests sempre com testmon
 para nao repetir todos toda hora e lentidão é problema gravíssimo". The tracker
 memory above retains the complete order. The later approved execution plan
-requires global Ruff/Pyrefly admission first, then global native incremental
-pytest admission, before dependent work. The latest 2026-10-28 approval requires
+requires complete Ruff/Pyrefly and native Pytest evidence for acceptance, without
+making one command's saved receipt a prerequisite of another. The latest 2026-10-28 approval requires
 three peripheral `mod` pilots in order: `flext-dbt-ldif`, `flext-tap-ldif`,
 `flext-target-ldif`. All three complete before modification reaches foundational
 consumers. These requirements supersede the older full-check-before-initial-pytest
@@ -102,7 +102,7 @@ is introduced. Tracker memory
 complete applicable population once without Testmon and without a preliminary
 incremental execution. It neither loads the Testmon plugin nor reads, leases,
 checks, updates or publishes its database. The existing database remains untouched.
-Both operations retain original source admission, applicability, failure accounting
+Both operations retain applicability, failure accounting
 and the active Make deadline. This supersedes the older no-full-verb and
 incremental-then-full prescriptions; it does not grant an unlimited-time exception.
 Source, generated consumers, runtime proof and integration remain separate states.
@@ -119,9 +119,8 @@ Source, generated consumers, runtime proof and integration remain separate state
    incomplete work is committed only on a lane branch and pushed only to a
    `preserve/*` ref outside the working and integration branches (root `AGENTS.md`
    "Rig and Lane Contract"; the `flext-law` preservation route). A preserve ref is
-   never publication, integration or advancement evidence. Initial behavioral
-   admission requires fresh global source admission, not a claim that the full
-   composite check is already green. Every applicable check and behavioral gate
+   never publication, integration or advancement evidence. Testing runs directly,
+   independently of saved check receipts. Every applicable check and behavioral gate
    still passes before publication, integration or advancement beyond the slice.
 5. **No excuse replaces completion.** An explanation of why something could not be
    finished is not a result; the slice continues until it is finished. A genuine
@@ -132,7 +131,7 @@ Source, generated consumers, runtime proof and integration remain separate state
    retains the canonical persistent external Testmon database and uses native
    dependency selection over the global applicable inventory. Preserve external
    and slow-test applicability, configuration/toolchain identity, cache integrity,
-    and the applicable admission guard. Initial source admission and complete
+    and native failure outcomes. Initial source diagnostics and complete
     check acceptance are distinct typed workflow phases; neither substitutes for
     the other. Repeated full runs, cache resets and deadline inflation do not
     resolve slowness; profile and repair the causal owner.
@@ -167,10 +166,9 @@ Source, generated consumers, runtime proof and integration remain separate state
 A slice is complete only when every step below has passed, in this order, with the
 command, working directory, exit code and decisive output recorded on its bead:
 
-Admission precedes this completion cycle: first global Ruff/Pyrefly, then global
-native incremental Testmon pytest. Repair every failure before dependent work.
-After source changes, refresh affected evidence and restore global primary
-admission; do not replace it with a green member or a stale whole-workspace run.
+Checks and tests execute independently. Repair their real failures, refresh
+affected evidence after source changes, and qualify the complete declared scope
+before publication. A saved receipt never determines whether a test may run.
 
 1. `make gen` twice in every touched repository; the second run produces no change.
 2. `make fmt`, then `make fix`, with every finding cleared.
@@ -197,8 +195,7 @@ admission; do not replace it with a green member or a stale whole-workspace run.
 - Starting a phase or slice while another is incomplete.
 - Pushing, merging or tagging a red state on a published or integration line,
   including `[WIP]` snapshots of red work. Red work goes only to a `preserve/*` ref.
-- Running initial pytest without fresh global source admission, or presenting
-  primary admission as a green full composite check.
+- Presenting a primary diagnostic as a green full composite check.
 - Leaving a red found in the blast radius for later, or attributing it to someone
   else instead of fixing it.
 - Reporting a slice as done, fixed or green without the cycle evidence above.
@@ -207,11 +204,9 @@ admission; do not replace it with a green member or a stale whole-workspace run.
 
 - Root `AGENTS.md` contract item 9 and the global `phase-admission-protocol` rule
   declare the law for every agent.
-- `make tests` and the native workspace test owner require the typed initial
-  global source-admission phase. Full-check evidence remains mandatory for
-  completion and publication. Align the runner, original capture, generated Make
-  and CI workflow consumers together; never remove a guard in isolation or add a
-  boolean skip switch (bead `flext-p4lve`).
+- `make tests` and the native workspace test owner execute directly. Full-check
+  and native test evidence remain mandatory for completion and publication.
+  No admission switch or saved-receipt prerequisite is introduced.
 - The existing runner, execution-mode contract and generated Make owner implement
   Testmon selection and cache accounting. This accepted contract is not evidence
   that generation, global execution or integration has completed.
