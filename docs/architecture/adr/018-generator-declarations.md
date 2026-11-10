@@ -318,20 +318,14 @@ retaining a concrete model in the consumer's type position. Metadata expressions
 that construct or validate a model are runtime expressions, not annotation targets
 for the reception codemod.
 
-**Amendment 2026-11-03 — deferred schema owner.** The field form is
-`Annotated[<protocol route>, t.schema_for_model(lambda: <model>)]`; the schema owner
-is a zero-argument callable resolved when the schema is generated, never an eager
-class reference. Measured on Pydantic 2.14: a nested model can only name a sibling
-through its holder class (the bare name is undefined for static checkers), the
-holder is unbound while its body executes, so an eager `Holder.X` leaves the field
-incomplete; Pydantic then re-evaluates it in the namespace of each class it builds,
-and a subclass in another module fails unless it happens to bind every name of the
-parent annotation. With the deferred owner the annotation evaluates at class
-creation (the protocol route is bound), the field is complete, subclasses copy it
-unchanged, and validation, serialization and JSON Schema still come from the real
-model. Qualify that contract with real
-ingress, serialization and consumer execution; do not invent a compatibility
-schema, suppress a failure, or restore a prohibited `m.*` type to obtain green.
+**Amendment 2026-11-09 — simplified model fields.** Model fields now use the
+model directly (``m.<Model>``) instead of the deferred schema owner form
+``Annotated[<protocol route>, t.schema_for_model(lambda: <model>)]``. The protocol
+mirror and deferred schema owner are no longer needed at the field boundary; the
+model itself owns validation, serialization and JSON Schema. Qualify that
+contract with real ingress, serialization and consumer execution; do not invent a
+compatibility schema, suppress a failure, or restore a prohibited form to obtain
+green.
 
 The existing generator and native Rope modification owner complete this cutover
 coherently across the declared inventory. Required protocol declarations,
