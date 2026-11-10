@@ -55,7 +55,8 @@ Pyrefly and Pytest evidence and required, verbatim, "pytests sempre com testmon
 para nao repetir todos toda hora e lentidão é problema gravíssimo". The tracker
 memory above retains the complete order. The later approved execution plan
 requires complete Ruff/Pyrefly and native Pytest evidence for acceptance, without
-making one command's saved receipt a prerequisite of another. The latest 2026-10-28 approval requires
+making one command's saved receipt a prerequisite of another. The latest 2026-10-28
+approval requires
 three peripheral `mod` pilots in order: `flext-dbt-ldif`, `flext-tap-ldif`,
 `flext-target-ldif`. All three complete before modification reaches foundational
 consumers. These requirements supersede the older full-check-before-initial-pytest
