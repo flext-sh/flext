@@ -600,6 +600,15 @@ owner places imports; parallel placement routes are deleted in the same cutover.
        `make mod`), keeps the deprecated-signature window (Decision 7) for external
        consumers, and is then applied to ai-hub and every other project that uses
        flext-infra (census under bead `flext-1engx.11`).
+     - **Domain capabilities (amended 2026-11-12, operator order: support projects
+       whose domain is the technology "via overrides ou automaticamente").** A
+       distribution prefix is the project's own capability, not a library leak,
+       when the project owns an importable package or subpackage of that normalized
+       name under its own package roots (never the tests tier), or when its
+       repository declares the name in `Infra.codegen.repository.domain_capabilities`.
+       Capability prefixes and the declared stdlib backports leave the
+       `ban-library-named-facade-member` set; every other imported third-party
+       distribution stays banned.
 
 ### Decision 16
 
