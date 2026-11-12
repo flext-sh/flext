@@ -122,6 +122,10 @@ Railway callbacks preserve original exceptions; only the declared error boundary
 converts a validation failure into a result.
 
 Research starts with the official
+When assembling a new boundary model from protocol-typed values, use its native
+`model_validate` entry with those values, retaining their references. This creates
+the new envelope once; it does not dump or revalidate an existing envelope or
+claim that a structural protocol is a concrete model type to the constructor.
 [complete Pydantic documentation](https://pydantic.dev/docs/validation/latest/llms-full.txt).
 Its `latest` URL is a reference index, not proof that a feature exists in the
 project's locked runtime. Check the declared floor and selected lock before using
@@ -355,6 +359,15 @@ constructors remain enabled, and external data enters through public validation.
 
 Compare the real public facade with the upstream declaration before calling a
 diagnostic a false positive. Record the checker version, loaded configuration,
+Pydantic's metaclass supplies the native dataclass-transform contract. FLEXT's
+model wrappers inherit it; they do not redeclare `@dataclass_transform`. Mypy's
+Pydantic plugin owns model synthesis and disables the metaclass transform for
+its own analysis. A wrapper-level transform activates a second synthesis path:
+Mypy's dataclass plugin turns callable fields into synthetic properties, which
+its protocol checker can then reject as read-only despite their setters.
+Validate removal against instance-to-protocol witnesses, typed constructors and
+the real model's assignment behavior rather than weakening the protocol.
+
 resolved imports, inferred type and runtime result. Cover inherited and nested
 models, generic specialization, defaults, aliases, validators, computed fields
 and settings. A descriptor returning the original callable at runtime does not,

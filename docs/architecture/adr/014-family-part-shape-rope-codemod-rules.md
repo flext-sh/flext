@@ -147,6 +147,12 @@ is introduced. The cold-process public import, export identity and downstream
 consumer proofs precede acceptance. This is an accepted target; these paragraphs
 do not attest implementation, a zero consumer census or integration.
 
+Lazy symbol exports retain their declared object identity during initialization;
+an initializing module never substitutes for a requested class or alias. Missing
+cyclic exports fail at their import boundary. Native SDK adapters obtain provider
+identities from the SDK instead of importing repository discovery back into its
+lower-level import dependencies.
+
 ### 2. Declarative Rope rules (one YAML file per rule)
 
 Structural shape rules for the Rope engine are planned as declarative YAML files (one
