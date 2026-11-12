@@ -186,6 +186,22 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
 
 ## Rig and Lane Contract
 
+**Priority (operator order 2026-11-12, translated from Portuguese: "we now migrate to
+0.12.0-dev in ~/flext, work with worktrees and close with merge PR, always").**
+
+- The rig `~/flext` and every attached member move to `0.12.0-dev` and stay at its
+  tip, synchronized with GitHub; `upload-20261007` lands into `0.12.0-dev` and retires
+  once its last consumer pin moves to `0.12.0-dev`.
+- All work happens in Git worktrees on lane branches cut from the integration tip; the
+  rig checkout itself carries no WIP.
+- Every change closes with a merged pull request (merge commit). Never push commits
+  directly to `0.12.0-dev`, `upload-*` or `main`, including conflict resolutions and
+  pin updates. A merge that needs `--admin` (only review missing, required checks
+  green) is run only with the operator's authorization.
+- Fixes go to the root cause with correct CA/DI wiring and no duplicated code path;
+  a fix already present on another unintegrated lane is cherry-picked (`-x`) instead
+  of rewritten.
+
 Operator ruling 2026-11-02 (tracker memory `operator-order-2026-11-02-rigs-on-integration`,
 translated from Portuguese: "~/flext and ~/ai-hub and the other rigs must be the
 official worktrees/rigs of the projects, always on the integration branches and used to
