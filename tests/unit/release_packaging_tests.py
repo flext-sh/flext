@@ -48,14 +48,28 @@ class TestsFlextRootReleasePackaging:
 
             tm.ok(config_file.is_file())
 
-        @staticmethod
-        def test_workspace_console_scripts_are_registered() -> None:
-            """The published package must expose its complete entry-point contract."""
-            entry_points = importlib.metadata.entry_points(group="console_scripts")
-            names = {entry_point.name for entry_point in entry_points}
+        def test_workspace_console_scripts_are_registered(self) -> None:
+            """Installed console scripts equal the pyproject declaration.
 
-            for name in ("flext", "flext-dev", "flext-docs", "flext-workspace"):
-                tm.ok(name in names)
+            Raises:
+                TypeError: If pyproject project.scripts is not a table.
+
+            """
+            repository_root = Path(__file__).resolve().parents[2]
+            loaded = u.config_load(repository_root / c.PYPROJECT_FILENAME)
+            tm.fail(loaded.failure)
+            project = self._section_of(loaded.unwrap(), "project")
+            declared = project.get("scripts", {})
+            if not isinstance(declared, Mapping):
+                msg = "pyproject project.scripts must be a table"
+                raise TypeError(msg)
+            installed = {
+                entry_point.name
+                for entry_point in importlib.metadata.distribution("flext").entry_points
+                if entry_point.group == "console_scripts"
+            }
+
+            tm.that(installed, eq=set(declared))
 
         def test_installed_version_matches_version_owner(self) -> None:
             """Runtime metadata and the version SSOT must never diverge.
