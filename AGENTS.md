@@ -887,7 +887,9 @@ CLI + pytest plugin, **never imported at runtime**.
     their family packages and composition modules), while the package's own facades
     are being composed, importing the letters of the upstream packages it composes
     (`from flext_cli import c, t, p, m, u`, `from flext_core import …`) is the
-    canonical form. Each own family composes the upstream same-letter class by MRO.
+    canonical form for references read through a letter; the facade class composes
+    the upstream same-letter facade by MRO through its declared class name (rule
+    `facade-base-by-class-name`; ADR-028 Decision 10 amended 2026-11-12).
     [ADR-028 Decision 10](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)
     elects one import binding from actual header references: a used bare upstream
     letter remains bare; a used, source-proven alias remains aliased, and an unused
