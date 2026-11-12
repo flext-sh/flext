@@ -69,20 +69,17 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
 
     conflicts or an action would be destructive; otherwise continue to the observable
     stop condition.
-
 13. **Short validated slices.** Deliver in small, independently validated
 
     units that merge to the integration branch quickly — one Bead, one reviewable PR,
     hours not days. Mega-lanes and long-lived WIP are defects; the orchestrator splits
     any unit that cannot merge green within a session.
-
 14. **Living documentation.** Project knowledge is durable, never rebuilt
 
     per session. On entering a project, read its docs first and validate key claims
     quickly against live reality. Every change that produces new understanding or
     behavior updates the affected docs in the SAME change; stale docs are defects filed
     as beads, never worked around.
-
 15. **Runtime reality precedes implementation and tests.** Establish the correct
     behavior from the official external contract and the real consumer first. For
     generated or deployed artifacts, validate the staged artifact with that real
@@ -188,6 +185,22 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
 <!-- END AI-HUB MANAGED UNIVERSAL CORE -->
 
 ## Rig and Lane Contract
+
+**Priority (operator order 2026-11-12, translated from Portuguese: "we now migrate to
+0.12.0-dev in ~/flext, work with worktrees and close with merge PR, always").**
+
+- The rig `~/flext` and every attached member move to `0.12.0-dev` and stay at its
+  tip, synchronized with GitHub; `upload-20261007` lands into `0.12.0-dev` and retires
+  once its last consumer pin moves to `0.12.0-dev`.
+- All work happens in Git worktrees on lane branches cut from the integration tip; the
+  rig checkout itself carries no WIP.
+- Every change closes with a merged pull request (merge commit). Never push commits
+  directly to `0.12.0-dev`, `upload-*` or `main`, including conflict resolutions and
+  pin updates. A merge that needs `--admin` (only review missing, required checks
+  green) is run only with the operator's authorization.
+- Fixes go to the root cause with correct CA/DI wiring and no duplicated code path;
+  a fix already present on another unintegrated lane is cherry-picked (`-x`) instead
+  of rewritten.
 
 Operator ruling 2026-11-02 (tracker memory `operator-order-2026-11-02-rigs-on-integration`,
 translated from Portuguese: "~/flext and ~/ai-hub and the other rigs must be the
@@ -326,13 +339,13 @@ agent governance. Installed skills and generated instruction surfaces, including
 those under `~/.agents/`, consume that authority; they are not independent writable
 owners. Project law contributes only its documented scope-specific delta.
 
-| Layer        | Canonical owner                                                                                              | Permitted content                                                                                                   |
-| ------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| Global       | `~/agents/AGENTS.md` and its canonical rules and skills, consumed through installed projections              | universal conduct, execution safety, command selection, evidence, and completion                                    |
-| Architecture | the accepted, topic-owning record in `docs/architecture/adr/`                                                 | precise technical decisions, their scope, consequences, and supersession links                                      |
-| FLEXT        | this root file and `.agents/skills/flext-law/SKILL.md`                                                        | workspace routing, FLEXT-wide application and enforcement of accepted decisions, Make control plane, and fleet law |
-| Scope        | the nearest member or standalone `AGENTS.md`                                                                  | only narrower domain facts, public surfaces, and explicit exclusions                                                |
-| Execution    | the active Bead                                                                                                | current intent, ownership, dependencies, phase, evidence, and stop condition; never a conflicting design decision   |
+| Layer        | Canonical owner                                                                                 | Permitted content                                                                                                  |
+| ------------ | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Global       | `~/agents/AGENTS.md` and its canonical rules and skills, consumed through installed projections | universal conduct, execution safety, command selection, evidence, and completion                                   |
+| Architecture | the accepted, topic-owning record in `docs/architecture/adr/`                                   | precise technical decisions, their scope, consequences, and supersession links                                     |
+| FLEXT        | this root file and `.agents/skills/flext-law/SKILL.md`                                          | workspace routing, FLEXT-wide application and enforcement of accepted decisions, Make control plane, and fleet law |
+| Scope        | the nearest member or standalone `AGENTS.md`                                                    | only narrower domain facts, public surfaces, and explicit exclusions                                               |
+| Execution    | the active Bead                                                                                 | current intent, ownership, dependencies, phase, evidence, and stop condition; never a conflicting design decision  |
 
 AI Hub distributes and validates managed projections; it does not become the authority
 for global or FLEXT law. The local provider exposes the exact branch-matched
@@ -437,14 +450,14 @@ exclusions; it never copies or replaces either parent or ADR.
 
 ## Where to Look
 
-| Task                             | Location                           | Notes                                                                                                                                                                         |
-| -------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Foundation facades / result / DI | `flext-core/src/flext_core/`       | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base                                                                                                                                 |
-| Build/codegen/enforcement        | `flext-infra/src/flext_infra/`     | drives standard Make generation, conform, and lint rules                                                                                                                      |
-| Test fixtures & builders         | `flext-tests/src/flext_tests/`     | public test facades and typed fixtures; unified `conftest.py` pattern                                                                                                         |
+| Task                             | Location                           | Notes                                                                                                                                                                                                                                                                                                                                                                                                           |
+| -------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Foundation facades / result / DI | `flext-core/src/flext_core/`       | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base                                                                                                                                                                                                                                                                                                                                                                   |
+| Build/codegen/enforcement        | `flext-infra/src/flext_infra/`     | drives standard Make generation, conform, and lint rules                                                                                                                                                                                                                                                                                                                                                        |
+| Test fixtures & builders         | `flext-tests/src/flext_tests/`     | public test facades and typed fixtures; unified `conftest.py` pattern                                                                                                                                                                                                                                                                                                                                           |
 | Architectural decisions          | `docs/architecture/adr/`           | Topic-owning accepted ADRs are the technical source of truth; [ADR-028 Decisions 15–18](https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15) cover capability boundaries, CA/DI, native workspace/refactoring ownership, and generalized rules. The ADR index records maturity; Beads record implementation state. |
-| Workspace composition            | `.gitmodules`                      | sole member-list owner (ADR-024); each repository's `config/codegen.yaml` holds its own declarations and deltas                                                             |
-| A Singer connector               | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006)                                                                                                                              |
+| Workspace composition            | `.gitmodules`                      | sole member-list owner (ADR-024); each repository's `config/codegen.yaml` holds its own declarations and deltas                                                                                                                                                                                                                                                                                                 |
+| A Singer connector               | `flext-{tap,target,dbt}-<domain>/` | thin driver over `flext-meltano` bases (ADR-006)                                                                                                                                                                                                                                                                                                                                                                |
 
 ## Build & Test
 
@@ -725,7 +738,7 @@ CLI + pytest plugin, **never imported at runtime**.
     sets/tables, aliases, `TypeVar`s, inline `Literal` domains, protocols, models,
     payload dicts or reusable helpers, explicit or implicit. The families never violate
     one another.
-  - #### ADR-028 Decision 15
+  - ### ADR-028 Decision 15
 
     **Library names never leave the facades**
     ([ADR-028 Decision 15][decision-15]; operator order 2026-10-25, tracker
@@ -830,7 +843,9 @@ CLI + pytest plugin, **never imported at runtime**.
       fixtures and the native test; duplicates, fallbacks and compatibility paths are
       exterminated without a remaining reference.
     - `refactor mod --laws <set>` is the diagnostic and repair route for one law; the
-      import law always runs.
+      import law always runs. A selector-free `make mod` runs the complete active
+      catalog to its fixed point; selection only narrows the focus (operator decision
+      2026-11-07, tracker key `operator-decision-2026-11-07-bare-mod-all-laws`).
     - Hand edits of violating sources are prohibited; workers change only stage, rule,
       generator and engine owners plus their fixtures.
     - Until make is repaired and validated, lint verdicts come from direct `ruff` and
@@ -957,7 +972,8 @@ CLI + pytest plugin, **never imported at runtime**.
   and `p.*` protocols; `T | None` (never `Optional`). A model is never a type.
   The 2026-11-02 operator mandate strictly prohibits every `m.*` typing reference;
   canonical model/service/data protocols must be `@runtime_checkable`. This also
-  governs fields, callbacks, quoted types and generic specializations. Actual
+  governs callbacks, quoted types and generic specializations; class-body
+  Pydantic fields keep the model per ADR-018 (amendment 2026-11-09). Actual
   model construction and native validation remain executable model operations,
   never Protocol construction. Apply
   [ADR-018's strict amendment](docs/architecture/adr/018-generator-declarations.md#model-and-service-protocol-projection)
@@ -1181,9 +1197,9 @@ anti-patterns.
 
 <!-- rtk-instructions v2 -->
 
-# RTK (Rust Token Killer) - Token-Optimized Commands
+## RTK (Rust Token Killer) - Token-Optimized Commands
 
-## Golden Rule
+### Golden Rule
 
 **Always prefix commands with `rtk`**. If RTK has a dedicated filter, it uses it. If
 not, it passes through unchanged. This means RTK is always safe to use.
@@ -1198,9 +1214,9 @@ git add . && git commit -m "msg" && git push
 rtk git add . && rtk git commit -m "msg" && rtk git push
 ```
 
-## RTK Commands by Workflow
+### RTK Commands by Workflow
 
-### Build & Compile (80-90% savings)
+#### Build & Compile (80-90% savings)
 
 ```bash
 rtk cargo build      # Cargo build output
@@ -1212,7 +1228,7 @@ rtk prettier --check # Files needing format only (70%)
 rtk next build       # Next.js build with route metrics (87%)
 ```
 
-### Test (60-99% savings)
+#### Test (60-99% savings)
 
 ```bash
 rtk cargo test          # Cargo test failures only (90%)
@@ -1226,7 +1242,7 @@ rtk rspec               # RSpec test failures only (60%)
 rtk test <cmd>          # Generic test wrapper - failures only
 ```
 
-### Git (59-80% savings)
+#### Git (59-80% savings)
 
 ```bash
 rtk git status   # Compact status
@@ -1245,7 +1261,7 @@ rtk git worktree # Compact worktree
 
 Note: Git passthrough works for ALL subcommands, even those not explicitly listed.
 
-### GitHub (26-87% savings)
+#### GitHub (26-87% savings)
 
 ```bash
 rtk gh pr view <num>    # Compact PR view (87%)
@@ -1255,7 +1271,7 @@ rtk gh issue list       # Compact issue list (80%)
 rtk gh api              # Compact API responses (26%)
 ```
 
-### JavaScript/TypeScript Tooling (70-90% savings)
+#### JavaScript/TypeScript Tooling (70-90% savings)
 
 ```bash
 rtk pnpm list           # Compact dependency tree (70%)
@@ -1267,7 +1283,7 @@ rtk prisma              # Prisma without ASCII art (88%)
 rtk uv run <cmd>        # Compact uv project command output
 ```
 
-### Files & Search (60-75% savings)
+#### Files & Search (60-75% savings)
 
 ```bash
 rtk ls <path> # Tree format, compact (65%) rtk read <file> # Code reading with filtering
@@ -1275,7 +1291,7 @@ rtk ls <path> # Tree format, compact (65%) rtk read <file> # Code reading with f
 -Z) run raw. rtk find <pattern> # Find grouped by directory (70%)
 ```
 
-### Analysis & Debug (70-90% savings)
+#### Analysis & Debug (70-90% savings)
 
 ```bash
 rtk err <cmd>           # Filter errors only from any command
@@ -1287,7 +1303,7 @@ rtk summary <cmd>       # Smart summary of command output
 rtk diff                # Ultra-compact diffs
 ```
 
-### Infrastructure (85% savings)
+#### Infrastructure (85% savings)
 
 ```bash
 rtk docker ps           # Compact container list
@@ -1297,14 +1313,14 @@ rtk kubectl get         # Compact resource list
 rtk kubectl logs        # Deduplicated pod logs
 ```
 
-### Network (65-70% savings)
+#### Network (65-70% savings)
 
 ```bash
 rtk curl <url>          # Compact HTTP responses (70%)
 rtk wget <url>          # Compact download output (65%)
 ```
 
-### Meta Commands
+#### Meta Commands
 
 ```bash
 rtk gain                # View token savings statistics
@@ -1315,7 +1331,7 @@ rtk init                # Add RTK instructions to CLAUDE.md
 rtk init --global       # Add RTK to ~/.claude/CLAUDE.md
 ```
 
-## Token Savings Overview
+### Token Savings Overview
 
 | Category         | Commands                       | Typical Savings |
 | ---------------- | ------------------------------ | --------------- |
@@ -1339,7 +1355,7 @@ Overall average: **60-90% token reduction** on common development operations.
 [decision-9]: https://github.com/flext-sh/flext/blob/0.12.0-dev/docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-9
 [workspace-analysis]: https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine
 
-## Learned User Preferences
+### Learned User Preferences
 
 - Before changing code, search libraries, the project, worktrees, local and remote
   branches, and pull requests. Adopt compatible work through the declared Git route,
@@ -1367,7 +1383,7 @@ Overall average: **60-90% token reduction** on common development operations.
   Heavy operations run concurrently through their owning tools, never serialized
   by hand.
 
-## Learned Workspace Facts
+### Learned Workspace Facts
 
 - Makefile commands share one place that sets `GITHUB_TOKEN`, `GH_TOKEN`, and
   `MISE_GITHUB_TOKEN` from `gh auth token` when GitHub auth is available.

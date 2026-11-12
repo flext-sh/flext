@@ -160,6 +160,10 @@ ancestor lazy exports are planned and published as one authenticated candidate, 
 source without importing the stale package being repaired. Callers use the nearest
 composed facade at every stage (ADR-028 [Decision 10](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
 
+Exported data classes retain their nominal identity. In particular, a subclass of a
+native data type is a published member, not a namespace composition base; exporting
+two such classes never combines their instance layouts in the facade's MRO.
+
 **Projection-engine correction, approved 2026-11-01.** The incident mandate
 supersedes the 2026-10-29 requirement to use native semantic machinery during
 generation. `make gen` projects declarations through one typed, invocation-local
@@ -292,10 +296,12 @@ The MRO/Pydantic analyzer and environment acceptance tracked by
 **Operator amendment 2026-11-02 — strict protocol typing.** Every `m.*` type
 reference is prohibited. First-party model, service and data contracts are typed
 through their canonical `p.*` protocols, each decorated with `@runtime_checkable`.
-This includes model fields, callback signatures, aliases, quoted references,
+This includes callback signatures, aliases, quoted references,
 generic arguments and service payload specializations; runtime evaluation of a
 typing expression does not make a concrete-model annotation permissible.
-Earlier exceptions retaining `m.*` annotations are superseded.
+Earlier exceptions retaining `m.*` annotations are superseded. Class-body
+model fields are the one position excluded, as superseded by the 2026-11-09
+amendment below.
 
 Executable construction, validation, serializers, schema and handler metadata
 retain the actual model owner: a Protocol is never instantiated. A value-level
@@ -309,29 +315,20 @@ the native migration distinguishes these roles by syntax and resolved identity.
 
 Use the existing `t.Port[p.X]` only for a genuine validated DI capability under
 ADR-019. Its dependency exclusion from serialization and JSON Schema cannot
-replace a persisted payload's validation. Serializable protocol-typed values
-must preserve the actual model's native validation, serializers and schema
-through native `GetPydanticSchema` projection at the established Pydantic owner.
-The metadata delegates to the original model schema; it preserves nested payloads,
-generic specialization, aliases, defaults, strictness and JSON Schema without
-retaining a concrete model in the consumer's type position. Metadata expressions
-that construct or validate a model are runtime expressions, not annotation targets
-for the reception codemod.
+replace a persisted payload's validation. Persisted model fields name their
+concrete model directly, which preserves its native validation, serializers
+and schema (superseded for fields by the 2026-11-09 amendment below). Metadata
+expressions that construct or validate a model are runtime expressions, not
+annotation targets for the reception codemod.
 
-**Amendment 2026-11-03 — deferred schema owner.** The field form is
-`Annotated[<protocol route>, t.schema_for_model(lambda: <model>)]`; the schema owner
-is a zero-argument callable resolved when the schema is generated, never an eager
-class reference. Measured on Pydantic 2.14: a nested model can only name a sibling
-through its holder class (the bare name is undefined for static checkers), the
-holder is unbound while its body executes, so an eager `Holder.X` leaves the field
-incomplete; Pydantic then re-evaluates it in the namespace of each class it builds,
-and a subclass in another module fails unless it happens to bind every name of the
-parent annotation. With the deferred owner the annotation evaluates at class
-creation (the protocol route is bound), the field is complete, subclasses copy it
-unchanged, and validation, serialization and JSON Schema still come from the real
-model. Qualify that contract with real
-ingress, serialization and consumer execution; do not invent a compatibility
-schema, suppress a failure, or restore a prohibited `m.*` type to obtain green.
+**Amendment 2026-11-09 — simplified model fields.** Model fields now use the
+model directly (``m.<Model>``) instead of the deferred schema owner form
+``Annotated[<protocol route>, t.schema_for_model(lambda: <model>)]``. The protocol
+mirror and deferred schema owner are no longer needed at the field boundary; the
+model itself owns validation, serialization and JSON Schema. Qualify that
+contract with real ingress, serialization and consumer execution; do not invent a
+compatibility schema, suppress a failure, or restore a prohibited form to obtain
+green.
 
 The existing generator and native Rope modification owner complete this cutover
 coherently across the declared inventory. Required protocol declarations,
@@ -359,6 +356,9 @@ preserve their own public callable contracts, including sync/async behavior,
 parameter kinds, defaults in signatures, overloads, generics and return types.
 This does not copy an external SDK into a local typing surface. Existing authored
 DI ports remain their declared capability owners; generation neither replaces
+A frozen model's protocol cannot inherit writable fields from a mutable model's
+protocol. Its projection declares those inherited fields as read-only members;
+the model's native inheritance and runtime behavior remain authoritative.
 them with a service implementation nor weakens an originating contract.
 Constructors, validation, field defaults/factories, schema, model configuration,
 validators, serializers and handler metadata retain their real runtime owners.
@@ -375,6 +375,46 @@ existing enum consumers must close in the same migration. Python dumps retain
 members; JSON serialization emits values at the actual outward boundary.
 Retaining source text alone is not proof of preserved behavior. Proper subsets
 and discriminators keep their narrower law.
+Model contracts mirror `_models/` beneath `_protocols/`. Internal service
+contracts and authored DI ports live beneath `_protocols/_services/`; external
+integration capabilities live beneath `_protocols/_external/`, named by capability
+and domain. Each module owns one holder with nested contracts. Service projections
+remain source-derived; authored ports remain consumer-owned. External contracts
+describe only consumed capabilities and reuse official types rather than mirroring
+SDKs. Native declaration identities and consumers determine placement, not filename
+heuristics. Facades and initializers compose these holders without changing public
+`p` identities. `make mod` owns moves and complete consumer rewiring.
+
+The existing census and modification pipeline executes ordered phases:
+classify native declarations and destinations, relocate owners, rewire the complete
+consumer closure, then project and validate the coherent candidate. Phase outputs
+share the authenticated native source view and refresh affected inputs; generation
+does not discover a repair by repeatedly attempting publication.
+The census and portable intent must cover Python bindings of every kind, including
+modules, classes, functions, methods, fields, variables, constants and aliases.
+Their native scopes and dependencies must retain properties, descriptors, closures
+and implicit consumers in the same relocation cohort. Identify existing model
+protocols by their actual public bindings; record the planned destination of an
+absent projection without requiring it to exist. Missing or ambiguous source
+bindings fail explicitly rather than disappearing from the census.
+The existing semantic migration artifact persists the global source-to-destination
+identities in immutable cohort files under the configured `config/rewires` directory
+for reuse by external consumers. Portable intent is separate from each
+checkout's observed source states and edits: applying it resolves native bindings
+and validates the target project's own sources before publication. Native Rope owns
+semantic moves and rewiring, including capabilities added at its upstream owner.
+Native discovery and refactoring retain reexports through `__init__.py`, nested
+namespace aliases, inherited declarations and diamond inheritance under Python C3
+precedence. Valid namespace depth has no project-imposed cap. The same binding
+identity drives classification, movement and consumer rewiring; a homonymous
+override is a different declaration. Dependency cycles in deferred annotations
+form atomic cohorts, while illegal evaluated inheritance preserves its native
+failure. Class-size and splitting policy remain with their separate owner.
+
+No generated `model_conformance.py` witness is required or emitted. `make gen`
+retires existing generated witnesses through the shared retirement publisher.
+Candidate imports and ordinary native type gates validate actual declarations and
+consumers without a separate generated assignment surface.
 
 Projection modules correspond to the semantic source-module owners of the
 models and services and group the declarations owned by those modules. They live

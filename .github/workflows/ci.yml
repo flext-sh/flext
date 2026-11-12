@@ -13,6 +13,12 @@ name: CI
 # cross-repo dependency-credential secret contract in workflow scope.
 "on":
   workflow_dispatch:
+    inputs:
+      full_check:
+        description: Run the complete native check in addition to required CI.
+        required: false
+        type: boolean
+        default: false
   push:
     branches:
       - main
@@ -26,6 +32,11 @@ name: CI
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_call:
     inputs:
+      full_check:
+        description: Run the complete native check in addition to required CI.
+        required: false
+        type: boolean
+        default: false
       ref:
         description: Exact candidate commit to validate instead of the caller event SHA.
         required: false
@@ -101,6 +112,11 @@ jobs:
       # The key is the content hash of the locks that decide what is
       # installed: one immutable entry per lock state, never one per run, so
       # saving never evicts the testmon cache with duplicate generations.
+      # Only that exact key restores. A prefix fallback restored the previous
+      # lock state, whose superseded installs and wheels the next save kept:
+      # the entry grew with every lock change (algar-oud-mig: 3.06 to
+      # 3.65 GiB) until its restore filled the runner disk. A lock change
+      # installs cold and saves exactly the new state.
       - name: Restore tool caches
         id: tool-cache
         uses: actions/cache/restore@v6
@@ -113,12 +129,11 @@ jobs:
             .pyrefly_cache
             .benchmarks
             .hypothesis
+            .bin
             ~/.cache/uv
             ~/.local/share/mise
             !~/.local/share/mise/shims
           key: ${{ runner.os }}-3.13-tools-${{ hashFiles('uv.lock', 'mise.lock', 'pyproject.toml', '.mise.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-3.13-tools-
 
       # Setup obtains any remaining declared members after authentication,
       # then installs the native shared workspace noneditable. It acquires Mise
@@ -196,6 +211,10 @@ jobs:
         # (workflow requires) admits the step only after that verb is green.
         if: ${{ !cancelled() && steps.approval-setup.outcome == 'success' && steps.approval-check.outcome == 'success' && steps.approval-check-primary.outcome == 'success' }}
         run: CI=Y make tests
+      - name: Complete check qualification
+        id: qualification-check
+        if: ${{ !cancelled() && inputs.full_check == true && steps.approval-setup.outcome == 'success' }}
+        run: CI=N make check
 
       - name: Dump reports on failure
         if: ${{ failure() }}
@@ -255,7 +274,7 @@ jobs:
       # rows capture receipts, so the upload runs exactly when one of them
       # failed (tests included), never after a setup failure that left none.
       - name: Upload gate receipts on failure
-        if: ${{ failure() && (steps.approval-check-primary.outcome == 'failure' || steps.approval-tests-primary.outcome == 'failure' || steps.approval-check.outcome == 'failure' || steps.approval-tests.outcome == 'failure') }}
+        if: ${{ failure() && (steps.approval-check-primary.outcome == 'failure' || steps.approval-tests-primary.outcome == 'failure' || steps.approval-check.outcome == 'failure' || steps.approval-tests.outcome == 'failure' || steps.qualification-check.outcome == 'failure') }}
         uses: actions/upload-artifact@v7
         with:
           name: flext-gate-receipts-${{ github.job }}-${{ github.run_id }}
@@ -291,6 +310,7 @@ jobs:
             .pyrefly_cache
             .benchmarks
             .hypothesis
+            .bin
             ~/.cache/uv
             ~/.local/share/mise
             !~/.local/share/mise/shims

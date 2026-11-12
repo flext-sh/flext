@@ -25,7 +25,6 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-
       - name: make setup
         run: make setup
 
@@ -40,4 +39,3 @@ jobs:
 
       - name: make tests
         run: make tests
-
