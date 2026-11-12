@@ -110,10 +110,10 @@ checks runtime protocol presence; it does not validate signatures. Retain static
 protocol checks and real consumer evidence rather than duplicate local narrowing.
 `t.Port` is a FLEXT DI annotation built on native hooks and excludes its runtime
 dependency from JSON Schema. It must not replace a serializable payload's
-validation: a payload typed through `p` delegates to its actual native model
-schema through `GetPydanticSchema`, preserving validators, serializers and JSON
-Schema. Model constructor identities supplied as schema metadata are executable
-values; they do not permit `m.*` type annotations.
+validation. Under ADR-018's 2026-11-09 amendment, persisted model fields name
+their concrete model directly and consumers receive the `p` contract, preserving
+validators, serializers and JSON Schema. Everywhere else `m.*` type annotations
+stay prohibited.
 An unresolved port type parameter fails instead of selecting `any_schema`.
 See [ADR-019](../architecture/adr/019-service-contract-ports-operations.md) for DI
 and [ADR-018](../architecture/adr/018-generator-declarations.md#model-and-service-protocol-projection)
@@ -504,8 +504,9 @@ classifies an unmeasured diagnostic as a false positive.
 
 The strict 2026-11-02 operator amendment in ADR-018 prohibits every `m.*` typing
 reference. Use the canonical source-derived `p.*` contract decorated with
-`@runtime_checkable`, including fields, callback parameters, forward references
-and generic type arguments. Keep actual construction and validation with the
+`@runtime_checkable`, including callback parameters, forward references
+and generic type arguments; class-body model fields keep the model (ADR-018
+2026-11-09 amendment). Keep actual construction and validation with the
 model owner. A Protocol is never a model constructor, and presence checks do not
 replace native payload validation or static signature checks. `t.Port` remains
 reserved for its documented DI semantics; it does not make a serializable model

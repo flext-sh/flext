@@ -519,12 +519,11 @@ owner places imports; parallel placement routes are deleted in the same cutover.
        payload validity. An unresolved generic parameter fails; an unconstrained
        schema is not a substitute. A protocol metaclass is not FLEXT-conformant
        because the metaclass is private API.
-     - A serializable model payload projected to a structural protocol follows
-       [ADR-018](018-generator-declarations.md#model-and-service-protocol-projection):
-       native `GetPydanticSchema` delegates to the original concrete model schema
-       in validation metadata, while the consumer's type position remains a protocol.
-       Preserve validators, serializers, defaults and JSON Schema once; do not
-       substitute the DI port's instance check or excluded schema for that payload.
+     - A persisted model field names its concrete model directly and consumers
+       receive the `p` contract, per
+       [ADR-018](018-generator-declarations.md#model-and-service-protocol-projection)
+       (amendment 2026-11-09). Do not substitute the DI port's instance check or
+       excluded schema for that payload.
      - `arbitrary_types_allowed` is banned.
      - **Enum-preservation revision, amended 2026-10-28:** governed model presets
        resolve `use_enum_values=False`. This supersedes the intermediate
@@ -569,7 +568,8 @@ owner places imports; parallel placement routes are deleted in the same cutover.
 
  1. **Operator amendment 2026-11-02 — protocol-only annotations.** First-party
     model, service and data annotations use their canonical `p.*` contracts,
-    decorated with `@runtime_checkable`, including annotations within models.
+    decorated with `@runtime_checkable`; class-body model fields keep the model
+    (superseded for fields by the 2026-11-09 amendment in ADR-018).
     Concrete model references remain only in executable construction, validation,
     schema, serialization and declaration metadata. Native binding identity owns
     this distinction, including imported or quoted references; spelling or aliases

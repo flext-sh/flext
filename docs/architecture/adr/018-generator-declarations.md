@@ -296,10 +296,12 @@ The MRO/Pydantic analyzer and environment acceptance tracked by
 **Operator amendment 2026-11-02 — strict protocol typing.** Every `m.*` type
 reference is prohibited. First-party model, service and data contracts are typed
 through their canonical `p.*` protocols, each decorated with `@runtime_checkable`.
-This includes model fields, callback signatures, aliases, quoted references,
+This includes callback signatures, aliases, quoted references,
 generic arguments and service payload specializations; runtime evaluation of a
 typing expression does not make a concrete-model annotation permissible.
-Earlier exceptions retaining `m.*` annotations are superseded.
+Earlier exceptions retaining `m.*` annotations are superseded. Class-body
+model fields are the one position excluded, as superseded by the 2026-11-09
+amendment below.
 
 Executable construction, validation, serializers, schema and handler metadata
 retain the actual model owner: a Protocol is never instantiated. A value-level
@@ -313,14 +315,11 @@ the native migration distinguishes these roles by syntax and resolved identity.
 
 Use the existing `t.Port[p.X]` only for a genuine validated DI capability under
 ADR-019. Its dependency exclusion from serialization and JSON Schema cannot
-replace a persisted payload's validation. Serializable protocol-typed values
-must preserve the actual model's native validation, serializers and schema
-through native `GetPydanticSchema` projection at the established Pydantic owner.
-The metadata delegates to the original model schema; it preserves nested payloads,
-generic specialization, aliases, defaults, strictness and JSON Schema without
-retaining a concrete model in the consumer's type position. Metadata expressions
-that construct or validate a model are runtime expressions, not annotation targets
-for the reception codemod.
+replace a persisted payload's validation. Persisted model fields name their
+concrete model directly, which preserves its native validation, serializers
+and schema (superseded for fields by the 2026-11-09 amendment below). Metadata
+expressions that construct or validate a model are runtime expressions, not
+annotation targets for the reception codemod.
 
 **Amendment 2026-11-09 — simplified model fields.** Model fields now use the
 model directly (``m.<Model>``) instead of the deferred schema owner form
