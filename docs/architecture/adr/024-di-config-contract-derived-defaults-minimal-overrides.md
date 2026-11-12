@@ -71,9 +71,9 @@ No library, workspace, or consumer declares names, paths, branches, toggles, or
 per-project keyed sections of another repository. The only composition fact a parent
 owns is its own `.gitmodules` (path, url, branch, and the `flext-managed` attribute of
 the 2026-10-02 decision); the parent's `make gen` is the single writer of the minimal
-generated reference that marks a flext subproject as its member. A member's `kind` is
-the member's own declaration. These are distinct facts with distinct owners: no
-duplicate, no gate forcing two declarations to agree.
+generated reference that marks a flext subproject as its member. Governance kind is
+detected from native dependency and workspace-composition facts, never declared in
+configuration (tracker `operator-order-2026-11-02-kind-detected`).
 
 The approved native-bootstrap target (`flext-0029c`) derives native root
 `[tool.uv.workspace]` member declarations from that composition owner, not a second
@@ -151,7 +151,7 @@ only version owners.
 | Distribution, description, license, authors, repository URL | PEP 621 `[project]`                                                                | never                                      |
 | provider, homepage, documentation                           | derived from `[project.urls].Repository`                                           | only a genuine delta                       |
 | package, class stem, namespace, alias, environment prefix   | one derivation each in the existing owners                                         | only a genuine delta with a live consumer  |
-| kind                                                        | the repository itself                                                              | required                                   |
+| kind                                                        | native dependency and workspace-composition facts                                  | never                                      |
 | integration branch                                          | the repository itself; a composed member reads its parent's `.gitmodules` `branch` | only where it is the repository's own fact |
 
 Deleted as dead (no reader): `checkout`, `state`, `beads_server`, `docs_audit`,
@@ -170,7 +170,7 @@ delta, an unknown key, or a stale block.
 
 ## Consequences
 
-- A repository manifest shrinks to its kind plus its genuine deltas; the root manifest
+- A repository manifest contains only genuine deltas; the root manifest
   loses its member list and every consumer reference.
 - The public `flext` repository no longer carries private repository names or
   machine-local paths.
