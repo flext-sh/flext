@@ -597,8 +597,8 @@ owner places imports; parallel placement routes are deleted in the same cutover.
        `module_ast`, `rename`, `move`, `extract`), never `rope_*`, `Rope*`, `griffe_*`
        or any other library name;
      - the rename is a mass refactoring by rule (sed, ast-grep and rope through
-       `make mod`), keeps the deprecated-signature window (Decision 7) for external
-       consumers, and is then applied to ai-hub and every other project that uses
+       `make mod`), removes the old route (Decision 7), and is applied to ai-hub and
+       every other project that uses
        flext-infra (census under bead `flext-1engx.11`).
      - **Domain capabilities (amended 2026-11-12, operator order: support projects
        whose domain is the technology "via overrides ou automaticamente").** A
