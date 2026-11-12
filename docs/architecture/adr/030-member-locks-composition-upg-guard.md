@@ -1,4 +1,4 @@
-# ADR-030 — Member Locks and Workspace Lock Composition
+# ADR-030 — Member Locks, Workspace Lock Composition, and the Upgrade Guard
 
 <!-- TOC START -->
 
@@ -13,8 +13,8 @@
 
 <!-- TOC END -->
 
-- **Status:** ACCEPTED for lock ownership and composition; Git-state admission
-  guards are removed by the current operator correction recorded on `flext-92rpb`.
+- **Status:** ACCEPTED — operator ruling 2026-10-25 (verbatim below); the upgrade
+  guard implementation is pending (see [Current state](#current-state))
 - **Date:** 2026-10-25
 - **Scope:** the FLEXT superproject, every member, standalone FLEXT checkouts and
   external consumers that bind FLEXT editable (ai-hub and others)
@@ -30,10 +30,31 @@
 
 ## Context
 
-Members retain their own locks so standalone installations have their own native
-dependency resolution. Lock ownership does not impose Git-state prerequisites on
-development commands or equality between an explicitly selected editable tree and
-a committed dependency pin.
+Earlier on 2026-10-25 the workspace adopted "only the root lock": members tracked no
+`uv.lock`, and a member checked out without its workspace failed setup. The operator
+then ruled, verbatim (tracker memory
+`operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`):
+
+> "vale para uv e para mise, somente make upg faz atualização de locks, para os
+> pacotes python só o uv que necessita de trava e commit completo de código da
+> workspace e subprojetos (somente quando for workspace com .venv editavel, em caso
+> de pip instalado en eduatbke o uv.lock se adequa ao que está ligado a ele e
+> projetos flext em modo standalone se liga assim), em casos de projetos standalone
+> sendo testado com .venv editavel externa o projeto externo precisa estar
+> commitado sem dirty e o projeto standalone que usa eles também gravado com
+> gitlinks atualizados em commit para uv fazer isso, veja como fazer isso da melhor
+> forma possível e garantir a hieraraquia de depencencias exatas pelo sha"
+
+and, answering the lock question directly (tracker memory
+`operator-rulings-2026-10-25-libnames-locks-ldif-rope`, answer 2):
+
+> "os locks dos membros tem que ser mantidos, mas tem que ser formados por eles, e o
+> da workspace com a composição dos deles, é importante fazer uma trava para make
+> upg só com rode repositórios limpos em casa .venv editável e com os gitlinks
+> ajustados, sem isso não vamos ter como manter a consistencias e testes no ci
+> remoto, analise para fazer isso funcionar e a melhor forma"
+
+The planned removal of member `uv.lock` files is cancelled.
 
 ## Decision
 
@@ -55,8 +76,9 @@ a committed dependency pin.
    the exact commit (tracker memory
    `operator-ruling-2026-10-24-lock-sha-pyproject-url-waves`). Composition preserves
    those pins, so the workspace lock and each member lock agree commit by commit.
-5. **Native tools own upgrade execution.** Clean-tree, branch, gitlink and
-   editable-HEAD-versus-lock admission layers do not precede their commands.
+5. **`make upg` is guarded** (next section). A lock written over uncommitted code or
+   stale gitlinks pins a SHA that the remote cannot reproduce, which breaks remote CI
+   consistency; the guard makes that impossible.
 
 ## Lock formation and composition
 
@@ -79,14 +101,11 @@ declaration owners without forming or writing another lock, followed by the
 existing typed selection owner in the physical consumer environment. That owner
 validates the complete selection and publishes its existing receipt. Local
 override paths are runtime inputs, never captured in generated Makefiles. The
-frozen installation owns dependency resolution; the executor bootstrap binds its
-declared editable requirements without dependency resolution or unrelated UV
-configuration overriding the explicit source selection. The
 [execution-context contract](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#generation-staging-transaction-journals-and-modernization)
 owns the source-only bootstrap target and its still-pending implementation and
 cold consumer proof; workspace-only export cannot be presumed to include the
-excluded editable path dependencies described below. Local source binding does
-not require the selected HEAD to equal the frozen installation's Git pin.
+excluded editable path dependencies described below. This clarification does not
+relax the upgrade guard or qualify an SDK release.
 
 **Release eligibility.** Clarification of 2026-11-02, documentation only (reconciliation
 of the retired 2026-09-10 cooldown plan, bead `flext-tvkbj`); no decision changes. The
@@ -106,18 +125,35 @@ projected to `[tool.uv] constraint-dependencies` (tracker memory
 
 ## The upgrade guard
 
-There is no Git-state admission guard. `make upg` calls the native dependency
-writers on declared manifests; generation uses the executing tool, and
-`make setup FLEXT=<path>` binds the selected source trees. A differing HEAD,
-uncommitted work or a stale gitlink is not a reason to refuse those operations.
-The original command's functional result is the evidence.
+The guard applies to uv only and runs in the `make upg` preflight, before any lock
+is written; the first defect fails loud:
+
+1. **Editable workspace** (`.venv` with editable members): every governed
+   repository is clean — the workspace and every subproject have their code fully
+   committed — and each committed gitlink in the superproject equals that member's
+   HEAD.
+2. **Standalone with an external editable install**: the external checkout is clean,
+   its HEAD is reachable from its integration branch, and the consumer's committed
+   gitlink or locked SHA equals that HEAD.
+3. **Non-editable install**: no guard condition applies; the lock follows the bound
+   distribution.
+
+The guard reads Git state only. It never commits, stashes, resets or repairs on the
+operator's behalf; a violation is a RED result naming the dirty path or the stale
+gitlink, and the operator or agent commits and reruns `make upg`.
+
+The guard is scoped to `make upg` only. It is the explicit operator exception to the
+root `AGENTS.md` "Rig and Lane Contract", which otherwise prohibits a clean tree as
+a prerequisite: lock writing pins SHAs that remote CI must reproduce, so only this
+verb requires committed state. No other verb inherits the requirement.
 
 **One-time Rope exception, 2026-10-28.** The operator answered "Autorizar
 exceção pontual para Rope" to the explicit request to update only the Rope pin
 and corresponding locks through `make upg`, then activate through `make setup`,
 with the current WIP preserved and every gate retained. Tracker memory
 `operator-exception-2026-10-28-rope-only-upg-wip` records the question and answer.
-This historical exception covered the causal native-SDK cutover only. It permits no site-packages
+This exception covers the causal native-SDK cutover only. It changes neither
+the permanent guard nor other dependency resolutions, permits no site-packages
 patch, and does not establish SDK qualification or installation evidence.
 
 Selected source updates cover runtime, optional and development declarations
@@ -177,7 +213,7 @@ pending.
 - Rejected alternative: isolated per-member copies, which is the retired synthetic
   resolver machinery.
 
-**One `make upg` pass.** Native resolution processes members in `.gitmodules` order,
+**One `make upg` pass.** The guard runs first, then members in `.gitmodules` order,
 then the root. uv runs `lock --upgrade`, which implies `--refresh` and costs about
 one second per project.
 
@@ -246,9 +282,11 @@ design lands, and ADR-003 §2 is then marked superseded in the same change.
 
 As of this ADR (2026-10-25):
 
-- Git-state admission guards are not part of the target contract. The
-  [proposed composition design](#proposed-design-implementation-pending) retains
-  its native-resolution verification and real-bump budget.
+- The upgrade guard is **not implemented**. The
+  [proposed design](#proposed-design-implementation-pending) is agent 11's; V1 and V2
+  are settled on fixtures, the 60-second budget on a real bump is not yet measured,
+  and until the design lands the guard is the target contract, not running
+  behavior.
 - The composition mechanism (members first, then the root, in one `make upg` pass)
   is part of the same pending design, as is the 60-second budget on a real bump.
 - Member locks that were already removed are restored by `make upg`, never by hand.

@@ -186,8 +186,20 @@ only while the pytester plugin is active.
   to completing this migration. This decision is the target contract, not evidence
   of implemented or verified consumer closure.
 
-  Consumer migration and removal happen together. Do not restore retired wrappers
-  or retain them behind deprecation markers; the new native contract is exclusive.
+  Amended 2026-10-29 (fix-forward/adopt, tracker keys
+  `operator-execute-more-with-less-law-20261028`,
+  `flext-wq1mo-complexity-campaign`): the first removal wave deleted
+  `MappingKV`, `SequenceOf`, `StrMapping` and siblings while their complete
+  consumer closure had not migrated, breaking non-migrated siblings fleet-wide;
+  the tree was repaired fix-forward by restoring those domain aliases in
+  `flext-core/src/flext_core/_typings/base.py` until the consumer migration
+  completes. The restoration is a managed transition, not a cancellation of
+  this decision: native collection annotations remain the target contract, the
+  consumer/rule/template closure migration resumes in the same campaign, and
+  `VariadicTuple`/`Pair`/`Triple`/`Quad`/`Quint` carry no restoration — they
+  continue through the deprecated-signature window to zero. Each wrapper's
+  removal closes only when its census reaches zero, external consumers
+  included.
 
   Modernizing `typing.List` or `typing.Dict` preserves the concrete native
   `list` or `dict` contract and does not require importing a `t` facade merely
@@ -205,9 +217,26 @@ only while the pytester plugin is active.
   invocation owns analysis and publication; historical declaration bytes used
   only to authenticate an interrupted cutover never become publication effects.
 
-  Superseded signatures, fallbacks and compatibility paths are deleted immediately.
-  Their consumers, including external projects, are rewired to the new owner in
-  the same change. There is no deprecated-signature window or parallel old route.
+  1. **The deprecated-signature window is the standard route to zero compatibility
+    code without breakage.** Operator order 2026-10-24 (verbatim): "toda a assinatura
+    antiga fica marcada com warning indicando o caminho novo até migrarmos tudo e daí
+    exterminamos o código antigo (isso tem que incluir os projetos externos mais
+    tarde)" and "não é contradição, é garantir que não vamos manter ABSOLUTAMENTE NADA
+    DE CÓDIGO ANTIGO DE COMPATIBILIDADE E SEM QUEBRAR O PROJETO" (tracker memory
+    `operator-ruling-2026-10-24-deprecated-signature-window`). Every removed or renamed
+    public signature stays as a thin pass-through to its new owner, marked with the
+    stdlib `warnings.deprecated` marker `compat: <old> -> <new owner>; fix: <exact
+    rewire>`. A constant carries the equivalent PEP 593 marker (bead `flext-1engx.12`).
+
+```text
+The marked declaration does not fail CI. Every remaining use of it does: type
+checkers report deprecated use as an error, and that report is the census. The
+rewire is applied by rule in each consumer's wave. The pass-through is deleted when
+the census reaches zero, external projects included (bead `flext-1engx.11`). An
+unmarked old path, or a zero-use marked path still present, is a defect. Current
+state: rule `report-compat-deprecated-marker.yml` still flags declarations; it is
+corrected under bead `flext-xws5d`.
+```
 
 ### Decision 8
 
@@ -568,7 +597,8 @@ owner places imports; parallel placement routes are deleted in the same cutover.
        `module_ast`, `rename`, `move`, `extract`), never `rope_*`, `Rope*`, `griffe_*`
        or any other library name;
      - the rename is a mass refactoring by rule (sed, ast-grep and rope through
-       `make mod`), removes the old route (Decision 7), and is applied to ai-hub and every other project that uses
+       `make mod`), keeps the deprecated-signature window (Decision 7) for external
+       consumers, and is then applied to ai-hub and every other project that uses
        flext-infra (census under bead `flext-1engx.11`).
 
 ### Decision 16
@@ -695,8 +725,12 @@ owner places imports; parallel placement routes are deleted in the same cutover.
        interpreter. The interpreter-based member-resolution routes are already
        exterminated in the campaign working tree (census 2026-10-28: 13 files
        examined, 9 routes removed, zero residue proven).
-     - **Superseded routes are removed immediately** (Decision 7), with their
-       consumers rewired through `make mod`, including external projects.
+     - **Superseded routes use the deprecated-signature window** (Decision 7):
+       a typed deprecation warning (`compat: <old> -> <new owner>; fix:
+       <rewire>`), an automatic usage census in which every reported use is a
+       finding in its consumer, rewire in waves through `make mod`, and deletion
+       when the census reaches zero. No dual fallback; an unmarked old path is
+       a defect.
      - **BLOCKED-ON-ROPE-CAPABILITY reporting.** A site with no rope-expressible
        equivalent is reported as blocked on a named rope capability and stays
        untouched until the operator rules — it never silently keeps an
@@ -884,11 +918,11 @@ architecture link.
   recognizes the PEP 747 call only when the callee's fullname is
   `typing_extensions.TypeForm`; a facade attribute is a class attribute, so mypy
   reports `"<typing special form>" not callable` and the result is `Any`.
-  `TypeForm` is removed: rule `ban-typeform-alias-call` rewrites every `TypeForm`
+  `t.TypeForm` is removed: rule `ban-typeform-alias-call` rewrites every `t.TypeForm`
   reference to the bare name and `pydantic-typeform-import` adds the import, both
   through `make mod`; the `t` re-binding is deleted at its typings owner.
   History (superseded 2026-10-31, not live law): the operator order of 2026-10-29
-  made `TypeForm(X)` the only spelling and banned `typing_extensions.TypeForm`
+  made `t.TypeForm(X)` the only spelling and banned `typing_extensions.TypeForm`
   imports outside flext-core's typings (rule `typeform-call-via-facade`).
 - **Runtime import:** a top-level import statement. Imports under `if TYPE_CHECKING:`
   never run and are outside the boundary.
@@ -922,7 +956,7 @@ All in flext-infra's declarative catalog, propagated to every consumer:
   biblioteca"): `ban-library-named-facade-member` flags a facade member whose name
   starts with an installed third-party distribution (`rope_*`, `Pytest*`), not a
   capability prefix (`git_`, `refactor_`, `workspace_`). The renames are mass-applied
-  with consumer migration and immediate deletion of the old names.
+  through a deprecated-signature window.
 
 The catalog follows one rule per law (operator order 2026-10-25). Facts that vary per
 package, letter or library become the values of one document (`constraints` regex,

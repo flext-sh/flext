@@ -293,10 +293,13 @@ contracts, source-module layout, automatic consumer rewiring and pilot coverage.
 The MRO/Pydantic analyzer and environment acceptance tracked by
 `flext-itpd1.13.11` remains incomplete and is not replaced by this amendment.
 
-Consumer model, service and data annotations use their canonical generated `p.*`
-contracts, each decorated with `@runtime_checkable`. Native Pydantic schema fields
-use their concrete model owner, including nested model operands. Callback
-signatures, consumer aliases and service payload annotations retain protocols.
+**Operator amendment 2026-11-02 — strict protocol typing.** Every `m.*` type
+reference is prohibited. First-party model, service and data contracts are typed
+through their canonical `p.*` protocols, each decorated with `@runtime_checkable`.
+This includes model fields, callback signatures, aliases, quoted references,
+generic arguments and service payload specializations; runtime evaluation of a
+typing expression does not make a concrete-model annotation permissible.
+Earlier exceptions retaining `m.*` annotations are superseded.
 
 Executable construction, validation, serializers, schema and handler metadata
 retain the actual model owner: a Protocol is never instantiated. A value-level
@@ -305,16 +308,24 @@ existing canonical scalar, enum and external SDK type owners; this decision does
 not authorize SDK-shaped protocol mirrors or aliases that disguise model classes
 as protocols.
 Native model base expressions and metadata factory calls such as `m.Field`
-remain actual model construction. Schema and consumer positions are distinguished
-by syntax and resolved identity, not by a blind prefix replacement.
+remain actual model construction. They do not permit `m.*` in a type operand;
+the native migration distinguishes these roles by syntax and resolved identity.
 
 Use the existing `t.Port[p.X]` only for a genuine validated DI capability under
 ADR-019. Its dependency exclusion from serialization and JSON Schema cannot
-replace a persisted payload's validation. The concrete field model owns native
-validation, serializers, aliases, defaults, specialization and JSON Schema.
+replace a persisted payload's validation. Serializable protocol-typed values
+must preserve the actual model's native validation, serializers and schema
+through native `GetPydanticSchema` projection at the established Pydantic owner.
+The metadata delegates to the original model schema; it preserves nested payloads,
+generic specialization, aliases, defaults, strictness and JSON Schema without
+retaining a concrete model in the consumer's type position. Metadata expressions
+that construct or validate a model are runtime expressions, not annotation targets
+for the reception codemod.
 
-Model fields use the model directly (``m.<Model>``). No deferred schema helper,
-protocol schema hook or model-lookup registry is retained at this boundary; the
+**Amendment 2026-11-09 — simplified model fields.** Model fields now use the
+model directly (``m.<Model>``) instead of the deferred schema owner form
+``Annotated[<protocol route>, t.schema_for_model(lambda: <model>)]``. The protocol
+mirror and deferred schema owner are no longer needed at the field boundary; the
 model itself owns validation, serialization and JSON Schema. Qualify that
 contract with real ingress, serialization and consumer execution; do not invent a
 compatibility schema, suppress a failure, or restore a prohibited form to obtain
@@ -346,6 +357,9 @@ preserve their own public callable contracts, including sync/async behavior,
 parameter kinds, defaults in signatures, overloads, generics and return types.
 This does not copy an external SDK into a local typing surface. Existing authored
 DI ports remain their declared capability owners; generation neither replaces
+A frozen model's protocol cannot inherit writable fields from a mutable model's
+protocol. Its projection declares those inherited fields as read-only members;
+the model's native inheritance and runtime behavior remain authoritative.
 them with a service implementation nor weakens an originating contract.
 Constructors, validation, field defaults/factories, schema, model configuration,
 validators, serializers and handler metadata retain their real runtime owners.
@@ -357,25 +371,11 @@ input validation from outward serialization: governed model presets use
 `use_enum_values=False`, superseding the intermediate primitive-output decision.
 A complete `StrEnum` remains the input and stored field type, and the projected
 getter and mutable setter retain that enum. Frozen fields have no setter.
-A frozen model's protocol cannot inherit writable fields from a mutable model's
-protocol. Its projection declares those inherited fields as read-only members;
-the model's native inheritance and runtime behavior remain authoritative.
 Default and factory producers, strict Python construction, JSON validation and
 existing enum consumers must close in the same migration. Python dumps retain
 members; JSON serialization emits values at the actual outward boundary.
 Retaining source text alone is not proof of preserved behavior. Proper subsets
 and discriminators keep their narrower law.
-
-Projection modules correspond to the semantic source-module owners of the
-models and services and group the declarations owned by those modules. They live
-in the canonical protocol family under [ADR-014](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership),
-without a `generated` directory/prefix or one file per model. Existing names and
-ownership are resolved through the native inventory. Ambiguous ownership or an
-incompatible occupied destination fails explicitly before effects; no numbered
-suffix, guessed basename or per-symbol mapping table resolves a collision.
-Generated protocols, authored ports, composed facades and lazy exports preserve
-their distinct owners and public identities.
-
 Model contracts mirror `_models/` beneath `_protocols/`. Internal service
 contracts and authored DI ports live beneath `_protocols/_services/`; external
 integration capabilities live beneath `_protocols/_external/`, named by capability
@@ -416,6 +416,16 @@ No generated `model_conformance.py` witness is required or emitted. `make gen`
 retires existing generated witnesses through the shared retirement publisher.
 Candidate imports and ordinary native type gates validate actual declarations and
 consumers without a separate generated assignment surface.
+
+Projection modules correspond to the semantic source-module owners of the
+models and services and group the declarations owned by those modules. They live
+in the canonical protocol family under [ADR-014](014-family-part-shape-rope-codemod-rules.md#1-semantic-facade-ownership),
+without a `generated` directory/prefix or one file per model. Existing names and
+ownership are resolved through the native inventory. Ambiguous ownership or an
+incompatible occupied destination fails explicitly before effects; no numbered
+suffix, guessed basename or per-symbol mapping table resolves a collision.
+Generated protocols, authored ports, composed facades and lazy exports preserve
+their distinct owners and public identities.
 
 The native Rope workspace model and reference graph drive semantic discovery,
 annotation migration and automatic rewiring through flext-infra's modification

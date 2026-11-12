@@ -35,7 +35,7 @@ the `flext_tests` facade plus the test-only mixins. There is no `@override`.
 from flext_infra import m as flext_infra_m
 from flext_tests import m as flext_tests_m
 
-from tests._models import TestsFlextInfraModelsBase
+from tests._models import TestsFlextInfraModelsBase  # noqa: PLC2701
 
 
 class TestsFlextInfraModels(flext_infra_m):

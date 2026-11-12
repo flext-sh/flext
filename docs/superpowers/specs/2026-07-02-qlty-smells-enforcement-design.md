@@ -110,7 +110,7 @@ artesanais. Sem aumento de erro de lint; testes 100% verdes.
     tipo → `match-case`.
   - `smell_similar_code`: composição MRO mixin no projeto root-most (flext-core >
     flext-cli/infra
-    > consumers); abstração nova exige prova ≥8x LOC dedup; scaffolding codegen
+    > consumers); abstração nova exige prova ≥8× LOC dedup; scaffolding codegen
     > conserta-se no TEMPLATE do gerador.
   - `smell_identical_code`: deletar toda cópia exceto a root-most; re-exportar via
     facade dona. Tolerância zero.
@@ -138,7 +138,7 @@ CODE_SMELL (warning sempre carrega ENFORCE-NNN + anchor + Fix).
 - SEM predicate kind novo: estender `MethodShapeParams += max_params: int = 0`
   (`_params.py:116-121`) + branch em `v_method_shape`
   (`_utilities/_beartype/method_visitor.py`): `inspect.getattr_static` +
-  `__code__.co_argcount + co_kwonlyargcount` - offset self/cls (staticmethod 0,
+  `__code__.co_argcount + co_kwonlyargcount` − offset self/cls (staticmethod 0,
   função/classmethod 1). Introspecção pura de code-object — beartype-style, zero leitura
   de source.
 - Exemptions LEGAIS (lei AGENTS.md, não silenciamento): dunders (`__*__`) e espelhos da
@@ -221,8 +221,8 @@ Arquivar (mv, nunca rm — política global) para `.reports/archive/qlty-legacy/
 
 - 8 beads de fix por categoria (prefixo `mro-`), cada um com a solução FLEXT-law do
   tipo + contagem/projetos do SARIF.
-- 1 bead: centralizar scaffolding codegen (`__version__.py` x30, `tests/base.py` x28,
-  `_exports.py` x14, `_parts/__init__.py`) via shared imports no gerador.
+- 1 bead: centralizar scaffolding codegen (`__version__.py` ×30, `tests/base.py` ×28,
+  `_exports.py` ×14, `_parts/__init__.py`) via shared imports no gerador.
 - 1 bead: flip STRICT — bloqueado por: fixes zerados + provisionamento qlty em CI +
   entrada em PRE_COMMIT_CONFIG + sanity assert de contagem não-zero workspace (proteção
   contra drift de descoberta de submodules do qlty).
@@ -289,7 +289,7 @@ make/cleanup/beads.**
 
 ## Riscos aceitos
 
-- Net LOC do feature ≈ +320 core/infra vs -80 código + artefatos arquivados — aumento
+- Net LOC do feature ≈ +320 core/infra vs −80 código + artefatos arquivados — aumento
   autorizado pelo pedido explícito de incremento de enforcement (regra global exige
   autorização: este plano é a autorização registrada).
 - Flood de warnings em import (intencional — "todos, sempre"); único quebra-testes

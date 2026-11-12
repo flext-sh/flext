@@ -217,10 +217,15 @@ long-running WIP in the rig checkout.
   or manufacture a clean state to satisfy tooling or reporting. Real runtime, type,
   lint, and test failures still require repair; Git dirtiness is not one.
 
-Native dependency tools form locks from declared inputs under
-[ADR-030](docs/architecture/adr/030-member-locks-composition-upg-guard.md).
-Development, generation, installation and upgrades do not require clean Git state,
-committed gitlinks or equality between a selected editable HEAD and a lock pin.
+The one explicit operator exception is the `make upg` lock guard (tracker memory
+`operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`,
+[ADR-030](docs/architecture/adr/030-member-locks-composition-upg-guard.md)). Lock
+writing pins exact SHAs that remote CI must reproduce, so `make upg` alone refuses
+to write a uv lock unless, in an editable workspace, every governed repository is
+committed and each gitlink equals its member's HEAD, or, in a standalone checkout
+with an external editable install, the external checkout is clean and the
+consumer's committed gitlink or locked SHA equals its HEAD. No other verb inherits
+this requirement. The guard is the target contract; its implementation is pending.
 
 ## Causal Repair Admission
 
@@ -707,8 +712,8 @@ CLI + pytest plugin, **never imported at runtime**.
     2026-10-24) count as stdlib. The PEP 747 special form is called and annotated
     only through `from typing_extensions import TypeForm` (`TypeForm(X)`,
     `TypeForm[T]`): mypy honours the call only for the fullname
-    `typing_extensions.TypeForm`. `TypeForm` is removed (operator ruling
-    2026-10-31, ADR-028; supersedes the 2026-10-29 `TypeForm` order, now
+    `typing_extensions.TypeForm`. `t.TypeForm` is removed (operator ruling
+    2026-10-31, ADR-028; supersedes the 2026-10-29 `t.TypeForm` order, now
     history).
   - Inside the facades too, an external library's types are named only through `t`
     aliases or `p` protocols; `u` never re-narrows or re-parses (`isinstance` chains,
@@ -733,7 +738,7 @@ CLI + pytest plugin, **never imported at runtime**.
     prefixed by functionality (`git_`, `refactor_`, `workspace_`; for example
     `p.Infra.WorkspaceSnapshot`), never `rope_*`, `Rope*`, `griffe_*` or another
     library name. The mass rename runs by rule through sed, ast-grep and rope via
-    `make mod`, removing the old route in the same change, and then reaches ai-hub
+    `make mod`, with the deprecated-signature window below, and then reaches ai-hub
     and every other consumer of flext-infra (ADR-028 Decision 15).
   - #### ADR-028 Decision 16
 
@@ -840,9 +845,17 @@ CLI + pytest plugin, **never imported at runtime**.
     only `conftest.py` and `tests/fixtures/` allowed the tests-tier delta (fixtures,
     hooks, scenario data); `examples/`, `scripts/` and every other Python folder follow
     the `src/` rules exactly.
-  - Removed or renamed signatures are rewired to their current owner and deleted
-    immediately, including their external consumers. No deprecated pass-through,
-    compatibility marker or transition window retains an obsolete execution path.
+  - **Deprecated-signature window: the standard route to zero compatibility code
+    without breaking anything** (operator order 2026-10-24, tracker memory
+    `operator-ruling-2026-10-24-deprecated-signature-window`). Every removed or
+    renamed public signature stays as a thin pass-through to the new owner, marked
+    with stdlib `warnings.deprecated` (`compat: <old> -> <new owner>; fix: <rewire>`).
+    Constants carry the equivalent PEP 593 marker (bead `flext-1engx.12`). The marked
+    declaration never fails CI. Every use of it is reported and fails, and that report
+    is the census. Consumers are rewired by rule in their waves, and the pass-through
+    is deleted when the census reaches zero, external projects included. This is how
+    the zero-residue law is met, not an exception to it. An unmarked old path, or a
+    marked path with zero uses that is still in the tree, is a defect.
   - The rules are identical in every project, applied as automatically as possible by
     flext-infra and the code-review graph; duplication and domain violations are
     rejected.
@@ -949,10 +962,13 @@ CLI + pytest plugin, **never imported at runtime**.
   [ADR-018's strict amendment](docs/architecture/adr/018-generator-declarations.md#model-and-service-protocol-projection)
   through the existing generator and native Rope owner. `t.Port` is valid only
   for its real DI contract and never bypasses persisted payload validation.
-  Generic wrapper aliases are replaced by native annotations through
-  [ADR-028 Decision 7](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7),
-  with consumer migration and deletion in the same change, including external
-  projects. No legacy wrapper remains as a transition mechanism.
+  Generic wrapper aliases (`MappingKV`, `SequenceOf`, `StrMapping`, …) are a managed
+  transition under [ADR-028 Decision 7](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7)
+  (amended 2026-10-29): restored fix-forward because premature removal broke
+  non-migrated consumers; native collection annotations remain the target, each
+  alias retires when its consumer census reaches zero. `VariadicTuple` and
+  tuple-arity wrappers carry no restoration and continue through the
+  deprecated-signature window.
 - **No owned typing stubs:** handwritten and generated first-party `.pyi`, custom
   stub distributions, stub generators, SDK-shaped shadow modules, and model-signature
   mirrors in `.py` are prohibited. Dependency contracts belong to the smallest
@@ -971,8 +987,9 @@ CLI + pytest plugin, **never imported at runtime**.
   bead `flext-vjj1s.8`). Its output is
   a generated projection, not an owned stub.
 - **No compat surface:** no shims, legacy branches, dual old+new paths, loose helpers,
-  or suppression (`# type: ignore`/`# noqa`) without documented justification.
-  Superseded code is removed immediately and its consumers use the new path.
+  or suppression (`# type: ignore`/`# noqa`) without documented justification. A
+  public signature that still has consumers goes through the deprecated-signature
+  window above. Everything else superseded is removed in the same cycle.
 - **Automated correction is the law** (operator order 2026-10-24, "lei extrema"):
   every violation fix is produced by flext-infra through `gen`, `upg`, `mod`, `fix`
   or `fmt` — a catalog rule with a `fix:`, a generator or a fixer — applied to every

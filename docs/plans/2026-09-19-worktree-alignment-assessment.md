@@ -2,7 +2,7 @@
 > (2026-09-19). PR/bead/branch states cited below may have changed; verify against the
 > live tracker (`bd` / `gh`) before relying on anything here.
 
-# Worktree alignment assessment — flext x ai-hub
+# Worktree alignment assessment — flext × ai-hub
 
 Historical paths use `${HOME}` for the recorded operator home directory. Their
 suffixes, revisions, and measurements are unchanged; they are not live checkout
@@ -12,7 +12,7 @@ recommendations. Resolve the active lane from the tracker before any command.
 
 - [1. Capacidade atual do flext (o que funciona)](#1-capacidade-atual-do-flext-o-que-funciona)
 - [2. Contrato ai-hub (para onde alinhar)](#2-contrato-ai-hub-para-onde-alinhar)
-- [3. Desalinhamentos flext x ai-hub](#3-desalinhamentos-flext-ai-hub)
+- [3. Desalinhamentos flext × ai-hub](#3-desalinhamentos-flext-ai-hub)
 - [4. Estágio por plano recuperado](#4-estagio-por-plano-recuperado)
 - [5. Todos restantes (por dono)](#5-todos-restantes-por-dono)
 - [6. Decisão recomendada](#6-decisao-recomendada)
@@ -59,7 +59,7 @@ manutenção), estágio e todos restantes.
 - **Metadata**: worktree deve carregar `.beads`
   (permissions.worktree.metadata_directory, 0700).
 
-## 3. Desalinhamentos flext x ai-hub
+## 3. Desalinhamentos flext × ai-hub
 
 1. **Layout de lanes divergente**: flext usa `<repo>-<sha12>` sob `.worktrees/` externo;
    ai-hub espera `<repo>-worktrees/<bead-id>` (sibling suffix). Lanes flext existentes

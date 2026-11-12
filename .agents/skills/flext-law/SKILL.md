@@ -131,9 +131,12 @@ missing projections authorize a concrete-model typing exception or protocol shim
   skipped, deferred or parked; red or incomplete work is never committed, tested or
   pushed except to a preservation ref outside the working and integration branches
   (ADR-029; root `AGENTS.md` contract item 9).
-- A removed or renamed public signature is deleted with its consumer migration
-  under ADR-028 Decision 7, including external projects. Keep only the new owner;
-  no deprecated pass-through, fallback or compatibility window survives.
+- A removed or renamed public signature that still has consumers follows the
+  deprecated-signature window (ADR-028 Decision 7; tracker memory
+  `operator-ruling-2026-10-24-deprecated-signature-window`). It stays a marked
+  pass-through to its new owner until the fleet and external census is zero, and is
+  then deleted. This window is the route to zero compatibility code, not an alias
+  exception.
   The operator's 2026-10-28 generic-typing-wrapper cutover in that same ADR requires
   complete consumer, rule and documentation migration for retired generic wrappers;
   preserve domain aliases and native collection semantics rather than restoring

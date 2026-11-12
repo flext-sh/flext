@@ -88,7 +88,7 @@ railway discipline.
 ### Key architectural patterns
 
 - **RFC-first normalization**: dialect handlers convert entries to and from the RFC
-  representation, so any NxN server conversion routes through a single canonical form.
+  representation, so any N×N server conversion routes through a single canonical form.
 - **Registry dispatch**: `ldif.resolve_server_bundle(...)`,
   `ldif.list_registered_servers()`, and `ldif.summarize_registry()` expose the
   registered dialects at runtime.

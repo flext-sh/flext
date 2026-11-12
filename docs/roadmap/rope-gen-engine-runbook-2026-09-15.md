@@ -141,7 +141,7 @@ its old commands. Current ownership and lifecycle above supersede its execution
 instructions.
 
 - Reported flext-infra tip `c3f574807` (0.12.0-dev); `_conform` stale drift adopted via
-  tip; `_models/_config` split (13 untracked + 2 M) ready to land through gen x2 with
+  tip; `_models/_config` split (13 untracked + 2 M) ready to land through gen ×2 with
   parity probe 107/107 dunders vs `pre_config.json` (scratch snapshots intact).
 - The historical session reported `bd`/`rg` shim problems. That report does not
   authorize bypassing the current rig environment or canonical command surface.
