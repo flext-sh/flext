@@ -374,9 +374,16 @@ is computed from facts the sources already declare:
   block. In the example, `t` and `FlextProtocolsResult` (read by `type` values)
   and `FlextProtocolsBase` (class bases) are runtime bindings, while `c`,
   `FlextProtocolsContainer` and `Callable` stay deferred.
-- A facade class lists only the upstream letters it composes as bases, aliased
-  `{package}_{letter}` when the module binds that letter itself (`class
-  FlextTargetOracleOicUtilities(flext_meltano_u, flext_oracle_oic_u)`). Its own
+- A FLEXT family facade lists only the upstream facades it composes as bases,
+  by the class name each parent declares, imported from the parent's package
+  root (`from flext_meltano import FlextMeltanoUtilities` and `class
+  FlextTargetOracleOicUtilities(FlextMeltanoUtilities, FlextOracleOicUtilities)`),
+  then rebinds its own letter as a plain alias (`u = FlextTargetOracleOicUtilities`).
+  A letter base or a `{package}_{letter}` alias base binds the letter twice and
+  makes type checkers read it as a variable; it is rewritten by rule
+  `facade-base-by-class-name` (amended 2026-11-12, operator decision "o ADR está
+  errado": the rule's class-name form is canonical). A Pattern-A consumer outside
+  the family keeps the letter base (flext-core ENFORCE-046). Its own
   components compose inside one nested namespace class named by the package
   (`class TargetOracleOic(FlextTargetOracleOicServiceRuntime,
   FlextTargetOracleOicSink)`), never as extra facade bases and never as
@@ -410,8 +417,10 @@ falando nas declaracoes de c,t,p,m e u usar import deles das bibliotecas mais
 altas para composição enquanto elas estão sendo compostas para uso hierárquico".
 Inside the declaration modules of the five families, while the package's own
 facades are being composed, the letters of the upstream packages it composes
-(`from flext_cli import c, t, p, m, u`) are the canonical binding: each own family
-composes the upstream same-letter class by MRO. The boundaries around it:
+(`from flext_cli import c, t, p, m, u`) are the canonical binding for references
+read through a letter (`t.X`, `p.Y`); the facade class itself composes the
+upstream same-letter class by MRO through its declared class name (rule
+`facade-base-by-class-name`, amended 2026-11-12). The boundaries around it:
   - Elect the spelling from native references at the class header. Retain a bare
     upstream letter when its identity is used there; when an existing verified
     alias is the used binding, retain only that alias. A later publication of the
