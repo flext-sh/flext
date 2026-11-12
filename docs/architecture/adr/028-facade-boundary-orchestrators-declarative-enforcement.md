@@ -145,29 +145,31 @@ outside the facades across 12 repositories.
     `testing/observable-runtime` rule's artifact-only amendment of 2026-10-26
     supersedes permission for executable fixture modules under `tests/fixtures/`.
 
-    That root contains artifacts and data only, including source-shaped bytes used
-    as engine inputs. It contains no executable test classes, builders, aliases,
-    models, package initializers or `conftest.py`, at any depth. File extension
-    alone does not establish executable ownership; artifacts are never imported
-    or executed in the suite process.
+```text
+That root contains artifacts and data only, including source-shaped bytes used
+as engine inputs. It contains no executable test classes, builders, aliases,
+models, package initializers or `conftest.py`, at any depth. File extension
+alone does not establish executable ownership; artifacts are never imported
+or executed in the suite process.
 
-    Executable declarations and builders belong to the test-code `c/t/p/m/u`
-    families, pytest wiring to `conftest.py` outside the artifact root, and behavior
-    to the declared test layers. Every other executable Python folder follows the
-    same rules as `src/`. The shared inventory owner keeps artifact bytes outside
-    live collection, lint, types, refactoring and generation, without inspecting
-    their content to decide applicability. These boundaries are declared once and
-    propagated; a local exclusion is not another enforcement owner.
+Executable declarations and builders belong to the test-code `c/t/p/m/u`
+families, pytest wiring to `conftest.py` outside the artifact root, and behavior
+to the declared test layers. Every other executable Python folder follows the
+same rules as `src/`. The shared inventory owner keeps artifact bytes outside
+live collection, lint, types, refactoring and generation, without inspecting
+their content to decide applicability. These boundaries are declared once and
+propagated; a local exclusion is not another enforcement owner.
 
-    The existing scenario-root declaration is the
-    `flext_fixture_trees_root` pytest ini key: flext-infra projects it into every
-    generated pytest configuration from `scenario_data_roots`, and the flext-tests
-    fixture-tree plugin registers and reads it (`c.Tests.FIXTURE_TREES_INI`). That
-    plugin keeps every scenario directory out of live collection and hands tests
-    `fixture_tree("<scenario>")` (`p.Tests.FixtureTree`), which copies the tree into
-    the test's `tmp_path` or into a declared consumer destination.
-    Tests never use pytester's `copy_example`, whose `pytester_example_dir` key exists
-    only while the pytester plugin is active.
+The existing scenario-root declaration is the
+`flext_fixture_trees_root` pytest ini key: flext-infra projects it into every
+generated pytest configuration from `scenario_data_roots`, and the flext-tests
+fixture-tree plugin registers and reads it (`c.Tests.FIXTURE_TREES_INI`). That
+plugin keeps every scenario directory out of live collection and hands tests
+`fixture_tree("<scenario>")` (`p.Tests.FixtureTree`), which copies the tree into
+the test's `tmp_path` or into a declared consumer destination.
+Tests never use pytester's `copy_example`, whose `pytester_example_dir` key exists
+only while the pytester plugin is active.
+```
 
 ### Decision 7
 
@@ -226,13 +228,15 @@ outside the facades across 12 repositories.
     stdlib `warnings.deprecated` marker `compat: <old> -> <new owner>; fix: <exact
     rewire>`. A constant carries the equivalent PEP 593 marker (bead `flext-1engx.12`).
 
-    The marked declaration does not fail CI. Every remaining use of it does: type
-    checkers report deprecated use as an error, and that report is the census. The
-    rewire is applied by rule in each consumer's wave. The pass-through is deleted when
-    the census reaches zero, external projects included (bead `flext-1engx.11`). An
-    unmarked old path, or a zero-use marked path still present, is a defect. Current
-    state: rule `report-compat-deprecated-marker.yml` still flags declarations; it is
-    corrected under bead `flext-xws5d`.
+```text
+The marked declaration does not fail CI. Every remaining use of it does: type
+checkers report deprecated use as an error, and that report is the census. The
+rewire is applied by rule in each consumer's wave. The pass-through is deleted when
+the census reaches zero, external projects included (bead `flext-1engx.11`). An
+unmarked old path, or a zero-use marked path still present, is a defect. Current
+state: rule `report-compat-deprecated-marker.yml` still flags declarations; it is
+corrected under bead `flext-xws5d`.
+```
 
 ### Decision 8
 
@@ -262,13 +266,15 @@ outside the facades across 12 repositories.
     `make fix` are no-ops, on every repository
     ([ADR-018 verification contract](018-generator-declarations.md#verification-contract)).
 
-    **Implementation status:** this is an accepted contract pending complete
-    engine implementation and runtime proof under `flext-pipol`. Existing
-    post-render repair code is a migration finding, not evidence that the
-    contract is already satisfied. Small publication transactions use
-    [ADR-018's cooperative-reader barrier](018-generator-declarations.md#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol);
-    their fast validation does not reduce any frozen gate policy or replace
-    full slice acceptance.
+```text
+**Implementation status:** this is an accepted contract pending complete
+engine implementation and runtime proof under `flext-pipol`. Existing
+post-render repair code is a migration finding, not evidence that the
+contract is already satisfied. Small publication transactions use
+[ADR-018's cooperative-reader barrier](018-generator-declarations.md#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol);
+their fast validation does not reduce any frozen gate policy or replace
+full slice acceptance.
+```
 
 ### Decision 9
 
@@ -288,18 +294,20 @@ outside the facades across 12 repositories.
     follows every decision of this ADR (root-letter imports, no library names
     outside the facades, the Pydantic way).
 
-    **Amendment 2026-11-02 — universal automatic rewiring** (operator order, tracker
-    memory `operator-order-2026-11-02-universal-auto-rewiring`, translated from
-    Portuguese: "the auto-rewiring law must cover all Python code; the mechanism must be
-    so generalized and applied to everything that it applies even to Python code in the
-    project's Markdown and docstrings, using flext-infra with rope for it; it is not
-    optional, it is mandatory for it and for every other complex code rewrite"). Every
-    rewiring cutover, whether import or letter binding, rename, move or relocation,
-    covers Python in Markdown code blocks and docstrings in the same change. It runs
-    through flext-infra on the native Rope workspace model ([Decision 17](#decision-17)),
-    using its documentation occurrences and the existing `_utilities/_docs` owners.
-    Text scripts and hand edits are not a rewrite mechanism. A cutover that leaves
-    stale embedded code is incomplete, never a follow-up item.
+```text
+**Amendment 2026-11-02 — universal automatic rewiring** (operator order, tracker
+memory `operator-order-2026-11-02-universal-auto-rewiring`, translated from
+Portuguese: "the auto-rewiring law must cover all Python code; the mechanism must be
+so generalized and applied to everything that it applies even to Python code in the
+project's Markdown and docstrings, using flext-infra with rope for it; it is not
+optional, it is mandatory for it and for every other complex code rewrite"). Every
+rewiring cutover, whether import or letter binding, rename, move or relocation,
+covers Python in Markdown code blocks and docstrings in the same change. It runs
+through flext-infra on the native Rope workspace model ([Decision 17](#decision-17)),
+using its documentation occurrences and the existing `_utilities/_docs` owners.
+Text scripts and hand edits are not a rewrite mechanism. A cutover that leaves
+stale embedded code is incomplete, never a follow-up item.
+```
 
 ### Decision 10
 
@@ -334,109 +342,111 @@ outside the facades across 12 repositories.
     module's `__all__`; an `__init__.py` only re-exports it (or inherits it from the
     parent namespace) and never assigns it.
 
-    Operator orders 2026-11-02 (tracker key
-    `operator-order-2026-11-02-import-and-composition-forms`; epic `flext-lqfqo`).
-    The operator showed, by example, forms that the generators and the codemod
-    violated (translated from Portuguese: "the codemod is generating the wrong
-    imports … it must fix this kind of code to the correct patterns; it is mandatory,
-    in every existing rule"; "it has to correct ALL THE IMPORTS, according to the
-    correct rules, without simplifying"; "the rule is calculated, deterministic …
-    already well documented"; "I gave examples of rules being violated and the
-    correct form, but you must do it calculated for every case and NOT USE hardcoded
-    lists or rules"). The examples are fixtures, never the rule; every decision below
-    is computed from facts the sources already declare:
-    - A facade or consumer imports a family's classes in one statement from the
-      package that publishes them (`from examples._models import
-      (ExamplesFlextModelsEx00, …)`), never one module-path statement per part
-      (`from examples._models.ex00 import …`).
-    - In a family module of letter L (for example `flext_core/_protocols/handler.py`)
-      the own letter L never appears; same-family siblings come through the family
-      package (`from flext_core._protocols import FlextProtocolsBase,
-      FlextProtocolsResult`); a member of another family is reached through that
-      family's letter, never imported from its family package (`from
-      flext_core._typings import FlextTypesCore` is forbidden there). Letters earlier
-      than L in `import-layer-order` come from the own package root; L and later
-      letters come from the elected upstream.
-    - Placement is calculated. An executed read needs a runtime binding: a class
-      base, a decorator, a class keyword, a default value, a `type` statement value,
-      or a construction that evaluates its annotations at runtime, such as a Pydantic
-      model. An annotation-only binding keeps its placement. A binding that would
-      close an import cycle is deferred into the single, last `if TYPE_CHECKING:`
-      block. In the example, `t` and `FlextProtocolsResult` (read by `type` values)
-      and `FlextProtocolsBase` (class bases) are runtime bindings, while `c`,
-      `FlextProtocolsContainer` and `Callable` stay deferred.
-    - A facade class lists only the upstream letters it composes as bases, aliased
-      `{package}_{letter}` when the module binds that letter itself (`class
-      FlextTargetOracleOicUtilities(flext_meltano_u, flext_oracle_oic_u)`). Its own
-      components compose inside one nested namespace class named by the package
-      (`class TargetOracleOic(FlextTargetOracleOicServiceRuntime,
-      FlextTargetOracleOicSink)`), never as extra facade bases and never as
-      `X: TypeAlias = X` republications.
-    - Each provider of a letter is bound once, bare or as its verified alias, as the
-      election below decides. Competing or duplicate bindings are rewritten to it:
-      `from flext_cli import p` beside `from flext_core import p` inside flext-cli's
-      own `_protocols` is corrected, never reported as competing import origins.
-    - Every form above is one authored, generalized rule in flext-infra's rule
-      catalog (`src/flext_infra/config/rules/**`: native ast-grep documents and
-      declarative Rope rules, each with fixtures and its native test). No rule is
-      generated: the operator ruled (verbatim) "NAO TEM QUE EXISTIR REGRAS GERADAS,
-      ISSO É COMPLETAMENTE FAKE, SE DÁ PARA GERAR NÃO É REGRA". The Python engine
-      only computes facts (publication, MRO upstream, layer rank, runtime reads, the
-      import-cycle graph, Pydantic-evaluated constructions), binds them to the
-      rules' declared utilities and parameters, and executes the rules natively; a
-      law written as a Python branch is a hardcoded rule. `check` reports the rules'
-      findings, `gen` applies them to every module it generates, and `mod` applies
-      them to every authored module it refactors. ai-hub builds its hooks from the
-      same catalog (verbatim: "TODAS AS REGRAS ... TEM QUE ESTAR em rules, pois ai-hub
-      irá usar elas para fazer hooks ... regras em python é considerado hardcoded e
-      gambiarra"). Ruff's type-checking rules are disabled as an axiom; these rules
-      own `TYPE_CHECKING` placement.
-    Existing violations are rewritten by the pipeline, never by hand. Status: target
-    contract; the implementation runs under epic `flext-lqfqo`.
+```text
+Operator orders 2026-11-02 (tracker key
+`operator-order-2026-11-02-import-and-composition-forms`; epic `flext-lqfqo`).
+The operator showed, by example, forms that the generators and the codemod
+violated (translated from Portuguese: "the codemod is generating the wrong
+imports … it must fix this kind of code to the correct patterns; it is mandatory,
+in every existing rule"; "it has to correct ALL THE IMPORTS, according to the
+correct rules, without simplifying"; "the rule is calculated, deterministic …
+already well documented"; "I gave examples of rules being violated and the
+correct form, but you must do it calculated for every case and NOT USE hardcoded
+lists or rules"). The examples are fixtures, never the rule; every decision below
+is computed from facts the sources already declare:
+- A facade or consumer imports a family's classes in one statement from the
+  package that publishes them (`from examples._models import
+  (ExamplesFlextModelsEx00, …)`), never one module-path statement per part
+  (`from examples._models.ex00 import …`).
+- In a family module of letter L (for example `flext_core/_protocols/handler.py`)
+  the own letter L never appears; same-family siblings come through the family
+  package (`from flext_core._protocols import FlextProtocolsBase,
+  FlextProtocolsResult`); a member of another family is reached through that
+  family's letter, never imported from its family package (`from
+  flext_core._typings import FlextTypesCore` is forbidden there). Letters earlier
+  than L in `import-layer-order` come from the own package root; L and later
+  letters come from the elected upstream.
+- Placement is calculated. An executed read needs a runtime binding: a class
+  base, a decorator, a class keyword, a default value, a `type` statement value,
+  or a construction that evaluates its annotations at runtime, such as a Pydantic
+  model. An annotation-only binding keeps its placement. A binding that would
+  close an import cycle is deferred into the single, last `if TYPE_CHECKING:`
+  block. In the example, `t` and `FlextProtocolsResult` (read by `type` values)
+  and `FlextProtocolsBase` (class bases) are runtime bindings, while `c`,
+  `FlextProtocolsContainer` and `Callable` stay deferred.
+- A facade class lists only the upstream letters it composes as bases, aliased
+  `{package}_{letter}` when the module binds that letter itself (`class
+  FlextTargetOracleOicUtilities(flext_meltano_u, flext_oracle_oic_u)`). Its own
+  components compose inside one nested namespace class named by the package
+  (`class TargetOracleOic(FlextTargetOracleOicServiceRuntime,
+  FlextTargetOracleOicSink)`), never as extra facade bases and never as
+  `X: TypeAlias = X` republications.
+- Each provider of a letter is bound once, bare or as its verified alias, as the
+  election below decides. Competing or duplicate bindings are rewritten to it:
+  `from flext_cli import p` beside `from flext_core import p` inside flext-cli's
+  own `_protocols` is corrected, never reported as competing import origins.
+- Every form above is one authored, generalized rule in flext-infra's rule
+  catalog (`src/flext_infra/config/rules/**`: native ast-grep documents and
+  declarative Rope rules, each with fixtures and its native test). No rule is
+  generated: the operator ruled (verbatim) "NAO TEM QUE EXISTIR REGRAS GERADAS,
+  ISSO É COMPLETAMENTE FAKE, SE DÁ PARA GERAR NÃO É REGRA". The Python engine
+  only computes facts (publication, MRO upstream, layer rank, runtime reads, the
+  import-cycle graph, Pydantic-evaluated constructions), binds them to the
+  rules' declared utilities and parameters, and executes the rules natively; a
+  law written as a Python branch is a hardcoded rule. `check` reports the rules'
+  findings, `gen` applies them to every module it generates, and `mod` applies
+  them to every authored module it refactors. ai-hub builds its hooks from the
+  same catalog (verbatim: "TODAS AS REGRAS ... TEM QUE ESTAR em rules, pois ai-hub
+  irá usar elas para fazer hooks ... regras em python é considerado hardcoded e
+  gambiarra"). Ruff's type-checking rules are disabled as an axiom; these rules
+  own `TYPE_CHECKING` placement.
+Existing violations are rewritten by the pipeline, never by hand. Status: target
+contract; the implementation runs under epic `flext-lqfqo`.
 
-    Hierarchical composition imports the upstream letters. Operator rulings
-    2026-10-25 (verbatim): "essa é a forma canonica, isso tem que estar declarado,
-    documentado e automatizado, confirme com as regras atuais" and "veja que estamos
-    falando nas declaracoes de c,t,p,m e u usar import deles das bibliotecas mais
-    altas para composição enquanto elas estão sendo compostas para uso hierárquico".
-    Inside the declaration modules of the five families, while the package's own
-    facades are being composed, the letters of the upstream packages it composes
-    (`from flext_cli import c, t, p, m, u`) are the canonical binding: each own family
-    composes the upstream same-letter class by MRO. The boundaries around it:
-      - Elect the spelling from native references at the class header. Retain a bare
-        upstream letter when its identity is used there; when an existing verified
-        alias is the used binding, retain only that alias. A later publication of the
-        package's own letter does not make an earlier bare binding occupied. Never
-        emit both `u` and `u as provider_u` from one provider when the bare binding
-        has no independent reference. This applies equally to nested namespaces;
-        it does not create a per-library alias list or change the MRO identity.
-      - the package's own letter inside its own family is forbidden in every form,
-        including `<pkg>.u` reached through the package module object (ENFORCE-051);
-      - a same-family sibling is imported from the family package;
-      - modules outside the families read every letter from their own package root
-        (ENFORCE-003, which also owns `if TYPE_CHECKING:` imports);
-      - a later layer stays TYPE_CHECKING-only from any package
-        (`ban-reverse-runtime-import`).
+Hierarchical composition imports the upstream letters. Operator rulings
+2026-10-25 (verbatim): "essa é a forma canonica, isso tem que estar declarado,
+documentado e automatizado, confirme com as regras atuais" and "veja que estamos
+falando nas declaracoes de c,t,p,m e u usar import deles das bibliotecas mais
+altas para composição enquanto elas estão sendo compostas para uso hierárquico".
+Inside the declaration modules of the five families, while the package's own
+facades are being composed, the letters of the upstream packages it composes
+(`from flext_cli import c, t, p, m, u`) are the canonical binding: each own family
+composes the upstream same-letter class by MRO. The boundaries around it:
+  - Elect the spelling from native references at the class header. Retain a bare
+    upstream letter when its identity is used there; when an existing verified
+    alias is the used binding, retain only that alias. A later publication of the
+    package's own letter does not make an earlier bare binding occupied. Never
+    emit both `u` and `u as provider_u` from one provider when the bare binding
+    has no independent reference. This applies equally to nested namespaces;
+    it does not create a per-library alias list or change the MRO identity.
+  - the package's own letter inside its own family is forbidden in every form,
+    including `<pkg>.u` reached through the package module object (ENFORCE-051);
+  - a same-family sibling is imported from the family package;
+  - modules outside the families read every letter from their own package root
+    (ENFORCE-003, which also owns `if TYPE_CHECKING:` imports);
+  - a later layer stays TYPE_CHECKING-only from any package
+    (`ban-reverse-runtime-import`).
 
-    A letter of any facade package read through its module object (`import pkg`,
-    then `pkg.u.X`) is rewritten by the same letter-binding rule data to the binding
-    this decision elects.
+A letter of any facade package read through its module object (`import pkg`,
+then `pkg.u.X`) is rewritten by the same letter-binding rule data to the binding
+this decision elects.
 
-    **Amendment 2026-11-02 — import header, automatic repair and rewiring**
-    (operator order, tracker memory `operator-order-2026-11-02-import-header-auto-rewire`,
-    translated from Portuguese: "a serious example of rule simplification that breaks
-    the projects: in flext-core, `_protocols/base.py` imports `p` (it will create an
-    import cycle and we have two TYPE_CHECKING import sections; it must always be the
-    last, and we cannot have comments between the imports)" and "the engine must fix
-    this too, automatically, and rewire the components to their definitions in the
-    correct location"). A module header has exactly one `if TYPE_CHECKING:` block, and
-    it is the last import section. There are no comments between imports, and the
-    package's own letter never appears inside its own family. The binding exists even
-    when the package has no foreign upstream for that letter. The repair is automatic
-    inside `make mod`, never detection-only. It runs on the native Rope workspace
-    model ([Decision 17](#decision-17)), rewiring references to their defining classes
-    in the correct family location, imported through the family package. Exactly one
-    owner places imports; parallel placement routes are deleted in the same cutover.
+**Amendment 2026-11-02 — import header, automatic repair and rewiring**
+(operator order, tracker memory `operator-order-2026-11-02-import-header-auto-rewire`,
+translated from Portuguese: "a serious example of rule simplification that breaks
+the projects: in flext-core, `_protocols/base.py` imports `p` (it will create an
+import cycle and we have two TYPE_CHECKING import sections; it must always be the
+last, and we cannot have comments between the imports)" and "the engine must fix
+this too, automatically, and rewire the components to their definitions in the
+correct location"). A module header has exactly one `if TYPE_CHECKING:` block, and
+it is the last import section. There are no comments between imports, and the
+package's own letter never appears inside its own family. The binding exists even
+when the package has no foreign upstream for that letter. The repair is automatic
+inside `make mod`, never detection-only. It runs on the native Rope workspace
+model ([Decision 17](#decision-17)), rewiring references to their defining classes
+in the correct family location, imported through the family package. Exactly one
+owner places imports; parallel placement routes are deleted in the same cutover.
+```
 
 ### Decision 11
 
@@ -536,13 +546,11 @@ outside the facades across 12 repositories.
      - A field naming a sibling through its own enclosing family class in an eagerly
        evaluated position is banned (`ban-enclosing-family-field-reference`): the
        enclosing class is unbound while its body runs, so the model stays incomplete.
-       The type position names the sibling's protocol, and the schema owner is
-       deferred (`t.schema_for_model(lambda: Holder.X)`,
-       [ADR-018 amendment 2026-11-03](018-generator-declarations.md#model-and-service-protocol-projection));
-       a deferred reference is not evaluated at class creation and keeps the field
-       complete (measured 2026-11-03: eager form incomplete, cross-module subclass
-       fails; deferred form complete, cross-module subclass validates and rejects
-       invalid input).
+       The type position names the sibling model directly (``Holder.X`` /
+       ``m.<Model>``); no protocol mirror or deferred schema owner is needed at
+       the field boundary, so the field stays complete at class creation and
+       subclasses inherit it unchanged
+       ([ADR-018 amendment 2026-11-09](018-generator-declarations.md#model-and-service-protocol-projection)).
      - Facade roots (`c`, `t`, `p`, `m`, `u`) never inherit a model. They compose
        namespaces; payload models compose data. Native constraints, validators,
        computed fields and serializers belong to the model contract and are not
@@ -620,7 +628,6 @@ outside the facades across 12 repositories.
        FLEXT configuration. The fix is extraction to the canonical owner, never an
        ignore, a raised threshold or a narrowed scope. The only authorized jscpd
        exception is the license header.
-
      - Rules are generalized and few (Decision 18).
      - `FlextResult` (`r`) railway combinators (`.map`, `.flat_map`, `.map_or`,
        `.unwrap_or`, `r.traverse`, `r.from_validation`, `r.create_from_callable`) and
@@ -688,69 +695,69 @@ outside the facades across 12 repositories.
        rope-over-rope wrapper. ast-grep remains the canonical declarative rules
        engine (Decision 11), and sed, the generator and non-Python text keep their
        own owners: the ban is on FLEXT-authored Python parsing, not on those
-       engines. The complete decision form:
-       - **Single loop, single index, single transaction.** One rope loop per
-         semantic modification invocation. Exactly one index per repository per
-         invocation — no phase, planner, checker or validator opens a second project
-         or re-parses what that index already holds. Effects publish as one batch in a single
-         transaction, and the first causal failure retains the batch
-         ([ADR-018 single-read, single-batch publication](018-generator-declarations.md#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol)).
-       - **Native refactorings first.** Before any custom transform, the operation
-         is expressed with rope's native refactorings (rename with documentation
-         occurrences, move, restructure, multi-project refactoring); a custom
-         planner is admissible only for what those refactorings cannot express.
-         Correction reaches the tree only through the engine — `make mod`, by
-         declarative rule where mechanical and by rope where semantic; a hand edit
-         stays the exception of the exception (Decision 8), and member
-         repositories are never edited by hand to unblock a run.
-       - **CA/DI surface only.** Every Python-model capability — checkers, fixers,
-         usage census, refactorings and Python code search — is exposed through
-         `c/t/p/m/u` with `p.Infra.*` protocols injected at the composition root.
-         The rope name stays inside the `_rope` family (Decision 15); services and
-         the other families never know which implementation they hold (Decision
-         16).
-       - **Per-repository isolation.** A member module is never resolved through
-         the engine's interpreter: the native `get_module` access gates on the
-         standard library and refuses member imports. Where a fresh interpreter is
-         genuinely indispensable, it is the checkout's own virtual environment
-         through `u.Infra.runtime_python(root)` — fresh-import and binding scripts
-         already run there — and member code still never loads in the engine's
-         interpreter. The interpreter-based member-resolution routes are already
-         exterminated in the campaign working tree (census 2026-10-28: 13 files
-         examined, 9 routes removed, zero residue proven).
-       - **Superseded routes use the deprecated-signature window** (Decision 7):
-         a typed deprecation warning (`compat: <old> -> <new owner>; fix:
-         <rewire>`), an automatic usage census in which every reported use is a
-         finding in its consumer, rewire in waves through `make mod`, and deletion
-         when the census reaches zero. No dual fallback; an unmarked old path is
-         a defect.
-       - **BLOCKED-ON-ROPE-CAPABILITY reporting.** A site with no rope-expressible
-         equivalent is reported as blocked on a named rope capability and stays
-         untouched until the operator rules — it never silently keeps an
-         alternative parser. Three known sites require live-object semantics
-         (census 2026-10-28): the two generators in `codemod_type_set_rules.py`
-         (tuple-member identity by `is`, runtime `__mro__`, PEP 702 markers in
-         `Annotated`), the `typing.is_protocol` check in
-         `codemod_native_package_utilities.py`, and the same file's check of a
-         package's installed lazy-export form. The proposed probe — a
-         `python -I -c` payload run against `runtime_python(project)` and emitting
-         typed JSON facts, so member code still never loads in the engine's
-         interpreter — awaits operator authorization.
-       - **No LibCST carve-out.** The 2026-10-25 ADR-014 §6 permission to retain
-         separate tools for distinct capabilities is superseded for semantic
-         Python parsing. Only the generation AST projection expressly approved
-         above is excepted; it supplies no semantic transformation route. A gap in
-         rope is a BLOCKED-ON-ROPE-CAPABILITY report, never a retained parallel engine.
-       - **Living census and execution truth.** The campaign engine map
-         (`.kilo/plans/2026-10-28-gen-mod-parametrization-performance/engine-map.md`,
-         private plan tree, not published authority) is the living census
-         artifact: `import ast` in 91 files, `libcst` in 22, `re`-on-code among
-         44 `import re` sites (mostly benign; classified per site), plus the
-         rope-over-rope wrapper census. Beads `flext-u9h2i` (rope-only cutover)
-         under campaign `flext-pipol` record execution truth in waves —
-         deprecation marks and census, rewire, green infra, members one at a time
-         under `make mod` as the sole correction authority, deletion at census
-         zero. The Beads track that work; they do not establish acceptance.
+     engines. The complete decision form:
+     - **Single loop, single index, single transaction.** One rope loop per
+       semantic modification invocation. Exactly one index per repository per
+       invocation — no phase, planner, checker or validator opens a second project
+       or re-parses what that index already holds. Effects publish as one batch in a single
+       transaction, and the first causal failure retains the batch
+       ([ADR-018 single-read, single-batch publication](018-generator-declarations.md#single-read-single-batch-publication-amended-2026-10-28-campaign-flext-pipol)).
+     - **Native refactorings first.** Before any custom transform, the operation
+       is expressed with rope's native refactorings (rename with documentation
+       occurrences, move, restructure, multi-project refactoring); a custom
+       planner is admissible only for what those refactorings cannot express.
+       Correction reaches the tree only through the engine — `make mod`, by
+       declarative rule where mechanical and by rope where semantic; a hand edit
+       stays the exception of the exception (Decision 8), and member
+       repositories are never edited by hand to unblock a run.
+     - **CA/DI surface only.** Every Python-model capability — checkers, fixers,
+       usage census, refactorings and Python code search — is exposed through
+       `c/t/p/m/u` with `p.Infra.*` protocols injected at the composition root.
+       The rope name stays inside the `_rope` family (Decision 15); services and
+       the other families never know which implementation they hold (Decision
+       16).
+     - **Per-repository isolation.** A member module is never resolved through
+       the engine's interpreter: the native `get_module` access gates on the
+       standard library and refuses member imports. Where a fresh interpreter is
+       genuinely indispensable, it is the checkout's own virtual environment
+       through `u.Infra.runtime_python(root)` — fresh-import and binding scripts
+       already run there — and member code still never loads in the engine's
+       interpreter. The interpreter-based member-resolution routes are already
+       exterminated in the campaign working tree (census 2026-10-28: 13 files
+       examined, 9 routes removed, zero residue proven).
+     - **Superseded routes use the deprecated-signature window** (Decision 7):
+       a typed deprecation warning (`compat: <old> -> <new owner>; fix:
+       <rewire>`), an automatic usage census in which every reported use is a
+       finding in its consumer, rewire in waves through `make mod`, and deletion
+       when the census reaches zero. No dual fallback; an unmarked old path is
+       a defect.
+     - **BLOCKED-ON-ROPE-CAPABILITY reporting.** A site with no rope-expressible
+       equivalent is reported as blocked on a named rope capability and stays
+       untouched until the operator rules — it never silently keeps an
+       alternative parser. Three known sites require live-object semantics
+       (census 2026-10-28): the two generators in `codemod_type_set_rules.py`
+       (tuple-member identity by `is`, runtime `__mro__`, PEP 702 markers in
+       `Annotated`), the `typing.is_protocol` check in
+       `codemod_native_package_utilities.py`, and the same file's check of a
+       package's installed lazy-export form. The proposed probe — a
+       `python -I -c` payload run against `runtime_python(project)` and emitting
+       typed JSON facts, so member code still never loads in the engine's
+       interpreter — awaits operator authorization.
+     - **No LibCST carve-out.** The 2026-10-25 ADR-014 §6 permission to retain
+       separate tools for distinct capabilities is superseded for semantic
+       Python parsing. Only the generation AST projection expressly approved
+       above is excepted; it supplies no semantic transformation route. A gap in
+       rope is a BLOCKED-ON-ROPE-CAPABILITY report, never a retained parallel engine.
+     - **Living census and execution truth.** The campaign engine map
+       (`.kilo/plans/2026-10-28-gen-mod-parametrization-performance/engine-map.md`,
+       private plan tree, not published authority) is the living census
+       artifact: `import ast` in 91 files, `libcst` in 22, `re`-on-code among
+       44 `import re` sites (mostly benign; classified per site), plus the
+       rope-over-rope wrapper census. Beads `flext-u9h2i` (rope-only cutover)
+       under campaign `flext-pipol` record execution truth in waves —
+       deprecation marks and census, rewire, green infra, members one at a time
+       under `make mod` as the sole correction authority, deletion at census
+       zero. The Beads track that work; they do not establish acceptance.
      - Numbered inheritance fragments implementing the same capability do not gain
        artificial responsibilities to evade a destination collision. Their methods
        consolidate at one implementation owner while the public facade retains its
@@ -829,7 +836,10 @@ outside the facades across 12 repositories.
      - A law is perfected at its owner with fixtures and the native test before it
        joins the pipeline. `refactor mod --laws <set>` and `--rule-ids` are the
        diagnostic and repair route for one law; the import law always runs, inside a
-       selected run too.
+       selected run too. A selector-free `make mod` runs the complete active catalog
+       (every law and rule) to its fixed point; selection only narrows the focus
+       (operator decision 2026-11-07, tracker key
+       `operator-decision-2026-11-07-bare-mod-all-laws`).
      - Hand edits of violating sources are prohibited. Workers change only stage,
        rule, generator and engine owners plus their fixtures.
      - Until make is repaired and validated, lint verdicts come from direct `ruff` and
@@ -867,19 +877,19 @@ are pinned to the same `0.12.0-dev` release line used by their branch-matched la
 record execution, status, and evidence; they do not replace either direction of the
 architecture link.
 
-| Decision | Workspace declaration | Subproject declaration and execution |
-| --- | --- | --- |
-| [8 — one standard, automated; gate-clean projections](#decision-8) | [Root `AGENTS.md`, Conventions and Patterns — automated correction](../../../AGENTS.md#conventions--patterns); [make commands guide, Convergence](../../guides/make-commands.md#convergence-dirty-inputs-and-clean-rules); [ADR-018 verification contract](018-generator-declarations.md#verification-contract) | Campaign `flext-pipol` (gate-clean slice `flext-wznvp`); lazy-init wrapping cure `flext-tlqrw`; engine post-cleanup removal tracked on `flext-pipol` |
-| [5 — static enforcement](#decision-5) | [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra, ADR-028 Decision 5: Declarative enforcement](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-5-declarative-enforcement); Bead `flext-43iz8` |
-| [15 — capability names](#decision-15) | [Root `AGENTS.md`, Decision 15](../../../AGENTS.md#adr-028-decision-15); [public core guide, What flext-core must not absorb](../../guides/using-flext-core.md#what-flext-core-must-not-absorb); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); external consumer census: `flext-1engx.11` |
-| [16 — CA/DI and zero findings](#decision-16) | [Root `AGENTS.md`, Decision 16](../../../AGENTS.md#adr-028-decision-16); [consumer law, R2](../../standards/consumption-law.md#r2--no-duplication-structural-scan); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map) | [Infra `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [Target LDAP CA/DI declaration](https://github.com/flext-sh/flext-target-ldap/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16-ca-di-and-quality); implementation and quality gates: `flext-1engx.15`, `flext-pawp5` |
-| [17 — workspace model and native refactorings](#decision-17) | [Root `AGENTS.md`, Decision 17](../../../AGENTS.md#adr-028-decision-17); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map); [stabilization decision-link section](../../ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links); [Core failure-factory declaration](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/AGENTS.md#failure-factory-responsibility) | [Infra `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); implementation: `flext-1engx.15` |
-| [18 — generalized rules](#decision-18) | [Root `AGENTS.md`, Decision 18](../../../AGENTS.md#adr-028-decision-18); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map); [codemod guide, One rule per law](../../guides/codemod-rules.md#one-rule-per-law); [stabilization decision-link section](../../ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links) | [Infra `AGENTS.md`, Decision 18](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-18); projection cleanup: `flext-13s6n` |
-| [17 amendment — rope-only interpreter law](#decision-17) | [Root `AGENTS.md`, Decision 17](../../../AGENTS.md#adr-028-decision-17); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map); [engine map — living campaign census](../../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/engine-map.md) (private plan tree, not published authority) | Rope-only cutover epic `flext-u9h2i` under campaign `flext-pipol`; the Beads record execution truth, not acceptance |
-| [18 fix-form mandate](#decision-18) | [Root `AGENTS.md`, Decision 18](../../../AGENTS.md#adr-028-decision-18); [codemod guide, One rule per law](../../guides/codemod-rules.md#one-rule-per-law) | Declarative catalog `Infra.codegen.ast_grep`, rendered in memory by the `make mod` cascade (Decision 11); flext-ldap fix-form gap evidence and closure tracked on `flext-u9h2i` |
-| AI Hub consumer route | [AI Hub ADR-0039](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/adr/0039-universal-law-references-in-governed-docs.md); [ADR catalog](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/adr/README.md#fleet-canon); [engineering-law routing](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/engineering-laws.md); [FLEXT development skill](https://github.com/datacosmos-br/agents/blob/dev/skills/framework/flext-development/SKILL.md) | Consumer Bead `aihub-9qdu6`; reciprocal-link Bead `flext-1engx.16` |
-| [9 — governed embedded examples](#decision-9) | [Root `AGENTS.md`, embedded-code rule](../../../AGENTS.md#adr-028-decision-9); [documentation standard](../../standards/documentation.md#command-and-test-examples) | The docs Bead `flext-0exhi` records authoring and executable-doc validation. |
-| Prior codemod ADR sections | [ADR-014 §5, Gate alignment](014-family-part-shape-rope-codemod-rules.md#5-gate-alignment-one-law-shared-consumers); [ADR-014 §6, Native tool responsibilities](014-family-part-shape-rope-codemod-rules.md#6-native-tool-responsibilities-amended-by-adr-028); [ADR-017, ADR-028 Supersession](017-parametrized-rule-surfaces-single-modernize-cli.md#adr-028-supersession) | These sections link back to the superseding decisions above. |
+| Decision                                                           | Workspace declaration                                                                                                                                                                                                                                                                                                                                                                                                                                         | Subproject declaration and execution                                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [8 — one standard, automated; gate-clean projections](#decision-8) | [Root `AGENTS.md`, Conventions and Patterns — automated correction](../../../AGENTS.md#conventions--patterns); [make commands guide, Convergence](../../guides/make-commands.md#convergence-dirty-inputs-and-clean-rules); [ADR-018 verification contract](018-generator-declarations.md#verification-contract)                                                                                                                                               | Campaign `flext-pipol` (gate-clean slice `flext-wznvp`); lazy-init wrapping cure `flext-tlqrw`; engine post-cleanup removal tracked on `flext-pipol`                                                                                                                                                                                                    |
+| [5 — static enforcement](#decision-5)                              | [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map)                                                                                                                                                                                                                                                                                                                                                                                           | [Infra, ADR-028 Decision 5: Declarative enforcement](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-5-declarative-enforcement); Bead `flext-43iz8`                                                                                                                                                                  |
+| [15 — capability names](#decision-15)                              | [Root `AGENTS.md`, Decision 15](../../../AGENTS.md#adr-028-decision-15); [public core guide, What flext-core must not absorb](../../guides/using-flext-core.md#what-flext-core-must-not-absorb); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map)                                                                                                                                                                                          | [Infra `AGENTS.md`, Decision 15](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-15); external consumer census: `flext-1engx.11`                                                                                                                                                                                     |
+| [16 — CA/DI and zero findings](#decision-16)                       | [Root `AGENTS.md`, Decision 16](../../../AGENTS.md#adr-028-decision-16); [consumer law, R2](../../standards/consumption-law.md#r2--no-duplication-structural-scan); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map)                                                                                                                                                                                                                       | [Infra `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [Target LDAP CA/DI declaration](https://github.com/flext-sh/flext-target-ldap/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16-ca-di-and-quality); implementation and quality gates: `flext-1engx.15`, `flext-pawp5`              |
+| [17 — workspace model and native refactorings](#decision-17)       | [Root `AGENTS.md`, Decision 17](../../../AGENTS.md#adr-028-decision-17); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map); [stabilization decision-link section](../../ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links); [Core failure-factory declaration](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/AGENTS.md#failure-factory-responsibility)                                                       | [Infra `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); implementation: `flext-1engx.15` |
+| [18 — generalized rules](#decision-18)                             | [Root `AGENTS.md`, Decision 18](../../../AGENTS.md#adr-028-decision-18); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map); [codemod guide, One rule per law](../../guides/codemod-rules.md#one-rule-per-law); [stabilization decision-link section](../../ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links)                                                                                                         | [Infra `AGENTS.md`, Decision 18](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-18); projection cleanup: `flext-13s6n`                                                                                                                                                                                              |
+| [17 amendment — rope-only interpreter law](#decision-17)           | [Root `AGENTS.md`, Decision 17](../../../AGENTS.md#adr-028-decision-17); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map); [engine map — living campaign census](../../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/engine-map.md) (private plan tree, not published authority)                                                                                                                                           | Rope-only cutover epic `flext-u9h2i` under campaign `flext-pipol`; the Beads record execution truth, not acceptance                                                                                                                                                                                                                                     |
+| [18 fix-form mandate](#decision-18)                                | [Root `AGENTS.md`, Decision 18](../../../AGENTS.md#adr-028-decision-18); [codemod guide, One rule per law](../../guides/codemod-rules.md#one-rule-per-law)                                                                                                                                                                                                                                                                                                    | Declarative catalog `Infra.codegen.ast_grep`, rendered in memory by the `make mod` cascade (Decision 11); flext-ldap fix-form gap evidence and closure tracked on `flext-u9h2i`                                                                                                                                                                         |
+| AI Hub consumer route                                              | [AI Hub ADR-0039](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/adr/0039-universal-law-references-in-governed-docs.md); [ADR catalog](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/adr/README.md#fleet-canon); [engineering-law routing](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/engineering-laws.md); [FLEXT development skill](https://github.com/datacosmos-br/agents/blob/dev/skills/framework/flext-development/SKILL.md) | Consumer Bead `aihub-9qdu6`; reciprocal-link Bead `flext-1engx.16`                                                                                                                                                                                                                                                                                      |
+| [9 — governed embedded examples](#decision-9)                      | [Root `AGENTS.md`, embedded-code rule](../../../AGENTS.md#adr-028-decision-9); [documentation standard](../../standards/documentation.md#command-and-test-examples)                                                                                                                                                                                                                                                                                           | The docs Bead `flext-0exhi` records authoring and executable-doc validation.                                                                                                                                                                                                                                                                            |
+| Prior codemod ADR sections                                         | [ADR-014 §5, Gate alignment](014-family-part-shape-rope-codemod-rules.md#5-gate-alignment-one-law-shared-consumers); [ADR-014 §6, Native tool responsibilities](014-family-part-shape-rope-codemod-rules.md#6-native-tool-responsibilities-amended-by-adr-028); [ADR-017, ADR-028 Supersession](017-parametrized-rule-surfaces-single-modernize-cli.md#adr-028-supersession)                                                                                  | These sections link back to the superseding decisions above.                                                                                                                                                                                                                                                                                            |
 
 ## Definitions
 
@@ -939,7 +949,6 @@ All in flext-infra's declarative catalog, propagated to every consumer:
   `u.Cli.template_*`; test source moves to files under `tests/fixtures/<scenario>`, which
   a test receives through the `fixture_tree` fixture (owner `u.Tests.materialize`,
   flext-tests).
-
 - **Pydantic completeness** (Decision 14): `ban-enclosing-family-field-reference`,
   `ban-arbitrary-types-allowed` and `ban-model-rebuild`.
 - **Library-prefixed exports** (operator ruling 2026-10-25: "bibliotecas externas só

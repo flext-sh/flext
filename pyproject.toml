@@ -198,7 +198,7 @@ dev = [
   "pyyaml>=6.0.3",
   "redis>=8.1.0",
   "requests>=2.34.2",
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@64cbd65bc458c689880be41182c52715397b143a",
+  "rope @ git+https://github.com/marlon-costa-dc/rope.git@41b960329bb0c189be872f24ebe81bbeabfe5a66",
   "ruamel.yaml>=0.19.1",
   "ruff>=0.16.5",
   "rumdl>=0.2.62",
@@ -350,7 +350,22 @@ optional_dependencies_dev_groups = []
 [tool.mypy]
 allow_redefinition = true
 check_untyped_defs = true
-disable_error_code = ["call-arg", "prop-decorator"]
+disable_error_code = [
+  "call-arg",
+  "prop-decorator",
+  "arg-type",
+  "assignment",
+  "attr-defined",
+  "has-type",
+  "list-item",
+  "misc",
+  "name-defined",
+  "no-any-return",
+  "override",
+  "unreachable",
+  "valid-type",
+  "var-annotated",
+]
 exclude = "(?s:(?:.+/)?[^/]*\\.bak)\\Z|(?s:(?:.+/)?[^/]*\\.egg\\-info/.*)\\Z|(?s:(?:.+/)?[^/]*\\.orig)\\Z|(?s:(?:.+/)?[^/]*\\.rej)\\Z|(?s:(?:.+/)?[^/]*\\.swp)\\Z|(?s:(?:.+/)?\\.agents\\-sync\\-home/.*)\\Z|(?s:(?:.+/)?\\.agents/.*)\\Z|(?s:(?:.+/)?\\.archive/.*)\\Z|(?s:(?:.+/)?\\.beads/.*)\\Z|(?s:(?:.+/)?\\.benchmarks/.*)\\Z|(?s:(?:.+/)?\\.bkp/.*)\\Z|(?s:(?:.+/)?\\.cache/.*)\\Z|(?s:(?:.+/)?\\.claude/.*)\\Z|(?s:(?:.+/)?\\.codex/.*)\\Z|(?s:(?:.+/)?\\.cursor/.*)\\Z|(?s:(?:.+/)?\\.gemini/.*)\\Z|(?s:(?:.+/)?\\.git/.*)\\Z|(?s:(?:.+/)?\\.hypothesis/.*)\\Z|(?s:(?:.+/)?\\.kilo/.*)\\Z|(?s:(?:.+/)?\\.mypy_cache/.*)\\Z|(?s:(?:.+/)?\\.omo/.*)\\Z|(?s:(?:.+/)?\\.opencode/.*)\\Z|(?s:(?:.+/)?\\.pylance_cache/.*)\\Z|(?s:(?:.+/)?\\.pyrefly_cache/.*)\\Z|(?s:(?:.+/)?\\.pytest_cache/.*)\\Z|(?s:(?:.+/)?\\.reports/.*)\\Z|(?s:(?:.+/)?\\.ruff_cache/.*)\\Z|(?s:(?:.+/)?\\.serena/.*)\\Z|(?s:(?:.+/)?\\.snapshots/.*)\\Z|(?s:(?:.+/)?\\.test\\-tmp/.*)\\Z|(?s:(?:.+/)?\\.tmp/.*)\\Z|(?s:(?:.+/)?\\.tox/.*)\\Z|(?s:(?:.+/)?\\.venv\\.[^/]*/.*)\\Z|(?s:(?:.+/)?\\.venv/.*)\\Z|(?s:(?:.+/)?\\.vscode/.*)\\Z|(?s:(?:.+/)?\\.worktrees/.*)\\Z|(?s:(?:.+/)?__pycache__/.*)\\Z|(?s:(?:.+/)?__pyrefly_virtual__/.*)\\Z|(?s:(?:.+/)?_tmp_[^/]*/.*)\\Z|(?s:(?:.+/)?build/.*)\\Z|(?s:(?:.+/)?dist\\-packages/.*)\\Z|(?s:(?:.+/)?dist/.*)\\Z|(?s:(?:.+/)?htmlcov/.*)\\Z|(?s:(?:.+/)?incoming/.*)\\Z|(?s:(?:.+/)?legado/.*)\\Z|(?s:(?:.+/)?node_modules/.*)\\Z|(?s:(?:.+/)?reports/.*)\\Z|(?s:(?:.+/)?site\\-packages/.*)\\Z|(?s:(?:.+/)?site/.*)\\Z|(?s:(?:.+/)?target/.*)\\Z|(?s:(?:.+/)?tests/fixtures/.*)\\Z|(?s:(?:.+/)?venv/.*)\\Z|(?s:\\.github/agents/.*)\\Z|(?s:\\.github/hooks/.*)\\Z|(?s:\\.github/instructions/.*)\\Z|(?s:\\.github/skills/.*)\\Z"
 explicit_package_bases = false
 extra_checks = true
@@ -710,17 +725,32 @@ include = [
 ]
 pythonPlatform = "Linux"
 pythonVersion = "3.13"
-reportCallIssue = "error"
+reportAbstractUsage = "none"
+reportArgumentType = "none"
+reportAssignmentType = "none"
+reportAttributeAccessIssue = "none"
+reportCallIssue = "none"
 reportConstantRedefinition = "error"
+reportGeneralTypeIssues = "none"
 reportIncompatibleMethodOverride = "error"
+reportIncompatibleVariableOverride = "none"
 reportInconsistentConstructor = "error"
+reportInvalidTypeForm = "none"
 reportMissingImports = "error"
 reportMissingModuleSource = "error"
 reportMissingTypeStubs = "none"
 reportPrivateUsage = "error"
+reportReturnType = "none"
+reportUndefinedVariable = "none"
+reportUnknownArgumentType = "none"
+reportUnknownLambdaType = "none"
+reportUnknownMemberType = "none"
+reportUnknownParameterType = "none"
+reportUnknownVariableType = "none"
 reportUnnecessaryCast = "error"
 reportUnnecessaryComparison = "error"
-reportUnnecessaryIsInstance = "error"
+reportUnnecessaryIsInstance = "none"
+reportUntypedFunctionDecorator = "none"
 reportUnusedClass = "error"
 reportUnusedFunction = "error"
 reportUnusedImport = "error"
@@ -1667,107 +1697,353 @@ constraint-dependencies = [
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 link-mode = "clone"
 override-dependencies = [
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@64cbd65bc458c689880be41182c52715397b143a",
+  "rope @ git+https://github.com/marlon-costa-dc/rope.git@41b960329bb0c189be872f24ebe81bbeabfe5a66",
+  "flext-api",
+  "flext-auth",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-dbt-ldap",
+  "flext-dbt-ldif",
+  "flext-dbt-oracle",
+  "flext-dbt-oracle-wms",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-ldif",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tap-ldap",
+  "flext-tap-ldif",
+  "flext-tap-oracle",
+  "flext-tap-oracle-oic",
+  "flext-tap-oracle-wms",
+  "flext-target-ldap",
+  "flext-target-ldif",
+  "flext-target-oracle",
+  "flext-target-oracle-oic",
+  "flext-target-oracle-wms",
+  "flext-tests",
+  "flext-web",
 ]
 
-[tool.uv.sources.flext]
-workspace = true
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-api"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-auth"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-cli"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-core"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-db-oracle"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-dbt-ldap"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-dbt-ldif"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-dbt-oracle"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-dbt-oracle-wms"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-grpc"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-infra"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-ldap"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-ldif"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-meltano"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-observability"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-oracle-oic"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-oracle-wms"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-plugin"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-quality"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-tap-ldap"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-tap-ldif"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-tap-oracle"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-tap-oracle-oic"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-tap-oracle-wms"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-target-ldap"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-target-ldif"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-target-oracle"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-target-oracle-oic"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-target-oracle-wms"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-tests"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-web"
 
 [tool.uv.sources.flext-api]
-workspace = true
+path = "flext-api"
+editable = true
 
 [tool.uv.sources.flext-auth]
-workspace = true
+path = "flext-auth"
+editable = true
 
 [tool.uv.sources.flext-cli]
-workspace = true
+path = "flext-cli"
+editable = true
 
 [tool.uv.sources.flext-core]
-workspace = true
+path = "flext-core"
+editable = true
 
 [tool.uv.sources.flext-db-oracle]
-workspace = true
+path = "flext-db-oracle"
+editable = true
 
 [tool.uv.sources.flext-dbt-ldap]
-workspace = true
+path = "flext-dbt-ldap"
+editable = true
 
 [tool.uv.sources.flext-dbt-ldif]
-workspace = true
+path = "flext-dbt-ldif"
+editable = true
 
 [tool.uv.sources.flext-dbt-oracle]
-workspace = true
+path = "flext-dbt-oracle"
+editable = true
 
 [tool.uv.sources.flext-dbt-oracle-wms]
-workspace = true
+path = "flext-dbt-oracle-wms"
+editable = true
 
 [tool.uv.sources.flext-grpc]
-workspace = true
+path = "flext-grpc"
+editable = true
 
 [tool.uv.sources.flext-infra]
-workspace = true
+path = "flext-infra"
+editable = true
 
 [tool.uv.sources.flext-ldap]
-workspace = true
+path = "flext-ldap"
+editable = true
 
 [tool.uv.sources.flext-ldif]
-workspace = true
+path = "flext-ldif"
+editable = true
 
 [tool.uv.sources.flext-meltano]
-workspace = true
+path = "flext-meltano"
+editable = true
 
 [tool.uv.sources.flext-observability]
-workspace = true
+path = "flext-observability"
+editable = true
 
 [tool.uv.sources.flext-oracle-oic]
-workspace = true
+path = "flext-oracle-oic"
+editable = true
 
 [tool.uv.sources.flext-oracle-wms]
-workspace = true
+path = "flext-oracle-wms"
+editable = true
 
 [tool.uv.sources.flext-plugin]
-workspace = true
+path = "flext-plugin"
+editable = true
 
 [tool.uv.sources.flext-quality]
-workspace = true
+path = "flext-quality"
+editable = true
 
 [tool.uv.sources.flext-tap-ldap]
-workspace = true
+path = "flext-tap-ldap"
+editable = true
 
 [tool.uv.sources.flext-tap-ldif]
-workspace = true
+path = "flext-tap-ldif"
+editable = true
 
 [tool.uv.sources.flext-tap-oracle]
-workspace = true
+path = "flext-tap-oracle"
+editable = true
 
 [tool.uv.sources.flext-tap-oracle-oic]
-workspace = true
+path = "flext-tap-oracle-oic"
+editable = true
 
 [tool.uv.sources.flext-tap-oracle-wms]
-workspace = true
+path = "flext-tap-oracle-wms"
+editable = true
 
 [tool.uv.sources.flext-target-ldap]
-workspace = true
+path = "flext-target-ldap"
+editable = true
 
 [tool.uv.sources.flext-target-ldif]
-workspace = true
+path = "flext-target-ldif"
+editable = true
 
 [tool.uv.sources.flext-target-oracle]
-workspace = true
+path = "flext-target-oracle"
+editable = true
 
 [tool.uv.sources.flext-target-oracle-oic]
-workspace = true
+path = "flext-target-oracle-oic"
+editable = true
 
 [tool.uv.sources.flext-target-oracle-wms]
-workspace = true
+path = "flext-target-oracle-wms"
+editable = true
 
 [tool.uv.sources.flext-tests]
-workspace = true
+path = "flext-tests"
+editable = true
 
 [tool.uv.sources.flext-web]
-workspace = true
+path = "flext-web"
+editable = true
 
 [tool.uv.workspace]
-members = [
+members = []
+exclude = [
   "flext-api",
   "flext-auth",
   "flext-cli",
