@@ -10,7 +10,7 @@
 
 <!-- TOC END -->
 
-The active rewrite's [2026-10-30 handoff](../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/plan.md#handoff-de-retomada--2026-10-30-chat-01a18a11)
+The active rewrite's 2026-10-30 handoff
 records owners, source changes, unresolved bootstrap/candidate failures and exact
 runtime limits. Bead `flext-u9h2i` remains open. Existing templates also form the
 base for refactoring existing modules: the existing Infra Rope catalog assembles

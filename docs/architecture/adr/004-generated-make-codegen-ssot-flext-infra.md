@@ -97,7 +97,7 @@ automatically delete it. Linux publication uses a capability-proven native atomi
 exchange under the existing shared mutation lock, with source and directory
 identity witnesses. Other platforms remain an explicit capability requirement;
 there is no destructive fallback or assertion of unproved portability. The
-[execution contract](../../../flext-infra/docs/guides/execution-context.md)
+[execution contract](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md)
 and `flext-9t6gn` retain implementation and real interruption evidence.
 
 One template layer emits the complete versioned Makefile for the `workspace` or

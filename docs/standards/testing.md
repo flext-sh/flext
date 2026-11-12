@@ -32,10 +32,10 @@ class inherits **only** the production facade; the nested `Tests` class inherits
 the `flext_tests` facade plus the test-only mixins. There is no `@override`.
 
 ```python
+from tests._models import TestsFlextInfraModelsBase  # noqa: PLC2701
+
 from flext_infra import m as flext_infra_m
 from flext_tests import m as flext_tests_m
-
-from tests._models import TestsFlextInfraModelsBase  # noqa: PLC2701
 
 
 class TestsFlextInfraModels(flext_infra_m):
