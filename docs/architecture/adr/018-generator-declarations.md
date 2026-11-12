@@ -199,7 +199,7 @@ and consumed MRO capabilities. Static and lazy bindings account for declared
 eager metadata without lifting child exports into ancestors. Missing targets,
 colliding identities and invalid ownership fail explicitly.
 
-#### Deferred heavy capabilities (amended 2026-11-05)
+#### Deferred heavy capabilities (amended 2026-11-05, 2026-11-12)
 
 The operator answered "Declared libraries (Recommended)" on 2026-11-05 (tracker
 memory `operator-decision-2026-11-05-lazy-declared-distributions`). This
@@ -210,8 +210,14 @@ just by importing the facade; fix it so they enter lazily, only on use".
 - A project declares its costly third-party distributions once, in the lazy-init
   section of its own `config/codegen.yaml`. That declaration is the only input.
 - The lazy-init generator reads the same source inventory it already uses. It
-  marks as deferred every export whose declaring module itself imports a
-  declared distribution at module scope. Only direct imports count; a module
+  marks as deferred every class export that a facade composes by MRO (a base,
+  directly or through other in-package bases, of the package's facade root
+  classes, derived from the same source facts) and whose declaring module
+  itself imports a declared distribution at module scope. Every other export
+  of such a module stays a plain lazy export, loaded on first attribute access
+  through the existing lazy-export path: a stand-in is only valid for a
+  namespace mixin, never for a class that is instantiated or subclasses a
+  third-party type (amended 2026-11-12). Only direct imports count; a module
   that reaches the distribution through another module of its package is not
   marked, because that other module's own export is the deferred one. The
   export's members are the names bound in the class bodies along
@@ -223,8 +229,8 @@ just by importing the facade; fix it so they enter lazily, only on use".
   a facade loads no declared distribution.
 - Type checkers read the real class through the initializer's `TYPE_CHECKING`
   imports. Consumers, facades and authored modules do not change.
-- Generation fails explicitly for a deferred export with an out-of-package base,
-  or one whose member set cannot be computed from source.
+- Generation fails explicitly for a facade-composed deferred export with an
+  out-of-package base, or one whose member set cannot be computed from source.
 - Acceptance: a fresh process imports the facade and loads none of the declared
   distributions, and runtime acceptance resolves every deferred member through
   `resolve_lazy_members`. A broken target fails exactly as an eager import
