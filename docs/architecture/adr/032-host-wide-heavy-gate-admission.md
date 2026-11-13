@@ -111,14 +111,14 @@ limits how often the full-weight form of a verb runs in one checkout
 - **Full-weight forms, windows and lighter forms** (declared in
   `Infra.gate_admission.repeat`):
 
-  | Full-weight (limited) | Window | Lighter form (not limited by this rule) |
-  | --- | --- | --- |
-  | `make check` | 30 min | `CHECK_PHASE=primary make check` |
-  | `make tests-full` | 60 min | `make tests` (Testmon selection) |
-  | `make mod` without `LAWS`/`RULES` | 120 min | `make mod` with `LAWS` or `RULES` |
-  | `make mod` with the same `LAWS`/`RULES` selection | 5 min | a different selection |
+    | Full-weight (limited)                             | Window  | Lighter form (not limited by this rule) |
+    | ------------------------------------------------- | ------- | --------------------------------------- |
+    | `make check`                                      | 30 min  | `CHECK_PHASE=primary make check`        |
+    | `make tests-full`                                 | 60 min  | `make tests` (Testmon selection)        |
+    | `make mod` without `LAWS`/`RULES`                 | 120 min | `make mod` with `LAWS` or `RULES`       |
+    | `make mod` with the same `LAWS`/`RULES` selection | 5 min   | a different selection                   |
 
-  Lighter forms still queue for a slot like any heavy gate.
+    Lighter forms still queue for a slot like any heavy gate.
 - **Not limited:** CI runners (`CI=Y`), and the generated pre-push hook, which
   runs the full matrix once per push by contract. `gen` and `gen-scope` are not
   limited: they are required after every source change of a generator input.

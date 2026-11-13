@@ -510,14 +510,21 @@ owner places imports; parallel placement routes are deleted in the same cutover.
 
 ### Decision 14
 
- 1. **Pydantic declarations are complete at import.** Every model, settings, config and
-    service class is complete when its module is imported (`__pydantic_complete__`),
+ 1. **Pydantic declarations resolve at their owner and build on first use**
+    (amended 2026-11-13, operator decision, tracker key
+    `operator-decision-2026-11-13-defer-build-restored`). Every model, settings,
+    config and service class declares annotations that resolve from its own module,
     with no `model_rebuild`.
-     - Lazy module imports do not authorize deferred schemas after a declaration's
-       module has loaded. The current Core `defer_build=True` setting is an
-       implementation gap against this accepted contract, pending repair at the
-       preset owner and public fresh-import proof. A later gate-triggered build
-       does not establish completeness at import.
+     - The `m.*` presets set `defer_build=True`: the core schema is built on first
+       use, not when the declaring module loads. The public fresh-import gate of
+       `make check` builds every model of every package, so an unresolved annotation
+       still fails `check`; that gate is the completeness proof.
+     - This supersedes the earlier import-time completeness target, which named the
+       setting an implementation gap. Removing it built every schema of the composed
+       facade tree at process start (flext-core `bd945445b2`, 2026-11-09): measured
+       2026-11-13, 1,625 instead of 342 complete models and 7.34 s instead of 5.39 s
+       of process CPU for the ai-hub models facade, 3.56 s instead of 2.70 s for
+       flext-infra.
        A local model created by a later factory call is proven at its actual
        declaration/creation boundary, not claimed to exist or have been validated
        by an earlier module import. Preserve its lexical closure under ADR-018;
