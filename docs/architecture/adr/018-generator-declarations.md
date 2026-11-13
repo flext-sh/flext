@@ -241,16 +241,22 @@ just by importing the facade; fix it so they enter lazily, only on use".
   builds nothing, and the first attribute read loads the root's declaring module
   through the lazy loader, which runs its `fetch_global`, and forwards to the
   root. The stand-in keeps the root, never a member, so an in-place
-  `reset_for_testing` stays visible. A root that cannot be published raises
-  `ImportError` with its cause, never an `AttributeError` that would read as a
-  missing name. Importing `c`, `t`, `p`, `m` or `u` then validates no
-  configuration, as `FlextConfig` requires.
-- Status: flext-core provides the runtime owner, `FlextLazyInstance` and
-  `defer_lazy_instances(module_name, globals, lazy_imports, names)`, called
-  after `install_lazy_exports` on the same globals and map. It fails before any
-  effect when a name is not an export of that map. The `config/codegen.yaml`
-  declaration and the lazy-init generator's emission of that call are not yet
-  implemented; until they land, no generated initializer defers a root.
+  `reset_for_testing` stays visible. Validation errors of the root, such as a
+  required setting with no source, surface unchanged on that first read. A
+  declaring module that does not publish the root raises `ImportError` with its
+  cause, never an `AttributeError` that would read as a missing name. Importing
+  `c`, `t`, `p`, `m` or `u`, and the codegen preview that imports the package,
+  then validates no configuration, as `FlextConfig` requires.
+- Status (implemented): the repository declaration lists the roots as
+  `deferred_instances` (for example `deferred_instances: [settings]`) beside
+  `deferred_distributions`. There is no default; each package names its own
+  roots. The lazy-init generator emits, right after `install_lazy_exports`,
+  `defer_lazy_instances(__name__, globals(), {<root>: <module>}, (<root>,))` in
+  every initializer of the project that exports a declared root, and generation
+  fails when no initializer exports it. flext-core owns the runtime,
+  `FlextLazyInstance` and `defer_lazy_instances`, which validates every name
+  against the map it receives before any effect (flext-core#777,
+  flext-infra#2356, bead `flext-14y32`).
 - These two are the only deferral forms outside `__init__.py` and `flext.lazy`.
   Method-local imports, operation registries, module-object attribute access and
   `TYPE_CHECKING` class splits remain prohibited.
