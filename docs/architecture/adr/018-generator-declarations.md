@@ -625,6 +625,14 @@ completed concurrency or fix-forward recovery validation.
 operator-approved small-transaction and cooperative-reader boundary supersedes
 the earlier invocation-wide, physically atomic batch interpretation.
 
+**Implementation 2026-11-13 — writer barrier for generation (flext-jg6y2,
+flext-infra#2405).** `codegen generate` holds the existing mutation barrier
+(the reentrant file-change lock on the repository's mutation lock path) from
+its first live read to validated publication, so a second same-tree
+generation waits. The lockless plan-and-reconcile path and its
+`reconcile_attempts` configuration are deleted. Cooperating readers (`mod`,
+`check`) remain pending.
+
 **Recovery supersession 2026-10-29 — operator order (`ag-ssut`, related
 `aihub-6sls5.2`).** The 2026-10-28 permission for transaction-owned rollback is
 historical and no longer operative. The canonical
