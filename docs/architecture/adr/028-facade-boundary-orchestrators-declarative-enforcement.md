@@ -374,9 +374,16 @@ is computed from facts the sources already declare:
   block. In the example, `t` and `FlextProtocolsResult` (read by `type` values)
   and `FlextProtocolsBase` (class bases) are runtime bindings, while `c`,
   `FlextProtocolsContainer` and `Callable` stay deferred.
-- A facade class lists only the upstream letters it composes as bases, aliased
-  `{package}_{letter}` when the module binds that letter itself (`class
-  FlextTargetOracleOicUtilities(flext_meltano_u, flext_oracle_oic_u)`). Its own
+- A FLEXT family facade lists only the upstream facades it composes as bases,
+  by the class name each parent declares, imported from the parent's package
+  root (`from flext_meltano import FlextMeltanoUtilities` and `class
+  FlextTargetOracleOicUtilities(FlextMeltanoUtilities, FlextOracleOicUtilities)`),
+  then rebinds its own letter as a plain alias (`u = FlextTargetOracleOicUtilities`).
+  A letter base or a `{package}_{letter}` alias base binds the letter twice and
+  makes type checkers read it as a variable; it is rewritten by rule
+  `facade-base-by-class-name` (amended 2026-11-12, operator decision "o ADR está
+  errado": the rule's class-name form is canonical). A Pattern-A consumer outside
+  the family keeps the letter base (flext-core ENFORCE-046). Its own
   components compose inside one nested namespace class named by the package
   (`class TargetOracleOic(FlextTargetOracleOicServiceRuntime,
   FlextTargetOracleOicSink)`), never as extra facade bases and never as
@@ -410,8 +417,10 @@ falando nas declaracoes de c,t,p,m e u usar import deles das bibliotecas mais
 altas para composição enquanto elas estão sendo compostas para uso hierárquico".
 Inside the declaration modules of the five families, while the package's own
 facades are being composed, the letters of the upstream packages it composes
-(`from flext_cli import c, t, p, m, u`) are the canonical binding: each own family
-composes the upstream same-letter class by MRO. The boundaries around it:
+(`from flext_cli import c, t, p, m, u`) are the canonical binding for references
+read through a letter (`t.X`, `p.Y`); the facade class itself composes the
+upstream same-letter class by MRO through its declared class name (rule
+`facade-base-by-class-name`, amended 2026-11-12). The boundaries around it:
   - Elect the spelling from native references at the class header. Retain a bare
     upstream letter when its identity is used there; when an existing verified
     alias is the used binding, retain only that alias. A later publication of the
@@ -501,14 +510,21 @@ owner places imports; parallel placement routes are deleted in the same cutover.
 
 ### Decision 14
 
- 1. **Pydantic declarations are complete at import.** Every model, settings, config and
-    service class is complete when its module is imported (`__pydantic_complete__`),
+ 1. **Pydantic declarations resolve at their owner and build on first use**
+    (amended 2026-11-13, operator decision, tracker key
+    `operator-decision-2026-11-13-defer-build-restored`). Every model, settings,
+    config and service class declares annotations that resolve from its own module,
     with no `model_rebuild`.
-     - Lazy module imports do not authorize deferred schemas after a declaration's
-       module has loaded. The current Core `defer_build=True` setting is an
-       implementation gap against this accepted contract, pending repair at the
-       preset owner and public fresh-import proof. A later gate-triggered build
-       does not establish completeness at import.
+     - The `m.*` presets set `defer_build=True`: the core schema is built on first
+       use, not when the declaring module loads. The public fresh-import gate of
+       `make check` builds every model of every package, so an unresolved annotation
+       still fails `check`; that gate is the completeness proof.
+     - This supersedes the earlier import-time completeness target, which named the
+       setting an implementation gap. Removing it built every schema of the composed
+       facade tree at process start (flext-core `bd945445b2`, 2026-11-09): measured
+       2026-11-13, 1,625 instead of 342 complete models and 7.34 s instead of 5.39 s
+       of process CPU for the ai-hub models facade, 3.56 s instead of 2.70 s for
+       flext-infra.
        A local model created by a later factory call is proven at its actual
        declaration/creation boundary, not claimed to exist or have been validated
        by an earlier module import. Preserve its lexical closure under ADR-018;
@@ -600,6 +616,15 @@ owner places imports; parallel placement routes are deleted in the same cutover.
        `make mod`), keeps the deprecated-signature window (Decision 7) for external
        consumers, and is then applied to ai-hub and every other project that uses
        flext-infra (census under bead `flext-1engx.11`).
+     - **Domain capabilities (amended 2026-11-12, operator order: support projects
+       whose domain is the technology "via overrides ou automaticamente").** A
+       distribution prefix is the project's own capability, not a library leak,
+       when the project owns an importable package or subpackage of that normalized
+       name under its own package roots (never the tests tier), or when its
+       repository declares the name in `Infra.codegen.repository.domain_capabilities`.
+       Capability prefixes and the declared stdlib backports leave the
+       `ban-library-named-facade-member` set; every other imported third-party
+       distribution stays banned.
 
 ### Decision 16
 
@@ -885,7 +910,7 @@ architecture link.
 | [16 — CA/DI and zero findings](#decision-16)                       | [Root `AGENTS.md`, Decision 16](../../../AGENTS.md#adr-028-decision-16); [consumer law, R2](../../standards/consumption-law.md#r2--no-duplication-structural-scan); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map)                                                                                                                                                                                                                       | [Infra `AGENTS.md`, Decision 16](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16); [Target LDAP CA/DI declaration](https://github.com/flext-sh/flext-target-ldap/blob/0.12.0-dev/AGENTS.md#adr-028-decision-16-ca-di-and-quality); implementation and quality gates: `flext-1engx.15`, `flext-pawp5`              |
 | [17 — workspace model and native refactorings](#decision-17)       | [Root `AGENTS.md`, Decision 17](../../../AGENTS.md#adr-028-decision-17); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map); [stabilization decision-link section](../../ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links); [Core failure-factory declaration](https://github.com/flext-sh/flext-core/blob/0.12.0-dev/AGENTS.md#failure-factory-responsibility)                                                       | [Infra `AGENTS.md`, Decision 17](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-17); [execution context, Workspace snapshot and analysis engine](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine); implementation: `flext-1engx.15` |
 | [18 — generalized rules](#decision-18)                             | [Root `AGENTS.md`, Decision 18](../../../AGENTS.md#adr-028-decision-18); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map); [codemod guide, One rule per law](../../guides/codemod-rules.md#one-rule-per-law); [stabilization decision-link section](../../ways-of-working/stabilization-checkpoint-0.12.md#adr-028-decision-links)                                                                                                         | [Infra `AGENTS.md`, Decision 18](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/AGENTS.md#adr-028-decision-18); projection cleanup: `flext-13s6n`                                                                                                                                                                                              |
-| [17 amendment — rope-only interpreter law](#decision-17)           | [Root `AGENTS.md`, Decision 17](../../../AGENTS.md#adr-028-decision-17); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map); [engine map — living campaign census](../../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/engine-map.md) (private plan tree, not published authority)                                                                                                                                           | Rope-only cutover epic `flext-u9h2i` under campaign `flext-pipol`; the Beads record execution truth, not acceptance                                                                                                                                                                                                                                     |
+| [17 amendment — rope-only interpreter law](#decision-17)           | [Root `AGENTS.md`, Decision 17](../../../AGENTS.md#adr-028-decision-17); [Governance decision map](../../GOVERNANCE.md#adr-028-decision-map)                                                                                                                                                                                                                                                                                                                  | Rope-only cutover epic `flext-u9h2i` under campaign `flext-pipol`; the Beads record execution truth, not acceptance                                                                                                                                                                                                                                     |
 | [18 fix-form mandate](#decision-18)                                | [Root `AGENTS.md`, Decision 18](../../../AGENTS.md#adr-028-decision-18); [codemod guide, One rule per law](../../guides/codemod-rules.md#one-rule-per-law)                                                                                                                                                                                                                                                                                                    | Declarative catalog `Infra.codegen.ast_grep`, rendered in memory by the `make mod` cascade (Decision 11); flext-ldap fix-form gap evidence and closure tracked on `flext-u9h2i`                                                                                                                                                                         |
 | AI Hub consumer route                                              | [AI Hub ADR-0039](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/adr/0039-universal-law-references-in-governed-docs.md); [ADR catalog](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/adr/README.md#fleet-canon); [engineering-law routing](https://github.com/datacosmos-br/ai-hub/blob/dev/docs/engineering-laws.md); [FLEXT development skill](https://github.com/datacosmos-br/agents/blob/dev/skills/framework/flext-development/SKILL.md) | Consumer Bead `aihub-9qdu6`; reciprocal-link Bead `flext-1engx.16`                                                                                                                                                                                                                                                                                      |
 | [9 — governed embedded examples](#decision-9)                      | [Root `AGENTS.md`, embedded-code rule](../../../AGENTS.md#adr-028-decision-9); [documentation standard](../../standards/documentation.md#command-and-test-examples)                                                                                                                                                                                                                                                                                           | The docs Bead `flext-0exhi` records authoring and executable-doc validation.                                                                                                                                                                                                                                                                            |

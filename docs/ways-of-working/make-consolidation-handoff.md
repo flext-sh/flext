@@ -203,7 +203,7 @@ not changed before real runtime. Do not mark that test debt complete.
 
 ## Native execution evidence
 
-All commands below ran in `/home/marlonsc/flext` unless otherwise stated.
+All commands below ran at the workspace root unless otherwise stated.
 Profiling captures are owner-thread wall timing, not worker CPU, whole-operation
 acceptance or automatically comparable populations. `partial=False` does not mean
 the command completed successfully.

@@ -125,6 +125,13 @@
     "mypy"
   ],
   "pyrefly.lspPath": "${workspaceFolder}/.venv/bin/pyrefly",
+  "python-envs.pythonProjects": [
+    {
+      "envManager": "ms-python.python:venv",
+      "packageManager": "ms-python.python:pip",
+      "path": "."
+    }
+  ],
   "python-envs.workspaceSearchPaths": [
     "./.venv"
   ],
@@ -254,12 +261,5 @@
     "**/.gitea/workflows/*.yaml",
     "**/.forgejo/workflows/*.yml",
     "**/.forgejo/workflows/*.yaml"
-  ],
-  "python-envs.pythonProjects": [
-    {
-      "path": ".",
-      "envManager": "ms-python.python:venv",
-      "packageManager": "ms-python.python:pip"
-    }
   ]
 }

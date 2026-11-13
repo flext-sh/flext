@@ -144,7 +144,7 @@ Compose the existing typed owners through CA and explicit DI to reduce coupling
 and the execution chain; do not replace it with wrappers or another engine.
 
 This amendment states the accepted contract, not implementation acceptance.
-The [2026-10-30 handoff](../../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/plan.md#handoff-de-retomada--2026-10-30-chat-01a18a11)
+The 2026-10-30 handoff
 records source limits and failing runtime receipts; `flext-u9h2i` owns execution
 and closure. Fix-forward adoption under the root `AGENTS.md` "Rig and Lane
 Contract" remains mandatory; no clean or quiet workspace prerequisite applies to
@@ -178,7 +178,7 @@ rewiring and source movement remain owned by `make mod` and its native workspace
 This separation introduces no substitute semantic engine or alternate publisher.
 
 The existing [engine guide](../../guides/engine.md) and
-[Infra execution contract](../../../flext-infra/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine)
+[Infra execution contract](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine)
 apply this target. Acceptance re-exercises the original public failure, then
 generation across FLEXT, AI Hub, OUD and their governed subprojects with their
 selected physical environments. Preserve pilot order and coverage, runtime-first
@@ -199,7 +199,7 @@ and consumed MRO capabilities. Static and lazy bindings account for declared
 eager metadata without lifting child exports into ancestors. Missing targets,
 colliding identities and invalid ownership fail explicitly.
 
-#### Deferred heavy capabilities (amended 2026-11-05)
+#### Deferred heavy capabilities (amended 2026-11-05, 2026-11-12, 2026-11-13)
 
 The operator answered "Declared libraries (Recommended)" on 2026-11-05 (tracker
 memory `operator-decision-2026-11-05-lazy-declared-distributions`). This
@@ -210,8 +210,14 @@ just by importing the facade; fix it so they enter lazily, only on use".
 - A project declares its costly third-party distributions once, in the lazy-init
   section of its own `config/codegen.yaml`. That declaration is the only input.
 - The lazy-init generator reads the same source inventory it already uses. It
-  marks as deferred every export whose declaring module itself imports a
-  declared distribution at module scope. Only direct imports count; a module
+  marks as deferred every class export that a facade composes by MRO (a base,
+  directly or through other in-package bases, of the package's facade root
+  classes, derived from the same source facts) and whose declaring module
+  itself imports a declared distribution at module scope. Every other export
+  of such a module stays a plain lazy export, loaded on first attribute access
+  through the existing lazy-export path: a stand-in is only valid for a
+  namespace mixin, never for a class that is instantiated or subclasses a
+  third-party type (amended 2026-11-12). Only direct imports count; a module
   that reaches the distribution through another module of its package is not
   marked, because that other module's own export is the deferred one. The
   export's members are the names bound in the class bodies along
@@ -223,14 +229,36 @@ just by importing the facade; fix it so they enter lazily, only on use".
   a facade loads no declared distribution.
 - Type checkers read the real class through the initializer's `TYPE_CHECKING`
   imports. Consumers, facades and authored modules do not change.
-- Generation fails explicitly for a deferred export with an out-of-package base,
-  or one whose member set cannot be computed from source.
+- Generation fails explicitly for a facade-composed deferred export with an
+  out-of-package base, or one whose member set cannot be computed from source.
 - Acceptance: a fresh process imports the facade and loads none of the declared
   distributions, and runtime acceptance resolves every deferred member through
   `resolve_lazy_members`. A broken target fails exactly as an eager import
   would.
-- Stand-ins and the adapter boundary below are the only deferral forms outside
-  `__init__.py` and `flext.lazy`. Method-local imports, operation registries and
+- A package also declares, in the same section, its configuration roots whose
+  validation is costly (operator choice 2026-11-13, "Lazy flext-infra settings").
+  The initializer publishes each such root as a stand-in instance: importing it
+  builds nothing, and the first attribute read loads the root's declaring module
+  through the lazy loader, which runs its `fetch_global`, and forwards to the
+  root. The stand-in keeps the root, never a member, so an in-place
+  `reset_for_testing` stays visible. Validation errors of the root, such as a
+  required setting with no source, surface unchanged on that first read. A
+  declaring module that does not publish the root raises `ImportError` with its
+  cause, never an `AttributeError` that would read as a missing name. Importing
+  `c`, `t`, `p`, `m` or `u`, and the codegen preview that imports the package,
+  then validates no configuration, as `FlextConfig` requires.
+- Status (implemented): the repository declaration lists the roots as
+  `deferred_instances` (for example `deferred_instances: [settings]`) beside
+  `deferred_distributions`. There is no default; each package names its own
+  roots. The lazy-init generator emits, right after `install_lazy_exports`,
+  `defer_lazy_instances(__name__, globals(), {<root>: <module>}, (<root>,))` in
+  every initializer of the project that exports a declared root, and generation
+  fails when no initializer exports it. flext-core owns the runtime,
+  `FlextLazyInstance` and `defer_lazy_instances`, which validates every name
+  against the map it receives before any effect (flext-core#777,
+  flext-infra#2356, bead `flext-14y32`).
+- These two are the only deferral forms outside `__init__.py` and `flext.lazy`.
+  Method-local imports, operation registries, module-object attribute access and
   `TYPE_CHECKING` class splits remain prohibited.
 
 ##### Structure of every facade letter (amended 2026-11-12)

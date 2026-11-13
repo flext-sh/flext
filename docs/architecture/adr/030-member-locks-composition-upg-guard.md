@@ -115,10 +115,15 @@ releases `make upg` may lock are bounded by one fleet cooldown, declared once as
 a rolling cooldown, never a fixed date). The generator projects that single value to
 the Mise `[settings]` `minimum_release_age` and to the `cooldown.default-days` of every
 Dependabot ecosystem entry; requirements a project takes by direct Git reference (the
-FLEXT members and `rope`) are excluded from the Dependabot cooldown. uv carries no
-cooldown key: `exclude-newer` and `exclude-newer-package` stay banned in every form,
-and conform removes both from `[tool.uv]` unconditionally
-(`flext-infra/src/flext_infra/_utilities/_pyproject/uv_sources.py`). Vulnerable
+FLEXT members and `rope`) are excluded from the Dependabot cooldown. uv carries the
+same value (amended 2026-11-13, operator decision "o cooldown tem que valer para tudo,
+exceto flext e nossos forks -dc"): pyproject conform projects
+`[tool.uv] exclude-newer` as the relative span of `dependency_cooldown_days`
+(`flext-infra/src/flext_infra/_utilities/_pyproject/uv_sources.py`); uv applies it to
+registry packages only, so FLEXT members and `-dc` forks taken by Git reference stay
+unaffected, and a CVE or critical package is exempted only through the typed
+`dependency_cooldown_exceptions` declaration (overridable per repository by the config
+overlay), projected to `exclude-newer-package` and the Dependabot exclude list. Vulnerable
 transitive packages are held by hand-reviewed floors in `uv_constraint_dependencies`,
 projected to `[tool.uv] constraint-dependencies` (tracker memory
 `operator-ruling-2026-10-24-security-cooldown-and-fp`; bead `flext-y9dqj`).
