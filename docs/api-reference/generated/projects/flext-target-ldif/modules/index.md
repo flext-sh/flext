@@ -14,6 +14,8 @@ These pages are generated from public modules and their docstrings.
 - [flext_target_ldif.errors](errors.md)
 - [flext_target_ldif.models](models.md)
 - [flext_target_ldif.protocols](protocols.md)
+- [flext_target_ldif.service_runtime](service_runtime.md)
+- [flext_target_ldif.sink](sink.md)
 - [flext_target_ldif.target](target.md)
 - [flext_target_ldif.typings](typings.md)
 - [flext_target_ldif.utilities](utilities.md)

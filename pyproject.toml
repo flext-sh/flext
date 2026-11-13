@@ -1680,6 +1680,7 @@ whitelines = 1
 [tool.uv]
 constraint-dependencies = [
   "pillow>=13.0.0",
+  "soupsieve>=4.0.0",
   "certifi>=2026.10.19",
   "setuptools>=84.1.0",
   "virtualenv>=21.14.13",
@@ -1909,6 +1910,9 @@ dependencies = ["flext"]
 
 [tool.uv.exclude-dependencies.package]
 name = "flext-web"
+
+[tool.uv.exclude-newer-package]
+soupsieve = false
 
 [tool.uv.sources.flext-api]
 path = "flext-api"
