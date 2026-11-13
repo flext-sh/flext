@@ -198,6 +198,14 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
   directly to `0.12.0-dev`, `upload-*` or `main`, including conflict resolutions and
   pin updates. A merge that needs `--admin` (only review missing, required checks
   green) is run only with the operator's authorization.
+- Resuming a lane starts by merging the integration tip (`--no-ff`) and resolving
+  every conflict before any other step; a pull request never waits conflicted.
+- The orchestrating session merges, never forge auto-merge: on the exact green head,
+  after another actor's review, one subject per pull request; the merged revision is
+  then re-proven at its real entry point.
+- No lane waits for the host load to drop. Work proceeds on light processes: code,
+  `CHECK_PHASE=primary make check`, the smallest real runtime proof, and the lane's
+  `gen`/`fmt`/`fix`. Heavy verbs run one at a time, only when the slice needs them.
 - Fixes go to the root cause with correct CA/DI wiring and no duplicated code path;
   a fix already present on another unintegrated lane is cherry-picked (`-x`) instead
   of rewritten.
@@ -503,6 +511,15 @@ Coordinate the wider generated Make/direnv installer cutover with
 `flext-itpd1.4.13`. The [execution-context contract](flext-infra/docs/guides/execution-context.md#native-bootstrap-task-route-flext-0029c)
 owns existing typed post-install verification and repeated bounded native QA;
 tests change only after real subsystem and cold-bootstrap proof.
+
+**Host admission** ([ADR-032](docs/architecture/adr/032-host-wide-heavy-gate-admission.md#host-admission-and-run-limits-of-every-verb);
+tracker key `operator-order-2026-11-13-make-admission-limits`): on the shared
+host every `make` verb refuses to start above `make.admission.max_load5` and
+runs inside a cgroup v2 scope bounded by its declared memory and CPUs; heavy
+gates also queue per host. A refusal is a failing gate, never routed around;
+meanwhile reading, design, edits, reviews, docs and Beads continue. Run one
+heavy verb at a time, `make tests` rather than `tests-full`, and
+`CHECK_PHASE=primary` while iterating.
 
 **All commands run from the active workspace/worktree root**, never from inside a
 submodule. Use `make`, never bare
@@ -933,8 +950,9 @@ CLI + pytest plugin, **never imported at runtime**.
       modules declare and is never empty while its members have consumers.
     - Heavy capabilities (spreadsheet and document libraries and their models, for
       example) load only on first use, never as a side effect of importing a facade.
-      The project declares those distributions; the generated init defers the exports
-      that import them ([ADR-018 deferred heavy capabilities](docs/architecture/adr/018-generator-declarations.md#deferred-heavy-capabilities-amended-2026-11-05)).
+      The generated init defers every class a facade composes by MRO, so importing
+      a facade loads no part module; there is no per-project declaration
+      ([ADR-018 deferred heavy capabilities](docs/architecture/adr/018-generator-declarations.md#deferred-heavy-capabilities-amended-2026-11-05-2026-11-12-2026-11-13)).
     - The `m.*` presets build Pydantic models lazily (`defer_build`), and a check
       gate builds every model so annotation errors still fail `make check`.
     - The lazy-init generator derives exports from source (AST over each module's
@@ -1371,6 +1389,16 @@ Overall average: **60-90% token reduction** on common development operations.
 
 ### Learned User Preferences
 
+- Nothing is simplified: every request, rule, refactoring and execution is carried out
+  whole (tracker key `operator-order-2026-11-13-no-simplified-interpretation`).
+  Decisions follow reality — the tool's official documentation, the routed skills, the
+  law and the owning ADR or guide — never opinion; a deviation from an approved plan
+  goes to the operator with evidence before any edit. While heavy gates wait on host
+  load, light checks on touched files and the other plan steps continue.
+- Tool data lives once at each tool's native default and is reused by every run,
+  checkout and test (Mise from its installer default, uv's cache with clone links,
+  pytest's own basetemp retention); no verb or fixture copies it per run, and a run
+  removes its own temporary files, also when stopped (epic `flext-b4gw3`).
 - **Never wait for load and never stop on a heavy operation.** Run the declared
   lightweight checks (primary-phase check, scoped Ruff/Pyrefly on touched files, `bd`,
   `git`, diffs, reads) and keep executing the plan; heavy `make gen`/`make check`/
@@ -1409,6 +1437,14 @@ Overall average: **60-90% token reduction** on common development operations.
   rules. Required local proof remains mandatory; remote CI does not replace it.
   Heavy operations run concurrently through their owning tools, never serialized
   by hand.
+- A held heavy gate (host admission, a peer's request) never stops the session,
+  and nobody waits for the load to drop: research, Beads, documentation, owner
+  code and light single-process gates on touched files continue at once; only
+  the heavy verb is queued by its owning tool (operator order 2026-11-13).
+- When the law already settles a design, apply it instead of asking: no opt-in
+  flag that makes a law optional, no criterion kept beside its replacement, no
+  input skipped silently. Ask only on a real authority conflict or a
+  destructive step (operator order 2026-11-13).
 
 ### Learned Workspace Facts
 

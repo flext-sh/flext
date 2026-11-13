@@ -201,40 +201,48 @@ colliding identities and invalid ownership fail explicitly.
 
 #### Deferred heavy capabilities (amended 2026-11-05, 2026-11-12, 2026-11-13)
 
-The operator answered "Declared libraries (Recommended)" on 2026-11-05 (tracker
-memory `operator-decision-2026-11-05-lazy-declared-distributions`). This
-implements lever 2 of `operator-ruling-2026-10-02-lazy-heavy-capabilities`,
-translated from Portuguese: "the xlsx and docx libraries must not be initialized
-just by importing the facade; fix it so they enter lazily, only on use".
+**Every facade part (amended 2026-11-13).** The operator answered "Adiar toda
+parte de fachada" on 2026-11-13 (tracker memory
+`operator-decision-2026-11-13-defer-every-facade-part`; bead `flext-2ayig`). It
+replaces the declared-distribution criterion of 2026-11-05 (tracker memory
+`operator-decision-2026-11-05-lazy-declared-distributions`), whose goal it keeps:
+the xlsx and docx libraries, and every other part, load only on use
+(`operator-ruling-2026-10-02-lazy-heavy-capabilities`). There is one rule and no
+declaration.
 
-- A project declares its costly third-party distributions once, in the lazy-init
-  section of its own `config/codegen.yaml`. That declaration is the only input.
+- Evidence (2026-11-13): only 9 flext-infra initializers carried deferred members
+  and no other package had any, so the first read of `m` loaded the whole composed
+  tree: about 2,400 modules and 8 s of process CPU for `ai-hub --help`.
 - The lazy-init generator reads the same source inventory it already uses. It
-  marks as deferred every class export that a facade composes by MRO (a base,
-  directly or through other in-package bases, of the package's facade root
-  classes, derived from the same source facts) and whose declaring module
-  itself imports a declared distribution at module scope. Every other export
-  of such a module stays a plain lazy export, loaded on first attribute access
-  through the existing lazy-export path: a stand-in is only valid for a
-  namespace mixin, never for a class that is instantiated or subclasses a
-  third-party type (amended 2026-11-12). Only direct imports count; a module
-  that reaches the distribution through another module of its package is not
-  marked, because that other module's own export is the deferred one. The
-  export's members are the names bound in the class bodies along
-  its in-package MRO, excluding dunders.
+  marks as deferred every class export that a family facade composes by MRO: a
+  base, directly or through other in-package bases, of the package's facade root
+  classes of the namespace families (`c`, `t`, `p`, `m`, `u`, derived from the
+  core package as for every family fact), from the same source facts. The facade
+  root classes stay real. Another facade, such as the service base `s`,
+  composes model mixins that stay real: a stand-in cannot join a Pydantic
+  metaclass. A stand-in is only valid for a namespace mixin, never for a class
+  that is instantiated or subclasses a third-party type (amended 2026-11-12). The
+  export's members are the names bound in the class bodies along its in-package
+  MRO, excluding dunders.
 - The generated initializer publishes those exports as deferred. `FlextLazy`
   hands consumers a stand-in class of `FlextLazyMember` descriptors. The first
   member access loads the declaring module through the lazy loader and caches the
   real member on the stand-in. Facades compose the stand-in by MRO, so importing
-  a facade loads no declared distribution.
+  a facade loads no part module.
 - Type checkers read the real class through the initializer's `TYPE_CHECKING`
   imports. Consumers, facades and authored modules do not change.
-- Generation fails explicitly for a facade-composed deferred export with an
+- Generation fails explicitly for a facade-composed export with an
   out-of-package base, or one whose member set cannot be computed from source.
-- Acceptance: a fresh process imports the facade and loads none of the declared
-  distributions, and runtime acceptance resolves every deferred member through
+  Such a part is corrected at its source; it is never left eager. A protocols
+  namespace that is itself a runtime-checkable `Protocol` is such a part: the
+  rule `protocol-namespace-part-plain` makes it a plain class through `make mod`,
+  as flext-core and flext-cli already declare it, and its nested contracts stay
+  protocols.
+- Acceptance: a fresh process imports every facade and loads no part module, and
+  runtime acceptance resolves every deferred member through
   `resolve_lazy_members`. A broken target fails exactly as an eager import
-  would.
+  would. The proof of the cost is the real `--help` of each CLI.
+- The `deferred_distributions` declaration is deleted with its planner branch.
 - A package also declares, in the same section, its configuration roots whose
   validation is costly (operator choice 2026-11-13, "Lazy flext-infra settings").
   The initializer publishes each such root as a stand-in instance: importing it
@@ -248,9 +256,9 @@ just by importing the facade; fix it so they enter lazily, only on use".
   `c`, `t`, `p`, `m` or `u`, and the codegen preview that imports the package,
   then validates no configuration, as `FlextConfig` requires.
 - Status (implemented): the repository declaration lists the roots as
-  `deferred_instances` (for example `deferred_instances: [settings]`) beside
-  `deferred_distributions`. There is no default; each package names its own
-  roots. The lazy-init generator emits, right after `install_lazy_exports`,
+  `deferred_instances` (for example `deferred_instances: [settings]`). There is
+  no default; each package names its own roots. The lazy-init generator emits,
+  right after `install_lazy_exports`,
   `defer_lazy_instances(__name__, globals(), {<root>: <module>}, (<root>,))` in
   every initializer of the project that exports a declared root, and generation
   fails when no initializer exports it. flext-core owns the runtime,
@@ -260,6 +268,51 @@ just by importing the facade; fix it so they enter lazily, only on use".
 - These two are the only deferral forms outside `__init__.py` and `flext.lazy`.
   Method-local imports, operation registries, module-object attribute access and
   `TYPE_CHECKING` class splits remain prohibited.
+
+##### Structure of every facade letter (amended 2026-11-12)
+
+The operator ruled on 2026-11-12, translated from Portuguese: "you have to fix
+the whole c, t, p, m, u layer, otherwise it does not lazy load", and named the
+flext-cli spreadsheet structure as the form to follow. A stand-in defers a
+module only when nothing reads it while a facade is being composed, so each
+letter has one structural rule. Measured on flext-infra with `libcst`,
+`pytest`, `rope` and `gitpython` declared: before, `c` loaded libcst and
+pytest, `t` and `m` added rope, and `u` added git; after, a fresh process
+imports each of the five letters and loads none of them.
+
+- **`c` and `t` — single-purpose holders.** Library classes and aliases stay
+  named through the facades (ADR-028 point 2): `c.<Ns>.<Lib>.<Name>` for runtime
+  operands and `t.<Ns>.<Lib>.<Name>` for annotations. Their holder is a class in
+  a module that declares nothing else, and it is the only module of its family
+  that imports the distribution. A holder never shares its class with a member
+  that another module reads while its own class is created: that read loads the
+  library for every importer of the facade.
+- **`p` — structural only.** A protocol names library objects by shape. It
+  imports no distribution at runtime.
+- **`m` — no library type in a field.** Pydantic evaluates every field when the
+  model class is created (ADR-028 Decision 14), so a field typed with a library
+  class or with an alias of a deferred holder loads the library at import. A
+  field carries an own enum whose values a contract test binds to the installed
+  library, a protocol the library object satisfies, or `Hashable` when the
+  object is only an identity key.
+- **`u` — light boundary, private adapters.** The facade composes a boundary
+  class whose methods delegate at call time. The modules that import the
+  distribution are adapters in a private subpackage. A class that subclasses a
+  library class is an adapter: it has no stand-in, stays a plain lazy export,
+  and no facade composes it. A boundary reaches an adapter through its
+  subpackage object at call time (`_xlsx.FlextCliUtilitiesXlsxRenderer`,
+  `_rope.FlextInfraRopeProject`), never through a name bound at import.
+- **Imports go through the package.** A runtime import of a deferred export
+  names its package, never its declaring module: the module path bypasses the
+  stand-in and loads the library.
+- **Generator.** A PEP 695 `type` statement in a class body is a member. A base
+  declared by an ancestor package resolves to its one declaring module. A class
+  that binds no member is not deferred. A class with a base from a declared
+  distribution is an adapter and is not deferred; any other unresolvable base
+  still fails generation.
+- **Acceptance.** For each of `c`, `t`, `p`, `m` and `u`, a fresh process
+  imports the letter and holds no import package of a declared distribution in
+  `sys.modules`; a deferred member read afterwards is the library's own object.
 
 **Error-handling amendment, 2026-10-29.** Generation handles operational and
 domain failures through the existing typed models/results and publisher at the
