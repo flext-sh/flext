@@ -198,6 +198,14 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
   directly to `0.12.0-dev`, `upload-*` or `main`, including conflict resolutions and
   pin updates. A merge that needs `--admin` (only review missing, required checks
   green) is run only with the operator's authorization.
+- Resuming a lane starts by merging the integration tip (`--no-ff`) and resolving
+  every conflict before any other step; a pull request never waits conflicted.
+- The orchestrating session merges, never forge auto-merge: on the exact green head,
+  after another actor's review, one subject per pull request; the merged revision is
+  then re-proven at its real entry point.
+- No lane waits for the host load to drop. Work proceeds on light processes: code,
+  `CHECK_PHASE=primary make check`, the smallest real runtime proof, and the lane's
+  `gen`/`fmt`/`fix`. Heavy verbs run one at a time, only when the slice needs them.
 - Fixes go to the root cause with correct CA/DI wiring and no duplicated code path;
   a fix already present on another unintegrated lane is cherry-picked (`-x`) instead
   of rewritten.
