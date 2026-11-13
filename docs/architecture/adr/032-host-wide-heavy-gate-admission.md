@@ -145,6 +145,13 @@ unless `fail_fast` is set, and its default is false.
 - **One slow gate never hides another's verdict.** Within the final phase the
   long gates (mypy, pyright, duplication, codemod) start only after every
   faster gate of that phase has passed.
+- **Implementation state.** The phase stop and the budget order are
+  implemented in flext-infra#2426: after the prerequisites, the pending gates
+  form one phase per declared check budget (`check_budget_seconds`, the reader
+  the route bound derives from), run from the smallest budget up; a failed,
+  incomplete or interrupted phase ends the verb and the summary prints the
+  remaining gates as `NOT EXECUTED`. Preflight before queueing is not
+  implemented yet.
 - **Same law for tests and mod.** `tests` and `tests-full` already stop at the
   first failure (`max-failures: 1`); collection and selection errors must
   surface before the suite starts. `mod` validates its selection and catalog
