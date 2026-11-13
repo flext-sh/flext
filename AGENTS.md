@@ -637,6 +637,18 @@ bypass them with an uncapped direct invocation. Documentation uses the existing 
 through gen, fix, fmt, check and build; no separate documentation lifecycle bypasses
 those owners.
 
+**Working method (light-process execution).** A heavy verb (`make check`,
+`make tests`, `make gen`, `make deploy`) never ends a turn and is never a reason
+to wait for host load. Start it as a background or persistent process, then
+continue the same slice with the light gates on the touched files
+(`.venv/bin/ruff check`, `ruff format --check`, `pyrefly check`), diff review,
+and doc/ADR/AGENTS/Bead alignment. The load does not drop while every session
+waits. Do not start a second implementation slice to fill the wait, and never
+bootstrap with manual `uv`. For a failed declared service, follow the
+`runtime-heal` procedure and the owner's documented reset/repair; never
+suppress, bypass, or hand-edit generated or config state. Ask only for a
+genuine unknown or an operator-only effect.
+
 ## Architecture Overview
 
 **Pydantic and domain routing:** follow
@@ -1359,6 +1371,19 @@ Overall average: **60-90% token reduction** on common development operations.
 
 ### Learned User Preferences
 
+- **Never wait for load and never stop on a heavy operation.** Run the declared
+  lightweight checks (primary-phase check, scoped Ruff/Pyrefly on touched files, `bd`,
+  `git`, diffs, reads) and keep executing the plan; heavy `make gen`/`make check`/
+  `make upg` run in the background with short budgets, never as a reason to block or
+  stall. Review and follow the real laws, rules, skills, research and best practices
+  before acting. The operator's zero-tolerance for warnings, strange logs, gambiarras,
+  fallbacks, unauthorized hooks, non-standard code, bad UX and latency above a few
+  seconds blocks Done.
+- **`make gen` is pure typed-AST declaration projection, never Rope, below twenty
+  seconds.** Reuse the existing parsed inventory (no second parse/scan); Rope semantic
+  refactoring belongs to `make mod`; stage budgets are typed configuration. A gen that
+  opens a Rope workspace or re-parses sources is an architectural violation, not a
+  performance tuning target.
 - Before changing code, search libraries, the project, worktrees, local and remote
   branches, and pull requests. Adopt compatible work through the declared Git route,
   keep the rig on its integration tip, and develop in lanes under the Rig and Lane
