@@ -214,11 +214,14 @@ declaration.
   and no other package had any, so the first read of `m` loaded the whole composed
   tree: about 2,400 modules and 8 s of process CPU for `ai-hub --help`.
 - The lazy-init generator reads the same source inventory it already uses. It
-  marks as deferred every class export that a facade composes by MRO: a base,
-  directly or through other in-package bases, of the package's facade root
-  classes, derived from the same source facts. The facade root classes stay
-  real. A stand-in is only valid for a namespace mixin, never for a class that is
-  instantiated or subclasses a third-party type (amended 2026-11-12). The
+  marks as deferred every class export that a family facade composes by MRO: a
+  base, directly or through other in-package bases, of the package's facade root
+  classes of the namespace families (`c`, `t`, `p`, `m`, `u`, derived from the
+  core package as for every family fact), from the same source facts. The facade
+  root classes stay real. Another facade, such as the service base `s`,
+  composes model mixins that stay real: a stand-in cannot join a Pydantic
+  metaclass. A stand-in is only valid for a namespace mixin, never for a class
+  that is instantiated or subclasses a third-party type (amended 2026-11-12). The
   export's members are the names bound in the class bodies along its in-package
   MRO, excluding dunders.
 - The generated initializer publishes those exports as deferred. `FlextLazy`
@@ -230,7 +233,11 @@ declaration.
   imports. Consumers, facades and authored modules do not change.
 - Generation fails explicitly for a facade-composed export with an
   out-of-package base, or one whose member set cannot be computed from source.
-  Such a part is corrected at its source; it is never left eager.
+  Such a part is corrected at its source; it is never left eager. A protocols
+  namespace that is itself a runtime-checkable `Protocol` is such a part: the
+  rule `protocol-namespace-part-plain` makes it a plain class through `make mod`,
+  as flext-core and flext-cli already declare it, and its nested contracts stay
+  protocols.
 - Acceptance: a fresh process imports every facade and loads no part module, and
   runtime acceptance resolves every deferred member through
   `resolve_lazy_members`. A broken target fails exactly as an eager import
