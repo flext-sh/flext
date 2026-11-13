@@ -32,15 +32,18 @@ class inherits **only** the production facade; the nested `Tests` class inherits
 the `flext_tests` facade plus the test-only mixins. There is no `@override`.
 
 ```python
-from flext_infra import m as flext_infra_m
+from flext_infra import FlextInfraModels
 from flext_tests import m as flext_tests_m
 
-from tests._models import TestsFlextInfraModelsBase  # noqa: PLC2701
+
+class TestsFlextInfraModels(FlextInfraModels):
+    """Infra test models composed from the production model facade."""
+
+    class Tests(flext_tests_m.Tests):
+        """Tests use inherited flext-tests and production infra models."""
 
 
-class TestsFlextInfraModels(flext_infra_m):
-    class Tests(flext_tests_m.Tests, TestsFlextInfraModelsBase):
-        """..."""
+m = TestsFlextInfraModels
 ```
 
 The same shape applies to every letter:

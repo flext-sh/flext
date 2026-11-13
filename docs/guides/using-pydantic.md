@@ -436,9 +436,9 @@ inference; it is not a causal repair.
 
 This snapshot records the inspected declarations, not a second policy owner or
 proof of the configuration loaded by a running checker. The writable owners are
-[native tooling settings](../../flext-infra/src/flext_infra/config/tooling.yaml),
-[the Mypy projection](../../flext-infra/src/flext_infra/deps/phases/tool_tables.py),
-and [the Pyright projection](../../flext-infra/src/flext_infra/deps/phases/ensure_pyright.py).
+[native tooling settings](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/config/tooling.yaml),
+[the Mypy projection](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/deps/phases/tool_tables.py),
+and [the Pyright projection](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/deps/phases/ensure_pyright.py).
 Project overlays, inline directives, command arguments and editor state must be
 included when establishing an individual diagnostic's effective policy.
 

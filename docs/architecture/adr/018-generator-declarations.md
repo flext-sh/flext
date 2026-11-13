@@ -144,7 +144,7 @@ Compose the existing typed owners through CA and explicit DI to reduce coupling
 and the execution chain; do not replace it with wrappers or another engine.
 
 This amendment states the accepted contract, not implementation acceptance.
-The [2026-10-30 handoff](../../../.kilo/plans/2026-10-28-gen-mod-parametrization-performance/plan.md#handoff-de-retomada--2026-10-30-chat-01a18a11)
+The 2026-10-30 handoff
 records source limits and failing runtime receipts; `flext-u9h2i` owns execution
 and closure. Fix-forward adoption under the root `AGENTS.md` "Rig and Lane
 Contract" remains mandatory; no clean or quiet workspace prerequisite applies to
@@ -178,7 +178,7 @@ rewiring and source movement remain owned by `make mod` and its native workspace
 This separation introduces no substitute semantic engine or alternate publisher.
 
 The existing [engine guide](../../guides/engine.md) and
-[Infra execution contract](../../../flext-infra/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine)
+[Infra execution contract](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/docs/guides/execution-context.md#workspace-snapshot-and-analysis-engine)
 apply this target. Acceptance re-exercises the original public failure, then
 generation across FLEXT, AI Hub, OUD and their governed subprojects with their
 selected physical environments. Preserve pilot order and coverage, runtime-first
