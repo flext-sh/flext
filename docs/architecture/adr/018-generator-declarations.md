@@ -229,9 +229,54 @@ just by importing the facade; fix it so they enter lazily, only on use".
   distributions, and runtime acceptance resolves every deferred member through
   `resolve_lazy_members`. A broken target fails exactly as an eager import
   would.
-- This is the only deferral form outside `__init__.py` and `flext.lazy`.
-  Method-local imports, operation registries, module-object attribute access and
+- Stand-ins and the adapter boundary below are the only deferral forms outside
+  `__init__.py` and `flext.lazy`. Method-local imports, operation registries and
   `TYPE_CHECKING` class splits remain prohibited.
+
+##### Structure of every facade letter (amended 2026-11-12)
+
+The operator ruled on 2026-11-12, translated from Portuguese: "you have to fix
+the whole c, t, p, m, u layer, otherwise it does not lazy load", and named the
+flext-cli spreadsheet structure as the form to follow. A stand-in defers a
+module only when nothing reads it while a facade is being composed, so each
+letter has one structural rule. Measured on flext-infra with `libcst`,
+`pytest`, `rope` and `gitpython` declared: before, `c` loaded libcst and
+pytest, `t` and `m` added rope, and `u` added git; after, a fresh process
+imports each of the five letters and loads none of them.
+
+- **`c` and `t` — single-purpose holders.** Library classes and aliases stay
+  named through the facades (ADR-028 point 2): `c.<Ns>.<Lib>.<Name>` for runtime
+  operands and `t.<Ns>.<Lib>.<Name>` for annotations. Their holder is a class in
+  a module that declares nothing else, and it is the only module of its family
+  that imports the distribution. A holder never shares its class with a member
+  that another module reads while its own class is created: that read loads the
+  library for every importer of the facade.
+- **`p` — structural only.** A protocol names library objects by shape. It
+  imports no distribution at runtime.
+- **`m` — no library type in a field.** Pydantic evaluates every field when the
+  model class is created (ADR-028 Decision 14), so a field typed with a library
+  class or with an alias of a deferred holder loads the library at import. A
+  field carries an own enum whose values a contract test binds to the installed
+  library, a protocol the library object satisfies, or `Hashable` when the
+  object is only an identity key.
+- **`u` — light boundary, private adapters.** The facade composes a boundary
+  class whose methods delegate at call time. The modules that import the
+  distribution are adapters in a private subpackage. A class that subclasses a
+  library class is an adapter: it has no stand-in, stays a plain lazy export,
+  and no facade composes it. A boundary reaches an adapter through its
+  subpackage object at call time (`_xlsx.FlextCliUtilitiesXlsxRenderer`,
+  `_rope.FlextInfraRopeProject`), never through a name bound at import.
+- **Imports go through the package.** A runtime import of a deferred export
+  names its package, never its declaring module: the module path bypasses the
+  stand-in and loads the library.
+- **Generator.** A PEP 695 `type` statement in a class body is a member. A base
+  declared by an ancestor package resolves to its one declaring module. A class
+  that binds no member is not deferred. A class with a base from a declared
+  distribution is an adapter and is not deferred; any other unresolvable base
+  still fails generation.
+- **Acceptance.** For each of `c`, `t`, `p`, `m` and `u`, a fresh process
+  imports the letter and holds no import package of a declared distribution in
+  `sys.modules`; a deferred member read afterwards is the library's own object.
 
 **Error-handling amendment, 2026-10-29.** Generation handles operational and
 domain failures through the existing typed models/results and publisher at the
