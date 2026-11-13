@@ -155,6 +155,12 @@ candidate; acceptance never proves fleet stability.
   re-export the class object; closes `UP040` at class-body re-export sites with the
   plain-assignment form; evidence in `gruponos/merges` audit
   `RUFF_PYREFLY_FLEXT_CORE_BATCH1_20261102.md`, bead `dc_recon-ob4`)
+- [ADR-032: Host-Wide Admission for Heavy Gates](032-host-wide-heavy-gate-admission.md)
+  — **ACCEPTED** (operator plan 2026-11-12, ai-hub `aihub-pxu63.6`; generated
+  `check`/`tests`/`tests-full`/`gen`/`gen-scope`/`mod` share one per-host FIFO queue
+  owned by flext-infra: 2 slots, 1 under high host pressure published by the
+  host-budget owner; liveness lock plus heartbeat TTL; admission sits outside the
+  verb's wall-time budget; nothing retried or skipped)
 
 > **Numbering evidence:** the recorded future-line (`0.13.0-dev`) catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance
