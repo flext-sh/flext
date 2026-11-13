@@ -1367,6 +1367,16 @@ Overall average: **60-90% token reduction** on common development operations.
 
 ### Learned User Preferences
 
+- Nothing is simplified: every request, rule, refactoring and execution is carried out
+  whole (tracker key `operator-order-2026-11-13-no-simplified-interpretation`).
+  Decisions follow reality — the tool's official documentation, the routed skills, the
+  law and the owning ADR or guide — never opinion; a deviation from an approved plan
+  goes to the operator with evidence before any edit. While heavy gates wait on host
+  load, light checks on touched files and the other plan steps continue.
+- Tool data lives once at each tool's native default and is reused by every run,
+  checkout and test (Mise from its installer default, uv's cache with clone links,
+  pytest's own basetemp retention); no verb or fixture copies it per run, and a run
+  removes its own temporary files, also when stopped (epic `flext-b4gw3`).
 - Before changing code, search libraries, the project, worktrees, local and remote
   branches, and pull requests. Adopt compatible work through the declared Git route,
   keep the rig on its integration tip, and develop in lanes under the Rig and Lane
