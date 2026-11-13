@@ -198,7 +198,7 @@ dev = [
   "pyyaml>=6.0.3",
   "redis>=8.1.0",
   "requests>=2.34.2",
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@41b960329bb0c189be872f24ebe81bbeabfe5a66",
+  "rope @ git+https://github.com/marlon-costa-dc/rope.git@bc2b0450c2a05f955ad5eaa52e8571b17614c9a8",
   "ruamel.yaml>=0.19.1",
   "ruff>=0.16.5",
   "rumdl>=0.2.62",
@@ -1687,9 +1687,10 @@ constraint-dependencies = [
   "uv>=0.13.4",
 ]
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
+exclude-newer = "P10D"
 link-mode = "clone"
 override-dependencies = [
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@41b960329bb0c189be872f24ebe81bbeabfe5a66",
+  "rope @ git+https://github.com/marlon-costa-dc/rope.git@bc2b0450c2a05f955ad5eaa52e8571b17614c9a8",
   "flext-api",
   "flext-auth",
   "flext-cli",
