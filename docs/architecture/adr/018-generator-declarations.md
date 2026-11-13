@@ -199,7 +199,7 @@ and consumed MRO capabilities. Static and lazy bindings account for declared
 eager metadata without lifting child exports into ancestors. Missing targets,
 colliding identities and invalid ownership fail explicitly.
 
-#### Deferred heavy capabilities (amended 2026-11-05, 2026-11-12)
+#### Deferred heavy capabilities (amended 2026-11-05, 2026-11-12, 2026-11-13)
 
 The operator answered "Declared libraries (Recommended)" on 2026-11-05 (tracker
 memory `operator-decision-2026-11-05-lazy-declared-distributions`). This
@@ -235,7 +235,15 @@ just by importing the facade; fix it so they enter lazily, only on use".
   distributions, and runtime acceptance resolves every deferred member through
   `resolve_lazy_members`. A broken target fails exactly as an eager import
   would.
-- This is the only deferral form outside `__init__.py` and `flext.lazy`.
+- A package also declares, in the same section, its configuration roots whose
+  validation is costly (operator choice 2026-11-13, "Lazy flext-infra settings").
+  The initializer publishes each such root as a stand-in instance: importing it
+  builds nothing, and the first attribute read publishes the root through
+  `fetch_global` and forwards to it (`defer_lazy_instances`, called after
+  `install_lazy_exports`). The stand-in keeps the root, never a member,
+  so an in-place `reset_for_testing` stays visible. Importing `c`, `t`, `p`, `m`
+  or `u` then validates no configuration, as `FlextConfig` requires.
+- These two are the only deferral forms outside `__init__.py` and `flext.lazy`.
   Method-local imports, operation registries, module-object attribute access and
   `TYPE_CHECKING` class splits remain prohibited.
 
