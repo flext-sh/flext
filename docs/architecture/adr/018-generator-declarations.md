@@ -201,40 +201,41 @@ colliding identities and invalid ownership fail explicitly.
 
 #### Deferred heavy capabilities (amended 2026-11-05, 2026-11-12, 2026-11-13)
 
-The operator answered "Declared libraries (Recommended)" on 2026-11-05 (tracker
-memory `operator-decision-2026-11-05-lazy-declared-distributions`). This
-implements lever 2 of `operator-ruling-2026-10-02-lazy-heavy-capabilities`,
-translated from Portuguese: "the xlsx and docx libraries must not be initialized
-just by importing the facade; fix it so they enter lazily, only on use".
+**Every facade part (amended 2026-11-13).** The operator answered "Adiar toda
+parte de fachada" on 2026-11-13 (tracker memory
+`operator-decision-2026-11-13-defer-every-facade-part`; bead `flext-2ayig`). It
+replaces the declared-distribution criterion of 2026-11-05 (tracker memory
+`operator-decision-2026-11-05-lazy-declared-distributions`), whose goal it keeps:
+the xlsx and docx libraries, and every other part, load only on use
+(`operator-ruling-2026-10-02-lazy-heavy-capabilities`). There is one rule and no
+declaration.
 
-- A project declares its costly third-party distributions once, in the lazy-init
-  section of its own `config/codegen.yaml`. That declaration is the only input.
+- Evidence (2026-11-13): only 9 flext-infra initializers carried deferred members
+  and no other package had any, so the first read of `m` loaded the whole composed
+  tree: about 2,400 modules and 8 s of process CPU for `ai-hub --help`.
 - The lazy-init generator reads the same source inventory it already uses. It
-  marks as deferred every class export that a facade composes by MRO (a base,
+  marks as deferred every class export that a facade composes by MRO: a base,
   directly or through other in-package bases, of the package's facade root
-  classes, derived from the same source facts) and whose declaring module
-  itself imports a declared distribution at module scope. Every other export
-  of such a module stays a plain lazy export, loaded on first attribute access
-  through the existing lazy-export path: a stand-in is only valid for a
-  namespace mixin, never for a class that is instantiated or subclasses a
-  third-party type (amended 2026-11-12). Only direct imports count; a module
-  that reaches the distribution through another module of its package is not
-  marked, because that other module's own export is the deferred one. The
-  export's members are the names bound in the class bodies along
-  its in-package MRO, excluding dunders.
+  classes, derived from the same source facts. The facade root classes stay
+  real. A stand-in is only valid for a namespace mixin, never for a class that is
+  instantiated or subclasses a third-party type (amended 2026-11-12). The
+  export's members are the names bound in the class bodies along its in-package
+  MRO, excluding dunders.
 - The generated initializer publishes those exports as deferred. `FlextLazy`
   hands consumers a stand-in class of `FlextLazyMember` descriptors. The first
   member access loads the declaring module through the lazy loader and caches the
   real member on the stand-in. Facades compose the stand-in by MRO, so importing
-  a facade loads no declared distribution.
+  a facade loads no part module.
 - Type checkers read the real class through the initializer's `TYPE_CHECKING`
   imports. Consumers, facades and authored modules do not change.
-- Generation fails explicitly for a facade-composed deferred export with an
+- Generation fails explicitly for a facade-composed export with an
   out-of-package base, or one whose member set cannot be computed from source.
-- Acceptance: a fresh process imports the facade and loads none of the declared
-  distributions, and runtime acceptance resolves every deferred member through
+  Such a part is corrected at its source; it is never left eager.
+- Acceptance: a fresh process imports every facade and loads no part module, and
+  runtime acceptance resolves every deferred member through
   `resolve_lazy_members`. A broken target fails exactly as an eager import
-  would.
+  would. The proof of the cost is the real `--help` of each CLI.
+- The `deferred_distributions` declaration is deleted with its planner branch.
 - A package also declares, in the same section, its configuration roots whose
   validation is costly (operator choice 2026-11-13, "Lazy flext-infra settings").
   The initializer publishes each such root as a stand-in instance: importing it
@@ -248,9 +249,9 @@ just by importing the facade; fix it so they enter lazily, only on use".
   `c`, `t`, `p`, `m` or `u`, and the codegen preview that imports the package,
   then validates no configuration, as `FlextConfig` requires.
 - Status (implemented): the repository declaration lists the roots as
-  `deferred_instances` (for example `deferred_instances: [settings]`) beside
-  `deferred_distributions`. There is no default; each package names its own
-  roots. The lazy-init generator emits, right after `install_lazy_exports`,
+  `deferred_instances` (for example `deferred_instances: [settings]`). There is
+  no default; each package names its own roots. The lazy-init generator emits,
+  right after `install_lazy_exports`,
   `defer_lazy_instances(__name__, globals(), {<root>: <module>}, (<root>,))` in
   every initializer of the project that exports a declared root, and generation
   fails when no initializer exports it. flext-core owns the runtime,

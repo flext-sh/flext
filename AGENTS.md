@@ -921,8 +921,9 @@ CLI + pytest plugin, **never imported at runtime**.
       modules declare and is never empty while its members have consumers.
     - Heavy capabilities (spreadsheet and document libraries and their models, for
       example) load only on first use, never as a side effect of importing a facade.
-      The project declares those distributions; the generated init defers the exports
-      that import them ([ADR-018 deferred heavy capabilities](docs/architecture/adr/018-generator-declarations.md#deferred-heavy-capabilities-amended-2026-11-05)).
+      The generated init defers every class a facade composes by MRO, so importing
+      a facade loads no part module; there is no per-project declaration
+      ([ADR-018 deferred heavy capabilities](docs/architecture/adr/018-generator-declarations.md#deferred-heavy-capabilities-amended-2026-11-05-2026-11-12-2026-11-13)).
     - The `m.*` presets build Pydantic models lazily (`defer_build`), and a check
       gate builds every model so annotation errors still fail `make check`.
     - The lazy-init generator derives exports from source (AST over each module's
@@ -1384,6 +1385,14 @@ Overall average: **60-90% token reduction** on common development operations.
   rules. Required local proof remains mandatory; remote CI does not replace it.
   Heavy operations run concurrently through their owning tools, never serialized
   by hand.
+- A held heavy gate (host admission, a peer's request) never stops the session,
+  and nobody waits for the load to drop: research, Beads, documentation, owner
+  code and light single-process gates on touched files continue at once; only
+  the heavy verb is queued by its owning tool (operator order 2026-11-13).
+- When the law already settles a design, apply it instead of asking: no opt-in
+  flag that makes a law optional, no criterion kept beside its replacement, no
+  input skipped silently. Ask only on a real authority conflict or a
+  destructive step (operator order 2026-11-13).
 
 ### Learned Workspace Facts
 
