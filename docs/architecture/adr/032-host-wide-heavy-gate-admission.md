@@ -8,6 +8,7 @@
 - [Repeat limit for full-weight runs](#repeat-limit-for-full-weight-runs)
 - [Fail early](#fail-early)
 - [Capacity and host pressure](#capacity-and-host-pressure)
+- [Host admission and run limits of every verb](#host-admission-and-run-limits-of-every-verb)
 - [Consumers](#consumers)
 - [Consequences](#consequences)
 
@@ -164,6 +165,40 @@ unless `fail_fast` is set, and its default is false.
   older than `valid_seconds` stops the admission with its cause.
 - `high` and `critical` both select `capacity.high`. The host-budget owner's
   critical-pressure spawn block applies before this queue is reached.
+
+## Host admission and run limits of every verb
+
+On the shared host every public Make verb, not only the heavy routes, refuses
+to start while the 5-minute load average exceeds its limit, and runs bounded in
+memory and CPUs. CI runners are dedicated hosts and are not admitted. This rule
+is separate from the queue: the queue bounds how many heavy gates run at once,
+this rule bounds when any verb may start and what each verb may use.
+
+- **Owner:** the generated Makefile prelude (`templates/project/base/Makefile.j2`,
+  section `host admission`), configured once in `make.admission` of
+  `flext-infra` `config/codegen.yaml`: `max_load5` (20), `memory_limit_gb` (5),
+  `max_processes` (2), `overrides` per declared public verb, and
+  `refusal_guidance`.
+- **Admission:** on the top-level invocation (`MAKELEVEL=0`, outside CI) the verb reads
+  field 2 of `/proc/loadavg`. Above `max_load5` it prints the guidance (one
+  heavy verb at a time, `make tests` over `tests-full`, a narrow `mod`,
+  `CHECK_PHASE=primary`, at most 2 workers) and exits 2 with the load, the
+  limit and the override key. No wait and no retry: the queue above is the
+  waiting owner.
+- **Run limits:** the kernel's cgroup v2 owns them. Every recipe and `$(shell)`
+  runs in a `systemd-run --user --scope` with `MemoryMax=<memory_limit_gb>` and
+  `CPUQuota=<max_processes>00%`, which bound the real memory and CPU of the whole
+  process tree. Nested Make and every child stay in the scope. The verb exports
+  `PYTHON_CPU_COUNT=<max_processes>`, so Python worker pools size to the same
+  CPUs.
+- **Exceptions:** only a declared `make.admission.overrides.<verb>` entry,
+  never a local edit or an environment bypass.
+- **Measurement:** this rule reads the kernel load directly, by operator
+  decision (tracker key `operator-order-2026-11-13-make-admission-limits`).
+  When the host-budget owner publishes its snapshot, the admission reads it
+  instead, as one owner.
+- **Scope of a limit:** each recipe line is one scope; a verb's heavy work is
+  one recipe line.
 
 ## Consumers
 

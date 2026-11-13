@@ -504,6 +504,15 @@ Coordinate the wider generated Make/direnv installer cutover with
 owns existing typed post-install verification and repeated bounded native QA;
 tests change only after real subsystem and cold-bootstrap proof.
 
+**Host admission** ([ADR-032](docs/architecture/adr/032-host-wide-heavy-gate-admission.md#host-admission-and-run-limits-of-every-verb);
+tracker key `operator-order-2026-11-13-make-admission-limits`): on the shared
+host every `make` verb refuses to start above `make.admission.max_load5` and
+runs inside a cgroup v2 scope bounded by its declared memory and CPUs; heavy
+gates also queue per host. A refusal is a failing gate, never routed around;
+meanwhile reading, design, edits, reviews, docs and Beads continue. Run one
+heavy verb at a time, `make tests` rather than `tests-full`, and
+`CHECK_PHASE=primary` while iterating.
+
 **All commands run from the active workspace/worktree root**, never from inside a
 submodule. Use `make`, never bare
 `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
