@@ -168,8 +168,8 @@ missing projections authorize a concrete-model typing exception or protocol shim
   the `pydantic-development` skill; symbols reach consumers only through `m`/`t`/`u`.
 - Model annotations must resolve at their declaring owner through runtime-safe imports.
   Preserve generated lazy exports and facade direction; `model_rebuild`, eager-export
-  rewrites, and compatibility aliases are not import-cycle repairs. Completeness at
-  import is ADR-028 Decision 14.
+  rewrites, and compatibility aliases are not import-cycle repairs. Schemas build on
+  first use (`defer_build`) and `make check` proves completeness (ADR-028 Decision 14).
 
 ## Runtime and language floor
 
