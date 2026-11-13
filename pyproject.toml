@@ -315,6 +315,9 @@ package_name = "flext"
 [tool.hatch.build.targets.wheel.extra-metadata]
 "pyproject.toml" = "pyproject.toml"
 
+[tool.hatch.build.targets.sdist]
+exclude = ["/.bin", "/.bin/**"]
+
 [tool.hatch.build.targets.sdist.force-include]
 "pyproject.toml" = "pyproject.toml"
 
