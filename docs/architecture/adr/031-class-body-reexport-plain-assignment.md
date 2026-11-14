@@ -21,9 +21,7 @@
 - **Complements:** ADR-014 (family part shape), ADR-018 (generator declarations
   law — generated re-exports follow the same rule), ADR-021 (lint repair channel —
   `UP040` fixes must not violate this law).
-- **Measured evidence:** `flext-core` batch 1 of the strict ruff/pyright plan
-  (audit `docs/auditoria/RUFF_PYREFLY_FLEXT_CORE_BATCH1_20261102.md` in the
-  `gruponos/merges` workspace), bead `dc_recon-ob4`.
+- **Measured evidence:** `flext-core` batch 1 of the strict ruff/pyright plan.
 
 ## Context
 
