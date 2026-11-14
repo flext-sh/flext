@@ -41,7 +41,7 @@
 | R4  | Dívida pré-existente de tipos no infra (~99 no-any-return em facades m/u compostas) — tornada visível quando o passo **check complement (CI=N make check)** entrou no CI                                                                                               | Postura **warning** por dois mecanismos: `WARNING_GATE_IDS` (constante, 6e964f28c) e `check_policy.warning_gates` no `tooling.yaml` do repositório checado (propriedade da #812). Dívida = bead **flext-1pquc** | Pousado no tip do infra                                                                       |
 
 Investigação concluída: **nenhuma outra variável do mypy foi removida** (diff seccional
-ontem→hoje: só o override stale do módulo `dcdoc`, sem relação). O `warn_return_any`
+ontem→hoje: só o override stale de um módulo de consumidor, sem relação). O `warn_return_any`
 existe desde julho. Os "99" são dívida real + efeito R3; o crash R1 já foi eliminado (0
 INTERNAL ERROR com 2.14.2).
 

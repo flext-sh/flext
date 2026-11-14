@@ -206,7 +206,7 @@ Releases (wheel + sdist artifacts) at per-repository SEMVER (`0.12.x`) determine
   and repos where `v0.12.0` already exists advance to `v0.12.1`)
 - `gc-mail` ceremony protocol: `[coord] [@city-hall] gate-window START <repo> release-build`
   before merge/cut and `[coord] landed <repo> v0.12.x` naming downstream consumers
-  (`ai-hub`, `algar-oud-mig`, `cosmos-*`, `invest`, `dataop`) before `gate-window END`
+  (`ai-hub` and every other declared consumer) before `gate-window END`
 - Consumer SSOT projection: external consumers (`ai-hub`) declare `@v0.12.x` tag refs in
   `config/codegen.yaml` (`branch_policy.integration_branch`, `project.flext_source`, and
   per-distribution overrides in `toolchain.uv_override_dependencies` + `tools.yaml`

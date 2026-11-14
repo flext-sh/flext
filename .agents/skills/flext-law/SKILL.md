@@ -156,6 +156,13 @@ missing projections authorize a concrete-model typing exception or protocol shim
   their owning class boundary. Consumers import from the nearest owning package's
   generated lazy surface, with the symbol in that package's `__all__`. These
   declarations govern generation; they do not attest completed runtime convergence.
+- A deferred facade part is a plain stand-in class with no metaclass and no fallback
+  ([ADR-018 stand-in composition law](../../../docs/architecture/adr/018-generator-declarations.md#stand-in-composition-law-amended-2026-11-14)):
+  it composes with any metaclass, an unlisted member fails, an ancestor-package base
+  is shared by its import route, and a part a stand-in cannot represent is rejected
+  at generation and corrected at its source.
+- Before proposing an architectural change, or stating what a rule, a lint result or
+  a lint configuration is, apply root `AGENTS.md` "Architectural Change Admission".
 - Service exposure follows the canonical short alias: `base.py` imports `s` from
   `flext_core`, the package root lazily re-exports `s`, and consumers use
   `from <namespace> import s`. Never rename it to `core_s` or substitute an alternative

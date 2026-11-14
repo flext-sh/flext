@@ -19,8 +19,7 @@
 <!-- TOC END -->
 
 For sessions that migrate FLEXT members (ldap, ldif, meltano, taps, targets, dbt, web,
-auth, …) and external consumers declared `internal_flext` (for example ai-hub and
-cosmos-\*), using `flext-core`, `flext-cli`, `flext-tests` and `flext-infra`. The
+auth, …) and external consumers declared `internal_flext` (for example ai-hub), using `flext-core`, `flext-cli`, `flext-tests` and `flext-infra`. The
 normative contract is `03-contract.md`; the laws are `04-rules.md`. This is the
 practical path: what to use, in which order, with which tool.
 

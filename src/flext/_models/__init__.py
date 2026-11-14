@@ -23,4 +23,11 @@ install_lazy_exports(
     globals(),
     {"FlextModelsRootBase": ".base", "FlextModelsRootConfig": ".config"},
     public_exports=__all__,
+    deferred_members={
+        "FlextModelsRootBase": (),
+        "FlextModelsRootConfig": (
+            "PipelinePayload",
+            "PipelineStageData",
+        ),
+    },
 )

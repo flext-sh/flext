@@ -180,6 +180,6 @@ direct `runtime_settings=` sites (OIC/WMS); 3 bases redeclare `__init__` for set
 
 - ai-hub plan v3, operator decision 4: ports as validated Pydantic fields, container
   resolution by Protocol, duplicate registration fails (phase 1.1, epic `aihub-5j4cw`).
-- cosmos plan v13, step A0.5: `t.Port[P]`, a composition constructor,
+- external consumer plan v13, step A0.5: `t.Port[P]`, a composition constructor,
   `CredentialsDirectorySource`, a DI guide. S1–S3 deliver the common part; the
   credentials source stays a candidate for a later base slice.

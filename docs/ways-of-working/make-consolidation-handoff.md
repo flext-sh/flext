@@ -66,8 +66,8 @@ The full matrix remains root FLEXT plus its declared members; a member Makefile
 selected from the root; independent clones; `CI=Y` selecting only its target even
 with absent members; a hosted runner; explicit scaffold including Python automation
 for a non-Python project; generated and mixed files; interruptions and `clean`;
-and the physical workspaces `~/devops-oud-iac`, `~/ai-hub`, `~/cosmos-main`,
-`~/cosmos-docgen` and `~/invest`. Reconfirm membership from `.gitmodules` and
+and the physical workspaces `~/devops-oud-iac`, `~/ai-hub`, the
+external consumer workspaces and `~/invest`. Reconfirm membership from `.gitmodules` and
 preserve unmanaged gitlinks, authored deltas and project-owned operations.
 
 ## Contracts that must not be rediscovered or weakened

@@ -293,9 +293,7 @@ data, never machinery. New inviolable rules (bind every `flext-(tap|target|dbt)-
 
     library facades; services are thin orchestrators. `base.py`
 
-    `s = meltano-service-base` with the domain facade injected (`self.ldap`,
-
-    algar-oud-mig pattern).
+    `s = meltano-service-base` with the domain facade injected (`self.ldap`).
 
 6. **Config/settings SSOT:** `config/` at PROJECT ROOT; `config.<Ns>.streams` typed via
 

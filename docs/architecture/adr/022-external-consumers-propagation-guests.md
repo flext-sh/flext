@@ -30,14 +30,14 @@
 ## Context
 
 Five repositories outside the workspace consume FLEXT as sibling checkouts, not
-submodules: `algar-oud-mig` (integration `0.12.0-dev`), `cosmos-main` (`develop`),
-`cosmos-docgen` (`dev`), `invest` (`dev`), and `dataop` (older Makefile generation,
+submodules: `consumer-a` (integration `0.12.0-dev`), `consumer-b` (`develop`),
+`consumer-c` (`dev`), `consumer-d` (`dev`), and `consumer-e` (older Makefile generation,
 without the `fix-namespace`/`fix-accessors` verbs). When the fleet advances — locks
 move (`make upg`), projections regenerate (`make gen`), repair engines gain reach
 (`fix-namespace`, `fix-accessors`) — consumers drift unless the same wave reaches them.
 None of them, however, is fleet property: each keeps its own governance, its own
 integration branch, and its own review flow, and two adjacent areas
-(`datacosmos.bkp`-class credential/backup areas) hold no code repositories at all.
+(credential/backup areas) hold no code repositories at all.
 FLEXT needed a declared, bounded way to carry a fleet wave into a consumer without
 imposing fleet governance or touching what must never be automated.
 
@@ -59,13 +59,13 @@ imposing fleet governance or touching what must never be automated.
 3. **Consumer governance untouched.** FLEXT law (this AGENTS.md, the ADR set, the
    submodule topology, fleet gates) is not imposed on a guest: the consumer's own
    AGENTS.md, config, and CI govern its lane. Toggles stay explicit in the manifest —
-   `invest` declares `fix_namespace: false` and `fix_accessors: false` — and are never
+   `consumer-d` declares `fix_namespace: false` and `fix_accessors: false` — and are never
    inferred from file inspection at run time.
-4. **Credential areas never enter automation.** `datacosmos.bkp`-class
-   credential/backup areas — no code repositories — have no manifest entry, no scan,
+4. **Credential areas never enter automation.** Credential/backup
+   areas — no code repositories — have no manifest entry, no scan,
    no propagation, no verb run, ever. Absence from the manifest is the guard, and the
    manifest comment records the exclusion so the boundary outlives the authors.
-5. **Deferred consumers defer by declaration.** `dataop` rides a later wave because
+5. **Deferred consumers defer by declaration.** `consumer-e` rides a later wave because
    its Makefile is an older generation without the repair verbs; it joins when its
    Makefile regenerates through the same flow, and the deferral is recorded in the
    manifest comment, not in run-time special cases.
@@ -97,12 +97,12 @@ imposing fleet governance or touching what must never be automated.
 ## Verification contract
 
 - A propagation dry run lists, per consumer, exactly the verb sequence its manifest
-  entry implies (toggles honored; `invest` omits both repair verbs) and the declared
+  entry implies (toggles honored; `consumer-d` omits both repair verbs) and the declared
   integration branch.
 - Each published consumer PR contains only changes its own verbs produced, and the PR
   body records the verb list (`upg, gen, fix-namespace, fix-accessors, fix, fmt` —
   minus disabled verbs).
-- No path under a `datacosmos.bkp`-class credential area appears in any manifest
+- No path under a credential/backup area appears in any manifest
   entry, log, or lane diff.
 - Manifest round-trip: `make gen` accepts the declared section unchanged and rejects a
   spec missing `name`, `root`, or carrying a relative root.

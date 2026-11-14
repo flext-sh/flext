@@ -10,14 +10,15 @@ work_item: flext-ro6mj
 
 <!-- TOC START -->
 
-- [Audit and handoff amendment](#audit-and-handoff-amendment)
-- [Approved outcome](#approved-outcome)
-- [Sequential delivery](#sequential-delivery)
-- [Fixed Make contract](#fixed-make-contract)
-- [Governance ownership and distribution](#governance-ownership-and-distribution)
-- [Collection contract](#collection-contract)
-- [Reconciliation and ADR consolidation](#reconciliation-and-adr-consolidation)
-- [Execution boundary and acceptance](#execution-boundary-and-acceptance)
+- [Plan reconciliation and fixed Make contracts](#plan-reconciliation-and-fixed-make-contracts)
+  - [Audit and handoff amendment](#audit-and-handoff-amendment)
+  - [Approved outcome](#approved-outcome)
+  - [Sequential delivery](#sequential-delivery)
+  - [Fixed Make contract](#fixed-make-contract)
+  - [Governance ownership and distribution](#governance-ownership-and-distribution)
+  - [Collection contract](#collection-contract)
+  - [Reconciliation and ADR consolidation](#reconciliation-and-adr-consolidation)
+  - [Execution boundary and acceptance](#execution-boundary-and-acceptance)
 
 <!-- TOC END -->
 

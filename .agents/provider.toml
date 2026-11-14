@@ -7,4 +7,7 @@ enabled_plugins_key = "enabledPlugins"
 
 [surfaces]
 always = [".agents/skills/flext-context-routing/SKILL.md"]
-on_demand = [".agents/skills/flext-law/SKILL.md"]
+on_demand = [
+  ".agents/skills/flext-law/SKILL.md",
+  ".agents/skills/flext-test-assertions/SKILL.md",
+]

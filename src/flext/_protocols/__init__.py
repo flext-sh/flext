@@ -34,4 +34,12 @@ install_lazy_exports(
         "FlextRootProtocolsConfig": ".config",
     },
     public_exports=__all__,
+    deferred_members={
+        "FlextModelsRootProtocolsGeneratedValue": ("Value",),
+        "FlextRootProtocolsBase": (),
+        "FlextRootProtocolsConfig": (
+            "PipelinePayload",
+            "PipelineStageData",
+        ),
+    },
 )

@@ -76,7 +76,7 @@ formatter-owned input. Authored tests, scripts, examples and documentation remai
 subject to strict gates; scope corrections never suppress legitimate findings.
 
 Markdown lint, repair, format and embedded-code discovery consume the same effective
-scope. MkDocs publication and physical-copy exclusions derive from declared purpose
+scope. Site publication and physical-copy exclusions derive from declared purpose
 views, rebased to its documentation root. Validators do not read generated ignore
 files back as policy, approximate native ignore matching, or override native excludes
 with a separately maintained command-line list.

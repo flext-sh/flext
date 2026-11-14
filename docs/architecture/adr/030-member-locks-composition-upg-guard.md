@@ -239,7 +239,7 @@ The only flext-infra step left, `deps repair-mise-platforms` (locked tools missi
 a declared platform, which Mise does not report), runs last from an isolated
 executor environment synced from the frozen lock.
 
-The 60-second gap is closed by measurement (scratch dc-recon, mise 2026.10.3,
+The 60-second gap is closed by measurement (scratch consumer project, mise 2026.10.3,
 uv 0.13.4, 2026-10-31):
 
 - no-change `make upg`: 18–26 s in total, of which the whole-lock `[]` gate takes
