@@ -40,11 +40,11 @@ como singleton em todos os módulos (incluindo as fachadas `c,t,p,m,u`). A sess�
 
 ## 2. Escopo
 
-| Camada   | Repositórios                                                                                                                                | O que muda                                                                                                                                            |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Dono     | `flext-core`                                                                                                                                | Ciclo de vida do singleton autoritativo (decision 1-3 do ADR-016), cache de resolução de namespaces, `_merge_overrides` sem dump+revalidate por clone |
-| Frota    | 31 membros `flext-*`                                                                                                                        | Bootstrap `settings`/`config` via `fetch_global()`, testes de contrato before/after, remoção de hacks de isolamento                                   |
-| Externos | `~/ai-hub`, `~/cosmos-main` (apps `cosmos-charts`, `cosmos-gitops`), `~/algar-oud-mig`, `~/algar-oud_mig`, `~/gruponos-*` (quando clonados) | Consumo tipado pela fachada (ADR-015 R1); extinção de resolução local de env/config; prova de import/identidade em runtime nos branches de integração |
+| Camada   | Repositórios                                                                                              | O que muda                                                                                                                                            |
+| -------- | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dono     | `flext-core`                                                                                              | Ciclo de vida do singleton autoritativo (decision 1-3 do ADR-016), cache de resolução de namespaces, `_merge_overrides` sem dump+revalidate por clone |
+| Frota    | 31 membros `flext-*`                                                                                      | Bootstrap `settings`/`config` via `fetch_global()`, testes de contrato before/after, remoção de hacks de isolamento                                   |
+| Externos | `~/ai-hub`, `~/cosmos-main` (apps `cosmos-charts`, `cosmos-gitops`), `~/algar-oud-mig`, `~/algar-oud_mig` | Consumo tipado pela fachada (ADR-015 R1); extinção de resolução local de env/config; prova de import/identidade em runtime nos branches de integração |
 
 ## 3. Ondas da sessão dedicada
 
