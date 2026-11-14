@@ -17,23 +17,26 @@
 
 - **Status:** CURRENT IMPLEMENTATION
 - **Date:** 2026-07-18
-- **Scope:** FLEXT contracts consumed by independent Cosmos applications
+- **Scope:** FLEXT contracts consumed by independent external applications
 - **Tracking:** `mro-ib6t`
 
 ## Context
 
-`cosmos-docgen`/`dcdoc`, DataOP, and DcBackup are independent applications that consume
-FLEXT foundations. They share needs for typed results, CLI and file operations, hashing,
+External applications (for example a document generator, a data pipeline, and a backup
+service) are independent applications that consume FLEXT foundations. They share needs
+for typed results, CLI and file operations, hashing,
 Office byte mechanics, repository documentation tooling, and possibly neutral artifact
 metadata. They do not share domain models, configuration, adapters, or lifecycle rules.
 
-Creating `flext-docs` by moving `dcdoc` modules would mix domain generation, site
-generation, Office mechanics, and Google Workspace plans. Copying DataOP adapters or
-DcBackup models into FLEXT would similarly turn application details into unstable
+Creating `flext-docs` by moving a document generator's modules would mix domain
+generation, site generation, Office mechanics, and Google Workspace plans. Copying a
+data pipeline's adapters or a backup service's models into FLEXT would similarly turn
+application details into unstable
 platform dependencies.
 
 Name disambiguation: the rejected `flext-docs` in this ADR is a hypothetical
-document-generation library extracted from `dcdoc`. It is unrelated to the existing
+document-generation library extracted from an external document generator. It is
+unrelated to the existing
 FLEXT `flext-docs-pointer-policy` skill and the `flext-docs validate_links` tooling
 entrypoint, which stay valid.
 
@@ -52,7 +55,7 @@ entrypoint, which stay valid.
 ### Dependency direction
 
 Every application may depend downward on public FLEXT packages. No `flext-*` package may
-import or declare a dependency on `dcdoc`/`cosmos-docgen`, DataOP, or DcBackup. `dcdoc`
+import or declare a dependency on an external application. An external application
 also does not import `flext-infra`; its repository invokes that tool as a separate
 process.
 
@@ -68,8 +71,8 @@ consumers.
 
 An existing FLEXT owner may later expose a neutral artifact envelope containing schema
 version, producer, artifact identifier, media type, byte size, SHA-256, creation time,
-source digest, and URI/path. It must not contain `dcdoc`, DataOP, DcBackup, Datacosmos,
-proposal, dataset-source, backup-service, or deployment semantics.
+source digest, and URI/path. It must not contain consumer application names,
+organization names, proposal, dataset-source, backup-service, or deployment semantics.
 
 No such shared model is required merely by this ADR. Extraction occurs only when at
 least two real consumers need the identical contract and the migration deletes more
@@ -82,7 +85,7 @@ code/dependencies than it adds.
 - ADR-018 Office work stays in `flext-cli`, with no domain literals or raw library
   objects crossing the boundary.
 - `flext-docs` is not created.
-- Cosmos applications integrate with each other through files, manifests, APIs, events,
+- External applications integrate with each other through files, manifests, APIs, events,
   or orchestration, not through FLEXT reverse dependencies.
 
 ## Verification contract
@@ -96,9 +99,6 @@ code/dependencies than it adds.
 
 ## References
 
-- Cosmos ADR-020 (`dcdoc-bhg1`)
-- DataOP ADR-001 (`data-organization-pipeline-4dt`)
-- DcBackup ADR-001 (`datacosmos-backup-o6w`)
 - [ADR-003 — Manifest-owned topology](003-workspace-tooling-hub-distribution.md)
 - [ADR-004 — Generated Make and codegen SSOT](004-generated-make-codegen-ssot-flext-infra.md)
 - [ADR-005 — Config and settings SSOT](005-config-settings-constants-templates-schemas-ssot.md)

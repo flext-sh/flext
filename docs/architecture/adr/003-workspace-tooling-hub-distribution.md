@@ -24,7 +24,8 @@
   `mise.lock` are kept and formed by each member, and the workspace lock is their
   composition (tracker memory `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`)
 - **Date:** 2026-06-24
-- **Scope:** FLEXT, Cosmos, and standalone repository topology, dependency provenance,
+- **Scope:** FLEXT, downstream-organization, and standalone repository topology,
+  dependency provenance,
   and development environments.
 - **Tracking:** `mro-qb4y`, `mro-wkii.17`
 
@@ -53,7 +54,7 @@ members, exclusions, repository URL, branch, relative checkout path, role, profi
 lifecycle state. A typed repository catalog covers:
 
 - FLEXT repositories at `https://github.com/flext-sh/<repo>.git` on `0.12.0-dev`;
-- Cosmos repositories at `https://github.com/datacosmos-br/<repo>.git` on `main`;
+- downstream-organization repositories at `https://github.com/example/<repo>.git` on `main`;
 - explicitly declared standalone repositories, with no sibling discovery.
 
 Submodule metadata, generated dependency groups, Makefiles, and inventories are derived

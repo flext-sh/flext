@@ -534,7 +534,8 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
 - Blocker fleet-wide: `flext-cli@0.12.0-dev` quebrado na origem (facade pydantic
   intercepta u.Cli; todo CI fresco vermelho no gen — diagnóstico + fix de 1 classe no
   mail gc-wisp-qdc29a). ai-hub #831 parado nisso.
-- Beads: 10 assumidos (6 cosmos + 4 flext) com evidência; Dolt do ai-hub PROJECT
+- Beads: 10 assumidos (6 de consumidor externo + 4 flext) com evidência; Dolt do ai-hub
+  PROJECT
   IDENTITY MISMATCH (cidade).
 - Census 1428 (rota: regras ast-grep pós-integração — decisão do operador flext/claude).
 

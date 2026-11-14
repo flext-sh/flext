@@ -205,8 +205,8 @@ The generated base fixes one structure for `src`, `tests`, `examples`, `scripts`
   preserving lazy public exports and ADR-005's model/import contract; never hand-written
   re-export sprawl.
 - Naming is one scheme, rendered/validated by codegen: class prefix per project
-  namespace (e.g. `Flext<Project>`, `DataOP<Concern>`, `DcBackup<Concern>`,
-  `Dcdoc<Verb>Service`), sub-prefixes per concern, canonical subdirectory names, and
+  namespace (e.g. `Flext<Project>`, `DataApp<Concern>`, `BackupApp<Concern>`,
+  `DocApp<Verb>Service`), sub-prefixes per concern, canonical subdirectory names, and
   module names matching the facet they own.
 
 Naming and structure are first reported as drift, then rewritten, then enforced (phases

@@ -9,7 +9,7 @@ This portal page links to architecture sources maintained by projects.
 - `flext-core/docs/architecture/overview.md`
 - `docs/architecture/adr/README.md`
 - `docs/architecture/ecosystem-coordination.md` — coordination of FLEXT with the
-  external Cosmos applications (`dcdoc`, DataOP, DcBackup) and platforms, on the
+  external consumer applications and platforms, on the
   future `0.13.x` line
   ([ADR-009](adr/009-ecosystem-coordination-and-library-evaluation.md)).
 

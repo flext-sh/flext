@@ -42,8 +42,9 @@ This pilot proves the complete template on ONE uncontested, fully-green, leaf pr
 ## Usage universe (SSOT — memory:flext-external-consumer-universe)
 
 Dead-code is judged against: **flext monorepo `src/` + these external consumers**:
-`../algar-oud-mig` (88), `../cosmos-main` (60), `../cosmos-docgen` (58), `../.ai-hub`
-(25). `legado/` is **excluded from every search** (archival false-consumers). `meltano/`
+the declared external consumers (three consumer repositories with 88, 60 and 58
+importing files) and `../.ai-hub` (25). `legado/` is **excluded from every search**
+(archival false-consumers). `meltano/`
 dir = 0 code imports. `flext-(tap|target|dbt)-*` are
 **end-users validated via their public CLI**, not by external refs.
 

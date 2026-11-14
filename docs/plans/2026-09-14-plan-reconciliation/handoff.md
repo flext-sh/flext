@@ -84,10 +84,10 @@ navigation entrypoints. No substitute tracker is created here.
   [PR 475](https://github.com/flext-sh/flext-core/pull/475), and Tests
   [PR 111](https://github.com/flext-sh/flext-tests/pull/111) are WIP publication
   references, not runtime acceptance receipts.
-- Agents [PR 148](https://github.com/datacosmos-br/agents/pull/148) was observed merged
+- Agents PR 148 was observed merged
   by another execution. Its integration does not validate subsequent dirty changes. AI
   Hub has a newer published WIP cut `77823582f` in
-  [PR 776](https://github.com/datacosmos-br/ai-hub/pull/776).
+  PR 776.
 
 #### Latest bounded evidence and first failures
 
@@ -180,7 +180,8 @@ historical plan migration; `flext-im2my` concerns open-Bead normalization; `flex
 and `flext-xeg9x` were closed as obsolete by the fixed-Make change. In particular, do
 not revive `flext-xeg9x`'s old request to propagate an APPLY=N mode: that contradicts
 the operator's later fixed-effect direction. Its closed state does not prove today's
-complete docs workflow. `cosmos-e286z` tracks the paused external consumer cut and
+complete docs workflow. An external consumer tracker holds the paused external consumer
+cut and
 remains in progress.
 
 ### Requirement-to-evidence assessment
@@ -346,7 +347,7 @@ Canonical owners and exact investigation entrypoints:
   ADR-0008 amendment. New resource tests lack a completed native run.
 - Paused migration: flext-tests native Payload model/protocols/consumers and
   `docs/guides/native-payload.md`; core TOML aliases; CLI atomic file helper; earlier
-  Cosmos consumer annotation work. Preserve separately and revalidate; no fleet
+  External consumer annotation work. Preserve separately and revalidate; no fleet
   serialization completion claim.
 
 ### Native evidence ledger for this handoff only
@@ -428,29 +429,29 @@ provider data was collected or published by this handoff.
 
 Publication amendment (2026-09-14):
 
-| Repository    | Preserved checkpoint                                                                        | PR / integration target                                                   |
-| ------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| FLEXT root    | Handoff `a6f9be8985`; subsequent WIP records the exact member snapshot                      | [242](https://github.com/flext-sh/flext/pull/242), `0.12.0-dev`           |
-| flext-infra   | `df262eb228a9fefb76b0332515d9559523ddd241`                                                  | [733](https://github.com/flext-sh/flext-infra/pull/733), `0.12.0-dev`     |
-| flext-cli     | `9336a7cd20be2672fda7bc31fab88dacb9b9af89`                                                  | [169](https://github.com/flext-sh/flext-cli/pull/169), `0.12.0-dev`       |
-| flext-core    | `9c08b68b1b36d2f952bbbc14c4b401e7b94635c0`                                                  | [475](https://github.com/flext-sh/flext-core/pull/475), `0.12.0-dev`      |
-| flext-tests   | `a0a0ddb532f3fcca085fc6c1aa274f00bd9bf683`                                                  | [111](https://github.com/flext-sh/flext-tests/pull/111), `0.12.0-dev`     |
-| agents        | `db4cdaa55c5a91d03f399ddd8da8fdc40db9a767`, then `14210a111013568502dbe307ff1eb413fed7d3e7` | [148](https://github.com/datacosmos-br/agents/pull/148), `dev`            |
-| AI Hub        | `4d34b263e783e957c73d96bdc5936de486992a1f`, includes resource cut `8068298d1`               | [774](https://github.com/datacosmos-br/ai-hub/pull/774), `dev`            |
-| Cosmos GitOps | `5494ef755ad86f76c0091fc4c0f262507905a5f2`, includes annotations `64ff6a545`                | [175](https://github.com/datacosmos-br/cosmos-gitops/pull/175), `develop` |
+| Repository  | Preserved checkpoint                                                                        | PR / integration target                                               |
+| ----------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| FLEXT root  | Handoff `a6f9be8985`; subsequent WIP records the exact member snapshot                      | [242](https://github.com/flext-sh/flext/pull/242), `0.12.0-dev`       |
+| flext-infra | `df262eb228a9fefb76b0332515d9559523ddd241`                                                  | [733](https://github.com/flext-sh/flext-infra/pull/733), `0.12.0-dev` |
+| flext-cli   | `9336a7cd20be2672fda7bc31fab88dacb9b9af89`                                                  | [169](https://github.com/flext-sh/flext-cli/pull/169), `0.12.0-dev`   |
+| flext-core  | `9c08b68b1b36d2f952bbbc14c4b401e7b94635c0`                                                  | [475](https://github.com/flext-sh/flext-core/pull/475), `0.12.0-dev`  |
+| flext-tests | `a0a0ddb532f3fcca085fc6c1aa274f00bd9bf683`                                                  | [111](https://github.com/flext-sh/flext-tests/pull/111), `0.12.0-dev` |
+| agents      | `db4cdaa55c5a91d03f399ddd8da8fdc40db9a767`, then `14210a111013568502dbe307ff1eb413fed7d3e7` | 148, `dev`                                                            |
+| AI Hub      | `4d34b263e783e957c73d96bdc5936de486992a1f`, includes resource cut `8068298d1`               | 774, `dev`                                                            |
 
 The root gitlink checkpoint is an explicit as-is preservation of the separate worktree,
 not a claim that its member tips contain the newest integration tips. Before eventual
 merge, reabsorb each fresh integration base with no-ff, validate and roll up the
 resulting published gitlinks. Never promote this snapshot by blindly replacing newer
-integration pointers. The original checkout and broad unrelated Cosmos superproject WIP
+integration pointers. The original checkout and broad unrelated consumer superproject WIP
 were not staged or modified by this handoff.
 
 All listed PRs were observed Draft/WIP; none was merged by this handoff. Agents
 checkpoint `14210a111` separately preserves previously shared `wip-beads.sh` changes
 without attributing their authorship or correctness to this task. AI Hub PR773's merge
 did not contain the later resource cut: fresh ancestry returned1; therefore PR774 was
-necessary. Infra PR728 likewise does not replace PR733. Cosmos GitOps was already
+necessary. Infra PR728 likewise does not replace PR733. The consumer GitOps repository
+was already
 published and clean; no new write was necessary. Its checks included skipped native
 CI/merge-guard, not full acceptance.
 
