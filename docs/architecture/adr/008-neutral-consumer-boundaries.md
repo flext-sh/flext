@@ -47,8 +47,8 @@ entrypoint, which stay valid.
 - `flext-core` owns generic typed foundations only.
 - `flext-cli` owns generic CLI/process/file/hash operations and typed DOCX/PPTX/XLSX
   plan-to-byte boundaries.
-- `flext-infra` owns repository tooling, including generated Markdown, MkDocs
-  configuration, strict build, validation, audit, and static publication.
+- `flext-infra` owns repository tooling, including generated Markdown, `mkdocs.yml`
+  configuration, strict ProperDocs build, validation, audit, and static publication.
 - Applications own their domain intent, configuration, adapters, manifests,
   orchestration, authorization, and deployment policy.
 
@@ -80,8 +80,8 @@ code/dependencies than it adds.
 
 ## Consequences
 
-- MkDocs through `flext-infra` remains the single FLEXT documentation engine; Sphinx or
-  another engine requires a measured migration decision rather than parallel adoption.
+- ProperDocs, the maintained MkDocs 1.x continuation, through `flext-infra` is the single
+  FLEXT documentation engine; another engine requires a measured migration decision.
 - ADR-018 Office work stays in `flext-cli`, with no domain literals or raw library
   objects crossing the boundary.
 - `flext-docs` is not created.
