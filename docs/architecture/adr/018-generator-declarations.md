@@ -316,7 +316,11 @@ open. Where it differs from a bullet above, this subsection prevails.
    `FlextLazyMember` descriptor per listed member, and has no metaclass and no
    fallback. It composes with a Pydantic model, a class that subclasses a
    protocol, an `ABC`, a generic, an enum, a dataclass or a class with its own
-   metaclass, and loads no part module while doing so.
+   metaclass, and loads no part module while doing so. A metaclass that reads a
+   listed member while it creates a deriving class loads that part: `ABCMeta`
+   resolving an abstract method a part implements, or Pydantic reading
+   `model_config` or a field that shadows a part member. The load is correct,
+   not free, and the acceptance tests name each of these cases.
 2. **An unlisted member is an `AttributeError`.** There is one resolution path.
    A stale initializer is a stale projection: `make gen` repairs it, and the
    completeness of every index is a generation fixed point and a check gate for
@@ -332,18 +336,27 @@ open. Where it differs from a bullet above, this subsection prevails.
    output is identical in a workspace run, a standalone member and an external
    consumer. A builtin or third-party base still fails generation.
 5. **A part a stand-in cannot represent is rejected at generation** and
-   corrected at its source: an annotated attribute a model would collect as a
-   field, `__init_subclass__`, `__class_getitem__`, `__slots__`, a namespace that
-   is itself a `Protocol`, or a metaclass other than `type`. A stand-in carries
-   no dunder of its class, so each of these would be lost in silence. A class
-   that binds no member is not deferred, and an empty stand-in is invalid.
-6. **A generator process runs eager.** The generation entry sets one process
-   flag before any facade is composed, and `FlextLazy` then publishes the real
-   classes. The lazy-init stage imports the facades of the package it
-   regenerates, so it must not depend on that package's own initializer being
-   current. No environment variable selects it. Measured cost: the facade
-   import of a generator process goes from 1.9 s to 5.8 s; every other process
-   keeps the deferred import.
+   corrected at its source. A stand-in carries no dunder of its class and is not
+   the real class in the facade's MRO, so each of these would be lost or break
+   in silence: any dunder the part defines (`__init__`, `__call__`,
+   `__enter__`/`__exit__`, `__repr__`, `__getattr__`, `__init_subclass__`,
+   `__class_getitem__`, `__slots__`); an annotated attribute a model would
+   collect as a field, and a Pydantic decorator (`field_validator`,
+   `model_validator`, `computed_field`); a zero-argument `super()` or an
+   `isinstance` against the part's own class inside a part method; a namespace
+   that is itself a `Protocol`; a metaclass other than `type`. A class that binds
+   no member is not deferred, and an empty stand-in is invalid.
+6. **A generator process runs eager.** The generator imports its own FLEXT
+   packages (`flext_infra/codegen/lazy_init.py` imports the flext-infra
+   facades, which compose flext-cli and flext-core), so when it regenerates one
+   of them a stale member index must not block the repair; every other package
+   it regenerates it never imports. The generation entry sets one process flag
+   before the first facade is read, and `FlextLazy` then publishes the real
+   classes; setting the flag after a stand-in was published fails, so a process
+   never mixes stand-ins and real classes. No environment variable selects it.
+   Measured cost: the facade import of a generator process goes from 1.9 s to
+   5.8 s; every other process keeps the deferred import. A part missing from an
+   export map is not a stale member index and still fails, as before.
 7. **A published letter names its class, and a module-less ancestor is a
    package.** A base read through a letter (`p = FlextLdifProtocols`) resolves
    to the class the letter is bound to. A directory that holds only
@@ -352,24 +365,33 @@ open. Where it differs from a bullet above, this subsection prevails.
    namespace, which stays implicit as packaging requires.
 
 - **Rejected.** Keeping the metaclass and forbidding every non-`type` metaclass
-  from inheriting a namespace is a law no checker can see. A non-class stand-in
-  resolved through `__mro_entries__` loads every part when the facade is
-  composed, which is the cost this section exists to remove. A source
-  fingerprint per initializer reads every source at import and means nothing
-  for an installed wheel.
+  from inheriting a namespace is a permanent restriction on every class that
+  derives from a namespace, held only by a census, where rule 1 removes the
+  conflict by construction. A non-class stand-in resolved through
+  `__mro_entries__` either returns the real class, which loads every part when
+  the facade is composed, or returns a plain stand-in, which is rule 1 behind an
+  indirection that `type()` rejects as a base. A source fingerprint per
+  initializer reads every source at import and means nothing for an installed
+  wheel.
 - **Acceptance.** flext-core carries the composition matrix of rule 1 as tests,
-  with zero part loads, and a test that an unlisted member raises and loads
-  nothing. flext-infra carries the ancestor-base fixture of rule 4 with
-  identical output in the three run scopes, the rejections of rule 5, the
-  completeness test for every regenerated package, and byte-identical
+  with zero part loads and the three named loading cases, a test that an
+  unlisted member raises and loads nothing, and a test that the flag of rule 6
+  fails once a stand-in is published. flext-infra carries the ancestor-base
+  fixture of rule 4 with identical output in the three run scopes, the
+  rejections of rule 5, a completeness test for every regenerated package that
+  compares each stand-in with the runtime namespace of its real class (names
+  bound by unpacking, decorators or `setattr` included), and byte-identical
   initializers with the flag of rule 6 on and off. The consumer proof is
   `make gen` followed by the fresh import of each regenerated member and of one
   external consumer.
 - **Status (2026-11-14): decided, implementation pending.** The runtime still
   carries the metaclass until flext-core lands rules 1 to 3 and 6; the generator
   lands rules 4 and 7 first, then 5. Until both are merged, a consumer that must
-  stay green keeps the flext-infra revision it last generated with. Beads:
-  `flext-hj6q0` and its children.
+  stay green keeps the flext-infra revision it last generated with. An
+  independent probe review (2026-11-14) confirmed the decision and found 16
+  part methods with a zero-argument `super()`; none is deferred today, because
+  their classes have third-party bases, and rule 5 rejects them once they would
+  be. Beads: `flext-hj6q0` and its children.
 
 ##### Structure of every facade letter (amended 2026-11-12)
 
