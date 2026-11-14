@@ -425,15 +425,14 @@ Anexos históricos mantidos no pacote, sem reescrevê-los como tracker:
 
 - `plan-source.md` — snapshot do plano anotado.
 - `previous-handoff-source.md` — snapshot do handoff anterior.
-- `ai-hub-package-source.md` — snapshot de coordenação externa.
 - `state-before-checkpoint.json` — estado datado dos 32 e principal.
 - `prs-at-audit.json` — PRs e heads observados na auditoria.
 - `beads-at-audit.json` — beads consultadas naquela captura.
 - `member-publication.json` — comandos e resultados dos pushes daquele lote.
 
 Todos ficam em `docs/plans/2026-09-14-stabilization-handoff/`. A revisão deste documento
-confirmou a existência dos sete anexos; não refez consultas remotas ou provas de
-runtime.
+confirma a localização dos seis anexos FLEXT. O pacote de execução do consumidor
+fica no repositório AI Hub, em `docs/handoffs/2026-09-14-flext-to-ai-hub.md`.
 
 ### 5. Crítica da execução e correções de método
 
