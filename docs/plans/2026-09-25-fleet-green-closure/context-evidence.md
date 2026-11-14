@@ -11,10 +11,11 @@ SHAs, counts, and exit evidence are preserved.
 
 <!-- TOC START -->
 
-- [flext-infra current slice](#flext-infra-current-slice)
-- [Latest valid local gates](#latest-valid-local-gates)
-- [Downstream lanes preserved](#downstream-lanes-preserved)
-- [Handoff package lane](#handoff-package-lane)
+- [Measured context and evidence](#measured-context-and-evidence)
+  - [flext-infra current slice](#flext-infra-current-slice)
+  - [Latest valid local gates](#latest-valid-local-gates)
+  - [Downstream lanes preserved](#downstream-lanes-preserved)
+  - [Handoff package lane](#handoff-package-lane)
 
 <!-- TOC END -->
 
