@@ -1130,7 +1130,8 @@ CLI + pytest plugin, **never imported at runtime**.
   to the existing infra Git service candidate (`flext-itpd1.3.26`); this is a contract,
   not evidence that enforcement is active or code is green.
 - **Config-owned module size cap** (`flext-infra/config/codegen.yaml` → `loc_cap.max_lines`,
-  enforced by the `loc-cap` check gate); net-negative LOC on refactors.
+  enforced by the `loc-cap` check gate) for authored modules; a generated projection
+  never counts (operator ruling 2026-11-14); net-negative LOC on refactors.
 - Toolchain: `uv` + `.venv` only, always via `make`.
 
 <!-- AIHUB-WORKSPACE-PROVIDERS-BEGIN -->

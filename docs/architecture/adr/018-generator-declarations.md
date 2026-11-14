@@ -236,8 +236,13 @@ declaration.
   one another (ai-hub `_protocols/__init__.py` grew from 166 to 1,075 lines and
   `make check` reported 12 duplicated blocks between initializers); sharing
   removes about half of each index (ai-hub `_protocols` 828 to about 384 members).
-  An initializer whose own index still exceeds the cap after sharing is split
-  under a separate decision; the gate stays as it is.
+  The module size cap governs authored modules only: the operator ruled on
+  2026-11-14, "generated code does not count loc-cap", so a generated
+  initializer, which opens with the declared generator header, never counts,
+  whatever the size of its own index (flext-infra `loc-cap` gate,
+  `u.Infra.generated_source`). After sharing, flext-infra's `_utilities`
+  initializer still has 1,704 lines (6,369 before), and no package is split to
+  meet a cap that does not apply to it.
 - The generated initializer publishes those exports as deferred. `FlextLazy`
   hands consumers a stand-in class of `FlextLazyMember` descriptors. The first
   member access loads the declaring module through the lazy loader and caches the
