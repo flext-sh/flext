@@ -232,12 +232,12 @@ namespace packages. A directory basename is not an import identity. An unresolve
 native class remains an error; adding an initializer or accepting an unknown Rope
 object is not a substitute for resolving its actual declaring module.
 
-2026-10-23 reconciliation (`algar-723.1.3`): source inspection found basename-derived
+2026-10-23 reconciliation: source inspection found basename-derived
 imports in facade generation for nested namespaces. The source repair reuses the
 existing discovery owner; successful consumer generation and regression evidence are
 still required before claiming implementation acceptance.
 
-2026-10-24 open contract (`algar-723.1.3.3`): initial Python capture uses the Git
+2026-10-24 open contract: initial Python capture uses the Git
 source-scope owner, while workspace indexing uses declared project discovery.
 Their suffix, ignore, hidden-directory and nonparticipant rules are not proven
 equivalent. Filtering one inventory by the other does not authenticate absence

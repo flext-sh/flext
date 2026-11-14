@@ -54,8 +54,8 @@ Wiki generation never creates or closes Beads by itself.
 - **Target line:** FLEXT `0.12.0-dev`, forward baseline `0.13.0`
 - **Scope:** every FLEXT generator, detector and fix (`make gen`, `make mod`,
   `make fix`, the namespace validator and its gates) and every consumer of them: the
-  `flext` workspace and its 31 members, ai-hub, cosmos-main and its apps, cosmos-docgen,
-  invest and their FLEXT subprojects.
+  `flext` workspace and its 31 members, and every external consumer workspace and its
+  FLEXT subprojects.
 - **Complements:** ADR-010 (standardization via codegen), ADR-014 (family shape +
   codemod rules), ADR-017 (parametrized rule surfaces). Supersedes every filename→letter
   table, closed folder list and advisory-gate list those ADRs tolerated.
@@ -649,8 +649,7 @@ generation waits. The lockless plan-and-reconcile path and its
 
 **Recovery supersession 2026-10-29 — operator order (`ag-ssut`, related
 `aihub-6sls5.2`).** The 2026-10-28 permission for transaction-owned rollback is
-historical and no longer operative. The canonical
-[atomic-effects rule](https://github.com/datacosmos-br/agents/blob/dev/rules/runtime/atomic-effects.md)
+historical and no longer operative. The canonical atomic-effects governance rule
 owns preservation of published effects and correction forward. The small-transaction,
 reader-barrier, authentication, scope and deadline contracts remain in force.
 
@@ -738,7 +737,7 @@ transaction's partial effects, without restoring its preimages.
   the folder on disk). Their permissions (exclusions, bypasses, advisory lists) leave in
   the same commits.
 - Every consumer regenerates; the diff is the inventory of hacks it carried. Two
-  flext-infra forks (`flext-sh@0.12.0-dev`, `datacosmos-br@baseline-20260919`) converge
+  flext-infra forks (`flext-sh@0.12.0-dev` and a downstream `baseline-20260919`) converge
   to one line.
 - The namespace validator reports one-nested-class, no-alias and nothing-loose
   violations as `error`; the fix derives letter ⇄ base and writes the declaration.

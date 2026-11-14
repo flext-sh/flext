@@ -29,9 +29,10 @@ external projects
   retrofit or acceptance prerequisite for the `0.12.0-dev` release line.
 - **Line rule:** the active line is `0.12.x`; every planning item after 0.12 belongs to
   the future `0.13.x` line (`0.13.0-dev`). There is no other forward line.
-- **Scope:** Coordination contract for the whole Cosmos ecosystem: FLEXT packages
+- **Scope:** Coordination contract for the whole consumer ecosystem: FLEXT packages
   (`flext-core`, `flext-cli`, `flext-infra`, and the rest) plus the independent external
-  applications `cosmos-docgen`/`dcdoc`, DataOP, and DcBackup, and the external platforms
+  applications — a document application (DocApp), a data-pipeline application
+  (DataApp) and a backup application (BackupApp) — and the external platforms
   they integrate with.
 - **Tracking:** The supplied 2026-10-20 tracker evidence identifies `flext-ik359` as the
   open 0.13 gate epic, waiting for `flext-1wjg1` publication and separate authorization.
@@ -50,9 +51,9 @@ internals and does not make any external repository a FLEXT dependency.
 The workspace root FLEXT project is the coordination point for a set of independent
 applications that all consume FLEXT foundations:
 
-- `cosmos-docgen`/`dcdoc` — document, proposal, and RCA artifact application.
-- DataOP — dataset organization and evidence in its independently versioned repository.
-- DcBackup (`datacosmos-backup`) — Google Workspace backup application.
+- DocApp — document, proposal, and RCA artifact application.
+- DataApp — dataset organization and evidence in its independently versioned repository.
+- BackupApp — Google Workspace backup application.
 
 Each has its own Beads tracker, its own ADRs, and its own release lifecycle. They must
 work together — documentation platform, data ingestion, backup — and they must reuse
@@ -77,7 +78,7 @@ continues to validate its existing public surface and runtime separately.
 
 | Plane               | Members                                                          | Role                                                                 |
 | ------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------- |
-| Domain applications | `dcdoc`, DataOP, DcBackup                                        | Own domain intent, configuration, adapters, manifests, authorization |
+| Domain applications | DocApp, DataApp, BackupApp                                       | Own domain intent, configuration, adapters, manifests, authorization |
 | Reusable libraries  | `flext-core`, `flext-cli`                                        | Own generic, neutral, typed contracts consumed downward              |
 | Repository tooling  | `flext-infra` + MkDocs                                           | Externally invoked docs/build/codegen tooling                        |
 | External platforms  | Airflow, Dify, Drive/DMS, Backstage, XWiki, PipesHub, ClickHouse | Integrated through commands, files, manifests, APIs, events          |
@@ -88,16 +89,16 @@ This is the required dependency contract, not a fresh claim that every consumer 
 its enforcement gates.
 
 ```text
-dcdoc / DataOP / DcBackup ---> flext-cli ---> flext-core
+DocApp / DataApp / BackupApp ---> flext-cli ---> flext-core
 flext-infra --------------------> flext-cli / flext-core
 ```
 
 Forbidden; acceptance requires evidence from the ADR-008 gates:
 
 ```text
-any flext-* -X-> dcdoc / cosmos-docgen / dataop / dc_backup
-dcdoc       -X-> flext_infra   (runtime/source import)
-dcdoc  -X-> DataOP   -X-> DcBackup   (no lateral application imports)
+any flext-* -X-> doc_app / data_app / backup_app
+DocApp       -X-> flext_infra   (runtime/source import)
+DocApp  -X-> DataApp   -X-> BackupApp   (no lateral application imports)
 ```
 
 Applications never import one another. They cooperate only through versioned files,
@@ -107,14 +108,14 @@ manifests, APIs, events, and an external orchestrator.
 
 | Capability                                                                  | Owner                                        | Coordinated action                          |
 | --------------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------- |
-| Document/proposal/RCA artifacts, brand, formulas, publication authorization | `dcdoc`                                      | Produces artifacts + neutral manifest       |
-| Dataset scan, manifest, provenance, catalog/dedup/archive/report            | DataOP                                       | Produces datasets/manifests/evidence        |
-| Backup, snapshot, retention, restore, recovery drills                       | DcBackup                                     | Consumes neutral artifact inputs            |
+| Document/proposal/RCA artifacts, brand, formulas, publication authorization | DocApp                                       | Produces artifacts + neutral manifest       |
+| Dataset scan, manifest, provenance, catalog/dedup/archive/report            | DataApp                                      | Produces datasets/manifests/evidence        |
+| Backup, snapshot, retention, restore, recovery drills                       | BackupApp                                    | Consumes neutral artifact inputs            |
 | Generic DOCX/PPTX/XLSX bytes, CLI, file, hash primitives                    | `flext-cli`                                  | Extended only with neutral primitives       |
 | Typed foundations (`Result`, models, protocols, settings)                   | `flext-core`                                 | Reused unchanged by domain                  |
 | Docs site: generate/build/validate/audit/publish                            | `flext-infra` + MkDocs                       | Invoked externally per repository           |
 | Orchestration/scheduling                                                    | Airflow (external)                           | Composes the commands above                 |
-| Content/RAG assist                                                          | Dify/Weaviate (external)                     | Feeds structured content into `dcdoc`       |
+| Content/RAG assist                                                          | Dify/Weaviate (external)                     | Feeds structured content into DocApp        |
 | Portal/DMS/catalog                                                          | Backstage, XWiki, PipesHub, Drive (external) | Consume static output/artifacts by contract |
 
 ### 4. Coordination flow across all projects
@@ -125,11 +126,11 @@ chain can be described as working.
 
 ```text
 Airflow / operator / CI
-  1. DataOP        -> datasets + manifest + evidence        (ClickHouse/Iceberg)
-  2. Dify          -> structured content / tokens           (optional, into dcdoc)
-  3. dcdoc build   -> artifacts + neutral artifact manifest
-  4. dcdoc publish -> stage/dry-run/apply (authorized only)
-  5. DcBackup      -> snapshot + checksummed manifest + restore drill
+  1. DataApp        -> datasets + manifest + evidence        (ClickHouse/Iceberg)
+  2. Dify          -> structured content / tokens           (optional, into DocApp)
+  3. DocApp build   -> artifacts + neutral artifact manifest
+  4. DocApp publish -> stage/dry-run/apply (authorized only)
+  5. BackupApp      -> snapshot + checksummed manifest + restore drill
   6. flext-infra   -> docs generate/build/validate/audit
   7. publish       -> static site (later: Backstage TechDocs)
 ```
@@ -151,8 +152,8 @@ into FLEXT libraries.
 | ------------------------ | ----------------------------------------------- | ------------------------------------------------------- |
 | MkDocs via `flext-infra` | Adopt after static-consumer gate (`mro-ib6t.1`) | Existing owner for site/search/nav/build/audit          |
 | Sphinx + MyST            | Do not add in parallel                          | Duplicates the site owner; no measured gap justifies it |
-| Pandoc                   | Keep, use directly                              | Mature conversion already used by `dcdoc`               |
-| Quarto                   | Corpus bake-off only (`dcdoc-bhg1.2`)           | Unproven for rich editable Office fidelity              |
+| Pandoc                   | Keep, use directly                              | Mature conversion already used by DocApp                |
+| Quarto                   | Corpus bake-off only                            | Unproven for rich editable Office fidelity              |
 | Antora                   | Conditional future migration                    | Only if multi-repo/multi-version docs dominate          |
 | Docusaurus               | Reject for current requirements                 | Adds React/MDX/Node without demonstrated need           |
 | Backstage TechDocs       | Future reader/catalog                           | Consumes MkDocs static output                           |
@@ -170,8 +171,8 @@ gated candidates rather than silent backlog:
 | ------------------------------------------------ | ------------------------ | ------------------------------------------------------------------------------------------- | ------------ |
 | `flext-docs` (generation engine)                 | Rejected                 | A second real consumer of the generation engine appears AND extraction is deletion-positive | epic child   |
 | `flext-gworkspace` (Drive DMS)                   | Rejected in current form | A deployed DMS owner + neutral Google contract + ≥2 consumers                               | epic child   |
-| Backup as shared library                         | Not created              | DcBackup primitives proven reusable by a second consumer                                    | epic child   |
-| Static-consumer docs mode in `flext-infra`       | Accepted, to build       | Immediate: required by Cosmos site                                                          | `mro-ib6t.1` |
+| Backup as shared library                         | Not created              | BackupApp primitives proven reusable by a second consumer                                   | epic child   |
+| Static-consumer docs mode in `flext-infra`       | Accepted, to build       | Immediate: required by an external consumer site                                            | `mro-ib6t.1` |
 | Generic Office byte completion in `flext-cli`    | Accepted, to build       | Immediate: required by ADR-018                                                              | `mro-ib6t.2` |
 | Neutral artifact-envelope model in a FLEXT owner | Deferred                 | ≥2 consumers need the identical neutral contract                                            | epic child   |
 
@@ -220,9 +221,6 @@ These are required receipts, not results produced by this documentation reconcil
 
 - [ADR-008 — Neutral consumer boundaries](008-neutral-consumer-boundaries.md)
 - [Ecosystem coordination](../ecosystem-coordination.md)
-- Cosmos ADR-020 (`dcdoc-bhg1`)
-- DataOP ADR-001 (`data-organization-pipeline-4dt`)
-- DcBackup ADR-001 (`datacosmos-backup-o6w`)
 
 ## 0.13 unified planning reconciliation (documentation only)
 

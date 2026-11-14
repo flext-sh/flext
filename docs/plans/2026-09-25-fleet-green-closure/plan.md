@@ -35,10 +35,10 @@ worktree, or unresolved Bead in its declared scope.
   authorized lane.
 - A defect discovered during the work is part of the work. Do not classify failures as
   pre-existing or defer them merely because another lane exposed them.
-- Repository-local catalog behavior follows current `cosmos-gitops` `origin/develop`:
+- Repository-local catalog behavior follows the current consumer GitOps `origin/develop`:
   the typed local `config/workspace.yaml` declaration is authoritative, standalone
   repositories declare an empty member set, and Git remains the physical-topology
-  authority. Tests use arbitrary values and the public detector; they do not copy Cosmos
+  authority. Tests use arbitrary values and the public detector; they do not copy consumer
   literals.
 - Commits and pushes are authorized. Deliver through reviewed PRs onto each configured
   integration branch and keep the branch green before integration.
