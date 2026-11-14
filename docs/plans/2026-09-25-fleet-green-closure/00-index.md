@@ -15,6 +15,8 @@ running any historical command below.
 
 <!-- TOC START -->
 
+- [FLEXT fleet green closure handoff](#flext-fleet-green-closure-handoff)
+
 <!-- TOC END -->
 
 This directory is the file-owned continuation authority for the active fleet closure. It
