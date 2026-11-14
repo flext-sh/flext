@@ -89,7 +89,7 @@ validated `custom.mk` handlers (ADR-004) or declared config, never a fork of the
 ### 2. Common verb surface for every project
 
 For the bounded `flext-0029c` native-bootstrap task, the
-[local-law exception](../../../.agents/skills/flext-law/SKILL.md#sources-generation-and-commands)
+local-law exception (`.agents/skills/flext-law/SKILL.md`)
 requires direct public `flext-infra` CLI diagnosis, runtime, refactoring and gates,
 with Make integration last. Documentation alignment precedes worker coding and
 real runtime proof precedes test changes. This does not relax the common surface
