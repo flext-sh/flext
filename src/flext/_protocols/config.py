@@ -21,8 +21,7 @@ from flext import t
 from flext_oracle_oic import FlextOracleOicProtocols
 
 
-@runtime_checkable
-class FlextRootProtocolsConfig(Protocol):
+class FlextRootProtocolsConfig:
     """Structural protocol for configuration providers and resolvers.
 
     Defines expected attributes and methods for configuration consumers to interact
