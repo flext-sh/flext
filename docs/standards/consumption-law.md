@@ -17,11 +17,11 @@
 
 <!-- TOC END -->
 
-> **Authority**: [ADR-015](../../docs/architecture/adr/015-consumer-consumption-law.md) owns the R1-R6 consumer contract. For an architectural concern,
+> **Authority**: [ADR-015](../architecture/adr/015-consumer-consumption-law.md) owns the R1-R6 consumer contract. For an architectural concern,
 > the accepted topic ADR is the precise technical source; this standard links to it and
 > does not create a competing architecture rule. Typed configuration owns tool settings.
 >
-> **Status**: See the [ADR index](../../docs/architecture/adr/README.md) for decision maturity.
+> **Status**: See the [ADR index](../architecture/adr/README.md) for decision maturity.
 > This page is not a rollout receipt; current enforcement and gate evidence belong to
 > the typed owners and active Beads.
 >
@@ -51,10 +51,10 @@ where `<symbol>` ∈ `pkg.__all__` (the published lazy export contract).
 **Intra-family exemption**: Facade assembly _within the same package_ imports from the
 family package's generated lazy exports (e.g., `flext_cli` importing from
 `flext_cli._models`), never from a module path below it or a module object reached by
-attribute ([ADR-028 Decision 10](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
+attribute ([ADR-028 Decision 10](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
 
 **Fix hints**: Resolve the declaration's native identity and its nearest published lazy
-surface under [ADR-028 Decision 10](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10).
+surface under [ADR-028 Decision 10](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10).
 A class name alone does not establish a facade letter. Preserve hierarchical family
 composition; rewrites must retain the resolved object's identity.
 
@@ -65,7 +65,7 @@ composition; rewrites must retain the resolved object's identity.
 ### R1a — Lazy-Init Re-Export Derivation (how `pkg.__all__` is built)
 
 The published lazy contract (`__all__` + `_LAZY_IMPORTS`) is generated, never
-hand-written. [ADR-018](../../docs/architecture/adr/018-generator-declarations.md)
+hand-written. [ADR-018](../architecture/adr/018-generator-declarations.md)
 owns its derivation from explicit declarations and source-authenticated MRO.
 Filename-to-letter tables and closed alias lists are superseded, not additional
 inputs to generation.
@@ -75,7 +75,7 @@ its immediate modules and never invents a declaration. Local explicit declaratio
 retain their ownership; inherited letters follow their verified upstream identity.
 Nested domains compose through their nearest owning facade. A child's export list
 never authorizes an ancestor to publish its leaf implementations
-([ADR-028 Decision 10](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
+([ADR-028 Decision 10](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10)).
 
 **Determinism (flext-b3xmn)**: the facade-letter set derives from the statically indexed
 workspace source (`u.Infra` `_lazy_init_package_names`), never from the ambient
@@ -117,7 +117,7 @@ through the chain; `m.Web.FastAPIAppConfig` resolves.
 the strict FLEXT policy. The rule applies to the affected repository's governed source;
 it is not limited to consumer+family pairs.
 
-**Canonical decision**: [ADR-028 Decision 16](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16)
+**Canonical decision**: [ADR-028 Decision 16](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16)
 owns the zero-finding requirement and prohibits hiding clones or smells with ignored
 paths, raised thresholds, or narrowed scope. The sole authorized jscpd exception is the
 mandated license header, declared by its typed owner.
@@ -133,7 +133,7 @@ exact gate evidence in its active Bead.
 
 ## R3 — Layer Law (Declaration vs Behavior)
 
-**Rule**: [ADR-028 Decisions 3–4](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-3)
+**Rule**: [ADR-028 Decisions 3–4](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-3)
 own declaration placement: `c` owns constants, `t` type aliases, `p` protocols and
 `m` Pydantic data models. Protocol signatures and Pydantic validation follow their
 declared contracts; they do not authorize reusable application behavior in those
@@ -154,12 +154,12 @@ enforced by the `loc-cap` gate.
 **No local redeclarations**, aliases, or competing long-name layers.
 
 **Boundaries and completeness**: external libraries and orchestrators follow [ADR-028
-Decisions 1–4](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-1),
-capability names follow [Decision 15](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15),
-CA/DI and quality follow [Decision 16](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16),
-native workspace refactoring follows [Decision 17](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17),
-generalized rules follow [Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18),
-and Pydantic completeness follows [Decision 14](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-14). This law restates none of them.
+Decisions 1–4](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-1),
+capability names follow [Decision 15](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15),
+CA/DI and quality follow [Decision 16](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16),
+native workspace refactoring follows [Decision 17](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17),
+generalized rules follow [Decision 18](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18),
+and Pydantic completeness follows [Decision 14](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-14). This law restates none of them.
 
 **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No
 `dict`/`TypedDict`/`dataclass`/`NamedTuple`/`m.Dict` as data contract.
@@ -230,7 +230,7 @@ alignment, and consumer docs gate.
 
 **Rule**: Every contribution follows its declared execution and integration path.
 Root `AGENTS.md` owns the current shared-worktree and suspended-orchestration
-boundary. [ADR-029](../../docs/architecture/adr/029-always-working-one-complete-cycle.md)
+boundary. [ADR-029](../architecture/adr/029-always-working-one-complete-cycle.md)
 owns global admission, the complete per-slice cycle and integrated runtime proof.
 Canonical global Git governance owns preservation refs, reviewed publication and
 non-rewriting merges. This standard does not create a separate formula, WIP or
@@ -241,7 +241,7 @@ and current integrated code. Superproject gitlinks advance only after their memb
 commits are available on the declared remote integration branches.
 
 **Zero residue**: Follow the canonical `runtime/zero-residue` owner and
-[ADR-028 Decision 7](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7).
+[ADR-028 Decision 7](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-7).
 A renamed public signature with consumers retains only its marked delegation to the
 new owner, without parallel behavior. Rewire the complete fleet and external census,
 then delete the old signature when no use remains. Unmarked legacy and zero-use
@@ -258,7 +258,7 @@ survivors are defects.
 | R1 Grammar     | `flext_core._utilities.family_surface.FlextUtilitiesFamilySurface`    |
 | R1a Lazy-Init  | `flext_infra._utilities.lazy_init_letters` (`lazy_init_resolve_aliases`) |
 | R1 Enforcement | `flext_infra.detectors.consumer_import_violations_detector`           |
-| R2 Duplication | [ADR-028 Decision 16](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16); typed Infra tooling declaration and the declared duplication/smells gates |
+| R2 Duplication | [ADR-028 Decision 16](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16); typed Infra tooling declaration and the declared duplication/smells gates |
 | R3 Layer Law   | `flext_infra.gates.namespace.FlextInfraGatesNamespace`                 |
 | R4 Config      | `config/codegen.yaml` → `codegen.yaml` scaffold.project.dev           |
 | R4 Budget Gate | `flext_infra.gates.budget` (new)                                      |
@@ -285,7 +285,7 @@ survivors are defects.
 - Owner-first reuse and simplification over local reimplementation
 - Rule fixtures are artifacts under the canonical `testing/observable-runtime`
   contract and
-  [ADR-028 Decision 6](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-6);
+  [ADR-028 Decision 6](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-6);
   executable builders and wiring remain with test-code owners, and fixture existence
   is not proof of real runtime correctness
 
@@ -302,10 +302,10 @@ survivors are defects.
 | ADR-010     | Codegen Standardization              | Accepted     |
 | ADR-014     | Codemod Governance                   | Accepted     |
 | **ADR-015** | **Consumer Consumption Law (R1-R6)** | **Accepted** |
-| [ADR-028 Decision 15](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15) | Capability-named boundaries | Accepted |
-| [ADR-028 Decision 16](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16) | CA/DI and zero quality findings | Accepted |
-| [ADR-028 Decision 17](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17) | Native workspace model and refactorings | Accepted |
-| [ADR-028 Decision 18](../../docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) | Generalized rules | Accepted |
+| [ADR-028 Decision 15](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15) | Capability-named boundaries | Accepted |
+| [ADR-028 Decision 16](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16) | CA/DI and zero quality findings | Accepted |
+| [ADR-028 Decision 17](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17) | Native workspace model and refactorings | Accepted |
+| [ADR-028 Decision 18](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18) | Generalized rules | Accepted |
 
 ---
 

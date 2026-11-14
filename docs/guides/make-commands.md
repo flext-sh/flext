@@ -64,10 +64,10 @@ verb is missing or broken, repair the root dispatcher owner and rerun that verb.
 ## Architecture admission and acceptance
 
 Command success does not replace architecture acceptance. Start with
-[root AGENTS.md](../../AGENTS.md), the
-[session router](../../.agents/commands/flext-law.md), and its exact
-[routing](../../.agents/skills/flext-context-routing/SKILL.md) and
-[FLEXT law](../../.agents/skills/flext-law/SKILL.md) owners. The router composes
+`AGENTS.md`, the
+session router (`.agents/commands/flext-law.md`), and its exact
+routing (`.agents/skills/flext-context-routing/SKILL.md`) and
+FLEXT law (`.agents/skills/flext-law/SKILL.md`) owners. The router composes
 global `search-first`, `yagni`, `ssot`, `solid`, `simplify` and `dry`; concrete
 dependency and data boundaries additionally follow the canonical global
 `dep-injection`, `clean-architecture` and `pydantic-development` skills under
@@ -556,7 +556,7 @@ private-method assertions or copied configuration expectations.
 
 - The first exception, traceback, and non-zero exit propagate unchanged.
 - Warnings, empty output, and missing tools are failures. Connectivity availability
-  skips follow [root prerequisite law](../../AGENTS.md#production-readiness-and-connectivity-tests)
+  skips follow root prerequisite law (`AGENTS.md`)
   and never count as successful connectivity or production validation.
 - No retry, fallback, suppression, normalization, partial run, or alternate raw tool
   path can replace the canonical verb.

@@ -287,7 +287,8 @@ qualified by the historical runs. Do not reset any checkout to these values.
 
 ## Resume procedure and stop condition
 
-1. Read root AGENTS, the [session router][router], the topic ADRs and
+1. Read root AGENTS, the session router (`.agents/commands/flext-law.md`), the
+   topic ADRs and
    `bd show flext-9t6gn --json` plus its latest comments. Reconcile current source
    and peer fences; retain the existing Bead and original plan.
 2. Close the approved bootstrap dependency group and review original-model identity,
@@ -313,4 +314,3 @@ an attempted command, a narrow green result, a timeout, or this handoff is not D
 
 [bootstrap]: ../architecture/adr/018-generator-declarations.md#projector-bootstrap-dependency-cut
 [imports]: ../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-10
-[router]: ../../.agents/commands/flext-law.md
