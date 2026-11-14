@@ -581,6 +581,9 @@ unrelated WIP; source drift remains an explicit failure. Index, mode, directory,
 cache and incremental native-engine effects belong to the same transaction.
 Fast candidate/coherence validation has an initial five-second transaction budget;
 full gates remain mandatory and each Make invocation stays within 60 seconds.
+Until that target is met, heavy verbs run under the per-verb wall-time budgets of
+[ADR-032](docs/architecture/adr/032-host-wide-heavy-gate-admission.md), armed only
+after admission, so queue time never counts against them.
 The first causal failure remains a failure after compensation. These are pending
 implementation and acceptance requirements, not a claim that the current sequential
 publisher already provides batch visibility ([ADR-018 single-read, single-batch
