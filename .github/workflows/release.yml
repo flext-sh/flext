@@ -55,7 +55,7 @@ jobs:
         run: |
           set -euo pipefail
           subject="$(git log -1 --format=%s)"
-          echo "ref=$(git rev-parse HEAD^{commit})" >> "${GITHUB_OUTPUT}"
+          echo "ref=$(git rev-parse "HEAD^{commit}")" >> "${GITHUB_OUTPUT}"
           if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
             if [ -n "${RELEASE_TAG}" ]; then
               git check-ref-format "refs/tags/${RELEASE_TAG}"
@@ -135,7 +135,7 @@ jobs:
             .pyrefly_cache
             .benchmarks
             .hypothesis
-            .bin
+            ~/.local/bin/mise
             ~/.cache/uv
             ~/.local/share/mise
             !~/.local/share/mise/shims
@@ -152,7 +152,7 @@ jobs:
         run: |
           set -euo pipefail
           make release-version
-          echo "ref=$(git rev-parse HEAD^{commit})" >> "${GITHUB_OUTPUT}"
+          echo "ref=$(git rev-parse "HEAD^{commit}")" >> "${GITHUB_OUTPUT}"
 
   version-ci:
     name: Validate release pull request commit
@@ -212,7 +212,7 @@ jobs:
             .pyrefly_cache
             .benchmarks
             .hypothesis
-            .bin
+            ~/.local/bin/mise
             ~/.cache/uv
             ~/.local/share/mise
             !~/.local/share/mise/shims
