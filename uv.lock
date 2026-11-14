@@ -59,7 +59,7 @@ overrides = [
     { name = "flext-target-oracle-wms", editable = "flext-target-oracle-wms" },
     { name = "flext-tests", editable = "flext-tests" },
     { name = "flext-web", editable = "flext-web" },
-    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=bc2b0450c2a05f955ad5eaa52e8571b17614c9a8" },
+    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=4cb40a6fe564c6761dcb2f4e6c79d7fb7304f96f" },
 ]
 excludes = [
     { package = { name = "flext-api" }, dependencies = ["flext"] },
@@ -1304,7 +1304,7 @@ dev = [
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "redis", specifier = ">=8.1.0" },
     { name = "requests", specifier = ">=2.34.2" },
-    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=bc2b0450c2a05f955ad5eaa52e8571b17614c9a8" },
+    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=4cb40a6fe564c6761dcb2f4e6c79d7fb7304f96f" },
     { name = "ruamel-yaml", specifier = ">=0.19.1" },
     { name = "ruff", specifier = ">=0.16.5" },
     { name = "rumdl", specifier = ">=0.2.62" },
@@ -5886,7 +5886,7 @@ wheels = [
 [[package]]
 name = "rope"
 version = "1.15.2+dc.6"
-source = { git = "https://github.com/marlon-costa-dc/rope.git?rev=bc2b0450c2a05f955ad5eaa52e8571b17614c9a8#bc2b0450c2a05f955ad5eaa52e8571b17614c9a8" }
+source = { git = "https://github.com/marlon-costa-dc/rope.git?rev=4cb40a6fe564c6761dcb2f4e6c79d7fb7304f96f#4cb40a6fe564c6761dcb2f4e6c79d7fb7304f96f" }
 dependencies = [
     { name = "pytoolconfig", extra = ["global"] },
 ]
