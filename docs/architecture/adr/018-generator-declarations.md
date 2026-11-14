@@ -221,9 +221,23 @@ declaration.
   root classes stay real. Another facade, such as the service base `s`,
   composes model mixins that stay real: a stand-in cannot join a Pydantic
   metaclass. A stand-in is only valid for a namespace mixin, never for a class
-  that is instantiated or subclasses a third-party type (amended 2026-11-12). The
-  export's members are the names bound in the class bodies along its in-package
-  MRO, excluding dunders.
+  that is instantiated or subclasses a third-party type (amended 2026-11-12).
+- **Shared member index (amended 2026-11-13).** The operator chose on
+  2026-11-13 that the generator shares the index instead of copying it, with no
+  gate change (bead `flext-2ayig.6`). A stand-in lists only the names bound in its
+  own class body, excluding dunders. Its bases are the stand-ins of its
+  in-package bases, in the real class's base order, each read from the
+  initializer that exports it, so C3 linearization of the stand-ins reproduces
+  the real MRO. An in-package base that no initializer defers has its members
+  listed on the deriving stand-in; a name bound by both that base and a deferred
+  base fails generation by name, because the flattened order could differ from
+  the real MRO. Evidence: copying the inherited members of every composed part
+  made generated initializers exceed the configured module size cap and repeat
+  one another (ai-hub `_protocols/__init__.py` grew from 166 to 1,075 lines and
+  `make check` reported 12 duplicated blocks between initializers); sharing
+  removes about half of each index (ai-hub `_protocols` 828 to about 384 members).
+  An initializer whose own index still exceeds the cap after sharing is split
+  under a separate decision; the gate stays as it is.
 - The generated initializer publishes those exports as deferred. `FlextLazy`
   hands consumers a stand-in class of `FlextLazyMember` descriptors. The first
   member access loads the declaring module through the lazy loader and caches the
