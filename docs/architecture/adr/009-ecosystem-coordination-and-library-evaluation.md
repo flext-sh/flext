@@ -80,7 +80,7 @@ continues to validate its existing public surface and runtime separately.
 | ------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------- |
 | Domain applications | DocApp, DataApp, BackupApp                                       | Own domain intent, configuration, adapters, manifests, authorization |
 | Reusable libraries  | `flext-core`, `flext-cli`                                        | Own generic, neutral, typed contracts consumed downward              |
-| Repository tooling  | `flext-infra` + MkDocs                                           | Externally invoked docs/build/codegen tooling                        |
+| Repository tooling  | `flext-infra` + ProperDocs                                       | Externally invoked docs/build/codegen tooling                        |
 | External platforms  | Airflow, Dify, Drive/DMS, Backstage, XWiki, PipesHub, ClickHouse | Integrated through commands, files, manifests, APIs, events          |
 
 ### 2. Dependency direction is one-way and enforced
@@ -113,7 +113,7 @@ manifests, APIs, events, and an external orchestrator.
 | Backup, snapshot, retention, restore, recovery drills                       | BackupApp                                    | Consumes neutral artifact inputs            |
 | Generic DOCX/PPTX/XLSX bytes, CLI, file, hash primitives                    | `flext-cli`                                  | Extended only with neutral primitives       |
 | Typed foundations (`Result`, models, protocols, settings)                   | `flext-core`                                 | Reused unchanged by domain                  |
-| Docs site: generate/build/validate/audit/publish                            | `flext-infra` + MkDocs                       | Invoked externally per repository           |
+| Docs site: generate/build/validate/audit/publish                            | `flext-infra` + ProperDocs                   | Invoked externally per repository           |
 | Orchestration/scheduling                                                    | Airflow (external)                           | Composes the commands above                 |
 | Content/RAG assist                                                          | Dify/Weaviate (external)                     | Feeds structured content into DocApp        |
 | Portal/DMS/catalog                                                          | Backstage, XWiki, PipesHub, Drive (external) | Consume static output/artifacts by contract |
@@ -148,16 +148,16 @@ into FLEXT libraries.
 
 ### 6. Platform selection (ecosystem-wide)
 
-| Candidate                | Decision                                        | Rationale                                               |
-| ------------------------ | ----------------------------------------------- | ------------------------------------------------------- |
-| MkDocs via `flext-infra` | Adopt after static-consumer gate (`mro-ib6t.1`) | Existing owner for site/search/nav/build/audit          |
-| Sphinx + MyST            | Do not add in parallel                          | Duplicates the site owner; no measured gap justifies it |
-| Pandoc                   | Keep, use directly                              | Mature conversion already used by DocApp                |
-| Quarto                   | Corpus bake-off only                            | Unproven for rich editable Office fidelity              |
-| Antora                   | Conditional future migration                    | Only if multi-repo/multi-version docs dominate          |
-| Docusaurus               | Reject for current requirements                 | Adds React/MDX/Node without demonstrated need           |
-| Backstage TechDocs       | Future reader/catalog                           | Consumes MkDocs static output                           |
-| Zensical                 | Track with compatibility probes                 | Plugin coverage not yet equivalent                      |
+| Candidate                    | Decision                                        | Rationale                                                                 |
+| ---------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------- |
+| ProperDocs via `flext-infra` | Adopt after static-consumer gate (`mro-ib6t.1`) | Maintained MkDocs 1.x continuation; same plugins and config               |
+| Sphinx + MyST                | Do not add in parallel                          | Duplicates the site owner; no measured gap justifies it                   |
+| Pandoc                       | Keep, use directly                              | Mature conversion already used by DocApp                                  |
+| Quarto                       | Corpus bake-off only                            | Unproven for rich editable Office fidelity                                |
+| Antora                       | Conditional future migration                    | Only if multi-repo/multi-version docs dominate                            |
+| Docusaurus                   | Reject for current requirements                 | Adds React/MDX/Node without demonstrated need                             |
+| Backstage TechDocs           | Future reader/catalog                           | Consumes the static site output                                           |
+| Zensical                     | Theme probe; decide by 2027-02-05               | Adopt only with revision dates, Mermaid and strict parity; else MaterialX |
 
 No candidate replaces DOCX/PPTX/XLSX domain production.
 

@@ -105,7 +105,7 @@ boundaries. No application vocabulary or reverse dependency.
 
 ### `flext-infra`
 
-Owns repository tooling: generated Markdown, MkDocs config, strict build, validation,
+Owns repository tooling: generated Markdown, site config, strict ProperDocs build, validation,
 audit, publication. Needs a static non-FLEXT consumer mode (`mro-ib6t.1`) before external
 adoption, because current API pages use live `mkdocstrings`.
 
@@ -121,7 +121,7 @@ later under the extraction gate, never preemptively.
 | Airflow            | Orchestration      | Runs the coordination flow steps as isolated processes                        |
 | Dify / Weaviate    | Content/RAG assist | Feeds structured content/tokens into DocApp; no authority over layout/publish |
 | Google Drive / DMS | Publication target | DocApp publishes via stage/apply; full DMS is a future gated capability       |
-| Backstage TechDocs | Reader/catalog     | Consumes MkDocs static output when deployed                                   |
+| Backstage TechDocs | Reader/catalog     | Consumes the static site output when deployed                                 |
 | XWiki / PipesHub   | Knowledge plane    | Receive content by API when deployed; not FLEXT dependencies                  |
 | ClickHouse         | Warehouse          | DataApp sink/source                                                           |
 

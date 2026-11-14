@@ -59,7 +59,7 @@ vendor trees such as `.kilo/`). Historical tables and unmanifested pages remain 
 until their disposition is authenticated; an auto-generated comment alone is not proof
 that a file can be deleted.
 
-MkDocs treats `README.md` and `index.md` in the same directory as the same landing-page
+ProperDocs treats `README.md` and `index.md` in the same directory as the same landing-page
 identity. A publication inventory must elect only one of them, preserving maintained
 explanatory prose separately from generated membership tables rather than excluding a
 conflicting page or weakening strict validation.
