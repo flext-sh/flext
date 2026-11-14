@@ -7,7 +7,7 @@
 - [Phase 1 — Consolidate the engine](#phase-1-consolidate-the-engine)
 - [Phase 2 — Generate the complete Make and uv contract](#phase-2-generate-the-complete-make-and-uv-contract)
 - [Phase 3 — Conform the FLEXT fleet](#phase-3-conform-the-flext-fleet)
-- [Phase 4 — Conform Cosmos](#phase-4-conform-cosmos)
+- [Phase 4 — Conform external workspaces](#phase-4-conform-external-workspaces)
 - [Phase 5 — Conform standalone repositories](#phase-5-conform-standalone-repositories)
 - [Phase 6 — Fleet acceptance and deletion proof](#phase-6-fleet-acceptance-and-deletion-proof)
 
@@ -103,18 +103,15 @@ Acceptance:
 
 Any missing, extra, or unclassified member is a hard inventory failure.
 
-## Phase 4 — Conform Cosmos
+## Phase 4 — Conform external workspaces
 
-1. Conform the Cosmos root as `workspace`.
-2. Conform Charts and GitOps as members that also pass in independent clones.
-3. Mark content-only repositories explicitly and remove invalid inventory entries rather
-   than treating them as package members.
-4. Preserve real chart release behavior behind the canonical commit and push checks,
-   including the clean-commit prerequisite.
+Each external workspace conforms its own root and members through its own plan; this
+plan requires only that members also pass in independent clones and that content-only
+repositories are marked explicitly instead of being treated as package members.
 
 ## Phase 5 — Conform standalone repositories
 
-Conform `.ai-hub`, Algar migration, and Cosmos Docgen as
+Conform `.ai-hub` and every other standalone consumer as
 explicit standalone manifests. Classify each real capability under the canonical Make
 responsibility, delete competing automation surfaces, and test from temporary clones
 with no sibling directories.
