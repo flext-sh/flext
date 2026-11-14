@@ -288,6 +288,114 @@ declaration.
   Method-local imports, operation registries, module-object attribute access and
   `TYPE_CHECKING` class splits remain prohibited.
 
+##### Stand-in composition law (amended 2026-11-14)
+
+The operator approved this amendment on 2026-11-14 (epic `flext-hj6q0`) after
+regenerated members and an external consumer failed at generation and at import.
+It restores the stand-in this ADR describes — "a stand-in class of
+`FlextLazyMember` descriptors" — and states the rules the earlier text left
+open. Where it differs from a bullet above, this subsection prevails.
+
+- **Cause.** flext-core `91092cbc8` and `37ebd9f69` (2026-11-13) gave the
+  stand-in a metaclass, `FlextLazyStandIn`, whose class-level `__getattr__`
+  resolves a name a stale initializer does not list. A metaclass is inherited:
+  every class derived from a stand-in, and so from a facade namespace, carries
+  it, and CPython refuses a class whose bases have unrelated metaclasses
+  (`TypeError: metaclass conflict`). Pydantic's `ModelMetaclass`, typing's
+  `_ProtocolMeta` and any authored metaclass are unrelated to it. Measured:
+  `class FlextDbOracleServiceBase(FlextService, u.DbOracle)`, the protocols and
+  models namespaces of flext-tap-oracle-oic, and the flext-ldif utilities root
+  (`metaclass=`); an AST census found 9 such join points in 8 packages, and any
+  root that gains a direct part breaks its own subclasses.
+- **No static tool sees it.** mypy, pyright and pyrefly read the real classes
+  through the initializer's `TYPE_CHECKING` imports, and no ruff rule covers the
+  runtime object. The proof of this law is therefore runtime: the fresh-import
+  admission of generation and the tests named below.
+
+1. **A stand-in is a plain class.** It is built with `type`, holds one
+   `FlextLazyMember` descriptor per listed member, and has no metaclass and no
+   fallback. It composes with a Pydantic model, a class that subclasses a
+   protocol, an `ABC`, a generic, an enum, a dataclass or a class with its own
+   metaclass, and loads no part module while doing so. A metaclass that reads a
+   listed member while it creates a deriving class loads that part: `ABCMeta`
+   resolving an abstract method a part implements, or Pydantic reading
+   `model_config` or a field that shadows a part member. The load is correct,
+   not free, and the acceptance tests name each of these cases.
+2. **An unlisted member is an `AttributeError`.** There is one resolution path.
+   A stale initializer is a stale projection: `make gen` repairs it, and the
+   completeness of every index is a generation fixed point and a check gate for
+   every package, never a runtime recovery.
+3. **Every base of a stand-in has metaclass `type`.** The runtime verifies it
+   when it resolves the shared bases; a base with another metaclass fails there,
+   by name.
+4. **An ancestor-package base is shared by its import route.** A part whose base
+   is declared by an ancestor FLEXT package (`FlextCliTypes`,
+   `FlextLdapConstants`) lists that base as `(package, export)`, exactly as the
+   source imports it. It is never flattened and never dropped, so the
+   stand-in's MRO names the same ancestor object as the real class, and the
+   output is identical in a workspace run, a standalone member and an external
+   consumer. A builtin or third-party base still fails generation.
+5. **A part a stand-in cannot represent is rejected at generation** and
+   corrected at its source. A stand-in carries no dunder of its class and is not
+   the real class in the facade's MRO, so each of these would be lost or break
+   in silence: any dunder the part defines (`__init__`, `__call__`,
+   `__enter__`/`__exit__`, `__repr__`, `__getattr__`, `__init_subclass__`,
+   `__class_getitem__`, `__slots__`); an annotated attribute a model would
+   collect as a field, and a Pydantic decorator (`field_validator`,
+   `model_validator`, `computed_field`); a zero-argument `super()` or an
+   `isinstance` against the part's own class inside a part method; a namespace
+   that is itself a `Protocol`; a metaclass other than `type`. A class that binds
+   no member is not deferred, and an empty stand-in is invalid.
+6. **A generator process runs eager.** The generator imports its own FLEXT
+   packages (`flext_infra/codegen/lazy_init.py` imports the flext-infra
+   facades, which compose flext-cli and flext-core), so when it regenerates one
+   of them a stale member index must not block the repair; every other package
+   it regenerates it never imports. The generation entry sets one process flag
+   before the first facade is read, and `FlextLazy` then publishes the real
+   classes; setting the flag after a stand-in was published fails, so a process
+   never mixes stand-ins and real classes. No environment variable selects it.
+   Measured cost: the facade import of a generator process goes from 1.9 s to
+   5.8 s; every other process keeps the deferred import. A part missing from an
+   export map is not a stale member index and still fails, as before.
+7. **A published letter names its class, and a module-less ancestor is a
+   package.** A base read through another package's letter
+   (`from flext_ldif import p`) is shared by that route under rule 4, and the
+   runtime resolves it to the class the letter is bound to; a base read through
+   the package's own letter is already forbidden (ENFORCE-051), so the planner
+   needs no alias resolution. A directory that holds only
+   sub-packages receives its generated initializer, so `import scripts.hooks`
+   resolves for every tool, unless the project declares it a repository
+   namespace, which stays implicit as packaging requires.
+
+- **Rejected.** Keeping the metaclass and forbidding every non-`type` metaclass
+  from inheriting a namespace is a permanent restriction on every class that
+  derives from a namespace, held only by a census, where rule 1 removes the
+  conflict by construction. A non-class stand-in resolved through
+  `__mro_entries__` either returns the real class, which loads every part when
+  the facade is composed, or returns a plain stand-in, which is rule 1 behind an
+  indirection that `type()` rejects as a base. A source fingerprint per
+  initializer reads every source at import and means nothing for an installed
+  wheel.
+- **Acceptance.** flext-core carries the composition matrix of rule 1 as tests,
+  with zero part loads and the three named loading cases, a test that an
+  unlisted member raises and loads nothing, and a test that the flag of rule 6
+  fails once a stand-in is published. flext-infra carries the ancestor-base
+  fixture of rule 4 with identical output in the three run scopes, the
+  rejections of rule 5, a completeness test for every regenerated package that
+  compares each stand-in with the runtime namespace of its real class (names
+  bound by unpacking, decorators or `setattr` included), and byte-identical
+  initializers with the flag of rule 6 on and off. The consumer proof is
+  `make gen` followed by the fresh import of each regenerated member and of one
+  external consumer.
+- **Status (2026-11-14): decided, implementation pending.** The runtime still
+  carries the metaclass until flext-core lands rules 1 to 3 and 6; the generator
+  lands rules 4 and 7 first, then 5. Until both are merged, a consumer that must
+  stay green keeps the flext-infra revision it last generated with. An
+  independent probe review (2026-11-14) confirmed the decision and found 16
+  part methods with a zero-argument `super()`; none is deferred today, because
+  their classes have third-party bases, and rule 5 rejects them once they would
+  be. Beads: `flext-hj6q0` and its children.
+
 ##### Structure of every facade letter (amended 2026-11-12)
 
 The operator ruled on 2026-11-12, translated from Portuguese: "you have to fix
@@ -325,10 +433,10 @@ imports each of the five letters and loads none of them.
   names its package, never its declaring module: the module path bypasses the
   stand-in and loads the library.
 - **Generator.** A PEP 695 `type` statement in a class body is a member. A base
-  declared by an ancestor package resolves to its one declaring module. A class
-  that binds no member is not deferred. A class with a base from a declared
-  distribution is an adapter and is not deferred; any other unresolvable base
-  still fails generation.
+  declared by an ancestor package is shared by its import route (stand-in
+  composition law, rule 4). A class that binds no member is not deferred. A
+  class with a base from a declared distribution is an adapter and is not
+  deferred; any other unresolvable base still fails generation.
 - **Acceptance.** For each of `c`, `t`, `p`, `m` and `u`, a fresh process
   imports the letter and holds no import package of a declared distribution in
   `sys.modules`; a deferred member read afterwards is the library's own object.

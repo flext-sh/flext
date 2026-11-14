@@ -232,7 +232,9 @@ long-running WIP in the rig checkout.
 - Transition (operator answer, "Converge in place, then return"): each repository's
   existing WIP is finished in place until its commit-stage gates pass. It is then
   committed on a lane branch (`git switch -c front/<repository>-<date>` carries the
-  WIP, so nothing is discarded) and pushed to a `preserve/*` ref. Only then does the
+  WIP, so nothing is discarded) and pushed to a `preserve/*` ref. A `preserve/*`
+  branch is never merged into an integration branch: its content lands only through
+  a validated lane cut from the tip. Only then does the
   checkout return to the `0.12.0-dev` tip. A consumer that installs this rig editable
   (`make setup FLEXT=<path>`) is told before each return and re-pins in lockstep.
 - Dirty, changing, or concurrent Git state is never a prerequisite blocker for
@@ -264,6 +266,26 @@ is authorized merely to obtain green. Missing causal proof requires further
 investigation. Re-exercise the original failing boundary after each adjustment;
 a different error, smaller finding count or isolated passing check is not resolution.
 This applies equally to source, generators, lazy exports, tests and documentation.
+
+## Architectural Change Admission
+
+Every architectural change or claim in FLEXT, and every statement of what a rule, a
+check result or a check configuration is, first passes the global
+`~/agents/rules/architecture/change-admission.md` (operator order 2026-11-14, tracker
+memory `operator-order-2026-11-14-architecture-change-admission`). Its FLEXT facts:
+
+- The tools whose behaviour is measured are Pydantic, mypy, pyright, pyrefly and
+  ruff at the versions the workspace lock declares; the census runs over all
+  governed repositories with code-review-graph or the syntax tree; the decision
+  record is the topic-owning ADR in `docs/architecture/adr/`.
+- A statement about a lint or type result names the Make verb and `CHECK_PHASE`
+  that produced it and its receipt under `.reports/`. A change to a lint key also
+  needs the Lint-Rule Change Freeze ruling (key, old value, new value, reason).
+- The precedent is the lazy stand-in incident
+  ([ADR-018 stand-in composition law](docs/architecture/adr/018-generator-declarations.md#stand-in-composition-law-amended-2026-11-14)):
+  work marked WIP reached the integration branch through a `preserve/*` branch, a
+  runtime fallback was added over an ADR that was not amended, and a first repair
+  relaxed a fail-loud rule the ADR states.
 
 ## Engineering And Phase Completion Contract
 
@@ -956,11 +978,19 @@ CLI + pytest plugin, **never imported at runtime**.
       The generated init defers every class a facade composes by MRO, so importing
       a facade loads no part module; there is no per-project declaration
       ([ADR-018 deferred heavy capabilities](docs/architecture/adr/018-generator-declarations.md#deferred-heavy-capabilities-amended-2026-11-05-2026-11-12-2026-11-13)).
+      A stand-in is a plain class of member descriptors with no metaclass and no
+      fallback: it composes with a Pydantic model, a protocol subclass or any
+      metaclass, an unlisted member is an `AttributeError` repaired by `make gen`,
+      an ancestor-package base is shared by its import route, and a part a
+      stand-in cannot represent is rejected at generation
+      ([stand-in composition law](docs/architecture/adr/018-generator-declarations.md#stand-in-composition-law-amended-2026-11-14)).
     - The `m.*` presets build Pydantic models lazily (`defer_build`), and a check
       gate builds every model so annotation errors still fail `make check`.
     - The lazy-init generator derives exports from source (AST over each module's
-      `__all__`) and imports its own dependencies directly. It never imports the
-      package it regenerates, so a stale init can never block its own repair.
+      `__all__`) and imports its own dependencies directly. It never imports a
+      package it regenerates other than its own FLEXT packages, and for those
+      its process runs eager (ADR-018 stand-in composition law, rule 6), so a
+      stale init can never block its own repair.
     - Rewrites that move imports must never create an import-time cycle. A
       reverse-direction import goes under `if TYPE_CHECKING:`.
     - Revalidate historical gap reports at the current owners before repair:
