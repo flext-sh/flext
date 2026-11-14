@@ -358,8 +358,11 @@ open. Where it differs from a bullet above, this subsection prevails.
    5.8 s; every other process keeps the deferred import. A part missing from an
    export map is not a stale member index and still fails, as before.
 7. **A published letter names its class, and a module-less ancestor is a
-   package.** A base read through a letter (`p = FlextLdifProtocols`) resolves
-   to the class the letter is bound to. A directory that holds only
+   package.** A base read through another package's letter
+   (`from flext_ldif import p`) is shared by that route under rule 4, and the
+   runtime resolves it to the class the letter is bound to; a base read through
+   the package's own letter is already forbidden (ENFORCE-051), so the planner
+   needs no alias resolution. A directory that holds only
    sub-packages receives its generated initializer, so `import scripts.hooks`
    resolves for every tool, unless the project declares it a repository
    namespace, which stays implicit as packaging requires.
