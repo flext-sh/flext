@@ -153,8 +153,7 @@ candidate; acceptance never proves fleet stability.
   `type X = X` in a class body yields a self-referential lazy `TypeAliasType`
   wrapper and breaks value consumers, while `X: TypeAlias = X` and plain `X = X`
   re-export the class object; closes `UP040` at class-body re-export sites with the
-  plain-assignment form; evidence in `gruponos/merges` audit
-  `RUFF_PYREFLY_FLEXT_CORE_BATCH1_20261102.md`, bead `dc_recon-ob4`)
+  plain-assignment form)
 - [ADR-032: Host-Wide Admission for Heavy Gates](032-host-wide-heavy-gate-admission.md)
   — **ACCEPTED** (operator plan 2026-11-12, ai-hub `aihub-pxu63.6`; generated
   `check`/`tests`/`tests-full`/`gen`/`gen-scope`/`mod` share one per-host FIFO queue

@@ -88,7 +88,7 @@ this documentation reconciliation does not promote this proposed ADR to accepted
    composed class with identity-verified invalidation; no filesystem/env re-resolution
    on hot reads; benchmarks (cProfile evidence) accompany the change.
 5. **SSOT alignment of clients.** Fleet members and external consumers (`ai-hub`,
-   `cosmos-main` apps, `algar-*`, `gruponos-*`) consume the typed facade only (ADR-015
+   `cosmos-main` apps, `algar-*`) consume the typed facade only (ADR-015
    R1); local re-implementations of env/config resolution are exterminated in the same
    cutover, with migration through `make gen` projections — never hand-edited
    duplicates.
