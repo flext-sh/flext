@@ -11,8 +11,9 @@ are unchanged. Resolve the current owner and lane before any historical command.
 
 <!-- TOC START -->
 
-- [Read-only preflight](#read-only-preflight)
-- [Exact continuation](#exact-continuation)
+- [Resumption contract](#resumption-contract)
+  - [Read-only preflight](#read-only-preflight)
+  - [Exact continuation](#exact-continuation)
 
 <!-- TOC END -->
 

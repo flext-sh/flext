@@ -11,22 +11,12 @@
 - [1. Estado vigente e próxima ação](#1-estado-vigente-e-proxima-acao)
   - [Atualização das tips de integração](#atualizacao-das-tips-de-integracao)
   - [Workspace e coordenação](#workspace-e-coordenacao)
-  - [Evidências encerradas](#evidencias-encerradas)
-  - [Patches aplicados depois dos respectivos testes, ainda não validados](#patches-aplicados-depois-dos-respectivos-testes-ainda-nao-validados)
-  - [Publicação não é integração](#publicacao-nao-e-integracao)
-  - [Checkpoint dos membros em 2026-09-15 UTC](#checkpoint-dos-membros-em-2026-09-15-utc)
-  - [Endereços dos 32 PRs de estabilização](#enderecos-dos-32-prs-de-estabilizacao)
-- [2. Falhas operacionais e reparos causais](#2-falhas-operacionais-e-reparos-causais)
-  - [Core](#core)
-  - [Oracle e provisionamento](#oracle-e-provisionamento)
-  - [Infra](#infra)
-  - [Ferramentas padrão](#ferramentas-padrao)
-- [3. Ordem de execução até o fechamento](#3-ordem-de-execucao-ate-o-fechamento)
-- [4. Plano, Beads e fontes](#4-plano-beads-e-fontes)
-  - [Auditoria histórica imutável](#auditoria-historica-imutavel)
-- [5. Crítica da execução e correções de método](#5-critica-da-execucao-e-correcoes-de-metodo)
-- [6. Reconciliação de S0–S8](#6-reconciliacao-de-s0s8)
-- [7. Contribuições históricas e adjudicação pendente](#7-contribuicoes-historicas-e-adjudicacao-pendente)
+  - [2. Falhas operacionais e reparos causais](#2-falhas-operacionais-e-reparos-causais)
+  - [3. Ordem de execução até o fechamento](#3-ordem-de-execucao-ate-o-fechamento)
+  - [4. Plano, Beads e fontes](#4-plano-beads-e-fontes)
+  - [5. Crítica da execução e correções de método](#5-critica-da-execucao-e-correcoes-de-metodo)
+  - [6. Reconciliação de S0–S8](#6-reconciliacao-de-s0s8)
+  - [7. Contribuições históricas e adjudicação pendente](#7-contribuicoes-historicas-e-adjudicacao-pendente)
 
 <!-- TOC END -->
 
@@ -107,9 +97,8 @@ busca identificou o tip infra `b82eefa3e` (merge externo do PR #732), absorvido 
 `ec9813edd` com ancestralidade base → HEAD exit 0. Os conflitos ficaram em dois testes:
 contrato CI combina comandos renderizados com etapas derivadas do catálogo; conform
 adota os helpers e módulos de teste reorganizados na integração, que já preservam a
-remoção dos campos aposentados. Isso atualiza a base da lane; não comprova pouso dos PRs
-
-## 240/#731
+remoção dos campos aposentados. Isso atualiza a base da lane; não comprova o pouso dos
+PRs #240/#731.
 
 A exigência reiterada às 01:00 UTC é trabalhar sobre a tip de integração atual em todos
 os projetos: buscar novamente antes de aplicar os patches preparados e incorporar
