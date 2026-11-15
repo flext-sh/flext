@@ -51,8 +51,7 @@ upstream-specific architecture and delivery workflow.
   `api.py`, or `cli.py`.
 
 Pydantic 2 is mandatory. Ruff is the one formatter and linter and Pyrefly the one
-type checker; Mypy, its `pydantic.mypy` plugin, and Pyright are not run by any Make
-verb, gate, projection or dependency (operator order 2026-11-13 `ag-6w7a`; global
+type checker (operator order 2026-11-13 `ag-6w7a`; global
 `rules/python.md`). The typed policy in `flext-infra/config/tooling.yaml` owns the
 Ruff and Pyrefly configuration; generators, profiles, overlays, and CLI consumers
 preserve it. Do not rewrite valid runtime contracts to accommodate a checker

@@ -30,13 +30,13 @@ section, and the handoff note.
   orchestrator over `flext-cli`), which fans out to members. The Makefile itself is
   fully generated (`overwrite: true` from `base/Makefile.j2`); customization lives ONLY
   in `custom.mk` via pre/post hooks — a project never owns a verb.
-- `make check` runs the non-test gates (Ruff/Pyrefly/Pyright/Mypy via the configured
+- `make check` runs the non-test gates (Ruff/Pyrefly via the configured
   policy, namespace/codemod gates); `make test` runs the suite through the persistent
   testmon cache; `make build` builds distribution artifacts; `make deps` recalculates
   dependency floors; `make gen` runs conform/codegen to the fixed point; `make mod` runs
   the ast-grep + semantic (Rope) modernize circuit to a guarded fixed point.
-- Canonical selection rules: never invoke `uv`/`ruff`/`mypy`/`pyright`/`pytest`
-  directly; mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never uncapped.
+- Canonical selection rules: never invoke `uv`/`ruff`/`pytest`
+  directly.
 
 ## 2. Environment isolation (per-lane venv)
 

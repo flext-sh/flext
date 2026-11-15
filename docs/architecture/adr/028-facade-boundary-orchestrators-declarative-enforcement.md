@@ -939,10 +939,6 @@ architecture link.
   every module of every project (operator ruling 2026-10-31, verbatim: "ok, use a
   opção b e propague para todos a solucao e em todos os projetos ... Option B: import
   from `typing_extensions` directly. `from typing_extensions import TypeForm`").
-  History (amended 2026-11-15; Mypy and Pyright removed, Pyrefly is the single type
-  checker, operator order `ag-6w7a`): the ruling's original rationale was that mypy
-  recognized the PEP 747 call only for the callee fullname
-  `typing_extensions.TypeForm` and typed a facade-attribute call as `Any`.
   `t.TypeForm` is removed: rule `ban-typeform-alias-call` rewrites every `t.TypeForm`
   reference to the bare name and `pydantic-typeform-import` adds the import, both
   through `make mod`; the `t` re-binding is deleted at its typings owner.

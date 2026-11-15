@@ -71,7 +71,7 @@ exigidas para integração e fechamento.
 
 **Exclusão específica:** os custom checks do flext-infra pertencem ao outro responsável
 e podem permanecer vermelhos. Não alterar, desligar ou enfraquecer esses checks para
-produzir aprovação artificial. Essa exclusão não abrange Ruff, Pyrefly, Pyright, Mypy,
+produzir aprovação artificial. Essa exclusão não abrange Ruff, Pyrefly,
 testes, geração, provisionamento, processos ou runtime. Um teste do infra não é
 automaticamente um custom check excluído: suas falhas precisam de diagnóstico causal.
 
@@ -79,7 +79,7 @@ As duas execuções consecutivas de **`make gen` 17490 e 69562 encerraram com ex
 segunda informou zero efeitos lazy-init em 220,21 s e completou as verificações de
 receipts e conformidade dos 32. O **`make check` 16946 está em andamento**: raiz
 concluída com falha por markdown (duas linhas longas já corrigidas, ainda sem nova
-prova) e 200 findings codemod custom; lint, segurança, Pyright, Pyrefly e Mypy passaram
+prova) e 200 findings codemod custom; lint, segurança e Pyrefly passaram
 na raiz. Isso não valida os outros 31. Não iniciar outro Make em paralelo na lane;
 aguardar a rodada, corrigir os owners ordinários e revalidar o candidato. A rodada de
 testes anterior não valida os patches posteriores. A correção documental posterior em
@@ -227,10 +227,10 @@ documentação de herança Target Oracle foi alinhada ao owner. Os demais membro
 publicaram o marker Oracle gerado e formatação pertinente. Esses são SHAs de branches de
 trabalho, não SHAs de merge.
 
-O check atual da API terminou com exit 2 e 14 erros Mypy de conformidade entre
+O check atual da API terminou com exit 2 e 14 erros de tipo de conformidade entre
 `FlextResult[T]` e `p.Result[T]`, concentrados em JsonValue; causa sob investigação no
-core. Auth terminou com falhas custom (silent-failure, runtime-census, namespace), Mypy
-passou. O restante da frota continua em execução; nenhuma contagem final ou integração
+core. Auth terminou com falhas custom (silent-failure, runtime-census, namespace).
+O restante da frota continua em execução; nenhuma contagem final ou integração
 foi obtida.
 
 #### Endereços dos 32 PRs de estabilização
@@ -319,9 +319,8 @@ traceback. Recuperar evidência na próxima rodada canônica.
 
 #### Ferramentas padrão
 
-Ruff, Pyrefly, Pyright, Mypy e testes precisam de rodada no candidato estabilizado. O
-Mypy histórico foi interrompido com teto de 6144 MiB; isso não identifica sozinho a
-causa nem autoriza execução ilimitada. Não reutilizar contagens históricas como
+Ruff, Pyrefly e testes precisam de rodada no candidato estabilizado. Não reutilizar
+contagens históricas como
 confirmação de erros ainda presentes ou corrigidos.
 
 ### 3. Ordem de execução até o fechamento

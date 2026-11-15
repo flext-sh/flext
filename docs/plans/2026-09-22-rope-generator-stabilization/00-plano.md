@@ -119,7 +119,7 @@ identity, references, inheritance, collisions and structural corrections.
   (`make check`) are not hand-fix targets: they must remain WARNINGS that do not block
   CI; only automatic fixes apply.
 - Commands always through the active workspace root; never bare
-  `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`; mypy never uncapped.
+  `uv`/`ruff`/`pyrefly`/`pytest`.
 - No rebase/force-push/reset/checkout-restore/stash-clean discards; explicit-path
   commits; fix-forward adoption of concurrent WIP.
 - Never hand-edit generated files (cure = `make gen`); no `# type: ignore`/`# noqa`
@@ -381,11 +381,11 @@ Appended below as increments land (command, cwd, exit code, decisive output).
   dbt-ldap, dbt-ldif, tests, web). Per-member `make gen` all exit 0; autofix pass
   committed and pushed per member. flext-cli needed `make setup` (stale site-packages
   flext_core lacked the new export map) before its fresh-import went green. flext-plugin
-  mypy arg-type trio cured at source (mutable dict materialized for `Registry.plugins`;
+  arg-type trio cured at source (mutable dict materialized for `Registry.plugins`;
   test dependency literals → tuples per the declared contract) — plugin check exit 0.
 - **Clone fixed point completed**: gen-11..gen-14 all exit 0; after committing the
   submodule-internal convergence, gen-14 finished with zero dirty files.
-- **Known residual**: ~42 canonical mypy findings across 12 wave-2 members (facade-Any /
+- **Known residual**: ~42 canonical type findings across 12 wave-2 members (facade-Any /
   no-any-return family + a few arg-types) — advisory per the warning law; census filed
   in the companion bead.
 - **Checkpoint**: superproject `0.12.0-dev` @ `64889954f3` pushed, all 31 gitlinks

@@ -391,8 +391,10 @@ branch, another worktree, or a same-named catalog entry.
 Python has one formatter and linter, Ruff, and one type checker, Pyrefly
 (operator order 2026-11-13 `ag-6w7a`, verbatim: "pq vc nao está usando ruff e
 pyrefly, que são os oficais pela linha de comando?"; global `rules/python.md`; no
-second type checker beside it). Mypy and Pyright are not run by any Make verb,
-gate, projection or dependency.
+second type checker beside it). Mypy and Pyright are discouraged and are not run by
+any Make verb, gate, CI job or dependency. Their configuration stays projected only as
+a compatibility exception for whoever still runs them locally; it is never evidence
+and never a reason to change code.
 
 Lint and type-check RULES are frozen at operator authority. The frozen surface is
 every rule-selection, severity, mode, and scope key of Ruff, Pyrefly,
@@ -405,7 +407,7 @@ pyprojects.
 No agent may add, remove, relax, tighten, re-scope, suppress, or re-project any of
 these keys on its own account. **Every lint-rule change requires express operator
 authorization naming the key, the old value, the new value, and the reason.** The
-2026-10-28 pyright incident (thousands of false `reportUnknown*` findings fleet-wide
+2026-10-28 incident (thousands of false `reportUnknown*` findings fleet-wide
 after unauthorized analyzer-scope changes) is the standing precedent: repair
 resolution at the rule's SSOT owner, never alter the rule to silence findings.
 

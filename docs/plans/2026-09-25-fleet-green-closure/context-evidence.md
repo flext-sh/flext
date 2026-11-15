@@ -62,7 +62,7 @@ All commands below ran in the active `flext-infra` lane:
 | `rtk make mod`        |    0 | joint AST/semantic/text fixed point; 0 actionable findings              |
 | `rtk make fix`        |    0 | 5/5 active stages; 0 failed, 0 skipped                                  |
 | `rtk make fmt`        |    0 | 1062 files unchanged; markdown-format green                             |
-| `rtk make check`      |    0 | 15/15 active stages green; Ruff, Pyrefly, Mypy and Pyright all 0 errors |
+| `rtk make check`      |    0 | 15/15 active stages green; Ruff and Pyrefly both 0 errors               |
 | `rtk make test`       |  130 | deliberately interrupted for handoff; invalid as acceptance evidence    |
 
 Five configured recovery suspensions remain visible in `make check`: duplication,

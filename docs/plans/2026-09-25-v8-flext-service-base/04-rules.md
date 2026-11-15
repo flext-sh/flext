@@ -111,15 +111,14 @@ and never introduces its own.
 
 1. Only selector-free root Make verbs of the lane (`setup`, `upg`, `gen`, `mod`, `fix`,
    `fmt`, `check`, `test`, `build`, `docs`). No Make selector, file filter,
-   environment-dispatched sub-operation or raw `pytest`, `ruff`, `pyrefly`, `mypy` or
+   environment-dispatched sub-operation or raw `pytest`, `ruff`, `pyrefly` or
    `uv`; a missing operation is a missing verb, repaired at the Make/codegen owner.
 2. Every lane verb runs as `env -u VIRTUAL_ENV -u UV_PROJECT_ENVIRONMENT make <verb>`.
 3. Shell guard: one command per call, at most one `&&` and one `|`, no `;`, no `$(...)`,
    no `cd` into another checkout (`git -C`, `env -C`).
 4. Long output goes to `~/tmp/v8/<slice>/<name>.log`; long commands run as background
    tasks whose completion evidence is read before dependent work.
-5. mypy runs only with the project memory cap.
-6. Diagnosis uses the canonical verb or the code-review graph (with a fresh `status`),
+5. Diagnosis uses the canonical verb or the code-review graph (with a fresh `status`),
    never a grep over a generated projection.
 
 ## 6. Git and landing
