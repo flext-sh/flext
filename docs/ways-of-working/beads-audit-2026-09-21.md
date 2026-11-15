@@ -35,11 +35,9 @@
 | facade/lazy    | 17+12 | flext-5fxu6.4.29/30, gy6mx, m4ls9, 3jjja, 4305f, vjj1s, 0in0k.23, tmpm4, m1abc, ssnc7 | Validar contra o estado pós-merge: SymbolRecovery do merge projection-roots pode ter resolvido várias; probe por bead |
 | namespace      | 10    | 0in0k.4/.5, z4ydq, 5fxu6.2, 1tcsp, uno8m                                              | Campaña ativa (uno8m é o mapa); as outras convergem nela                                                              |
 | hook           | 10    | mvaxv, z7u1g, 1c3mu, cxxha, 64c4s, 5hzi                                               | ai-hub lane (hooks.json render + CRG sweep já feito); coordenar com o dedicado                                        |
-| mypy           | 6     | 051n4, 5fxu6.4.16, vaw, o352o, rxg, 0ftd.3                                            | Contidos: minoria; validar pós-042 (Settings MRO pode ter resolvido)                                                  |
 | codemod        | 5     | t9q8h, dgd97, pwmej, mu6mp, vjj1s.2                                                   | Validar contra codemod/rules/ atual (35 findings no infra eram do merge)                                              |
 | pyrefly        | 5     | osqra, 1x66z, p68a.46.7.x                                                             | 1x66z (\_conform ~64) pode ter caído pós-recuperação de símbolos                                                      |
 | journal        | 4     | fkfmu, 3c03u, xldlq, iy2zt                                                            | iy2zt (harvest verb) ABERTO e válido; validar os outros contra o #780                                                 |
-| pyright        | 3     | 94d4y, a0edu, 57i4w                                                                   | Contidos                                                                                                              |
 | gen fixed      | 2     | t9fay, 6ddeh                                                                          | 6ddeh família .1-.4 já absorvida; validar                                                                             |
 | runtime-census | 1     | 0in0k.26                                                                              | Onda executada (21 Config FlextSettings); validar e fechar                                                            |
 | silent-failure | 1     | 9eczi                                                                                 | Onda executada (~66 fixes); validar                                                                                   |
@@ -63,6 +61,6 @@
    múltiplas vezes — fechar como superseded se o sintoma não reproduz.
 3. facade/lazy family: probe de import por bead (629 módulos importando pós-recovery —
    muitas fecham).
-4. mypy/pyrefly/pyright/codemod: contidos — validar pós-próximo check.
+4. pyrefly/codemod: contidos — validar pós-próximo check.
 5. namespace family: convergir em flext-uno8m (campanha ativa).
 6. hook family: ai-hub lane.

@@ -307,7 +307,7 @@ open. Where it differs from a bullet above, this subsection prevails.
   models namespaces of flext-tap-oracle-oic, and the flext-ldif utilities root
   (`metaclass=`); an AST census found 9 such join points in 8 packages, and any
   root that gains a direct part breaks its own subclasses.
-- **No static tool sees it.** mypy, pyright and pyrefly read the real classes
+- **No static tool sees it.** Pyrefly reads the real classes
   through the initializer's `TYPE_CHECKING` imports, and no ruff rule covers the
   runtime object. The proof of this law is therefore runtime: the fresh-import
   admission of generation and the tests named below.

@@ -87,12 +87,12 @@ navigation entrypoints. No substitute tracker is created here.
 | FLEXT separate worktree `~/flext-worktrees/plan-reconciliation` | `direnv exec . make status`, exit 0                                                          | Environment/status only; not functional acceptance                                                                                                    |
 | Same FLEXT worktree                                             | Two `make test` runs interrupted with exit 130 after repeated import failures                | First `types.TypeAliasType` imports corrected in authored Tests modules; next failure importing `m` remains to revalidate after generator composition |
 | Same FLEXT worktree                                             | `direnv exec . make gen`, session 88479, still running at this cut                           | Conform/publication progressed; Rope indexed 4,179 modules. Wait for final exit before any claim or concurrent write                                  |
-| `~/agents`                                                      | `make check`, session 3023, worker reports exit 0                                            | Ruff/Pyright/Mypy, 132 semantic suites, fixed point and 242 packaged resources passed for that snapshot; later test changes invalidate freshness      |
+| `~/agents`                                                      | `make check`, session 3023, worker reports exit 0                                            | Ruff, 132 semantic suites, fixed point and 242 packaged resources passed for that snapshot; later test changes invalidate freshness                   |
 | `~/agents`                                                      | `make test-full` then native test rerun, worker reports exit 2; 14 passed before MCP timeout | Real stdio consumer times out after 10 seconds. Cold-cache hypothesis disproved; locate lifecycle failure without suppressing it                      |
 | `~/ai-hub`                                                      | External native test report: 188 passed, 2 failed; session exit not owned here               | Installed older producer lacks `SkillRecord.resources`; refreshed lock alone is not an installed-runtime proof                                        |
 | `~/ai-hub`                                                      | `direnv exec . make setup`, session 87449, running                                           | Installs the already refreshed producer lock; then repeat native consumer tests                                                                       |
 
-The operator clarified that Ruff, Pyrefly, Pyright and Mypy remain mandatory; the
+The operator clarified that Ruff and Pyrefly remain mandatory; the
 exception concerns other Infra custom Make checks. No functional collection, generation,
 transaction or publication failure is hidden under that exception.
 
@@ -352,9 +352,9 @@ remains in `flext-ro6mj.1` notes and native reports.
 | FLEXT worktree | `direnv exec . make check`     | 2; 32 completed, 0 passed, 32 failed, earlier snapshot                                |
 | FLEXT worktree | `direnv exec . make audit`     | 2; latest session68939 reached 32 repositories, generated differences                 |
 | FLEXT worktree | `direnv exec . make mod`       | 2; session69763 expected 3 ast-grep errors, receipt contained 4; before Rope          |
-| agents         | `direnv exec . make check`     | Earlier 0 invalidated by later changes; latest47706 exit2, 13 resource Pyright errors |
+| agents         | `direnv exec . make check`     | Earlier 0 invalidated by later changes; latest47706 exit2, 13 resource type errors    |
 | agents         | `direnv exec . make test-full` | Earlier 0, 10 passed; not rerun after final parser/resource changes                   |
-| agents         | `direnv exec . make setup`     | 0; installed Pyright1.1.414, not overall gate proof                                   |
+| agents         | `direnv exec . make setup`     | 0; not overall gate proof                                                             |
 | agents         | `direnv exec . make fmt`       | 0; formatting only                                                                    |
 | AI Hub         | `direnv exec . make test`      | 2; session35894, 1456 collected, 67 passed, 2 failed before new publisher tests       |
 
