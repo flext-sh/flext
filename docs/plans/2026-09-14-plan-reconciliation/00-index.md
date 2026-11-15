@@ -9,7 +9,8 @@ work_item: flext-ro6mj.1
 
 <!-- TOC START -->
 
-- [Context lookup by boundary](#context-lookup-by-boundary)
+- [Plan reconciliation handoff](#plan-reconciliation-handoff)
+  - [Context lookup by boundary](#context-lookup-by-boundary)
 
 <!-- TOC END -->
 

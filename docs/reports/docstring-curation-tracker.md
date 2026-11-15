@@ -1,5 +1,14 @@
 # FLEXT Fleet-Wide Docstring Curation Program Tracker
 
+<!-- TOC START -->
+
+- [1. Governance & Execution Rules](#1-governance-execution-rules)
+- [2. Cohort Roadmap & Fleet Inventory](#2-cohort-roadmap-fleet-inventory)
+- [3. Cohort 0: Root Workspace (src/flext/) Modules](#3-cohort-0-root-workspace-srcflext-modules)
+- [4. Session Handoff & Continuity Log](#4-session-handoff-continuity-log)
+
+<!-- TOC END -->
+
 > **Tracker ID:** `flext-ez35p` (Docstring PEP campaign: D413 mechanical + curated quality, fleet-wide)  
 > **Authority:** Operator Order 2026-11-03 (Cyclic interactive fleet-wide docstring professionalization)  
 > **Docstring Convention:** Google Style / PEP 257 (`[tool.ruff.lint.pydocstyle] convention = "google"`)  

@@ -11,6 +11,8 @@ identities, and exit evidence below are unchanged.
 
 <!-- TOC START -->
 
+- [Beads reconciliation boundary](#beads-reconciliation-boundary)
+
 <!-- TOC END -->
 
 The active coordination item named by repository authority is `aihub-l42it`. Preserve

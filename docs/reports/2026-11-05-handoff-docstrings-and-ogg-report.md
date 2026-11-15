@@ -1,5 +1,17 @@
 # Handoff — docstring campaign + OGG report (session 2026-11-03/05)
 
+<!-- TOC START -->
+
+- [A. Docstring professionalization (bead flext-ez35p)](#a-docstring-professionalization-bead-flext-ez35p)
+  - [Operator requirements (all binding)](#operator-requirements-all-binding)
+  - [Agreed reference convention](#agreed-reference-convention)
+  - [State](#state)
+  - [Known issues and caveats — fix before continuing](#known-issues-and-caveats-fix-before-continuing)
+  - [Suggested plan for the next session](#suggested-plan-for-the-next-session)
+- [B. OGG (GoldenGate) status report for PRD and QAS — NOT DONE](#b-ogg-goldengate-status-report-for-prd-and-qas-not-done)
+
+<!-- TOC END -->
+
 Two independent workstreams. Nothing was committed or pushed. All edits are uncommitted in `~/flext` on branch `upload-20261007`.
 
 ## A. Docstring professionalization (bead `flext-ez35p`)

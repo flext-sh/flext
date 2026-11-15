@@ -8,9 +8,10 @@ status: active
 
 <!-- TOC START -->
 
-- [Objective](#objective)
-- [Accepted operator decisions](#accepted-operator-decisions)
-- [Ordered phases](#ordered-phases)
+- [Execution plan](#execution-plan)
+  - [Objective](#objective)
+  - [Accepted operator decisions](#accepted-operator-decisions)
+  - [Ordered phases](#ordered-phases)
 
 <!-- TOC END -->
 

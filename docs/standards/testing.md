@@ -3,6 +3,8 @@
 <!-- TOC START -->
 
 - [Public boundary](#public-boundary)
+- [Test facade MRO](#test-facade-mro)
+- [Strong typing](#strong-typing)
 - [Fixtures and assertions](#fixtures-and-assertions)
 - [Configuration independence](#configuration-independence)
 - [Failure semantics](#failure-semantics)

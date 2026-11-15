@@ -12,10 +12,11 @@ are unchanged. Reconcile the live tracker before resuming any step.
 
 <!-- TOC START -->
 
-- [Entry state](#entry-state)
-- [Owned behavior](#owned-behavior)
-- [Execution loop](#execution-loop)
-- [Stop condition](#stop-condition)
+- [Phase 03: flext-infra test convergence and integration](#phase-03-flext-infra-test-convergence-and-integration)
+  - [Entry state](#entry-state)
+  - [Owned behavior](#owned-behavior)
+  - [Execution loop](#execution-loop)
+  - [Stop condition](#stop-condition)
 
 <!-- TOC END -->
 

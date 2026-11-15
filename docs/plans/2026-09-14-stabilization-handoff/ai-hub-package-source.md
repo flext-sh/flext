@@ -7,12 +7,13 @@
 <!-- TOC START -->
 
 - [Atualização de transferência — 2026-09-14](#atualizacao-de-transferencia-2026-09-14)
-- [1. Sintoma medido](#1-sintoma-medido)
-- [2. Causas (arquivo:linha)](#2-causas-arquivolinha)
-- [3. Mudança (um dono, sem daemon)](#3-mudanca-um-dono-sem-daemon)
-- [3b. Defeito adicional encontrado: projeções de governança commitadas com marcadores](#3b-defeito-adicional-encontrado-projecoes-de-governanca-commitadas-com-marcadores)
-- [3c. Fronteira flext ↔ ai-hub decidida pelo operador (14/09, atualização)](#3c-fronteira-flext-ai-hub-decidida-pelo-operador-1409-atualizacao)
-- [4. Aceite (prova em runtime real)](#4-aceite-prova-em-runtime-real)
+- [ai-hub — .envrc carregado em toda sessão de agente (pacote para a sessão do ai-hub)](#ai-hub-envrc-carregado-em-toda-sessao-de-agente-pacote-para-a-sessao-do-ai-hub)
+  - [1. Sintoma medido](#1-sintoma-medido)
+  - [2. Causas (arquivo:linha)](#2-causas-arquivolinha)
+  - [3. Mudança (um dono, sem daemon)](#3-mudanca-um-dono-sem-daemon)
+  - [3b. Defeito adicional encontrado: projeções de governança commitadas com marcadores](#3b-defeito-adicional-encontrado-projecoes-de-governanca-commitadas-com-marcadores)
+  - [3c. Fronteira flext ↔ ai-hub decidida pelo operador (14/09, atualização)](#3c-fronteira-flext-ai-hub-decidida-pelo-operador-1409-atualizacao)
+  - [4. Aceite (prova em runtime real)](#4-aceite-prova-em-runtime-real)
 
 <!-- TOC END -->
 
