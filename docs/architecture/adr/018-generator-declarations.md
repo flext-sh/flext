@@ -321,22 +321,12 @@ open. Where it differs from a bullet above, this subsection prevails.
    resolving an abstract method a part implements, or Pydantic reading
    `model_config` or a field that shadows a part member. The load is correct,
    not free, and the acceptance tests name each of these cases.
-2. **Operator decision 2026-11-15** (tracker key
-   `operator-decision-2026-11-15-standin-members-fully-dynamic`), verbatim:
-   "Tudo dinâmico, sem lista"; "A LISTA NÃO TEM QUE SER DESCARTADA E
-   REUTILIZADA NOS PRÓXIMOS ACESSOS E INCREMENTADA COM NOVAS DESCOBERTAS,
-   NUNCA RECOMECE DO ZERO"; "SE NÃO EXISTIR NO CÓDIGO TEM QUE DAR ERRO"; on
-   persisting the list between processes, `make gen` incrementing it and a
-   per-part SHA-256 digest: "NADA DISSO, VC ESTÁ VOLTANDO AO PADRÃO ANTERIOR
-   QUE EU ABOLI, EU NÃO PEDI ISSO"; "A LISTA TEM QUE SER VALIDA APENAS NO
-   RUNTIME E EM MEMÓRIA"; earlier: "vc está com um tempo de carga total, não é
-   isso que estou falando". Translation: "Everything dynamic, no list." "The
-   list is not to be discarded: it is reused on the next accesses and
-   incremented with new discoveries; never start over from zero." "If it does
-   not exist in the code, it must raise an error." "None of that; you are going
-   back to the earlier pattern that I abolished; I did not ask for that." "The
-   list must be valid only at run time and in memory." "You are at a total load
-   time; that is not what I am talking about."
+2. Stand-in members are resolved dynamically at run time. The member list
+   lives only in memory: it is reused on later accesses and grows with each
+   discovery, never starting over from zero. A member that does not exist in
+   the code raises `AttributeError`, and resolving a member loads only what
+   owns it. No member list is generated, persisted or kept between processes
+   (`operator-decision-2026-11-15-standin-members-fully-dynamic`).
 3. **Every base of a stand-in has metaclass `type`.** The runtime verifies it
    when it resolves the shared bases; a base with another metaclass fails there,
    by name.
@@ -393,15 +383,13 @@ open. Where it differs from a bullet above, this subsection prevails.
   `__mro_entries__` either returns the real class, which loads every part when
   the facade is composed, or returns a plain stand-in, which is rule 1 behind an
   indirection that `type()` rejects as a base.
-- **Acceptance.** flext-core carries the composition matrix of rule 1 as tests,
-  with zero part loads and the three named loading cases, a test that an
-  unlisted member raises and loads nothing, and a test that the flag of rule 6
-  fails once a stand-in is published. flext-infra carries the ancestor-base
-  fixture of rule 4 with identical output in the three run scopes, the
-  rejections of rule 5, a completeness test for every regenerated package that
-  compares each stand-in with the runtime namespace of its real class (names
-  bound by unpacking, decorators or `setattr` included), and byte-identical
-  initializers with the flag of rule 6 on and off. The consumer proof is
+- **Acceptance.** flext-core carries as tests the composition matrix of rule 1
+  with zero part loads, including a generic (PEP 695) part, and the named
+  loading cases; a member added to a part after generation resolves and loads
+  only its part; a name absent from the code raises `AttributeError` and loads
+  nothing; each stand-in has the same MRO, members and type parameters as its
+  real class; and the flag of rule 6 fails once a stand-in is published.
+  flext-infra carries the rejections of rule 5. The consumer proof is
   `make gen` followed by the fresh import of each regenerated member and of one
   external consumer.
 - **Status (2026-11-14): decided, implementation pending.** The runtime still
