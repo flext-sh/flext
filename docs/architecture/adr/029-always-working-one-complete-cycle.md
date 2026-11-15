@@ -217,8 +217,11 @@ admission; do not replace it with a green member or a stale whole-workspace run.
 - The existing runner, execution-mode contract and generated Make owner implement
   Testmon selection and cache accounting. This accepted contract is not evidence
   that generation, global execution or integration has completed.
-- The generated pre-commit hook runs only fast gates and never accepts a red tree
-  (bead `flext-x2p69`).
+- The generated pre-commit hook runs `setup`, `upg`, `gen`, `fmt`, `fix`, the
+  primary check (Ruff and Pyrefly) and the fast tests (slow markers excluded), in
+  that order, stages what those verbs changed, and never accepts a red tree. CI
+  runs the same rows without `upg` and fails on any difference they produce
+  (tracker key `operator-order-2026-11-15-commit-ci-sequence`).
 - Pull requests merge only on green CI; gates re-run on the merged SHA.
 
 ## Current state and recovery order
