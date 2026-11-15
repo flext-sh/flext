@@ -175,8 +175,10 @@ admission; do not replace it with a green member or a stale whole-workspace run.
 1. `make gen` twice in every touched repository; the second run produces no change.
 2. `make fmt`, then `make fix`, with every finding cleared.
 3. `make mod`, clean.
-4. `make check`: lint, format, types (ruff, pyrefly, pyright, mypy), rule catalog and
-   every configured gate at zero findings.
+4. `make check`: lint, format, types (ruff, pyrefly), rule catalog and
+   every configured gate at zero findings (amended 2026-11-15: Mypy and Pyright
+   removed, Pyrefly is the single type checker, operator order `ag-6w7a`; the
+   original item also listed pyright and mypy).
 5. `make tests`: native incremental Testmon selection
    over the complete applicable population, with zero failures, errors and
    warnings. Record collection, selection, execution and deselection separately.

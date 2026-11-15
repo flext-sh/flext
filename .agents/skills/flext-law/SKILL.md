@@ -9,8 +9,10 @@ description:
 
 ## Lint-rule change freeze (inviolable)
 
-Lint and type-check rules (ruff, pyrefly, pyright, mypy, jscpd, qlty — rule
-selections, severities, `typeCheckingMode`, code-tier scope, `extraPaths`,
+Ruff is the one formatter and linter and Pyrefly the one type checker; Mypy and
+Pyright are not run by any Make verb, gate, projection or dependency (operator order
+2026-11-13 `ag-6w7a`; global `rules/python.md`). Lint and type-check rules (ruff,
+pyrefly, jscpd, qlty — rule selections, severities, code-tier scope, `extraPaths`,
 `venv`/`venvPath` bindings, and their SSOT in `flext-infra/config/tooling.yaml` and
 every generated `[tool.*]` section) change only with express operator authorization.
 Agents never relax, tighten, re-scope, or re-project them on their own account; the

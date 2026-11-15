@@ -1,4 +1,4 @@
-# Política de supressões (mypy / pyright / pyrefly / Pylance)
+# Política de supressões (Ruff / Pyrefly)
 
 <!-- TOC START -->
 
@@ -9,19 +9,13 @@
 
 **Regras (AGENTS.md + decisão do repositório):**
 
-0. **Overrides** — Seguir sempre o modelo padrão de `pyproject.toml` sincronizado do
-   repositório FLEXT por `make upgrade`. Não adicionar overrides de mypy/pyright fora
-   desse padrão. A exceção permitida é o `reportUntypedBaseClass = "none"` do
-   `[tool.pyright]` em `pyproject.toml` (projetado de `config/tooling.yaml` →
-   `tools.pyright.extended-settings`): Pylance marca falsamente como autorreferente o
-   padrão canônico de facade MRO `from flext_cli import m`;
-   `class FlextPluginModels(m): ...`; `m = FlextPluginModels`. O dono canônico dessa
-   supressão é o `[tool.pyright]`; `.vscode/settings.json` **não** pode carregar
-   `python.analysis.typeCheckingMode` nem `python.analysis.diagnosticSeverityOverrides`
-   porque o codegen (`config/codegen.yaml` → `vscode.stripped_keys`) os remove
-   ativamente: com um `pyproject.toml` presente, Pylance emite `settingsNotOverridable`
-   e ignora as duas chaves. Essa supressão não altera os gates CLI (`pyright`,
-   `pyrefly`, `mypy`).
+0. **Overrides** — Seguir sempre o modelo padrão de `pyproject.toml` projetado de
+   `config/tooling.yaml` por `make gen`. Não adicionar overrides de Ruff ou Pyrefly fora
+   desse padrão. Ruff é o único formatador e linter e Pyrefly o único verificador de
+   tipos; Mypy e Pyright não são executados por nenhum verbo Make, gate, projeção ou
+   dependência (ordem do operador 2026-11-13 `ag-6w7a`). A antiga exceção
+   `reportUntypedBaseClass` do `[tool.pyright]` para o Pylance saiu junto com o
+   Pyright; as seções abaixo registram o histórico de Mypy e Pyright.
 
 1. **Any** — Uso de `Any` é **terminantemente proibido** sem exceções.
 
@@ -29,7 +23,7 @@
    corrigir o fluxo no código (estrutura de validadores/ramificações) em vez de desligar
    a regra.
 
-3. **Supressões inline** — Não usar `# pyright: ignore`, `# pyrefly: ignore` ou
+3. **Supressões inline** — Não usar `# type: ignore`, `# pyrefly: ignore`, `# noqa` ou
    equivalentes para contornar o linter. Corrigir pela **causa raiz** usando os padrões
    e skills do flext e as regras de AGENTS.md.
 

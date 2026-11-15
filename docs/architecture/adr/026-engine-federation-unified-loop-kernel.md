@@ -51,6 +51,11 @@ The existing engine roles remain binding: ast-grep performs declared mechanical 
 fixes, Rope performs semantic refactors, and real `pyright-langserver` diagnostics validate
 the fixed point ([ADR-014](014-family-part-shape-rope-codemod-rules.md),
 [ADR-017](017-parametrized-rule-surfaces-single-modernize-cli.md), and local FLEXT law).
+
+> **Amended 2026-11-15:** Mypy and Pyright removed; Pyrefly is the single type
+> checker (operator order `ag-6w7a`, 2026-11-13, repeated 2026-11-15; global
+> `rules/python.md`). Pyrefly diagnostics, not
+> `pyright-langserver`, validate the fixed point here and in Decision item 3.
 This draft establishes no new engine owner and cannot override that composition.
 The architecture below is proposed, not an implementation inventory or green receipt.
 The operator's original frozen D2 requires Python semantics/analysis through Rope
@@ -130,7 +135,8 @@ role keeps ai-hub (a heavy flext-infra consumer) green.
 3. **Existing engine responsibilities are preserved (federation).** ast-grep: declared
    detection and mechanical Python fixes. Rope: semantic refactors and their semantic
    facts (occurrences, identity, imports, rename, move, restructure). Real
-   `pyright-langserver` diagnostics validate the fixed point. sed:
+   Pyrefly diagnostics validate the fixed point (amended 2026-11-15; formerly
+   `pyright-langserver`, see the note above). sed:
    non-Python files and malformed-Python recovery only; rules targeting valid Python
    migrate to rope/ast-grep and the registry rejects new ones. ruff fix/fmt: lint repair
    and formatting — final authority on form. template (jinja2): declared

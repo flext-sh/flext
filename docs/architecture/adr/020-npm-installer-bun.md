@@ -41,6 +41,11 @@
    `prop-decorator`/`call-arg`/`attr-defined` suspended at the tooling
    SSOT — code changed to dodge them is regression and reverts.
 
+> **Amended 2026-11-15:** Mypy and Pyright removed; Pyrefly is the single type
+> checker (operator order `ag-6w7a`, 2026-11-13, repeated 2026-11-15; global
+> `rules/python.md`). The `pydantic.mypy` companion law in item 5 is history; no
+> projection carries it.
+
 ## Consequences
 
 - Faster, dependency-sidecar-free npm tool installs; transitive npm

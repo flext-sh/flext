@@ -47,8 +47,7 @@ bypass them.
 
 ## 2. Gates only through root Make verbs
 
-Never invoke bare `ruff`, `pyrefly`, `pyright`, `mypy`, `pytest`, or `uv`. Use the
-dispatcher:
+Never invoke bare `ruff`, `pyrefly`, `pytest`, or `uv`. Use the dispatcher:
 
 ```bash
 make gen

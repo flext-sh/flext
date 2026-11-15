@@ -50,15 +50,13 @@ upstream-specific architecture and delivery workflow.
 - Declaration layers contain data only. Runtime behavior belongs in `u`, base, services,
   `api.py`, or `cli.py`.
 
-Pydantic 2 and the Mypy `pydantic.mypy` plugin are mandatory. The typed policy in
-`flext-infra/config/tooling.yaml` owns the suspension of `prop-decorator` and
-`call-arg`; generators, profiles, overlays, and CLI consumers must preserve that
-policy. Do not disable the plugin or rewrite valid runtime contracts to accommodate
-these diagnostics.
-
-Treat code changes motivated by those diagnostics as regressions. Establish the
-causal commit and prior public contract, restore only the affected hunks, and preserve
-independent runtime and architecture fixes. Source findings are not runtime proof.
+Pydantic 2 is mandatory. Ruff is the one formatter and linter and Pyrefly the one
+type checker; Mypy, its `pydantic.mypy` plugin, and Pyright are not run by any Make
+verb, gate, projection or dependency (operator order 2026-11-13 `ag-6w7a`; global
+`rules/python.md`). The typed policy in `flext-infra/config/tooling.yaml` owns the
+Ruff and Pyrefly configuration; generators, profiles, overlays, and CLI consumers
+preserve it. Do not rewrite valid runtime contracts to accommodate a checker
+diagnostic. Source findings are not runtime proof.
 
 All generated tooling surfaces derive their scope from the typed
 `codegen.artifacts` and `codegen.exclusions` owners. `.gitignore`, editor settings,

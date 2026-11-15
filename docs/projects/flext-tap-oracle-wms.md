@@ -34,8 +34,8 @@ canonical `c/m/p/t/u` facade layout.
 
 - Quality gates run through the selector-free workspace Make contract: `make check`,
   `make test`, and `make build`.
-- Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy,
-  pyright); consult the gate output rather than static claims in this page.
+- Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly);
+  consult the gate output rather than static claims in this page.
 
 ## Quick start
 
