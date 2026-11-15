@@ -36,15 +36,6 @@
 4. **Bootstrap:** the safe-mode environment (`env -i`, `MISE_SAFE=1`)
    ignores project `[settings]`, so the generated bootstrap carries
    `MISE_NPM_PACKAGE_MANAGER` explicitly from the SSOT.
-5. **The mypy/pydantic companion law** (same operator order, bead
-   gc-eqvqx5): `pydantic.mypy` plugin mandatory in every projection;
-   `prop-decorator`/`call-arg`/`attr-defined` suspended at the tooling
-   SSOT — code changed to dodge them is regression and reverts.
-
-> **Amended 2026-11-15:** Mypy and Pyright removed; Pyrefly is the single type
-> checker (operator order `ag-6w7a`, 2026-11-13, repeated 2026-11-15; global
-> `rules/python.md`). The `pydantic.mypy` companion law in item 5 is history; no
-> projection carries it.
 
 ## Consequences
 

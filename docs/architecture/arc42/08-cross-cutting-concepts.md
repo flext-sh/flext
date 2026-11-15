@@ -46,8 +46,7 @@ Python 3.13+ typing, modern forms only: builtin generics, `X | Y` unions, `type`
 statements, structural protocols. `Any` and bare `object` are forbidden. Composite types
 use `t.*` aliases (`t.MappingOf[K, V]`, `Sequence[T]`, …) with `| None` on the
 outside for nullability. Type-checking is a gate, not a suggestion: Ruff (format and
-lint) and Pyrefly (the one type checker) run in CI; Mypy and Pyright are not run by any
-Make verb, gate, projection or dependency (operator order 2026-11-13 `ag-6w7a`).
+lint) and Pyrefly (the one type checker) run in CI (operator order 2026-11-13 `ag-6w7a`).
 
 ## 8.3 Configuration and Settings SSOT
 

@@ -31,7 +31,7 @@ This pilot proves the complete template on ONE uncontested, fully-green, leaf pr
 
 ## Target: flext-tap-oracle-wms (why)
 
-- Baseline fully green: ruff 0, pyrefly 0, pyright 0, import ok.
+- Baseline fully green: ruff 0, pyrefly 0, import ok.
 - Uncontested: 0 active-lane mentions; mine via mro-rn88.
 - NOT in the broken `m.Ldif.EntryMetadata` refactor chain (unlike ldap/ldif/tap-ldap).
 - Leaf **end-user tap**: 0 external consumers reference it → acceptance = its own
@@ -83,7 +83,7 @@ missing. Models stay pure data; signatures depend on protocols (§3.2).
 
 ## Phase 4 — Static gate + CLI acceptance (no pytest)
 
-After each ≤5-file batch: **ruff + pyrefly + mypy + pyright + import-smoke + CLI-smoke**
+After each ≤5-file batch: **ruff + pyrefly + import-smoke + CLI-smoke**
 (`python -m flext_tap_oracle_wms.cli --help` + real Singer discovery). NO pytest (tests
 are legado). Pathspec commit + fast-forward push per batch. Fix-forward only.
 

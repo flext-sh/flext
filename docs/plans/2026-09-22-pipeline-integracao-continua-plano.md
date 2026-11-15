@@ -54,7 +54,7 @@ agir.
 - PRs pequenos por proprietário, título convencional, Draft/WIP sinaliza incompletude;
   promoção exige commit final não-WIP + gates completos + CI executada + revisão
   independente + merge commit.
-- Comandos canônicos: `make` na raiz da workspace ativa (nunca uv/ruff/mypy/pytest
+- Comandos canônicos: `make` na raiz da workspace ativa (nunca uv/ruff/pytest
   crus); `bd` via direnv; publicar membro antes do gitlink; push fast-forward only.
 - Gas City permanece desativado; nenhum clone/worktree/ambiente novo.
 

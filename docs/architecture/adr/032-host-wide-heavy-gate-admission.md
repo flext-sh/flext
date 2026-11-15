@@ -28,9 +28,9 @@
 One developer host runs many agent sessions, each with its own lane. On
 2026-11-12 the host (20 cores, 64 GiB RAM) reached load 70–94 with swap at
 51/61 GiB. The kernel killed desktop clients to free memory. One measured cause is
-concurrent heavy gates from different lanes: one Mypy run over a FLEXT project
+concurrent heavy gates from different lanes: one type-check run over a FLEXT project
 uses about 4 GiB. Nothing bounds how many start at once. Each generated verb
-bounds its own wall time (`timeout`), memory (`prlimit`) and cache (the Mypy cache
+bounds its own wall time (`timeout`), memory (`prlimit`) and cache (its cache
 lock). It has no view of the gates other checkouts are running.
 
 `~/.gc/gate-slots/slot-{0,1}.lock` are leftovers from Gas City's own push-gate
@@ -144,15 +144,7 @@ unless `fail_fast` is set, and its default is false.
   never as passed.
 - **One slow gate never hides another's verdict.** Within the final phase the
   long gates (duplication, codemod) start only after every faster gate of that
-  phase has passed. The original list also named mypy and pyright; see the
-  amendment below.
-
-> **Amended 2026-11-15:** Mypy and Pyright removed; Pyrefly is the single type
-> checker (operator order `ag-6w7a`, 2026-11-13, repeated 2026-11-15; global
-> `rules/python.md`). No Make verb, gate,
-> ai-hub post-edit hook or consumer below runs Mypy or Pyright; the 4 GiB Mypy
-> measurement in the context remains the historical cause of this ADR.
-
+  phase has passed.
 - **Implementation state.** The phase stop and the budget order are
   implemented in flext-infra#2426: after the prerequisites, the pending gates
   form one phase per declared check budget (`check_budget_seconds`, the reader
@@ -221,7 +213,7 @@ this rule bounds when any verb may start and what each verb may use.
   from the template. Consumers repin flext-infra and run `make gen` to reach the
   fixed point.
 - **ai-hub post-edit gates (`python_gates`):** the heavy tools (pyrefly,
-  pytest; mypy removed 2026-11-15, see "Fail early") acquire a ticket through
+  pytest) acquire a ticket through
   the same flext-infra utility. Their wait is bounded by the hook's own tool
   timeout. When the wait expires, the hook
   reports the tool as `not executed: admission queue full` with the current
@@ -232,8 +224,7 @@ this rule bounds when any verb may start and what each verb may use.
 
 - With the declared capacity, two lanes' `make check` runs queue instead of
   overlapping, and two heavy type-check runs from different lanes never start
-  together (the original example was two 4 GiB Mypy runs; Mypy removed
-  2026-11-15, see "Fail early").
+  together.
 - A verb may wait a long time behind other gates. The wait is visible and
   names the holders, and it never turns into a timeout failure.
 - Gas City's push-gate semaphore stays a separate owner for Gas City's own Go

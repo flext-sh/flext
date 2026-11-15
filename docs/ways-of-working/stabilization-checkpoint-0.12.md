@@ -142,9 +142,7 @@ Do not start another cycle before proving the whole fleet green on the integrate
 published SHAs.
 
 Pydantic 2 is mandatory. Ruff is the one formatter and linter and Pyrefly the one type
-checker; Mypy, its `pydantic.mypy` plugin, and Pyright are not run by any Make verb,
-gate, projection or dependency (operator order 2026-11-13 `ag-6w7a`, which retires the
-`flext-2guq8` Mypy suspension of `prop-decorator` and `call-arg`). Generated
+checker (operator order 2026-11-13 `ag-6w7a`). Generated
 configurations must reflect their canonical policy owner rather than being patched at
 consumers.
 

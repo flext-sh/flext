@@ -137,7 +137,7 @@ desenvolvimento; não negociável.
 
 **D4 — Reds estruturais zerados** (ator): namespace 83, loc-cap 5 (config.py 3.695 LOC,
 conform.py 2.986 LOC — *splits obrigatórios pela SUPREME LAW de 1k LOC*), duplication 57
-(`flext-uuhc4`), mypy 38, tier-whitelist 712 violações (`flext-y3qpq.3`). Gatilho de
+(`flext-uuhc4`), tier-whitelist 712 violações (`flext-y3qpq.3`). Gatilho de
 absorção: a cada pouso do ator, revalidar gates antes de qualquer nova lane.
 
 **D5 — Release v0.13.0 real**: guia de migração já existe
@@ -175,7 +175,7 @@ fica como histórico do raciocínio D1–D6 (§3).
 
 | Item                                                                                | Bead                                                   | Nota                                |
 | ----------------------------------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------- |
-| Reforma estrutural (namespace 83 / loc-cap 5 / duplication 57 / mypy 38 / tier-712) | `flext-1wjg1` (+filhas `flext-uuhc4`, `flext-y3qpq.*`) | absorver pós-pouso de `z82dg-nsloc` |
+| Reforma estrutural (namespace 83 / loc-cap 5 / duplication 57 / tier-712)           | `flext-1wjg1` (+filhas `flext-uuhc4`, `flext-y3qpq.*`) | absorver pós-pouso de `z82dg-nsloc` |
 | CI green pós wave-2 (check vermelho na raiz)                                        | `flext-cpkk` (OPEN P0 — DONO do gate raiz)             | minha revalidação cita este dono    |
 | Dedup foundation / SonarQube / fleet green                                          | `flext-uuhc4`, `flext-2wjm`, `flext-ywet`              | fora do meu monotema                |
 

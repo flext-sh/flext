@@ -43,8 +43,9 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
 7. **Continuous green.** No completion while the project or environment is broken,
    partially migrated, dirty from task WIP, ahead of remote, missing real-use QA, or
    carrying stale generated output or docs. Run native global and changed-scope gates;
-   Python requires Ruff, Pyrefly, Pyright, Mypy, and Pytest coverage plus applicable
-   build and integrated validation. Lint and type gates cover `examples/`, `scripts/`,
+   Python requires Ruff (formatter/linter) and Pyrefly (single type checker),
+   and Pytest coverage plus applicable build and integrated
+   validation. Lint and type gates cover `examples/`, `scripts/`,
    and `tests/` with the same rigor as production source: blanket
    `per-file-ignores`/exclude patterns that hide violations in those trees are
    prohibited (operator law 2026-07-20). The only permitted exceptions are test-idiom
@@ -391,8 +392,10 @@ branch, another worktree, or a same-named catalog entry.
 Python has one formatter and linter, Ruff, and one type checker, Pyrefly
 (operator order 2026-11-13 `ag-6w7a`, verbatim: "pq vc nao está usando ruff e
 pyrefly, que são os oficais pela linha de comando?"; global `rules/python.md`; no
-second type checker beside it). Mypy and Pyright are not run by any Make verb,
-gate, projection or dependency.
+second type checker beside it). Mypy and Pyright are discouraged and are not run by
+any Make verb, gate, CI job or dependency. Their configuration stays projected only as
+a compatibility exception for whoever still runs them locally; it is never evidence
+and never a reason to change code.
 
 Lint and type-check RULES are frozen at operator authority. The frozen surface is
 every rule-selection, severity, mode, and scope key of Ruff, Pyrefly,
@@ -405,7 +408,7 @@ pyprojects.
 No agent may add, remove, relax, tighten, re-scope, suppress, or re-project any of
 these keys on its own account. **Every lint-rule change requires express operator
 authorization naming the key, the old value, the new value, and the reason.** The
-2026-10-28 pyright incident (thousands of false `reportUnknown*` findings fleet-wide
+2026-10-28 incident (thousands of false `reportUnknown*` findings fleet-wide
 after unauthorized analyzer-scope changes) is the standing precedent: repair
 resolution at the rule's SSOT owner, never alter the rule to silence findings.
 
@@ -777,9 +780,8 @@ CLI + pytest plugin, **never imported at runtime**.
     (tooling `lazy-init.stdlib-backports`: `typing_extensions`, operator decision
     2026-10-24) count as stdlib. The PEP 747 special form is called and annotated
     only through `from typing_extensions import TypeForm` (`TypeForm(X)`,
-    `TypeForm[T]`). `t.TypeForm` is removed (operator ruling
-    2026-10-31, ADR-028; supersedes the 2026-10-29 `t.TypeForm` order, now
-    history).
+    `TypeForm[T]`). `t.TypeForm` removal completed via
+    `ban-typeform-alias-call` and `pydantic-typeform-import` rules.
   - Inside the facades too, an external library's types are named only through `t`
     aliases or `p` protocols; `u` never re-narrows or re-parses (`isinstance` chains,
     `ast.literal_eval`) what a `t`/`m` declaration validates once.

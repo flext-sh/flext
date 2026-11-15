@@ -19,7 +19,6 @@ exception catalog wholesale.
 - [Repair generated lazy exports and absolute imports](02-generated-lazy-initializers.md)
 - [Repair analyzer environment ownership](03-tool-runtime-environment.md)
 - [Repair Pyrefly source-root identity](04-pyrefly-module-identities.md)
-- [Repair Mypy projection and remaining source contracts](05-mypy-contracts-and-projection.md)
 - [Migrate tests, scripts and examples to current public contracts](06-consumer-interface-migration.md)
 - [Repair semantic codemod publication and typed fixtures](07-semantic-codemod-publication.md)
 - [Repair origin-owned typing and facade generation](08-runtime-typing-and-facades.md)
@@ -28,7 +27,7 @@ exception catalog wholesale.
 
 ## Dispatch order and collision control
 
-Start with 01 to assess policy. Implement 02–05 at their canonical producers with one
+Start with 01 to assess policy. Implement 02–04 at their canonical producers with one
 writer at a time for shared templates; 03 already contains unvalidated WIP. Consumer
 work in 06–09 may proceed on explicitly disjoint files after producer contracts are
 established. 07 owns semantic publication, including the active IDE test. 10 coordinates
@@ -40,6 +39,6 @@ ownership through Beads. Generation/codemod publication must never race source e
 
 Historical evidence: core native make check exited 2, receipt
 .reports/gates/20261019T204234.985057Z-1487714/check/1f7b879b-72e6-414c-8366-dc9b4de57e54.
-That snapshot was RED, with lint 2464, format 1, security 1765, Pyrefly 21, Mypy 59,
-Pyright 1, dependency 6, duplication 2 and codemod 1826 admitted findings. It must be
+That snapshot was RED, with lint 2464, format 1, security 1765, Pyrefly 21,
+dependency 6, duplication 2 and codemod 1826 admitted findings. It must be
 refreshed before acceptance; the prompts do not claim these counts remain current.
