@@ -345,7 +345,15 @@ open. Where it differs from a bullet above, this subsection prevails.
    `model_validator`, `computed_field`); a zero-argument `super()` or an
    `isinstance` against the part's own class inside a part method; a namespace
    that is itself a `Protocol`; a metaclass other than `type`. A class that binds
-   no member is not deferred, and an empty stand-in is invalid.
+   no member and names no base is not deferred. A composition part
+   (`class X(A, B): pass`) binds its members through its bases and is deferred
+   with no members of its own and those bases shared, so deriving stand-ins keep
+   the real MRO; only a stand-in with neither members nor bases is invalid, and
+   the runtime rejects it when it builds the stand-in. A class the package's
+   own import-time code reads (the modules of its eager dunder bindings, such
+   as `__version__`, and what they import from the package) is not deferred:
+   it loads at import anyway, and importing a package must publish no
+   stand-in, so the eager flag of rule 6 can still be set first.
 6. **A generator process runs eager.** The generator imports its own FLEXT
    packages (`flext_infra/codegen/lazy_init.py` imports the flext-infra
    facades, which compose flext-cli and flext-core), so when it regenerates one
@@ -434,7 +442,8 @@ imports each of the five letters and loads none of them.
   stand-in and loads the library.
 - **Generator.** A PEP 695 `type` statement in a class body is a member. A base
   declared by an ancestor package is shared by its import route (stand-in
-  composition law, rule 4). A class that binds no member is not deferred. A
+  composition law, rule 4). A class that binds no member and names no base is
+  not deferred; a composition part is deferred through its bases (rule 5). A
   class with a base from a declared distribution is an adapter and is not
   deferred; any other unresolvable base still fails generation.
 - **Acceptance.** For each of `c`, `t`, `p`, `m` and `u`, a fresh process
