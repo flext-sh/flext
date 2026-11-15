@@ -92,26 +92,6 @@ override ADMISSION_MAX_LOAD5 := 80.0
 override ADMISSION_MEMORY_LIMIT_BYTES := 5368709120
 override ADMISSION_MAX_PROCESSES := 2
 endif
-ifeq ($(ADMISSION_VERB),sync-workspace)
-override ADMISSION_MAX_LOAD5 := 80.0
-override ADMISSION_MEMORY_LIMIT_BYTES := 5368709120
-override ADMISSION_MAX_PROCESSES := 2
-endif
-ifeq ($(ADMISSION_VERB),clean-workspace)
-override ADMISSION_MAX_LOAD5 := 80.0
-override ADMISSION_MEMORY_LIMIT_BYTES := 5368709120
-override ADMISSION_MAX_PROCESSES := 2
-endif
-ifeq ($(ADMISSION_VERB),pr-validate)
-override ADMISSION_MAX_LOAD5 := 80.0
-override ADMISSION_MEMORY_LIMIT_BYTES := 5368709120
-override ADMISSION_MAX_PROCESSES := 2
-endif
-ifeq ($(ADMISSION_VERB),rca-capture)
-override ADMISSION_MAX_LOAD5 := 80.0
-override ADMISSION_MEMORY_LIMIT_BYTES := 5368709120
-override ADMISSION_MAX_PROCESSES := 2
-endif
 override ADMISSION_LOAD5 := $(shell awk -v limit=$(ADMISSION_MAX_LOAD5) '$$2 > limit { print $$2 }' /proc/loadavg)
 ifneq ($(.SHELLSTATUS),0)
 $(error Cannot read the 5-minute load average from /proc/loadavg)
@@ -408,7 +388,7 @@ endif
 # === SECTION: verb dispatch (managed) ===
 # Source: config:make.verbs and the canonical gate vocabulary. A verb exists
 # only in the profiles it declares (make.verbs[].profiles).
-PUBLIC_VERBS := setup upg lock gen gen-scope mod fix fmt check tests tests-full help build clean sync-workspace clean-workspace pr-validate rca-capture release-plan release-version release-tag release-build release-publish
+PUBLIC_VERBS := setup upg lock gen gen-scope mod fix fmt check tests tests-full help build clean release-plan release-version release-tag release-build release-publish
 SCRIPT_VERBS :=
 
 CUSTOM_MAKEFILE := $(MAKEFILE_ROOT)/custom.mk
@@ -919,18 +899,6 @@ VERB_ARGUMENTS_build :=
 VERB_DESCRIPTION_clean := Remove only declared disposable resources owned by the selected target.
 VERB_ARGUMENTS_clean :=
 
-VERB_DESCRIPTION_sync-workspace := Synchronize all governed repositories and submodules to the integration branch tip; fetch remotes, prune stale refs, verify submodule SHAs match .gitmodules.
-VERB_ARGUMENTS_sync-workspace := DRY_RUN
-
-VERB_DESCRIPTION_clean-workspace := Identify and optionally remove obsolete worktrees, stale preservation branches, drifted submodules, and stale generated projections; requires CONFIRM=yes to execute.
-VERB_ARGUMENTS_clean-workspace := DRY_RUN CONFIRM
-
-VERB_DESCRIPTION_pr-validate := Execute complete PR readiness checklist: workspace sync, gate evidence, RCA completeness, runtime QA, integration path verification.
-VERB_ARGUMENTS_pr-validate := TRACKING_ID
-
-VERB_DESCRIPTION_rca-capture := Record Root Cause Analysis evidence for the current tracking item: reproduction command, root cause, fix verification, and gate re-exercise.
-VERB_ARGUMENTS_rca-capture := TRACKING_ID
-
 VERB_DESCRIPTION_release-plan := Execute the declared release plan phase.
 VERB_ARGUMENTS_release-plan := PR_TITLE
 
@@ -952,7 +920,7 @@ VERB_HELP_LINE = printf '  %-16s %s\n' '$(1)' '$(VERB_DESCRIPTION_$(1))'$(if $(s
 ifeq ($(VERB_CONTRACT),)
 PROFILE_VERBS_PLAIN := gen gen-scope
 PROFILE_VERBS_DISPATCH := help clean
-PROFILE_VERBS_ACTIVATED := mod fix fmt check tests tests-full build sync-workspace clean-workspace pr-validate rca-capture release-plan release-version release-tag release-build release-publish
+PROFILE_VERBS_ACTIVATED := mod fix fmt check tests tests-full build release-plan release-version release-tag release-build release-publish
 PROFILE_VERBS_INTERPRETER :=
 PROFILE_VERBS_HOOKED := $(foreach v,$(filter-out $(PROFILE_VERBS_INTERPRETER),$(PROFILE_VERBS_ACTIVATED)),$(if $(filter pre-$(v) _custom-$(v) post-$(v),$(CUSTOM_DECLARED_TARGETS)),$(v)))
 PROFILE_VERBS_DIRECT := $(filter-out $(PROFILE_VERBS_HOOKED) $(PROFILE_VERBS_INTERPRETER),$(PROFILE_VERBS_ACTIVATED))
@@ -1505,33 +1473,6 @@ _builtin_mod_apply: _builtin_require_environment
 	for rule in $(strip $(RULES)); do selection="$$selection --rule-ids $$rule"; done; \
 	$(if $(MOD_PROFILE),FLEXT_INFRA_PROFILE=$(MOD_PROFILE) ,)FLEXT_INFRA_PROFILE_OUTPUT="$(PROJECT_ROOT)/.reports/refactor/mod.pstats" $(PROJECT_FLEXT_INFRA) refactor mod --repository-root "$(PROJECT_ROOT)"$$selection
 
-# SOP: Workspace Synchronization & Hygiene
-_builtin_sync_workspace_all: _builtin_require_environment
-	@set -eu; \
-	root="$(abspath $(or $(strip $(ROOT)),$(PROJECT_ROOT)))"; \
-	dry_run="$(strip $(DRY_RUN))"; \
-	$(PROJECT_FLEXT_INFRA) workspace sync --repository-root "$$root" $(if $$dry_run,--dry-run)
-
-_builtin_clean_workspace_all: _builtin_require_environment
-	@set -eu; \
-	root="$(abspath $(or $(strip $(ROOT)),$(PROJECT_ROOT)))"; \
-	dry_run="$(strip $(DRY_RUN))"; \
-	confirm="$(strip $(CONFIRM))"; \
-	$(PROJECT_FLEXT_INFRA) workspace clean --repository-root "$$root" $(if $$dry_run,--dry-run) $(if $$confirm,--confirm)
-
-# SOP: PR Validation & RCA
-_builtin_pr_validate_all: _builtin_require_environment
-	@set -eu; \
-	root="$(abspath $(or $(strip $(ROOT)),$(PROJECT_ROOT)))"; \
-	tracking_id="$(strip $(TRACKING_ID))"; \
-	$(PROJECT_FLEXT_INFRA) workspace pr-validate --repository-root "$$root" $(if $$tracking_id,--tracking-id "$$tracking_id")
-
-_builtin_rca_capture_all: _builtin_require_environment
-	@set -eu; \
-	root="$(abspath $(or $(strip $(ROOT)),$(PROJECT_ROOT)))"; \
-	tracking_id="$(strip $(TRACKING_ID))"; \
-	$(PROJECT_FLEXT_INFRA) workspace rca-capture --repository-root "$$root" $(if $$tracking_id,--tracking-id "$$tracking_id")
-
 # Public operations invoke only their own canonical implementation.
 _builtin-build: _builtin_build_artifacts
 	@$(PROJECT_FLEXT_INFRA) docs build --repository-root "$(PROJECT_ROOT)" --output-dir ".reports/docs" --projects .
@@ -1546,10 +1487,6 @@ _builtin-clean: _builtin_clean_generated
 _builtin-gen: _builtin_gen_all
 _builtin-gen-scope: _builtin_gen_scope_all
 _builtin-mod: _builtin_mod_apply
-_builtin-sync-workspace: _builtin_sync_workspace_all
-_builtin-clean-workspace: _builtin_clean_workspace_all
-_builtin-pr-validate: _builtin_pr_validate_all
-_builtin-rca-capture: _builtin_rca_capture_all
 # The repository's release capability elects these product operations.
 # Operator values cross the shell boundary as environment data.
 
