@@ -79,6 +79,11 @@ The standard is data, not prose. It lives only in:
   policy and `templates.entries`. Managed-file views derive from that single catalog.
 - `flext-infra/.../config/tooling.yaml` — tool versions and tool config (ruff, pyrefly,
   pyright, mypy, pytest) rendered into `pyproject.toml`.
+
+> **Amended 2026-11-15:** Mypy and Pyright removed; Pyrefly is the single type
+> checker (operator order `ag-6w7a`, 2026-11-13, repeated 2026-11-15; global
+> `rules/python.md`). The tooling SSOT renders Ruff,
+> Pyrefly and pytest configuration; the pyright and mypy entries above are history.
 - each parent's `.gitmodules` — the sole member list; each repository's own typed
   declarations — kind and genuine local deltas.
 - `flext-tests` — shared fixtures and `conftest` base.

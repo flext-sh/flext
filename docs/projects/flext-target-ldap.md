@@ -35,8 +35,8 @@ only `target_name` and `sink_factory`.
 - Quality gates run through the selector-free workspace Make contract: `make setup`,
   `make check`, `make test`. From the workspace root these fan out across every declared
   member; from within `flext-target-ldap/` they apply to this package only.
-- Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy,
-  pyright); consult the gate output rather than static claims in this page.
+- Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly);
+  consult the gate output rather than static claims in this page.
 
 ## Quick start
 

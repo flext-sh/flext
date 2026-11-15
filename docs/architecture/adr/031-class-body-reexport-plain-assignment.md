@@ -96,6 +96,8 @@ class objects with lazy wrappers and break every such consumer.
 - `ruff check` closes `UP040` at every class-body re-export site with the
   plain-assignment form; no `type` statement appears inside a class body for
   re-exports.
-- `pyright`/`pyrefly` report no new diagnostics on the rewritten sites.
+- `pyrefly` reports no new diagnostics on the rewritten sites (amended 2026-11-15:
+  Mypy and Pyright removed, Pyrefly is the single type checker, operator order
+  `ag-6w7a`; the original contract also named `pyright`).
 - Consumers that read re-exported classes as values (e.g. `.HANDLER_TYPES`) keep
   passing their tests.

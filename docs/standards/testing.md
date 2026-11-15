@@ -76,8 +76,8 @@ through the production facade; the test-only mixins stay in `_models`,
 
 Test code is typed as strictly as production code. `Any`, `object`, `cast`,
 `TypeGuard`, `TypeIs`, `assert isinstance` narrowing, implicit conversions used to
-satisfy the checker, and every ignore hint (`# type: ignore`, `# pyright: ignore`,
-`# mypy: ignore`, `# ruff: ignore`, `# noqa`) are prohibited. Declare the concrete
+satisfy the checker, and every ignore hint (`# type: ignore`, `# pyrefly: ignore`,
+`# ruff: ignore`, `# noqa`) are prohibited. Declare the concrete
 type in `t`, the protocol in `p`, the model in `m`, the constant in `c`, or the
 helper in `u`; then consume that declaration. A checker failure is repaired at its
 declaration, never suppressed.

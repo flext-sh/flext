@@ -274,8 +274,8 @@ check result or a check configuration is, first passes the global
 `~/agents/rules/architecture/change-admission.md` (operator order 2026-11-14, tracker
 memory `operator-order-2026-11-14-architecture-change-admission`). Its FLEXT facts:
 
-- The tools whose behaviour is measured are Pydantic, mypy, pyright, pyrefly and
-  ruff at the versions the workspace lock declares; the census runs over all
+- The tools whose behaviour is measured are Pydantic, pyrefly and ruff at the
+  versions the workspace lock declares; the census runs over all
   governed repositories with code-review-graph or the syntax tree; the decision
   record is the topic-owning ADR in `docs/architecture/adr/`.
 - A statement about a lint or type result names the Make verb and `CHECK_PHASE`
@@ -388,9 +388,15 @@ branch, another worktree, or a same-named catalog entry.
 
 ## Lint-Rule Change Freeze (inviolable — operator order 2026-10-28)
 
+Python has one formatter and linter, Ruff, and one type checker, Pyrefly
+(operator order 2026-11-13 `ag-6w7a`, verbatim: "pq vc nao está usando ruff e
+pyrefly, que são os oficais pela linha de comando?"; global `rules/python.md`; no
+second type checker beside it). Mypy and Pyright are not run by any Make verb,
+gate, projection or dependency.
+
 Lint and type-check RULES are frozen at operator authority. The frozen surface is
-every rule-selection, severity, mode, and scope key of Ruff, Pyrefly, Pyright, Mypy,
-jscpd, and qlty — including `typeCheckingMode`, code-tier includes/excludes
+every rule-selection, severity, mode, and scope key of Ruff, Pyrefly,
+jscpd, and qlty — including code-tier includes/excludes
 (`src`, `tests`, `examples`, `scripts`), `extraPaths`, `venv`/`venvPath`/`pythonPath`
 bindings, and their SSOT declarations in `flext-infra/config/tooling.yaml`,
 `config/codegen.yaml`, and every generated `[tool.*]` section of the 32 member
@@ -545,7 +551,7 @@ heavy verb at a time, `make tests` rather than `tests-full`, and
 
 **All commands run from the active workspace/worktree root**, never from inside a
 submodule. Use `make`, never bare
-`uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
+`uv`/`ruff`/`pyrefly`/`pytest`.
 
 The approved common Make interface is `setup`, `upg`, `gen`, `mod`, `fix`,
 `fmt`, `check`, `tests`, `tests-full`, `help`, `build`, and `clean`. The operator's
@@ -674,8 +680,7 @@ moving selectors.
 `flext-infra/config/tooling.yaml` owns tool configuration and policy, not a separate
 version catalog. The `.default-python-packages` file was removed.
 
-**Gotchas:** the typed tooling policy owns Mypy's memory and execution limits; never
-bypass them with an uncapped direct invocation. Documentation uses the existing engines
+**Gotchas:** documentation uses the existing engines
 through gen, fix, fmt, check and build; no separate documentation lifecycle bypasses
 those owners.
 
@@ -781,8 +786,7 @@ CLI + pytest plugin, **never imported at runtime**.
     (tooling `lazy-init.stdlib-backports`: `typing_extensions`, operator decision
     2026-10-24) count as stdlib. The PEP 747 special form is called and annotated
     only through `from typing_extensions import TypeForm` (`TypeForm(X)`,
-    `TypeForm[T]`): mypy honours the call only for the fullname
-    `typing_extensions.TypeForm`. `t.TypeForm` is removed (operator ruling
+    `TypeForm[T]`). `t.TypeForm` is removed (operator ruling
     2026-10-31, ADR-028; supersedes the 2026-10-29 `t.TypeForm` order, now
     history).
   - Inside the facades too, an external library's types are named only through `t`
