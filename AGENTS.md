@@ -43,8 +43,9 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
 7. **Continuous green.** No completion while the project or environment is broken,
    partially migrated, dirty from task WIP, ahead of remote, missing real-use QA, or
    carrying stale generated output or docs. Run native global and changed-scope gates;
-   Python requires Ruff, Pyrefly, Pyright, Mypy, and Pytest coverage plus applicable
-   build and integrated validation. Lint and type gates cover `examples/`, `scripts/`,
+   Python requires Ruff (formatter/linter) and Pyrefly (single type checker),
+   and Pytest coverage plus applicable build and integrated
+   validation. Lint and type gates cover `examples/`, `scripts/`,
    and `tests/` with the same rigor as production source: blanket
    `per-file-ignores`/exclude patterns that hide violations in those trees are
    prohibited (operator law 2026-07-20). The only permitted exceptions are test-idiom
@@ -779,9 +780,8 @@ CLI + pytest plugin, **never imported at runtime**.
     (tooling `lazy-init.stdlib-backports`: `typing_extensions`, operator decision
     2026-10-24) count as stdlib. The PEP 747 special form is called and annotated
     only through `from typing_extensions import TypeForm` (`TypeForm(X)`,
-    `TypeForm[T]`). `t.TypeForm` is removed (operator ruling
-    2026-10-31, ADR-028; supersedes the 2026-10-29 `t.TypeForm` order, now
-    history).
+    `TypeForm[T]`). `t.TypeForm` removal completed via
+    `ban-typeform-alias-call` and `pydantic-typeform-import` rules.
   - Inside the facades too, an external library's types are named only through `t`
     aliases or `p` protocols; `u` never re-narrows or re-parses (`isinstance` chains,
     `ast.literal_eval`) what a `t`/`m` declaration validates once.
