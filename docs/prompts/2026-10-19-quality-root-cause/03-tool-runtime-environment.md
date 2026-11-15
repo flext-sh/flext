@@ -80,6 +80,6 @@ workaround, borrowed environment, command-line override or fixed absolute path.
 ## Acceptance evidence
 
 Prove attached, standalone and planned scaffold cases through native tests; regenerate
-the core projection and rerun native Pyright. Historical report had zero diagnostics
+the core projection and rerun the native type check. Historical report had zero diagnostics
 but a missing member .venv stderr warning, so its gate was RED. Require no warning and
 correct runtime provenance.

@@ -235,7 +235,7 @@ Persistent locators:
 
 The Root plan collector was configured disabled with no sources when the cited
 Root gen ran. Its successful hook was a configured no-op, not extraction or proof
-that documentation/Beads automation completed. No full Ruff/Pyrefly/Pyright/Mypy/
+that documentation/Beads automation completed. No full Ruff/Pyrefly/
 Pytest/build/CI/integrated acceptance exists for this campaign.
 
 ## Coordination cursor

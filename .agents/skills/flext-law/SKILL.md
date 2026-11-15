@@ -9,8 +9,7 @@ description:
 
 ## Lint-rule change freeze (inviolable)
 
-Ruff is the one formatter and linter and Pyrefly the one type checker; Mypy and
-Pyright are not run by any Make verb, gate, projection or dependency (operator order
+Ruff is the one formatter and linter and Pyrefly the one type checker (operator order
 2026-11-13 `ag-6w7a`; global `rules/python.md`). Lint and type-check rules (ruff,
 pyrefly, jscpd, qlty — rule selections, severities, code-tier scope, `extraPaths`,
 `venv`/`venvPath` bindings, and their SSOT in `flext-infra/config/tooling.yaml` and
@@ -18,7 +17,7 @@ every generated `[tool.*]` section) change only with express operator authorizat
 Agents never relax, tighten, re-scope, or re-project them on their own account; the
 fix for a lint finding is at the code's owner or the projection's SSOT, never the
 rule. See the root `AGENTS.md` "Lint-Rule Change Freeze" block (operator order
-2026-10-28, pyright incident precedent).
+2026-10-28, with its incident precedent).
 
 ## Composition
 

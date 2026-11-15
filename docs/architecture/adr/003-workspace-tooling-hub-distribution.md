@@ -22,9 +22,7 @@
   ownership in §3 and the verification contract SUPERSEDED (2026-10-25) by
   [ADR-030](030-member-locks-composition-upg-guard.md) — member `uv.lock` and
   `mise.lock` are kept and formed by each member, and the workspace lock is their
-  composition (tracker memory `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`);
-  §5 amended 2026-11-15 — Mypy and Pyright removed, Pyrefly is the single type checker
-  (operator order `ag-6w7a`)
+  composition (tracker memory `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`)
 - **Date:** 2026-06-24
 - **Scope:** FLEXT, downstream-organization, and standalone repository topology,
   dependency provenance,
@@ -145,46 +143,29 @@ No profile depends on files outside its repository checkout.
 
 ### 5. Analyzers use the environment owned by the checkout topology
 
-> **Amended 2026-11-15:** Mypy and Pyright removed; Pyrefly is the single type
-> checker (operator order `ag-6w7a`, 2026-11-13, repeated 2026-11-15; global
-> `rules/python.md`). The Pyright `venvPath`/`venv` paths, the
-> `mypy-type-checker.*` editor settings, the Pylance + Pyright diagnostics and the
-> retained `pydantic.mypy`/strict-Pyright sentence below are history. The
-> checkout-topology environment election still governs Pyrefly and the
-> `python.defaultInterpreterPath` binding.
-
 Operator-approved amendment, 2026-10-28, tracked by `flext-itpd1.13.11`:
 the approved MRO/Pydantic typing plan corrects environment selection without
 changing diagnostic severities, analyzed code tiers or model behavior.
 
-Relative Pyright environment paths resolve from the configuration file. The
+Relative environment paths resolve from the configuration file. The
 environment-owning workspace root and an independent checkout declare
 `venvPath = "."` with `venv = ".venv"`; an attached member using its parent
 workspace environment retains `venvPath = ".."`. The generator derives attachment
 from the existing workspace topology owner, never from the presence of an
 arbitrary neighboring environment. No absolute developer path is published.
 
-The editor declaration adds exactly these previously undeclared settings:
-
-| Setting                         | Approved value                            | Purpose                                      |
-| ------------------------------- | ----------------------------------------- | -------------------------------------------- |
-| `mypy-type-checker.interpreter` | `["${workspaceFolder}/.venv/bin/python"]` | Bind the extension to the opened environment |
-| `mypy-type-checker.path`        | `["${interpreter}", "-m", "mypy"]`        | Invoke that environment's module explicitly  |
-| `mypy-type-checker.cwd`         | `"${nearestConfig}"`                      | Discover the owning member's configuration   |
-
 The one-program Pylance workspace contract remains unchanged. Its
-`Pylance + Pyright` diagnostics and environment-selected version remain explicit;
+diagnostics and environment-selected version remain explicit;
 acceptance records the engine actually launched, not just the declared settings.
-The `pydantic.mypy` plugin, typed constructors, strict Pyright checking and the
-existing `call-arg`/`prop-decorator` exceptions remain unchanged. Any further
+Any further
 frozen-key change needs its own explicit old/new-value authorization.
 
 The operator's subsequent clarification in the same session makes dual-mode
 environment ownership explicit: a project cloned into a declared workspace uses
 that workspace's environment, while a standalone clone owns its own environment.
 This also applies when the editor opens an attached member by itself. The
-approved `mypy-type-checker.interpreter` and `python.defaultInterpreterPath`
-bindings therefore derive their relative environment path from that topology:
+approved `python.defaultInterpreterPath`
+binding therefore derives its relative environment path from that topology:
 `${workspaceFolder}/.venv/bin/python` for an environment owner and, for a direct
 member, `${workspaceFolder}/../.venv/bin/python`. Nested placement derives the
 relative path rather than counting a fixed number of parents. Other declared

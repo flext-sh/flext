@@ -171,11 +171,11 @@ make check
 make tests
 ```
 
-`make help` owns the current inventory; [Make Commands](guides/make-commands.md)
-documents the lifecycle. Use the root Make dispatcher and the [testing
-standard](standards/testing.md#canonical-execution). Ruff owns formatting and lint;
-Pyrefly owns type checking. Retired checkers' passive local configuration is governed
-by [agents ADR-0039](https://github.com/datacosmos-br/agents/blob/dev/docs/adr/ADR-0039-pyrefly-is-the-only-type-checker.md).
+`make help` owns the current inventory; the complete lifecycle is documented in
+[Make Commands](guides/make-commands.md) without freezing a target count here. All FLEXT
+validation uses the root Make dispatcher and every Python test run retains the canonical
+testmon cache; never run bare `ruff`, `pyrefly`, or `pytest` commands. Ruff is the one
+formatter and linter and Pyrefly the one type checker (operator order 2026-11-13 `ag-6w7a`).
 
 Record every red or green result with its exit code and decisive output in the active
 workspace Bead.

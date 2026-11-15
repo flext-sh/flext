@@ -65,9 +65,8 @@ Upstream Pydantic declaration primitives retain their library/model owner. Movin
 project helpers does not authorize importing `u` backward into `m`, `config`, or
 `settings`, or changing validation behavior merely to relocate a decorator.
 
-Ruff is the one formatter and linter and Pyrefly the one type checker. Mypy, its
-`pydantic.mypy` plugin, and Pyright are not run by any Make verb, gate, projection or
-dependency (operator order 2026-11-13 `ag-6w7a`; global `rules/python.md`).
+Ruff is the one formatter and linter and Pyrefly the one type checker
+(operator order 2026-11-13 `ag-6w7a`; global `rules/python.md`).
 `flext-infra/config/tooling.yaml` owns the Ruff and Pyrefly policy. Change and
 regenerate the producer, never hand-edit a consumer projection. Correct YAML alone
 does not prove that the installed checker consumed the policy. Never weaken an

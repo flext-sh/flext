@@ -81,5 +81,5 @@ tests.
 ## Acceptance evidence
 
 Prove observable behavior and failure semantics through public boundaries; rerun member
-Ruff, Pyrefly, Pyright, Mypy and affected tests using native routes. No reduced test
+Ruff, Pyrefly and affected tests using native routes. No reduced test
 collection or renamed expectations solely to accept broken behavior.

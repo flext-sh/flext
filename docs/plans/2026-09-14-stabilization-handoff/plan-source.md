@@ -474,7 +474,7 @@ Dono: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`,
   drop de `result` no rule0.
 - `make mod` desbloqueado e avançando; estados medidos: setup 0, deps 0 (uv.lock de raiz
   gerado), fmt 0, ruff e pyrefly verdes na enumeração por membro.
-- Restante (grind em andamento): cluster pyright `inconsistent-inheritance` na
+- Restante (grind em andamento): cluster `inconsistent-inheritance` na
   hierarquia `deps_tool_config`, `bad-dunder-all` de `TestsRule4Annotations`,
   type-mismatch em `tests/utilities_release.py:44` (artifact × release
   BuildConstraintSpec) — depois `check`/`tests` completos e announce `[coord] verify`.
