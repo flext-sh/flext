@@ -32,8 +32,8 @@ FLEXT API is the FLEXT platform's HTTP client layer: a typed REST client facade 
 
 - Quality gates run through selector-free root `make check`, `make test`, and
   `make build`.
-- Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy,
-  pyright); consult the gate output rather than static claims in this page.
+- Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly);
+  consult the gate output rather than static claims in this page.
 
 ## Quick start
 

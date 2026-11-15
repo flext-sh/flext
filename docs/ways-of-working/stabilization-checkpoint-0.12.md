@@ -73,7 +73,7 @@ configuration and dependency origins. Record the elected universe and account fo
 exclusions before claiming global acceptance. Missing project rows or hidden
 first-party fixtures leave this prerequisite unproven even when the completed rows
 report zero diagnostics. Evaluate Ruff and Pyrefly first, then complete the
-remaining required `check` gates, including Mypy, before admitting Pytest through
+remaining required `check` gates before admitting Pytest through
 its same-scope green-check receipt. Those checks and their repairs belong to this
 prerequisite; they are not a later phase blocked by the tests they must admit.
 Keep setup changes and the deferred refactor pending until the global prerequisite
@@ -141,13 +141,12 @@ the complete configured docs lifecycle. Residual warnings and findings block clo
 Do not start another cycle before proving the whole fleet green on the integrated and
 published SHAs.
 
-Pydantic 2 and the Mypy `pydantic.mypy` plugin are mandatory. The operator's scoped
-exception suspends only `prop-decorator` and `call-arg`; it does not waive the remaining
-lint or type gates. Code changes made to work around either diagnostic are regressions.
-Review their causal hunks and correct them through the existing policy and regression
-owners, preserving shared work and proving the real consumer. The source contract and authorization
-are recorded in `flext-2guq8`; generated configurations
-must reflect their canonical policy owner rather than being patched at consumers.
+Pydantic 2 is mandatory. Ruff is the one formatter and linter and Pyrefly the one type
+checker; Mypy, its `pydantic.mypy` plugin, and Pyright are not run by any Make verb,
+gate, projection or dependency (operator order 2026-11-13 `ag-6w7a`, which retires the
+`flext-2guq8` Mypy suspension of `prop-decorator` and `call-arg`). Generated
+configurations must reflect their canonical policy owner rather than being patched at
+consumers.
 
 ## (b) Central Beads contract
 

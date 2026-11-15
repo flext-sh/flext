@@ -62,6 +62,6 @@ an owner.
 ## Required final report
 
 Do not finish until you can report: active/closed Bead IDs; changed and preserved paths;
-manual-QA behavior; global Ruff/Pyrefly result; affected-scope Pyright, mypy, and pytest
-results; remaining external blockers; and the final root plus affected-submodule Git
-status. Commit or push only with explicit user authorization and explicit pathspecs.
+manual-QA behavior; global Ruff/Pyrefly result; affected-scope pytest results; remaining
+external blockers; and the final root plus affected-submodule Git status. Commit or push
+only with explicit user authorization and explicit pathspecs.

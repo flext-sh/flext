@@ -22,7 +22,9 @@
   ownership in §3 and the verification contract SUPERSEDED (2026-10-25) by
   [ADR-030](030-member-locks-composition-upg-guard.md) — member `uv.lock` and
   `mise.lock` are kept and formed by each member, and the workspace lock is their
-  composition (tracker memory `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`)
+  composition (tracker memory `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`);
+  §5 amended 2026-11-15 — Mypy and Pyright removed, Pyrefly is the single type checker
+  (operator order `ag-6w7a`)
 - **Date:** 2026-06-24
 - **Scope:** FLEXT, downstream-organization, and standalone repository topology,
   dependency provenance,
@@ -142,6 +144,14 @@ The sole template layer supports exactly two profiles, derived from the checkout
 No profile depends on files outside its repository checkout.
 
 ### 5. Analyzers use the environment owned by the checkout topology
+
+> **Amended 2026-11-15:** Mypy and Pyright removed; Pyrefly is the single type
+> checker (operator order `ag-6w7a`, 2026-11-13, repeated 2026-11-15; global
+> `rules/python.md`). The Pyright `venvPath`/`venv` paths, the
+> `mypy-type-checker.*` editor settings, the Pylance + Pyright diagnostics and the
+> retained `pydantic.mypy`/strict-Pyright sentence below are history. The
+> checkout-topology environment election still governs Pyrefly and the
+> `python.defaultInterpreterPath` binding.
 
 Operator-approved amendment, 2026-10-28, tracked by `flext-itpd1.13.11`:
 the approved MRO/Pydantic typing plan corrects environment selection without
