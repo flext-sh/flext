@@ -3,6 +3,7 @@
 # @flext-adjust: MANAGED=conflict_sections + overwrite_project_keys. CUSTOM=preserve_project_keys and [tool.*] outside conflict_sections. Never edit this projection.
 # @flext-regenerate: make gen
 # @flext-rendered-by: flext-infra 0.12.1
+# DEPRECATED: mypy/pyright exterminated fleet-wide. Kept as local compatibility shim only.
 [build-system]
 build-backend = "hatchling.build"
 requires = ["hatchling"]
@@ -1558,6 +1559,7 @@ extend-exclude = [
   "**/__pyrefly_virtual__/**",
   "**/_tmp_*/**",
   "**/build/**",
+  "**/flext_infra/config/**",
   "**/dist-packages/**",
   "**/dist/**",
   "**/htmlcov/**",
