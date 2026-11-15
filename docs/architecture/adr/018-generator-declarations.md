@@ -321,20 +321,21 @@ open. Where it differs from a bullet above, this subsection prevails.
    resolving an abstract method a part implements, or Pydantic reading
    `model_config` or a field that shadows a part member. The load is correct,
    not free, and the acceptance tests name each of these cases.
-2. **An unlisted member is an `AttributeError`.** There is one resolution path.
-   A stale initializer is a stale projection: `make gen` repairs it, and the
-   completeness of every index is a generation fixed point and a check gate for
-   every package, never a runtime recovery.
+2. Stand-in members are resolved dynamically at run time. The member list
+   lives only in memory: it is reused on later accesses and grows with each
+   discovery, never starting over from zero. A member that does not exist in
+   the code raises `AttributeError`, and resolving a member loads only what
+   owns it. No member list is generated, persisted or kept between processes
+   (`operator-decision-2026-11-15-standin-members-fully-dynamic`).
 3. **Every base of a stand-in has metaclass `type`.** The runtime verifies it
    when it resolves the shared bases; a base with another metaclass fails there,
    by name.
-4. **An ancestor-package base is shared by its import route.** A part whose base
-   is declared by an ancestor FLEXT package (`FlextCliTypes`,
-   `FlextLdapConstants`) lists that base as `(package, export)`, exactly as the
-   source imports it. It is never flattened and never dropped, so the
-   stand-in's MRO names the same ancestor object as the real class, and the
-   output is identical in a workspace run, a standalone member and an external
-   consumer. A builtin or third-party base still fails generation.
+4. The bases of a stand-in are resolved at run time from its part's class
+   statement and its module's import bindings, kept in memory: a base imported
+   from a package resolves through that package's export; a base defined in
+   the same module or imported by module path becomes its own in-memory
+   stand-in. C3 reproduces the real MRO; nothing is flattened, and no base list
+   is generated.
 5. **A part a stand-in cannot represent is rejected at generation** and
    corrected at its source. A stand-in carries no dunder of its class and is not
    the real class in the facade's MRO, so each of these would be lost or break
@@ -381,18 +382,14 @@ open. Where it differs from a bullet above, this subsection prevails.
   conflict by construction. A non-class stand-in resolved through
   `__mro_entries__` either returns the real class, which loads every part when
   the facade is composed, or returns a plain stand-in, which is rule 1 behind an
-  indirection that `type()` rejects as a base. A source fingerprint per
-  initializer reads every source at import and means nothing for an installed
-  wheel.
-- **Acceptance.** flext-core carries the composition matrix of rule 1 as tests,
-  with zero part loads and the three named loading cases, a test that an
-  unlisted member raises and loads nothing, and a test that the flag of rule 6
-  fails once a stand-in is published. flext-infra carries the ancestor-base
-  fixture of rule 4 with identical output in the three run scopes, the
-  rejections of rule 5, a completeness test for every regenerated package that
-  compares each stand-in with the runtime namespace of its real class (names
-  bound by unpacking, decorators or `setattr` included), and byte-identical
-  initializers with the flag of rule 6 on and off. The consumer proof is
+  indirection that `type()` rejects as a base.
+- **Acceptance.** flext-core carries as tests the composition matrix of rule 1
+  with zero part loads, including a generic (PEP 695) part, and the named
+  loading cases; a member added to a part after generation resolves and loads
+  only its part; a name absent from the code raises `AttributeError` and loads
+  nothing; each stand-in has the same MRO, members and type parameters as its
+  real class; and the flag of rule 6 fails once a stand-in is published.
+  flext-infra carries the rejections of rule 5. The consumer proof is
   `make gen` followed by the fresh import of each regenerated member and of one
   external consumer.
 - **Status (2026-11-14): decided, implementation pending.** The runtime still
