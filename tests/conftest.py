@@ -23,55 +23,55 @@ from flext_tests import (
 
 
 @pytest.fixture(scope="session")
-def c() -> FlextTestsConstants:
+def c() -> type[FlextTestsConstants]:
     """Constants facade for test configuration and parametrization.
 
     Returns:
-        The FlextTestsConstants facade.
+        The FlextTestsConstants facade class.
 
     """
     return FlextTestsConstants
 
 
 @pytest.fixture(scope="session")
-def t() -> FlextTestsTypes:
+def t() -> type[FlextTestsTypes]:
     """Types facade for type aliases and protocols.
 
     Returns:
-        The FlextTestsTypes facade.
+        The FlextTestsTypes facade class.
 
     """
     return FlextTestsTypes
 
 
 @pytest.fixture(scope="session")
-def p() -> FlextTestsProtocols:
+def p() -> type[FlextTestsProtocols]:
     """Protocols facade for interface contracts.
 
     Returns:
-        The FlextTestsProtocols facade.
+        The FlextTestsProtocols facade class.
 
     """
     return FlextTestsProtocols
 
 
 @pytest.fixture(scope="session")
-def m() -> FlextTestsModels:
+def m() -> type[FlextTestsModels]:
     """Models facade for Pydantic test models.
 
     Returns:
-        The FlextTestsModels facade.
+        The FlextTestsModels facade class.
 
     """
     return FlextTestsModels
 
 
 @pytest.fixture(scope="session")
-def u() -> FlextTestsUtilities:
+def u() -> type[FlextTestsUtilities]:
     """Utilities facade for test helpers and builders.
 
     Returns:
-        The FlextTestsUtilities facade.
+        The FlextTestsUtilities facade class.
 
     """
     return FlextTestsUtilities
