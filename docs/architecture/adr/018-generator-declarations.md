@@ -313,12 +313,12 @@ open. Where it differs from a bullet above, this subsection prevails.
   admission of generation and the tests named below.
 
 1. **A stand-in is a plain class.** It is built with `type`, holds one
-   `FlextLazyMember` descriptor per listed member, and has no metaclass and no
-   fallback. It composes with a Pydantic model, a class that subclasses a
-   protocol, an `ABC`, a generic, an enum, a dataclass or a class with its own
-   metaclass, and loads no part module while doing so. A metaclass that reads a
-   listed member while it creates a deriving class loads that part: `ABCMeta`
-   resolving an abstract method a part implements, or Pydantic reading
+   `FlextLazyMember` descriptor per member its part's code binds, and has no
+   metaclass and no fallback. It composes with a Pydantic model, a class that
+   subclasses a protocol, an `ABC`, a generic, an enum, a dataclass or a class
+   with its own metaclass, and loads no part module while doing so. A metaclass
+   that reads a member while it creates a deriving class loads that part:
+   `ABCMeta` resolving an abstract method a part implements, or Pydantic reading
    `model_config` or a field that shadows a part member. The load is correct,
    not free, and the acceptance tests name each of these cases.
 2. Stand-in members are resolved dynamically at run time. The member list
@@ -358,14 +358,14 @@ open. Where it differs from a bullet above, this subsection prevails.
 6. **A generator process runs eager.** The generator imports its own FLEXT
    packages (`flext_infra/codegen/lazy_init.py` imports the flext-infra
    facades, which compose flext-cli and flext-core), so when it regenerates one
-   of them a stale member index must not block the repair; every other package
+   of them a stale initializer must not block the repair; every other package
    it regenerates it never imports. The generation entry sets one process flag
    before the first facade is read, and `FlextLazy` then publishes the real
    classes; setting the flag after a stand-in was published fails, so a process
    never mixes stand-ins and real classes. No environment variable selects it.
    Measured cost: the facade import of a generator process goes from 1.9 s to
    5.8 s; every other process keeps the deferred import. A part missing from an
-   export map is not a stale member index and still fails, as before.
+   export map still fails, as before.
 7. **A published letter names its class, and a module-less ancestor is a
    package.** A base read through another package's letter
    (`from flext_ldif import p`) is shared by that route under rule 4, and the
