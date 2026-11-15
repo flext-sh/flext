@@ -349,7 +349,11 @@ open. Where it differs from a bullet above, this subsection prevails.
    (`class X(A, B): pass`) binds its members through its bases and is deferred
    with no members of its own and those bases shared, so deriving stand-ins keep
    the real MRO; only a stand-in with neither members nor bases is invalid, and
-   the runtime rejects it when it builds the stand-in.
+   the runtime rejects it when it builds the stand-in. A class the package's
+   own import-time code reads (the modules of its eager dunder bindings, such
+   as `__version__`, and what they import from the package) is not deferred:
+   it loads at import anyway, and importing a package must publish no
+   stand-in, so the eager flag of rule 6 can still be set first.
 6. **A generator process runs eager.** The generator imports its own FLEXT
    packages (`flext_infra/codegen/lazy_init.py` imports the flext-infra
    facades, which compose flext-cli and flext-core), so when it regenerates one
