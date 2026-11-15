@@ -59,7 +59,7 @@ values are last observed in this session and other actors share the board.
      is removed; the chain is `.flat_map(self.request)`.
    - **Not set up, not gated, not committed.** Verify `create_from_callable` preserves
      Result semantics for invalid method/URL and admits `bytes` bodies. If review or
-     mypy rejects it, the fallback is `u.parse_model` plus widening its core input to
+     a gate rejects it, the fallback is `u.parse_model` plus widening its core input to
      admit request-body bytes (move that to the core lane; do not cast bytes).
 2. **flext-observability** —
    `/home/marlonsc/worktrees/flext-observability/observability-labels-json-20261114`,
@@ -72,7 +72,7 @@ values are last observed in this session and other actors share the board.
    `/home/marlonsc/worktrees/flext-auth/auth-settings-identity-20261114`,
    branch `fix/auth-settings-identity-20261114`.
    - `tests/unit/test_api.py`: exact identity via `id(value) == id(settings)`.
-   - Setup done; focused mypy 0 errors; `CI=N make check CHECK_PHASE=primary` passed;
+   - Setup done; focused gate 0 errors; `CI=N make check CHECK_PHASE=primary` passed;
      `CI=N make fmt` passed (no-op).
    - Docs repairs already applied in this lane:
      - `docs/architecture.md` retired to a short historical pointer (the v2.0.0 code
@@ -96,9 +96,7 @@ values are last observed in this session and other actors share the board.
 
 ### Not started
 
-- **Infra SSOT policy lane** (authorized, conditional on evidence). No lane exists
-  yet. `mypy_path` is still `["src"]`; no `meltano.*` override exists.
-- **Final root bump** for the member fixes and the infra policy.
+- **Final root bump** for the member fixes.
 - **Beads/retirement/docs/RCA closure**.
 
 ### Beads
@@ -111,11 +109,6 @@ values are last observed in this session and other actors share the board.
 
 ### Authorizations
 
-- Operator authorized both narrow mypy SSOT changes **conditionally on evidence**:
-  1. `mypy_path` `["src"]` → `["src", "."]` (root-owned `scripts` package).
-  2. A `meltano.*` override with `follow_untyped_imports = true`, same shape as the
-     existing `rope.*` axiom, **only** if the six meltano findings reproduce and the
-     mechanism is mypy failing to authenticate the installed distribution.
 - Operator's completion order authorizes landing these convergence PRs. If the
   ruleset still blocks with every declared check green, use `--admin --merge` only
   for these PRs, after recording the mandate and the exact head in a PR comment.
@@ -149,7 +142,7 @@ values are last observed in this session and other actors share the board.
    `CI=N make fix` loop; it stops at the first failure, so repeat until green.
    A diagnostic scanner exists at `/home/marlonsc/tmp/kilo/scan_auth_docs.py`
    (outside the repo; diagnostic only, not evidence).
-2. `CI=N make fix` green; `CI=N make fmt` no-op; focused mypy 0; `CI=N make check
+2. `CI=N make fix` green; `CI=N make fmt` no-op; focused gate 0; `CI=N make check
    CHECK_PHASE=primary`; `CI=N make tests`.
 3. Commit the test fix and the docs repairs with explicit paths. Push a PR. If the
    docs tail is too large to finish in the same slice, split it into a dedicated
@@ -159,7 +152,7 @@ values are last observed in this session and other actors share the board.
 
 ### Step 3 — Flext-api lane
 
-1. `make setup` in the lane; focused mypy; `CI=N make check CHECK_PHASE=primary`;
+1. `make setup` in the lane; focused gate; `CI=N make check CHECK_PHASE=primary`;
    `CI=N make tests`.
 2. Prove the real request boundary: the API tests that build and send requests must
    pass, including a `bytes` body and invalid method/URL failure results.
@@ -168,42 +161,19 @@ values are last observed in this session and other actors share the board.
 
 ### Step 4 — Flext-observability lane
 
-1. `make setup`; focused mypy; primary check; tests.
+1. `make setup`; focused gate; primary check; tests.
 2. Verify `resolve_metric_info` returns the same labels for scalar values and a
    stable `JsonValue` mapping for nested labels; no behavior change.
 3. `make fix`/`fmt` no-op; commit/push/PR/merge.
 
 ### Step 5 — Flext-core lane
 
-1. `make setup`; focused mypy; primary check; tests.
+1. `make setup`; focused gate; primary check; tests.
 2. The change is test-only; prove the assertion still fails if a field annotation is
    `TypeAlias` (temporary local check is enough; do not commit a fake).
 3. `make fix`/`fmt` no-op; commit/push/PR/merge.
 
-### Step 6 — Infra SSOT policy lane (authorized, conditional)
-
-Create from `flext-infra` `origin/0.12.0-dev` (must include `c3d37c8b`).
-
-1. **Re-measure the six `meltano.*` findings** at the new pins with the canonical
-   focused mypy route. Capture command, cwd, exit, interpreter, site-packages path,
-   and whether `meltano` is importable. Installed `meltano 4.4.1` ships `py.typed`
-   and the generated config already has `follow_untyped_imports = true`; the handoff's
-   "untyped distribution" diagnosis is unproven.
-2. **scripts** (authorized): change `mypy_path` `["src"]` → `["src", "."]` in
-   `flext-infra/src/flext_infra/config/tooling.yaml`. Reason: the repo root is the
-   `scripts` package root; `src` is not a package, so no duplicate module name is
-   expected. Run `make gen`; prove every governed pyproject and the root projection
-   changed. If `source-file-found-twice` appears, stop and report; a different key
-   needs a new authorization.
-3. **meltano** (conditional): only if step 1 proves the six findings and the
-   mechanism is mypy not authenticating the installed distribution, add the
-   `meltano.*` override exactly as authorized. If it does not clear the findings,
-   stop and report; do not add another key or suppression.
-4. `CI=Y make gen` twice; `CI=Y make check CHECK_PHASE=primary`; commit/push/PR/merge.
-5. After merge, update the final root lane's infra gitlink, run `make gen`, and prove
-   the root `scripts.hooks` finding is gone with the focused mypy/complete check.
-
-### Step 7 — Final root bump and complete proof
+### Step 6 — Final root bump and complete proof
 
 Create/refresh a root lane from the merged `origin/0.12.0-dev`:
 
@@ -218,7 +188,7 @@ Create/refresh a root lane from the merged `origin/0.12.0-dev`:
 6. Verify the Docs workflow on the final merge commit; record the run ID.
 7. Merge after the exact head is green; record the merge SHA.
 
-### Step 8 — Beads, docs, RCA, retirement
+### Step 7 — Beads, docs, RCA, retirement
 
 1. `flext-5jsar`: receipts, merge SHAs, the docs-example debt, and the final complete
    check. Close only when check + tests are green at the final tip.
@@ -228,7 +198,7 @@ Create/refresh a root lane from the merged `origin/0.12.0-dev`:
 4. Update affected `AGENTS.md`/`CLAUDE.md` only where this convergence changed state;
    never hand-edit generated projections. Record the RCA: single-gate deadline for
    the Docs timeout, untrusted whitespace for MD064, the untyped `ConfigMap`/invariant
-   mappings/protocol identity for the mypy findings, the stale ruleset contexts for
+   mappings/protocol identity for the type findings, the stale ruleset contexts for
    the PR stall, and the stale docs examples for the `make fix` debt.
 5. Retire merged worktrees/branches only after `git status` clean, no active process,
    and `git merge-base --is-ancestor <head> origin/0.12.0-dev`. Use `git branch -d`,
@@ -236,7 +206,7 @@ Create/refresh a root lane from the merged `origin/0.12.0-dev`:
    pushed ref (or record the rejection) before removing it; verify
    `preserve/infra-rig-wip-20261114` on its actual origin. Never touch the other
    actors' worktrees (`adr-*`, `agents-*`, `loc-cap-*`, `root-*` on their branches,
-   `tmc-flext-ws`, `ci-layout`, `mypy-ruling-*`, `fix/root-envrc-*`,
+   `tmc-flext-ws`, `ci-layout`, `fix/root-envrc-*`,
    `fix/mcp-direct-launcher-*`, `docs/loc-cap-*`, the kilo pool).
 
 ## 4. Auth docs repair map (remaining; iterate `make fix`)
@@ -265,7 +235,7 @@ retire the block or point to the current API, as done for `docs/architecture.md`
 
 | Scope | Command | Evidence |
 | --- | --- | --- |
-| each member lane | focused mypy, `CI=N make check CHECK_PHASE=primary`, `CI=N make tests` | receipt + exit 0 |
+| each member lane | focused gate, `CI=N make check CHECK_PHASE=primary`, `CI=N make tests` | receipt + exit 0 |
 | each member lane | `CI=N make fix`, `CI=N make fmt` | no diff, exit 0 |
 | root | `CI=Y make gen` ×2 | second pass no-op |
 | root | `CI=N make check` | 32/32, receipt path, exit 0 |
@@ -277,8 +247,8 @@ retire the block or point to the current API, as done for `docs/architecture.md`
 ## 6. Guardrails and known traps
 
 - Re-verify before acting; this handoff is not live state.
-- No lint-rule change beyond the two authorized items; no `disable_error_code` edit;
-  no suppressions, stubs, hardcodes, fallbacks, or generated-file hand edits.
+- No lint-rule change; no suppressions, stubs, hardcodes, fallbacks, or
+  generated-file hand edits.
 - No `stash`, `reset`, `rebase`, or force-push. Merge `--no-ff`.
 - The auth docs tail is pre-existing debt; fix it at its owner rather than excluding
   the files or weakening the fixer.
