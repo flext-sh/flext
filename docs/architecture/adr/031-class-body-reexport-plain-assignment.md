@@ -21,7 +21,7 @@
 - **Complements:** ADR-014 (family part shape), ADR-018 (generator declarations
   law — generated re-exports follow the same rule), ADR-021 (lint repair channel —
   `UP040` fixes must not violate this law).
-- **Measured evidence:** `flext-core` batch 1 of the strict ruff/pyright plan.
+- **Measured evidence:** `flext-core` batch 1 of the strict ruff plan.
 
 ## Context
 
@@ -96,8 +96,6 @@ class objects with lazy wrappers and break every such consumer.
 - `ruff check` closes `UP040` at every class-body re-export site with the
   plain-assignment form; no `type` statement appears inside a class body for
   re-exports.
-- `pyrefly` reports no new diagnostics on the rewritten sites (amended 2026-11-15:
-  Mypy and Pyright removed, Pyrefly is the single type checker, operator order
-  `ag-6w7a`; the original contract also named `pyright`).
+- `pyrefly` reports no new diagnostics on the rewritten sites.
 - Consumers that read re-exported classes as values (e.g. `.HANDLER_TYPES`) keep
   passing their tests.

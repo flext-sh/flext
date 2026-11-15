@@ -432,9 +432,7 @@ order 2026-11-13 `ag-6w7a`; global `rules/python.md`). Their writable declaratio
 are the `pyrefly`, `pyrefly.errors` and `ruff.lint` tables of the
 [native tooling settings](https://github.com/flext-sh/flext-infra/blob/0.12.0-dev/src/flext_infra/config/tooling.yaml).
 Project overlays, inline directives, command arguments and editor state must be
-included when establishing an individual diagnostic's effective policy. The
-2026-10-28 Mypy and Pyright declaration snapshot that stood here retired with
-those analyzers; Git history keeps it as evidence.
+included when establishing an individual diagnostic's effective policy.
 
 A proposed rule change requires a reproduced diagnostic, upstream/facade
 comparison, preserved invalid-case detection, and the operator's explicit

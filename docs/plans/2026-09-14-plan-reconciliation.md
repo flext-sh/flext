@@ -37,7 +37,7 @@ the delivered runtime before the final handoff. Absorb each current development 
 with no-ff, correct unfinished owner/consumer contracts, integrate reviewed PRs and
 prove the runtime from the integration SHA. Update skills, guidance, docs and existing
 ADRs with reusable context and freshness boundaries so the next executor does not repeat
-established discovery. Ruff, Pyrefly, Pyright and Mypy remain required; the operator's
+established discovery. Ruff and Pyrefly remain required; the operator's
 exception for other Infra custom Make findings never establishes functional correctness
 or hides an unexecuted/failed check. Preserve the audit below as historical evidence.
 

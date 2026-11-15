@@ -175,8 +175,7 @@ make tests
 [Make Commands](guides/make-commands.md) without freezing a target count here. All FLEXT
 validation uses the root Make dispatcher and every Python test run retains the canonical
 testmon cache; never run bare `ruff`, `pyrefly`, or `pytest` commands. Ruff is the one
-formatter and linter and Pyrefly the one type checker; Mypy and Pyright are not run by
-any Make verb, gate, projection or dependency (operator order 2026-11-13 `ag-6w7a`).
+formatter and linter and Pyrefly the one type checker (operator order 2026-11-13 `ag-6w7a`).
 
 Record every red or green result with its exit code and decisive output in the active
 workspace Bead.

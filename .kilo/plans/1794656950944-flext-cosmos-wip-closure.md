@@ -58,15 +58,15 @@ Design implemented in #2464:
 1. Merge #2463 and #2464 with the authorized admin merge (exact green heads above).
 2. Re-fetch and record the new tip SHA. Then merge the tip into the remaining flext-infra lanes (#2458, #2455, #2453) with `--no-ff` before any other step.
 
-### 2. Finish #2455 (`fix/mypy-ruling-guard-20261114`)
+### 2. Finish #2455 (its fix lane)
 
-Lane: `/home/marlonsc/flext-infra-worktrees/mypy-ruling-guard-20261114`, clean, local merge commit `2afaeb32b6` on tip `5745aaf442`, ahead 12, **unpushed**.
+Lane: its flext-infra worktree, clean, local merge commit `2afaeb32b6` on tip `5745aaf442`, ahead 12, **unpushed**.
 
 - `make setup`, `make gen` (idempotent), `make fix`, `make fmt`, `CHECK_PHASE=primary make check` already green at this merge.
 - **Open blocker:** the targeted test run after the merge produced 27 failures:
   - `tests/unit/codemod/test_mod_evidence_inputs.py` + `tests/unit/check/codemod_gate_tests.py`: `RuntimeError: runtime manifest does not declare aqua:ast-grep/ast-grep`.
-  - `tests/unit/deps/test_modernizer_tool_tables.py` (3) and `tests/unit/codegen/mypy_fleet_defaults_tests.py` (3).
-- Triage rule: reproduce the same node ids on a **clean current-tip worktree** first. If they fail there, the defect belongs to the tip owner (runtime manifest / modernizer / mypy defaults), not to #2455; file a bead and fix at that owner. If they pass on clean tip, fix the lane's own assumptions (most likely the fixtures seed a runtime manifest without the ast-grep entry).
+  - `tests/unit/deps/test_modernizer_tool_tables.py` (3) and the fleet-defaults codegen tests (3).
+- Triage rule: reproduce the same node ids on a **clean current-tip worktree** first. If they fail there, the defect belongs to the tip owner (runtime manifest / modernizer / fleet defaults), not to #2455; file a bead and fix at that owner. If they pass on clean tip, fix the lane's own assumptions (most likely the fixtures seed a runtime manifest without the ast-grep entry).
 - Only after the suite is green: push the merge commit, CI green, admin merge.
 
 ### 3. Finish #2453 (`feat/admission-preflight-toolchain-20261114`)
@@ -112,7 +112,7 @@ Only after #2463 is merged and the new flext-infra tip is known.
 
 - `hotfix/mod-budget-20261114` (`/home/marlonsc/worktrees/flext-infra/rule-test-snapshot-20261114`): **superseded** — its commit `bb62d643e5` is integrated by #2462 and the branch upstream is gone. Tree is clean. Retire the worktree and local branch with the ancestry proof.
 - `fix/lazy-init-generated-20261114` (`/home/marlonsc/flext-infra-worktrees/lazy-init-generated-20261114`): still dirty (`protocols_bootstrap.py`, `test_protocol_source_bootstrap.py`), 11 behind. Compare against the new tip; if the `_LAZY_IMPORTS` shape is not integrated, commit + push + PR + validate + merge; otherwise commit the exact WIP to `preserve/lazy-init-generated-wip-20261114`, push, record the bead, then retire the worktree only.
-- `chore/mypy-ruling-pyproject-20261114` (`/home/marlonsc/worktrees/flext-infra/mypy-ruling-20261114`): dirty `pyproject.toml` touching frozen `venvPath`/dependency keys. Do not integrate. Commit the exact WIP to `preserve/mypy-ruling-wip-20261114`, push, record the bead, retire the worktree only.
+- The dirty flext-infra pyproject WIP lane: `pyproject.toml` touching frozen `venvPath`/dependency keys. Do not integrate. Commit the exact WIP to its own `preserve/*` ref, push, record the bead, retire the worktree only.
 - Retire only worktrees whose branch is 0-ahead or proven content-integrated (clean tree first): `check-route-phase-limit-20261113`, `clean-members-20261113`, `codemod-scan-cache-20261113`, `fixture-snapshots-20261114` (renamed branch now holds #2463 — retire only after merge), `make-check-complete-budget-20261113`, `markdown-fixture-20261113`, `member-pin-after-auth-20261113`, `models-through-m-20261113`, `native-store-gc-20261113`, `tests-testmon-env-20261113`, `tip-red-residue-20261114`, plus the equivalent merged Cosmos/member worktrees.
 - Unique-ahead branches without a PR (`testmon-convergence-20261113`, `tests-green-tip-20261113`, `tip-red-20261114`): prove content equivalence to the tip; if integrated, record the diff proof and retire; otherwise open a PR or preserve + record. Never delete an unmerged ref.
 
