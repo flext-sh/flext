@@ -340,13 +340,12 @@ open. Where it differs from a bullet above, this subsection prevails.
 3. **Every base of a stand-in has metaclass `type`.** The runtime verifies it
    when it resolves the shared bases; a base with another metaclass fails there,
    by name.
-4. **An ancestor-package base is shared by its import route.** A part whose base
-   is declared by an ancestor FLEXT package (`FlextCliTypes`,
-   `FlextLdapConstants`) lists that base as `(package, export)`, exactly as the
-   source imports it. It is never flattened and never dropped, so the
-   stand-in's MRO names the same ancestor object as the real class, and the
-   output is identical in a workspace run, a standalone member and an external
-   consumer. A builtin or third-party base still fails generation.
+4. The bases of a stand-in are resolved at run time from its part's class
+   statement and its module's import bindings, kept in memory: a base imported
+   from a package resolves through that package's export; a base defined in
+   the same module or imported by module path becomes its own in-memory
+   stand-in. C3 reproduces the real MRO; nothing is flattened, and no base list
+   is generated.
 5. **A part a stand-in cannot represent is rejected at generation** and
    corrected at its source. A stand-in carries no dunder of its class and is not
    the real class in the facade's MRO, so each of these would be lost or break
