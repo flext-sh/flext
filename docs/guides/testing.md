@@ -123,7 +123,7 @@ Both operations retain source admission, runtime/input identity, applicability,
 original failures and the complete invocation deadline. Full execution is not
 a coverage-mode substitute or a second runner.
 
-CI and pre-push retain their declared workflow; pre-commit runs no tests. No
+CI and the generated pre-commit hook run the rows ADR-029 declares. No
 compatibility aliases or file selectors belong to either operation.
 
 The complete suite retains its declared services, network access and authentication

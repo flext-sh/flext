@@ -581,18 +581,9 @@ without it, setup installs the locked versions. The environment selector
 resolver views are retired in the same flext-infra cutover (`flext-1engx` P2); until
 that lands, the parameter is the declared target, not yet the running behavior.
 
-```bash
-# Standard root lifecycle; each verb retains its declared scope.
-make setup
-make gen
-make mod
-make fix
-make fmt
-make build
-# Prove the implemented behavior through its real public consumer before tests.
-make check
-make tests
-```
+The verb order of a slice, of the generated pre-commit hook and of CI is owned by
+[ADR-029](docs/architecture/adr/029-always-working-one-complete-cycle.md);
+each verb retains its declared scope.
 
 Each operation completes the change it initiated. `gen` and `mod` reuse the same
 semantic engines and publisher for dependent projections; neither invokes another

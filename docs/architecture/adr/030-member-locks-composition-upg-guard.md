@@ -152,6 +152,12 @@ root `AGENTS.md` "Rig and Lane Contract", which otherwise prohibits a clean tree
 a prerequisite: lock writing pins SHAs that remote CI must reproduce, so only this
 verb requires committed state. No other verb inherits the requirement.
 
+Pre-commit: the generated hook runs `make upg` over the commit being made. There
+the guard does not require the committing repository to be clean; it still
+requires each committed gitlink to equal its member's HEAD. Locks written by that
+run enter the same commit. Outside the hook, `make upg` refuses to run over
+uncommitted work (tracker key `operator-order-2026-11-15-commit-ci-sequence`).
+
 **One-time Rope exception, 2026-10-28.** The operator answered "Autorizar
 exceção pontual para Rope" to the explicit request to update only the Rope pin
 and corresponding locks through `make upg`, then activate through `make setup`,
@@ -301,5 +307,6 @@ As of this ADR (2026-10-25):
 - A member, a standalone checkout and a pip-installed consumer each reproduce the
   same exact dependency hierarchy, because every lock pins by SHA and every writer
   is `make upg`.
-- `make upg` refuses to run over uncommitted work; agents commit first, then upgrade.
+- Outside the generated pre-commit hook, `make upg` refuses to run over uncommitted
+  work; agents commit first, then upgrade.
 - Remote CI stays reproducible: every pinned SHA exists on the remote.
