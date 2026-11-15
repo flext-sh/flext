@@ -2,6 +2,9 @@ Infra:
   codegen:
     make:
       lint_freeze_catalog: flext-infra/config/lint_freeze_catalog.json
+      admission:
+        overrides:
+          gen-scope: {max_load5: 80}
       docs:
         contract_guide: docs/guides/make-commands.md
     vscode:
