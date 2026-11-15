@@ -321,10 +321,22 @@ open. Where it differs from a bullet above, this subsection prevails.
    resolving an abstract method a part implements, or Pydantic reading
    `model_config` or a field that shadows a part member. The load is correct,
    not free, and the acceptance tests name each of these cases.
-2. **An unlisted member is an `AttributeError`.** There is one resolution path.
-   A stale initializer is a stale projection: `make gen` repairs it, and the
-   completeness of every index is a generation fixed point and a check gate for
-   every package, never a runtime recovery.
+2. **Operator decision 2026-11-15** (tracker key
+   `operator-decision-2026-11-15-standin-members-fully-dynamic`), verbatim:
+   "Tudo dinâmico, sem lista"; "A LISTA NÃO TEM QUE SER DESCARTADA E
+   REUTILIZADA NOS PRÓXIMOS ACESSOS E INCREMENTADA COM NOVAS DESCOBERTAS,
+   NUNCA RECOMECE DO ZERO"; "SE NÃO EXISTIR NO CÓDIGO TEM QUE DAR ERRO"; on
+   persisting the list between processes, `make gen` incrementing it and a
+   per-part SHA-256 digest: "NADA DISSO, VC ESTÁ VOLTANDO AO PADRÃO ANTERIOR
+   QUE EU ABOLI, EU NÃO PEDI ISSO"; "A LISTA TEM QUE SER VALIDA APENAS NO
+   RUNTIME E EM MEMÓRIA"; earlier: "vc está com um tempo de carga total, não é
+   isso que estou falando". Translation: "Everything dynamic, no list." "The
+   list is not to be discarded: it is reused on the next accesses and
+   incremented with new discoveries; never start over from zero." "If it does
+   not exist in the code, it must raise an error." "None of that; you are going
+   back to the earlier pattern that I abolished; I did not ask for that." "The
+   list must be valid only at run time and in memory." "You are at a total load
+   time; that is not what I am talking about."
 3. **Every base of a stand-in has metaclass `type`.** The runtime verifies it
    when it resolves the shared bases; a base with another metaclass fails there,
    by name.
@@ -381,9 +393,7 @@ open. Where it differs from a bullet above, this subsection prevails.
   conflict by construction. A non-class stand-in resolved through
   `__mro_entries__` either returns the real class, which loads every part when
   the facade is composed, or returns a plain stand-in, which is rule 1 behind an
-  indirection that `type()` rejects as a base. A source fingerprint per
-  initializer reads every source at import and means nothing for an installed
-  wheel.
+  indirection that `type()` rejects as a base.
 - **Acceptance.** flext-core carries the composition matrix of rule 1 as tests,
   with zero part loads and the three named loading cases, a test that an
   unlisted member raises and loads nothing, and a test that the flag of rule 6
