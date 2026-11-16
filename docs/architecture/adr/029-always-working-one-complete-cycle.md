@@ -172,6 +172,15 @@ native incremental Testmon pytest. Repair every failure before dependent work.
 After source changes, refresh affected evidence and restore global primary
 admission; do not replace it with a green member or a stale whole-workspace run.
 
+Budgets are configuration-owned by `flext-infra`
+`src/flext_infra/config/tooling.yaml`: `ordinary-timeout-seconds` (2) measures the
+test call, `slow-timeout-seconds` (20) the slow and heavy markers, and
+`run-timeout-seconds` (240) is the fleet-wide suite clock — one `make tests` or
+`make tests-full` invocation owns one 240 s budget across every member suite, and a
+per-member clock reset is rejected (operator decision 2026-11-16). Collection,
+fixture teardown and plugin bookkeeping belong to the suite deadline, which reserves
+its own shutdown time; charging them to an item budget fails healthy runs.
+
 1. `make gen` twice in every touched repository; the second run produces no change.
 2. `make fmt`, then `make fix`, with every finding cleared.
 3. `make mod`, clean.
