@@ -69,5 +69,5 @@
     `t` em `**all**` de `tests/typings.py`. **Singer\*Message**: `model_validate({...})`
     em `utilities.py`. Check passa sem override adicional.
 
-Regra: qualquer novo override deve seguir o padrão (módulo específico, comentário de
-fronteira, registro aqui).
+Regra: qualquer novo override deve ser um axioma declarado no SSOT de tooling
+(`flext-infra/config/tooling.yaml`); este documento não é um registro de exceções.
