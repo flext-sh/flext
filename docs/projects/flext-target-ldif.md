@@ -35,7 +35,7 @@ layout. The package is a thin driver (ADR-006): all Singer runtime plumbing come
 ### Quality signals
 
 - Quality gates run through the selector-free workspace Make contract: `make setup`,
-  `make check`, `make test`. From the workspace root these fan out across every declared
+  `make check`, `make tests`. From the workspace root these fan out across every declared
   member; from within `flext-target-ldif/` they apply to this package only.
 - Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly);
   consult the gate output rather than static claims in this page.
@@ -47,7 +47,7 @@ Provision the environment and run gates from the workspace root:
 ```bash
 make setup
 make check
-make test
+make tests
 ```
 
 To run gates for this package only, invoke the selector-free per-project Makefile:
@@ -94,7 +94,7 @@ src/flext_target_ldif/
 
 ## Testing & quality
 
-- Tests live under the project `tests/` tree and run via `make test` (selector-free
+- Tests live under the project `tests/` tree and run via `make tests` (selector-free
   workspace Make verb). Singer behavior is exercised through the target CLI and sink
   flow.
 - Pre-merge verification: `make check` (lint + typing + security gates) from the

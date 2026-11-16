@@ -25,7 +25,7 @@ integration. Its executable source lives under `flext-oracle-wms/src/flext_oracl
 
 ### Quality signals
 
-- Run selector-free `make check`, `make test`, and `make build` through the workspace
+- Run selector-free `make check`, `make tests`, and `make build` through the workspace
   root.
 
 ## Quick start

@@ -470,6 +470,19 @@ adds these boundaries:
   Do not hand-edit or ignore `TODO.md`, or substitute manual output for unavailable
   automation. Approval and this law are not evidence of implemented or active delivery.
 
+## Runtime and lane ownership
+
+- A lane worktree lives under the owning rig's ignored `worktrees/<bead-id>` and is
+  removed after its work merges (the Gas City rule,
+  `~/agents/rules/coordination/gascity.md`).
+- Runtime belongs to the checkout. A linked worktree owns its `<RUNTIME_ROOT>/.venv`;
+  the Git common directory is the ledger key, never the runtime. An attached member
+  excluded from the superproject's native uv workspace still validates against the
+  superproject environment: move a newer FLEXT owner revision into the workspace lock
+  through `make upg` at the superproject before the member gate can observe it.
+- Authority: ADR-003 Decision 5, ADR-030 and the runtime environment section of
+  `flext-infra/docs/guides/execution-context.md`.
+
 ## Resume entry points
 
 - Namespace/runtime handoff and execution context:

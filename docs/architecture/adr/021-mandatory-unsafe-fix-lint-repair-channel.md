@@ -120,7 +120,7 @@ flag absence — is the information-preservation guard.
 - One live `make fix` run per member proves the ruff invocation carries the flag, and
   the `unfixable` census shows no T201-class deletion (no removed `print`/`p-print`
   diagnostic anywhere in the diff).
-- `make fmt`, `make fix`, `make check`, `make mod`, `make test` green on the changed
+- `make fmt`, `make fix`, `make check`, `make mod`, `make tests` green on the changed
   fleet; propagation re-runs the consumer lanes through their own regenerated verbs
   (ADR-022).
 

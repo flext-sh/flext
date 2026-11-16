@@ -230,6 +230,15 @@ long-running WIP in the rig checkout.
 - Development happens in lanes. Until ai-hub's worktree manager owns the lane lifecycle,
   a lane is a native Git worktree and branch placed per the global Gas City rule
   (`~/agents/rules/coordination/gascity.md`).
+- Lane worktrees live under the owning rig's ignored `worktrees/<bead-id>` (the Gas
+  City rule, `~/agents/rules/coordination/gascity.md`); the worktree is removed after
+  its work merges.
+- Runtime belongs to the checkout: a linked worktree owns its `<RUNTIME_ROOT>/.venv`,
+  and the Git common directory is the ledger key, never the runtime. An attached member
+  excluded from the superproject's native uv workspace still validates against the
+  superproject environment, so a newer FLEXT owner revision moves the workspace lock
+  through `make upg` first (ADR-003 Decision 5, ADR-030,
+  `flext-infra/docs/guides/execution-context.md#runtime-environment`).
 - Transition (operator answer, "Converge in place, then return"): each repository's
   existing WIP is finished in place until its commit-stage gates pass. It is then
   committed on a lane branch (`git switch -c front/<repository>-<date>` carries the
