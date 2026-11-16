@@ -21,14 +21,15 @@
   external-consumer propagation lanes (ADR-022), and every member and consumer that
   regenerates the verb.
 - **Complements:** ADR-004 (generated Make as codegen SSOT — the flag is declared in
-  `flext-infra/config/codegen.yaml`, never hand-edited into a Makefile), ADR-005
+  `flext-infra/src/flext_infra/config/codegen.yaml`, never hand-edited into a
+  Makefile), ADR-005
   (config SSOT — `unfixable` stays a `tooling.yaml` rule selection), ADR-015
   (consumption law — consumers receive the same verb through regeneration, not patches).
 - **Supersedes:** the 2026-09-08 safe-only lint repair posture and its T201 incident
   rationale, both formerly encoded in `MakeRuffSpec._reject_unsafe_fixes`
   (`flext-infra/src/flext_infra/_models/_config/make.py`) and in the
   `lint_fix: [--preview, --fix]` declaration
-  (`flext-infra/config/codegen.yaml`).
+  (`flext-infra/src/flext_infra/config/codegen.yaml`).
 
 ## Context
 
