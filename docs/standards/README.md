@@ -23,6 +23,7 @@ The root standards surface is intentionally narrow.
 - [Configuration standard](configuration.md)
 - [Development standard](development.md)
 - [Testing standard](testing.md)
+- [Pre-PR readiness SOP](pre-pr-readiness.md)
 - [Performance profiling standard](performance-profiling.md)
 
 Historical or supporting notes that are not part of the canonical root portal stay
