@@ -369,7 +369,8 @@ tip or authorize another execution route. The versioned recovery contract is
 - [ADR-008 — Neutral consumer boundaries](008-neutral-consumer-boundaries.md)
 - [ADR-009 — Ecosystem coordination](009-ecosystem-coordination-and-library-evaluation.md)
 - [Ecosystem coordination](../ecosystem-coordination.md)
-- SSOT: `flext-infra/config/codegen.yaml`, `flext-infra/config/tooling.yaml`; templates
+- SSOT: `flext-infra/src/flext_infra/config/codegen.yaml`,
+  `flext-infra/src/flext_infra/config/tooling.yaml`; templates
   under `flext_infra/templates/project/base/`.
 
 ## 0.13 unified planning reconciliation (documentation only)
