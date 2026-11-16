@@ -396,6 +396,13 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   project-owned values. `tests` uses the persistent Testmon database; `tests-full`
   leaves it untouched and runs without Testmon or an incremental pre-run, as defined
   by ADR-029 above.
+- The in-process CLI runner is `u.Tests.cli_in_process`: it owns stream capture, the
+  environment scope and termination-handler restoration; the caller keeps only its
+  domain configuration, and a local environment/stream/signal runner is a defect.
+- Test budgets are config-owned (2 s ordinary, 20 s slow/heavy) and the 240 s suite
+  clock is fleet-wide per invocation; collection, session setup, fixture teardown and
+  plugin bookkeeping belong to the suite deadline. A child-process test carries the
+  `slow` marker.
 - Connectivity-test prerequisites and availability skips follow root `AGENTS.md`,
   section "Production Readiness And Connectivity Tests"; they never waive failures
   from an available service or disable pure unit/integration behavior checks.

@@ -4,6 +4,7 @@
 
 - [Test design](#test-design)
 - [Pydantic and type checking](#pydantic-and-type-checking)
+- [Execution budgets and the shared runner](#execution-budgets-and-the-shared-runner)
 - [Canonical execution](#canonical-execution)
 - [Generated documentation](#generated-documentation)
 - [Related guides](#related-guides)
@@ -198,6 +199,22 @@ make gen
 ```
 
 Do not edit a member projection by hand.
+
+## Execution budgets and the shared runner
+
+Budgets are configuration-owned by `flext-infra/src/flext_infra/config/tooling.yaml`:
+`ordinary-timeout-seconds` (2 s) measures the test call, `slow-timeout-seconds`
+(20 s) applies to `slow` and the heavy capability markers, and
+`run-timeout-seconds` (240 s) is the fleet-wide suite clock — one invocation owns one
+budget across every member suite, and a per-member reset is rejected. Collection,
+session setup, fixture teardown and plugin bookkeeping belong to the suite deadline; an
+item budget never pays for them. A test that starts a child process is a
+process-boundary test and carries the `slow` marker instead of straining the ordinary
+budget.
+
+CLI coverage runs in-process through `u.Tests.cli_in_process`, which owns stream
+capture, the environment scope and termination-handler restoration; the caller keeps
+only its domain configuration.
 
 ## Related guides
 
