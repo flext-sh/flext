@@ -37,6 +37,14 @@ is expected and a deviation needs a recorded reason on the active Bead.
 
 **Fix, Forward, Adopt, Collaborate.**
 
+**Reuse admission precedes every edit.** Code growth is a grave violation risk under
+FLEXT, PEP, Pydantic, Python 3.13+, CA/DI, SSOT, SOLID, DRY, and YAGNI. Before adding
+any symbol, prove the capability does not already exist in the project or in an earlier
+layer; the first attempt to add is refused until that proof is recorded, and the
+existing owner is extended instead of a second one beside it. A change that grows the
+code is redesigned before it lands. The universal owner is law 2 in
+`~/agents/rules/law.md`; this paragraph applies it to every FLEXT lane.
+
 1. **Fix at the cause.** Reproduce through the canonical entry point, bind the failing
    artifact to its revision, and prove the mechanism (debug, trace, profile) before
    editing. A hypothesis guides investigation; it is never a trial patch.
@@ -67,6 +75,7 @@ change stays on its lane.
 | Scope              | One subject, one reviewable unit, beginning to end, no bundled drive-bys        |
 | Cause              | Root cause identified and repaired at its canonical owner                       |
 | No workaround      | No fallback, shim, suppression, allowlist, hardcode, or dual path               |
+| Reuse              | Capability proven absent in project and earlier layers; existing owner extended |
 | Generated surfaces | Regenerated from source, not hand-edited; idempotent                            |
 | Lint/format        | Clean on `src/`, `tests/`, `examples/`, `scripts/`                              |
 | Types              | Single type checker clean across the governed population                        |
@@ -209,28 +218,32 @@ once; cross-lane concurrency is owned by the host admission queue.
     git merge-base --is-ancestor origin/0.12.0-dev HEAD
     ```
 
-2. **Cause.** The RCA record names cause, mechanism, owner, failing entrypoint, and the
+2. **Reuse.** The Bead records the search across the project and earlier layers, the
+   proof that the capability is absent, and the existing owner to extend. The first
+   attempt to add was refused until that proof existed.
+3. **Cause.** The RCA record names cause, mechanism, owner, failing entrypoint, and the
    re-exercise result on the Bead.
-3. **Generation and repair.** `make gen` twice with no diff on the second run, then
+4. **Generation and repair.** `make gen` twice with no diff on the second run, then
    `make fmt`, `make fix`, and `make mod`, each clean. No generated projection is edited
    by hand.
-4. **Static gates.** `make check CHECK_PHASE=primary` while iterating, then `make check`
+5. **Static gates.** `make check CHECK_PHASE=primary` while iterating, then `make check`
    for the complete workspace scope; no file or changed-only selector. Zero findings, no
    new suppression.
-5. **Tests.** `make tests` runs the native Testmon selection over the complete applicable
+6. **Tests.** `make tests` runs the native Testmon selection over the complete applicable
    population; `make tests-full` is the alternative complete run without Testmon and
    without a preliminary incremental run. Use one of them as the declared evidence, with
    no unexpected skip, warning, empty selection, or retry; record wall time when timing
    changed.
-6. **Runtime.** Prove the changed public behavior through the real consumer or
+7. **Runtime.** Prove the changed public behavior through the real consumer or
    entrypoint, with command, working directory, exit status, and decisive output.
-7. **Diff hygiene.** Review `git status`, `git diff`, and the staged stat; explicit paths
-   only; no generated projection edited by hand, no secret, no unrelated file.
-8. **Pull request.** One Bead, one subject, RCA and evidence in the body, green head,
+8. **Diff hygiene.** Review `git status`, `git diff`, and the staged stat; explicit paths
+   only; no generated projection edited by hand, no secret, no unrelated file; every
+   added line has a current consumer and a proven absent capability.
+9. **Pull request.** One Bead, one subject, RCA and evidence in the body, green head,
    no conflict, independent review requested.
-9. **Integration.** The coordinator merges the reviewed green head and reruns the
-   boundary on the merged revision.
-10. **Closure.** Bead evidence updated, post-merge proof recorded, lane retired only with
+10. **Integration.** The coordinator merges the reviewed green head and reruns the
+    boundary on the merged revision.
+11. **Closure.** Bead evidence updated, post-merge proof recorded, lane retired only with
     ancestry and content preservation proof.
 
 ## 6. Evidence contract
