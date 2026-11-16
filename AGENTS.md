@@ -223,10 +223,10 @@ tools in a unified way"). It supersedes the former shared-worktree contract, whi
 long-running WIP in the rig checkout.
 
 - The rig checkout (this workspace root and every attached member) sits on the
-  integration branch `0.12.0-dev` at its tip (operator answer of the same day, "0.12.0-dev").
-  It applies hotfixes and bugfixes through the validated gitflow route and is the base
-  that local consumers develop against. `upload-20261007` is a lane, promoted into
-  `0.12.0-dev` through its existing pull requests once green.
+  integration branch `0.12.0-dev` at its tip (operator answer of the same day, "0.12.0-dev"),
+  every member HEAD equal to its recorded gitlink; a behind gitlink is synced, never
+  committed. It applies hotfixes through the validated gitflow route and is the base
+  local consumers use. `upload-20261007` is a lane, promoted into `0.12.0-dev` once green.
 - Development happens in lanes. Until ai-hub's worktree manager owns the lane lifecycle,
   a lane is a native Git worktree and branch placed per the global Gas City rule
   (`~/agents/rules/coordination/gascity.md`).
@@ -1115,11 +1115,12 @@ CLI + pytest plugin, **never imported at runtime**.
   consumer exercises; measure consumers (code graph, ast-grep) instead of keeping a
   path "just in case".
 - **English-only** in all code, comments, docstrings, log strings, and `.j2` templates.
-- **Tests** (`flext-tests`): tests are evidence, never SSOT; behavior-only through
-  public facades with `tm` and canonical `c/t/p/m/u`, NO mocks/`patch`, hardcoded
-  project-owned values, or internal-construction assertions; one unified `conftest.py`,
-  typed fixtures in `tests/fixtures/`, canonical testmon cache in every run, layout
-  `tests/{unit,integration,e2e}/`, thin single nested `Tests<Unit>` class.
+- **Tests** (`flext-tests`): evidence, never SSOT; authored tests import only the
+  generated `tests` namespace (`from tests import ...`), never `flext_*` or
+  `tests.<submodule>`; behavior-only with `tm`/`c/t/p/m/u`, no mocks/`patch`,
+  project-owned hardcodes or internal-construction assertions; unified `conftest.py`,
+  typed `tests/fixtures/`, Testmon cache, `tests/{unit,integration,e2e}/`, nested
+  `Tests<Unit>`.
   - #### ADR-028 Decision 9
 
     **Code in docstrings and Markdown follows the project's rules**

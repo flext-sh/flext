@@ -52,7 +52,7 @@ Never invoke bare `ruff`, `pyrefly`, `pytest`, or `uv`. Use the dispatcher:
 ```bash
 make gen
 make check
-make test
+make tests
 ```
 
 Follow `canonical-commands.md` for test verbs, selection, and cache policy.

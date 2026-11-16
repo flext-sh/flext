@@ -389,7 +389,8 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   hide the first traceback are forbidden evidence paths.
 - `flext-tests` owns reusable fixtures and behavior helpers. Packages consume them
   through public facades rather than creating local copies.
-- FLEXT tests exercise only public facades and observable runtime behavior. They use
+- FLEXT tests exercise only the generated `tests` namespace and observable runtime
+  behavior (`from tests import ...`; never `flext_*` or `tests.<submodule>`). They use
   `tm`, canonical `c/t/p/m/u` contracts, the unified `conftest.py`, and typed shared
   fixtures instead of mocks, internal assertions, copied setup, or hardcoded
   project-owned values. `tests` uses the persistent Testmon database; `tests-full`
