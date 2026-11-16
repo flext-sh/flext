@@ -20,8 +20,8 @@ root and member `AGENTS.md` files route and enforce that decision, while skills 
 supporting docs consume it without creating a competing design. Beads own work scope,
 ownership, status, and evidence, not architecture. Proposed ADRs are not accepted
 contracts, and an accepted ADR is not proof that its implementation is complete. Record
-implementation and acceptance evidence in Beads. `TODO.md` is a generated Beads
-projection; update its owner, never the projection by hand.
+implementation and acceptance evidence in Beads. A generated `TODO.md` projection, where
+present, is updated through its owner, never by hand.
 
 Catalog classifications describe recorded decision maturity, not fresh runtime receipts.
 Historical implementation labels require revalidation on the current integrated
