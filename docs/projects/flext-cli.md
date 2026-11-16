@@ -57,16 +57,17 @@ method.
 - **Foundation**: `constants.py`, `typings.py`, `protocols.py` (+ `_constants/`,
   `_typings/`, `_protocols/`) — CLI- specific constants, type aliases, and protocols.
 - **Domain**: `models.py` (`_models/`) — Pydantic v2 models for CLI payloads.
-- **Services**: `services/` — `cli.py` (command definitions), `cmd.py` (command
-  execution), `cli_params.py` (shared parameters), `file_tools.py` (JSON/YAML/CSV
-  read/write, atomic writes), `formatters.py` (Rich-safe printing, panels, rules),
-  `output.py`, `pipeline.py`, `prompts.py`, `rules.py`, `runtime.py`, `tables.py`.
-- **Entry point**: `api.py` defines `FlextCli` as an MRO composition of `FlextCliAuth`,
-  `FlextCliCli`, `FlextCliCmd`, `FlextCliCommonParams`, `FlextCliFileTools`,
-  `FlextCliFormatters`, `FlextCliOutput`, `FlextCliPipeline`, `FlextCliPrompts`,
-  `FlextCliRules`, `FlextCliRuntime`, and `FlextCliTables`; `__init__.py` exports it
-  plus the standard aliases (`c`, `m`, `t`, `p`, `u`, `r`, `s`, `e`, `x`, `d`, `h`) and
-  `config`/`settings`.
+- **Services**: `services/` — twelve modules: `auth.py`, `cli.py` (command
+  definitions), `cli_params.py` (shared parameters), `docx.py`, `pptx.py`, `xlsx.py`,
+  `file_tools.py` (JSON read/write, YAML write, text read), `formatters.py`
+  (Rich-safe printing, panels, rules, and `display_text`/`display_message`/
+  `display_progress`), `pipeline.py`, `prompts.py`, `runtime.py`, `tables.py`.
+- **Entry point**: `api.py` defines `FlextCli` as an MRO composition of
+  `FlextCliAuth`, `FlextCliCli`, `FlextCliCommonParams`, `FlextCliDocx`,
+  `FlextCliFileTools`, `FlextCliFormatters`, `FlextCliPipeline`, `FlextCliPrompts`,
+  `FlextCliPptx`, `FlextCliRuntime`, `FlextCliTables`, and `FlextCliXlsx`;
+  `__init__.py` exports it plus the standard aliases (`c`, `m`, `t`, `p`, `u`, `r`,
+  `s`, `e`, `x`, `d`, `h`) and `config`/`settings`.
 
 ### Key architectural patterns
 
@@ -82,7 +83,8 @@ method.
 ## Testing & quality
 
 - `make check`: lint, typing, security, and structural checks
-- `make test`: pytest suite through the shared Testmon cache
+- `make tests`: native incremental Testmon selection; `make tests-full` runs the
+  complete population once
 - `make build`: package candidate; runtime proof remains separate
 - Tests target the public `cli` facade surface only, per workspace testing law (U16)
 
