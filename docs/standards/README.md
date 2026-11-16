@@ -19,6 +19,7 @@ The root standards surface is intentionally narrow.
 
 ## Supporting Standards
 
+- [Engineering SOP](engineering-sop.md)
 - [Documentation standard](documentation.md)
 - [Configuration standard](configuration.md)
 - [Development standard](development.md)
