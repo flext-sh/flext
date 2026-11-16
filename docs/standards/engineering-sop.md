@@ -116,8 +116,8 @@ or split the case.
 3. **Share canonical objects.** Use the project's `c/t/p/m/u` facades and typed fixtures
    instead of ad-hoc literals; one owner per constant. Share read-only values, reset
    mutable singletons through the `flext_tests` plugin and its fixtures.
-4. **Centralize fixtures.** One unified `conftest.py`, typed fixtures in
-   `tests/fixtures/`, no per-module copies. `autouse` exists only for isolation.
+4. **Centralize fixtures.** One authored `tests/conftest.py` plus the generated
+   bootstrap; `tests/fixtures/`; no per-module copies; `autouse` only for isolation.
 5. **Isolate infrastructure.** Each test owns its temporary directories, ports, and
    namespaces. Expensive services belong to the integration or e2e tier behind a
    lifecycle fixture with a readiness probe and complete teardown. No ordering
