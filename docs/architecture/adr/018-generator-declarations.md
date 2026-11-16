@@ -870,7 +870,7 @@ transaction's partial effects, without restoring its preimages.
 - `make gen` exits 0 in 32/32 and a second run has no diff, after every flext-infra
   commit of the epic — before the commit is pushed.
 - `make mod` twice is idempotent; the validator's counts above reach 0.
-- `make check` and `make test` green in 32/32 and in every consumer; no new exclusion.
+- `make check` and `make tests` green in 32/32 and in every consumer; no new exclusion.
 - One unchanged observation, one read (campaign `flext-pipol`): profiling receipts
   (`make.generation_profile_path`, `modification_profile_path`) show no repeated
   parse of unchanged source across phases. Changed paths refresh incrementally

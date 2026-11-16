@@ -25,7 +25,7 @@ source lives under `flext-tap-oracle/src/flext_tap_oracle/`.
 
 ### Quality signals
 
-- Run selector-free `make check`, `make test`, and `make build` through the workspace
+- Run selector-free `make check`, `make tests`, and `make build` through the workspace
   root.
 
 ## Quick start

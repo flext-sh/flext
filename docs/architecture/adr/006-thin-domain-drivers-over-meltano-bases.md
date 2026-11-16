@@ -242,7 +242,7 @@ structurally satisfies the protocol. tap/target keep their factory seams (
 
     target-oracle reuses `settings.DbOracle`, normalize its base, scope the loader cut
 
-    separately. Each step: `uv run` per-file gate + `make check`/`make test` per project,
+    separately. Each step: `uv run` per-file gate + `make check`/`make tests` per project,
 
     net-LOC ≤ 0.
 

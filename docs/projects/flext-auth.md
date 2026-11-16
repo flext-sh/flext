@@ -23,7 +23,7 @@ LDAP, and Kerberos, all behind the same `r[T]` validation pipeline. Package desc
 
 - **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Quality gate**: selector-free root `make check`, `make test`, and `make build`
+- **Quality gate**: selector-free root `make check`, `make tests`, and `make build`
 - **Depends on**: `flext-core` (facades, result contract, container)
 
 ### Quality signals
@@ -107,7 +107,7 @@ implement the provider mixin/protocol and are registered through `FlextAuthRegis
 ## Testing & quality
 
 - `make check`: lint, typing, security, and structural checks
-- `make test`: pytest suite through the shared Testmon cache
+- `make tests`: pytest suite through the shared Testmon cache
 - `make build`: package candidate; runtime proof remains separate
 - Tests target the public facade and exported models only, per workspace testing law
   (U16)

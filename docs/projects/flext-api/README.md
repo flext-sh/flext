@@ -30,7 +30,7 @@ FLEXT API is the FLEXT platform's HTTP client layer: a typed REST client facade 
 
 ### Quality signals
 
-- Quality gates run through selector-free root `make check`, `make test`, and
+- Quality gates run through selector-free root `make check`, `make tests`, and
   `make build`.
 - Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly);
   consult the gate output rather than static claims in this page.
@@ -96,8 +96,8 @@ src/flext_api/
 
 ## Testing & quality
 
-- Tests live under the project `tests/` tree and run via root `make test`.
-- Pre-merge verification uses root `make check`, `make test`, and `make build`.
+- Tests live under the project `tests/` tree and run via root `make tests`.
+- Pre-merge verification uses root `make check`, `make tests`, and `make build`.
 
 ## Resources
 

@@ -33,14 +33,14 @@ canonical `c/m/p/t/u` facade layout.
 ### Quality signals
 
 - Quality gates run through the selector-free workspace Make contract: `make check`,
-  `make test`, and `make build`.
+  `make tests`, and `make build`.
 - Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly);
   consult the gate output rather than static claims in this page.
 
 ## Quick start
 
 From the workspace root, provision and validate with `make setup`, `make check`, and
-`make test`.
+`make tests`.
 
 Singer discovery and sync through the console script:
 
@@ -91,9 +91,9 @@ src/flext_tap_oracle_wms/
 
 ## Testing & quality
 
-- Tests live under the project `tests/` tree and run via root `make test`; Singer
+- Tests live under the project `tests/` tree and run via root `make tests`; Singer
   behavior is exercised through the tap CLI and discovery flow.
-- Pre-merge verification uses root `make check`, `make test`, and `make build`.
+- Pre-merge verification uses root `make check`, `make tests`, and `make build`.
 
 ## Resources
 
