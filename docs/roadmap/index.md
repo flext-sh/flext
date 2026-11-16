@@ -41,7 +41,7 @@ evidence and do not define the resume or execution route.
 
 Fleet stability on `0.12.0-dev` is **unproved** as of this recovery update. The
 canonical root cycle is `make setup` → `make gen` → `make mod` → `make gen` → `make gen`
-→ `make fix` → `make fmt` → `make check` → `make test` → `make build`, followed by
+→ `make fix` → `make fmt` → `make check` → `make tests` → `make build`, followed by
 applicable public runtime and native documentation/link validation. Repeated gen/fix/fmt
 must be no-op, exit-zero runs on the unchanged candidate. No new cycle starts before
 warning-free and finding-free fleet receipts on the published integrated SHAs. Later

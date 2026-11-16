@@ -32,12 +32,12 @@ reimplementing it.
   API as control flow.
 - Settings are validated Pydantic models (`FlextDbOracleSettings`, env prefix `ORACLE_`,
   nested delimiter `__`).
-- Selector-free root `make check`, `make test`, and `make build` produce the
+- Selector-free root `make check`, `make tests`, and `make build` produce the
   authoritative evidence; this page does not freeze gate totals.
 
 ## Quick start
 
-From the workspace root, run `make setup`, `make check`, and `make test`.
+From the workspace root, run `make setup`, `make check`, and `make tests`.
 
 ```python
 from flext_db_oracle import FlextDbOracleApi, settings
@@ -104,11 +104,11 @@ The package follows the canonical FLEXT layout under `src/flext_db_oracle/`:
 
 ## Testing & quality
 
-- Tests live in the project `tests/` tree and run through root `make test` and the
+- Tests live in the project `tests/` tree and run through root `make tests` and the
   workspace gates.
 - Oracle-backed integration paths require a reachable Oracle instance; without one, unit
   suites and static gates are the evidence of record.
-- The authoritative quality verdict comes from root `make check`, `make test`, and
+- The authoritative quality verdict comes from root `make check`, `make tests`, and
   `make build` — consult their output for current lint, typing, and test status.
 
 ## Resources

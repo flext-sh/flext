@@ -32,12 +32,12 @@ identical patterns.
   `m.DbtLdap.*`.
 - Settings are validated Pydantic models (`FlextDbtLdapSettings`); no direct environment
   reads in runtime code.
-- Selector-free root `make check`, `make test`, and `make build` produce the
+- Selector-free root `make check`, `make tests`, and `make build` produce the
   authoritative evidence.
 
 ## Quick start
 
-From the workspace root, run `make setup`, `make check`, and `make test`.
+From the workspace root, run `make setup`, `make check`, and `make tests`.
 
 ```python
 from flext_dbt_ldap import FlextDbtLdap
@@ -88,10 +88,10 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldap/`:
 
 ## Testing & quality
 
-- Tests live in the project `tests/` tree and run through root `make test`.
+- Tests live in the project `tests/` tree and run through root `make tests`.
 - Warehouse sync paths need a reachable LDAP directory and a dbt target; without them,
   unit suites and static gates are the evidence of record.
-- The authoritative quality verdict comes from root `make check`, `make test`, and
+- The authoritative quality verdict comes from root `make check`, `make tests`, and
   `make build`.
 
 ## Resources

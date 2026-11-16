@@ -33,7 +33,7 @@ memory, and code execution behind one railway-oriented facade and CLI.
 
 - Lint, type-check, security, and tests run through the canonical `make` verbs; current
   status is produced by the gates, not restated here.
-- Run selector-free root `make check`, `make test`, and `make build`.
+- Run selector-free root `make check`, `make tests`, and `make build`.
 
 ## Quick start
 
@@ -90,7 +90,7 @@ stdin-based hook processing.
 ## Testing & quality
 
 - `make check` — lint, typing, security, and structural checks.
-- `make test` — suites through the shared Testmon cache.
+- `make tests` — suites through the shared Testmon cache.
 - `make build` — package candidate; runtime proof remains separate.
 - Typing is strict (no `Any`/`object`); all owned payloads are `m.Quality.*` Pydantic
   models and all fallible paths return `r[T]`.

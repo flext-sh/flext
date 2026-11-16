@@ -22,7 +22,7 @@ handling. Package description: "FLEXT CLI — Developer Command Line Interface".
 
 - **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Quality gate**: selector-free root `make check`, `make test`, and `make build`
+- **Quality gate**: selector-free root `make check`, `make tests`, and `make build`
 - **Depends on**: `flext-core` (facades, result contract, container)
 
 ### Quality signals

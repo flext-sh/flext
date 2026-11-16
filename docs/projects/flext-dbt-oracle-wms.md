@@ -33,7 +33,7 @@ FLEXT dbt Oracle WMS is the integration package for Oracle Warehouse Management 
 
 ## Quick start
 
-From the workspace root, run `make setup`, `make check`, and `make test`.
+From the workspace root, run `make setup`, `make check`, and `make tests`.
 
 Use the generated API reference for public imports and method signatures; this page
 deliberately avoids stale hand-maintained call examples.
@@ -52,7 +52,7 @@ configuration under `config/`.
 
 ## Testing & quality
 
-Use root `make check`, `make test`, and `make build` for project evidence.
+Use root `make check`, `make tests`, and `make build` for project evidence.
 
 ## Resources
 
