@@ -25,7 +25,8 @@ Apply the newest applicable source in this order, with technical decisions and e
 state kept in their separate owners:
 
 1. Newest operator request.
-2. `~/.agents` universal authority (`AGENTS.md` and universal skills).
+2. `~/agents/` canonical universal authority (`AGENTS.md` and universal skills),
+   consumed through the installed `~/.agents/` projection.
 3. The topic-owning **accepted ADR** in the [architecture ADR index](architecture/adr/README.md)
    is the precise source for its technical decision. For this boundary, follow the exact
    [ADR-028 Decision 15](architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15),
@@ -42,14 +43,16 @@ state kept in their separate owners:
    behavior.
 5. Beads own the active work's scope, owner, dependencies, status, and evidence; they do
    not redefine accepted architecture.
-6. Supporting documentation and generated projections consume the owners above. `TODO.md`
-   is generated from Beads and is never edited by hand.
+6. Supporting documentation and generated projections consume the owners above. Beads is
+   the execution truth; a generated `TODO.md` projection, where present, is updated
+   through its owner, never by hand.
 
 When a higher source changes reality, update the affected lower sources in the same
 change. Ask before acting only when the conflict cannot be resolved from this order.
 
-Universal authority is installed at `~/.agents/AGENTS.md`; it is not copied into
-this portal. The context router names the exact global Make and verification skills.
+The canonical universal authority is authored at `~/agents/AGENTS.md` and installed
+as `~/.agents/AGENTS.md`; it is not copied into this portal.
+The context router names the exact global Make and verification skills.
 Resolve global engineering skills at their installed canonical locations:
 `project-wide/configuration/ssot`, `project-wide/refactoring/yagni`,
 `project-wide/architecture/dry`, `project-wide/architecture/solid`,
