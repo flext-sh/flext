@@ -204,4 +204,4 @@ Do not edit a member projection by hand.
 - [Development](development.md)
 - [Troubleshooting](troubleshooting.md)
 - [Testing standards](../standards/testing.md)
-- [Pre-PR readiness SOP](../standards/pre-pr-readiness.md)
+- [Engineering SOP](../standards/engineering-sop.md)

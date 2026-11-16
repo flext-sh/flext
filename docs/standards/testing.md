@@ -149,5 +149,5 @@ and regenerate with `make gen`; never edit a projection directly.
 
 - `AGENTS.md` — workspace engineering law
 - `.agents/skills/flext-law/SKILL.md` — FLEXT architecture law
-- [Pre-PR readiness SOP](pre-pr-readiness.md)
+- [Engineering SOP](engineering-sop.md)
 - [Testing guide](../guides/testing.md)
