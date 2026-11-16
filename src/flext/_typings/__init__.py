@@ -23,8 +23,4 @@ install_lazy_exports(
     globals(),
     {"FlextRootTypingsBase": ".base", "FlextRootTypingsConfig": ".config"},
     public_exports=__all__,
-    deferred_members={
-        "FlextRootTypingsBase": (),
-        "FlextRootTypingsConfig": (),
-    },
 )
