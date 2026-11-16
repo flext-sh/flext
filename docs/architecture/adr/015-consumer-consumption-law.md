@@ -196,7 +196,7 @@ without breaking active consumers.
 - `flext_core._utilities.family_surface` (R1 derivation SSOT)
 - `flext_infra.detectors.consumer_import_violations_detector` (R1 enforcement)
 - `flext_infra.gates.duplication` (R2 enforcement)
-- `flext-infra/config/codegen.yaml` (R4/R5 config SSOT)
+- `flext-infra/src/flext_infra/config/codegen.yaml` (R4/R5 config SSOT)
 - `docs/GOVERNANCE.md` (R6 router)
 
 ## 0.13 unified planning reconciliation (documentation only)
