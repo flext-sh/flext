@@ -118,17 +118,20 @@ FLEXT configuration, owns them.
 
 ## Canonical execution
 
-Every test run starts at the workspace root and flows through the retained Testmon
-cache:
+Run the native verbs from the workspace root:
 
 ```bash
 make tests
+make tests-full
 ```
 
-For one declared test file, use the root dispatcher's
-`make test-file FILE=<repository-relative-path>`. Never invoke the underlying test
-runner, clear Testmon state, or add unsupported selectors. Run the complete quality
-gate through its root owner:
+`tests` uses the persistent Testmon cache. `tests-full` runs the complete applicable
+population without Testmon and provides suite timing evidence. The shared
+[canonical commands rule](https://github.com/datacosmos-br/agents/blob/dev/rules/workflow/canonical-commands.md)
+owns the time limits; the `flext-infra` tooling configuration and runner apply them.
+
+Use only the scope supported by the root dispatcher. Keep Testmon state and run
+the complete quality gate through its root owner:
 
 ```bash
 make check

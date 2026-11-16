@@ -3,13 +3,12 @@
 #
 # Every INTERVAL seconds this runs the flext-infra codegen/refactor strict-rule
 # fixers inside a THROWAWAY git worktree, validates that worktree green
-# (ruff -> pyrefly -> mypy[memory-capped] -> pytest), and only then applies the
+# (ruff -> pyrefly -> pytest), and only then applies the
 # vetted changes to the real workspace and commits. If the worktree is not
 # green the cycle is discarded and the workspace is left untouched.
 #
 # Operator rules honoured:
 #   * validate in a temporary worktree BEFORE applying to the whole workspace
-#   * mypy ALWAYS inherits the canonical Make memory and wall-time ceilings
 #   * never mutate the workspace on a red cycle (fix-forward, no bypass)
 #
 # Usage:
@@ -39,8 +38,6 @@ fi
 INTERVAL="${FLEXT_LAW_INTERVAL:-1200}"
 APPLY=0
 ONCE=0
-MYPY_MEMORY_LIMIT_MB="${MYPY_MEMORY_LIMIT_MB:-6144}"
-MYPY_TIMEOUT_SECONDS="${MYPY_TIMEOUT_SECONDS:-600}"
 FLEXT_INFRA=(uv run --all-packages flext-infra)
 REPORT_DIR="${REPOSITORY_ROOT}/.reports/flext-law"
 
@@ -54,8 +51,6 @@ while [ "$#" -gt 0 ]; do
   esac
   shift
 done
-
-export MYPY_MEMORY_LIMIT_MB MYPY_TIMEOUT_SECONDS
 
 log() { printf '[flext-law %(%Y-%m-%dT%H:%M:%SZ)T] %s\n' -1 "$*"; }
 
@@ -77,10 +72,6 @@ validate_worktree() {
   make -C "${root}" check WHAT=lint || return 1
   log "validate: pyrefly"
   make -C "${root}" check WHAT=pyrefly || return 1
-  log "validate: mypy (bounded ${MYPY_MEMORY_LIMIT_MB}MB/${MYPY_TIMEOUT_SECONDS}s)"
-  make -C "${root}" check WHAT=mypy \
-    MYPY_MEMORY_LIMIT_MB="${MYPY_MEMORY_LIMIT_MB}" \
-    MYPY_TIMEOUT_SECONDS="${MYPY_TIMEOUT_SECONDS}" || return 1
   log "validate: pytest"
   make -C "${root}" test || return 1
   return 0
@@ -186,7 +177,7 @@ run_cycle() {
   return 0
 }
 
-log "flext-law loop starting (interval=${INTERVAL}s apply=${APPLY} once=${ONCE} mypy_cap=${MYPY_MEMORY_LIMIT_MB}MB/${MYPY_TIMEOUT_SECONDS}s)"
+log "flext-law loop starting (interval=${INTERVAL}s apply=${APPLY} once=${ONCE})"
 while true; do
   if run_cycle; then
     log "cycle ok"

@@ -128,7 +128,6 @@ jobs:
         with:
           path: |
             __pycache__
-            .mypy_cache
             .pytest_cache
             .ruff_cache
             .pyrefly_cache
@@ -217,7 +216,6 @@ jobs:
         with:
           path: |
             __pycache__
-            .mypy_cache
             .pytest_cache
             .ruff_cache
             .pyrefly_cache
