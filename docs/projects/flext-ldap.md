@@ -23,7 +23,7 @@ Operations Library for FLEXT Framework".
 
 - **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Quality gate**: selector-free root `make check`, `make test`, and `make build`
+- **Quality gate**: selector-free root `make check`, `make tests`, and `make build`
 - **Depends on**: `flext-core`, `flext-ldif` (entry models and LDIF conversion)
 
 ### Quality signals
@@ -107,7 +107,7 @@ Use `FlextLdapEntryAdapter` to convert between `ldap3` entries and `flext-ldif` 
 ## Testing & quality
 
 - `make check`: lint, typing, security, and structural checks
-- `make test`: pytest suite through the shared Testmon cache
+- `make tests`: pytest suite through the shared Testmon cache
 - `make build`: package candidate; runtime proof remains separate
 - Tests target the public facade and exported models only, per workspace testing law
   (U16)

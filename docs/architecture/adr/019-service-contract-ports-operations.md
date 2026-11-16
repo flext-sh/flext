@@ -221,7 +221,7 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
 ## Verification contract
 
 - Every slice: runtime proof through the public API, `make gen` twice with a fixed
-  point, `make fix`, `make fmt`, `make check` and `make test` (selector-free; the
+  point, `make fix`, `make fmt`, `make check` and `make tests` (selector-free; the
   incremental testmon selection is the verb's own), and consumer revalidation before
   merge.
 - End to end after S5: a service with a port and a real adapter is composed at the root,

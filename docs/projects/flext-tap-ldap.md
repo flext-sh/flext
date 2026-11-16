@@ -29,7 +29,7 @@ operation returns `r[T]`.
 ### Quality signals
 
 - Gates run through the selector-free workspace Make contract: `make check`,
-  `make test`, and `make build` from the workspace root.
+  `make tests`, and `make build` from the workspace root.
 - Strict typing per workspace `AGENTS.md`: no `Any`/`object`, Pydantic 2-way models,
   `r[T]` on every fallible path; LDAP access goes through `flext-ldap`, Singer
   orchestration through `flext-meltano`.
@@ -89,7 +89,7 @@ Source lives under `flext-tap-ldap/src/flext_tap_ldap/`:
 
 ## Testing & quality
 
-- Workspace quality evidence comes from `make check`, `make test`, and `make build` at
+- Workspace quality evidence comes from `make check`, `make tests`, and `make build` at
   the workspace root.
 - Tests assert the public surface only (tap discovery/execution, exported models, stream
   behavior) per the workspace testing law.

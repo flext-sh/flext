@@ -28,7 +28,7 @@ to `flext-ldif`; Singer orchestration (discovery, catalog, state, sync) is built
 ### Quality signals
 
 - Gates run through the selector-free workspace Make contract: `make check`,
-  `make test`, and `make build` from the workspace root.
+  `make tests`, and `make build` from the workspace root.
 - Strict typing per workspace `AGENTS.md`: no `Any`/`object`, Pydantic 2-way models,
   `r[T]` on every fallible path.
 - No coverage or test-count metrics are asserted here; the gates above produce the
@@ -85,7 +85,7 @@ Source lives under `flext-tap-ldif/src/flext_tap_ldif/`:
 
 ## Testing & quality
 
-- Workspace quality evidence comes from `make check`, `make test`, and `make build` at
+- Workspace quality evidence comes from `make check`, `make tests`, and `make build` at
   the workspace root.
 - Tests assert the public surface only (tap discovery, CLI exit codes, exported models)
   per the workspace testing law.
