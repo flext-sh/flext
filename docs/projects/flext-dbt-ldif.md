@@ -32,12 +32,12 @@ workflows, and assesses data quality.
   `m.DbtLdif.*`.
 - Settings are validated Pydantic models (`FlextDbtLdifSettings`); configuration is
   consumed only through the settings SSOT.
-- Selector-free root `make check`, `make test`, and `make build` produce the
+- Selector-free root `make check`, `make tests`, and `make build` produce the
   authoritative evidence.
 
 ## Quick start
 
-From the workspace root, run `make setup`, `make check`, and `make test`.
+From the workspace root, run `make setup`, `make check`, and `make tests`.
 
 ```python
 from flext_dbt_ldif import FlextDbtLdif, settings
@@ -94,10 +94,10 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldif/`:
 
 ## Testing & quality
 
-- Tests live in the project `tests/` tree and run through root `make test`.
+- Tests live in the project `tests/` tree and run through root `make tests`.
 - Workflow tests use synthetic LDIF fixtures; dbt execution paths need a configured dbt
   target.
-- The authoritative quality verdict comes from root `make check`, `make test`, and
+- The authoritative quality verdict comes from root `make check`, `make tests`, and
   `make build`.
 
 ## Resources

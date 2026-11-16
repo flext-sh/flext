@@ -29,7 +29,7 @@ connections, lookups, and packages.
 ### Quality signals
 
 - Lint, formatting, and type gates run through selector-free root `make check`,
-  `make test`, and `make build`.
+  `make tests`, and `make build`.
 - Strict typing policy per workspace `AGENTS.md`: no `Any`/`object`, Pydantic 2-way
   models for owned payloads, `r[T]` contracts on every fallible path.
 - No health metrics (coverage or test counts) are asserted on this page; the gates above
@@ -92,7 +92,7 @@ Source lives under `flext-oracle-oic/src/flext_oracle_oic/`:
 
 ## Testing & quality
 
-- Run root `make check`, `make test`, and `make build` for workspace evidence.
+- Run root `make check`, `make tests`, and `make build` for workspace evidence.
 - Tests exercise the public surface only (facade methods, exported models, CLI behavior)
   per the workspace testing law.
 
