@@ -187,23 +187,30 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
 
 ## Rig and Lane Contract
 
-**Priority (operator order 2026-11-12, translated from Portuguese: "we now migrate to
-0.12.0-dev in ~/flext, work with worktrees and close with merge PR, always").**
+**Priority (operator order 2026-11-16, translated from Portuguese: "move your work to
+always be done in the project rig workspaces based on the integration branches, using
+worktrees for mass refactoring tests and dangerous adjustments only, and as soon as you
+finish make an admin merge PR with the affected integration branches and a no-ff merge
+into the integration workspaces"; supersedes the 2026-11-12 worktree-first order).**
 
 - The rig `~/flext` and every attached member move to `0.12.0-dev` and stay at its
   tip, synchronized with GitHub; `upload-20261007` lands into `0.12.0-dev` and retires
   once its last consumer pin moves to `0.12.0-dev`.
-- All work happens in Git worktrees on lane branches cut from the integration tip; the
-  rig checkout itself carries no WIP.
+- Work happens in the rig on its integration branch. A worktree is used only for a mass
+  refactor, a dangerous adjustment or isolated validation, at the documented
+  `<rig>/worktrees/<bead-id>` path (or the Gas City formula path when dispatch owns the
+  lane), and is retired after its merge. The rig may carry a dirty hotfix on top of the
+  integration tip while that hotfix is in flight.
 - Every change closes with a merged pull request (merge commit). Never push commits
   directly to `0.12.0-dev`, `upload-*` or `main`, including conflict resolutions and
   pin updates. A merge that needs `--admin` (only review missing, required checks
-  green) is run only with the operator's authorization.
+  green) runs only with the operator's authorization; ADR-0038 makes that administrative
+  landing the integration-branch approval and keeps green required checks as the gate.
 - Resuming a lane starts by merging the integration tip (`--no-ff`) and resolving
   every conflict before any other step; a pull request never waits conflicted.
 - The orchestrating session merges, never forge auto-merge: on the exact green head,
-  after another actor's review, one subject per pull request; the merged revision is
-  then re-proven at its real entry point.
+  one subject per pull request; review is advisory where ADR-0038 declares zero
+  approvals; the merged revision is then re-proven at its real entry point.
 - No lane waits for the host load to drop. Work proceeds on light processes: code,
   `CHECK_PHASE=primary make check`, the smallest real runtime proof, and the lane's
   `gen`/`fmt`/`fix`. Heavy verbs run one at a time, only when the slice needs them.
@@ -227,9 +234,10 @@ long-running WIP in the rig checkout.
   every member HEAD equal to its recorded gitlink; a behind gitlink is synced, never
   committed. It applies hotfixes through the validated gitflow route and is the base
   local consumers use. `upload-20261007` is a lane, promoted into `0.12.0-dev` once green.
-- Development happens in lanes. Until ai-hub's worktree manager owns the lane lifecycle,
-  a lane is a native Git worktree and branch placed per the global Gas City rule
-  (`~/agents/rules/coordination/gascity.md`).
+- Development happens in the rig on the integration branch. A lane is used only for the
+  risky or mass cases above; until ai-hub's worktree manager owns the lifecycle, a lane
+  is a native Git worktree and branch at the documented `<rig>/worktrees/<bead-id>` path,
+  per the global Gas City rule (`~/agents/rules/coordination/gascity.md`).
 - Transition (operator answer, "Converge in place, then return"): each repository's
   existing WIP is finished in place until its commit-stage gates pass. It is then
   committed on a lane branch (`git switch -c front/<repository>-<date>` carries the
