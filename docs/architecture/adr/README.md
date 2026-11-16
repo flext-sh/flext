@@ -121,8 +121,9 @@ candidate; acceptance never proves fleet stability.
   [Decision 15](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-15),
   [Decision 16](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-16),
   [Decision 17](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-17),
+  [Decision 18](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18),
   and
-  [Decision 18](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-18).
+  [Decision 19](028-facade-boundary-orchestrators-declarative-enforcement.md#decision-19).
   Implementation tracking: `flext-43iz8` for Decision 5 static-enforcement migration,
   `flext-1engx.15` for Decisions 16–17 and zero-quality exit, `flext-13s6n` for Decision
   18 rule projection. Decision 8 was amended 2026-10-28 (generated projections are
