@@ -25,8 +25,8 @@ is expected and a deviation needs a recorded reason on the active Bead.
 
 - Behavior authority: the running system, the official external contract, and the real
   consumer. Tests confirm behavior; they never define it.
-- Change authority: the operator's request, then the active Bead, then the owning
-  architecture record.
+- Change authority: the operator's newest instruction, then global governance and the
+  topic-owning ADR, then root and member law, then the active Bead as execution state.
 - Execution authority: the canonical Make/CLI surface only. A broken verb is repaired at
   its owner and rerun through the same surface.
 - Beads is execution truth. A report, a commit, or a green local run is not delivery.
@@ -87,16 +87,18 @@ A change is not ready when any of these is true:
 - the pull request is conflicted or behind the integration tip;
 - it adds a suppression, an exclusion, a skip, or a policy change without authorization;
 - the only proof is a unit test, a cache hit, or a formatter-only pass;
-- the suite wall time increased because of the change;
+- the suite wall time increased without a recorded owner-level profile and justification;
 - the diff includes unrelated files or a generated projection edited by hand.
 
 A lane that cannot merge green within its session is split, not extended.
 
 ## 3. Test performance
 
-The timeout ladder, per-item slow bound, and run deadline live in the typed `flext-infra`
-tooling SSOT and its runner. Read them from that owner; never restate, duplicate, or
-raise a limit to make a test fit. Remove the latency or split the case.
+The timeout ladder, per-item slow bound, and run deadline are policy-owned by the shared
+[canonical commands rule](https://github.com/datacosmos-br/agents/blob/dev/rules/workflow/canonical-commands.md)
+and applied by the typed `flext-infra` tooling SSOT and its runner. Read them from that
+owner; never restate, duplicate, or raise a limit to make a test fit. Remove the latency
+or split the case.
 
 1. **Measure first.** Capture a duration profile before editing; locate the hot path.
 2. **Reuse construction.** Build shared values once in `conftest.py` or a typed fixture;
@@ -151,7 +153,9 @@ raise a limit to make a test fit. Remove the latency or split the case.
 
 ### 4.1 Shallow-test pruning procedure
 
-A test is shallow when deleting it leaves the named behavior unverified.
+A test is shallow when it does not verify the named behavior: it proves a construction,
+an import, or a type existence, not an outcome, and deleting it changes no behavioral
+coverage.
 
 1. Inventory candidates and name the contract each intends to protect.
 2. Keep the strongest test per contract and delete weaker duplicates.
@@ -194,7 +198,8 @@ Repair protocol:
 
 ## 5. Pre-PR checklist
 
-Run in order from the workspace or worktree root. Heavy verbs are never parallel.
+Run in order from the workspace or worktree root. A lane never starts two heavy verbs at
+once; cross-lane concurrency is owned by the host admission queue.
 
 1. **Scope and lane.** One Bead claimed, lane declared, integration tip absorbed.
 
@@ -206,13 +211,17 @@ Run in order from the workspace or worktree root. Heavy verbs are never parallel
 
 2. **Cause.** The RCA record names cause, mechanism, owner, failing entrypoint, and the
    re-exercise result on the Bead.
-3. **Generation.** `make gen` reaches its fixed point; `make fix` and `make fmt` produce
-   no diff.
+3. **Generation and repair.** `make gen` twice with no diff on the second run, then
+   `make fmt`, `make fix`, and `make mod`, each clean. No generated projection is edited
+   by hand.
 4. **Static gates.** `make check CHECK_PHASE=primary` while iterating, then `make check`
-   for the complete changed scope. Zero findings, no new suppression.
-5. **Tests.** `make tests` for the affected scope. Run `make tests-full` when the suite
-   or its timing changed, and record wall time. No unexpected skip, warning, empty
-   selection, or retry.
+   for the complete workspace scope; no file or changed-only selector. Zero findings, no
+   new suppression.
+5. **Tests.** `make tests` runs the native Testmon selection over the complete applicable
+   population; `make tests-full` is the alternative complete run without Testmon and
+   without a preliminary incremental run. Use one of them as the declared evidence, with
+   no unexpected skip, warning, empty selection, or retry; record wall time when timing
+   changed.
 6. **Runtime.** Prove the changed public behavior through the real consumer or
    entrypoint, with command, working directory, exit status, and decisive output.
 7. **Diff hygiene.** Review `git status`, `git diff`, and the staged stat; explicit paths
@@ -248,11 +257,15 @@ passing count transferred to new source is not completion evidence.
 - The reviewer checks behavior, cause, test quality, latency, and scope. Review never
   waives a native gate.
 - The coordinator owns integration, merge authority, closures, and lane retirement.
-- Administrative merge is allowed only with explicit operator authorization after every
-  required check is green.
-- The only standing exceptions are the connectivity prerequisite skip and the
-  deprecated-signature window defined by root `AGENTS.md`. Neither weakens assertions,
-  coverage, isolation, or the performance baseline.
+- Administrative merge is allowed only when review is the sole missing requirement, every
+  required check is green on the exact head, and the operator authorized it.
+- The standing test exceptions are the connectivity prerequisite skip, the
+  deprecated-signature window, and the test-idiom rules explicitly justified per rule in
+  root `AGENTS.md`. The `make upg` lock guard is a precondition, not an exception. None
+  of them weakens assertions, coverage, isolation, or the performance baseline.
+- Lane mechanics, the review route, and retirement are owned by the
+  [worker lane contract](../ways-of-working/worker-lane-contract.md); this section states
+  only the SOP-level split.
 - Any other relaxation is an operator decision, presented with the original
   requirement, evidence, alternative, and impact.
 
@@ -260,8 +273,9 @@ passing count transferred to new source is not completion evidence.
 
 1. Apply this checklist to every open lane and pull request, recording the outcome on
    the owning Bead.
-2. Reference it from the pull request template through the owning generator, never by
-   hand-editing a projection.
+2. Use it directly in review today. When a pull request template is declared in the
+   repository, reference the SOP through that template's owning generator; no template
+   exists yet.
 3. Run a per-repository shallow-test census and prune by section 4.1, with wall-time
    measurements before and after.
 4. Track suite wall time, unexpected skips, first-submission green rate, and pruned
@@ -270,7 +284,10 @@ passing count transferred to new source is not completion evidence.
 ## Related
 
 - `AGENTS.md` (workspace law and the Rig and Lane Contract)
-- `docs/standards/testing.md`, `docs/standards/development.md`
-- `docs/standards/performance-profiling.md`
-- `docs/guides/testing.md`, `docs/guides/using-flext-tests.md`
-- ADR-029 (one complete cycle), ADR-032 (host admission for heavy gates)
+- [Worker lane contract](../ways-of-working/worker-lane-contract.md)
+- [Testing standard](testing.md), [development standard](development.md)
+- [Performance profiling standard](performance-profiling.md)
+- [Testing guide](../guides/testing.md), [using flext-tests](../guides/using-flext-tests.md)
+- [ADR-029](../architecture/adr/029-always-working-one-complete-cycle.md) (one complete
+  cycle), [ADR-032](../architecture/adr/032-host-wide-heavy-gate-admission.md) (host
+  admission for heavy gates)
