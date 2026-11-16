@@ -24,7 +24,7 @@ project builds on. Package description: "Enterprise Foundation Framework — Mod
 
 - **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Quality gate**: selector-free root `make check`, `make test`, and `make build`
+- **Quality gate**: selector-free root `make check`, `make tests`, and `make build`
 - **Role**: root of the dependency chain; no runtime dependency on any other `flext-*`
   package (stdlib-first design)
 
@@ -116,7 +116,7 @@ in `flext-core/examples/`
 ## Testing & quality
 
 - `make check`: lint, typing, security, and structural checks
-- `make test`: pytest suite through the shared Testmon cache
+- `make tests`: pytest suite through the shared Testmon cache
 - `make build`: package candidate; consult `reports/coverage-scan-*` for the current
   coverage snapshot rather than trusting any fixed number in docs
 - Tests exercise only the public surface (facade aliases and exported classes), per the

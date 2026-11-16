@@ -238,6 +238,13 @@ long-running WIP in the rig checkout.
   risky or mass cases above; until ai-hub's worktree manager owns the lifecycle, a lane
   is a native Git worktree and branch at the documented `<rig>/worktrees/<bead-id>` path,
   per the global Gas City rule (`~/agents/rules/coordination/gascity.md`).
+- Runtime belongs to the checkout: a linked worktree owns its `<RUNTIME_ROOT>/.venv`.
+  The ledger key is the superproject root when the checkout has one, otherwise the main
+  worktree root; the Git common directory is never the runtime. An attached member
+  excluded from the superproject's native uv workspace still validates against the
+  superproject environment, so a newer FLEXT owner revision moves the workspace lock
+  through `make upg` first (ADR-003 Decision 5, ADR-030,
+  `flext-infra/docs/guides/execution-context.md#runtime-environment`).
 - Transition (operator answer, "Converge in place, then return"): each repository's
   existing WIP is finished in place until its commit-stage gates pass. It is then
   committed on a lane branch (`git switch -c front/<repository>-<date>` carries the
@@ -630,6 +637,15 @@ Testmon database. Both retain the same admission and deadline requirements
 ([ADR-029](docs/architecture/adr/029-always-working-one-complete-cycle.md)). The operator
 order of 2026-10-26 requires global Ruff, Pyrefly and pytest evidence before
 advancing; preserve the green-check prerequisite and fix performance at its owner.
+
+Test budgets are configuration-owned by
+`flext-infra/src/flext_infra/config/tooling.yaml`: `ordinary-timeout-seconds` (2 s)
+measures the test call, `slow-timeout-seconds` (20 s) applies to `slow` and the heavy
+capability markers, and `run-timeout-seconds` (240 s) is the fleet-wide suite clock —
+one invocation owns one budget across every member suite, and a per-member reset is
+rejected. Collection, session setup, fixture teardown and plugin bookkeeping belong to
+the suite deadline. In-process CLI coverage calls `u.Tests.cli_in_process`; a local
+environment/stream/signal runner is a defect.
 
 Consult and align the affected README, guides, AGENTS, ADRs, Beads and canonical skills
 before code. Establish real public behavior before changing tests, then run the

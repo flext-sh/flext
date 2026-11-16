@@ -114,7 +114,7 @@ standalone verbs.
   produce byte-identical results to the loop phases (same engines, same inputs), and a
   propagation lane (ADR-022) exercises the identical verbs in a consumer.
 - `make gen` twice is no-op on the verb projections; `make fix`, `make fmt`,
-  `make check`, `make mod`, `make test` green on the changed fleet.
+  `make check`, `make mod`, `make tests` green on the changed fleet.
 
 ## 0.13 unified planning reconciliation (documentation only)
 

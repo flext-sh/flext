@@ -396,6 +396,13 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   project-owned values. `tests` uses the persistent Testmon database; `tests-full`
   leaves it untouched and runs without Testmon or an incremental pre-run, as defined
   by ADR-029 above.
+- The in-process CLI runner is `u.Tests.cli_in_process`: it owns stream capture, the
+  environment scope and termination-handler restoration; the caller keeps only its
+  domain configuration, and a local environment/stream/signal runner is a defect.
+- Test budgets are config-owned (2 s ordinary, 20 s slow/heavy) and the 240 s suite
+  clock is fleet-wide per invocation; collection, session setup, fixture teardown and
+  plugin bookkeeping belong to the suite deadline. A child-process test carries the
+  `slow` marker.
 - Connectivity-test prerequisites and availability skips follow root `AGENTS.md`,
   section "Production Readiness And Connectivity Tests"; they never waive failures
   from an available service or disable pure unit/integration behavior checks.
@@ -469,6 +476,20 @@ adds these boundaries:
   AI Hub owns generation and automatic convergence; it never stages, commits or pushes.
   Do not hand-edit or ignore `TODO.md`, or substitute manual output for unavailable
   automation. Approval and this law are not evidence of implemented or active delivery.
+
+## Runtime and lane ownership
+
+- A lane worktree lives under the owning rig's ignored `worktrees/<bead-id>` and is
+  removed after its work merges (the Gas City rule,
+  `~/agents/rules/coordination/gascity.md`).
+- Runtime belongs to the checkout. A linked worktree owns its `<RUNTIME_ROOT>/.venv`.
+  The ledger key is the superproject root when the checkout has one, otherwise the main
+  worktree root; the Git common directory is never the runtime. An attached member
+  excluded from the superproject's native uv workspace still validates against the
+  superproject environment: move a newer FLEXT owner revision into the workspace lock
+  through `make upg` at the superproject before the member gate can observe it.
+- Authority: ADR-003 Decision 5, ADR-030 and the runtime environment section of
+  `flext-infra/docs/guides/execution-context.md`.
 
 ## Resume entry points
 
