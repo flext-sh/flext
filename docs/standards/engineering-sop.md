@@ -261,8 +261,9 @@ passing count transferred to new source is not completion evidence.
   required check is green on the exact head, and the operator authorized it.
 - The standing test exceptions are the connectivity prerequisite skip, the
   deprecated-signature window, and the test-idiom rules explicitly justified per rule in
-  root `AGENTS.md`. The `make upg` lock guard is a precondition, not an exception. None
-  of them weakens assertions, coverage, isolation, or the performance baseline.
+  root `AGENTS.md`. The `make upg` lock guard is the one explicit operator exception: a
+  lock-write precondition, not a test exception. None of them weakens assertions,
+  coverage, isolation, or the performance baseline.
 - Lane mechanics, the review route, and retirement are owned by the
   [worker lane contract](../ways-of-working/worker-lane-contract.md); this section states
   only the SOP-level split.
