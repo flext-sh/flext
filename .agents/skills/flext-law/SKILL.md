@@ -402,7 +402,8 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
 - Test budgets are config-owned (2 s ordinary, 20 s slow/heavy) and the 240 s suite
   clock is fleet-wide per invocation; collection, session setup, fixture teardown and
   plugin bookkeeping belong to the suite deadline. A child-process test carries the
-  `slow` marker.
+  `slow` marker. The 60-second Make target covers non-test routes; a test suite keeps
+  the config-owned runner deadline above and arms no route budget.
 - Connectivity-test prerequisites and availability skips follow root `AGENTS.md`,
   section "Production Readiness And Connectivity Tests"; they never waive failures
   from an available service or disable pure unit/integration behavior checks.
