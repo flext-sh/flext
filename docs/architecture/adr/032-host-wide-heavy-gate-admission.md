@@ -183,7 +183,8 @@ this rule bounds when any verb may start and what each verb may use.
 
 - **Owner:** the generated Makefile prelude (`templates/project/base/Makefile.j2`,
   section `host admission`), configured once in `make.admission` of
-  `flext-infra` `config/codegen.yaml`: `max_load5` (20), `memory_limit_gb` (5),
+  `flext-infra` `src/flext_infra/config/codegen.yaml`:
+  `max_load5` (20), `memory_limit_gb` (5),
   `max_processes` (2), `overrides` per declared public verb, and
   `refusal_guidance`.
 - **Admission:** on the top-level invocation (`MAKELEVEL=0`, outside CI) the verb reads
