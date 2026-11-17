@@ -11,6 +11,7 @@ Infra:
       - [python.analysis.enableTroubleshootMissingImports, true]
     repository:
       project:
+        flext_source: "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev"
         package_name: flext
         class_stem: Flext
         namespace: Flext
