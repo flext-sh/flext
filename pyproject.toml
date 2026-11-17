@@ -3,7 +3,6 @@
 # @flext-adjust: MANAGED=conflict_sections + overwrite_project_keys. CUSTOM=preserve_project_keys and [tool.*] outside conflict_sections. Never edit this projection.
 # @flext-regenerate: make gen
 # @flext-rendered-by: flext-infra 0.12.1
-# DEPRECATED: mypy/pyright exterminated fleet-wide. Kept as local compatibility shim only.
 [build-system]
 build-backend = "hatchling.build"
 requires = ["hatchling"]
@@ -19,19 +18,19 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
-  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
-  "flext-db-oracle @ git+https://github.com/flext-sh/flext-db-oracle.git@0.12.0-dev",
-  "flext-grpc @ git+https://github.com/flext-sh/flext-grpc.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
-  "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
-  "flext-observability @ git+https://github.com/flext-sh/flext-observability.git@0.12.0-dev",
-  "flext-oracle-oic @ git+https://github.com/flext-sh/flext-oracle-oic.git@0.12.0-dev",
-  "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
-  "flext-plugin @ git+https://github.com/flext-sh/flext-plugin.git@0.12.0-dev",
-  "flext-quality @ git+https://github.com/flext-sh/flext-quality.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tests",
 ]
 description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
 keywords = ["coordination", "enterprise", "flext", "typed", "workspace"]
@@ -58,6 +57,7 @@ Repository = "https://github.com/flext-sh/flext"
 
 [dependency-groups]
 dev = [
+  "properdocs>=1.6.7",                                                                               # flext: derived member environment
   "types-networkx",
   "actionlint-py>=1.7.12.24",
   "aiohttp>=3.14.5",
@@ -75,37 +75,37 @@ dev = [
   "fastapi>=0.143.0",
   "fastmcp>=4.1.0",
   "flask>=3.1.3",
-  "flext-api @ git+https://github.com/flext-sh/flext-api.git@0.12.0-dev",
-  "flext-auth @ git+https://github.com/flext-sh/flext-auth.git@0.12.0-dev",
-  "flext-cli @ git+https://github.com/flext-sh/flext-cli.git@0.12.0-dev",
-  "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
-  "flext-db-oracle @ git+https://github.com/flext-sh/flext-db-oracle.git@0.12.0-dev",
-  "flext-dbt-ldap @ git+https://github.com/flext-sh/flext-dbt-ldap.git@0.12.0-dev",
-  "flext-dbt-ldif @ git+https://github.com/flext-sh/flext-dbt-ldif.git@0.12.0-dev",
-  "flext-dbt-oracle @ git+https://github.com/flext-sh/flext-dbt-oracle.git@0.12.0-dev",
-  "flext-dbt-oracle-wms @ git+https://github.com/flext-sh/flext-dbt-oracle-wms.git@0.12.0-dev",
-  "flext-grpc @ git+https://github.com/flext-sh/flext-grpc.git@0.12.0-dev",
-  "flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev",
-  "flext-ldap @ git+https://github.com/flext-sh/flext-ldap.git@0.12.0-dev",
-  "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
-  "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
-  "flext-observability @ git+https://github.com/flext-sh/flext-observability.git@0.12.0-dev",
-  "flext-oracle-oic @ git+https://github.com/flext-sh/flext-oracle-oic.git@0.12.0-dev",
-  "flext-oracle-wms @ git+https://github.com/flext-sh/flext-oracle-wms.git@0.12.0-dev",
-  "flext-plugin @ git+https://github.com/flext-sh/flext-plugin.git@0.12.0-dev",
-  "flext-quality @ git+https://github.com/flext-sh/flext-quality.git@0.12.0-dev",
-  "flext-tap-ldap @ git+https://github.com/flext-sh/flext-tap-ldap.git@0.12.0-dev",
-  "flext-tap-ldif @ git+https://github.com/flext-sh/flext-tap-ldif.git@0.12.0-dev",
-  "flext-tap-oracle @ git+https://github.com/flext-sh/flext-tap-oracle.git@0.12.0-dev",
-  "flext-tap-oracle-oic @ git+https://github.com/flext-sh/flext-tap-oracle-oic.git@0.12.0-dev",
-  "flext-tap-oracle-wms @ git+https://github.com/flext-sh/flext-tap-oracle-wms.git@0.12.0-dev",
-  "flext-target-ldap @ git+https://github.com/flext-sh/flext-target-ldap.git@0.12.0-dev",
-  "flext-target-ldif @ git+https://github.com/flext-sh/flext-target-ldif.git@0.12.0-dev",
-  "flext-target-oracle @ git+https://github.com/flext-sh/flext-target-oracle.git@0.12.0-dev",
-  "flext-target-oracle-oic @ git+https://github.com/flext-sh/flext-target-oracle-oic.git@0.12.0-dev",
-  "flext-target-oracle-wms @ git+https://github.com/flext-sh/flext-target-oracle-wms.git@0.12.0-dev",
-  "flext-tests @ git+https://github.com/flext-sh/flext-tests.git@0.12.0-dev",
-  "flext-web @ git+https://github.com/flext-sh/flext-web.git@0.12.0-dev",
+  "flext-api",
+  "flext-auth",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-dbt-ldap",
+  "flext-dbt-ldif",
+  "flext-dbt-oracle",
+  "flext-dbt-oracle-wms",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-ldif",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tap-ldap",
+  "flext-tap-ldif",
+  "flext-tap-oracle",
+  "flext-tap-oracle-oic",
+  "flext-tap-oracle-wms",
+  "flext-target-ldap",
+  "flext-target-ldif",
+  "flext-target-oracle",
+  "flext-target-oracle-oic",
+  "flext-target-oracle-wms",
+  "flext-tests",
+  "flext-web",
   "gitdb>=4.0.12",
   "GitPython>=3.2.1",
   "grpcio>=1.84.0",
@@ -125,14 +125,11 @@ dev = [
   "mkdocs-minify-plugin>=0.8.0",
   "mkdocs-redirects>=1.2.3",
   "mkdocs-section-index>=0.3.12",
-  "mkdocs",
-  "mkdocs>=1.6.1",
   "mkdocstrings-python>=2.0.8",
   "mkdocstrings-python>=2.0.9",
   "mkdocstrings>=1.0.6",
   "msgpack-types",
   "msgpack>=1.2.3",
-  "mypy>=2.3.1",
   "openpyxl>=3.1.5",
   "oracledb>=26.0.1",
   "packaging>=26.3",
@@ -146,7 +143,6 @@ dev = [
   "pymdown-extensions",
   "pymdown-extensions>=11.0.1",
   "pyrefly>=1.2.0",
-  "pyright>=1.1.411",
   "pytest-asyncio",
   "pytest-benchmark",
   "pytest-cov",
@@ -165,7 +161,7 @@ dev = [
   "pyyaml>=6.0.3",
   "redis>=8.1.0",
   "requests>=2.34.2",
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@4cb40a6fe564c6761dcb2f4e6c79d7fb7304f96f",
+  "rope @ git+https://github.com/marlon-costa-dc/rope.git@3a0cb69024fb5f17ba32064bf6c294d016c7d9d8",
   "ruamel.yaml>=0.19.1",
   "ruff>=0.16.5",
   "rumdl>=0.2.62",
@@ -216,7 +212,6 @@ codegen = [
   "deptry",
   "editables>=0.6",
   "hypothesis",
-  "mkdocs",
   "mkdocs-autorefs",
   "mkdocs-exclude>=1.0.2",
   "mkdocs-git-revision-date-localized-plugin>=1.5.4",
@@ -228,11 +223,9 @@ codegen = [
   "mkdocstrings>=1.0.6",
   "mkdocstrings-python>=2.0.8",
   "msgpack-types",
-  "mypy>=2.3.1",
   "platformdirs>=4.12.0",
   "pymdown-extensions",
   "pyrefly>=1.2.0",
-  "pyright>=1.1.411",
   "pytest>=9.1.1",
   "pytest-asyncio",
   "pytest-benchmark",
@@ -387,7 +380,6 @@ project-excludes = [
   "**/.git/**",
   "**/.hypothesis/**",
   "**/.kilo/**",
-  "**/.mypy_cache/**",
   "**/.omo/**",
   "**/.opencode/**",
   "**/.pylance_cache/**",
@@ -1454,7 +1446,7 @@ filterwarnings = ["error", "once::pytest.PytestAssertRewriteWarning"]
 flext_fixture_trees_root = "tests/fixtures"
 flext_make_ci_value = "Y"
 flext_make_ci_variable = "CI"
-flext_slow_timeout_seconds = "25"
+flext_slow_timeout_seconds = "20"
 markers = [
   "smoke: public-interface smoke tests",
   "unit: unit tests",
@@ -1478,6 +1470,8 @@ minversion = "8.0"
 python_classes = ["Test*"]
 python_files = ["*_test.py", "*_tests.py", "test_*.py"]
 testpaths = ["tests"]
+timeout = 20
+timeout_method = "signal"
 
 [tool.ruff]
 extend-exclude = [
@@ -1500,7 +1494,6 @@ extend-exclude = [
   "**/.git/**",
   "**/.hypothesis/**",
   "**/.kilo/**",
-  "**/.mypy_cache/**",
   "**/.omo/**",
   "**/.opencode/**",
   "**/.pylance_cache/**",
@@ -1521,7 +1514,6 @@ extend-exclude = [
   "**/__pyrefly_virtual__/**",
   "**/_tmp_*/**",
   "**/build/**",
-  "**/flext_infra/config/**",
   "**/dist-packages/**",
   "**/dist/**",
   "**/htmlcov/**",
@@ -1687,7 +1679,7 @@ environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 exclude-newer = "P10D"
 link-mode = "clone"
 override-dependencies = [
-  "rope @ git+https://github.com/marlon-costa-dc/rope.git@4cb40a6fe564c6761dcb2f4e6c79d7fb7304f96f",
+  "rope @ git+https://github.com/marlon-costa-dc/rope.git@3a0cb69024fb5f17ba32064bf6c294d016c7d9d8",
   "flext-api",
   "flext-auth",
   "flext-cli",
