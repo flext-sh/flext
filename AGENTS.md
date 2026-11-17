@@ -1003,8 +1003,8 @@ CLI + pytest plugin, **never imported at runtime**.
       ([ADR-018 deferred heavy capabilities](docs/architecture/adr/018-generator-declarations.md#deferred-heavy-capabilities-amended-2026-11-05-2026-11-12-2026-11-13)).
       A stand-in is a plain class of member descriptors with no metaclass and no
       fallback: it composes with a Pydantic model, a protocol subclass or any
-      metaclass, an unlisted member is an `AttributeError` repaired by `make gen`,
-      an ancestor-package base is shared by its import route, and a part a
+      metaclass, its members and bases are resolved from the code at run time,
+      a member the code does not bind is an `AttributeError`, and a part a
       stand-in cannot represent is rejected at generation
       ([stand-in composition law](docs/architecture/adr/018-generator-declarations.md#stand-in-composition-law-amended-2026-11-14)).
     - The `m.*` presets build Pydantic models lazily (`defer_build`), and a check
@@ -1012,8 +1012,8 @@ CLI + pytest plugin, **never imported at runtime**.
     - The lazy-init generator derives exports from source (AST over each module's
       `__all__`) and imports its own dependencies directly. It never imports a
       package it regenerates other than its own FLEXT packages, and for those
-      its process runs eager (ADR-018 stand-in composition law, rule 6), so a
-      stale init can never block its own repair.
+      it uses the same stand-ins as any consumer (ADR-018 stand-in composition
+      law, rule 6), so a stale init can never block its own repair.
     - Rewrites that move imports must never create an import-time cycle. A
       reverse-direction import goes under `if TYPE_CHECKING:`.
     - Revalidate historical gap reports at the current owners before repair:

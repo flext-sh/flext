@@ -159,9 +159,9 @@ missing projections authorize a concrete-model typing exception or protocol shim
   declarations govern generation; they do not attest completed runtime convergence.
 - A deferred facade part is a plain stand-in class with no metaclass and no fallback
   ([ADR-018 stand-in composition law](../../../docs/architecture/adr/018-generator-declarations.md#stand-in-composition-law-amended-2026-11-14)):
-  it composes with any metaclass, an unlisted member fails, an ancestor-package base
-  is shared by its import route, and a part a stand-in cannot represent is rejected
-  at generation and corrected at its source.
+  it composes with any metaclass, its members and bases are resolved from the code
+  at run time, a member the code does not bind fails, and a part a stand-in cannot
+  represent is rejected at generation and corrected at its source.
 - Before proposing an architectural change, or stating what a rule, a lint result or
   a lint configuration is, apply root `AGENTS.md` "Architectural Change Admission".
 - Service exposure follows the canonical short alias: `base.py` imports `s` from
