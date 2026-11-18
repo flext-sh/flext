@@ -4,4 +4,3 @@
 -e flext-core @ file:./flext-core
 -e flext-cli @ file:./flext-cli
 -e flext-infra @ file:./flext-infra
-
