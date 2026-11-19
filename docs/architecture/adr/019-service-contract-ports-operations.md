@@ -52,6 +52,26 @@
   ruling "core = composition root without a locator". Decision 13 is new. Old public
   signatures follow the deprecated-signature window (root `AGENTS.md`, tracker memory
   `operator-ruling-2026-10-24-deprecated-signature-window`).
+- **Amendment, 2026-11-19 (operator decision): a transport route binds to its owning
+  service.** Decision 6's "a transport receives the composed facade, never resolves
+  services by name" is replaced for command transports. Measured in ai-hub: every
+  CLI command built the MRO composition root of ~45 port-bearing services and every
+  config domain, so `--help` took ~4 s of imports and one command ~7.6 s, and a
+  one-service edit selected most of the test suite.
+  1. Each route declares its owning service once, in the route table that already
+     owns its name and help (SSOT). The transport resolves that service through the
+     package's generated lazy export and constructs only it; no other service, model
+     family or config domain is loaded for that route.
+  2. A service declares the ports it consumes as its own fields with their adapter
+     factories (Decision 2's constructor injection, moved from the aggregate to the
+     owner). `api.py` composes services only for consumers that need the aggregate;
+     it is not the route resolver, and a route never reaches it.
+  3. There is still no locator: resolution is the declared owner name in the route
+     table through the generated lazy export, never a Protocol-keyed container or a
+     string search across services.
+  4. Acceptance measures the real entry point: help resolves no service, config
+     domain or route model; a command resolves exactly its owner, its ports and the
+     config domains its owner reads.
 
 ## Context
 
@@ -146,6 +166,8 @@ and an automatic CLI for every member (plan V7), with fakes removed and real wir
    core retains its real consumed composition root without a locator (bead
    `flext-itpd1.11.3`); a transport receives the composed facade, never resolves
    services by name. This target does not certify current runtime compliance.
+   Superseded for command transports by the 2026-11-19 amendment above: a route
+   binds to its declared owning service.
 7. **Consumers first.** A base contract contracts only after every consumer declared
    what it uses; every base slice revalidates its consumers before merge.
 8. **Execution law for every slice.** Module size follows the owning project's typed
