@@ -51,3 +51,16 @@ The wrapper script relies on direnv to set up:
 - The wrapper script should be portable across different user accounts
 - The script should work in both workspace and standalone checkout modes
 - direnv must be installed and configured for the project
+
+## LSP Configuration (Ported from OpenCode)
+
+The kilo LSP configuration has been updated to match the opencode configuration,
+which uses openmoat. The LSP servers include:
+
+- Python (pyright-langserver)
+- Python Pyrefly (pyrefly lsp)
+- TypeScript (typescript-language-server)
+- Rust (rust-analyzer)
+- Go (gopls)
+
+This ensures consistent language server support across both tools.
