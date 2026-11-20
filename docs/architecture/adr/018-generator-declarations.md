@@ -222,6 +222,16 @@ declaration.
   composes model mixins that stay real: a stand-in cannot join a Pydantic
   metaclass. A stand-in is only valid for a namespace mixin, never for a class
   that is instantiated or subclasses a third-party type (amended 2026-11-12).
+- **Declared service facades (amended 2026-11-19).** Asked "Autoriza o gerador a
+  criar stand-ins para fachadas de serviço?", the operator answered "Sim,
+  autorizo"; asked "Converto os 19 serviços em mixins puros para o CLI ficar
+  mais rápido?", the operator answered "Sim, converter" (bead `dcos-cwh.21`). A
+  project may declare root facade classes beyond the namespace families in
+  `deferred_facades`; the generator then defers every in-package class such a
+  facade composes by MRO, under the same stand-in checks (rule 5). The service
+  base stays on the facade class itself, never on a part: each part is a plain
+  mixin, so the stand-in joins no Pydantic metaclass. A project that declares
+  nothing keeps every service part real.
 - **Shared member index (amended 2026-11-13).** The operator chose on
   2026-11-13 that the generator shares the index instead of copying it, with no
   gate change (bead `flext-2ayig.6`). A stand-in lists only the names bound in its
