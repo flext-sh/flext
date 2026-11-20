@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = "==3.13.*"
 resolution-markers = [
     "sys_platform == 'linux'",
@@ -2150,7 +2150,7 @@ dev = [
 
 [[package]]
 name = "flext-infra"
-version = "0.12.1"
+version = "0.12.3"
 source = { editable = "flext-infra" }
 dependencies = [
     { name = "defusedxml" },
@@ -2200,6 +2200,7 @@ dev = [
     { name = "bandit", specifier = ">=1.9.4" },
     { name = "deptry" },
     { name = "editables", specifier = ">=0.6" },
+    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev" },
     { name = "hypothesis" },
     { name = "mkdocs-autorefs" },
     { name = "mkdocs-exclude", specifier = ">=1.0.2" },
@@ -2210,7 +2211,6 @@ dev = [
     { name = "mkdocs-redirects", specifier = ">=1.2.3" },
     { name = "mkdocs-section-index", specifier = ">=0.3.12" },
     { name = "mkdocstrings", specifier = ">=1.0.6" },
-    { name = "mkdocstrings-python", specifier = ">=2.0.8" },
     { name = "mkdocstrings-python", specifier = ">=2.0.9" },
     { name = "msgpack-types" },
     { name = "platformdirs", specifier = ">=4.12.0" },
