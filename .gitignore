@@ -31,6 +31,7 @@
 # Dispatcher-based command surface (Make SSOT)
 !scripts/
 scripts/*.py
+!scripts/__init__.py
 scripts/*.sh
 scripts/*.md
 scripts/maintenance/
@@ -212,7 +213,6 @@ fix-report.json
 *.rej
 
 # Python caches inside allowed directories
-**/.mypy_cache/
 **/.ruff_cache/
 **/.pytest_cache/
 **/.hypothesis/
@@ -395,7 +395,6 @@ __pyrefly_virtual__/
 .doltcfg/
 .hypothesis/
 .mimosa/
-.mypy_cache/
 .omo/
 .pylance_cache/
 .pytest_cache/
