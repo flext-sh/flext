@@ -1,17 +1,19 @@
 ---
 name: flext-test-assertions
-description:
+description: >
   Convert or write FLEXT test assertions through the canonical tm matchers and the
-  flext-infra rewire-test-assert catalog, with the fewest statements.
+  flext-infra rewire-test-assert catalog, with the fewest statements. USE FOR: tm. DO NOT USE FOR: ad-hoc matchers.
+license: MIT
+metadata:
+  version: "1.0"
 ---
 
 # FLEXT Test Assertions
 
-Use when a FLEXT test asserts anything, or when `ban-test-assert`, a complexity finding
-or a review points at test assertions. The
-[workspace assertion standard](../../../docs/guides/using-flext-tests.md#workspace-assertion-standard)
+Use when a FLEXT test asserts anything. The
+`docs/guides/using-flext-tests.md#workspace-assertion-standard`
 owns the patterns and the
-[codemod rules guide](../../../docs/guides/codemod-rules.md) owns the catalog; this skill
+`docs/guides/codemod-rules.md` owns the catalog; this skill
 holds only the procedure.
 
 1. Bind `tm` through the project's tests facade (`from tests import tm`), never a local
@@ -28,6 +30,11 @@ holds only the procedure.
    unbound, and `rewire-test-reject-pass-branch*` for empty branches an older rewrite
    left. Measure the selection with code-review-graph (`impact --files`) before and
    the gate after.
-5. Then `make fmt`, `make gen` (second run writes nothing), the affected tests, and
-   `make check`. A rule that rewrites wrongly is fixed in `flext-infra` with a fixture
-   and snapshot (`make mod-snapshots`), never patched in the consumer.
+
+## Examples
+
+- `tm.ok(result)` and `tm.that(value, eq=expected)`.
+
+## Troubleshooting
+
+- `tm` unbound: run `make mod RULES=import-header--tests`.
