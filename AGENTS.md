@@ -633,9 +633,12 @@ then `setup` explicitly to install them. Generation does not install dependencie
 `tests` uses native incremental Testmon selection over the complete applicable
 population with the same persistent database. It does not force a repeated full
 run, add a second execution pass, or accept a manual file selector.
-`tests-full` executes the complete applicable population once without Testmon,
-without first running `tests`, and without reading, leasing or changing the
-Testmon database. Both retain the same admission and deadline requirements
+`tests-full` executes the complete applicable population once, records it in
+Testmon under the incremental environment so one run warms a cold checkout, and
+has no suite deadline; it keeps host admission (load5 ≤ 20), idle priority and
+at most two workers. `tests` keeps native incremental Testmon selection and its
+240 s budget. (Operator, 2026-11-19, superseding the 2026-10-28 'tests-full
+without Testmon' order.)
 ([ADR-029](docs/architecture/adr/029-always-working-one-complete-cycle.md)). The operator
 order of 2026-10-26 requires global Ruff, Pyrefly and pytest evidence before
 advancing; preserve the green-check prerequisite and fix performance at its owner.
