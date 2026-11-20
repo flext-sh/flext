@@ -1,8 +1,11 @@
 ---
 name: flext-context-routing
-description:
+description: >
   Route FLEXT repositories through global execution skills and the branch-matched local
-  flext-law domain delta after flext-core dependency detection.
+  flext-law domain delta after flext-core dependency detection. USE FOR: routing, context, flext-law. DO NOT USE FOR: upstream governance.
+license: MIT
+metadata:
+  version: "1.0"
 ---
 
 # FLEXT Context Routing
@@ -22,10 +25,6 @@ FLEXT law without duplicating universal execution governance.
 Fail closed if a required file is absent. Never resolve `flext-law` by an unqualified
 catalog name, from `main`, or from another checkout.
 
-At resumption, recover intent, scope and exclusions, the last validated candidate, and
-the next action from the active Bead. Read the handoff it links as dated evidence; do
-not copy its state into a second tracker.
-
 ## Detection and scope
 
 - Read the typed AI Hub project association before dependency detection. A
@@ -39,5 +38,12 @@ not copy its state into a second tracker.
 - In workspace mode, use the active workspace root and its checked-out law.
 - In standalone mode, use the FLEXT root law pinned to the same branch or release; never
   fall back to `main`.
-- Load only local surfaces declared in `.agents/provider.toml`. Global skills remain
-  owned by `~/.agents` and are not copied into the local provider.
+
+## Examples
+
+- Enter a repo: read `~/.agents/AGENTS.md`, then the branch-matched
+  `.agents/skills/flext-law/SKILL.md`.
+
+## Troubleshooting
+
+- A required file is absent: fail closed and do not guess or fall back to `main`.
