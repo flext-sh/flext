@@ -517,13 +517,13 @@ exclusions; it never copies or replaces either parent or ADR.
 
 Use the owning AI Hub capability directly; do not reimplement it in FLEXT.
 
-| Capability | Tool / MCP | Use when | Owner / Skill |
-| ---------- | ---------- | -------- | ------------- |
-| WIP lifecycle | `ai-hub wip` | claim, start, save, check, ship, approve, land, clean, sweep, cancel | `.agents/skills/wip/SKILL.md` (references: `commands.md`, `readiness.md`) |
-| Code graph | `ai-hub crg-*` + code-review-graph MCP | structural impact, callers/callees/tests, refactor planning, community analysis | MCP tools in this file; global `crg` skill |
-| Policy / audit | `openmoat` | decide, audit, sandbox, provenance of agent calls | `openmoat status`, `openmoat doctor`, `openmoat why` |
-| Project memory | OpenViking MCP | recall/search project memory, resources, session context | `openviking_search`, `openviking_read`, `kilo_memory_recall` |
-| Skill validation | `waza` | token budgets, compliance, eval coverage for skills/instructions | `waza check`, `waza dev`, `waza spec verify` |
+| Capability       | Tool / MCP                             | Use when                                                                        | Owner / Skill                                                             |
+| ---------------- | -------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| WIP lifecycle    | `ai-hub wip`                           | claim, start, save, check, ship, approve, land, clean, sweep, cancel            | `.agents/skills/wip/SKILL.md` (references: `commands.md`, `readiness.md`) |
+| Code graph       | `ai-hub crg-*` + code-review-graph MCP | structural impact, callers/callees/tests, refactor planning, community analysis | MCP tools in this file; global `crg` skill                                |
+| Policy / audit   | `openmoat`                             | decide, audit, sandbox, provenance of agent calls                               | `openmoat status`, `openmoat doctor`, `openmoat why`                      |
+| Project memory   | OpenViking MCP                         | recall/search project memory, resources, session context                        | `openviking_search`, `openviking_read`, `kilo_memory_recall`              |
+| Skill validation | `waza`                                 | token budgets, compliance, eval coverage for skills/instructions                | `waza check`, `waza dev`, `waza spec verify`                              |
 
 Rules: WIP and worktree lifecycle is owned by `ai-hub wip` (never flext-infra or Make).
 CRG graph builds follow `CRG_RECURSE_SUBMODULES=1` for dirty workspaces. OpenMoat
