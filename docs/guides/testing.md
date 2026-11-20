@@ -4,9 +4,9 @@
 
 - [Test design](#test-design)
 - [Pydantic and type checking](#pydantic-and-type-checking)
-- [Execution budgets and the shared runner](#execution-budgets-and-the-shared-runner)
 - [Canonical execution](#canonical-execution)
 - [Generated documentation](#generated-documentation)
+- [Execution budgets and the shared runner](#execution-budgets-and-the-shared-runner)
 - [Related guides](#related-guides)
 
 <!-- TOC END -->
