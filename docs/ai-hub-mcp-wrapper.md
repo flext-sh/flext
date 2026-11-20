@@ -64,3 +64,15 @@ which uses openmoat. The LSP servers include:
 - Go (gopls)
 
 This ensures consistent language server support across both tools.
+
+## OpenMoat/OpenCode Configuration Alignment
+
+The kilo configuration has been aligned with opencode's advanced config:
+
+- MCP ai-hub uses canonical native form (openmoat mcp proxy)
+- Browse MCP server added
+- Cliproxy provider with ai-hub models added
+- Model set to cliproxy/ai-hub-balanced
+- Small model set to cliproxy/ai-hub-fast
+
+See ADR-035 for details.
