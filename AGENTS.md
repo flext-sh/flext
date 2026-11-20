@@ -643,8 +643,9 @@ advancing; preserve the green-check prerequisite and fix performance at its owne
 Test budgets are configuration-owned by
 `flext-infra/src/flext_infra/config/tooling.yaml`: `ordinary-timeout-seconds` (2 s)
 measures the test call, `slow-timeout-seconds` (20 s) applies to `slow` and the heavy
-capability markers, and `run-timeout-seconds` (240 s) is the fleet-wide suite clock —
-one invocation owns one budget across every member suite, and a per-member reset is
+capability markers, and `run-timeout-seconds` (240 s) is the per-member suite clock —
+each member owns its own budget from the moment it is dispatched, and a shared
+clock that leaves later members only the budget their predecessors did not spend is
 rejected. Collection, session setup, fixture teardown and plugin bookkeeping belong to
 the suite deadline. In-process CLI coverage calls `u.Tests.cli_in_process`; a local
 environment/stream/signal runner is a defect.
