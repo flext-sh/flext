@@ -184,7 +184,7 @@ this rule bounds when any verb may start and what each verb may use.
 - **Owner:** the generated Makefile prelude (`templates/project/base/Makefile.j2`,
   section `host admission`), configured once in `make.admission` of
   `flext-infra` `src/flext_infra/config/codegen.yaml`:
-  `max_load5` (20), `memory_limit_gb` (5),
+  `host_load_gate` (true), `max_load5` (20), `memory_limit_gb` (5),
   `max_processes` (2), `overrides` per declared public verb, and
   `refusal_guidance`.
 - **Admission:** on the top-level invocation (`MAKELEVEL=0`, outside CI) the verb reads
@@ -201,6 +201,16 @@ this rule bounds when any verb may start and what each verb may use.
   CPUs.
 - **Exceptions:** only a declared `make.admission.overrides.<verb>` entry,
   never a local edit or an environment bypass.
+- **Fixture projects (amended 2026-11-19, bead `flext-lgbai`, operator
+  decisions "Declared fixture input" and "Local layer only"):**
+  `make.admission.host_load_gate` (packaged value `true`) decides whether the
+  rendered Makefile reads the load and refuses; the run limits stay in force
+  either way. The test fabric renders every fixture project with `false` in
+  its untracked `config/codegen.local.yaml`, because a fixture's verbs run
+  inside the already admitted test verb and its tests verify recipe
+  behaviour, not host admission. A tracked project layer that declares the key
+  fails loud, so no committed repository disables the gate; real Makefiles
+  render byte-identical.
 - **Measurement:** this rule reads the kernel load directly, by operator
   decision (tracker key `operator-order-2026-11-13-make-admission-limits`).
   When the host-budget owner publishes its snapshot, the admission reads it
