@@ -268,8 +268,12 @@ every consumer must follow; consumer adoption and enforcement are tracked in Bea
 
 ### 3b. Semantic discovery and automated rewiring
 
-Class and symbol movement is derived from live sources: typed module paths, AST/Rope
-identities, and LSP reference resolution. A checked-in list that maps individual
+Class and symbol movement is derived from live sources: typed module paths, Rope
+identities, and LSP reference resolution. Rope is the only authority for source facts
+(operator decision 2026-11-21): syntax, scopes, bindings and typing identities such as
+`typing.Final` are read through the Rope project, never through `ast` or a regex
+over source lines (first cutover: the constants consolidator, bead `flext-ezljc`).
+A checked-in list that maps individual
 classes, files, confidence labels, or rewrite targets is a second owner and is
 prohibited. Unknown or ambiguous ownership fails at the classifier; it never falls back
 to a guessed namespace or an inert/manual-review entry.
