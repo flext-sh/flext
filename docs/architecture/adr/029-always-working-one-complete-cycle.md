@@ -17,6 +17,8 @@
 - **Amended:** 2026-10-26 — global primary admission, native Testmon selection and
   serial peripheral-first modification
 - **Amended:** 2026-10-28 — explicit full-suite operation without Testmon
+- **Amended:** 2026-11-19 — full-suite operation records Testmon and has no suite
+  deadline (supersedes the 2026-10-28 amendment)
 - **Scope:** every FLEXT repository (superproject, every member, external consumers
   such as ai-hub) and every agent or session working in them
 - **Tracker memories:** `operator-order-2026-10-24-always-working-never-skip-phase`,
@@ -98,13 +100,15 @@ conversation, verbatim: "make tests (usa tetmon ) make tests-fulll nao usa,
 simples assim". The canonical existing spelling is `tests-full`; no typo alias
 is introduced. Tracker memory
 `operator-ruling-2026-10-28-tests-testmon-full-native` records the decision.
-`tests` retains native incremental Testmon selection. `tests-full` executes the
-complete applicable population once without Testmon and without a preliminary
-incremental execution. It neither loads the Testmon plugin nor reads, leases,
-checks, updates or publishes its database. The existing database remains untouched.
-Both operations retain original source admission, applicability, failure accounting
-and the active Make deadline. This supersedes the older no-full-verb and
-incremental-then-full prescriptions; it does not grant an unlimited-time exception.
+
+The operator amended it on 2026-11-19: `tests-full` executes the complete
+applicable population once, records it in Testmon under the incremental
+environment so one run warms a cold checkout, and has no suite deadline; it keeps
+host admission (load5 ≤ 20), idle priority and at most two workers. `tests` keeps
+native incremental Testmon selection and its 240 s budget. (Operator, 2026-11-19,
+superseding the 2026-10-28 'tests-full without Testmon' order.) Neither operation
+adds a preliminary incremental execution, and both retain original source
+admission, applicability and failure accounting.
 Source, generated consumers, runtime proof and integration remain separate states.
 
 1. **The project and its runtime work 100% of the time.** No integration tip and no
@@ -129,7 +133,8 @@ Source, generated consumers, runtime proof and integration remain separate state
    the slice stays open, never silently dropped.
 6. **Global evidence and native impact selection.** Ruff, Pyrefly and Pytest cover
    the complete declared scope before dependent work advances. Pytest always
-   retains the canonical persistent external Testmon database and uses native
+   retains each checkout's persistent Testmon database at Testmon's native
+   default location (git-ignored, never relocated) and uses native
    dependency selection over the global applicable inventory. Preserve external
    and slow-test applicability, configuration/toolchain identity, cache integrity,
     and the applicable admission guard. Initial source admission and complete
@@ -175,9 +180,10 @@ admission; do not replace it with a green member or a stale whole-workspace run.
 Budgets are configuration-owned by `flext-infra`
 `src/flext_infra/config/tooling.yaml`: `ordinary-timeout-seconds` (2) measures the
 test call, `slow-timeout-seconds` (20) the slow and heavy markers, and
-`run-timeout-seconds` (240) is the fleet-wide suite clock — one `make tests` or
-`make tests-full` invocation owns one 240 s budget across every member suite, and a
-per-member clock reset is rejected (operator decision 2026-11-16). Collection,
+`run-timeout-seconds` (240) is the fleet-wide suite clock — one `make tests`
+invocation owns one 240 s budget across every member suite, and a per-member clock
+reset is rejected (operator decision 2026-11-16). `make tests-full` has no suite
+deadline (operator 2026-11-19). Collection,
 fixture teardown and plugin bookkeeping belong to the suite deadline, which reserves
 its own shutdown time; charging them to an item budget fails healthy runs.
 
@@ -193,8 +199,9 @@ its own shutdown time; charging them to an item budget fails healthy runs.
    it as a cache hit, never as tests executed and passed. No repeated full pass is
    added to the normal invocation.
    When explicitly requested, `make tests-full` runs that complete applicable
-   population once without Testmon or an incremental pre-run. It requires actual
-   execution accounting; a cache hit cannot admit the full-suite operation.
+   population once, without an incremental pre-run, and records it in Testmon so
+   the next `make tests` is incremental. It requires actual execution accounting;
+   a cache hit cannot admit the full-suite operation.
 6. Real runtime proof through the public consumer (CLI from a neutral directory,
    installed artifact, real service), not only tests.
 7. Commit by explicit paths, fast-forward push, pull request to the integration

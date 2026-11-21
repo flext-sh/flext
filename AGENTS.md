@@ -651,9 +651,12 @@ then `setup` explicitly to install them. Generation does not install dependencie
 `tests` uses native incremental Testmon selection over the complete applicable
 population with the same persistent database. It does not force a repeated full
 run, add a second execution pass, or accept a manual file selector.
-`tests-full` executes the complete applicable population once without Testmon,
-without first running `tests`, and without reading, leasing or changing the
-Testmon database. Both retain the same admission and deadline requirements
+`tests-full` executes the complete applicable population once, records it in
+Testmon under the incremental environment so one run warms a cold checkout, and
+has no suite deadline; it keeps host admission (load5 ≤ 20), idle priority and
+at most two workers. `tests` keeps native incremental Testmon selection and its
+240 s budget. (Operator, 2026-11-19, superseding the 2026-10-28 'tests-full
+without Testmon' order.)
 ([ADR-029](docs/architecture/adr/029-always-working-one-complete-cycle.md)). The operator
 order of 2026-10-26 requires global Ruff, Pyrefly and pytest evidence before
 advancing; preserve the green-check prerequisite and fix performance at its owner.
@@ -1030,9 +1033,11 @@ CLI + pytest plugin, **never imported at runtime**.
       gate builds every model so annotation errors still fail `make check`.
     - The lazy-init generator derives exports from source (AST over each module's
       `__all__`) and imports its own dependencies directly. It never imports a
-      package it regenerates other than its own FLEXT packages, and for those
-      it uses the same stand-ins as any consumer (ADR-018 stand-in composition
-      law, rule 6), so a stale init can never block its own repair.
+      package it regenerates other than its own FLEXT packages, and for those it
+      uses the same dynamic stand-ins as any consumer (ADR-018 stand-in
+      composition law, rule 6): members and bases come from the code at run
+      time, so a stale init can never block its own repair and no process runs
+      eager.
     - Rewrites that move imports must never create an import-time cycle. A
       reverse-direction import goes under `if TYPE_CHECKING:`.
     - Revalidate historical gap reports at the current owners before repair:
