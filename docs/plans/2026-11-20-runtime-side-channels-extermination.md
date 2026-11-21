@@ -13,9 +13,10 @@ ADR-028 D18 are inviolable.
 ## Root causes
 
 1. `.flext/executor` — separate venv holding stale `flext_core` (missing
-   `_constants.infrastructure`). Created/maintained outside `make setup`. OpenMoat blocks
-   its python binary (non-pinned path).
-2. `core.hooksPath=/dev/null` — silent skip in `INSTALL_GIT_HOOKS_RECIPE`. Must fail-loud.
+   `_constants.infrastructure`). Created/maintained outside `make setup`. OpenMoat
+   blocks its python binary (non-pinned path).
+2. `core.hooksPath=/dev/null` — silent skip in `INSTALL_GIT_HOOKS_RECIPE`. Must
+   fail-loud.
 3. Scattered `.venv` / mise data / runtimes across projects.
 4. Manual `pip install` / `uv pip install` outside `make setup`.
 
@@ -33,13 +34,14 @@ ADR-028 D18 are inviolable.
 
 - Executor already uses pinned Python (`--python $$desired_python` in template).
 - Add hooksPath fail-loud pre-flight in `_setup_activated`.
-- OpenMoat homologation: either add executor path to allowlist or reroute to mise binary.
+- OpenMoat homologation: either add executor path to allowlist or reroute to mise
+  binary.
 - Owner: `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`.
 
 ### Fase 2 — Proof (GATE)
 
-- Destructive test in isolated worktree: break flext-infra source, run `make upg`, verify
-  self-repair.
+- Destructive test in isolated worktree: break flext-infra source, run `make upg`,
+  verify self-repair.
 - Success → proceed to Fase 3. Failure → keep executor canonical (Fase 1 is final).
 
 ### Fase 3 — Exterminate (gated on Fase 2 pass)
