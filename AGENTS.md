@@ -211,9 +211,10 @@ into the integration workspaces"; supersedes the 2026-11-12 worktree-first order
 - The orchestrating session merges, never forge auto-merge: on the exact green head,
   one subject per pull request; review is advisory where ADR-0038 declares zero
   approvals; the merged revision is then re-proven at its real entry point.
-- No lane waits for the host load to drop. Work proceeds on light processes: code,
-  `CHECK_PHASE=primary make check`, the smallest real runtime proof, and the lane's
-  `gen`/`fmt`/`fix`. Heavy verbs run one at a time, only when the slice needs them.
+- No lane waits for the host load to drop. Work proceeds on code, the smallest real
+  runtime proof and the lane's `gen`/`upg` when sources change; the commit hook and
+  the required integration CI are the gate (engineering SOP §1 item 6). Heavy verbs
+  run in the background or a subagent, one at a time.
 - Fixes go to the root cause with correct CA/DI wiring and no duplicated code path;
   a fix already present on another unintegrated lane is cherry-picked (`-x`) instead
   of rewritten.
@@ -728,12 +729,14 @@ those owners.
 
 **Working method (light-process execution).** A heavy verb (`make check`,
 `make tests`, `make gen`, `make deploy`) never ends a turn and is never a reason
-to wait for host load. Start it as a background or persistent process, then
-continue the same slice with the light gates on the touched files
-(`.venv/bin/ruff check`, `ruff format --check`, `pyrefly check`), diff review,
-and doc/ADR/AGENTS/Bead alignment. The load does not drop while every session
-waits. Do not start a second implementation slice to fill the wait, and never
-bootstrap with manual `uv`. For a failed declared service, follow the
+to wait for host load. Start it as a background process or in a subagent, then
+continue the same slice with diff review and doc/ADR/AGENTS/Bead alignment.
+Static gates and tests are not rerun as a separate pre-commit or pre-push step:
+the commit hook and the required integration CI on the exact head are the gate
+([engineering SOP §1 item 6](docs/standards/engineering-sop.md#1-development-lifecycle)),
+and every plan phase, and the plan's end, closes with its pull request merged into
+the integration branch. Do not start a second implementation slice to fill the
+wait, and never bootstrap with manual `uv`. For a failed declared service, follow the
 `runtime-heal` procedure and the owner's documented reset/repair; never
 suppress, bypass, or hand-edit generated or config state. Ask only for a
 genuine unknown or an operator-only effect.
@@ -1481,11 +1484,11 @@ Overall average: **60-90% token reduction** on common development operations.
   checkout and test (Mise from its installer default, uv's cache with clone links,
   pytest's own basetemp retention); no verb or fixture copies it per run, and a run
   removes its own temporary files, also when stopped (epic `flext-b4gw3`).
-- **Never wait for load and never stop on a heavy operation.** Run the declared
-  lightweight checks (primary-phase check, scoped Ruff/Pyrefly on touched files, `bd`,
-  `git`, diffs, reads) and keep executing the plan; heavy `make gen`/`make check`/
-  `make upg` run in the background with short budgets, never as a reason to block or
-  stall. Review and follow the real laws, rules, skills, research and best practices
+- **Never wait for load and never stop on a heavy operation.** Keep executing the
+  plan (`bd`, `git`, diffs, reads, owner code); heavy `make gen`/`make upg` run in the
+  background or a subagent, never as a reason to block or stall, and static gates and
+  tests run in the commit hook and the integration CI, not as a separate manual
+  step. Review and follow the real laws, rules, skills, research and best practices
   before acting. The operator's zero-tolerance for warnings, strange logs, gambiarras,
   fallbacks, unauthorized hooks, non-standard code, bad UX and latency above a few
   seconds blocks Done.
@@ -1516,13 +1519,14 @@ Overall average: **60-90% token reduction** on common development operations.
   libraries; apply DI, DRY, YAGNI, and SSOT — invert dependencies, respect domain
   interfaces, and decouple instead of patching around a problem (no gambiarra).
 - Follow the current operator's division of work and the canonical coordination
-  rules. Required local proof remains mandatory; remote CI does not replace it.
+  rules. The commit hook and the required integration CI are the gate; runtime
+  proof at the real entry point still precedes closure.
   Heavy operations run concurrently through their owning tools, never serialized
   by hand.
 - A held heavy gate (host admission, a peer's request) never stops the session,
-  and nobody waits for the load to drop: research, Beads, documentation, owner
-  code and light single-process gates on touched files continue at once; only
-  the heavy verb is queued by its owning tool (operator order 2026-11-13).
+  and nobody waits for the load to drop: research, Beads, documentation and owner
+  code continue at once; only the heavy verb is queued by its owning tool
+  (operator order 2026-11-13).
 - When the law already settles a design, apply it instead of asking: no opt-in
   flag that makes a law optional, no criterion kept beside its replacement, no
   input skipped silently. Ask only on a real authority conflict or a
