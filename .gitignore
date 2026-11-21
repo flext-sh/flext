@@ -31,6 +31,7 @@
 # Dispatcher-based command surface (Make SSOT)
 !scripts/
 scripts/*.py
+!scripts/__init__.py
 scripts/*.sh
 scripts/*.md
 scripts/maintenance/
@@ -212,7 +213,6 @@ fix-report.json
 *.rej
 
 # Python caches inside allowed directories
-**/.mypy_cache/
 **/.ruff_cache/
 **/.pytest_cache/
 **/.hypothesis/
@@ -395,7 +395,6 @@ __pyrefly_virtual__/
 .doltcfg/
 .hypothesis/
 .mimosa/
-.mypy_cache/
 .omo/
 .pylance_cache/
 .pytest_cache/
@@ -529,3 +528,7 @@ CLAUDE.local.md
 !/flext-tests/**
 !/flext-web/
 !/flext-web/**
+
+# BEGIN ai-hub projection destinations (generated from config/workspaces.yaml; do not edit; regenerate: make workspace-config in ai-hub)
+/.moat/policy.yaml
+# END ai-hub projection destinations
