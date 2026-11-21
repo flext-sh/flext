@@ -361,19 +361,20 @@ open. Where it differs from a bullet above, this subsection prevails.
    with no members of its own and those bases shared, so deriving stand-ins keep
    the real MRO; only a stand-in with neither members nor bases is invalid, and
    the runtime rejects it when it builds the stand-in. A class the package's
-   own import-time code reads (the modules of its import-time dunder bindings,
-   such as `__version__`, and what they import from the package) is not
-   deferred: it loads at import anyway.
-6. **A generator process uses the same stand-ins as any consumer.** The
-   generator imports its own FLEXT packages (`flext_infra/codegen/lazy_init.py`
-   imports the flext-infra facades, which compose flext-cli and flext-core), so
-   when it regenerates one of them a stale initializer must not block the
-   repair; every other package it regenerates it never imports. It does not
-   block: a stand-in resolves its members and bases from its part's own code at
-   run time (rules 2 and 4), the initializer carries no member or base list,
-   and the code is the authority. Only what an access needs loads, and a name
-   the code does not bind fails. A part missing from an export map still fails,
-   as before.
+   own import-time code reads (the modules of its eager dunder bindings, such
+   as `__version__`, and what they import from the package) is not deferred:
+   it loads at import anyway, the one binding that is eager by construction.
+6. **A generator process uses the same dynamic stand-ins as any consumer.**
+   The generator imports its own FLEXT packages
+   (`flext_infra/codegen/lazy_init.py` imports the flext-infra facades, which
+   compose flext-cli and flext-core), so a stale initializer must not block the
+   repair. It does not, because a stand-in resolves its members and bases from
+   the part's own code at run time (rules 2 and 4): the initializer carries no
+   member or base list, so the code is always the authority. There is no
+   process flag and no environment variable that switches the process to eager
+   classes, and no total load at startup: only what an access needs loads, and
+   a name the code does not bind fails. A part missing from an export map still
+   fails, as before.
 7. **A published letter names its class, and a module-less ancestor is a
    package.** A base read through another package's letter
    (`from flext_ldif import p`) resolves through that package's export under
@@ -396,8 +397,7 @@ open. Where it differs from a bullet above, this subsection prevails.
   loading cases; a member added to a part after generation resolves and loads
   only its part; a name absent from the code raises `AttributeError` and loads
   nothing; each stand-in has the same MRO, members and type parameters as its
-  real class; and a generator process repairs a stale initializer of a package
-  it imports.
+  real class; and the flag of rule 6 fails once a stand-in is published.
   flext-infra carries the rejections of rule 5. The consumer proof is
   `make gen` followed by the fresh import of each regenerated member and of one
   external consumer.

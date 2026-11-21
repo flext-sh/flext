@@ -3760,6 +3760,7 @@ dependencies = [
     { name = "pytest-xdist" },
     { name = "python-dotenv" },
     { name = "python-on-whales" },
+    { name = "starlette" },
 ]
 
 [package.metadata]
@@ -3782,6 +3783,7 @@ requires-dist = [
     { name = "pytest-xdist" },
     { name = "python-dotenv", specifier = ">=1.2.4" },
     { name = "python-on-whales", specifier = ">=0.81.0" },
+    { name = "starlette" },
 ]
 
 [package.metadata.requires-dev]
@@ -3791,6 +3793,7 @@ dev = [
     { name = "bandit", specifier = ">=1.9.4" },
     { name = "deptry" },
     { name = "editables", specifier = ">=0.6" },
+    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev" },
     { name = "hypothesis" },
     { name = "mkdocs-autorefs" },
     { name = "mkdocs-exclude", specifier = ">=1.0.2" },
