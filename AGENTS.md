@@ -1033,9 +1033,11 @@ CLI + pytest plugin, **never imported at runtime**.
       gate builds every model so annotation errors still fail `make check`.
     - The lazy-init generator derives exports from source (AST over each module's
       `__all__`) and imports its own dependencies directly. It never imports a
-      package it regenerates other than its own FLEXT packages, and for those
-      it uses the same stand-ins as any consumer (ADR-018 stand-in composition
-      law, rule 6), so a stale init can never block its own repair.
+      package it regenerates other than its own FLEXT packages, and for those it
+      uses the same dynamic stand-ins as any consumer (ADR-018 stand-in
+      composition law, rule 6): members and bases come from the code at run
+      time, so a stale init can never block its own repair and no process runs
+      eager.
     - Rewrites that move imports must never create an import-time cycle. A
       reverse-direction import goes under `if TYPE_CHECKING:`.
     - Revalidate historical gap reports at the current owners before repair:
