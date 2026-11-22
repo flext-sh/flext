@@ -59,7 +59,7 @@ overrides = [
     { name = "flext-target-oracle-wms", editable = "flext-target-oracle-wms" },
     { name = "flext-tests", editable = "flext-tests" },
     { name = "flext-web", editable = "flext-web" },
-    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=09806ca918b69994ac3a880c92cde9689f480f46" },
+    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=ecdee0efcbfa1bbdbd070218de3c39716b0299aa" },
 ]
 excludes = [
     { package = { name = "flext-api" }, dependencies = ["flext"] },
@@ -1221,7 +1221,6 @@ dev = [
     { name = "mkdocs-redirects", specifier = ">=1.2.3" },
     { name = "mkdocs-section-index", specifier = ">=0.3.12" },
     { name = "mkdocstrings", specifier = ">=1.0.6" },
-    { name = "mkdocstrings-python", specifier = ">=2.0.8" },
     { name = "mkdocstrings-python", specifier = ">=2.0.9" },
     { name = "msgpack", specifier = ">=1.2.3" },
     { name = "msgpack-types" },
@@ -1237,19 +1236,16 @@ dev = [
     { name = "pydantic-settings", specifier = ">=2.15.0" },
     { name = "pyjwt", specifier = ">=2.15.1" },
     { name = "pymdown-extensions" },
-    { name = "pymdown-extensions", specifier = ">=11.0.1" },
     { name = "pyrefly", specifier = ">=1.2.0" },
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "pytest-asyncio" },
     { name = "pytest-benchmark" },
     { name = "pytest-cov" },
     { name = "pytest-markdown-docs" },
-    { name = "pytest-markdown-docs", specifier = ">=0.9.2" },
     { name = "pytest-randomly", specifier = ">=4.1.0" },
     { name = "pytest-reportlog" },
     { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout" },
-    { name = "pytest-timeout", specifier = ">=2.4.0" },
     { name = "pytest-xdist" },
     { name = "python-docx", specifier = ">=1.2.0" },
     { name = "python-on-whales", specifier = ">=0.81.0" },
@@ -1257,7 +1253,7 @@ dev = [
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "redis", specifier = ">=8.1.0" },
     { name = "requests", specifier = ">=2.34.2" },
-    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=09806ca918b69994ac3a880c92cde9689f480f46" },
+    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=ecdee0efcbfa1bbdbd070218de3c39716b0299aa" },
     { name = "ruamel-yaml", specifier = ">=0.19.1" },
     { name = "ruff", specifier = ">=0.16.5" },
     { name = "rumdl", specifier = ">=0.2.62" },
@@ -2191,7 +2187,7 @@ requires-dist = [
     { name = "pymdown-extensions", specifier = ">=11.0.1" },
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "pytest-markdown-docs", specifier = ">=0.9.2" },
-    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=09806ca918b69994ac3a880c92cde9689f480f46" },
+    { name = "rope", git = "https://github.com/marlon-costa-dc/rope.git?rev=ecdee0efcbfa1bbdbd070218de3c39716b0299aa" },
     { name = "typing-extensions", specifier = ">=4.16.0" },
 ]
 
@@ -2202,7 +2198,6 @@ dev = [
     { name = "bandit", specifier = ">=1.9.4" },
     { name = "deptry" },
     { name = "editables", specifier = ">=0.6" },
-    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev" },
     { name = "hypothesis" },
     { name = "mkdocs-autorefs" },
     { name = "mkdocs-exclude", specifier = ">=1.0.2" },
@@ -3791,7 +3786,6 @@ dev = [
     { name = "bandit", specifier = ">=1.9.4" },
     { name = "deptry" },
     { name = "editables", specifier = ">=0.6" },
-    { name = "flext-infra", git = "https://github.com/flext-sh/flext-infra.git?rev=0.12.0-dev" },
     { name = "hypothesis" },
     { name = "mkdocs-autorefs" },
     { name = "mkdocs-exclude", specifier = ">=1.0.2" },
@@ -5649,7 +5643,7 @@ wheels = [
 [[package]]
 name = "rope"
 version = "1.15.2+dc.9"
-source = { git = "https://github.com/marlon-costa-dc/rope.git?rev=09806ca918b69994ac3a880c92cde9689f480f46#09806ca918b69994ac3a880c92cde9689f480f46" }
+source = { git = "https://github.com/marlon-costa-dc/rope.git?rev=ecdee0efcbfa1bbdbd070218de3c39716b0299aa#ecdee0efcbfa1bbdbd070218de3c39716b0299aa" }
 dependencies = [
     { name = "pytoolconfig", extra = ["global"] },
 ]
