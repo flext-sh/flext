@@ -3755,7 +3755,6 @@ dependencies = [
     { name = "pytest-xdist" },
     { name = "python-dotenv" },
     { name = "python-on-whales" },
-    { name = "starlette" },
 ]
 
 [package.metadata]
@@ -3778,7 +3777,6 @@ requires-dist = [
     { name = "pytest-xdist" },
     { name = "python-dotenv", specifier = ">=1.2.4" },
     { name = "python-on-whales", specifier = ">=0.81.0" },
-    { name = "starlette" },
 ]
 
 [package.metadata.requires-dev]
