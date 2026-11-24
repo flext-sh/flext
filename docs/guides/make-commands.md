@@ -610,9 +610,11 @@ The source template
 `flext-infra/src/flext_infra/templates/project/base/Makefile.j2`, in its derived-paths
 and repository-root sections, binds `PROJECT_ROOT` to the selected Makefile's
 checkout rather than CWD. Attached members share the containing workspace's runtime
-environment. Standalone checkouts and member worktrees without a containing
-superproject own their runtime environment and run `make <verb>` from their own
-root.
+environment. A standalone checkout owns its runtime environment and runs
+`make <verb>` from its own root. A workspace member's dev group never declares
+`flext-infra`, so a member worktree without a containing superproject has no
+runtime supplier: its `setup`, `upg` and `lock` refuse before any effect with
+exit 2 and point to a workspace-shaped lane that attaches the member.
 Manifest exclusions remain authoritative. Generated Make surfaces and documentation
 are changed at their template or configuration owner, then regenerated with `make gen`.
 
