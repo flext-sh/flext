@@ -1836,9 +1836,9 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev" },
-    { name = "flext-ldif", git = "https://github.com/flext-sh/flext-ldif.git?rev=0.12.0-dev" },
-    { name = "flext-meltano", git = "https://github.com/flext-sh/flext-meltano.git?rev=0.12.0-dev" },
+    { name = "flext-core" },
+    { name = "flext-ldif" },
+    { name = "flext-meltano" },
 ]
 
 [package.metadata.requires-dev]
@@ -2173,8 +2173,8 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "defusedxml", specifier = ">=0.7.1" },
-    { name = "flext-cli", git = "https://github.com/flext-sh/flext-cli.git?rev=0.12.0-dev" },
-    { name = "flext-core", git = "https://github.com/flext-sh/flext-core.git?rev=0.12.0-dev" },
+    { name = "flext-cli" },
+    { name = "flext-core" },
     { name = "gitdb", specifier = ">=4.0.12" },
     { name = "gitpython", specifier = ">=3.2.1" },
     { name = "jinja2", specifier = ">=3.1.6" },
@@ -2198,7 +2198,6 @@ dev = [
     { name = "bandit", specifier = ">=1.9.4" },
     { name = "deptry" },
     { name = "editables", specifier = ">=0.6" },
-    { name = "flext-tests", git = "https://github.com/flext-sh/flext-tests.git?rev=0.12.0-dev" },
     { name = "hypothesis" },
     { name = "mkdocs-autorefs" },
     { name = "mkdocs-exclude", specifier = ">=1.0.2" },
