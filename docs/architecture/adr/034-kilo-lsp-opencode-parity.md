@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Superseded by [ADR-036](036-flext-consumes-no-ai-hub-configuration.md) (2026-11-24).
 
 ## Context
 

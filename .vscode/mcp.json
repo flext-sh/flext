@@ -1,24 +1,10 @@
 {
   "servers": {
-    "serena": {
-      "type": "stdio",
-      "command": "serena",
-      "args": ["start-mcp-server", "--context=vscode", "--project-from-cwd"]
-    },
     "code-review-graph": {
+      "type": "stdio",
       "command": "code-review-graph",
       "args": ["serve", "--repo", "~/flext"],
-      "cwd": "~/flext",
-      "type": "stdio"
-    },
-    "ai-hub": {
-      "type": "stdio",
-      "command": "ai-hub",
-      "args": ["mcp", "--action", "client", "--agent", "kilo"],
-      "env": {
-        "AI_HUB_MCP_SOCKET": "${env:AI_HUB_MCP_SOCKET}",
-        "AIHUB_PROJECT_ROOT": "${workspaceFolder}"
-      }
+      "cwd": "~/flext"
     }
   }
 }

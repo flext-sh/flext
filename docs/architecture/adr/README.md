@@ -161,6 +161,16 @@ candidate; acceptance never proves fleet stability.
   owned by flext-infra: 2 slots, 1 under high host pressure published by the
   host-budget owner; liveness lock plus heartbeat TTL; admission sits outside the
   verb's wall-time budget; nothing retried or skipped)
+- [ADR-033: AI Hub MCP Project Environment Activation](033-ai-hub-mcp-project-environment.md)
+  — **SUPERSEDED** by ADR-036
+- [ADR-034: Kilo LSP Configuration Parity with OpenCode](034-kilo-lsp-opencode-parity.md)
+  — **SUPERSEDED** by ADR-036
+- [ADR-035: Kilo Code OpenMoat/OpenCode Configuration Alignment](035-kilo-openmoat-config-alignment.md)
+  — **SUPERSEDED** by ADR-036
+- [ADR-036: Flext Carries No AI Hub Configuration](036-flext-consumes-no-ai-hub-configuration.md)
+  — **ACCEPTED** (2026-11-24; AI Hub owns projecting its MCP and hooks into agent
+  homes, including kilo; this workspace carries no AI Hub configuration, wrapper or
+  runtime paths; supersedes ADR-033, ADR-034 and ADR-035)
 
 > **Numbering evidence:** the recorded future-line (`0.13.0-dev`) catalog associates
 > ADR-011/012 with the forward line and ADR-012 with worktree transaction performance
