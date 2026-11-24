@@ -10,6 +10,15 @@
       "args": ["serve", "--repo", "~/flext"],
       "cwd": "~/flext",
       "type": "stdio"
+    },
+    "ai-hub": {
+      "type": "stdio",
+      "command": "ai-hub",
+      "args": ["mcp", "--action", "client", "--agent", "kilo"],
+      "env": {
+        "AI_HUB_MCP_SOCKET": "${env:AI_HUB_MCP_SOCKET}",
+        "AIHUB_PROJECT_ROOT": "${workspaceFolder}"
+      }
     }
   }
 }

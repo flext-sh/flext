@@ -117,6 +117,7 @@ scripts/maintenance/
 .claude/shell-snapshots/
 .claude/worktrees/
 .claude/settings.local.json.bak
+.trigger-tree/
 
 # WHITELIST: Agent skills owned by the workspace root
 !.agents/skills/
