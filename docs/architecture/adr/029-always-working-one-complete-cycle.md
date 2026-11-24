@@ -19,6 +19,8 @@
 - **Amended:** 2026-10-28 — explicit full-suite operation without Testmon
 - **Amended:** 2026-11-19 — full-suite operation records Testmon and has no suite
   deadline (supersedes the 2026-10-28 amendment)
+- **Amended:** 2026-11-22 — full execution uses the configured suite deadline;
+  workspace verbs select members only when explicitly requested (`flext-bga5y`)
 - **Scope:** every FLEXT repository (superproject, every member, external consumers
   such as ai-hub) and every agent or session working in them
 - **Tracker memories:** `operator-order-2026-10-24-always-working-never-skip-phase`,
@@ -103,12 +105,14 @@ is introduced. Tracker memory
 
 The operator amended it on 2026-11-19: `tests-full` executes the complete
 applicable population once, records it in Testmon under the incremental
-environment so one run warms a cold checkout, and has no suite deadline; it keeps
+environment so one run warms a cold checkout; it keeps
 host admission (load5 ≤ 20), idle priority and at most two workers. `tests` keeps
 native incremental Testmon selection and its 240 s budget. (Operator, 2026-11-19,
 superseding the 2026-10-28 'tests-full without Testmon' order.) Neither operation
 adds a preliminary incremental execution, and both retain original source
 admission, applicability and failure accounting.
+The 2026-11-22 decision recorded in `flext-bga5y` applies the same configured
+suite deadline to `tests-full`; it does not change the Testmon recording contract.
 Source, generated consumers, runtime proof and integration remain separate states.
 
 1. **The project and its runtime work 100% of the time.** No integration tip and no
@@ -180,10 +184,10 @@ admission; do not replace it with a green member or a stale whole-workspace run.
 Budgets are configuration-owned by `flext-infra`
 `src/flext_infra/config/tooling.yaml`: `ordinary-timeout-seconds` (2) measures the
 test call, `slow-timeout-seconds` (20) the slow and heavy markers, and
-`run-timeout-seconds` (240) is the fleet-wide suite clock — one `make tests`
-invocation owns one 240 s budget across every member suite, and a per-member clock
-reset is rejected (operator decision 2026-11-16). `make tests-full` has no suite
-deadline (operator 2026-11-19). Collection,
+`run-timeout-seconds` (240) is the suite clock for each selected project. A
+workspace-root verb acts on the workspace project; `ALL=Y` includes its members,
+each with its own project clock (operator decision 2026-11-22, `flext-bga5y`).
+The same configured clock applies to `make tests-full`. Collection,
 fixture teardown and plugin bookkeeping belong to the suite deadline, which reserves
 its own shutdown time; charging them to an item budget fails healthy runs.
 
