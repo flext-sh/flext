@@ -102,9 +102,11 @@ is introduced. Tracker memory
 `operator-ruling-2026-10-28-tests-testmon-full-native` records the decision.
 
 The operator amended it on 2026-11-19: `tests-full` executes the complete
-applicable population once, records it in Testmon under the incremental
-environment so one run warms a cold checkout, and has no suite deadline; it keeps
-host admission (load5 ≤ 20), idle priority and at most two workers. `tests` keeps
+applicable population once and records it in Testmon under the incremental
+environment so one run warms a cold checkout. Ordinary full execution has no
+suite deadline. A qualified private fixture uses the existing operation
+deadline for its native policy and child lifecycle. Both keep host admission
+(load5 ≤ 20), idle priority and at most two workers. `tests` keeps
 native incremental Testmon selection and its 240 s budget. (Operator, 2026-11-19,
 superseding the 2026-10-28 'tests-full without Testmon' order.) Neither operation
 adds a preliminary incremental execution, and both retain original source
@@ -141,6 +143,12 @@ Source, generated consumers, runtime proof and integration remain separate state
     check acceptance are distinct typed workflow phases; neither substitutes for
     the other. Repeated full runs, cache resets and deadline inflation do not
     resolve slowness; profile and repair the causal owner.
+   A project can elect its independently prepared private checkout in effective
+   pytest tooling. The existing Make and systemd admission precedes fixture
+   election. That checkout owns its native Testmon database and sidecars.
+   Setup qualifications bind the current issuer revision and native tool
+   roles. The suite receives authenticated read-only Git and runtime inputs.
+   Every admitted worker contributes to complete incremental accounting.
 7. **One original evidence owner.** Both admission phases use the existing native
    checker, capture, diagnostic and publisher primitives. Declare their gate sets
    and dependencies once in typed workflow policy. Source admission covers every
