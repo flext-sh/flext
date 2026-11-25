@@ -187,20 +187,16 @@ allowed to hardcode, freeze, or implicitly assume the values that exist today.
 
 ## Rig and Lane Contract
 
-**Priority (operator order 2026-11-16, translated from Portuguese: "move your work to
-always be done in the project rig workspaces based on the integration branches, using
-worktrees for mass refactoring tests and dangerous adjustments only, and as soon as you
-finish make an admin merge PR with the affected integration branches and a no-ff merge
-into the integration workspaces"; supersedes the 2026-11-12 worktree-first order).**
+**Priority (operator order 2026-11-25: worktree-first; the rig only receives
+merges. Supersedes the 2026-11-16 rig-first order.)**
 
 - The rig `~/flext` and every attached member move to `0.12.0-dev` and stay at its
   tip, synchronized with GitHub; `upload-20261007` lands into `0.12.0-dev` and retires
   once its last consumer pin moves to `0.12.0-dev`.
-- Work happens in the rig on its integration branch. A worktree is used only for a mass
-  refactor, a dangerous adjustment or isolated validation, at the documented
-  `<rig>/worktrees/<bead-id>` path (or the Gas City formula path when dispatch owns the
-  lane), and is retired after its merge. The rig may carry a dirty hotfix on top of the
-  integration tip while that hotfix is in flight.
+- Every change is made in its own worktree on a branch cut from the integration tip
+  (or the Gas City formula path when dispatch owns the lane) and is retired after its
+  merge. The rig is never edited directly: it only receives merges of the integration
+  tip.
 - Every change closes with a merged pull request (merge commit). Never push commits
   directly to `0.12.0-dev`, `upload-*` or `main`, including conflict resolutions and
   pin updates. A merge that needs `--admin` (only review missing, required checks
@@ -212,7 +208,7 @@ into the integration workspaces"; supersedes the 2026-11-12 worktree-first order
   one subject per pull request; review is advisory where ADR-0038 declares zero
   approvals; the merged revision is then re-proven at its real entry point.
 - No lane waits for the host load to drop. Work proceeds on code, the smallest real
-  runtime proof and the lane's `gen`/`upg` when sources change; the commit hook and
+  runtime proof and the lane's `check`/`upg` when sources change; the commit hook and
   the required integration CI are the gate (engineering SOP §1 item 6). Heavy verbs
   run in the background or a subagent, one at a time.
 - Fixes go to the root cause with correct CA/DI wiring and no duplicated code path;
@@ -581,23 +577,33 @@ tests change only after real subsystem and cold-bootstrap proof.
 tracker key `operator-order-2026-11-13-make-admission-limits`): on the shared
 host every `make` verb refuses to start above `make.admission.max_load5` and
 runs inside a cgroup v2 scope bounded by its declared memory and CPUs; heavy
-gates also queue per host. A refusal is a failing gate, never routed around;
-meanwhile reading, design, edits, reviews, docs and Beads continue. Run one
-heavy verb at a time, `make tests` rather than `tests-full`, and
-`CHECK_PHASE=primary` while iterating.
+gates queue per host. The load queue applies only to the full forms
+(`check-full`, `mod-full`, `tests-full`); the default `make check`
+(`CHECK_PHASE=primary`) and `make tests` never wait on it. A refusal is a failing
+gate, never routed around; meanwhile reading, design, edits, reviews, docs and
+Beads continue. Run one heavy verb at a time and `make tests` rather than
+`tests-full` while iterating.
 
 **All commands run from the active workspace/worktree root**, never from inside a
 submodule. Use `make`, never bare
 `uv`/`ruff`/`pyrefly`/`pytest`.
 
-The approved common Make interface is `setup`, `upg`, `gen`, `mod`, `fix`,
-`fmt`, `check`, `tests`, `tests-full`, `help`, `build`, and `clean`. The operator's
-2026-10-28 clarification adds the explicit full-suite operation (ADR-029),
-superseding the earlier eleven-verb limit. The typed catalog owns its
-grammar; `make help` projects it. Product-specific commands remain in their declaring
-repositories. Generic aliases, subverbs and composite wrappers do not survive the
-cutover. The October 23 operator contract supersedes older common-verb examples;
-canonical global governance is reconciled at its source and propagated, never patched
+The approved common Make interface is `setup`, `upg`, `mod`, `check`, `tests`,
+`tests-full`, `help`, `build`, and `clean`
+([ADR-037](docs/architecture/adr/037-single-check-gate.md), flext-infra #2791,
+operator 2026-11-25). There is no public `gen`, `fix`, `fmt` or
+`lock`: `make check` is the only gate. Locally it converges gen → fix → fmt to a
+fixed point and then verifies; in CI it is verify-only and fails when any byte
+would change. Locks change only through `make upg`. The delivery order is
+fetch + `merge --no-ff` of the integration tip → `make check` → runtime
+validation → `make tests` → commit → PR → merge → release deploy; work from
+another lane is adopted with `git cherry-pick -x`. The operator's 2026-10-28
+clarification keeps the explicit full-suite operation (ADR-029). The typed
+catalog owns its grammar; `make help` projects it. Product-specific commands
+remain in their declaring repositories. Generic aliases, subverbs and composite
+wrappers do not survive the cutover. The October 23 operator contract supersedes
+older common-verb examples; canonical
+global governance is reconciled at its source and propagated, never patched
 inside the managed block above.
 
 Use the active root's selector-free public verbs for the declared workspace
@@ -681,9 +687,9 @@ Prove repeated generation, modification, repair and formatting are no-op, exit-z
 operations on unchanged relevant inputs; later mutations invalidate affected receipts.
 Generated projections are gate-clean by construction ([ADR-028 Decision
 8](docs/architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-8)):
-`make gen` followed directly by `make check` is green and `make fmt`/`make fix` are
-no-ops, with zero post-adjustment, manual or automated — the engine never runs a
-fixer or formatter over its own output.
+the convergence inside `make check` reaches its fixed point after one gen → fix → fmt
+pass on unchanged inputs, and a second `make check` changes no byte — the engine
+never runs a fixer or formatter over its own output.
 Source, help and contract-inspection receipts do not prove a full generation or fleet
 rollout. No stability cycle closes before the declared fleet has its required integrated
 runtime and gate evidence, without warnings or residual findings.
