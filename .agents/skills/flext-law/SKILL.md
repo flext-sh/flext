@@ -303,8 +303,14 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   contract. Never add a replacement toggle or a guard for retired inputs. Agents never
   add `WHAT=` or `PROJECT=` to setup, generation, repair, formatting, checking, or
   testing.
-- The common Make surface is `setup`, `upg`, `gen`, `mod`, `fix`, `fmt`, `check`,
-  `tests`, `tests-full`, `help`, `build` and `clean`. Repository-owned product commands remain
+- The common Make surface is `setup`, `upg`, `mod`, `check`, `tests`, `tests-full`,
+  `help`, `build` and `clean` (ADR-037, flext-infra #2791). There is no public `gen`,
+  `fix`, `fmt` or `lock`: `make check` is the only gate, converging gen → fix → fmt
+  to a fixed point locally and verify-only in CI; locks change only through
+  `make upg`; the host load queue applies only to the full forms. Order:
+  fetch + `merge --no-ff` of the tip → `make check` → runtime validation →
+  `make tests` → commit → PR → merge → release deploy; adopt other lanes' work with
+  `git cherry-pick -x`. Repository-owned product commands remain
   explicit extensions. Former subverbs are absorbed into their operation owner,
   never retained as aliases or a second pipeline.
 - `tests` executes native incremental Testmon selection over the complete
@@ -334,10 +340,11 @@ and cold-bootstrap proof. Do not restore the retired pre-install admission.
   full gates and the general 60-second Make budget remain mandatory; generation
   has the stricter below-20-second budget above. No surface re-reads
   an earlier stage's on-disk output instead of planned sources. Their published
-  projections are gate-clean by construction (ADR-028 Decision 8): `make gen`
-  followed directly by `make check` is green and `make fmt`/`make fix` are no-ops;
-  the engine never runs a fixer or formatter over its own output. Engine
-  configuration travels as typed lists and dicts in the config SSOT: a new VALUE
+  projections are gate-clean by construction (ADR-028 Decision 8): the
+  convergence inside `make check` reaches its fixed point after one pass on
+  unchanged inputs and a second `make check` changes no byte; the engine
+  never runs a fixer or formatter over its own output. Engine configuration
+  travels as typed lists and dicts in the config SSOT: a new VALUE
   is a data change; orchestrators never branch on literal tables.
 - Reconcile canonical documentation and governance before each implementation
   slice, prove the real public consumer next, and change tests only afterward.
