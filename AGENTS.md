@@ -551,7 +551,7 @@ outside that task; its documentation-only slice executes neither surface.
 The approved `flext-0029c` target is one native root uv workspace. Setup, runtime
 activation and the hook/CI gate follow
 [ADR-038](docs/architecture/adr/038-reproducible-setup-runtime.md) (operator orders
-2026-11-26, text pending approval): `make setup` installs only the committed locks
+2026-11-26; implementation pending, `flext-itpd1.4.17`): `make setup` installs only the committed locks
 and never updates; locally the checkout and its subprojects are editable; in GitHub
 CI the project is editable and the subprojects come non-editable from the lock,
 with no submodule checkout; the pre-commit hook runs the same rows as CI. Lock ownership

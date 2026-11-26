@@ -2,8 +2,9 @@
 
 ## Status
 
-Proposed (operator orders of 2026-11-26; text pending operator approval).
-Tracked by `flext-itpd1.4.17`. Amends ADR-003, ADR-024, ADR-030 and ADR-037 where
+Accepted (operator, 2026-11-26). Implementation pending, tracked by
+`flext-itpd1.4.17` and its children; this record is the decision, not a claim
+that the code, projections or runtime already follow it. Amends ADR-003, ADR-024, ADR-030 and ADR-037 where
 stated below; those records carry a pointer here.
 
 ## Operator orders (2026-11-26, translated from Portuguese)
