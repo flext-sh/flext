@@ -33,6 +33,10 @@ stated below; those records carry a pointer here.
 11. "`check-full` and `tests-full` run only at my request; `make ci` does not exist
     in flext projects; the pre-commit hook must do the same thing as the GitHub
     CI, including running `make setup` of the workspace."
+12. "`make mod` is for global adjustments and standardizations and must be used
+    only at the request of the operator and of the plan; projects may declare
+    other verbs and pre/post actions of the verbs through `custom.mk`, supported
+    by config overrides."
 
 ## Context (measured 2026-11-26)
 
@@ -140,6 +144,18 @@ HEAD. Member CI checks out the member alone and installs the member's own lock.
   `make ci`.
 - The incremental test selection key includes the sibling commits and the lock
   hashes.
+
+### 8. `make mod` and project extension
+
+- `make mod` applies global adjustments and standardizations. It runs only when
+  the operator or the approved plan asks for it; it is not part of the setup,
+  check or tests cycle, of the pre-commit hook or of CI.
+- A project declares its own additional verbs and the pre/post actions of the
+  common verbs in its `custom.mk`, with its values coming from the project's
+  config overrides. The generated Makefile stays a projection and is never
+  edited for a project need.
+- A pre/post action is a project need. It never repairs a generator defect and
+  never re-installs, re-binds or re-resolves what `setup` owns.
 
 ## Consequences
 
