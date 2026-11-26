@@ -7,6 +7,8 @@ Accepted (operator, 2026-11-26). Implementation pending, tracked by
 that the code, projections or runtime already follow it. Amends ADR-003, ADR-024, ADR-030 and ADR-037 where
 stated below; those records carry a pointer here.
 
+Amended 2026-11-26 (decision 9): projections are independent of the checkout.
+
 ## Operator orders (2026-11-26, translated from Portuguese)
 
 1. "`make setup` must always install the workspace/worktree and its subprojects
@@ -158,8 +160,37 @@ HEAD. Member CI checks out the member alone and installs the member's own lock.
 - A pre/post action is a project need. It never repairs a generator defect and
   never re-installs, re-binds or re-resolves what `setup` owns.
 
+### 9. The projection does not depend on the checkout
+
+Operator order (2026-11-26, translated from Portuguese): "both; do not simplify
+the rules I already gave", answering which profile the flext-infra projections
+take.
+
+- A repository's committed projections are a function of its own declarations
+  and the generator's version only. Generating from the rig, a linked worktree,
+  a standalone clone or CI yields the same bytes.
+- Two facts are kept apart:
+  - **Repository role:** whether the repository governs members (its own
+    `.gitmodules` declares governed members). It is read from the repository and
+    selects the workspace-governance entries.
+  - **Execution mode:** whether a checkout runs as an attached member or
+    standalone (decision 2). Make decides it at execution from the containing
+    checkout. It never selects what is generated.
+- A repository without governed members that can run attached to a workspace
+  receives the entries both execution modes need. Neither mode's rule is
+  dropped.
+- A catalog entry whose content differs between the two modes renders both
+  branches. Make selects one at execution; the projection never changes with
+  the checkout.
+- Proof: `make check` run twice in two different checkouts of the same revision
+  (the rig member and a linked worktree) changes no byte, and the projection is
+  identical in both.
+
 ## Consequences
 
+- Deleted: selecting the profile by the checkout in which generation runs
+  (`detector.py:384-390` as a projection input). The catalog's `profiles` key
+  selects by repository role; execution mode moves to the Make runtime.
 - Deleted: the mise self-tool flow, the duplicate acquisition and trust, the
   `direnv exec` activation, the `native_isolation` branches, the superproject
   checkout in member CI, the root's bare member overrides, the post-sync
