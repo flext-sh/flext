@@ -52,7 +52,8 @@ make check
 make tests
 ```
 
-`make check` converges generation, fixes and formatting to a fixed point. `make mod` owns structural
+`make check` converges generation, fixes and formatting to a fixed point. `make mod`
+owns structural
 transformations; no direct script or tool invocation is valid. `make tests` always
 retains Testmon.
 

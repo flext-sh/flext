@@ -45,7 +45,8 @@ make check
 make tests
 ```
 
-`make check` converges generation, fixes and formatting to a fixed point. The test verb always retains and uses
+`make check` converges generation, fixes and formatting to a fixed point. The test verb
+always retains and uses
 Testmon; a direct test-runner invocation is invalid evidence.
 
 ## Architecture and tests

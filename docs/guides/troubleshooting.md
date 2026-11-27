@@ -49,7 +49,8 @@ or cache-clearing test runs do not count as evidence.
 ## Documentation failures
 
 For stale member guides, change the matching root file under `docs/guides/` and run
-`make check`. Generated member guides carry their source and exact regeneration command in
+`make check`. Generated member guides carry their source and exact regeneration command
+in
 the header; never patch those projections.
 
 For a docs audit failure, remove the invalid command or test-double example at the

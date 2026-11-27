@@ -39,7 +39,8 @@ make check
 make tests
 ```
 
-`make check` converges generation, fixes and formatting to a fixed point. Test execution remains inside
+`make check` converges generation, fixes and formatting to a fixed point. Test execution
+remains inside
 `make tests`, which owns selection and the retained Testmon cache.
 
 ## Command boundaries
