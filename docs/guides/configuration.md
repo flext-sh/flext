@@ -209,11 +209,10 @@ llms artifacts with the real site consumer before claiming documentation deliver
 Run configuration propagation and validation from the workspace root:
 
 ```bash
-make gen
-make gen
+make mod
+make mod
 make check
 make tests
-make gen
 ```
 
 The second generation run must be a fixed point. Test validation retains the canonical
