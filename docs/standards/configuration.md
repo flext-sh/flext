@@ -73,19 +73,15 @@ Use the selector-free root lifecycle:
 
 ```bash
 make setup
-make gen
+make check
 make mod
-make gen
-make gen
-make fix
-make fmt
 make check
 make tests
 make build
 ```
 
 Follow with the applicable public runtime and native documentation/link validation.
-Require repeated `make gen`, `make fix` and `make fmt` to produce zero further effects
+Require repeated `make check` to produce zero further effects
 and exit zero on the unchanged candidate. Later mutations invalidate affected receipts.
 A missing command or tool, warning, stale projection or second-run mutation is a defect
 at its canonical owner.

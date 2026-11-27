@@ -15,7 +15,7 @@ supplies evidence, not automatic execution status.
 ## Current documents
 
 - [Rope-Gen Engine runbook (2026-09-15)](rope-gen-engine-runbook-2026-09-15.md) — owner,
-  taxonomy, findings flow and resume procedure for `make gen` / `make fix` / `make mod`.
+  taxonomy, findings flow and resume procedure for `make check` / `make mod`.
   **Resume authority updated 2026-09-17:** the coordinator is Gas City Bead
   `flext-itpd1.3`; `flext-itpd1.2` owns documentation and `flext-itpd1.4` owns Make
   machinery. The runbook retains concrete technical Bead references for reconciliation,
@@ -40,8 +40,7 @@ evidence and do not define the resume or execution route.
 ## Runtime status
 
 Fleet stability on `0.12.0-dev` is **unproved** as of this recovery update. The
-canonical root cycle is `make setup` → `make gen` → `make mod` → `make gen` → `make gen`
-→ `make fix` → `make fmt` → `make check` → `make tests` → `make build`, followed by
+canonical root cycle is `make setup` → `make check` → `make mod` → `make check` → `make tests` → `make build`, followed by
 applicable public runtime and native documentation/link validation. Repeated gen/fix/fmt
 must be no-op, exit-zero runs on the unchanged candidate. No new cycle starts before
 warning-free and finding-free fleet receipts on the published integrated SHAs. Later

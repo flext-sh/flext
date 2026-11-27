@@ -10,7 +10,7 @@
 **Regras (AGENTS.md + decisão do repositório):**
 
 0. **Overrides** — Seguir sempre o modelo padrão de `pyproject.toml` projetado de
-   `config/tooling.yaml` por `make gen`. Não adicionar overrides de Ruff ou Pyrefly fora
+   `config/tooling.yaml` por `make check`. Não adicionar overrides de Ruff ou Pyrefly fora
    desse padrão. Ruff é o único formatador e linter e Pyrefly o único verificador de
    tipos (ordem do operador 2026-11-13 `ag-6w7a`).
 

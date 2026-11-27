@@ -51,11 +51,9 @@ change.
 ## Canonical validation
 
 ```bash
-make fix
-make fmt
 make check
 make tests
-make gen
+make check
 ```
 
 Do not invoke profilers, test runners, or other underlying tools directly. Do not add
