@@ -50,7 +50,6 @@ bypass them.
 Never invoke bare `ruff`, `pyrefly`, `pytest`, or `uv`. Use the dispatcher:
 
 ```bash
-make gen
 make check
 make tests
 ```

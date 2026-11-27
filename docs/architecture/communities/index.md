@@ -94,13 +94,13 @@ From the workspace root:
 
 ```bash
 code-review-graph update && code-review-graph wiki
-make gen
+make check
 ```
 
 The CRG graph is built by `code-review-graph build` and kept in sync incrementally by
 `code-review-graph watch` (or on-demand via `code-review-graph update`). Community pages
 are emitted to `$CODE_REVIEW_GRAPH_DATA_DIR/wiki/` (or `.code-review-graph/wiki/`), and
-governed workspace projections are synchronized via `make gen`.
+governed workspace projections are synchronized via `make check`.
 
 ## See Also
 

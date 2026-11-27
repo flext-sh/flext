@@ -47,15 +47,11 @@ Run only from the workspace root:
 ```bash
 make setup
 make help
-make gen
+make check
 make mod
-make gen
-make gen
-make fix
-make fmt
 make check
 make tests
-make gen
+make check
 ```
 
 The final generation run proves the fixed point. `make mod` owns structural

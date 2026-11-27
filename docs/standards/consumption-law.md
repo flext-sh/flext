@@ -210,7 +210,7 @@ Releases (wheel + sdist artifacts) at per-repository SEMVER (`0.12.x`) determine
 - Consumer SSOT projection: external consumers (`ai-hub`) declare `@v0.12.x` tag refs in
   `config/codegen.yaml` (`branch_policy.integration_branch`, `project.flext_source`, and
   per-distribution overrides in `toolchain.uv_override_dependencies` + `tools.yaml`
-  `uv-tools`) and project `pyproject.toml` via `make gen` and `uv.lock` via `make upg`
+  `uv-tools`) and project `pyproject.toml` via `make check` and `uv.lock` via `make upg`
   (never hand-editing `pyproject.toml`)
 - `AI_HUB_CONSUMER.md` versioned with each release in English (consumer-facing contract
   and clean-consumer receipt proving fresh `.venv` install and public smoke imports

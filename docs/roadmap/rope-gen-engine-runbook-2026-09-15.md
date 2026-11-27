@@ -31,8 +31,8 @@
 
 | Concern                                                       | Owner                                                                                                                                   | Hard rule                                                                         |
 | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Generated projections (`__init__`, lazy-init exports, facets) | `make gen` (flext-infra codegen)                                                                                                        | change canonical sources; preserve and reconcile authored WIP before regeneration |
-| Auto-fixable findings (rel-import self-import, etc.)          | `make fix` (rope via engine)                                                                                                            | fix corrects, never suppresses                                                    |
+| Generated projections (`__init__`, lazy-init exports, facets) | `make check` (flext-infra codegen)                                                                                                        | change canonical sources; preserve and reconcile authored WIP before regeneration |
+| Auto-fixable findings (rel-import self-import, etc.)          | `make check` (rope via engine)                                                                                                            | fix corrects, never suppresses                                                    |
 | Reporting of remaining findings                               | `make check`                                                                                                                            | detectors never disabled; no silent success                                       |
 | Ad-hoc structural moves                                       | `make mod`                                                                                                                              | consumes the same Rope primitives; one engine                                     |
 | Config/rules surface                                          | `flext-infra/src/flext_infra/config/codegen.yaml` and the owning typed rule configuration                                               | rules-as-data; no exception that hides an in-scope defect                         |
@@ -103,7 +103,7 @@ snapshot (input-CAS, authenticated)
 4. Preserve all WIP; implement only the explicitly assigned owner paths after fresh
    inspection. Coordinate overlapping changes instead of discarding them.
 5. In the coordinator's serialized window, follow the current root lifecycle:
-   `make setup` → `make gen` → `make fmt` → `make fix` → `make mod` → `make check` →
+   `make setup` → `make check` → `make mod` → `make check` →
    `make tests`, plus applicable build, public runtime and native documentation/link
    validation. Source admission covers every governed repository and code tier before
    native incremental Testmon admission. Prove repeated gen/fix/fmt are no-op,

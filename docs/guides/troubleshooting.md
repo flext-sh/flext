@@ -38,15 +38,11 @@ changed-only, fix, or phase selectors.
 After correcting the source, use only the applicable canonical verbs:
 
 ```bash
-make gen
+make check
 make mod
-make gen
-make gen
-make fix
-make fmt
 make check
 make tests
-make gen
+make check
 ```
 
 Test diagnosis still runs through `make tests`, with the retained Testmon cache. Direct
@@ -55,7 +51,7 @@ or cache-clearing test runs do not count as evidence.
 ## Documentation failures
 
 For stale member guides, change the matching root file under `docs/guides/` and run
-`make gen`. Generated member guides carry their source and exact regeneration command in
+`make check`. Generated member guides carry their source and exact regeneration command in
 the header; never patch those projections.
 
 For a docs audit failure, remove the invalid command or test-double example at the
@@ -68,7 +64,7 @@ TODO followed by a colon while ordinary prose remains valid. A dated document th
 records a real machine path may be listed by its exact Markdown path under
 `docs_audit.historical_evidence_files`; a directory prefix does not exempt later
 documents. Add only files whose observed path is necessary to preserve the
-historical record, then run `make gen` and `make check` to verify the projection.
+historical record, then run `make check` to verify the projection.
 
 ## Test failures
 

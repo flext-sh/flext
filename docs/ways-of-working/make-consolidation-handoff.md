@@ -211,13 +211,13 @@ the command completed successfully.
 | Session                | Canonical invocation and bound                                                                | Actual result                                                                                  |
 | ---------------------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | 67033                  | `make help`, direnv, TERM 58 + KILL 2                                                         | Exit 0; exposed stale `tests-full` help text despite corrected catalog                         |
-| 53387                  | `make gen FLEXT_INFRA_PROFILE=true`, direnv, INT 48 + KILL 12                                 | Exit 124; 32 selected; Root lazy 6.690 s, then API lazy; no managed/final publication proof    |
+| 53387                  | `make check FLEXT_INFRA_PROFILE=true`, direnv, INT 48 + KILL 12                                 | Exit 124; 32 selected; Root lazy 6.690 s, then API lazy; no managed/final publication proof    |
 | API member attempt     | `direnv exec <flext-api> make -C flext-api gen CI=Y`                                          | Exit 1 before Make: member `.envrc` blocked                                                    |
 | 21712                  | `make -f flext-api/Makefile gen CI=Y FLEXT_INFRA_PROFILE=true`, Root direnv, INT 48 + KILL 12 | Exit 124; actual root API, scope self, one repository; managed protocol inventory reached      |
 | 35308, peer receipt    | `make mod`, direnv, TERM 58 + KILL 2                                                          | Exit 124; `requested_utilities` completed without former Generic failure; operation incomplete |
 | 28107, peer receipt    | `make mod FLEXT_INFRA_PROFILE=true`, direnv, INT 48 + KILL 12                                 | Exit 124; 41.944 s capture; layout/composition hot path; no full refactor                      |
 | 95987, peer receipt    | Same profiled MOD entry                                                                       | Exit 2 before CLI: missing `_protocols.runtime`; no post-change profile                        |
-| DBT-LDIF, peer receipt | `make gen` from member, TERM 58 + KILL 2                                                      | Exit 1 before Make; direnv blocked and credentials source missing; no pilot publication        |
+| DBT-LDIF, peer receipt | `make check` from member, TERM 58 + KILL 2                                                      | Exit 1 before Make; direnv blocked and credentials source missing; no pilot publication        |
 
 Persistent locators:
 

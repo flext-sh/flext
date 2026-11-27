@@ -61,7 +61,7 @@ code is redesigned before it lands. The universal owner is law 2 in
    regardless of provenance. Re-read the tree, attribute intent, and integrate.
 5. **Collaborate.** Announce material findings, blockers, and integration state to
    affected participants. One active integration candidate per lane.
-6. **One slice at a time.** `make gen`/`make upg` when sources, dependencies, or generated
+6. **One slice at a time.** `make check`/`make upg` when sources, dependencies, or generated
    surfaces change; commit through the hook, which runs the gates; `merge --no-ff` the
    integration tip; push; pull request. The required integration CI checks are the gate:
    a red is fixed at its cause in the same lane; then merge and runtime proof. Gates are
@@ -230,7 +230,7 @@ once; cross-lane concurrency is owned by the host admission queue.
    attempt to add was refused until that proof existed.
 3. **Cause.** The RCA record names cause, mechanism, owner, failing entrypoint, and the
    re-exercise result on the Bead.
-4. **Generation.** `make gen` leaves no diff on a second run. No generated projection is
+4. **Generation.** `make check` leaves no diff on a second run. No generated projection is
    edited by hand.
 5. **Static gates.** The commit hook and the required integration CI run them on the
    exact head; that output is the evidence. Zero findings, no new suppression.
