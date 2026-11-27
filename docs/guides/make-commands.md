@@ -123,9 +123,6 @@ Run each required operation explicitly from the workspace root:
 
 ```bash
 make setup
-make gen
-make fmt
-make fix
 make mod
 make build
 # Exercise the selected public consumer before the final tests.
@@ -306,7 +303,7 @@ configuration values or fallback execution.
 ### Conformance, Environment, and Runtime Bindings
 
 The generated dispatcher invokes conformance checking only through `make check`
-and conformance repair only through `make fix`. Installing, generating,
+and conformance repair only through its local convergence. Installing, generating,
 upgrading, rewriting or formatting does not implicitly run a global conformance
 check. Each operation still proves the prerequisites and effects it actually
 consumes. Native environment verification, input authentication and publication
@@ -499,7 +496,7 @@ or checking; `upg` owns changes to the resolved release.
 ## Markdown quality pipeline
 
 The markdown standard lives once in `flext-infra/src/flext_infra/config/tooling.yaml`
-(`Infra.tooling.tools.markdown`) and is projected to every repository by `make gen`:
+(`Infra.tooling.tools.markdown`) and is projected to every repository by `make check`:
 
 - Common `MD*` rules, native options and additional rules generate one
   `.rumdl.toml`. The former markdownlint JSON projection is retired through the
@@ -507,10 +504,10 @@ The markdown standard lives once in `flext-infra/src/flext_infra/config/tooling.
   caused native configuration warnings. `.markdownlintignore` and native
   exclusions derive from the same governed scope.
 - `rumdl` is the command-line linter and reads generated `.rumdl.toml`, including
-  the MkDocs dialect used by the documentation renderer. `make fix` applies its
+  the MkDocs dialect used by the documentation renderer. The repair phase of `make check` applies its
   supported repairs; unresolved findings remain failures, not accepted exceptions.
 - `rumdl fmt` is the formatter and reads the same `.rumdl.toml`:
-  `rumdl fmt --check` in `make check`, `rumdl fmt` in `make fmt`. rumdl is locked in
+  `rumdl fmt --check` in CI, `rumdl fmt` in the local format phase of `make check`. rumdl is locked in
   `uv.lock`; the Mise npm backend remains retired (ADR-025). The amended Bun
   project contract for distributed JavaScript tools does not change this formatter.
 - `make check` validates without rewriting. Run generation before repair and
@@ -612,11 +609,11 @@ environment. A standalone checkout owns its runtime environment and runs
 runtime supplier: its `setup`, `upg` and `lock` refuse before any effect with
 exit 2 and point to a workspace-shaped lane that attaches the member.
 Manifest exclusions remain authoritative. Generated Make surfaces and documentation
-are changed at their template or configuration owner, then regenerated with `make gen`.
+are changed at their template or configuration owner, then regenerated with `make check`.
 
 ### Scaffolding, Codemod Census, and Template Ownership
 
-Explicit new-project declarations let `make gen` reuse the existing scaffold service.
+Explicit new-project declarations let `make check` reuse the existing scaffold service.
 The target's project identity, kind, integration and provenance are validated before
 effects; its Git/worktree is prepared separately. A missing package manifest in an
 established repository is not permission to initialize Git or create a new project.
@@ -674,8 +671,8 @@ observations do not cover every generated artifact. Repeated `mod`, `fix`
 and `fmt` also require zero relevant effects. Generated projections are
 gate-clean by construction (ADR-028
 [Decision 8](../architecture/adr/028-facade-boundary-orchestrators-declarative-enforcement.md#decision-8)):
-`make gen` followed directly by `make check` is green and `make fmt` / `make fix`
-are no-ops, with zero post-adjustment, manual or automated — the engine never
+one `make check` is green and a second `make check`
+changes no byte, with zero post-adjustment, manual or automated — the engine never
 runs a fixer or formatter over its own output. A later effective change invalidates the
 affected runtime and gate receipts and requires their renewed validation, never a hidden
 retry or a whole-workspace quiet window.

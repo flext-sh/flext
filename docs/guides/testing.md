@@ -211,7 +211,7 @@ Member copies of this guide are generated projections. Change this root source a
 regenerate from the workspace root:
 
 ```bash
-make gen
+make check
 ```
 
 Do not edit a member projection by hand.
