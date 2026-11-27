@@ -30,7 +30,7 @@ and verification separately.
 Source validation, generated publication and installed consumption remain separate
 receipts under the existing verification owner.
 
-`make gen` uses the existing typed AST declaration projection without Rope,
+`make check` uses the existing typed AST declaration projection without Rope,
 source moves, consumer rewrites or semantic convergence. Its complete invocation
 must finish below twenty seconds; typed stage budgets remain configuration-owned.
 `make mod` retains native Rope for semantic discovery and refactoring and reuses

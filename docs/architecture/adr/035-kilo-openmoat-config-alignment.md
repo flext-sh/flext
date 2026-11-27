@@ -1,5 +1,18 @@
 # ADR-035: Kilo Code OpenMoat/OpenCode Configuration Alignment
 
+<!-- TOC START -->
+
+- [Status](#status)
+- [Context](#context)
+- [Decision](#decision)
+- [Consequences](#consequences)
+  - [Positive](#positive)
+  - [Negative](#negative)
+- [Implementation](#implementation)
+- [Related](#related)
+
+<!-- TOC END -->
+
 ## Status
 
 Superseded by [ADR-036](036-flext-consumes-no-ai-hub-configuration.md) (2026-11-24).

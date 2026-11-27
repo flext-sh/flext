@@ -32,7 +32,7 @@ outside maintained engineering guidance; generated pages are projections, not ow
 - `docs/standards/` owns cross-workspace authoring standards.
 
 Every generated document carries a header naming its source, adjustment point, and exact
-`make gen` regeneration rule. Generated output is never edited by hand.
+`make check` regeneration rule. Generated output is never edited by hand.
 
 ## Command and test examples
 
@@ -87,13 +87,13 @@ There is no common `docs` verb. For authored documentation, use the canonical ro
 lifecycle and its documentation checks:
 
 ```bash
-make fix
-make fmt
+make check repair
+make check formatting
 make check
 make tests
 ```
 
-Run `make gen` before these gates only when an owned generator source or generated
+Run `make check` before these gates only when an owned generator source or generated
 projection changed. Use `make build` when a built documentation artifact is in scope.
 `make tests` runs only after the same scope's `make check` is green. To check a member
 while remaining at the workspace root, select that member's Makefile:
@@ -111,9 +111,9 @@ When source, generation policy or shared projections also change, run the
 applicable full engineering lifecycle through the same dispatcher:
 
 ```bash
-make gen
-make fmt
-make fix
+make check
+make check formatting
+make check repair
 make mod
 make check
 make tests

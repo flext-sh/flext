@@ -37,12 +37,12 @@ the following from this workspace:
 
 ```bash
 make setup
-make gen
+make check
 make mod
-make gen
-make gen
-make fix
-make fmt
+make check
+make check
+make check repair
+make check formatting
 make check
 make test
 make build

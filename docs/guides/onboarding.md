@@ -47,12 +47,12 @@ Never enter a member directory to run a parallel tool command.
 ## Establish the baseline
 
 ```bash
-make gen
-make fix
-make fmt
+make check
+make check repair
+make check formatting
 make check
 make tests
-make gen
+make check
 ```
 
 Tests run only through the retained Testmon cache. Apply the root
@@ -77,10 +77,10 @@ Warnings, empty collection, missing tools, and suppressed failures remain explic
 Change the source owner, then regenerate and prove the fixed point:
 
 ```bash
-make gen
+make check
 make mod
-make gen
-make gen
+make check
+make check
 ```
 
 Generated member guides identify their root source and exact regeneration rule. Never

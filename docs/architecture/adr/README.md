@@ -86,7 +86,7 @@ candidate; acceptance never proves fleet stability.
 - [ADR-020: Bun installs the npm-backed mise tools fleet-wide](020-npm-installer-bun.md)
   — **SUPERSEDED** by ADR-025 (the fleet toolchain has no npm backend)
 - [ADR-021: Mandatory Unsafe-Fix Lint Repair Channel](021-mandatory-unsafe-fix-lint-repair-channel.md)
-  — **ACCEPTED** (operator law 2026-10-05: `make fix` always runs
+  — **ACCEPTED** (operator law 2026-10-05: `make check` repair always runs
   `ruff check --fix --unsafe-fixes --preview`; `MakeRuffSpec` requires the flag;
   supersedes the 2026-09-08 safe-only posture)
 - [ADR-022: External Consumers as Propagation Guests](022-external-consumers-propagation-guests.md)

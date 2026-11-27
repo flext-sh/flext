@@ -40,15 +40,15 @@ fix, or phase selectors to narrow a standard verb.
 5. Run the native gates without bypassing their orchestration.
 
 ```bash
-make gen
+make check
 make mod
-make gen
-make gen
-make fix
-make fmt
+make check
+make check
+make check repair
+make check formatting
 make check
 make tests
-make gen
+make check
 ```
 
 The final generation run proves the fixed point. The test verb always retains and uses
@@ -72,7 +72,7 @@ Testmon; a direct test-runner invocation is invalid evidence.
 ## Documentation ownership
 
 Root guides are the writable source for generated member guides. Update the root source,
-then use `make gen`; never hand-edit generated copies.
+then use `make check`; never hand-edit generated copies.
 
 ## Related guides
 

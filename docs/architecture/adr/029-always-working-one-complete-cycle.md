@@ -1,5 +1,9 @@
 # ADR-029 — Always Working: One Complete Cycle Per Slice
 
+> Verbs superseded by [ADR-037](037-single-check-gate.md): `make gen`, `make fix` and
+> `make fmt` no longer exist; `make check` converges generation, repair and
+> formatting. References to them below are historical.
+
 <!-- TOC START -->
 
 - [Context](#context)

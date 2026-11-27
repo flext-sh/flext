@@ -31,11 +31,11 @@ documentation never duplicates that registry.
 Run documentation and code validation only from the workspace root:
 
 ```bash
-make fix
-make fmt
+make check repair
+make check formatting
 make check
 make tests
-make gen
+make check
 ```
 
 Do not invoke Ruff or another underlying tool directly. Do not add project, file,

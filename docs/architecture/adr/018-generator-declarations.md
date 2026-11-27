@@ -1,5 +1,9 @@
 # ADR-018 — Generator Declarations Law
 
+> Verbs superseded by [ADR-037](037-single-check-gate.md): `make gen`, `make fix` and
+> `make fmt` no longer exist; `make check` converges generation, repair and
+> formatting. References to them below are historical.
+
 ## Offline dependency and architecture references (amended 2026-10-28)
 
 **Accepted target; acquisition, publication and runtime acceptance are pending.**

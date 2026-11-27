@@ -143,7 +143,7 @@ canonical command.
 ## Generated copies
 
 Generated member guides are projections of root documentation. Change the root source
-and regenerate with `make gen`; never edit a projection directly.
+and regenerate with `make check`; never edit a projection directly.
 
 ## Related
 

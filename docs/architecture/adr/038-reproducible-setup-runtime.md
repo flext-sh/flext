@@ -1,11 +1,32 @@
 # ADR-038: Reproducible Setup, Runtime Activation and One Gate for Hook and CI
 
+<!-- TOC START -->
+
+- [Status](#status)
+- [Operator orders (2026-11-26, translated from Portuguese)](#operator-orders-2026-11-26-translated-from-portuguese)
+- [Context (measured 2026-11-26)](#context-measured-2026-11-26)
+- [Decision](#decision)
+  - [1. make setup installs; make upg updates](#1-make-setup-installs-make-upg-updates)
+  - [2. Runtime root and PATH](#2-runtime-root-and-path)
+  - [3. mise bootstrap](#3-mise-bootstrap)
+  - [4. One uv command](#4-one-uv-command)
+  - [5. FLEXT=<path>](#5-flextpath)
+  - [6. Sibling identity](#6-sibling-identity)
+  - [7. One gate for the hook and CI (amends ADR-037)](#7-one-gate-for-the-hook-and-ci-amends-adr-037)
+  - [8. make mod and project extension](#8-make-mod-and-project-extension)
+  - [9. The projection does not depend on the checkout](#9-the-projection-does-not-depend-on-the-checkout)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+- [Open points](#open-points)
+
+<!-- TOC END -->
+
 ## Status
 
 Accepted (operator, 2026-11-26). Implementation pending, tracked by
 `flext-itpd1.4.17` and its children; this record is the decision, not a claim
-that the code, projections or runtime already follow it. Amends ADR-003, ADR-024, ADR-030 and ADR-037 where
-stated below; those records carry a pointer here.
+that the code, projections or runtime already follow it. Amends ADR-003, ADR-024,
+ADR-030 and ADR-037 where stated below; those records carry a pointer here.
 
 Amended 2026-11-26 (decision 9): projections are independent of the checkout.
 
@@ -45,17 +66,17 @@ Amended 2026-11-26 (decision 9): projections are independent of the checkout.
 
 The current state fails the orders in these places.
 
-| Area | Measured state | Evidence |
-| --- | --- | --- |
-| CI install | `--no-editable` covers the project too; checkout uses `submodules: recursive` | `Makefile.j2:680-682`, `codegen.yaml:541` |
-| Root lock | members recorded only as editable paths, no SHA | root `uv.lock:1577` |
-| Member CI | checks out the superproject at the moving branch and installs the root lock; the member's SHA-pinned lock is never consumed | `_fragments/superproject_checkout.j2`, `artifact_render.py:1011-1064` |
-| Standalone member | `make setup` aborts; no `setup`/`upg` target is emitted | `Makefile.j2:322-331, 794-822` |
-| Setup installers | two installers run outside the lock after the sync | `Makefile.j2:494-500`, `workspace/flext_editable.py:165-214` |
-| mise bootstrap | mise is managed as a mise tool; the host binary is a symlink into that tool; acquisition and trust run twice | `tool_bootstrap_recipe.j2:9-28, 120-163`, `Makefile.j2:798-805` |
-| Activation | every verb is wrapped in `direnv exec`; mise documents mise + direnv together as unsupported | `Makefile.j2:758, 850`, mise.jdx.dev/direnv.html |
-| Gate | `CHECK_PHASE ?= primary` is assigned after admission reads it; primary is `lint` + `pyrefly` only; convergence never runs by default and the complete-phase rule ends in a bare `&&`; hook and CI never verify projections and the hook runs no tests | `Makefile.j2:66, 176, 1028`, `codegen.yaml:701` |
-| Sibling identity | no gate proves local sibling HEAD = gitlink = locked SHA outside a CI-only PUSH-stage gate | `environment_provenance.py:699-845` |
+| Area              | Measured state                                                                                                                                                                                                                                        | Evidence                                                              |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| CI install        | `--no-editable` covers the project too; checkout uses `submodules: recursive`                                                                                                                                                                         | `Makefile.j2:680-682`, `codegen.yaml:541`                             |
+| Root lock         | members recorded only as editable paths, no SHA                                                                                                                                                                                                       | root `uv.lock:1577`                                                   |
+| Member CI         | checks out the superproject at the moving branch and installs the root lock; the member's SHA-pinned lock is never consumed                                                                                                                           | `_fragments/superproject_checkout.j2`, `artifact_render.py:1011-1064` |
+| Standalone member | `make setup` aborts; no `setup`/`upg` target is emitted                                                                                                                                                                                               | `Makefile.j2:322-331, 794-822`                                        |
+| Setup installers  | two installers run outside the lock after the sync                                                                                                                                                                                                    | `Makefile.j2:494-500`, `workspace/flext_editable.py:165-214`          |
+| mise bootstrap    | mise is managed as a mise tool; the host binary is a symlink into that tool; acquisition and trust run twice                                                                                                                                          | `tool_bootstrap_recipe.j2:9-28, 120-163`, `Makefile.j2:798-805`       |
+| Activation        | every verb is wrapped in `direnv exec`; mise documents mise + direnv together as unsupported                                                                                                                                                          | `Makefile.j2:758, 850`, mise.jdx.dev/direnv.html                      |
+| Gate              | `CHECK_PHASE ?= primary` is assigned after admission reads it; primary is `lint` + `pyrefly` only; convergence never runs by default and the complete-phase rule ends in a bare `&&`; hook and CI never verify projections and the hook runs no tests | `Makefile.j2:66, 176, 1028`, `codegen.yaml:701`                       |
+| Sibling identity  | no gate proves local sibling HEAD = gitlink = locked SHA outside a CI-only PUSH-stage gate                                                                                                                                                            | `environment_provenance.py:699-845`                                   |
 
 Tool facts measured in a scratch tree (uv 0.12.19, mise 2026.11.14):
 
