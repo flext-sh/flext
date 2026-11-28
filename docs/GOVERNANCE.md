@@ -99,7 +99,7 @@ Forward obligations on every code, docs, and example slice — applied while
 writing, before any review. The law owns the rules; this table only routes each
 invariant to its canonical authority and never restates it. Record how each
 invariant was satisfied in the active Bead before completion; place declarations
-through `make mod` and regenerate projections through `make gen`.
+through `make mod` and regenerate projections through `make check`.
 
 | Invariant          | Always                                                                                                                                                                       | Canonical authority                                                                                                                                                                                                                                                                                                      |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |

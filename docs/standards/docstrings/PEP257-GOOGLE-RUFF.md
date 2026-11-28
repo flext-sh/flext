@@ -127,11 +127,9 @@ fakes, stubs, patching, monkeypatch mutation, and copied setup are prohibited.
 Run validation from the workspace root:
 
 ```bash
-make fix
-make fmt
 make check
 make tests
-make gen
+make check
 ```
 
 The test verb retains Testmon. Never invoke Ruff, a test runner, or an ad-hoc script

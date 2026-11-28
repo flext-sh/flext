@@ -19,6 +19,11 @@ via epic bead and
 [epic plan](../../plans/2026-09-15-flext-settings-config-ssot-epic.md). This ADR becomes
 `Accepted` only when that session lands the full contract with runtime evidence.
 
+> **Nota (27/11/2026):** os verbos `make gen`, `make fix` e `make fmt` citados
+> nesta ADR foram retirados pela [ADR-037](037-single-check-gate.md). Geração,
+> correção e formatação são fases do `make check`; o texto abaixo registra a
+> decisão como foi tomada.
+
 ## Context
 
 `FlextSettings` and `FlextConfig` are layer-zero SSOT foundations consumed by FLEXT

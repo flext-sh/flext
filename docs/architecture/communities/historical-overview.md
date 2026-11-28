@@ -97,7 +97,7 @@ code-review-graph update && code-review-graph wiki
 
 The CRG graph is built by `code-review-graph build` and kept in sync incrementally by
 `code-review-graph watch` (running as a background daemon). Community pages are emitted
-to `.code-review-graph/wiki/` and copied into this directory during `make gen`.
+to `.code-review-graph/wiki/` and copied into this directory during `make check`.
 
 ## See Also
 

@@ -51,7 +51,7 @@ The CRG wiki generator emits community pages and a single `index.md` into
 Its graph must match the intended repository and revision before its output can be used
 to refresh published documentation.
 
-The FLEXT documentation generator (`flext-infra docs generate` / `make gen`) renders API
+The FLEXT documentation generator (`flext-infra docs generate` / `make check`) renders API
 references, project catalogs, [`docs/knowledge-index.md`](../knowledge-index.md), and
 governed community projections in [`communities/index.md`](communities/index.md) from the
 active ADR catalog, workspace projects, and the CRG SQLite index (excluding non-governed

@@ -84,7 +84,7 @@ annotations.
 
 Change the existing canonical declaration, schema, or configuration input.
 Publish symbols through the owner's explicit public exports and regenerate
-derived surfaces through root `make gen` under the authorized lifecycle. Never
+derived surfaces through root `make check` under the authorized lifecycle. Never
 hand-edit the package's generated `__init__.py` or generated configuration files.
 
 Validate the real public consumer with the candidate's physical environment,

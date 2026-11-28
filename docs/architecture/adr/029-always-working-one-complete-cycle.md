@@ -1,5 +1,10 @@
 # ADR-029 — Always Working: One Complete Cycle Per Slice
 
+> **Nota (27/11/2026):** os verbos `make gen`, `make fix` e `make fmt` citados
+> nesta ADR foram retirados pela [ADR-037](037-single-check-gate.md). Geração,
+> correção e formatação são fases do `make check`; o texto abaixo registra a
+> decisão como foi tomada.
+
 <!-- TOC START -->
 
 - [Context](#context)
