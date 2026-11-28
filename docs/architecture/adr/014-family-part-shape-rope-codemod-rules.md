@@ -1,8 +1,9 @@
 # ADR-014 — Family Part Shape Law and Rope-Driven Codemod Rules
 
-> Verbs superseded by [ADR-037](037-single-check-gate.md): `make gen`, `make fix` and
-> `make fmt` no longer exist; `make check` converges generation, repair and
-> formatting. References to them below are historical.
+> **Nota (27/11/2026):** os verbos `make gen`, `make fix` e `make fmt` citados
+> nesta ADR foram retirados pela [ADR-037](037-single-check-gate.md). Geração,
+> correção e formatação são fases do `make check`; o texto abaixo registra a
+> decisão como foi tomada.
 >
 > **Amended by ADR-018** (generator declarations): its filename-to-letter tables, closed
 > folder lists and advisory-gate lists are superseded; see

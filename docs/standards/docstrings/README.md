@@ -31,8 +31,6 @@ documentation never duplicates that registry.
 Run documentation and code validation only from the workspace root:
 
 ```bash
-make check repair
-make check formatting
 make check
 make tests
 make check

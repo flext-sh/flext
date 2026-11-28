@@ -95,7 +95,7 @@ Profile slow collection, fixtures and execution before changing their owners;
 never remove Testmon, reset its database or raise
 the deadline to obtain acceptance.
 
-> **Status (2026-09-20):** `make gen` reaches a green fixed point across the fleet
+> **Status (2026-09-20):** `make check` reaches a green fixed point across the fleet
 > (32/32; landed fixes: 31 `config/workspace.yaml` identity manifests, bare-deps render
 > in the root workspace, journal recovery #780, lazy `d/e/h/r/x` exports restored in the
 > flext-infra root). Global stability is not proven yet: the namespace campaign remains
@@ -133,7 +133,7 @@ verbs without selectors at the active workspace root. Documentation corrections 
 this same cycle. Validate changed behavior through the applicable real public consumer
 before tests, and complete native documentation, executable-example, and link
 validation; a docs-only receipt does not replace the required gates. Prove that
-repeated `make gen`, `make fix`, and `make fmt` leave the same final candidate unchanged
+repeated `make check`, and `make check` leave the same final candidate unchanged
 and exit zero. An overlapping edit, regeneration, or
 integration-base change invalidates the affected receipts and requires renewed
 convergence and validation. Generation convergence alone does not prove convergence of

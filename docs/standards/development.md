@@ -132,9 +132,6 @@ Start at the workspace root:
 ```bash
 make setup
 make help
-make check
-make check formatting
-make check repair
 make mod
 make check
 make tests

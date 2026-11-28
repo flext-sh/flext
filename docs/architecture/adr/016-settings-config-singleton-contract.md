@@ -1,9 +1,5 @@
 # ADR-016: Settings/Config Singleton Contract, Performance and SSOT Alignment
 
-> Verbs superseded by [ADR-037](037-single-check-gate.md): `make gen`, `make fix` and
-> `make fmt` no longer exist; `make check` converges generation, repair and
-> formatting. References to them below are historical.
-
 <!-- TOC START -->
 
 - [Status](#status)
@@ -22,6 +18,11 @@ PROPOSED (2026-09-15) — accepted for planning; execution assigned to a dedicat
 via epic bead and
 [epic plan](../../plans/2026-09-15-flext-settings-config-ssot-epic.md). This ADR becomes
 `Accepted` only when that session lands the full contract with runtime evidence.
+
+> **Nota (27/11/2026):** os verbos `make gen`, `make fix` e `make fmt` citados
+> nesta ADR foram retirados pela [ADR-037](037-single-check-gate.md). Geração,
+> correção e formatação são fases do `make check`; o texto abaixo registra a
+> decisão como foi tomada.
 
 ## Context
 

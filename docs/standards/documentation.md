@@ -87,8 +87,6 @@ There is no common `docs` verb. For authored documentation, use the canonical ro
 lifecycle and its documentation checks:
 
 ```bash
-make check repair
-make check formatting
 make check
 make tests
 ```
@@ -112,8 +110,6 @@ applicable full engineering lifecycle through the same dispatcher:
 
 ```bash
 make check
-make check formatting
-make check repair
 make mod
 make check
 make tests

@@ -51,8 +51,6 @@ change.
 ## Canonical validation
 
 ```bash
-make check repair
-make check formatting
 make check
 make tests
 make check

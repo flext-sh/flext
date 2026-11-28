@@ -51,7 +51,6 @@ Never invoke bare `ruff`, `pyrefly`, `pytest`, or `uv`. Use the dispatcher:
 
 ```bash
 make check
-make check
 make tests
 ```
 

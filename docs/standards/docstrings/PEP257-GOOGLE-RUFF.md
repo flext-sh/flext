@@ -127,8 +127,6 @@ fakes, stubs, patching, monkeypatch mutation, and copied setup are prohibited.
 Run validation from the workspace root:
 
 ```bash
-make check repair
-make check formatting
 make check
 make tests
 make check
