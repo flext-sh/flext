@@ -551,10 +551,11 @@ outside that task; its documentation-only slice executes neither surface.
 The approved `flext-0029c` target is one native root uv workspace. Setup, runtime
 activation and the hook/CI gate follow
 [ADR-038](docs/architecture/adr/038-reproducible-setup-runtime.md) (operator orders
-2026-11-26; implementation pending, `flext-itpd1.4.17`): `make setup` installs only the committed locks
-and never updates; locally the checkout and its subprojects are editable; in GitHub
-CI the project is editable and the subprojects come non-editable from the lock,
-with no submodule checkout; the pre-commit hook runs the same rows as CI. Lock ownership
+2026-11-26; implementation pending, `flext-itpd1.4.17`): `make setup` installs only
+the committed locks and never updates; locally the checkout and its subprojects
+are editable; in GitHub CI the project is editable and the subprojects come
+non-editable from the lock, with no submodule checkout; the pre-commit hook runs
+the same rows as CI. Lock ownership
 follows [ADR-030](docs/architecture/adr/030-member-locks-composition-upg-guard.md)
 (tracker memory `operator-ruling-2026-10-25-member-locks-uv-mise-upg-guard`, which
 supersedes the earlier root-only lock decision): member `uv.lock` and `mise.lock`
@@ -741,7 +742,7 @@ through gen, fix, fmt, check and build; no separate documentation lifecycle bypa
 those owners.
 
 **Working method (light-process execution).** A heavy verb (`make check`,
-`make tests`, `make gen`, `make deploy`) never ends a turn and is never a reason
+`make tests`, `make check`, `make deploy`) never ends a turn and is never a reason
 to wait for host load. Start it as a background process or in a subagent, then
 continue the same slice with diff review and doc/ADR/AGENTS/Bead alignment.
 Static gates and tests are not rerun as a separate pre-commit or pre-push step:
@@ -1126,7 +1127,7 @@ CLI + pytest plugin, **never imported at runtime**.
   upstream typing, and generated facade composition. Protocol assignment never
   proves unannotated vendor signatures or validates external payloads. The one
   owned generator of model-derived `p.*` protocols is flext-infra's model→protocol
-  stage, which runs on every `make gen` (operator order 2026-10-24, translated from
+  stage, which runs on every `make check` (operator order 2026-10-24, translated from
   Portuguese: "Generate protocols automatically through flext-infra; this already
   exists and must be active and always run through Make"; restoration tracked by
   bead `flext-vjj1s.8`). Its output is
@@ -1498,14 +1499,14 @@ Overall average: **60-90% token reduction** on common development operations.
   pytest's own basetemp retention); no verb or fixture copies it per run, and a run
   removes its own temporary files, also when stopped (epic `flext-b4gw3`).
 - **Never wait for load and never stop on a heavy operation.** Keep executing the
-  plan (`bd`, `git`, diffs, reads, owner code); heavy `make gen`/`make upg` run in the
+  plan (`bd`, `git`, diffs, reads, owner code); heavy `make check`/`make upg` run in the
   background or a subagent, never as a reason to block or stall, and static gates and
   tests run in the commit hook and the integration CI, not as a separate manual
   step. Review and follow the real laws, rules, skills, research and best practices
   before acting. The operator's zero-tolerance for warnings, strange logs, gambiarras,
   fallbacks, unauthorized hooks, non-standard code, bad UX and latency above a few
   seconds blocks Done.
-- **`make gen` is pure typed-AST declaration projection, never Rope, below twenty
+- **`make check` is pure typed-AST declaration projection, never Rope, below twenty
   seconds.** Reuse the existing parsed inventory (no second parse/scan); Rope semantic
   refactoring belongs to `make mod`; stage budgets are typed configuration. A gen that
   opens a Rope workspace or re-parses sources is an architectural violation, not a

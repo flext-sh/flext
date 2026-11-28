@@ -230,8 +230,8 @@ once; cross-lane concurrency is owned by the host admission queue.
    attempt to add was refused until that proof existed.
 3. **Cause.** The RCA record names cause, mechanism, owner, failing entrypoint, and the
    re-exercise result on the Bead.
-4. **Generation.** `make check` leaves no diff on a second run. No generated projection is
-   edited by hand.
+4. **Generation.** `make check` leaves no diff on a second run. No generated
+   projection is edited by hand.
 5. **Static gates.** The commit hook and the required integration CI run them on the
    exact head; that output is the evidence. Zero findings, no new suppression.
 6. **Tests.** Run by the same hook and CI over the complete applicable population, with

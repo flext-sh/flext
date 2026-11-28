@@ -238,7 +238,7 @@ stage and always runs. The work cycle, with exact forms:
 
 The 2026-11-01 operator correction in
 [ADR-018](../../../docs/architecture/adr/018-generator-declarations.md#nested-facade-projection)
-supersedes earlier Rope-only generation requirements. `make gen` performs pure
+supersedes earlier Rope-only generation requirements. `make check` performs pure
 declaration projection through the existing typed AST inventory, with no Rope
 project, source movement, consumer rewrite or semantic convergence loop. Its
 complete invocation must finish below twenty seconds; stage budgets and counters

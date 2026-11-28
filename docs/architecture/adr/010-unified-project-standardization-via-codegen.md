@@ -4,7 +4,7 @@
 > nesta ADR foram retirados pela [ADR-037](037-single-check-gate.md). Geração,
 > correção e formatação são fases do `make check`; o texto abaixo registra a
 > decisão como foi tomada.
-
+>
 > **Amended by ADR-018** (generator declarations): its filename-to-letter tables, closed
 > folder lists and advisory-gate lists are superseded; see
 > [ADR-018](018-generator-declarations.md).

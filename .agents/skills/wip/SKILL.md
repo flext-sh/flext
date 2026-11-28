@@ -21,7 +21,7 @@ and sweep. `flext-infra` is static only (`gen`, `fmt`, `fix`, `mod`, `check`,
 
 1. `ai-hub wip claim --bead <id> --path <path>`
 2. `ai-hub wip start --claim --bead <id> --path <path>`
-3. Static gates: `make gen && make fmt && make fix && make mod && make check
+3. Static gates: `make check && make check formatting && make check repair && make mod && make check
    CHECK_PHASE=primary && make tests && make tests-full`
 4. `ai-hub wip save --bead <id>` then `check`, `ship`, `approve`, `land`, `clean`
 

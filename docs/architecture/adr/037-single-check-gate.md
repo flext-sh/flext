@@ -1,5 +1,14 @@
 # ADR-037: `make check` Is the Single Gate
 
+<!-- TOC START -->
+
+- [Status](#status)
+- [Context](#context)
+- [Decision](#decision)
+- [Consequences](#consequences)
+
+<!-- TOC END -->
+
 ## Status
 
 Accepted (operator, 2026-11-25). Implemented by flext-infra #2791 (`4bf12d062d`)

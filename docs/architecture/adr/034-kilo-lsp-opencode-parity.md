@@ -1,5 +1,17 @@
 # ADR-034: Kilo LSP Configuration Parity with OpenCode
 
+<!-- TOC START -->
+
+- [Status](#status)
+- [Context](#context)
+- [Decision](#decision)
+- [Consequences](#consequences)
+  - [Positive](#positive)
+  - [Negative](#negative)
+- [Implementation](#implementation)
+
+<!-- TOC END -->
+
 ## Status
 
 Superseded by [ADR-036](036-flext-consumes-no-ai-hub-configuration.md) (2026-11-24).

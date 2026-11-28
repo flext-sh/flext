@@ -1,6 +1,6 @@
 # @flext-generated: continuous
 # @flext-owner: flext-infra template catalog and declared executor dependencies
-# @flext-regenerate: make gen
+# @flext-regenerate: make check
 -e flext-core @ file:./flext-core
 -e flext-cli @ file:./flext-cli
 -e flext-infra @ file:./flext-infra

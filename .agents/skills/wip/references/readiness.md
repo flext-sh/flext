@@ -5,7 +5,7 @@
 2. **Item deadlines**: 2 s ordinary, 20 s slow. A case that cannot fit the ordinary budget
    is declared at the slow tier from measurement; a budget is never raised to hide a
    regression.
-3. **PR readiness**: `make gen`/`fmt`/`fix` no-op, `CHECK_PHASE=primary make check` exit 0,
+3. **PR readiness**: `make check`/`fmt`/`fix` no-op, `CHECK_PHASE=primary make check` exit 0,
    `make tests` green, `make tests-full` green over the complete applicable population
    with harness gates reported NOT EXECUTED; the merged revision is re-proven at its real
    entry point.

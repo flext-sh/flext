@@ -3,7 +3,7 @@
 # @flext-generated: continuous
 # @flext-owner: flext-infra/config/codegen.yaml + flext-infra/src/flext_infra/templates/project/base/Makefile.j2
 # @flext-adjust: edit the owner configuration or template; never this projection
-# @flext-regenerate: make gen
+# @flext-regenerate: make check
 # flext — generated project interface.
 # Managed by flext-infra codegen conform for new and existing repositories.
 # === SECTION: header (managed) ===
@@ -23,6 +23,9 @@ override SHELL := /bin/sh
 # named mod-full, and a check outside the commit stage without
 # CHECK_PHASE=primary is the full form, named check-full. Overrides apply when
 # the invocation names exactly one verb.
+# The default phase is assigned before admission reads it, so a bare
+# `make check` is the primary form and never the gated check-full.
+CHECK_PHASE ?= primary
 ifeq ($(MAKELEVEL)$(filter Y,$(CI)),0)
 override ADMISSION_VERB := $(if $(word 2,$(MAKECMDGOALS)),,$(or $(MAKECMDGOALS),$(.DEFAULT_GOAL),help))
 override ADMISSION_VERB := $(if $(filter mod,$(ADMISSION_VERB)),$(if $(strip $(RULES)$(LAWS)),mod,mod-full),$(ADMISSION_VERB))
@@ -148,8 +151,6 @@ WORKSPACE_SUBPROJECTS := flext-api flext-auth flext-cli flext-core flext-db-orac
 # The Makefile validates no caller input. Every verb
 # always applies; a mistyped variable fails where the verb consumes it, and an
 # unconsumed variable is ignored.
-# Default to the fast primary phase so `make check` is the single gate.
-CHECK_PHASE ?= primary
 export CHECK_PHASE MARKER
 PYTEST_REPORTS_DIR := .reports/tests
 override PYTEST_RUN_TIMEOUT_SECONDS := 240
@@ -871,7 +872,6 @@ endef
 
 
 .PHONY: $(PUBLIC_VERBS) $(addprefix _builtin-,$(PUBLIC_VERBS))
-.PHONY: _builtin_gen_all
 
 
 VERB_DESCRIPTION_setup := Install the declared frozen locks, synchronize the physical environment and configure local integrations; FLEXT=<path> reinstalls the FLEXT distributions that workspace provides as editable (local only).
@@ -883,7 +883,7 @@ VERB_ARGUMENTS_upg :=
 VERB_DESCRIPTION_mod := Refactor declared source structure through the shared pipeline and publish the complete coherent change; LAWS (ENFORCE ids) or RULES (rule ids) diagnose or repair one law (ADR-028 Decision 18 item 2).
 VERB_ARGUMENTS_mod := LAWS RULES
 
-VERB_DESCRIPTION_check := Validate declarations, projections, environment, documentation and configured gates without repairs or publication.
+VERB_DESCRIPTION_check := Outside CI, converge generation, repairs and formatting to a fixed point and publish them; then validate declarations, projections, environment, documentation and configured gates. In CI it changes nothing and fails when any byte would change (ADR-037).
 VERB_ARGUMENTS_check := CHECK_PHASE
 
 VERB_DESCRIPTION_tests := Run native incremental tests through the persistent Testmon selection; in a workspace root ALL=Y includes every governed member.
@@ -1182,7 +1182,7 @@ _builtin_require_github_credential:
 _builtin_require_mise:
 	@set -eu; \
 	if [ ! -f "$(RUNTIME_ROOT)/.mise.toml" ]; then \
-		printf 'ERROR: missing project mise config %s; run make gen\n' "$(RUNTIME_ROOT)/.mise.toml" >&2; \
+		printf 'ERROR: missing project mise config %s; run make check\n' "$(RUNTIME_ROOT)/.mise.toml" >&2; \
 		exit 2; \
 	fi; \
 	if [ ! -f "$(RUNTIME_ROOT)/mise.lock" ]; then \
@@ -1210,7 +1210,7 @@ _builtin_require_environment: _builtin_require_interpreter
 # === SECTION: setup environment (managed) ===
 # Source: computed (MAKE_PROFILE routing)
 # Setup provisions tooling and the native project's declared dependencies.
-# It never generates or mutates project source; `make gen` owns source generation.
+# It never generates or mutates project source; `make check` owns source generation.
 # The lifecycle above owns the single native toolchain installation.
 # Attached members delegate publicly before entering it; there is no second
 # private installer or alternative source-selection pipeline.
@@ -1445,9 +1445,30 @@ _builtin_build_artifacts:
 # make.check_gates_ci, CI=C (the commit hook) runs
 # make.pre_commit_check_gates, CI=N runs
 # make.check_gates_local, and an absent CI token runs every active gate.
+# Outside CI and the commit hook, every phase first converges gen -> fix ->
+# fmt to a fixed point: passes repeat until the working tree, hashed as a git
+# tree through a throwaway index, stops changing; a tree still moving after
+# CHECK_CONVERGE_MAX_PASSES passes fails. CI=Y converges
+# nothing, so its read-only gates fail when any byte would change.
+override CHECK_CONVERGE_MAX_PASSES := 5
 _builtin_check_all: _builtin_require_environment
-	@$(if $(filter Y,$(CI)),,$(if $(filter primary,$(CHECK_PHASE)),,$(SELF_MAKE) _builtin_gen_all && $(SELF_MAKE) _builtin_fix_all && $(SELF_MAKE) _builtin_fmt_all && ))
+	@$(if $(filter Y C,$(CI)),,$(SELF_MAKE) _builtin_converge_all)
 	@$(if $(CHECK_PROFILE),FLEXT_INFRA_PROFILE=$(CHECK_PROFILE) ,)FLEXT_INFRA_PROFILE_OUTPUT="$(PROJECT_ROOT)/.reports/check/route.pstats" $(PROJECT_FLEXT_INFRA) workspace check --repository-root "$(if $(filter Y,$(CI)),$(PROJECT_ROOT),$(if $(filter primary,$(CHECK_PHASE)),$(RUNTIME_ROOT),$(PROJECT_ROOT)))"$(if $(CHECK_PHASE), --phase "$$CHECK_PHASE")
+
+_builtin_converge_all: _builtin_require_environment
+	@tree() { idx="$$(mktemp -u)"; GIT_INDEX_FILE="$$idx" git -C "$(PROJECT_ROOT)" add -A && GIT_INDEX_FILE="$$idx" git -C "$(PROJECT_ROOT)" write-tree; rc=$$?; rm -f "$$idx"; return $$rc; }; \
+	before="$$(tree)" || exit 1; pass=0; \
+	while :; do \
+		pass=$$((pass + 1)); \
+		if [ "$$pass" -gt $(CHECK_CONVERGE_MAX_PASSES) ]; then printf '%s\n' "❌ check: convergence did not reach a fixed point in $(CHECK_CONVERGE_MAX_PASSES) passes" >&2; exit 1; fi; \
+		FLEXT_INFRA_CHECK_CONVERGE=1 $(PROJECT_FLEXT_INFRA) codegen generate --root "$(PROJECT_ROOT)" --scope "$(if $(filter Y,$(CI)),self,all)" && \
+		$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gate-set fix --scope $(GATE_SCOPE) --apply && \
+		$(PROJECT_FLEXT_INFRA) docs fix --repository-root "$(PROJECT_ROOT)" --output-dir ".reports/docs" --projects . --apply && \
+		$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gate-set fmt --scope $(GATE_SCOPE) --apply || exit 1; \
+		after="$$(tree)" || exit 1; \
+		if [ "$$after" = "$$before" ]; then printf '%s\n' "INFO: check: fixed point after $$pass pass(es)"; break; fi; \
+		before="$$after"; \
+	done
 
 _builtin_tests_all: _builtin_require_environment
 	@FLEXT_INFRA_PROFILE_OUTPUT="$(PROJECT_ROOT)/.reports/tests/route.pstats" $(PROJECT_FLEXT_INFRA) workspace tests --repository-root "$(PROJECT_ROOT)" --scope "$(GATE_SCOPE)"
@@ -1458,62 +1479,16 @@ _builtin_tests_full_all: _builtin_require_environment
 _builtin_tests_harness_all: _builtin_require_environment
 	@FLEXT_INFRA_PROFILE_OUTPUT="$(PROJECT_ROOT)/.reports/tests/route.pstats" $(PROJECT_FLEXT_INFRA) workspace tests-harness --repository-root "$(PROJECT_ROOT)" --scope "$(GATE_SCOPE)"$(if $(MARKER), --marker "$$MARKER")
 
-# fmt is format-only (single-pass verb law): ruff formats Python, the
-# fmt_gates formatters run once through the checker's apply mode, and every
-# lint repair belongs to `make fix`. Every repair requires read-only native
-# verification; remaining findings and tool failures both fail the verb.
-_builtin_fmt_all: _builtin_require_environment
-	@$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gate-set fmt --scope $(GATE_SCOPE) --apply
-
-_builtin_fix_all: _builtin_require_environment
-	@$(PROJECT_FLEXT_INFRA) check run --repository-root "$(PROJECT_ROOT)" --gate-set fix --scope $(GATE_SCOPE) --apply
-	@$(PROJECT_FLEXT_INFRA) docs fix --repository-root "$(PROJECT_ROOT)" --output-dir ".reports/docs" --projects . --apply
-
 _builtin_clean_generated: _builtin_require_interpreter
 	@$(PROJECT_FLEXT_INFRA) maintenance clean --repository-root "$(PROJECT_ROOT)" --apply
 
-# Heavy verbs (check, tests, tests-full, tests-harness, gen, gen-scope, mod)
+# Heavy verbs (check, tests, tests-full, tests-harness, mod)
 # admit themselves into the per-host FIFO queue and arm their wall-time budget only once
 # admitted (FLEXT ADR-032, config Infra.gate_admission): queue time never
-# counts against a budget. GEN_PROFILE=1 / MOD_PROFILE=1 capture cProfile.
-GEN_PROFILE ?=
+# counts against a budget. MOD_PROFILE=1 captures cProfile.
 MOD_PROFILE ?=
 # Check profiling is opt-in like generation (CHECK_PROFILE=1 make check).
 CHECK_PROFILE ?=
-
-# Generation rewrites .envrc projections, so on a host it re-authorizes direnv
-# for every governed checkout exactly as setup and upg do.
-_builtin_gen_all: _builtin_require_interpreter
-	@set -eu; \
-	root="$(abspath $(or $(strip $(ROOT)),$(PROJECT_ROOT)))"; \
-	what="$(strip $(WHAT))"; \
-	if [ -n "$$what" ] && [ "$$what" != "ALL" ]; then \
-		scope="$(or $(strip $(SCOPE)),self)"; \
-		module_args=""; \
-		if [ -n "$(strip $(MODULE))" ]; then module_args=" --module $(strip $(MODULE))"; fi; \
-		$(if $(GEN_PROFILE),FLEXT_INFRA_PROFILE=$(GEN_PROFILE) ,)FLEXT_INFRA_PROFILE_OUTPUT="$$root/.reports/codegen/gen-scope.pstats" $(PROJECT_FLEXT_INFRA) codegen generate --root "$$root" --what "$$what" --scope "$$scope"$$module_args; \
-	else \
-		scope=all; \
-		if [ "$$root" != "$(PROJECT_ROOT)" ] || [ "$(strip $(CI))" = "Y" ]; then scope=self; fi; \
-		$(if $(GEN_PROFILE),FLEXT_INFRA_PROFILE=$(GEN_PROFILE) ,)FLEXT_INFRA_PROFILE_OUTPUT="$$root/.reports/codegen/gen.pstats" $(PROJECT_FLEXT_INFRA) codegen generate --root "$$root" --scope "$$scope"; \
-	fi; \
-	$(if $(filter Y,$(CI)),:,set -f; \
-	$(GOVERNED_CHECKOUTS); \
-	for checkout in $$checkouts; do \
-		if [ "$$checkout" = . ]; then allow_root="$$root"; else allow_root="$$root/$$checkout"; fi; \
-		[ ! -f "$$allow_root/.envrc" ] || $(DIRENV) allow "$$allow_root"; \
-	done; \
-	set +f)
-
-# Focal generation is the bounded diagnosis vehicle: one surface (and, for
-# facades, one module) through the identical engine, lock and budget.
-_builtin_gen_scope_all: _builtin_require_interpreter
-	@set -eu; \
-	root="$(abspath $(or $(strip $(ROOT)),$(PROJECT_ROOT)))"; \
-	scope="$(or $(strip $(SCOPE)),self)"; \
-	module_args=""; \
-	if [ -n "$(strip $(MODULE))" ]; then module_args=" --module $(strip $(MODULE))"; fi; \
-	$(if $(GEN_PROFILE),FLEXT_INFRA_PROFILE=$(GEN_PROFILE) ,)FLEXT_INFRA_PROFILE_OUTPUT="$$root/.reports/codegen/gen-scope.pstats" $(PROJECT_FLEXT_INFRA) codegen generate --root "$$root" --what "$(strip $(WHAT))" --scope "$$scope"$$module_args
 
 # Structural rewrites run one theme at a time (ADR-028 Decision 18 item 2):
 # LAWS selects ENFORCE law ids, RULES selects exact rule ids; the engine refuses
@@ -1534,11 +1509,7 @@ _builtin-check: _builtin_check_all
 _builtin-tests: _builtin_tests_all
 _builtin-tests-full: _builtin_tests_full_all
 _builtin-tests-harness: _builtin_tests_harness_all
-_builtin-fmt: _builtin_fmt_all
-_builtin-fix: _builtin_fix_all
 _builtin-clean: _builtin_clean_generated
-_builtin-gen: _builtin_gen_all
-_builtin-gen-scope: _builtin_gen_scope_all
 _builtin-mod: _builtin_mod_apply
 # The repository's release capability elects these product operations.
 # Operator values cross the shell boundary as environment data.

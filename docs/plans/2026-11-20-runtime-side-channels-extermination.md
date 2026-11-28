@@ -1,5 +1,21 @@
 # Runtime Side-Channels Extermination Plan
 
+<!-- TOC START -->
+
+- [Mandate](#mandate)
+- [Root causes](#root-causes)
+- [Phases](#phases)
+  - [Fase 0 — Census (done 2026-11-20)](#fase-0-census-done-2026-11-20)
+  - [Fase 1 — Canonicalize (in progress)](#fase-1-canonicalize-in-progress)
+  - [Fase 2 — Proof (GATE)](#fase-2-proof-gate)
+  - [Fase 3 — Exterminate (gated on Fase 2 pass)](#fase-3-exterminate-gated-on-fase-2-pass)
+  - [Fase 4 — Pytest runtimes + scattered .venv](#fase-4-pytest-runtimes-scattered-venv)
+  - [Fase 5 — Validation (the only proof)](#fase-5-validation-the-only-proof)
+- [Blockers](#blockers)
+- [ADR compliance](#adr-compliance)
+
+<!-- TOC END -->
+
 **Bead:** flext-9qlie  
 **Status:** Approved, in execution (Fase 0/1)  
 **Integration branch:** 0.12.0-dev

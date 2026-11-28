@@ -1,5 +1,18 @@
 # ADR-036: Flext Carries No AI Hub Configuration
 
+<!-- TOC START -->
+
+- [Status](#status)
+- [Context](#context)
+- [Decision](#decision)
+- [Consequences](#consequences)
+  - [Positive](#positive)
+  - [Negative](#negative)
+- [Implementation](#implementation)
+- [Related](#related)
+
+<!-- TOC END -->
+
 ## Status
 
 Accepted (2026-11-24). Supersedes ADR-033, ADR-034 and ADR-035.
